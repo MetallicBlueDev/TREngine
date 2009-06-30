@@ -13,11 +13,6 @@ if (preg_match("/main.class.php/ie", $_SERVER['PHP_SELF'])) {
 class Core_Main {
 	
 	/**
-	 * Instance du gestionnaire SQL
-	 */ 
-	public static $coreSql;
-	
-	/**
 	 * Tableau d'information de configuration
 	 */ 
 	public static $coreConfig = array();
@@ -53,11 +48,11 @@ class Core_Main {
 		Core_Loader::classLoader("Core_ConfigsLoader");
 		$coreConfigLoader = new Core_ConfigsLoader();
 		
-		// Récuperation de la configuration
-		$this->setCoreConfig($coreConfigLoader->getConfig());
-		
 		// Connexion à la base de donnée
 		$this->setCoreSql($coreConfigLoader->getDatabase());
+		
+		// Récuperation de la configuration
+		$this->setCoreConfig($coreConfigLoader->getConfig());
 		
 		// Destruction du chargeur de configs
 		unset($coreConfigLoader);
@@ -74,55 +69,85 @@ class Core_Main {
 	 */
 	private function setCoreSql($db) {
 		Core_Loader::classLoader("Core_Sql");
-		self::$coreSql = Core_Sql::getInstance($db);
+		Core_Sql::getInstance($db);
 		Core_Table::setPrefix($db['prefix']);
 	}
 	
 	/**
 	 * Charge la configuration a partir de la base
+	 * 
+	 * @return array
 	 */
 	private function getConfigDb() {
-		self::$coreSql->select(Core_Table::$CONFIG_TABLE, array("name", "value"));
-		while ($row = self::$coreSql->fetchArray()) {
-			self::$coreConfig[$row['name']] = stripslashes(htmlentities($row['value'], ENT_NOQUOTES));
+		$config = array();
+		$sql = Core_Sql::getInstance();
+		Core_CacheBuffer::setSectionName("tmp");
+		$content = "";
+		
+		// Requête vers la base de donnée de configs
+		$sql->select(Core_Table::$CONFIG_TABLE, array("name", "value"));
+		while ($row = $sql->fetchArray()) {
+			$config[$row['name']] = stripslashes(htmlentities($row['value'], ENT_NOQUOTES));
+			$content .= "$" . Core_CacheBuffer::getSectionName() . "['" . $row['name'] . "'] = \"" . Core_CacheBuffer::preparingCaching($config[$row['name']]) . "\"; ";
 		}
+		// Mise en cache
+		Core_CacheBuffer::writingCache("configs.php", $content, true);
+		// Retourne le configuration pour l'ajout
+		return $config;
 	}
 	
 	/**
 	 * Ajoute l'objet a la configuration
 	 * 
-	 * @param $object array
+	 * @param $config array
 	 */
-	private function setCoreConfig($config) {
-		// Configuration via la base donnée
+	private function addToConfig($config) {
 		if (is_array($config)) {
 			foreach($config as $key => $value) {
 				self::$coreConfig[$key] = $value;
 			}
 		}
+	}
+	
+	/**
+	 * Recupere les variables de configuration
+	 * Utilisation du cache ou sinon de la base de donnée
+	 * 
+	 * @param $configIncFile
+	 */
+	private function setCoreConfig($configIncFile) {
+		// Ajout a la configuration courante
+		$this->addToConfig($configIncFile);
 		
 		// Configuration via le fichier temporaire
 		Core_CacheBuffer::setSectionName("tmp");
-		$configsFile = Core_CacheBuffer::getCache("configs.php");
-		self::$coreConfig['urlRewriting'] = ((isset($configsFile['urlRewriting'])) ? $configsFile['urlRewriting'] : false);
+		if (Core_CacheBuffer::cached("configs.php")) {
+			$configCached = Core_CacheBuffer::getCache("configs.php");
+			$this->addToConfig($configCached);
+		} else {
+			// Recherche de la configuration dans la base de donnée
+			$configDb = $this->getConfigDb();
+			// Ajout a la configuration courante
+			$this->addToConfig($configDb);
+		}
 	}
 	
 	public function start() {
-		// Recherche de la configuration dans la base de donnée
-		$this->getConfigDb();
-		
-		// Chargement des sessions
-		Core_Loader::classLoader("Core_Session");
-		$this->coreSession = new Core_Session();
+		// Gestionnaire des cookie
+		Core_Loader::classLoader("Exec_Cookie");
 		
 		// Analyse pour les statistiques
 		Core_Loader::classLoader("Exec_Agent");
 		Exec_Agent::getVisitorsStats();
 		
+		// Chargement des sessions
+		Core_Loader::classLoader("Core_Session");
+		$this->coreSession = new Core_Session();
+		
 		// Configure la page demandé
 		$this->getUrl();
 		
-		$this->openCompression();
+		//$this->openCompression();
 		
 		// Routine du cache
 		Core_CacheBuffer::valideCacheBuffer();
@@ -130,14 +155,14 @@ class Core_Main {
 		// AFFICHAGE -- A SUPPRIMER
 		Core_Loader::classLoader("Libs_MakeStyle");
 		$libsMakeStyle = new Libs_MakeStyle();
-		$libsMakeStyle->assign("test", "Test template : succes !");
+		$libsMakeStyle->assign("test", "Template d'essai activé");
 		$libsMakeStyle->displayDebug("index.tpl");
 		// AFFICHAGE -- A SUPPRIMER
 		
 		// Affichage des exceptions
 		Core_Exception::displayException();
 		
-		$this->closeCompression();
+		//$this->closeCompression();
 				
 		// Assemble tous les messages d'erreurs dans un fichier log
 		Core_Exception::logException();

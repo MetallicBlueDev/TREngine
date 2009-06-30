@@ -14,16 +14,22 @@ class Core_Session {
 	
 	/**
 	 * Timer générale
+	 * 
+	 * @var int
 	 */ 
 	private $timer;
 	
 	/**
 	 * Limite de temps pour le cache
+	 * 
+	 * @var int
 	 */ 
 	private $cacheTimeLimit;
 	
 	/**
 	 * Limite de temps pour les cookies
+	 * 
+	 * @var int
 	 */ 
 	private $cookieTimeLimit;
 	
@@ -34,6 +40,8 @@ class Core_Session {
 	
 	/**
 	 * Nom des cookies
+	 * 
+	 * @var array
 	 */ 
 	private $cookieName = array(
 		"USER" => "_user_id",
@@ -51,8 +59,6 @@ class Core_Session {
 		// Marque le timer
 		$this->timer = time();
 		
-		// Gestionnaire des cookie
-		Core_Loader::classLoader("Exec_Cookie");
 		// Durée de validité du cache en jours
 		$this->cacheTimeLimit = Core_Main::$coreConfig['cacheTimeLimit'] * 86400;
 		// Durée de validité des cookies
@@ -73,7 +79,7 @@ class Core_Session {
 		$this->checkSessionCache();
 		
 		// Lanceur de session
-		$this->selectSession();
+		$this->sessionSelect();
 	}
 	
 	/**
@@ -102,10 +108,13 @@ class Core_Session {
 		return false;
 	}
 	
-	private function selectSession() {
+	private function sessionSelect() {
 		if ($this->sessionFound()) {
-			$userId = Exec_Cookie::getCookie($this->cookieName['USER']);
-			$sessionId = Exec_Cookie::getCookie($this->cookieName['SESSION']);
+			// Chargement du crypteur
+			Core_Loader::classLoader("Exec_Crypt");
+			
+			$userId = Exec_Crypt::md5Decrypt(Exec_Cookie::getCookie($this->cookieName['USER']), $this->getSalt());
+			$sessionId = Exec_Crypt::md5Decrypt(Exec_Cookie::getCookie($this->cookieName['SESSION']), $this->getSalt());
 			
 		    if ($userId != "" && $sessionId != "" && Core_CacheBuffer::cached($sessionId . ".php")) {
 				// Si fichier cache trouvé, on l'utilise
@@ -113,12 +122,12 @@ class Core_Session {
 				$sessions = Core_CacheBuffer::getCache($sessionId . ".php");
 				
 				// Verification + mise à jour toute les 5 minutes
-				if ($sessions['userId'] === $userId) {
+				if ($sessions['userId'] == $userId) {
 					// Mise à jour toute les 5 min
-					if ((Core_CacheBuffer::cacheMTime($sessionId . ".php") + (5*60)) < $this->timer) {
-						$updVerif = $this->updateLastConnect($userId);
+					if ((Core_CacheBuffer::cacheMTime($sessions['sessionId'] . ".php") + (5*60)) < $this->timer) {
+						$updVerif = $this->updateLastConnect($sessions['userId']);
 						// Mise a jour du dernier accès
-						Core_CacheBuffer::touchCache($sessionId . ".php");
+						Core_CacheBuffer::touchCache($sessions['sessionId'] . ".php");
 					} else {
 						$updVerif = 1;
 					}
@@ -135,15 +144,16 @@ class Core_Session {
 				}
 		    } else if ($userId != "") {
 				// Si plus de fichier cache, on tente de retrouver le client
-				Core_Main::$coreSql->select(
+				$sql = Core_Sql::getInstance();
+				$sql->select(
 					Core_Table::$USERS_TABLE,
 					array("user_name", "user_rang"),
-					array("user_id = '" . $userID . "'")
+					array("user_id = '" . $userId . "'")
 				);
 				
-				if (Core_Main::$coreSql->getQueries() != false) {
+				if ($sql->affectedRows() > 0) {
 					// Si le client a été trouvé, on recupere les informations
-					list($userName, $userRang) = Core_Main::$coreSql->fetchArray();
+					list($userName, $userRang) = $sql->fetchArray();
 					
 					// Injection des informations du client
 					$this->setUser(array(
@@ -175,7 +185,7 @@ class Core_Session {
 		if (!$userId) $userId = $this->user['userId'];
 		
 		// Envoie la requête Sql
-		return Core_Main::$coreSql->update(Core_Table::$USERS_TABLE, 
+		return Core_Sql::getInstance()->update(Core_Table::$USERS_TABLE, 
 			array("last_connect" => "NOW()"), 
 			array("user_id" => $userId));
 	}
@@ -242,14 +252,14 @@ class Core_Session {
 		
 		// Chargement de l'outil de cryptage
 		Core_Loader::classLoader("Exec_Crypt");
-		$this->user['sessionId'] = Exec_Crypt::creatId(34);
+		$this->user['sessionId'] = Exec_Crypt::creatId(32);
 		
 		// Connexion automatique via cookie
 		if ($auto == 1) $cookieTimeLimit = $this->cookieTimeLimit;
 		else $cookieTimeLimit = "";
 		
-		if (Exec_Cookie::createCookie($this->cookieName['USER'], $this->user['userId'], $cookieTimeLimit)) {
-			if (Exec_Cookie::createCookie($this->cookieName['SESSION'], $this->user['sessionId'], $cookieTimeLimit)) {
+		if (Exec_Cookie::createCookie($this->cookieName['USER'], Exec_Crypt::md5Encrypt($this->user['userId'], $this->getSalt()), $cookieTimeLimit)) {
+			if (Exec_Cookie::createCookie($this->cookieName['SESSION'], Exec_Crypt::md5Encrypt($this->user['sessionId'], $this->getSalt()), $cookieTimeLimit)) {
 				// Préparation des informations pour le cache
 				$content = "";
 				foreach ($this->user as $key => $value) {
@@ -290,19 +300,20 @@ class Core_Session {
 	public function startConnection($name, $pass, $auto) {
 		// Arrête de la session courante si il y en a une
 		$this->stopConnection();
+		$sql = Core_Sql::getInstance();
 		
-		Core_Main::$coreSql->select(
+		$sql->select(
 			Core_Table::$USERS_TABLE,
 			array("user_id", "user_rang"),
 			array("user_name = '" . $name . "'", "&& user_pass = '" . md5($pass) . "'")
 		);
 		
-		if (Core_Main::$coreSql->getQueries() != false) {
+		if ($sql->affectedRows() > 0) {
 			// Si le client a été trouvé, on recupere les informations
-			list($id_utilisateur, $rang) = Core_Main::$coreSql->fetchArray();
+			list($userId, $rang) = $sql->fetchArray();
 			// Injection des informations
 			$this->setUser(array(
-				"userId" => $id_utilisateur,
+				"userId" => $userId,
 				"userName" => $name,
 				"userRang" => $rang
 			));
@@ -320,6 +331,15 @@ class Core_Session {
 		if ($this->isUser()) {
 			$this->sessionClose();
 		}
+	}
+	
+	/**
+	 * Retourne la combinaise de cles pour le salt
+	 * 
+	 * @return String
+	 */
+	private function getSalt() {
+		return Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowser;
 	}
 }
 ?>

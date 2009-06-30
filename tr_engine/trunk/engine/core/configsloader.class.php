@@ -72,6 +72,8 @@ class Core_ConfigsLoader {
 			
 			if ($config['cookiePrefix'] != "") $this->config['cookiePrefix'] = $config['cookiePrefix'];
 			else $this->config['cookiePrefix'] = "tr";
+			
+			if ($config['cryptKey'] != "") $this->config['cryptKey'] = $config['cryptKey'];
 		} else {
 			Core_Secure::getInstance()->debug("configPath", $configPath);
 		}

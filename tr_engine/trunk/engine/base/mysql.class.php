@@ -1,5 +1,4 @@
 <?php
-
 if (preg_match("/mysql.class.php/ie", $_SERVER['PHP_SELF'])) {
 	require("../core/secure.class.php");
 	new Core_Secure();
@@ -86,7 +85,7 @@ class Base_MySql extends Core_Sql {
 	 * Retourne un tableau qui contient la ligne demandée
 	 */
 	public function fetchArray() {
-		$this->lastRow = mysql_fetch_array($this->queries);
+		return mysql_fetch_array($this->queries);
 	}
 	
 	/**
@@ -96,6 +95,15 @@ class Base_MySql extends Core_Sql {
 	 */
 	public function affectedRows() {
 		return mysql_affected_rows($this->connId);
+	}
+	
+	/**
+	 * Get number of LAST affected rows 
+	 * 
+	 * @return int
+	 */
+	public function numRows() {
+		return mysql_num_rows($this->queries);
 	}
 	
 	/**

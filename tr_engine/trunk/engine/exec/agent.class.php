@@ -8,16 +8,46 @@
  */
 class Exec_Agent {
 	
+	/**
+	 * Adresse IP du client
+	 * 
+	 * @var String
+	 */
 	public static $userIp;
 	
+	/**
+	 * Host du client
+	 * 
+	 * @var String
+	 */
 	public static $userHost;
 	
+	/**
+	 * OS du client
+	 * 
+	 * @var String
+	 */
 	public static $userOs;
 	
+	/**
+	 * Navigateur du client
+	 * 
+	 * @var String
+	 */
 	public static $userBrowser;
 	
+	/**
+	 * Referer du client
+	 * 
+	 * @var String
+	 */
 	public static $userReferer;
 	
+	/**
+	 * User agent complet du client
+	 * 
+	 * @var String
+	 */
 	public static $userAgent;
 	
 	/**
@@ -89,6 +119,11 @@ class Exec_Agent {
 		"Mozilla" => "Mozilla"
 	);
 	
+	/**
+	 * Tableau des OS
+	 * 
+	 * @var array
+	 */
 	private static $osRessources = array (
 		// Windows
 		"Windows NT 6.1" => "Windows Seven",
@@ -162,9 +197,9 @@ class Exec_Agent {
 	private static function checkUserBrower() {
 		// Boucle sur tout les Browsers et Bot connus
 		foreach (self::$browserRessouces as $browserAgent => $browserName) {
-			if (preg_match("/" . $browserAgent . "/ie", self::$userAgent, $version)
-					|| preg_match("/" . $browserAgent . "[ \/]([0-9\.]+)/ie", self::$userAgent, $version)) {
-				return $browserName . ((isset($res[1])) ? " " . $version[1] : "");
+			if (preg_match("/" . $browserAgent . "[ \/]([0-9\.]+)/ie", self::$userAgent, $version)
+					|| preg_match("/" . $browserAgent . "/ie", self::$userAgent, $version)) {
+				return $browserName . ((isset($version[1])) ? " " . $version[1] : "");
 			}
 		}
 		return "Unknown Browser";
@@ -193,7 +228,7 @@ class Exec_Agent {
 		self::$userIp = Core_Secure::getUserIp();
 		
 		// Analyse pour les statistiques
-		self::$userReferer = $_SERVER['HTTP_REFERER'];
+		self::$userReferer = htmlentities($_SERVER['HTTP_REFERER'], ENT_QUOTES);
 		self::$userHost = strtolower(@gethostbyaddr(self::$userIp));
 		self::$userAgent = $_SERVER['HTTP_USER_AGENT'];
 		

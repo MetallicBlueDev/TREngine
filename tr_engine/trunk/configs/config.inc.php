@@ -28,7 +28,6 @@ $config["TR_ENGINE_STATUT"] = "open";
 // -------------------------------------------------------------------------//
 // Données des sessions
 //
-//
 // Durée en jours d'une session cookie
 $config['cookieTimeLimit'] = 7;
 //
@@ -37,6 +36,9 @@ $config['cacheTimeLimit'] = 7;
 //
 // Préfixe des noms des cookies
 $config['cookiePrefix'] = "tr";
+//
+// Cles de décriptage UNIQUE (généré aleatoirement a l'installation)
+$config['cryptKey'] = "A4bT9D4V";
 // -------------------------------------------------------------------------//
 
 

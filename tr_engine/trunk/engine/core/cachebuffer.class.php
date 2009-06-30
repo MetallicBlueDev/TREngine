@@ -251,13 +251,13 @@ class Core_CacheBuffer {
 		// Réglage avant capture
 		$variableName = self::$sectionName;
 		// Rend la variable global a la fonction
-		$$variableName = "";
+		${$variableName} = "";
 		
 		// Capture du fichier
-		if (self::cached(self::getPath($path))) {
+		if (self::cached($path)) {
 			require(self::getPath($path));
-		}		
-		return $$variableName;
+		}
+		return ${$variableName};
 	}
 	
 	/**
