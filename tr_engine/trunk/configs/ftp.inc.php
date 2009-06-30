@@ -3,22 +3,22 @@
 // Informations sur le FTP
 //
 // Adresse de host du FTP
-$ftp['host'] = "web3.clicasso.com";
+$ftp['host'] = "localhost";
 //
 // Numéro de port de l'host
 $ftp['port'] = "21";
 //
 // Nom d'utilisateur du FTP
-$ftp['user'] = "trancers";
+$ftp['user'] = "root";
 //
 // Mot de passe de l'utilisateur du FTP
-$ftp['pass'] = "aKL7Xhd1";
+$ftp['pass'] = "";
 //
 // Chemin Root du FTP
 $ftp['root'] = "";
 //
 // Type de FTP (php / ftp / sftp)
-$ftp['type'] = "ftp";
+$ftp['type'] = "php";
 //
 // -------------------------------------------------------------------------//
 

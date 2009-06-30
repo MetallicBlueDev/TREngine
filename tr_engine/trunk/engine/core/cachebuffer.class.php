@@ -248,8 +248,16 @@ class Core_CacheBuffer {
 	 * @return unknown_type
 	 */
 	public static function getCache($path) {
-		require(self::getPath($path));
-		return self::$$sectionName;
+		// Réglage avant capture
+		$variableName = self::$sectionName;
+		// Rend la variable global a la fonction
+		$$variableName = "";
+		
+		// Capture du fichier
+		if (self::cached(self::getPath($path))) {
+			require(self::getPath($path));
+		}		
+		return $$variableName;
 	}
 	
 	/**

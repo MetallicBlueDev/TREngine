@@ -84,7 +84,8 @@ class Core_Exception {
 			for ($i = 0; $i < $nbStars; $i++) {
 				if ($i == (int)($nbStars / 2)) {
 					$nbException = self::countException();
-					echo $nbException . " EXCEPTION" . (($nbException > 1) ? "S" : "");
+					$add = ($nbException > 1) ? "S" : "";
+					echo $nbException . " DIFFERENT" . $add . " EXCEPTION" . $add;
 				} else {
 					echo "*";
 				}

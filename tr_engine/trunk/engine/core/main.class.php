@@ -94,11 +94,17 @@ class Core_Main {
 	 * @param $object array
 	 */
 	private function setCoreConfig($config) {
+		// Configuration via la base donnée
 		if (is_array($config)) {
 			foreach($config as $key => $value) {
 				self::$coreConfig[$key] = $value;
 			}
 		}
+		
+		// Configuration via le fichier temporaire
+		Core_CacheBuffer::setSectionName("tmp");
+		$configsFile = Core_CacheBuffer::getCache("configs.php");
+		self::$coreConfig['urlRewriting'] = ((isset($configsFile['urlRewriting'])) ? $configsFile['urlRewriting'] : false);
 	}
 	
 	public function start() {
@@ -128,10 +134,11 @@ class Core_Main {
 		$libsMakeStyle->displayDebug("index.tpl");
 		// AFFICHAGE -- A SUPPRIMER
 		
+		// Affichage des exceptions
+		Core_Exception::displayException();
+		
 		$this->closeCompression();
 				
-		// Affichage des exceptions
-		Core_Exception::displayException();		
 		// Assemble tous les messages d'erreurs dans un fichier log
 		Core_Exception::logException();
 		// Validation du cache
@@ -159,7 +166,7 @@ class Core_Main {
 	 */
 	private function closeCompression() {
 		// Tamporisation de sortie
-		if (Core_UrlRewriting::isActived()) {
+		if (self::$coreConfig['urlRewriting']) {
 			$buffer = ob_get_contents();
 			ob_end_clean();
 			Core_UrlRewriting::displayAll($buffer);
