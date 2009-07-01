@@ -179,18 +179,23 @@ class Core_Main {
 		// Configure la page demandé
 		$this->getUrl();
 		
+		// Chargement du moteur de traduction
+		Core_Loader::classLoader("Core_Translate");
+		Core_Translate::setLanguage();
+		
+		Core_Loader::classLoader("Libs_Captcha");
+		
 		//$this->openCompression();
 		
 		// Routine du cache
 		Core_CacheBuffer::valideCacheBuffer();
 		
 		// AFFICHAGE -- A SUPPRIMER
-		
 		$libsMakeStyle = new Libs_MakeStyle();
 		$libsMakeStyle->assign("test", "Template d'essai activé");
 		$libsMakeStyle->displayDebug("index.tpl");
 		// AFFICHAGE -- A SUPPRIMER
-		
+		echo self::$module;
 		// Affichage des exceptions
 		Core_Exception::displayException();
 		
@@ -247,14 +252,14 @@ class Core_Main {
 		
 		$layout = $this->checkVariable("layout");
 		
-		if ($layout != "default" || $layout != "none") {
+		if ($layout != "default" && $layout != "none") {
 			$layout = "default";
 		}
 		
 		// Vérification de la page courante
-		if ($module != "" 
-				&& (!is_dir(TR_ENGINE_DIR . "/modules/" . $module)
-				|| !is_file(TR_ENGINE_DIR . "/modules/" . $module . "/" . $page . ".php"))) {
+		if (($module != "" && !$page && !is_dir(TR_ENGINE_DIR . "/modules/" . $module))
+				|| ($module != "" && $page != "" && !is_file(TR_ENGINE_DIR . "/modules/" . $module . "/" . $page . ".php"))
+				|| (!$module)) {
 			// Afficher une erreur 404
 			Core_Exception::setMinorError("404 FILE NOT FOUND!");
 			$module = self::$coreConfig['defaultMod'];
@@ -265,7 +270,14 @@ class Core_Main {
 		// Assignation et vérification du template
 		Core_Loader::classLoader("Libs_MakeStyle");
 		$template = $this->checkVariable(Core_Session::$userTemplate, false);
+		$template = (!$template) ? self::$coreConfig['defaultTemplate'] : $template;
 		Libs_MakeStyle::getTemplateUsedDir($template);
+		
+		// Injection des informations
+		self::$module = $module;
+		self::$page = $page;
+		self::$view = $view;
+		self::$layout = $layout;
 	}
 	
 	/**

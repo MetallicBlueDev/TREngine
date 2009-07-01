@@ -42,7 +42,8 @@ class Core_CacheBuffer {
 	protected static $sectionDir = array(
 		"tmp" => "tmp",
 		"log" => "tmp/log",
-		"sessions" => "tmp/sessions"
+		"sessions" => "tmp/sessions",
+		"lang" => "tmp/lang"
 	);
 	
 	/**
@@ -387,16 +388,16 @@ class Core_CacheBuffer {
 			
 			if (self::$modeActived['php']) {
 				// Démarrage du gestionnaire de fichier
-				Core_Loader::classLoader("Exec_FileManager");
+				Core_Loader::classLoader("Libs_FileManager");
 				$execProtocol = new Exec_FileManager();
 			} else if (self::$modeActived['ftp']) {
 				// Démarrage du gestionnaire FTP
-				Core_Loader::classLoader("Exec_FtpManager");
+				Core_Loader::classLoader("Libs_FtpManager");
 				$execProtocol = new Exec_FtpManager();
 				$execProtocol->setFtp(self::$ftp);
 			} else if (self::$modeActived['sftp']) {
 				// Démarrage du gestionnaire SFTP
-				Core_Loader::classLoader("Exec_SftpManager");
+				Core_Loader::classLoader("Libs_SftpManager");
 				$execProtocol = new Exec_SftpManager();
 				$execProtocol->setFtp(self::$ftp);
 			} else {
