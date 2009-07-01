@@ -149,6 +149,11 @@ class Core_Secure {
 		 * Version php sous forme 5.2.9.2
 		 */
 		// TR_ENGINE_PHP_VERSION est définie dans le fichier "phpversion.inc.php"
+		
+		/**
+		 * Le système d'exploitation qui execute TR ENGINE
+		 */
+		define("TR_ENGINE_PHP_OS", strtolower(substr(PHP_OS, 0, 3)));
 	}
 	
 	

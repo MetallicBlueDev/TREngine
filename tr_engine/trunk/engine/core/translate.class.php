@@ -2,8 +2,25 @@
 
 class Core_Translate {
 	
+	/**
+	 * Langue utilisé actuellement
+	 * 
+	 * @var String
+	 */
 	private static $currentLanguage = "";
 	
+	/**
+	 * Extension de la langue utilisé
+	 * 
+	 * @var String
+	 */
+	private static $currentLanguageExtension = "";
+	
+	/**
+	 * Liste des differentes langues
+	 * 
+	 * @var array
+	 */
 	private static $languageList = array(
 		"aa" => "Afar",
 		"ab" => "Abkhazian",
@@ -177,26 +194,56 @@ class Core_Translate {
 		if ($userLanguage != "") {
 			$language = strtolower(trim($userLanguage));
 		} else {
-			// Recherche de la langue du client
-			$languageClient = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-			$languageClient = strtolower(substr(trim($languageClient[0]), 0, 2));
-			
-			// Recherche de l'URL
-			if (!defined("TR_ENGINE_URL")) $url = $_SERVER["SERVER_NAME"];
-			else $url = TR_ENGINE_URL;
-			
-			// Recherche de l'extension de URL
-			preg_match('@^(?:http://)?([^/]+)@i', $url, $matches);
-			preg_match('/[^.]+\.[^.]+$/', $matches[1], $matches);
-			preg_match('/[^.]+$/', $matches[0], $languageExtension);
-			
-			if (self::$languageList[$languageClient] != "") $language = strtolower(trim($languageList[$languageClient]));
-			else if ($language_list[$language_selector] != "") $language = strtolower(trim($languageList[$languageExtension]));
+			// Recherche de l'extension de la langue
+			self::setCurrentLanguageExtension();
+			// Langue trouvée
+			$language = strtolower(trim($languageList[self::$currentLanguageExtension]));
 		}
 		
+		// Validation du langage courant
 		if (self::isValid($language)) self::$currentLanguage = $language;
 		else if (self::isValid(Core_Main::$coreConfig['defaultLanguage'])) self::$currentLanguage = Core_Main::$coreConfig['defaultLanguage'];
 		else self::$currentLanguage = "english";
+		
+		// Formate l'heure local
+		if (self::$currentLanguage == "french" && TR_ENGINE_PHP_OS == "win") {
+			setlocale(LC_TIME, "french");
+		} elseif(self::$currentLanguage == "french" && TR_ENGINE_PHP_OS == "BSD") {
+			setlocale(LC_TIME, "fr_FR.ISO8859-1");
+		} elseif(self::$currentLanguage == "french") {
+			setlocale(LC_TIME, 'fr_FR');
+		} else {
+			if (!setlocale(LC_TIME, $language)) {
+				if (!self::$currentLanguageExtension) self::setCurrentLanguageExtension();
+				setlocale(LC_TIME, strtolower(self::$currentLanguageExtension) . "_" . strtoupper(self::$currentLanguageExtension));
+			}
+		}
+		
+	}
+	
+	/**
+	 * Recherche l'extension de la langue du client
+	 * a partir du client ou de l'extension du serveur
+	 */
+	private static function setCurrentLanguageExtension() {
+		// Recherche de la langue du client
+		$languageClient = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+		$languageClient = strtolower(substr(trim($languageClient[0]), 0, 2));
+		
+		// Recherche de l'URL
+		if (!defined("TR_ENGINE_URL")) $url = $_SERVER["SERVER_NAME"];
+		else $url = TR_ENGINE_URL;
+		
+		// Recherche de l'extension de URL
+		preg_match('@^(?:http://)?([^/]+)@i', $url, $matches);
+		preg_match('/[^.]+\.[^.]+$/', $matches[1], $matches);
+		preg_match('/[^.]+$/', $matches[0], $languageExtension);
+		
+		if (self::$languageList[$languageClient] != "") {
+			self::$currentLanguageExtension = $languageClient;
+		} else if ($language_list[$language_selector] != "") {
+			self::$currentLanguageExtension = $languageExtension;
+		}
 	}
 	
 	/**
