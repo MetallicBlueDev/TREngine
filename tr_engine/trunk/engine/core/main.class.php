@@ -18,16 +18,45 @@ class Core_Main {
 	public static $coreConfig = array();
 	
 	/**
-	 * Gestionnaire des sessions
+	 * Nom du module courant
+	 * 
+	 * @var String
 	 */
-	private $coreSession;
+	public static $module = "";
 	
+	/**
+	 * Nom de la page courante
+	 * 
+	 * @var String
+	 */
+	public static $page = "";
+	
+	/**
+	 * Nom du viewer courant
+	 * 
+	 * @var String
+	 */
+	public static $view = "";
+	
+	/**
+	 * Mode de mise en page courante
+	 * default : affichage normale et complet
+	 * minimal : affichage minimum, uniquement la page cible
+	 * 
+	 * @var String
+	 */
+	public static $layout = "";
+	
+	/**
+	 * Préparation TR ENGINE
+	 */
 	public function __construct() {
 		$this->starter();
 	}
 	
 	/**
-	 * Capture du fichier de configuration
+	 * Procédure de préparation du moteur
+	 * Une étape avant le démarrage réel
 	 */
 	private function starter() {
 		// Vérification de la version PHP
@@ -132,6 +161,9 @@ class Core_Main {
 		}
 	}
 	
+	/**
+	 * Démarrage TR ENGINE
+	 */
 	public function start() {
 		// Gestionnaire des cookie
 		Core_Loader::classLoader("Exec_Cookie");
@@ -142,7 +174,7 @@ class Core_Main {
 		
 		// Chargement des sessions
 		Core_Loader::classLoader("Core_Session");
-		$this->coreSession = new Core_Session();
+		Core_Session::getInstance();
 		
 		// Configure la page demandé
 		$this->getUrl();
@@ -153,7 +185,7 @@ class Core_Main {
 		Core_CacheBuffer::valideCacheBuffer();
 		
 		// AFFICHAGE -- A SUPPRIMER
-		Core_Loader::classLoader("Libs_MakeStyle");
+		
 		$libsMakeStyle = new Libs_MakeStyle();
 		$libsMakeStyle->assign("test", "Template d'essai activé");
 		$libsMakeStyle->displayDebug("index.tpl");
@@ -203,7 +235,62 @@ class Core_Main {
 	/**
 	 * Récupere les informations de l'url relatif a la page ciblé
 	 */
-	private function getUrl() {
+	private function getUrl() {				
+		// Assignation et vérification du module
+		$module = $this->checkVariable("mod");
+		
+		// Assignation et vérification de la page
+		$page = $this->checkVariable("page");
+		
+		// Assignation et vérification de fonction view
+		$view = $this->checkVariable("view");
+		
+		$layout = $this->checkVariable("layout");
+		
+		if ($layout != "default" || $layout != "none") {
+			$layout = "default";
+		}
+		
+		// Vérification de la page courante
+		if ($module != "" 
+				&& (!is_dir(TR_ENGINE_DIR . "/modules/" . $module)
+				|| !is_file(TR_ENGINE_DIR . "/modules/" . $module . "/" . $page . ".php"))) {
+			// Afficher une erreur 404
+			Core_Exception::setMinorError("404 FILE NOT FOUND!");
+			$module = self::$coreConfig['defaultMod'];
+			$page = "";
+			$view = "";
+		}
+		
+		// Assignation et vérification du template
+		Core_Loader::classLoader("Libs_MakeStyle");
+		$template = $this->checkVariable(Core_Session::$userTemplate, false);
+		Libs_MakeStyle::getTemplateUsedDir($template);
+	}
+	
+	/**
+	 * Récupère, analyse et vérifie une variable URL
+	 * 
+	 * @param $variableName
+	 * @return String
+	 */
+	private function checkVariable($variable, $search = true) {
+		// Recuperation de la variable
+		if ($search) {
+			if (isset($_GET[$variable]) && $_GET[$variable] != "") $variableContent = $_GET[$variable];
+			else if (isset($_POST[$variable]) && $_POST[$variable] != "") $variableContent = $_POST[$variable];
+			else $variableContent = "";
+		} else {
+			$variableContent = $variableName;
+		}
+		
+		// Nettoyage de la variable
+		if ($variableContent != "") $variableContent = trim($variableContent);
+		
+		if (preg_match("/(\.\.|http:|ftp:)/", $variableContent)) {
+			$variableContent = "";
+		}
+		return $variableContent;
 	}
 	
 	/**

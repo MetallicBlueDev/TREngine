@@ -13,10 +13,14 @@ Core_Secure::getInstance();
 // Inclusion du chargeur
 require("engine/core/loader.class.php");
 
-// Démarrage du moteur
+// Chargement de la classe principal
 Core_Loader::classLoader("Core_Main");
-$coreMain = new Core_Main();
-$coreMain->start();
+
+// Préparation du moteur
+$TR_ENGINE = new Core_Main();
+
+// Démarrage du moteur
+$TR_ENGINE->start();
 
 
 ?>

@@ -378,7 +378,7 @@ class Core_CacheBuffer {
 				
 				
 			/**
-			 * TODO Détection du mode a utiliser
+			 * TODO code sur la détection du mode a utiliser a faire
 			 * Parametrage du gestionnaire
 			 * Détection du mode a utiliser
 			 * Mode PHP, utilisation des fonctions classique PHP

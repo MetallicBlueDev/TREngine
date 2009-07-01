@@ -14,32 +14,37 @@ if (preg_match("/makestyle.class.php/ie", $_SERVER['PHP_SELF'])) {
 class Libs_MakeStyle {
 	
 	/**
-	 * Dossier contenant le cache
-	 */
-	private static $cacheDir = "tmp/templates";
-	
-	/**
 	 * Dossier contenant les templates
+	 * 
+	 * @var String
 	 */ 
 	private static $templatesDir = "templates";
 	
 	/**
 	 * Nom du dossier du template utilisé
+	 * 
+	 * @var String
 	 */ 
 	private static $templateUsedDir = "default";
 	
 	/**
 	 * Nom du fichier template
+	 * 
+	 * @var String
 	 */ 
 	private $templateName;
 	
 	/**
 	 * Variables assignées
+	 * 
+	 * @var array
 	 */ 
 	private $templateVars = array();
 	
 	/**
 	 * Indique si l'instance courante est en mode debug
+	 * 
+	 * @var boolean
 	 */
 	private $debugMode = false;
 	
@@ -51,13 +56,12 @@ class Libs_MakeStyle {
 		// Mode normale
 		$this->debugMode = false;
 		
-		// Si le nom du template est déjà précisé
-		if ($templateName != "") $this->templateName = $templateName;
+		// Si le nom du template est précisé a la construction
+		if ($templateName != "") {
+			$this->templateName = $templateName;
+		}
 		
-		if (!self::$cacheDir 
-				|| self::$cacheDir == "/"
-				|| !self::$templatesDir
-				|| self::$templatesDir == "/") {
+		if (!self::$templatesDir || !self::$templateUsedDir) {
 			Core_Secure::getInstance()->debug("makeStyleConfig");
 		}
 	}
@@ -149,21 +153,14 @@ class Libs_MakeStyle {
 	}
 	
 	/**
-	 * Configure le dossier cache du template
-	 * 
-	 * @param $cacheDir String
-	 */
-	public static function setCacheDir($cacheDir) {
-		self::$cacheDir = $cacheDir;
-	}
-	
-	/**
 	 * Configure le dossier contenant les templates
 	 * 
 	 * @param $templatesDir String
 	 */
 	public static function setTemplatesDir($templatesDir) {
-		self::$templatesDir = $templatesDir;
+		if (is_dir(TR_ENGINE_DIR . "/" . $templatesDir)) {
+			self::$templatesDir = $templatesDir;
+		}
 	}
 	
 	/**
@@ -172,15 +169,9 @@ class Libs_MakeStyle {
 	 * @param $templateUsedDir String
 	 */
 	public static function setTemplateUsedDir($templateUsedDir) {
-		self::$templateUsedDir = $templateUsedDir;
-	}
-	
-	/**
-	 * Retourne le dossier du cache configuré
-	 * @return String
-	 */
-	public static function getCacheDir() {
-		return self::$cacheDir;
+		if (is_dir(TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . $templateUsedDir)) {
+			self::$templateUsedDir = $templateUsedDir;
+		}		
 	}
 	
 	/**

@@ -647,7 +647,7 @@ class Exec_FtpManager {
 					// Envoie de la commande
 					if ($overWrite) {
 						$this->setCommand("STOR " . $this->getRootPath($path), array (150, 125));
-					} else {// TODO verifier la réponse du serveur
+					} else {// TODO verifier le code réponse du serveur (150 et 125)
 						$this->setCommand("APPE " . $this->getRootPath($path), array (150, 125));
 					}
 					

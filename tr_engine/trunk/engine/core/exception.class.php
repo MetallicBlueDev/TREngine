@@ -14,11 +14,24 @@ class Core_Exception {
 	
 	/**
 	 * Tableau contenant toutes les exceptions internes rencontrées
+	 * Destiné au developpeur
+	 * 
+	 * @var array
 	 */
 	private static $exception = array();
 	
 	/**
+	 * Tableau contenant toutes les erreurs mineurs rencontrées
+	 * Destiné au client
+	 * 
+	 * @var array
+	 */
+	private static $minorError = array();
+	
+	/**
 	 * Activer l'écrire dans une fichier log
+	 * 
+	 * @var boolean
 	 */
 	private static $writeLog = true;
 	
@@ -33,12 +46,32 @@ class Core_Exception {
 	}
 	
 	/**
-	 * Ajouter une nouvelle exception
-	 * @param String $msg
+	 * Ajoute une nouvelle exception
+	 * 
+	 * @param $msg
 	 */
 	public static function setException($msg) {
+		$msg = strtolower($msg);
 		$msg[0] = strtoupper($msg[0]);
 		self::$exception[] = date('Y-m-d H:i:s') . " : " . $msg . ".";
+	}
+	
+	/**
+	 * Ajoute une nouvelle erreur mineur
+	 * 
+	 * @param $msg
+	 */
+	public static function setMinorError($msg) {
+		self::$minorError[] = $msg;
+	}
+	
+	/**
+	 * Retourne le tableau d'erreur mineur
+	 * 
+	 * @return array string
+	 */
+	public static function getMinorError() {
+		return self::$minorError;
 	}
 	
 	/**
@@ -62,11 +95,12 @@ class Core_Exception {
 	/**
 	 * Capture les exceptions et les retournes en chaine de caractère
 	 * 
+	 * @param $var array
 	 * @return String
 	 */
-	private static function linearizeException() {
+	private static function linearize($var) {
 		$content = "";
-		foreach (self::$exception as $msg) {
+		foreach ($var as $msg) {
 			$content .= $content . $msg . "\n";
 		}
 		return $content;
@@ -90,7 +124,7 @@ class Core_Exception {
 					echo "*";
 				}
 			}
-			$exceptions = str_replace("\n", "<br />", self::linearizeException());
+			$exceptions = str_replace("\n", "<br />", self::linearize(self::$exception));
 			echo "<br />" . $exceptions;
 		} else {
 			echo "No exception detected.";
@@ -106,7 +140,7 @@ class Core_Exception {
 			// Positionne dans le cache
 			Core_CacheBuffer::setSectionName("log");
 			// Ecriture a la suite du cache
-			Core_CacheBuffer::writingCache("exception_" . date('Y-m-d'') . ".log.php", self::linearizeException(), false);
+			Core_CacheBuffer::writingCache("exception_" . date('Y-m-d') . ".log.php", self::linearize(self::$exception), false);
 		}
 	}
 }
