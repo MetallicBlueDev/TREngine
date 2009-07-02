@@ -17,6 +17,13 @@ class Core_Translate {
 	private static $currentLanguageExtension = "";
 	
 	/**
+	 * Memorise les fichiers déjà traduit
+	 * 
+	 * @var array
+	 */
+	private static $translated = array();
+	
+	/**
 	 * Liste des differentes langues
 	 * 
 	 * @var array
@@ -188,33 +195,48 @@ class Core_Translate {
 	 * @param string $user_langue : langue via cookie du client
 	 */
 	public static function setLanguage() {
-		// Langage du client
-		$userLanguage = Core_Session::$userLanguage;
+		// Langue finale
+		$language = "";
+		// Langage du client via le cookie de session
+		$userLanguage = strtolower(trim(Core_Session::$userLanguage));
 		
-		if ($userLanguage != "") {
-			$language = strtolower(trim($userLanguage));
+		if (self::isValid($userLanguage)) {
+			// Langue du client via cookie valide
+			$language = $userLanguage;
 		} else {
 			// Recherche de l'extension de la langue
 			self::setCurrentLanguageExtension();
-			// Langue trouvée
-			$language = strtolower(trim($languageList[self::$currentLanguageExtension]));
+			
+			// Langue trouvée via la recherche
+			$language = strtolower(trim(self::$languageList[self::$currentLanguageExtension]));
+			
+			// Si la langue trouvé en invalide
+			if (!self::isValid($language)) {
+				// Utilisation de la langue par défaut du site
+				$language = Core_Main::$coreConfig['defaultLanguage'];
+				
+				// Malheureusement la langue par défaut est aussi invalide
+				if (!self::isValid($language)) {
+					$language = "english";
+				}
+			}
 		}
-		
-		// Validation du langage courant
-		if (self::isValid($language)) self::$currentLanguage = $language;
-		else if (self::isValid(Core_Main::$coreConfig['defaultLanguage'])) self::$currentLanguage = Core_Main::$coreConfig['defaultLanguage'];
-		else self::$currentLanguage = "english";
+		// Langue finale retenu
+		self::$currentLanguage = $language;
 		
 		// Formate l'heure local
-		if (self::$currentLanguage == "french" && TR_ENGINE_PHP_OS == "win") {
+		if (self::$currentLanguage == "french" && TR_ENGINE_PHP_OS == "WIN") {
 			setlocale(LC_TIME, "french");
-		} elseif(self::$currentLanguage == "french" && TR_ENGINE_PHP_OS == "BSD") {
+		} else if (self::$currentLanguage == "french" && TR_ENGINE_PHP_OS == "BSD") {
 			setlocale(LC_TIME, "fr_FR.ISO8859-1");
-		} elseif(self::$currentLanguage == "french") {
+		} else if (self::$currentLanguage == "french") {
 			setlocale(LC_TIME, 'fr_FR');
 		} else {
-			if (!setlocale(LC_TIME, $language)) {
+			// Tentative de formatage via le nom de la langue
+			if (!setlocale(LC_TIME, self::$currentLanguage)) {
+				// Si la recherche n'a pas été faite, on la lance maintenant
 				if (!self::$currentLanguageExtension) self::setCurrentLanguageExtension();
+				// Dernère tentative de formatage sous forme "fr_FR"
 				setlocale(LC_TIME, strtolower(self::$currentLanguageExtension) . "_" . strtoupper(self::$currentLanguageExtension));
 			}
 		}
@@ -241,8 +263,8 @@ class Core_Translate {
 		
 		if (self::$languageList[$languageClient] != "") {
 			self::$currentLanguageExtension = $languageClient;
-		} else if ($language_list[$language_selector] != "") {
-			self::$currentLanguageExtension = $languageExtension;
+		} else if ($language_list[$languageExtension[0]] != "") {
+			self::$currentLanguageExtension = $languageExtension[0];
 		}
 	}
 	
@@ -258,12 +280,30 @@ class Core_Translate {
 	}
 	
 	/**
+	 * Retourne le vrai chemin vers le fichier de langue
+	 * 
+	 * @param $pathLang
+	 * @return String
+	 */
+	private static function getPath($pathLang) {
+		if ($pathLang != "" && substr($pathLang, -1) != "/") $pathLang .= "/";
+		return $pathLang . "lang/" . self::$currentLanguage . ".lang.php";
+	}
+	
+	/**
 	 * Traduction de la page via le fichier
 	 * 
 	 * @param string $path_lang : chemin du fichier de traduction
 	 */
-	public static function translate($pathLang) {
-		if (is_file(TR_ENGINE_DIR . "/" . $pathLang)) {
+	public static function translate($pathLang = "") {
+		// Capture du chemin vers le fichier
+		$pathLang = self::getPath($pathLang);
+		
+		// Fichier déjà traduit
+		if (self::$translated[$pathLang] != "") return null;
+		
+		// Vérification du fichier de langue
+		if (is_file(TR_ENGINE_DIR . "/" . $pathLang)) {			
 			// Préparation du Path et du contenu
 			$langCacheFile = str_replace("/", "_", $pathLang);
 			$content = "";
@@ -295,6 +335,9 @@ class Core_Translate {
 			
 			// Traduction disponible
 			if ($data != "") {
+				// Ajoute le fichier traduit dans le tableau
+				self::$translated[$pathLang] = "1";
+				
 				ob_start();
 				print eval(" $data ");
 				$langDefine = ob_get_contents();
@@ -304,7 +347,14 @@ class Core_Translate {
 		}
 	}
 	
-	private static function entitiesTranslate() {
+	/**
+	 * Conversion des caratères spéciaux en entitiées UTF-8
+	 * Ajout d'antislashes pour utilisation dans le cache
+	 * 
+	 * @param String
+	 * @return String
+	 */
+	private static function entitiesTranslate($text) {
 		$text = self::entitiesUtf8($text);
 		$text = addslashes($text);
 		return $text;

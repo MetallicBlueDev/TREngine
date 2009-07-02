@@ -176,35 +176,50 @@ class Core_Main {
 		Core_Loader::classLoader("Core_Session");
 		Core_Session::getInstance();
 		
-		// Configure la page demandé
-		$this->getUrl();
+		// Configure les informations de page demandées
+		$this->launchUrl();
 		
 		// Chargement du moteur de traduction
 		Core_Loader::classLoader("Core_Translate");
 		Core_Translate::setLanguage();
+		Core_Translate::translate();
 		
-		Core_Loader::classLoader("Libs_Captcha");
+		// Vérification des bannissements
+		Core_Loader::classLoader("Core_BlackBan");
+		Core_BlackBan::checkBlackBan();
 		
+		// TODO a décommenté
 		//$this->openCompression();
 		
-		// Routine du cache
-		Core_CacheBuffer::valideCacheBuffer();
+		// Comportement different en fonction du type de client
+		if (!Core_BlackBan::isBlackUser()) {
+			// Chargement du système de validation par code
+			Core_Loader::classLoader("Libs_Captcha");
+			
+			// Configure le module
+			$this->launchModule();
+					
+			// Assemble tous les messages d'erreurs dans un fichier log
+			Core_Exception::logException();
+			// Validation du cache / Routine du cache
+			Core_CacheBuffer::valideCacheBuffer();
+		} else {
+			Core_BlackBan::displayBlackPage();
+		}
 		
+		// Affichage des exceptions
+		Core_Exception::displayException();
+		
+		// TODO a décommenté
+		//$this->closeCompression();
+	}
+	
+	private function launchModule() {
 		// AFFICHAGE -- A SUPPRIMER
 		$libsMakeStyle = new Libs_MakeStyle();
 		$libsMakeStyle->assign("test", "Template d'essai activé");
 		$libsMakeStyle->displayDebug("index.tpl");
 		// AFFICHAGE -- A SUPPRIMER
-		echo self::$module;
-		// Affichage des exceptions
-		Core_Exception::displayException();
-		
-		//$this->closeCompression();
-				
-		// Assemble tous les messages d'erreurs dans un fichier log
-		Core_Exception::logException();
-		// Validation du cache
-		Core_CacheBuffer::valideCacheBuffer();
 	}
 	
 	/**
@@ -240,7 +255,7 @@ class Core_Main {
 	/**
 	 * Récupere les informations de l'url relatif a la page ciblé
 	 */
-	private function getUrl() {				
+	private function launchUrl() {				
 		// Assignation et vérification du module
 		$module = $this->checkVariable("mod");
 		
@@ -250,8 +265,16 @@ class Core_Main {
 		// Assignation et vérification de fonction view
 		$view = $this->checkVariable("view");
 		
+		// Assignation et vérification de fonction layout
 		$layout = $this->checkVariable("layout");
 		
+		// Vérification de la langue du client
+		Core_Session::$userLanguage = $this->checkVariable(Core_Session::$userLanguage, false);
+		
+		// Vérification du template du client
+		Core_Session::$userTemplate = $this->checkVariable(Core_Session::$userTemplate, false);
+		
+		// Configuration du layout
 		if ($layout != "default" && $layout != "none") {
 			$layout = "default";
 		}
@@ -268,9 +291,8 @@ class Core_Main {
 		}
 		
 		// Assignation et vérification du template
-		Core_Loader::classLoader("Libs_MakeStyle");
-		$template = $this->checkVariable(Core_Session::$userTemplate, false);
-		$template = (!$template) ? self::$coreConfig['defaultTemplate'] : $template;
+		$template = (!Core_Session::$userTemplate) ? self::$coreConfig['defaultTemplate'] : Core_Session::$userTemplate;
+		Core_Loader::classLoader("Libs_MakeStyle");		
 		Libs_MakeStyle::getTemplateUsedDir($template);
 		
 		// Injection des informations

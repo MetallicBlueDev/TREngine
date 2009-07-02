@@ -153,7 +153,7 @@ class Core_Secure {
 		/**
 		 * Le système d'exploitation qui execute TR ENGINE
 		 */
-		define("TR_ENGINE_PHP_OS", strtolower(substr(PHP_OS, 0, 3)));
+		define("TR_ENGINE_PHP_OS", strtoupper(substr(PHP_OS, 0, 3)));
 	}
 	
 	
