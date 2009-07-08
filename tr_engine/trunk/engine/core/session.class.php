@@ -81,6 +81,13 @@ class Core_Session {
 	 * @var String
 	 */
 	public static $userTemplate = "";
+	
+	/**
+	 * Adresse Ip du client bannis
+	 * 
+	 * @var String
+	 */
+	public static $userIpBan = "";
 
 	/**
 	 * Nom des cookies
@@ -91,7 +98,8 @@ class Core_Session {
 		"USER" => "_user_id",
 		"SESSION" => "_sess_id",
 		"LANGUE" => "_user_langue",
-		"TEMPLATE" => "_user_template"
+		"TEMPLATE" => "_user_template",
+		"BLACKBAN" => "_user_ip_ban"
 	);
 	
 	/**
@@ -189,7 +197,7 @@ class Core_Session {
 				)
 			);
 			// Cookie de langue
-			$this->user['userLanguage'] = Exec_Crypt::md5Decrypt(
+			$userLanguage = Exec_Crypt::md5Decrypt(
 				Exec_Cookie::getCookie(
 					Exec_Crypt::md5Encrypt(
 						$this->cookieName['LANGUE'],
@@ -198,10 +206,19 @@ class Core_Session {
 				)
 			);
 			// Cookie de langue
-			$this->user['userTemplate'] = Exec_Crypt::md5Decrypt(
+			$userTemplate = Exec_Crypt::md5Decrypt(
 				Exec_Cookie::getCookie(
 					Exec_Crypt::md5Encrypt(
 						$this->cookieName['TEMPLATE'],
+						$this->getSalt()
+					), $this->getSalt()
+				)
+			);
+			// Cookie de l'IP BAN voir Core_BlackBan
+			$userIpBan = Exec_Crypt::md5Decrypt(
+				Exec_Cookie::getCookie(
+					Exec_Crypt::md5Encrypt(
+						$this->cookieName['BLACKBAN'],
 						$this->getSalt()
 					), $this->getSalt()
 				)
@@ -234,26 +251,30 @@ class Core_Session {
 					self::$userName = $sessions['userName'];
 					self::$userRang = $sessions['userRang'];
 					self::$sessionId = $sessions['sessionId'];
-					self::$userLanguage = $sessions['userLanguage'];
-					self::$userTemplate = $sessions['userTemplate'];
+					self::$userLanguage = ($userLanguage != "") ? $userLanguage : $sessions['userLanguage'];
+					self::$userTemplate = ($userTemplate != "") ? $userTemplate : $sessions['userTemplate'];
+					self::$userIpBan = $userIpBan;
 				}
 		    } else if ($userId != "") {
 				// Si plus de fichier cache, on tente de retrouver le client
 				$sql = Core_Sql::getInstance();
 				$sql->select(
 					Core_Table::$USERS_TABLE,
-					array("user_name", "user_rang"),
+					array("user_name", "user_rang", "user_language", "user_template"),
 					array("user_id = '" . $userId . "'")
 				);
 				
 				if ($sql->affectedRows() > 0) {
 					// Si le client a été trouvé, on recupere les informations
-					list($userName, $userRang) = $sql->fetchArray();
+					list($userName, $userRang, $userLanguage, $userTemplate) = $sql->fetchArray();
 					
 					// Injection des informations du client
 					self::$userId = $userId;
 					self::$userName = $userName;
 					self::$userRang = $userRang;
+					self::$userLanguage = $userLanguage;
+					self::$userTemplate = $userTemplate;
+					self::$userIpBan = $userIpBan;
 					
 					// Mise à jour de derniere connexion
 					$this->updateLastConnect();
@@ -266,6 +287,20 @@ class Core_Session {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Suppression de l'Ip bannie
+	 */
+	public function deleteUserIpBan() {
+		self::$userIpBan = "";
+		
+		Exec_Cookie::destroyCookie(
+			Exec_Crypt::md5Encrypt(
+				$this->cookieName['BLACKBAN'],
+				$this->getSalt()
+			)
+		);
 	}
 	
 	/**
@@ -308,6 +343,7 @@ class Core_Session {
 		self::$sessionId = "";
 		self::$userLanguage = "";
 		self::$userTemplate = "";
+		self::$userIpBan = "";
 	}
 	
 	/**
@@ -372,6 +408,9 @@ class Core_Session {
 		
 		// Destruction des éventuelles cookies
 		foreach ($this->cookieName as $key => $value) {
+			// On évite de supprimer le cookie de bannissement
+			if ($key == "BLACKBAN") continue;
+			
 			Exec_Cookie::destroyCookie(
 				Exec_Crypt::md5Encrypt(
 					$this->cookieName[$key],
@@ -389,25 +428,27 @@ class Core_Session {
 	 * @param $auto Connexion automatique
 	 * @return boolean ture succès
 	 */
-	public function startConnection($name, $pass, $auto) {
+	public function startConnection($userName, $userPass, $auto) {
 		// Arrête de la session courante si il y en a une
 		$this->stopConnection();
 		$sql = Core_Sql::getInstance();
 		
 		$sql->select(
 			Core_Table::$USERS_TABLE,
-			array("user_id", "user_rang"),
-			array("user_name = '" . $name . "'", "&& user_pass = '" . md5($pass) . "'")
+			array("user_id", "user_rang", "user_language", "user_template"),
+			array("user_name = '" . $userName . "'", "&& user_pass = '" . md5($userPass) . "'")
 		);
 		
 		if ($sql->affectedRows() > 0) {
 			// Si le client a été trouvé, on recupere les informations
-			list($userId, $rang) = $sql->fetchArray();
+			list($userId, $userRang, $userLanguage, $userTemplate) = $sql->fetchArray();
 			
-			// Injection des informations
+			// Injection des informations du client
 			self::$userId = $userId;
-			self::$userName = $name;
-			self::$userRang = $rang;
+			self::$userName = $userName;
+			self::$userRang = $userRang;
+			self::$userLanguage = $userLanguage;
+			self::$userTemplate = $userTemplate;
 			
 			// Tentative d'ouverture de session
 			return $this->sessionOpen($auto);

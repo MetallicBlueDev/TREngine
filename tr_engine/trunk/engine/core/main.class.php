@@ -179,6 +179,12 @@ class Core_Main {
 		// Configure les informations de page demandées
 		$this->launchUrl();
 		
+		// Chargement du convertiseur d'entities
+		Core_Loader::classLoader("Exec_Entities");
+		
+		// Chargement du traitement HTML
+		Core_Loader::classLoader("Core_TextEditor");
+		
 		// Chargement du moteur de traduction
 		Core_Loader::classLoader("Core_Translate");
 		Core_Translate::setLanguage();
@@ -193,6 +199,9 @@ class Core_Main {
 		
 		// Comportement different en fonction du type de client
 		if (!Core_BlackBan::isBlackUser()) {
+			// Chargement des blocks
+			Core_Loader::classLoader("Libs_Block");
+			
 			// Chargement du système de validation par code
 			Core_Loader::classLoader("Libs_Captcha");
 			
@@ -273,6 +282,9 @@ class Core_Main {
 		
 		// Vérification du template du client
 		Core_Session::$userTemplate = $this->checkVariable(Core_Session::$userTemplate, false);
+		
+		// Vérification des infos IP BAN pour Core_BlackBan
+		Core_Session::$userIpBan = $this->checkVariable(Core_Session::$userIpBan, false);
 		
 		// Configuration du layout
 		if ($layout != "default" && $layout != "none") {

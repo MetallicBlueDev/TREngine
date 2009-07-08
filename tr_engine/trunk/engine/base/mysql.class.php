@@ -36,6 +36,10 @@ class Base_MySql extends Core_Sql {
 		}
 	}
 	
+	public function __destruct() {
+		$this->connId = $this->dbDeconnect();
+	}
+	
 	/**
 	 * Etablie une connexion à la base de donnée
 	 */

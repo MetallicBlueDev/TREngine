@@ -45,6 +45,19 @@ class Core_Loader {
 	}
 	
 	/**
+	 * Chargeur de block
+	 * 
+	 * @param $block Nom ou type du block
+	 */
+	public static function blockLoader($block) {
+		try {
+			self::load($block, "block");
+		} catch (Exception $ie) {
+			Core_Secure::getInstance()->debug($ie);
+		}
+	}
+	
+	/**
 	 * Chargeur de fichier
 	 * 
 	 * @param $name Nom de la classe/ du fichier
@@ -55,7 +68,16 @@ class Core_Loader {
 		if (!self::isLoaded($name)) {
 			// Retrouve le chemin via le nom
 			$path = str_replace("_", "/", $name);
-			$path = TR_ENGINE_DIR . "/engine/" . strtolower($path) . "." . $ext . ".php";
+			
+			// Repertoire principal
+			if ($ext == "block") {
+				$directory = "block";
+			} else {
+				$directory = "engine";
+			}
+			
+			// Chemin finale
+			$path = TR_ENGINE_DIR . "/" . $directory . "/" . strtolower($path) . "." . $ext . ".php";
 			
 			if (is_file($path)) {
 				require($path);

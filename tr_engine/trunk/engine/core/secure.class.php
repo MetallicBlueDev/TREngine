@@ -311,7 +311,8 @@ class Core_Secure {
 			"makestyle" => "Error reading template.",
 			"makestyleconfig" => "Error in the configuration templates.",
 			"phpversion" => "Database file not found.",
-			"sqlpath" => "Sorry, your version of php is too bad."
+			"sqlpath" => "Sorry, your version of php is too bad.",
+			"blockside" => "Sorry, a block has an invalide position"
 		);
 		
 		if (isset($errorMessageTitle[$cmd])) {

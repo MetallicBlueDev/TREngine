@@ -20,9 +20,12 @@ class Core_Table {
 	// Nom des tables
 	public static $CONFIG_TABLE = "configs";
 	public static $USERS_TABLE = "users";
+	public static $BANNED_TABLE = "banned";
+	public static $BLOCKS_TABLE = "blocks";
 	
 	private static $tables = array(
-		"CONFIG_TABLE", "USERS_TABLE"
+		"CONFIG_TABLE", "USERS_TABLE",
+		"BANNED_TABLE", "BLOCKS_TABLE"
 	);
 	
 	/**
