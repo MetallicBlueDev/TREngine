@@ -79,8 +79,8 @@ class Base_MySql extends Core_Sql {
 	 * 
 	 * @param $Sql
 	 */
-	public function query($Sql) {
-		$this->queries = @mysql_query($Sql, $this->connId);
+	public function query($sql) {
+		$this->queries = @mysql_query($sql, $this->connId);
 		
 		if (!$this->queries) throw new Exception("sqlReq");
 	}

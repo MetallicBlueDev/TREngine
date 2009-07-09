@@ -321,6 +321,31 @@ class Core_Secure {
 			return "Stop loading.";
 		}
 	}
+	
+	/**
+	 * Récupère, analyse et vérifie une variable URL
+	 * 
+	 * @param $variableName
+	 * @return String
+	 */
+	public static function checkVariable($variable, $search = true) {
+		// Recuperation de la variable
+		if ($search) {
+			if (isset($_GET[$variable]) && $_GET[$variable] != "") $variableContent = $_GET[$variable];
+			else if (isset($_POST[$variable]) && $_POST[$variable] != "") $variableContent = $_POST[$variable];
+			else $variableContent = "";
+		} else {
+			$variableContent = $variableName;
+		}
+		
+		// Nettoyage de la variable
+		if ($variableContent != "") $variableContent = trim($variableContent);
+		
+		if (preg_match("/(\.\.|http:|ftp:)/", $variableContent)) {
+			$variableContent = "";
+		}
+		return $variableContent;
+	}
 }
 
 ?>

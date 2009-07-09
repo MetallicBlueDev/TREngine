@@ -17,17 +17,23 @@ class Libs_Block {
 	 * 
 	 * @var Libs_Block
 	 */
-	private static $block = false;
+	private static $libsBlock = false;
 	
 	/**
-	 * Blocks chargés
+	 * Blocks chargés, tableau a deux dimensions
 	 * 
 	 * @var array
 	 */
-	private $blocksLoaded = array();
+	public static $blocksConfig = array();
+	
+	/**
+	 * Blocks compilés, tableau a deux dimensions
+	 * 
+	 * @var array
+	 */
+	private $blocksCompiled = array();
 	
 	public function __construct() {
-		$this->load();
 	}
 	
 	/**
@@ -36,10 +42,10 @@ class Libs_Block {
 	 * @return Libs_Block
 	 */
 	public static function getInstance() {
-		if (!self::$block) {
-			self::$block = new self();
+		if (!self::$libsBlock) {
+			self::$libsBlock = new self();
 		}
-		return self::$block;
+		return self::$libsBlock;
 	}
 	
 	/**
@@ -73,31 +79,79 @@ class Libs_Block {
 	 * @param $content String
 	 * @return array
 	 */
-	private function arrayContent($content = "") {
-		return explode("|", $content);
+	private function arrayContent($content) {
+		if (is_array($content)) return explode("|", $content);
+		else return array();
+	}
+	
+	/**
+	 * Execute la routine block
+	 */
+	public function launch() {
+		if (Core_Main::isBlockScreen()) {
+			// Chargement de tout les blocks
+			$this->launchOneBlock();
+		} else {
+			// Chargement d'un seul block
+			$this->launchAllBlock();
+		}
 	}
 	
 	/**
 	 * Charge les blocks
 	 */
-	private function load() {
+	private function launchAllBlock() {
 		$sql = Core_Sql::getInstance();
 		$sql->select(
 			Core_Table::$BLOCKS_TABLE,
-			array("block_id", "side", "position", "title", "content", "type", "rang", "mod"),
+			array("block_id", "side", "position", "title", "content", "type", "rang", "mods"),
 			array("side > 0", "&& rang >= 0"),
 			array("side", "position")
 		);
 		
-		// Récuperation des données des blocks
-		$blocksLoaded = array();
-		while ($block = $sql->fetchArray()) {
-			$block['mod'] = $this->arrayContent($block['mod']);
+		if ($sql->affectedRows > 0) {
+			// Récuperation des données des blocks
+			while (list($block['blockId'], $block['side'], $block['position'], $block['title'], $block['content'], $block['type'], $block['rang'], $block['mods']) = $sql->fetchArray()) {
+				$block['mods'] = $this->arrayContent($block['mods']);
+				
+				if ($this->isBlock($block['type']) // Si le block existe
+						&& $this->blockActiveMod($block['mods']) // Et qu'il est actif sur la page courante
+						&& Core_Session::$userRang >= $block['rang']) { // Et que le client est assez gradé
+					$block['title'] = Exec_Entities::textDisplay($block['title']);
+					
+					$this->blocksConfig[$block['side']][] = $block;
+					$this->get($block);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Charge un block
+	 */
+	private function launchOneBlock() {
+		// Capture de la variable
+		$blockId = Core_Secure::checkVariable("block");
+		
+		if (is_numeric($blockId)) {
+			$sql = Core_Sql::getInstance();
+			$sql->select(
+				Core_Table::$BLOCKS_TABLE,
+				array("side", "position", "title", "content", "type", "rang", "mods"),
+				array("block_id = '" . $blockId . "'")
+			);
 			
-			if ($this->isBlock($block['type']) // Si le block existe
-					&& $this->blockActiveMod($block['mod']) // Et qu'il est actif sur la page courante
-					&& Core_Session::$userRang >= $block['rang']) { // Et que le client est assez gradé
-				$this->get($block);
+			if ($sql->affectedRows() > 0) {
+				$block = $sql->fetchArray();
+				$block['blockId'] = $blockId;
+				
+				if ($this->isBlock($block['type']) // Si le block existe
+						&& Core_Session::$userRang >= $block['rang']) { // Et que le client est assez gradé
+					$block['title'] = Exec_Entities::textDisplay($block['title']);
+					
+					$this->blocksConfig[$block['side']][] = $block;
+					$this->get($block);
+				}
 			}
 		}
 	}
@@ -108,25 +162,23 @@ class Libs_Block {
 	 * @param $block array
 	 */
 	private function get($block) {
-		// On prepare le contenu du block suivant le type
-		$block['title'] = Exec_Entities::textDisplay($block['title']);
 		Core_Loader::blockLoader($block['type']);
 		$functionBlockDisplay = $block['type'] . "Display";
 		
 		// Capture des données d'affichage
 		ob_start();
 		$functionBlockDisplay($block, $side);
-		$this->blocksLoaded[$block['side']][] = ob_get_contents();
+		$this->blocksCompiled[$block['side']][] = ob_get_contents();
 		ob_end_clean();
 	}
 	
 	/**
-	 * Retourne le contenu du block voulu (right/left/top/bottom)
+	 * Retourne les blocks compilés voulu (right/left/top/bottom)
 	 * 
 	 * @param $side String
 	 * @return String
 	 */
-	public function getBlock($side) {
+	public function getBlocks($side) {
 		// Recherche de la position
 		$side = strtolower($side);
 		switch ($side) {
@@ -138,10 +190,21 @@ class Libs_Block {
 		}
 		
 		$blockSide = "";
-		foreach($this->blocksLoaded[$side] as $block) {
+		foreach($this->blocksCompiled[$side] as $block) {
 			$blockSide .= $block;
 		}
 		return $blockSide;
+	}
+	
+	/**
+	 * Retourne le block compilé
+	 * 
+	 * @return String
+	 */
+	public function getBlock() {
+		foreach(self::$blocksConfig as $key => $block) {
+			return $this->blocksCompiled[$key][0];
+		}
 	}
 }
 

@@ -18,14 +18,17 @@ class Core_Table {
 	private static $prefix = "";
 	
 	// Nom des tables
-	public static $CONFIG_TABLE = "configs";
-	public static $USERS_TABLE = "users";
 	public static $BANNED_TABLE = "banned";
 	public static $BLOCKS_TABLE = "blocks";
+	public static $CONFIG_TABLE = "configs";
+	public static $MODULES_TABLE = "modules";
+	public static $USERS_TABLE = "users";
+	public static $ADMIN_USERS_TABLE = "users_admin";
 	
 	private static $tables = array(
 		"CONFIG_TABLE", "USERS_TABLE",
-		"BANNED_TABLE", "BLOCKS_TABLE"
+		"BANNED_TABLE", "BLOCKS_TABLE",
+		"MODULES_TABLE", "ADMIN_USERS_TABLE"
 	);
 	
 	/**

@@ -313,7 +313,7 @@ class Core_Translate {
 		if (self::$translated[$pathLang] != "") return null;
 		
 		// Vérification du fichier de langue
-		if (is_file(TR_ENGINE_DIR . "/" . $pathLang)) {			
+		if (is_file(TR_ENGINE_DIR . "/" . $pathLang)) {		
 			// Préparation du Path et du contenu
 			$langCacheFile = str_replace("/", "_", $pathLang);
 			$content = "";

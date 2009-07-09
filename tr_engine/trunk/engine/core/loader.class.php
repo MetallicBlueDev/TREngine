@@ -58,6 +58,19 @@ class Core_Loader {
 	}
 	
 	/**
+	 * Chargeur de module
+	 * 
+	 * @param $module Nom du module
+	 */
+	public static function moduleLoader($module) {
+		try {
+			self::load($module, "mod");
+		} catch (Exception $ie) {
+			Core_Secure::getInstance()->debug($ie);
+		}
+	}
+	
+	/**
 	 * Chargeur de fichier
 	 * 
 	 * @param $name Nom de la classe/ du fichier
@@ -71,7 +84,9 @@ class Core_Loader {
 			
 			// Repertoire principal
 			if ($ext == "block") {
-				$directory = "block";
+				$directory = "blocks";
+			} else if ($ext == "mod") {
+				$directory = "modules";
 			} else {
 				$directory = "engine";
 			}

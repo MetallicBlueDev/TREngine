@@ -18,30 +18,10 @@ class Core_Main {
 	public static $coreConfig = array();
 	
 	/**
-	 * Nom du module courant
-	 * 
-	 * @var String
-	 */
-	public static $module = "";
-	
-	/**
-	 * Nom de la page courante
-	 * 
-	 * @var String
-	 */
-	public static $page = "";
-	
-	/**
-	 * Nom du viewer courant
-	 * 
-	 * @var String
-	 */
-	public static $view = "";
-	
-	/**
 	 * Mode de mise en page courante
 	 * default : affichage normale et complet
-	 * minimal : affichage minimum, uniquement la page cible
+	 * module : affichage du module uniquement
+	 * block : affichage du block uniquement
 	 * 
 	 * @var String
 	 */
@@ -195,18 +175,31 @@ class Core_Main {
 		Core_BlackBan::checkBlackBan();
 		
 		// TODO a décommenté
-		//$this->openCompression();
+		$this->openCompression();
 		
 		// Comportement different en fonction du type de client
 		if (!Core_BlackBan::isBlackUser()) {
-			// Chargement des blocks
-			Core_Loader::classLoader("Libs_Block");
+			// Chargement du gestionnaire d'autorisation
+			Core_Loader::classLoader("Core_Acces");
 			
 			// Chargement du système de validation par code
 			Core_Loader::classLoader("Libs_Captcha");
 			
-			// Configure le module
-			$this->launchModule();
+			// Chargement des blocks
+			Core_Loader::classLoader("Libs_Block");
+			
+			if (self::isFullScreen()) {
+				Libs_Block::getInstance()->launch();
+				Libs_Module::getInstance()->launch();
+				$libsMakeStyle = new Libs_MakeStyle();
+				$libsMakeStyle->display("index.tpl");
+			} else if (self::isModuleScreen()) {
+				Libs_Module::getInstance()->launch();
+				echo Libs_Module::getModule();
+			} else if (self::isBlockScreen()) {
+				Libs_Block::getInstance()->launch();
+				echo Libs_Block::getBlock();
+			}
 					
 			// Assemble tous les messages d'erreurs dans un fichier log
 			Core_Exception::logException();
@@ -220,15 +213,7 @@ class Core_Main {
 		Core_Exception::displayException();
 		
 		// TODO a décommenté
-		//$this->closeCompression();
-	}
-	
-	private function launchModule() {
-		// AFFICHAGE -- A SUPPRIMER
-		$libsMakeStyle = new Libs_MakeStyle();
-		$libsMakeStyle->assign("test", "Template d'essai activé");
-		$libsMakeStyle->displayDebug("index.tpl");
-		// AFFICHAGE -- A SUPPRIMER
+		$this->closeCompression();
 	}
 	
 	/**
@@ -240,7 +225,7 @@ class Core_Main {
 		if (@extension_loaded('zlib') 
 				&& !@ini_get('zlib.output_compression') 
 				&& @function_exists("ob_gzhandler") 
-				&& !$GLOBALS['core']['url_rewriting']) {
+				&& !self::$coreConfig['urlRewriting']) {
 			ob_start("ob_gzhandler");
 		} else {
 			ob_start();
@@ -264,79 +249,72 @@ class Core_Main {
 	/**
 	 * Récupere les informations de l'url relatif a la page ciblé
 	 */
-	private function launchUrl() {				
+	private function launchUrl() {
+		// Assignation et vérification de fonction layout
+		$layout = strtolower(Core_Secure::checkVariable("layout"));
+		
 		// Assignation et vérification du module
-		$module = $this->checkVariable("mod");
+		$module = Core_Secure::checkVariable("mod");
 		
 		// Assignation et vérification de la page
-		$page = $this->checkVariable("page");
+		$page = Core_Secure::checkVariable("page");
 		
 		// Assignation et vérification de fonction view
-		$view = $this->checkVariable("view");
-		
-		// Assignation et vérification de fonction layout
-		$layout = $this->checkVariable("layout");
-		
-		// Vérification de la langue du client
-		Core_Session::$userLanguage = $this->checkVariable(Core_Session::$userLanguage, false);
-		
-		// Vérification du template du client
-		Core_Session::$userTemplate = $this->checkVariable(Core_Session::$userTemplate, false);
-		
-		// Vérification des infos IP BAN pour Core_BlackBan
-		Core_Session::$userIpBan = $this->checkVariable(Core_Session::$userIpBan, false);
+		$view = Core_Secure::checkVariable("view");
 		
 		// Configuration du layout
-		if ($layout != "default" && $layout != "none") {
+		if ($layout != "default" 
+				&& $layout != "block" 
+				&& $layout != "module") {
 			$layout = "default";
 		}
+		self::$layout = $layout;
 		
-		// Vérification de la page courante
-		if (($module != "" && !$page && !is_dir(TR_ENGINE_DIR . "/modules/" . $module))
-				|| ($module != "" && $page != "" && !is_file(TR_ENGINE_DIR . "/modules/" . $module . "/" . $page . ".php"))
-				|| (!$module)) {
-			// Afficher une erreur 404
-			Core_Exception::setMinorError("404 FILE NOT FOUND!");
-			$module = self::$coreConfig['defaultMod'];
-			$page = "";
-			$view = "";
-		}
+		// Création de l'instance du module
+		// Même si ce n'est pas utilisé, il vaut mieux le laisser
+		Core_Loader::classLoader("Libs_Module");	
+		Libs_Module::getInstance($module, $page, $view, $layout);
+		
+		// Vérification de la langue du client
+		Core_Session::$userLanguage = Core_Secure::checkVariable(Core_Session::$userLanguage, false);
+		
+		// Vérification du template du client
+		Core_Session::$userTemplate = Core_Secure::checkVariable(Core_Session::$userTemplate, false);
+		
+		// Vérification des infos IP BAN pour Core_BlackBan
+		Core_Session::$userIpBan = Core_Secure::checkVariable(Core_Session::$userIpBan, false);
 		
 		// Assignation et vérification du template
 		$template = (!Core_Session::$userTemplate) ? self::$coreConfig['defaultTemplate'] : Core_Session::$userTemplate;
 		Core_Loader::classLoader("Libs_MakeStyle");		
 		Libs_MakeStyle::getTemplateUsedDir($template);
-		
-		// Injection des informations
-		self::$module = $module;
-		self::$page = $page;
-		self::$view = $view;
-		self::$layout = $layout;
 	}
 	
 	/**
-	 * Récupère, analyse et vérifie une variable URL
+	 * Vérifie si l'affichage se fait en écran complet
 	 * 
-	 * @param $variableName
-	 * @return String
+	 * @return boolean true c'est en plein écran
 	 */
-	private function checkVariable($variable, $search = true) {
-		// Recuperation de la variable
-		if ($search) {
-			if (isset($_GET[$variable]) && $_GET[$variable] != "") $variableContent = $_GET[$variable];
-			else if (isset($_POST[$variable]) && $_POST[$variable] != "") $variableContent = $_POST[$variable];
-			else $variableContent = "";
-		} else {
-			$variableContent = $variableName;
-		}
-		
-		// Nettoyage de la variable
-		if ($variableContent != "") $variableContent = trim($variableContent);
-		
-		if (preg_match("/(\.\.|http:|ftp:)/", $variableContent)) {
-			$variableContent = "";
-		}
-		return $variableContent;
+	public static function isFullScreen() {
+		return ((self::$layout == "default") ? true : false);
+	}
+	
+	/**
+	 * Vérifie si l'affichage se fait en écran minimal ciblé module
+	 * 
+	 * @return boolean true c'est un affichage de module uniquement
+	 */
+	public static function isModuleScreen() {
+		return ((self::$layout == "module") ? true : false);
+	}
+	
+	/**
+	 * Vérifie si l'affichage se fait en écran minimal ciblé block
+	 * 
+	 * @return boolean true c'est un affichage de block uniquement
+	 */
+	public static function isBlockScreen() {
+		return ((self::$layout == "block") ? true : false);
 	}
 	
 	/**
