@@ -174,8 +174,8 @@ class Core_Main {
 		Core_Loader::classLoader("Core_BlackBan");
 		Core_BlackBan::checkBlackBan();
 		
-		// TODO a décommenté
-		$this->openCompression();
+		// TODO a décommenter
+		//$this->openCompression();
 		
 		// Comportement different en fonction du type de client
 		if (!Core_BlackBan::isBlackUser()) {
@@ -195,10 +195,10 @@ class Core_Main {
 				$libsMakeStyle->display("index.tpl");
 			} else if (self::isModuleScreen()) {
 				Libs_Module::getInstance()->launch();
-				echo Libs_Module::getModule();
+				echo Libs_Module::getInstance()->getModule();
 			} else if (self::isBlockScreen()) {
 				Libs_Block::getInstance()->launch();
-				echo Libs_Block::getBlock();
+				echo Libs_Block::getInstance()->getBlock();
 			}
 					
 			// Assemble tous les messages d'erreurs dans un fichier log
@@ -212,8 +212,8 @@ class Core_Main {
 		// Affichage des exceptions
 		Core_Exception::displayException();
 		
-		// TODO a décommenté
-		$this->closeCompression();
+		// TODO a décommenter
+		//$this->closeCompression();
 	}
 	
 	/**

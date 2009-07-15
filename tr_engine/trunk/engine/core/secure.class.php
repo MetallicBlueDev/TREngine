@@ -312,7 +312,8 @@ class Core_Secure {
 			"makestyleconfig" => "Error in the configuration templates.",
 			"phpversion" => "Database file not found.",
 			"sqlpath" => "Sorry, your version of php is too bad.",
-			"blockside" => "Sorry, a block has an invalide position"
+			"blockside" => "Sorry, a block has an invalide position",
+			"blockdisplay" => "Unable to display block: invalid configuration."
 		);
 		
 		if (isset($errorMessageTitle[$cmd])) {

@@ -7,34 +7,20 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Core_Acces  {
 	
 	/**
-	 * Memoire cache de module
-	 * 
-	 * @var array
-	 */
-	private static $modules = array();
-	
-	/**
 	 * Vérifie si le client courant a accès au module courant
 	 * 
-	 * @param $mod
+	 * @param $mod String nom du module
 	 * @return boolean true accès autorisé
 	 */
-	public static function mod($mod) {
-		Core_Sql::getInstance()->select(
-			Core_Table::$MODULES_TABLE,
-			array("rang", "configs"),
-			array("name = '" . $mod . "'")
-		);
+	public static function mod($mod) {//return true; // TODO supprimer ceci
+		// Recherche des infos du module
+		$moduleInfo = Libs_Module::getInstance()->getInfoModule();
 		
-		if ($sql->AffectedRows > 0) {
-			list($rang, $configs) = $sql->fetchArray();
-			Core_Main::$moduleConfig = $configs;
-			self::$modules[$mod] = $rang;
-			
-			if ($rang == 3) return self::moderate($mod); // Accès admin avec droit
-			else if ($rang == 2 && Core_Session::$userRang > 1) return true; // Accès admin simple
-			else if ($rang == 1 && Core_Session::$userRang > 0) return true; // Accès membre
-			else if ($rang == 0) return true; // Accès publique
+		if ($moduleInfo != false) {	
+			if ($moduleInfo['rang'] == 3) return self::moderate($mod); // Accès admin avec droit
+			else if ($moduleInfo['rang'] == 2 && Core_Session::$userRang > 1) return true; // Accès admin simple
+			else if ($moduleInfo['rang'] == 1 && Core_Session::$userRang > 0) return true; // Accès membre
+			else if ($moduleInfo['rang'] == 0) return true; // Accès publique
 		}
 		return false; // Aucun accès
 	}
@@ -47,40 +33,17 @@ class Core_Acces  {
 	 * @return boolean true le client visé a la droit
 	 */
 	public static function moderate($mod, $userIdAdmin = "") {
-		// Si aucun Id précisé, on le prend sur le client courant
-		if (!$userIdAdmin) $userIdAdmin = Core_Session::$userId;
-		$userIdAdmin = Exec_Entities::secureText($userIdAdmin);
-		
 		// Rang 3 exigé !
-		if (Core_Session::$userRang == 3 && $userIdAdmin != "") {
-			$sql = Core_Sql::getInstance();
+		if (Core_Session::$userRang == 3) {
+			// Recherche des droits admin
+			$right = Core_Session::getInstance()->getAdminRight($userIdAdmin);
 			
-			$sql->select(
-				Core_Table::$ADMIN_USERS_TABLE,
-				array("rights"),
-				array("user_id = '" . $userIdAdmin . "'")
-			);
-			list($rights) = $sql->fetchArray();
-			$adminRows = $sql->affectedRows();
-			
-			$sql->select(
-				Core_Table::$MODULES_TABLE,
-				array("mod_id"),
-				array("name = '" . $mod . "'")
-			);
-			list($modId) = $sql->fetchArray();
-			$modRows = $sql->affectedRows();
-			
-			// Si c'est une page bien particulière
-			if ($adminRows == 1
-					&& $modRows == 0 
-					&& is_file(TR_ENGINE_DIR . "/modules/management/" . $mod . ".php")) {
-				$modRows++;
-			}
+			// Recherche des infos du module
+			$moduleInfo = Libs_Module::getInstance()->getInfoModule();
 			
 			// Si les réponses retourné sont correcte
-			if ($adminRows == 1 && $modRows == 1) {
-				$right = explode("|", $rights);
+			if (($right != false && count($right) > 0)
+					&& (isset($moduleInfo['modId']) || Libs_Module::getInstance()->isModule("management", $mod))) {
 				$nbRights = count($right);
 				
 				if ($nbRights > 0) {
@@ -89,10 +52,10 @@ class Core_Acces  {
 						return true;
 					} else {
 						for ($i = 0; $i <= $nbRights; $i++) {
-							if (is_numeric($right[$i]) && is_numeric($modId) && $right[$i] == $modId) {
+							if (is_numeric($right[$i]) && is_numeric($moduleInfo['modId']) && $right[$i] == $moduleInfo['modId']) {
 								return true;
-							} else if (!is_numeric($right[$i]) && !is_numeric($modId) && $right[$i] == $modId) {
-								if (is_file(TR_ENGINE_DIR . "/modules/management/" . $right[$i] . ".php")) {
+							} else if (!is_numeric($right[$i]) && !is_numeric($moduleInfo['modId']) && $right[$i] == $moduleInfo['modId']) {
+								if (Libs_Module::getInstance()->isModule("management", $right[$i])) {
 									return true;
 								}
 							}
@@ -111,35 +74,14 @@ class Core_Acces  {
 	 * @return String
 	 */
 	public static function getError($mod) {
-		// Récuperation du rangs
-		$rang = self::getRang($mod);
+		// Recherche des infos du module
+		$moduleInfo = Libs_Module::getInstance()->getInfoModule();
 		
 		// Si on veut le type d'erreur pour un acces
-		if ($rang == -1) return "ERROR_ACCES_OFF";
-		else if ($rang == 1 && Core_Session::$userRang == 0) return "ERROR_ACCES_MEMBER";
-		else if ($rang > 1 && Core_Session::$userRang < $rang) return "ERROR_ACCES_ADMIN";
+		if ($moduleInfo['rang'] == -1) return "ERROR_ACCES_OFF";
+		else if ($moduleInfo['rang'] == 1 && Core_Session::$userRang == 0) return "ERROR_ACCES_MEMBER";
+		else if ($moduleInfo['rang'] > 1 && Core_Session::$userRang < $rang) return "ERROR_ACCES_ADMIN";
 		else return "ERROR_ACCES_FORBIDDEN";
-	}
-	
-	/**
-	 * Retourne le rang du module
-	 * 
-	 * @param $mod String
-	 * @return int
-	 */
-	public static function getRang($mod) {
-		if (!self::$modules[$mod]) {
-			Core_Sql::getInstance()->select(
-				Core_Table::$MODULES_TABLE,
-				array("rang"),
-				array("name = '" . $mod . "'")
-			);
-			if ($sql->AffectedRows > 0) {
-				list($rang, $configs) = $sql->fetchArray();
-				self::$modules[$mod] = $rang;
-			}
-		}
-		return self::$modules[$mod];
 	}
 }
 

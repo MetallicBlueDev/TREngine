@@ -423,8 +423,8 @@ class Core_Session {
 	/**
 	 * Tentative de creation d'un nouvelle session
 	 * 
-	 * @param $name Nom du compte (identifiant)
-	 * @param $pass Mot de passe du compte
+	 * @param $name Nom du compte (identifiant) crypté !
+	 * @param $pass Mot de passe du compte crypté !
 	 * @param $auto Connexion automatique
 	 * @return boolean ture succès
 	 */
@@ -433,10 +433,12 @@ class Core_Session {
 		$this->stopConnection();
 		$sql = Core_Sql::getInstance();
 		
+		$userName = Exec_Crypt::md5Decrypt($userName, $this->getSalt());
+		
 		$sql->select(
 			Core_Table::$USERS_TABLE,
 			array("user_id", "user_rang", "user_language", "user_template"),
-			array("user_name = '" . $userName . "'", "&& user_pass = '" . md5($userPass) . "'")
+			array("user_name = '" . $userName . "'", "&& user_pass = '" . $userPass . "'")
 		);
 		
 		if ($sql->affectedRows() > 0) {
@@ -473,6 +475,26 @@ class Core_Session {
 	 */
 	private function getSalt() {
 		return Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowser;
+	}
+	
+	public function getAdminRight($userIdAdmin = "") {
+		// Id du client courant sinon utilisation de l'id indiqué
+		if (!$userIdAdmin) $userIdAdmin = self::$userId;
+		else $userIdAdmin = Exec_Entities::secureText($userIdAdmin);
+		
+		$sql = Core_Sql::getInstance();
+		$sql->select(
+			Core_Table::$ADMIN_USERS_TABLE,
+			array("rights"),
+			array("user_id = '" . $userIdAdmin . "'")
+		);
+		list($rights) = $sql->fetchArray();
+		$adminRows = $sql->affectedRows();
+		
+		if ($sql->affectedRows() > 0) {
+			return explode("|", $rights);
+		}
+		return false;
 	}
 }
 ?>

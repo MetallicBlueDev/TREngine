@@ -21,12 +21,33 @@ class Libs_Module {
 	public static $module = "";
 	
 	/**
+	 * Id du module
+	 * 
+	 * @var int
+	 */	
+	public static $modId = "";
+	
+	/**
+	 * Rang du module
+	 * 
+	 * @var int
+	 */
+	public static $rang;
+	
+	
+	/**
 	 * Configuration du module
 	 * 
 	 * @var array
 	 */
-	public static $moduleConfig = array();
+	public static $configs = array();
 	
+	/**
+	 * Compteur de visites du module
+	 * 
+	 * @var int
+	 */
+	public static $count;
 	
 	/**
 	 * Module compilé
@@ -48,6 +69,13 @@ class Libs_Module {
 	 * @var String
 	 */
 	public static $view = "";
+	
+	/**
+	 * Tableau d'information sur les modules extrait
+	 * 
+	 * @var array
+	 */
+	private $modules = array();
 	
 	public function __construct() {
 		$this->configuration();
@@ -75,16 +103,72 @@ class Libs_Module {
 	 */
 	private function configuration() {
 		
-		// Vérification de la page courante
-		if ((self::$module != "" && !self::$page && !is_dir(TR_ENGINE_DIR . "/modules/" . self::$module))
-				|| (self::$module != "" && self::$page != "" && !is_file(TR_ENGINE_DIR . "/modules/" . self::$module . "/" . self::$page . ".php"))
-				|| (!self::$module)) {
-			// Afficher une erreur 404
-			Core_Exception::setMinorError(ERROR_404);
+		if (self::$module != "" && !self::$page) {
+			self::$page = self::$module;
+		}
+		
+		// Erreur dans la configuration
+		if (!$this->isModule()) {
+			if (self::$module != "" || self::$page != "") {
+				// Afficher une erreur 404
+				Core_Exception::setMinorError(ERROR_404);
+			}
 			self::$module = Core_Main::$coreConfig['defaultMod'];
 			self::$page = Core_Main::$coreConfig['defaultMod'];
 			self::$view = "";
 		}
+	}
+	
+	/**
+	 * Retourne les informations du module cible
+	 * 
+	 * @param $module String le nom du module, par défaut le module courant
+	 * @return mixed tableau array d'informations ou boolean false si echec
+	 */
+	public function getInfoModule($module = "") {
+		// Nom du module cible 
+		$modName = ((!$module) ? self::$module : $module);
+		
+		// Retourne le cache
+		if (isset($this->modules[$modName])) return $this->modules[$modName];
+		
+		$sql = Core_Sql::getInstance();		
+		$sql->select(
+			Core_Table::$MODULES_TABLE,
+			array("mod_id", "rang", "configs", "count"),
+			array("name =  '" . ((!$module) ? self::$module : $module) . "'")			
+		);
+		
+		if ($sql->affectedRows() > 0) {
+			list($modId, $rang, $configs, $count) = $sql->fetchArray();
+			
+			if (!$module || self::$module == $module) {
+				self::$modId = $modId;
+				self::$rang = $rang;
+				self::$configs = $configs;
+				self::$count = $count;
+			}
+			$this->modules[$modName] = array(
+				"modId" => $modId,
+				"rang" => $rang,
+				"configs" => $configs,
+				"count" => $count
+			);
+			return $this->modules[$modName];
+		}
+		return false;
+	}
+	
+	/**
+	 * Retourne le rang du module
+	 * 
+	 * @param $mod String
+	 * @return int
+	 */
+	public function getRang($mod) {
+		// Recherche des infos du module
+		$moduleInfo = $this->getInfoModule($mod);
+		return $moduleInfo['rang'];
 	}
 	
 	/**
@@ -93,22 +177,30 @@ class Libs_Module {
 	public function launch() {
 		// Vérification du niveau d'acces 
 		if (Core_Acces::mod(self::$module)) {
-			if (!$this->moduleCompiled) {
-				// Vérification du module
-				if (is_file(TR_ENGINE_DIR . "/modules/" . self::$module . "/" . self::$page . ".php")) {
-					Core_Translate::translate("modules/" . self::$module);
-					
-					ob_start();
-					Core_Loader::moduleLoader(self::$module . "_" . self::$page);
-					self::$moduleContent = ob_get_contents();
-					ob_end_clean();
-				} else {
-					Core_Exception::setMinorError("404: module no found: unknown error!");
-				}
+			if (!$this->moduleCompiled && $this->isModule()) {
+				Core_Translate::translate("modules/" . self::$module);
+				
+				ob_start();
+				Core_Loader::moduleLoader(self::$module . "_" . self::$page);
+				$this->moduleCompiled = ob_get_contents();
+				ob_end_clean();
 			}
 		} else {
 			Core_Exception::setMinorError(ERROR_ACCES_ZONE . " " . Core_Acces::getError(self::$module));
 		}
+	}
+	
+	/**
+	 * Vérifie si le module courant existe
+	 * 
+	 * @param $module String
+	 * @param $page String
+	 * @return boolean true le module existe
+	 */
+	public function isModule($module = "", $page = "") {
+		if (!$module) $module = self::$module;
+		if (!$page) $page = self::$page;
+		return is_file(TR_ENGINE_DIR . "/modules/" . $module . "/" . $page . ".mod.php");
 	}
 	
 	/**

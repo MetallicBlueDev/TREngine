@@ -66,7 +66,7 @@ class Libs_Block {
 	 */
 	private function blockActiveMod($modules = array("all")) {
 		foreach ($modules as $modSelected)  {
-			if (Core_Main::$module == $modSelected || $modSelect == "all") {
+			if (Libs_Module::$module == $modSelected || $modSelected == "all") {
 				return true;
 			}
 		}
@@ -80,8 +80,7 @@ class Libs_Block {
 	 * @return array
 	 */
 	private function arrayContent($content) {
-		if (is_array($content)) return explode("|", $content);
-		else return array();
+		return explode("|", $content);
 	}
 	
 	/**
@@ -109,7 +108,7 @@ class Libs_Block {
 			array("side", "position")
 		);
 		
-		if ($sql->affectedRows > 0) {
+		if ($sql->affectedRows() > 0) {
 			// Récuperation des données des blocks
 			while (list($block['blockId'], $block['side'], $block['position'], $block['title'], $block['content'], $block['type'], $block['rang'], $block['mods']) = $sql->fetchArray()) {
 				$block['mods'] = $this->arrayContent($block['mods']);
@@ -119,7 +118,7 @@ class Libs_Block {
 						&& Core_Session::$userRang >= $block['rang']) { // Et que le client est assez gradé
 					$block['title'] = Exec_Entities::textDisplay($block['title']);
 					
-					$this->blocksConfig[$block['side']][] = $block;
+					self::$blocksConfig[$block['side']][] = $block;
 					$this->get($block);
 				}
 			}
@@ -149,7 +148,7 @@ class Libs_Block {
 						&& Core_Session::$userRang >= $block['rang']) { // Et que le client est assez gradé
 					$block['title'] = Exec_Entities::textDisplay($block['title']);
 					
-					$this->blocksConfig[$block['side']][] = $block;
+					self::$blocksConfig[$block['side']][] = $block;
 					$this->get($block);
 				}
 			}
@@ -167,7 +166,7 @@ class Libs_Block {
 		
 		// Capture des données d'affichage
 		ob_start();
-		$functionBlockDisplay($block, $side);
+		$functionBlockDisplay($block);
 		$this->blocksCompiled[$block['side']][] = ob_get_contents();
 		ob_end_clean();
 	}
@@ -202,8 +201,12 @@ class Libs_Block {
 	 * @return String
 	 */
 	public function getBlock() {
-		foreach(self::$blocksConfig as $key => $block) {
-			return $this->blocksCompiled[$key][0];
+		if (Core_Main::isBlockScreen()) {
+			foreach(self::$blocksConfig as $key => $block) {
+				return $this->blocksCompiled[$key][0];
+			}
+		} else {
+			Core_Secure::getInstance()->debug("blockDisplay");
 		}
 	}
 }

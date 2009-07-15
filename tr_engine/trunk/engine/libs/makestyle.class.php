@@ -99,7 +99,26 @@ class Libs_MakeStyle {
 	 * @return $output L'affichage finale du template
 	 */
 	public function display($templateName = "") {
-		
+		echo $this->render($templateName);
+	}
+	
+	/**
+	 * Execute et affiche le template en mode debug
+	 * Si le fichier de template debug n'est pas trouvé, le fichier debug par défaut est utilisé
+	 * 
+	 * @param $templateName String
+	 */
+	public function displayDebug($templateName = "") {
+		echo $this->renderDebug($templateName);
+	}
+	
+	/**
+	 * Retourne le rendu du template
+	 * 
+	 * @param $templateName String
+	 * @return String
+	 */
+	public function render($templateName = "") {
 		// Vérifie le template
 		$this->checkTemplate($templateName);
 		
@@ -111,17 +130,16 @@ class Libs_MakeStyle {
 		include($this->getTemplatePath());
 		$output = ob_get_contents();
 		ob_end_clean();
-		
-		echo $output;
+		return $output;
 	}
 	
 	/**
-	 * Execute et affiche le template en mode debug
-	 * Si le fichier de template debug n'est pas trouvé, le fichier debug par défaut est utilisé
+	 * Active le mode debug si besoin et retourne le rendu du template
 	 * 
 	 * @param $templateName String
+	 * @return String
 	 */
-	public function displayDebug($templateName = "") {
+	public function renderDebug($templateName = "") {
 		if ($templateName != "") $this->templateName = $templateName;
 		
 		// Si le template ne contient pas le fichier debug
@@ -129,9 +147,7 @@ class Libs_MakeStyle {
 			// Activation du mode debug
 			$this->debugMode = true;
 		}
-		
-		// Affichage du template avec le mode debug si besoin
-		$this->display();
+		return $this->render($templateName);
 	}
 	
 	/**
