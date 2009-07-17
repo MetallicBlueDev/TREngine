@@ -1,7 +1,6 @@
 <?php
-if (preg_match("/phpversion.inc.php/ie", $_SERVER['PHP_SELF'])) {
-	require("secure.class.php");
-	new Core_Secure();
+if (!defined("TR_ENGINE_INDEX")) {
+	exit();
 }
 
 /**

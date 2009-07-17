@@ -1,5 +1,5 @@
 <?php
-if (preg_match("/secure.class.php/ie", $_SERVER['PHP_SELF'])) {
+if (!defined("TR_ENGINE_INDEX")) {
 	new Core_Secure();
 }
 
@@ -33,7 +33,10 @@ class Core_Secure {
 		$this->getConfig();
 		
 		// Si nous ne sommes pas passé par l'index
-		if (!defined("TR_ENGINE_INDEX")) $this->debug("badUrl");
+		if (!defined("TR_ENGINE_INDEX")) {
+			define("TR_ENGINE_INDEX", 1);
+			$this->debug("badUrl");
+		}
 	}
 	
 	/**
@@ -233,8 +236,14 @@ class Core_Secure {
 			require(TR_ENGINE_DIR . "/engine/core/loader.class.php");
 		}
 		
-		// Charge Make Style si besoin
+		// Gestionnaires suivants obligatoires
+		Core_Loader::classLoader("Exec_Cookie");
+		Core_Loader::classLoader("Exec_Crypt");
+		Core_Loader::classLoader("Core_Translate");
+		Core_Translate::makeInstance();
+		Core_Loader::classLoader("Core_Html");
 		Core_Loader::classLoader("Libs_MakeStyle");
+		
 		// Préparation du template debug
 		$libsMakeStyle = new Libs_MakeStyle();
 		$libsMakeStyle->assign("errorMessageTitle", $this->getErrorMessageTitle($ie));
@@ -293,31 +302,11 @@ class Core_Secure {
 		if (is_object($ie)) $cmd = $ie->getMessage();
 		else $cmd = $ie;
 		
-		// Uniformise pour éviter les prises de tête
-		$cmd = strtolower($cmd);
+		// Message d'erreur
+		$errorMessageTitle = "ERROR_DEBUG_" . strtoupper($cmd);
 		
-		/**
-		 * List des messages d'erreurs
-		 */
-		$errorMessageTitle = array(
-			"close" => "The site is currently closed.",
-			"sqlconnect" => "Error connecting to the database.",
-			"sqlreq" => "Error SQL query.",
-			"sqltype" => "The type of database isn't supported.",
-			"sqlpath" => "Database file not found.",
-			"badurl" => "Thank you for going to the site from the index page.",
-			"loader" => "Error loading file.",
-			"configpath" => "Configuration file not found.",
-			"makestyle" => "Error reading template.",
-			"makestyleconfig" => "Error in the configuration templates.",
-			"phpversion" => "Database file not found.",
-			"sqlpath" => "Sorry, your version of php is too bad.",
-			"blockside" => "Sorry, a block has an invalide position",
-			"blockdisplay" => "Unable to display block: invalid configuration."
-		);
-		
-		if (isset($errorMessageTitle[$cmd])) {
-			return $errorMessageTitle[$cmd];
+		if (defined($errorMessageTitle)) {
+			return constant($errorMessageTitle);
 		} else {
 			return "Stop loading.";
 		}

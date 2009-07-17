@@ -35,8 +35,9 @@ class Exec_Crypt {
 	/**
 	 * Crypteur de donnée
 	 * 
-	 * @param $data String
-	 * @param $method méthode de cryptage
+	 * @param $data String donnée
+	 * @param $salt String clès
+	 * @param $method String méthode de cryptage
 	 * @return String
 	 */
 	public static function cryptData($data, $salt = "", $method = "") {
@@ -45,9 +46,9 @@ class Exec_Crypt {
 		$method = strtolower($method);
 		
 		// Préparation du salt
-		if (!$salt) $salt = md5(uniqid(rand(), true));
+		if (!$salt) $salt = self::creatId(16);
 		
-		switch($methode) {
+		switch($method) {
 			case 'smd5':
 				// Si le crypt md5 est activé
 				if (defined("CRYPT_MD5") && CRYPT_MD5) {
@@ -67,7 +68,9 @@ class Exec_Crypt {
 			case 'my411':
 				return '*'.sha1(pack("H*", sha1($data)));
 			default:
-				Core_Exception::setException("Unsupported crypt method. Method : " . $method);
+				if (class_exists("Core_Exception")) {
+					Core_Exception::setException("Unsupported crypt method. Method : " . $method);
+				}
 				return self::cryptData($data, $salt);
 		}
 	}
@@ -80,7 +83,6 @@ class Exec_Crypt {
 	 * @param $plain_text
 	 * @param $password
 	 * @param $iv_len
-	 * 
 	 * @return String
 	 */
 	public static function md5Encrypt($plain_text, $password, $iv_len = 16) {
@@ -108,7 +110,6 @@ class Exec_Crypt {
 	 * @param $enc_text
 	 * @param $password
 	 * @param $iv_len
-	 * 
 	 * @return String
 	 */
 	public static function md5Decrypt($enc_text, $password, $iv_len = 16) {
@@ -131,6 +132,7 @@ class Exec_Crypt {
 	 * Genere une valeur
 	 * Thanks Alexander Valyalkin @ 30-Jun-2004 08:41
 	 * http://fr2.php.net/manual/fr/function.md5.php
+	 * 
 	 * @param $iv_len
 	 * @return String
 	 */

@@ -1,6 +1,6 @@
 <?php
 
-echo "module HOME!";
+echo "Contenu du module home, bienvenue !";
 
 
 ?>

@@ -200,6 +200,16 @@ class Core_Translate {
 	);
 	
 	/**
+	 * Configure et charge les 1ere données de traduction
+	 */
+	public static function makeInstance() {
+		if (!self::$currentLanguage) {
+			self::setLanguage();
+			self::translate();
+		}
+	}
+	
+	/**
 	 * Sélection de la langue la plus appropriée
 	 * 
 	 * @param string $user_langue : langue via cookie du client
@@ -208,7 +218,8 @@ class Core_Translate {
 		// Langue finale
 		$language = "";
 		// Langage du client via le cookie de session
-		$userLanguage = strtolower(trim(Core_Session::$userLanguage));
+		if (class_exists("Core_Session")) $userLanguage = strtolower(trim(Core_Session::$userLanguage));
+		else $userLanguage = "";
 		
 		if (self::isValid($userLanguage)) {
 			// Langue du client via cookie valide
@@ -223,7 +234,8 @@ class Core_Translate {
 			// Si la langue trouvé en invalide
 			if (!self::isValid($language)) {
 				// Utilisation de la langue par défaut du site
-				$language = Core_Main::$coreConfig['defaultLanguage'];
+				if (class_exists("Core_Main")) $language = Core_Main::$coreConfig['defaultLanguage'];
+				else $language = "";
 				
 				// Malheureusement la langue par défaut est aussi invalide
 				if (!self::isValid($language)) {
@@ -319,8 +331,9 @@ class Core_Translate {
 			$content = "";
 			
 			// Recherche dans le cache
-			Core_CacheBuffer::setSectionName("lang");
-			if (!Core_CacheBuffer::cached($langCacheFile)
+			if (class_exists("Core_CacheBuffer")) Core_CacheBuffer::setSectionName("lang");
+			if (!class_exists("Core_CacheBuffer") 
+					|| !Core_CacheBuffer::cached($langCacheFile)
 					|| (Core_CacheBuffer::cacheMTime($langCacheFile) < @filemtime(TR_ENGINE_DIR . "/" . $pathLang))) {
 				// Ecriture du fichier cache
 				$lang = "";
@@ -334,12 +347,12 @@ class Core_Translate {
 							$content .= "define(\"" . $key . "\",\"" . self::entitiesTranslate($value) . "\");";
 						}
 					}
-					Core_CacheBuffer::writingCache($langCacheFile, $content);
+					if (class_exists("Core_CacheBuffer")) Core_CacheBuffer::writingCache($langCacheFile, $content);
 				}
 			}
 			
 			// Donnée de traduction
-			if (Core_CacheBuffer::cached($langCacheFile)) $data = "require(TR_ENGINE_DIR . '/tmp/lang/" . $langCacheFile . "');";
+			if (class_exists("Core_CacheBuffer") && Core_CacheBuffer::cached($langCacheFile)) $data = "require(TR_ENGINE_DIR . '/tmp/lang/" . $langCacheFile . "');";
 			else if ($content != "") $data = $content;
 			else $data = "";
 			
@@ -367,7 +380,7 @@ class Core_Translate {
 	private static function entitiesTranslate($text) {
 		Core_Loader::classLoader("Exec_Entities");
 		$text = Exec_Entities::entitiesUtf8($text);
-		$text = Exec_Entities::addSlashes($text);
+		//$text = Exec_Entities::addSlashes($text);
 		return $text;
 	}
 }

@@ -1,7 +1,6 @@
 <?php
-if (preg_match("/makestyle.class.php/ie", $_SERVER['PHP_SELF'])) {
-	require("../core/secure.class.php");
-	new Core_Secure();
+if (!defined("TR_ENGINE_INDEX")) {
+	exit();
 }
 
 /**

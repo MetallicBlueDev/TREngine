@@ -1,5 +1,5 @@
 <?php
-if (preg_match("/session.class.php/ie", $_SERVER['PHP_SELF'])) {
+if (!defined("TR_ENGINE_INDEX")) {
 	require("secure.class.php");
 	new Core_Secure();
 }
@@ -174,10 +174,7 @@ class Core_Session {
 	 * Recuperation d'une session ouverte
 	 */
 	private function sessionSelect() {
-		if ($this->sessionFound()) {
-			// Chargement du crypteur
-			Core_Loader::classLoader("Exec_Crypt");
-			
+		if ($this->sessionFound()) {			
 			// Cookie de l'id du client
 			$userId = Exec_Crypt::md5Decrypt(
 				Exec_Cookie::getCookie(
@@ -355,9 +352,6 @@ class Core_Session {
 	private function sessionOpen($auto = 1) {		
 		// Destruction d'une éventuelle session
 		$this->sessionClose();
-		
-		// Chargement de l'outil de cryptage
-		Core_Loader::classLoader("Exec_Crypt");
 		self::$sessionId = Exec_Crypt::creatId(32);
 		
 		// Connexion automatique via cookie
@@ -402,9 +396,6 @@ class Core_Session {
 		
 		// Remise à zéro des infos client
 		$this->resetUser();
-		
-		// Chargement de l'outil de cryptage
-		Core_Loader::classLoader("Exec_Crypt");
 		
 		// Destruction des éventuelles cookies
 		foreach ($this->cookieName as $key => $value) {
@@ -469,7 +460,7 @@ class Core_Session {
 	}
 	
 	/**
-	 * Retourne la combinaise de cles pour le salt
+	 * Retourne la combinaison de cles pour le salt
 	 * 
 	 * @return String
 	 */

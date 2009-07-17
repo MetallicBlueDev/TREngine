@@ -1,5 +1,5 @@
 <?php
-if (preg_match("/configloader.class.php/ie", $_SERVER['PHP_SELF'])) {
+if (!defined("TR_ENGINE_INDEX")) {
 	require("secure.class.php");
 	new Core_Secure();
 }

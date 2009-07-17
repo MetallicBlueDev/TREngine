@@ -1,6 +1,6 @@
 <?php
-if (preg_match("/main.class.php/ie", $_SERVER['PHP_SELF'])) {
-	require("secure.class.php");
+if (!defined("TR_ENGINE_INDEX")) {
+	require("../core/secure.class.php");
 	new Core_Secure();
 }
 
@@ -25,7 +25,7 @@ class Core_Main {
 	 * 
 	 * @var String
 	 */
-	public static $layout = "";
+	public static $layout = "default";
 	
 	/**
 	 * Préparation TR ENGINE
@@ -148,6 +148,9 @@ class Core_Main {
 		// Gestionnaire des cookie
 		Core_Loader::classLoader("Exec_Cookie");
 		
+		// Chargement de l'outil de cryptage
+		Core_Loader::classLoader("Exec_Crypt");
+		
 		// Analyse pour les statistiques
 		Core_Loader::classLoader("Exec_Agent");
 		Exec_Agent::getVisitorsStats();
@@ -167,12 +170,15 @@ class Core_Main {
 		
 		// Chargement du moteur de traduction
 		Core_Loader::classLoader("Core_Translate");
-		Core_Translate::setLanguage();
-		Core_Translate::translate();
+		Core_Translate::makeInstance();
 		
 		// Vérification des bannissements
 		Core_Loader::classLoader("Core_BlackBan");
 		Core_BlackBan::checkBlackBan();
+		
+		// Chargement du gestionnaire HTML
+		Core_Loader::classLoader("Core_Html");
+		Core_Html::getInstance();
 		
 		// TODO a décommenter
 		//$this->openCompression();

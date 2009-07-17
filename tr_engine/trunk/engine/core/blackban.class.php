@@ -57,21 +57,44 @@ class Core_BlackBan {
 		Core_Session::getInstance()->deleteUserIpBan();
 	}
 	
+	public static function checkBlackBan() {
+		self::checkOldBlackBan();
+		self::checkBan();
+	}
+	
+	/**
+	 * Nettoyage des adresses IP périmées de la base de donnée
+	 */
+	private static function checkOldBlackBan() {
+		$deleteOldBlackBan = false;
+		
+		// Vérification du fichier cache
+		if (!Core_CacheBuffer::cached("deleteOldBlackBan.php")) {
+			$deleteOldBlackBan = true;
+			Core_CacheBuffer::writingCache("deleteOldBlackBan.php", "1");
+		} else if ((time() - 2*24*60*60) < Core_CacheBuffer::cacheMTime("deleteOldBlackBan.php")) {
+			$deleteOldBlackBan = true;
+			Core_CacheBuffer::touchCache("deleteOldBlackBan.php");
+		}
+		
+		if ($deleteOldBlackBan) {
+			// Suppression des bannissements par ip trop vieux / 2 jours 
+			Core_Sql::getInstance()->delete(
+				Core_Table::$BANNED_TABLE,
+				array("ip != ''", 
+					"&& (name = 'Hacker' || name = '')", 
+					"&& type = '0'",
+					"&& DATE_ADD(date, INTERVAL 2 DAY) > CURDATE()"
+				)
+			);
+		}
+	}
+	
 	/**
 	 * Vérification des bannissements
 	 */
-	public static function checkBlackBan() {
-		$sql = Core_Sql::getInstance();
-		// Suppression des bannissements par ip trop vieux / 2 jours 
-		$sql->delete(
-			Core_Table::$BANNED_TABLE,
-			array("ip != ''", 
-				"&& (name = 'Hacker' || name = '')", 
-				"&& type = '0'",
-				"&& DATE_ADD(date, INTERVAL 2 DAY) > CURDATE()"
-			)
-		);
-		
+	private static function checkBan() {
+		$sql = Core_Sql::getInstance();		
 		$userIp = Core_Secure::getUserIp();
 		
 		if (Core_Session::$userIpBan != "") {
