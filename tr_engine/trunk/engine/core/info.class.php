@@ -1,5 +1,5 @@
 <?php
-if (!defined("TR_ENGINE_INDEX")) {
+if (preg_match("/info.class.php/ie", $_SERVER['PHP_SELF'])) {
 	exit();
 }
 

@@ -174,25 +174,52 @@ class Libs_Block {
 	/**
 	 * Retourne les blocks compilés voulu (right/left/top/bottom)
 	 * 
-	 * @param $side String
+	 * @param $side String or int
 	 * @return String
 	 */
 	public function getBlocks($side) {
-		// Recherche de la position
-		$side = strtolower($side);
-		switch ($side) {
-			case 'right': $side = 1; break;
-			case 'left': $side = 2; break;
-			case 'top': $side = 3; break;
-			case 'bottom': $side = 4; break;
-			default : Core_Secure::getInstance()->debug("blockSide");
-		}
+		$side = $this->getSide($side);
 		
 		$blockSide = "";
-		foreach($this->blocksCompiled[$side] as $block) {
-			$blockSide .= $block;
+		if (isset($this->blocksCompiled[$side])) {
+			foreach($this->blocksCompiled[$side] as $block) {
+				$blockSide .= $block;
+			}
 		}
 		return $this->outPut($blockSide);
+	}
+	
+	/**
+	 * Retourne la position associé
+	 * 
+	 * @param $side String or int
+	 * @return String or int
+	 */
+	public function getSide($side, $type = "numeric") {
+		if ($type == "letters") {
+			switch ($side) {
+				case 1: $side = "right"; break;
+				case 2: $side = "left"; break;
+				case 3: $side = "top"; break;
+				case 4: $side = "bottom"; break;
+				default : Core_Secure::getInstance()->debug("blockSide");
+			}
+		} else {
+			if (!is_numeric($side) 
+					|| $side < 0
+					|| $side > 4) {
+				// Recherche de la position
+				$side = strtolower($side);
+				switch ($side) {
+					case 'right': $side = 1; break;
+					case 'left': $side = 2; break;
+					case 'top': $side = 3; break;
+					case 'bottom': $side = 4; break;
+					default : Core_Secure::getInstance()->debug("blockSide");
+				}
+			}
+		}
+		return $side;
 	}
 	
 	/**

@@ -6,24 +6,40 @@
     dir="ltr">
 <head>
 <?php echo Core_Html::getInstance()->getMetaHeaders(); ?>
+<link rel="stylesheet" href="templates/default/style.css" type="text/css" />
 </head>
 <body>
-<br /><br />
 
-TEMPLATE :<br />
-Dossier conteneur de templates : <?php echo Libs_MakeStyle::getTemplatesDir(); ?><br />
-Nom du template courant: <?php echo Libs_MakeStyle::getTemplateUsedDir(); ?>
-<br /><br />
+<div id="header">
+<div style="display: none;"><h2><?php echo Core_Main::$coreConfig['defaultSiteName'] . " - " . Core_Main::$coreConfig['defaultSiteSlogan']; ?></h2></div>
+<object type="application/x-shockwave-flash" data="templates/default/images/header.swf" width="900px" height="130px">
+	<param name="movie" value="themes/ts_studio/images/header.swf" />
+	<param name="pluginurl" value="http://www.macromedia.com/go/getflashplayer" />
+	<param name="wmode" value="transparent" />
+	<param name="menu" value="false" />
+	<param name="quality" value="best" /> 
+	<param name="scale" value="exactfit" /> 
+</object>
+</div>
 
-CONTENU BLOCK :<br />
-<?php echo Libs_Block::getInstance()->getBlocks("right"); ?>
-<br /><br />
-CONTENU MODULE :<br /><?php echo Libs_Module::getInstance()->getModule(); ?>
-<br /><br />
+<div id="wrapper">
+	<table>
+		<tr>
+			<td><?php echo Libs_Block::getInstance()->getBlocks("right"); ?></td>
+			<td>
+				<?php echo Libs_Block::getInstance()->getBlocks("top"); ?>
+				<?php include(TR_ENGINE_DIR . "/templates/default/module.tpl"); ?>
+				<?php echo Libs_Block::getInstance()->getBlocks("bottom"); ?>
+			</td>
+		</tr>
+	</table>
+</div>
 
-MARKER :<br />
-Timer MAIN : <?php echo Exec_Marker::getTime("main"); ?>
-
+<div id="footer">
+	<div style="padding: 50px;">
+		Page g&eacute;n&eacute;r&eacute;e en <?php echo Exec_Marker::getTime("main"); ?> seconde.
+	</div>
+</div>
 <?php echo Core_Html::getInstance()->getMetaFooters(); ?>
 </body>
 </html>

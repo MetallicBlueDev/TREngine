@@ -147,7 +147,7 @@ class Core_CacheBuffer {
 	 * @param $path chemin vers le fichier cache
 	 */
 	public static function touchCache($path) {
-		self::$updateCache[self::encodePath(self::getSectionPath() . $path)] = time();
+		self::$updateCache[self::encodePath(self::getSectionPath() . "/" . $path)] = time();
 	}
 	
 	/**

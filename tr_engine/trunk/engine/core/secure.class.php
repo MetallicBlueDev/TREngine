@@ -33,6 +33,7 @@ class Core_Secure {
 		
 		// Si nous ne sommes pas passé par l'index
 		if (!defined("TR_ENGINE_INDEX")) {
+			if (!class_exists("Core_Info")) require("info.class.php");
 			define("TR_ENGINE_INDEX", 1);
 			$this->debug("badUrl");
 		}
