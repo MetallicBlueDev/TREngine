@@ -30,7 +30,6 @@ class Core_Secure {
 		$this->checkRequestReferer();
 		$this->checkGPC();
 		$this->checkUserIp();
-		$this->getConfig();
 		
 		// Si nous ne sommes pas passé par l'index
 		if (!defined("TR_ENGINE_INDEX")) {
@@ -131,88 +130,6 @@ class Core_Secure {
 		} else {
 			$key = addslashes($key);
 		}
-	}
-	
-	/**
-	 * Capture de la configuration courante
-	 */
-	private function getConfig() {
-		
-		/**
-		 * Chemin jusqu'a la racine
-		 */
-		define("TR_ENGINE_DIR", $this->getBaseDir());
-		
-		/**
-		 * Adresse URL complete jusqu'a TR ENGINE
-		 */
-		define("TR_ENGINE_URL", $this->getUrlAddress());
-		
-		/**
-		 * Version php sous forme 5.2.9.2
-		 */
-		// TR_ENGINE_PHP_VERSION est définie dans le fichier "phpversion.inc.php"
-		
-		/**
-		 * Le système d'exploitation qui execute TR ENGINE
-		 */
-		define("TR_ENGINE_PHP_OS", strtoupper(substr(PHP_OS, 0, 3)));
-	}
-	
-	
-	/**
-	 * Retourne le chemin jusqu'a la racine
-	 * 
-	 * @return $baseDir String
-	 */
-	private function getBaseDir() {
-		// Recherche du chemin absolu depuis n'importe quel fichier
-		if (defined("TR_ENGINE_INDEX")) {
-			// Nous sommes dans l'index
-			$baseDir = str_replace('\\', '/', getcwd());
-		} else {
-			// Chemin de base
-			$baseName = str_replace($_SERVER['SCRIPT_NAME'], "", $_SERVER['SCRIPT_FILENAME']);
-			// Chemin jusqu'au fichier
-			$currentPath = str_replace('\\', '/', getcwd());
-			// On isole le chemin en plus jusqu'au fichier
-			$path = str_replace($baseName, "", $currentPath);
-			$path = substr($path, 1); // Suppression du slash
-			
-			if ($path != "") { // Recherche du chemin complet
-				// Vérification en se reperant sur l'emplacement du fichier config
-				while (!@is_file($baseName . "/" . $path . "/configs/config.inc.php")) {
-					// On remonte d'un cran
-					$path = dirname($path);
-					// La recherche n'aboutira pas
-					if ($path == ".") break;
-				}
-			}
-			
-			// Verification du résultat
-			if ($path != "" && is_file($baseName . "/" . $path . "/configs/config.inc.php")) $baseDir = $baseName . "/" . $path;
-			else if (is_file($baseName . "/configs/config.inc.php")) $baseDir = $baseName;
-			else $baseDir = $baseName;
-		}
-		return $baseDir;
-	}
-	
-	/**
-	 * Retourne l'adresse URL complete jusqu'a TR ENGINE
-	 * 
-	 * @return $urlAddress String
-	 */
-	private function getUrlAddress() {
-		$url = explode("/", $_SERVER["REQUEST_URI"]);
-		$url_tmp = $url;
-		$nb_url = count($url);
-		$baseUrl = explode("/", TR_ENGINE_DIR);
-		$nb_baseUrl = count($baseUrl);
-		for ($i = $nb_url, $j = $nb_baseUrl; $i > 0; $i--, $j--) {
-			if ($url[$i] == $baseUrl[$j]) array_splice($url_tmp, 0, $i); // Suppression des clés inutile
-			else break;
-		}
-		return $_SERVER["SERVER_NAME"] . (($url_tmp[0] != "") ? "/" . implode("/", $url_tmp) : "");
 	}
 	
 	/**

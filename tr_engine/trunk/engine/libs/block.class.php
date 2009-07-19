@@ -192,7 +192,20 @@ class Libs_Block {
 		foreach($this->blocksCompiled[$side] as $block) {
 			$blockSide .= $block;
 		}
-		return $blockSide;
+		return $this->outPut($blockSide);
+	}
+	
+	/**
+	 * Réécriture du tampon de sortie si besoin
+	 * 
+	 * @param $buffer String
+	 * @return $buffer String
+	 */
+	private function outPut($buffer) {
+		if (Core_Main::$coreConfig['urlRewriting']) {
+			$buffer = Core_UrlRewriting::rewrite($buffer);
+		}
+		return $buffer;
 	}
 	
 	/**
@@ -203,7 +216,7 @@ class Libs_Block {
 	public function getBlock() {
 		if (Core_Main::isBlockScreen()) {
 			foreach(self::$blocksConfig as $key => $block) {
-				return $this->blocksCompiled[$key][0];
+				return $this->outPut($this->blocksCompiled[$key][0]);
 			}
 		} else {
 			Core_Secure::getInstance()->debug("blockDisplay");

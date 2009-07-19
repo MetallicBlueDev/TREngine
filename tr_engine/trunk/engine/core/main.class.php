@@ -39,6 +39,8 @@ class Core_Main {
 	 * Une étape avant le démarrage réel
 	 */
 	private function starter() {
+		Exec_Marker::startTimer("core");
+		
 		// Vérification de la version PHP
 		if (TR_ENGINE_PHP_VERSION < "5.0.0") {
 			Core_Secure::getInstance()->debug("phpVersion");
@@ -65,6 +67,8 @@ class Core_Main {
 		
 		// Destruction du chargeur de configs
 		unset($coreConfigLoader);
+		
+		Exec_Marker::stopTimer("core");
 		
 		// TODO isoler l'installation
 		$installPath = TR_ENGINE_DIR . "/install/index.php";
@@ -145,6 +149,8 @@ class Core_Main {
 	 * Démarrage TR ENGINE
 	 */
 	public function start() {
+		Exec_Marker::startTimer("launcher");
+		
 		// Gestionnaire des cookie
 		Core_Loader::classLoader("Exec_Cookie");
 		
@@ -197,6 +203,7 @@ class Core_Main {
 			if (self::isFullScreen()) {
 				Libs_Block::getInstance()->launch();
 				Libs_Module::getInstance()->launch();
+				Exec_Marker::stopTimer("main");
 				$libsMakeStyle = new Libs_MakeStyle();
 				$libsMakeStyle->display("index.tpl");
 			} else if (self::isModuleScreen()) {
@@ -206,11 +213,11 @@ class Core_Main {
 				Libs_Block::getInstance()->launch();
 				echo Libs_Block::getInstance()->getBlock();
 			}
-					
-			// Assemble tous les messages d'erreurs dans un fichier log
-			Core_Exception::logException();
+			
 			// Validation du cache / Routine du cache
 			Core_CacheBuffer::valideCacheBuffer();
+			// Assemble tous les messages d'erreurs dans un fichier log
+			Core_Exception::logException();
 		} else {
 			Core_BlackBan::displayBlackPage();
 		}
@@ -220,17 +227,19 @@ class Core_Main {
 		
 		// TODO a décommenter
 		//$this->closeCompression();
+		
+		Exec_Marker::stopTimer("launcher");
 	}
 	
 	/**
 	 * Lance le tampon de sortie
+	 * Entête & tamporisation de sortie
 	 */
 	private function openCompression() {
-		// Entête & tamporisation de sortie
-		@header("Vary: Cookie, Accept-Encoding");
-		if (@extension_loaded('zlib') 
-				&& !@ini_get('zlib.output_compression') 
-				&& @function_exists("ob_gzhandler") 
+		header("Vary: Cookie, Accept-Encoding");
+		if (extension_loaded('zlib') 
+				&& !ini_get('zlib.output_compression') 
+				&& function_exists("ob_gzhandler") 
 				&& !self::$coreConfig['urlRewriting']) {
 			ob_start("ob_gzhandler");
 		} else {
@@ -242,14 +251,7 @@ class Core_Main {
 	 * Relachement des tampons de sortie
 	 */
 	private function closeCompression() {
-		// Tamporisation de sortie
-		if (self::$coreConfig['urlRewriting']) {
-			$buffer = ob_get_contents();
-			ob_end_clean();
-			Core_UrlRewriting::displayAll($buffer);
-		}
-		// Relachement des tampon
-		while (@ob_end_flush());
+		while (ob_end_flush());
 	}
 	
 	/**

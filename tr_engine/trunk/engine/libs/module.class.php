@@ -209,7 +209,13 @@ class Libs_Module {
 	 * @return String
 	 */
 	public function getModule() {
-		return $this->moduleCompiled;
+		$buffer = $this->moduleCompiled;
+		// Tamporisation de sortie
+		if (Core_Main::$coreConfig['urlRewriting']) {
+			$buffer = Core_UrlRewriting::rewrite($buffer);
+		}
+		// Relachement des tampon
+		return $buffer;
 	}
 }
 

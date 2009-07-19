@@ -21,7 +21,7 @@ class Core_UrlRewriting {
 		return false;
 	}
 	
-	public static function displayAll($buffer) {
+	public static function rewrite($buffer) {
 		echo "";
 	}
 }

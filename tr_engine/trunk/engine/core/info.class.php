@@ -1,0 +1,116 @@
+<?php
+if (!defined("TR_ENGINE_INDEX")) {
+	exit();
+}
+
+/**
+ * Version php sous forme 5.2.9.2
+ */
+define("TR_ENGINE_PHP_VERSION", preg_replace("/[^0-9.]/", "", (preg_replace("/(_|-|[+])/", ".", phpversion()))));
+
+// Si une version PHP OO moderne n'est pas détecté
+if (TR_ENGINE_PHP_VERSION < "5.0.0") {
+	echo"<b>Sorry, but the PHP version currently running is too old to understand TR ENGINE.</b>"
+	. "<br /><br />MINIMAL PHP VERSION : 5.0.0"
+	. "<br />YOUR PHP VERSION : " . TR_ENGINE_PHP_VERSION;
+	exit();
+}
+
+new Core_Info();
+
+/**
+ * Configurateur rapide
+ * 
+ * @author Sebastien Villemain
+ *
+ */
+class Core_Info {
+	
+	/**
+	 * Capture de la configuration courante
+	 */
+	public function __construct() {
+		
+		/**
+		 * Chemin jusqu'a la racine
+		 */
+		define("TR_ENGINE_DIR", $this->getBaseDir());
+		
+		/**
+		 * Adresse URL complete jusqu'a TR ENGINE
+		 */
+		define("TR_ENGINE_URL", $this->getUrlAddress());
+		
+		/**
+		 * Le système d'exploitation qui execute TR ENGINE
+		 */
+		define("TR_ENGINE_PHP_OS", strtoupper(substr(PHP_OS, 0, 3)));
+	}
+	
+	
+	/**
+	 * Retourne le chemin jusqu'a la racine
+	 * 
+	 * @return $baseDir String
+	 */
+	private function getBaseDir() {
+		// Recherche du chemin absolu depuis n'importe quel fichier
+		if (defined("TR_ENGINE_INDEX")) {
+			// Nous sommes dans l'index
+			$baseDir = str_replace('\\', '/', getcwd());
+		} else {
+			// Chemin de base
+			$baseName = str_replace($_SERVER['SCRIPT_NAME'], "", $_SERVER['SCRIPT_FILENAME']);
+			// Chemin jusqu'au fichier
+			$currentPath = str_replace('\\', '/', getcwd());
+			// On isole le chemin en plus jusqu'au fichier
+			$path = str_replace($baseName, "", $currentPath);
+			$path = substr($path, 1); // Suppression du slash
+			
+			if ($path != "") { // Recherche du chemin complet
+				// Vérification en se reperant sur l'emplacement du fichier config
+				while (!@is_file($baseName . "/" . $path . "/configs/config.inc.php")) {
+					// On remonte d'un cran
+					$path = dirname($path);
+					// La recherche n'aboutira pas
+					if ($path == ".") break;
+				}
+			}
+			
+			// Verification du résultat
+			if ($path != "" && is_file($baseName . "/" . $path . "/configs/config.inc.php")) $baseDir = $baseName . "/" . $path;
+			else if (is_file($baseName . "/configs/config.inc.php")) $baseDir = $baseName;
+			else $baseDir = $baseName;
+		}
+		return $baseDir;
+	}
+	
+	/**
+	 * Retourne l'adresse URL complete jusqu'a TR ENGINE
+	 * 
+	 * @return $urlAddress String
+	 */
+	private function getUrlAddress() {
+		// Recherche de l'URL courante
+		$urlTmp = $_SERVER["REQUEST_URI"];
+		if (substr($urlTmp, -1) == "/") $urlTmp = substr($urlTmp, 0, strlen($urlTmp)-1);
+		if ($urlTmp[0] == "/") $urlTmp = substr($urlTmp, 1);
+		$urlTmp = explode("/", $urlTmp);
+		
+		// Recherche du dossier courant
+		$urlBase = explode("/", TR_ENGINE_DIR);
+		$urlBase = $urlBase[count($urlBase)-1];
+		
+		// Construction du lien
+		$urlFinal = "";
+		for($i = count($urlTmp)-1; $i >= 0; $i--) {
+			if ($urlTmp[$i] == $urlBase) {
+				if (!$urlFinal) $urlFinal = $urlTmp[$i];
+				else $urlFinal = $urlTmp[$i] . "/" . $urlFinal;
+			}
+		}		
+		return ((!$urlFinal) ? $_SERVER["SERVER_NAME"] : $_SERVER["SERVER_NAME"] . "/" . $urlFinal);
+	}
+}
+
+?>
