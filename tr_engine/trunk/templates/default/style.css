@@ -2,9 +2,13 @@ body {
 	background: #6b737b;
 	font-family: verdana, Arial, Sans-serif;
 	font-size: 11px;
-	color: Black;
-	margin: 0px;
+	color: #000;
+}
+
+* {
 	padding: 0px;
+	margin: 0px;
+	border: 0px;
 }
 
 /* Entête */
@@ -26,6 +30,7 @@ body {
 	height: 100%;
 	margin: 0 auto;
 	background: url(images/background_middle.jpg);
+	overflow: hidden;
 }
 
 /* Pieds de page */
@@ -37,13 +42,13 @@ body {
 }
 
 #module_top {
+	margin-top: 20px;
 	width: 645px;
 	height: 60px;
 	background: url(images/module_top.jpg);
 }
 
 #module_middle {
-	margin-right: 20px;
 	width: 645px;
 	background: url(images/module_middle.jpg);
 }
@@ -55,6 +60,7 @@ body {
 }
 
 .block_top {
+	margin-top: 10px;
 	margin-left: 30px;
 	margin-right: 10px;
 	width: 174px;
@@ -74,4 +80,38 @@ body {
 	width: 174px;
 	height: 35px;
 	background: url(images/block_bottom.jpg);
+}
+
+.block_error {
+	margin-top: 10px;
+	padding: 10px 25px 10px 10px;
+	background: url(images/block_error.png);
+}
+
+.block_error #exception li {
+	list-style-type: none;
+	padding-left: 25px;
+	height: 20px;
+	font-size: 13px;
+	background: url(images/block_error_failed.png) no-repeat 0 0;
+}
+
+.block_error #minor_error li {
+	list-style-type: none;
+	padding-left: 25px;
+	height: 20px;
+	font-size: 13px;
+	background: url(images/block_error_info.png) no-repeat 0 0;
+}
+
+#left {
+	width: 214px;
+	float: left;
+	position: relative;
+}
+
+#middle {
+	width: 645px;
+	float: left;
+	position: relative;
 }

@@ -28,9 +28,8 @@ $TR_ENGINE = new Core_Main();
 $TR_ENGINE->start();
 
 Exec_Marker::stopTimer("all");
-echo "<br />Timer Core : " . Exec_Marker::getTime("core");
-echo "<br />Timer LAUNCHER : " . Exec_Marker::getTime("launcher");
-echo "<br />Timer CORE+LAUNCHER : " . (Exec_Marker::getTime("core")+Exec_Marker::getTime("launcher"));
-echo "<br />Timer ALL : " . Exec_Marker::getTime("all");
+
+// Affichage des exceptions
+Core_Exception::displayException();
 
 ?>

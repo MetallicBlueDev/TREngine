@@ -20,6 +20,7 @@ new Core_Info();
 
 /**
  * Configurateur rapide
+ * ATTENTION : cette classe doit être lu en PHP 4 sans erreur.
  * 
  * @author Sebastien Villemain
  *
@@ -29,7 +30,7 @@ class Core_Info {
 	/**
 	 * Capture de la configuration courante
 	 */
-	public function __construct() {
+	function __construct() {
 		
 		/**
 		 * Chemin jusqu'a la racine
@@ -53,7 +54,7 @@ class Core_Info {
 	 * 
 	 * @return $baseDir String
 	 */
-	private function getBaseDir() {
+	function getBaseDir() {
 		// Recherche du chemin absolu depuis n'importe quel fichier
 		if (defined("TR_ENGINE_INDEX")) {
 			// Nous sommes dans l'index
@@ -90,7 +91,7 @@ class Core_Info {
 	 * 
 	 * @return $urlAddress String
 	 */
-	private function getUrlAddress() {
+	function getUrlAddress() {
 		// Recherche de l'URL courante
 		$urlTmp = $_SERVER["REQUEST_URI"];
 		if (substr($urlTmp, -1) == "/") $urlTmp = substr($urlTmp, 0, strlen($urlTmp)-1);

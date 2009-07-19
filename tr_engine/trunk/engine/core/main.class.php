@@ -222,9 +222,6 @@ class Core_Main {
 			Core_BlackBan::displayBlackPage();
 		}
 		
-		// Affichage des exceptions
-		Core_Exception::displayException();
-		
 		// TODO a décommenter
 		//$this->closeCompression();
 		

@@ -75,21 +75,30 @@ class Core_Exception {
 	}
 	
 	/**
+	 * Retourne le tableau d'exception
+	 * 
+	 * @return array string
+	 */
+	public static function getException() {
+		return self::$exception;
+	}
+	
+	/**
 	 * Vérifie si une exception est détecté
 	 * 
 	 * @return boolean
 	 */
-	private static function exceptionDetected() {
-		return (is_array(self::$exception) && self::countException() > 0);
+	public static function exceptionDetected() {
+		return (is_array(self::$exception) && count(self::$exception) > 0);
 	}
 	
 	/**
-	 * Retourne le nombre d'exception
+	 * Vérifie si une erreur mineur est détecté
 	 * 
-	 * @return int
+	 * @return boolean
 	 */
-	private static function countException() {
-		return count(self::$exception);
+	public static function minorErrorDetected() {
+		return (is_array(self::$minorError) && count(self::$minorError) > 0);
 	}
 	
 	/**
@@ -110,26 +119,33 @@ class Core_Exception {
 	 * Affichage des exceptions courante
 	 */
 	public static function displayException() {
-		echo "<div style=\"color: red;\"><br />";
-		
+		$error = "";
+		$color = "green";
 		// Vérification de la présence des exceptions
 		if (self::exceptionDetected()) {
+			$color = "red";
 			$nbStars = 45;
 			for ($i = 0; $i < $nbStars; $i++) {
 				if ($i == (int)($nbStars / 2)) {
-					$nbException = self::countException();
+					$nbException = count(self::$exception);
 					$add = ($nbException > 1) ? "S" : "";
-					echo $nbException . " DIFFERENT" . $add . " EXCEPTION" . $add;
+					$error .= $nbException . " DIFFERENT" . $add . " EXCEPTION" . $add;
 				} else {
-					echo "*";
+					$error .= "*";
 				}
 			}
 			$exceptions = str_replace("\n", "<br />", self::linearize(self::$exception));
-			echo "<br />" . $exceptions;
+			$error .= "<br />" . $exceptions;
 		} else {
-			echo "No exception detected.";
-		}		
-		echo "<br /></div>";
+			$error .= "No exception detected.";
+		}
+		
+		echo "<div style=\"color: " . $color . ";\"><br />" . $error . "</div>\n"
+		. "<div style=\"color: blue;\"><br />BenchMaker :<br />\n"
+		. "Core : " . Exec_Marker::getTime("core")
+		. "<br />Launcher : " . Exec_Marker::getTime("launcher")
+		. "<br />All : " . Exec_Marker::getTime("all")
+		. "</div>";
 	}
 	
 	/**

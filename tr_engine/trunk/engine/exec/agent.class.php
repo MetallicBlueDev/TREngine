@@ -38,7 +38,14 @@ class Exec_Agent {
 	 * 
 	 * @var String
 	 */
-	public static $userBrowser;
+	public static $userBrowserName;
+	
+	/**
+	 * Version du navigateur du client
+	 * 
+	 * @var String
+	 */
+	public static $userBrowserVersion;
 	
 	/**
 	 * Referer du client
@@ -203,7 +210,8 @@ class Exec_Agent {
 		foreach (self::$browserRessouces as $browserAgent => $browserName) {
 			if (preg_match("/" . $browserAgent . "[ \/]([0-9\.]+)/ie", self::$userAgent, $version)
 					|| preg_match("/" . $browserAgent . "/ie", self::$userAgent, $version)) {
-				return $browserName . ((isset($version[1])) ? " " . $version[1] : "");
+				self::$userBrowserVersion = isset($version[1]) ? trim($version[1]) : "";
+				return $browserName;
 			}
 		}
 		return "Unknown Browser";
@@ -238,7 +246,7 @@ class Exec_Agent {
 		
 		// Details sur le client
 		self::$userHost = self::checkUserHost();
-		self::$userBrowser = self::checkUserBrower();
+		self::$userBrowserName = self::checkUserBrower();
 		self::$userOs = self::checkUserOs();
 	}
 }

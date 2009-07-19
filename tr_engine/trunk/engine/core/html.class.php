@@ -101,6 +101,10 @@ class Core_Html {
 		if ($_SERVER['REQUEST_METHOD'] != "POST") {
 			$script .= "<script type=\"text/javascript\" src=\"includes/js/javascriptactived.js\"></script>\n";
 			
+			if (Exec_Agent::$userBrowserName == "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") {
+				$script .= "<script defer type=\"text/javascript\" src=\"includes/js/pngfix.js\"></script>\n";
+			}
+			
 			if (class_exists("Core_Main")) $fullScreen = Core_Main::isFullScreen();
 			else $fullScreen = true;
 			
