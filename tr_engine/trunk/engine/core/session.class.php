@@ -465,7 +465,7 @@ class Core_Session {
 	 * @return String
 	 */
 	private function getSalt() {
-		return Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowser;
+		return Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowserName;
 	}
 	
 	public function getAdminRight($userIdAdmin = "") {

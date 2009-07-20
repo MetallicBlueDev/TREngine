@@ -43,6 +43,7 @@ class Libs_Block {
 	 */
 	public static function getInstance() {
 		if (!self::$libsBlock) {
+			Core_Loader::blockLoader("base");
 			self::$libsBlock = new self();
 		}
 		return self::$libsBlock;
@@ -162,13 +163,30 @@ class Libs_Block {
 	 */
 	private function get($block) {
 		Core_Loader::blockLoader($block['type']);
-		$functionBlockDisplay = $block['type'] . "Display";
 		
-		// Capture des données d'affichage
-		ob_start();
-		$functionBlockDisplay($block);
-		$this->blocksCompiled[$block['side']][] = ob_get_contents();
-		ob_end_clean();
+		// Vérification du block
+		if (class_exists("Block_" . ucfirst($block['type']))) {
+			
+			if ($block['type'] != "base" && Core_Acces::autorize("block" . $block['blockId'], $block['rang'])) {
+				$blockClassName = "Block_" . ucfirst($block['type']);
+				$BlockClass = new $blockClassName();
+				$BlockClass->blockId = $block['blockId'];
+				$BlockClass->side = $block['side'];
+				$BlockClass->sideName = $this->getSide($block['side'], "letters");
+				$BlockClass->templateName = "block_" . $BlockClass->sideName . ".tpl";
+				$BlockClass->title = $block['title'];
+				$BlockClass->content = $block['content'];
+				$BlockClass->rang = $block['rang'];
+				
+				// Capture des données d'affichage
+				ob_start();
+				$BlockClass->display($block);
+				$this->blocksCompiled[$block['side']][] = ob_get_contents();
+				ob_end_clean();
+			}
+		} else {
+			Core_Exception::setMinorError(ERROR_BLOCK_CODE);
+		}
 	}
 	
 	/**

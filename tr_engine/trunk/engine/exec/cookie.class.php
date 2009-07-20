@@ -44,11 +44,8 @@ class Exec_Cookie {
 	 * @return String
 	 */
 	public static function getCookie($cookieName) {
-		if (isset($_COOKIE[$cookieName]) 
-				&& $_COOKIE[$cookieName] != "") {
-			return $_COOKIE[$cookieName];
-		}
-		return "";
+		$cookie = Core_Request::getString($cookieName, "", "COOKIE");
+		return $cookie;
 	}
 }
 ?>

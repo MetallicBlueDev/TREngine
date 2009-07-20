@@ -271,14 +271,14 @@ class Core_Translate {
 	 */
 	private static function setCurrentLanguageExtension() {
 		// Recherche de la langue du client
-		$languageClient = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+		$languageClient = explode(',', Core_Request::getString("HTTP_ACCEPT_LANGUAGE", "", "SERVER"));
 		$languageClient = strtolower(substr(trim($languageClient[0]), 0, 2));
 		
 		if (self::$languageList[$languageClient] != "") {
 			self::$currentLanguageExtension = $languageClient;
 		} else {
 			// Recherche de l'URL
-			if (!defined("TR_ENGINE_URL")) $url = $_SERVER["SERVER_NAME"];
+			if (!defined("TR_ENGINE_URL")) $url = Core_Request::getString("SERVER_NAME", "", "SERVER");
 			else $url = TR_ENGINE_URL;
 			
 			// Recherche de l'extension de URL

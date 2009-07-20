@@ -4,6 +4,12 @@ if (!defined("TR_ENGINE_INDEX")) {
 	new Core_Secure();
 }
 
+/**
+ * Utilitaire d'entête et de contenu HTML
+ * 
+ * @author Sebastien Villemain
+ *
+ */
 class Core_Html {
 	
 	/**
@@ -98,10 +104,10 @@ class Core_Html {
 	 */
 	private function includeJavaScript() {
 		$script = "";
-		if ($_SERVER['REQUEST_METHOD'] != "POST") {
+		if (Core_Request::getRequest() != "POST") {
 			$script .= "<script type=\"text/javascript\" src=\"includes/js/javascriptactived.js\"></script>\n";
 			
-			if (Exec_Agent::$userBrowserName == "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") {
+			if (class_exists("Exec_Agent") && Exec_Agent::$userBrowserName == "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") {
 				$script .= "<script defer type=\"text/javascript\" src=\"includes/js/pngfix.js\"></script>\n";
 			}
 			
@@ -168,8 +174,8 @@ class Core_Html {
 			if (!$this->title) $title = Core_Main::$coreConfig['defaultSiteName'] . " - " . Core_Main::$coreConfig['defaultSiteSlogan'];
 			else $title = Core_Main::$coreConfig['defaultSiteName'] . " - " . $this->title;
 		} else {
-			if (!$this->title) $title = $_SERVER['SERVER_NAME'];
-			else $title = $_SERVER['SERVER_NAME'] . " - " . $this->title;
+			if (!$this->title) $title = Core_Request::getString("SERVER_NAME", "", "SERVER");
+			else $title = Core_Request::getString("SERVER_NAME", "", "SERVER") . " - " . $this->title;
 		}
 		
 		Core_Loader::classLoader("Exec_Entities");

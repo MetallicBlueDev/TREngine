@@ -1,5 +1,5 @@
 <?php
-if (preg_match("/mysql.class.php/ie", $_SERVER['PHP_SELF'])) {
+if (!defined("TR_ENGINE_INDEX")) {
 	require("../core/secure.class.php");
 	new Core_Secure();
 }

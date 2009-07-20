@@ -237,17 +237,30 @@ class Exec_Agent {
 	 */
 	public static function getVisitorsStats() {
 		// Adresse Ip du client
-		self::$userIp = Core_Secure::getUserIp();
+		self::$userIp = self::checkUserIp();
 		
 		// Analyse pour les statistiques
-		self::$userReferer = htmlentities($_SERVER['HTTP_REFERER'], ENT_QUOTES);
+		self::$userReferer = htmlentities(Core_Request::getString("HTTP_REFERER", "", "SERVER"), ENT_QUOTES);
 		self::$userHost = strtolower(@gethostbyaddr(self::$userIp));
-		self::$userAgent = $_SERVER['HTTP_USER_AGENT'];
+		self::$userAgent = Core_Request::getString("HTTP_USER_AGENT", "", "SERVER");
 		
 		// Details sur le client
 		self::$userHost = self::checkUserHost();
 		self::$userBrowserName = self::checkUserBrower();
 		self::$userOs = self::checkUserOs();
+	}
+	
+	/**
+	 * Renseigne l'adresse IP (v4) correcte du client
+	 */
+	private static function checkUserIp() {
+		// Recherche de l'IP
+		if (Core_Request::getString("HTTP_CLIENT_IP", "", "SERVER")) $userIp = Core_Request::getString("HTTP_CLIENT_IP", "", "SERVER");
+		else if (Core_Request::getString("HTTP_X_FORWARDED_FOR", "", "SERVER")) $userIp = Core_Request::getString("HTTP_X_FORWARDED_FOR", "", "SERVER");
+		else if (Core_Request::getString("REMOTE_ADDR", "", "SERVER")) $userIp = Core_Request::getString("REMOTE_ADDR", "", "SERVER");
+		
+		if (isset($userIp) && $userIp != "" && preg_match("/([0-9]{1,3}\.){3}[0-9]{1,3}/", $userIp)) return $userIp;
+		return "";
 	}
 }
 ?>

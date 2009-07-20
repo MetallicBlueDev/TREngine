@@ -15,11 +15,6 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Core_Secure {
 	
 	/**
-	 * Adresse IP du client courant
-	 */ 
-	private static $user_ip = "";
-	
-	/**
 	 * Instance de cette classe
 	 */ 
 	private static $secure = false;
@@ -29,7 +24,6 @@ class Core_Secure {
 		$this->checkQueryString();
 		$this->checkRequestReferer();
 		$this->checkGPC();
-		$this->checkUserIp();
 		
 		// Si nous ne sommes pas passé par l'index
 		if (!defined("TR_ENGINE_INDEX")) {
@@ -90,19 +84,6 @@ class Core_Secure {
 	}
 	
 	/**
-	 * Renseigne l'adresse IP (v4) correcte du client
-	 */
-	private function checkUserIp() {
-		// Recherche de l'IP
-		if ($_SERVER['HTTP_CLIENT_IP']) $user_ip = $_SERVER['HTTP_CLIENT_IP'];
-		else if ($_SERVER['HTTP_X_FORWARDED_FOR']) $user_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		else if ($_SERVER['REMOTE_ADDR']) $user_ip = $_SERVER['REMOTE_ADDR'];
-		
-		if (isset($user_ip) && $user_ip != "" && preg_match("/([0-9]{1,3}\.){3}[0-9]{1,3}/", $user_ip)) self::$user_ip = $user_ip; 
-		else self::$user_ip = "";
-	}
-	
-	/**
 	 * Fonction de substitution pour MAGIC_QUOTES_GPC
 	 */
 	private function checkGPC() {
@@ -134,15 +115,6 @@ class Core_Secure {
 	}
 	
 	/**
-	 * Retourne l'adresse IP du client
-	 * 
-	 * @return String
-	 */
-	public static function getUserIp() {
-		return self::$user_ip;
-	}
-	
-	/**
 	 * La fonction debug affiche un message d'erreur
 	 * Cette fonction est activé si une erreur est détecté
 	 * 
@@ -155,6 +127,7 @@ class Core_Secure {
 		}
 		
 		// Gestionnaires suivants obligatoires
+		Core_Loader::classLoader("Core_Request");
 		Core_Loader::classLoader("Exec_Cookie");
 		Core_Loader::classLoader("Exec_Crypt");
 		Core_Loader::classLoader("Core_Translate");
@@ -228,31 +201,6 @@ class Core_Secure {
 		} else {
 			return "Stop loading.";
 		}
-	}
-	
-	/**
-	 * Récupère, analyse et vérifie une variable URL
-	 * 
-	 * @param $variableName
-	 * @return String
-	 */
-	public static function checkVariable($variable, $search = true) {
-		// Recuperation de la variable
-		if ($search) {
-			if (isset($_GET[$variable]) && $_GET[$variable] != "") $variableContent = $_GET[$variable];
-			else if (isset($_POST[$variable]) && $_POST[$variable] != "") $variableContent = $_POST[$variable];
-			else $variableContent = "";
-		} else {
-			$variableContent = $variableName;
-		}
-		
-		// Nettoyage de la variable
-		if ($variableContent != "") $variableContent = trim($variableContent);
-		
-		if (preg_match("/(\.\.|http:|ftp:)/", $variableContent)) {
-			$variableContent = "";
-		}
-		return $variableContent;
 	}
 }
 

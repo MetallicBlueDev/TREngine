@@ -96,7 +96,7 @@ class Core_BlackBan {
 	 */
 	private static function checkBan() {
 		$sql = Core_Sql::getInstance();		
-		$userIp = Core_Secure::getUserIp();
+		$userIp = Exec_Agent::$userIp;
 		
 		if (Core_Session::$userIpBan != "") {
 			// Si l'ip n'est plus du tout valide

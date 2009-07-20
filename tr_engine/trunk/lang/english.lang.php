@@ -8,6 +8,10 @@ $lang = array(
 "ERROR_ACCES_ADMIN" => "You don't have sufficient rights to view this page.",
 "ERROR_ACCES_FORBIDDEN" => "You don't have permission to view this page.",
 
+"ERROR_404" => "Error 404, the page isn't found.",
+"ERROR_BLOCK_CODE" => "The code of a block isn't valide.",
+"ERROR_BLOCK_IMPLEMENT" => "A block isn't correctly implemented",
+
 // Erreur critique, mode debug via Core_Secure
 "ERROR_DEBUG_CLOSE" => "The site is currently closed.",
 "ERROR_DEBUG_SQLCONNECT" => "Error connecting to the database.",

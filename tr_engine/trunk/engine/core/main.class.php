@@ -151,6 +151,9 @@ class Core_Main {
 	public function start() {
 		Exec_Marker::startTimer("launcher");
 		
+		// Chargement du gestionnaire d'accès url
+		Core_Loader::classLoader("Core_Request");
+		
 		// Gestionnaire des cookie
 		Core_Loader::classLoader("Exec_Cookie");
 		
@@ -256,16 +259,16 @@ class Core_Main {
 	 */
 	private function launchUrl() {
 		// Assignation et vérification de fonction layout
-		$layout = strtolower(Core_Secure::checkVariable("layout"));
+		$layout = strtolower(Core_Request::getWord("layout"));
 		
 		// Assignation et vérification du module
-		$module = Core_Secure::checkVariable("mod");
+		$module = Core_Request::getWord("mod");
 		
 		// Assignation et vérification de la page
-		$page = Core_Secure::checkVariable("page");
+		$page = Core_Request::getWord("page");
 		
 		// Assignation et vérification de fonction view
-		$view = Core_Secure::checkVariable("view");
+		$view = Core_Request::getWord("view");
 		
 		// Configuration du layout
 		if ($layout != "default" 
@@ -278,16 +281,7 @@ class Core_Main {
 		// Création de l'instance du module
 		// Même si ce n'est pas utilisé, il vaut mieux le laisser
 		Core_Loader::classLoader("Libs_Module");	
-		Libs_Module::getInstance($module, $page, $view, $layout);
-		
-		// Vérification de la langue du client
-		Core_Session::$userLanguage = Core_Secure::checkVariable(Core_Session::$userLanguage, false);
-		
-		// Vérification du template du client
-		Core_Session::$userTemplate = Core_Secure::checkVariable(Core_Session::$userTemplate, false);
-		
-		// Vérification des infos IP BAN pour Core_BlackBan
-		Core_Session::$userIpBan = Core_Secure::checkVariable(Core_Session::$userIpBan, false);
+		Libs_Module::getInstance($module, $page, $view);
 		
 		// Assignation et vérification du template
 		$template = (!Core_Session::$userTemplate) ? self::$coreConfig['defaultTemplate'] : Core_Session::$userTemplate;

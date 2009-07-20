@@ -176,7 +176,7 @@ class Libs_Module {
 	 */
 	public function launch() {
 		// Vérification du niveau d'acces 
-		if (Core_Acces::mod(self::$module)) {
+		if (Core_Acces::autorize(self::$module)) {
 			if (!$this->moduleCompiled && $this->isModule()) {
 				Core_Translate::translate("modules/" . self::$module);
 				
@@ -186,12 +186,12 @@ class Libs_Module {
 				ob_end_clean();
 			}
 		} else {
-			Core_Exception::setMinorError(ERROR_ACCES_ZONE . " " . Core_Acces::getError(self::$module));
+			Core_Exception::setMinorError(ERROR_ACCES_ZONE . " " . Core_Acces::getModuleAccesError(self::$module));
 		}
 	}
 	
 	/**
-	 * Vérifie si le module courant existe
+	 * Vérifie si le module existe
 	 * 
 	 * @param $module String
 	 * @param $page String

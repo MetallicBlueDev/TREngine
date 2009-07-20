@@ -9,6 +9,8 @@ $lang = array(
 "ERROR_ACCES_FORBIDDEN" => "Vous n'avez pas l'autorisation d'afficher cette page.",
 
 "ERROR_404" => "Erreur 404, la page demandée est introuvable.",
+"ERROR_BLOCK_CODE" => "Le code d'un block n'est pas utilisable.",
+"ERROR_BLOCK_IMPLEMENT" => "Le code d'un block n'est pas correctement implémenté.",
 
 // Erreur critique, mode debug via Core_Secure
 "ERROR_DEBUG_CLOSE" => "Le site est actuellement fermé.",
