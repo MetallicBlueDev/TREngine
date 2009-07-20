@@ -165,6 +165,10 @@ class Core_Main {
 		Core_Loader::classLoader("Core_Session");
 		Core_Session::getInstance();
 		
+		// Chargement du moteur de traduction
+		Core_Loader::classLoader("Core_Translate");
+		Core_Translate::makeInstance();
+		
 		// Configure les informations de page demandées
 		$this->launchUrl();
 		
@@ -173,10 +177,6 @@ class Core_Main {
 		
 		// Chargement du traitement HTML
 		Core_Loader::classLoader("Core_TextEditor");
-		
-		// Chargement du moteur de traduction
-		Core_Loader::classLoader("Core_Translate");
-		Core_Translate::makeInstance();
 		
 		// Vérification des bannissements
 		Core_Loader::classLoader("Core_BlackBan");

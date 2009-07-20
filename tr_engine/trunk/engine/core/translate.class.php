@@ -274,19 +274,21 @@ class Core_Translate {
 		$languageClient = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 		$languageClient = strtolower(substr(trim($languageClient[0]), 0, 2));
 		
-		// Recherche de l'URL
-		if (!defined("TR_ENGINE_URL")) $url = $_SERVER["SERVER_NAME"];
-		else $url = TR_ENGINE_URL;
-		
-		// Recherche de l'extension de URL
-		preg_match('@^(?:http://)?([^/]+)@i', $url, $matches);
-		preg_match('/[^.]+\.[^.]+$/', $matches[1], $matches);
-		preg_match('/[^.]+$/', $matches[0], $languageExtension);
-		
 		if (self::$languageList[$languageClient] != "") {
 			self::$currentLanguageExtension = $languageClient;
-		} else if ($language_list[$languageExtension[0]] != "") {
-			self::$currentLanguageExtension = $languageExtension[0];
+		} else {
+			// Recherche de l'URL
+			if (!defined("TR_ENGINE_URL")) $url = $_SERVER["SERVER_NAME"];
+			else $url = TR_ENGINE_URL;
+			
+			// Recherche de l'extension de URL
+			preg_match('@^(?:http://)?([^/]+)@i', $url, $matches);
+			preg_match('/[^.]+\.[^.]+$/', $matches[1], $matches);
+			preg_match('/[^.]+$/', $matches[0], $languageExtension);
+			
+			if (self::$languageList[$languageExtension[0]] != "") {
+				self::$currentLanguageExtension = $languageExtension[0];
+			}
 		}
 	}
 	

@@ -8,6 +8,8 @@ $lang = array(
 "ERROR_ACCES_ADMIN" => "Vous ne possedez pas les droits suffisants pour afficher cette page.",
 "ERROR_ACCES_FORBIDDEN" => "Vous n'avez pas l'autorisation d'afficher cette page.",
 
+"ERROR_404" => "Erreur 404, la page demandée est introuvable.",
+
 // Erreur critique, mode debug via Core_Secure
 "ERROR_DEBUG_CLOSE" => "Le site est actuellement fermé.",
 "ERROR_DEBUG_SQLCONNECT" => "Erreur de connexion à la base de donnée.",
