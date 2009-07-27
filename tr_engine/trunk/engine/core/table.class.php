@@ -21,6 +21,7 @@ class Core_Table {
 	public static $BANNED_TABLE = "banned";
 	public static $BLOCKS_TABLE = "blocks";
 	public static $CONFIG_TABLE = "configs";
+	public static $MENUS_TABLES = "menus";
 	public static $MODULES_TABLE = "modules";
 	public static $USERS_TABLE = "users";
 	public static $ADMIN_USERS_TABLE = "users_admin";
@@ -28,7 +29,8 @@ class Core_Table {
 	private static $tables = array(
 		"CONFIG_TABLE", "USERS_TABLE",
 		"BANNED_TABLE", "BLOCKS_TABLE",
-		"MODULES_TABLE", "ADMIN_USERS_TABLE"
+		"MODULES_TABLE", "ADMIN_USERS_TABLE",
+		"MENUS_TABLES"
 	);
 	
 	/**

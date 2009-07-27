@@ -24,16 +24,14 @@ class Core_BlackBan {
 	/**
 	 * Affichage de l'isoloire BLACKBAN
 	 */
-	public static function displayBlackPage() {
-		$sql = Core_Sql::getInstance();
-		
-		$sql->select(
+	public static function displayBlackPage() {		
+		Core_Sql::select(
 			Core_Table::$BANNED_TABLE,
 			array("reason"),
 			array("ip = '" . Core_Session::$userIpBan . "'")
 		);
 		
-		if ($sql->affectedRows() > 0) {
+		if (Core_Sql::affectedRows() > 0) {
 			$mail = (Core_Main::$coreConfig['defaultAdministratorMail'] != "") ? Core_Main::$coreConfig['defaultAdministratorMail'] : TR_ENGINE_MAIL;
 			$name = (Core_Main::$coreConfig['defaultSiteName'] != "") ? Core_Main::$coreConfig['defaultSiteName'] : "";
 			
@@ -80,7 +78,7 @@ class Core_BlackBan {
 		
 		if ($deleteOldBlackBan) {
 			// Suppression des bannissements par ip trop vieux / 2 jours 
-			Core_Sql::getInstance()->delete(
+			Core_Sql::delete(
 				Core_Table::$BANNED_TABLE,
 				array("ip != ''", 
 					"&& (name = 'Hacker' || name = '')", 
@@ -94,8 +92,7 @@ class Core_BlackBan {
 	/**
 	 * Vérification des bannissements
 	 */
-	private static function checkBan() {
-		$sql = Core_Sql::getInstance();		
+	private static function checkBan() {	
 		$userIp = Exec_Agent::$userIp;
 		
 		if (Core_Session::$userIpBan != "") {
@@ -103,19 +100,19 @@ class Core_BlackBan {
 			if (Core_Session::$userIpBan != $userIp 
 					&& !preg_match("/" . Core_Session::$userIpBan . "/", $userIp)) {
 				// On verifie qu'il est bien dans la base (au cas ou il y aurait un débannissement)
-				$sql->select(
+				Core_Sql::select(
 					Core_Table::$BANNED_TABLE,
 					array("ban_id"),
 					array("ip = '" . Core_Session::$userIpBan . "'")
 				);
 				
 				// Il est fiché, on s'occupe bien de lui
-				if ($sql->affectedRows() > 0) {
+				if (Core_Sql::affectedRows() > 0) {
 					// Extrait l'id du bannissement
-					list($banId) = $sql->fetchArray();
+					list($banId) = Core_Sql::fetchArray();
 					
 					// Mise à jour de l'ip
-					$sql->update(
+					Core_Sql::update(
 						Core_Table::$BANNED_TABLE,
 						array("ip = '" . $userIp . "'"),
 						array("ban_id = '" . $banId . "'")
@@ -127,14 +124,14 @@ class Core_BlackBan {
 			}
 		} else {
 			// Sinon on recherche dans la base les bannis l'ip et le pseudo
-			$sql->select(
+			Core_Sql::select(
 				Core_Table::$BANNED_TABLE,
 				array("ip", "name"),
 				array(),
 				array("ban_id")					
 			);
 			
-			while (list($blackBanIp, $blackBanName) = $sql->fetchArray()) {
+			while (list($blackBanIp, $blackBanName) = Core_Sql::fetchArray()) {
 				$banIp = explode(".", $blackBanIp);
 				
 				// Filtre pour la vérification

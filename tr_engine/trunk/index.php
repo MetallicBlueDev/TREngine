@@ -4,6 +4,7 @@
 define("TR_ENGINE_INDEX", 1);
 
 // Vérification de la version PHP
+// Classe compatible PHP 4
 require("engine/core/info.class.php");
 
 // Inclusion du chargeur

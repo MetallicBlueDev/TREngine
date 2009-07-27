@@ -34,6 +34,7 @@ class Libs_Block {
 	private $blocksCompiled = array();
 	
 	public function __construct() {
+		Core_Loader::blockLoader("base");
 	}
 	
 	/**
@@ -42,8 +43,7 @@ class Libs_Block {
 	 * @return Libs_Block
 	 */
 	public static function getInstance() {
-		if (!self::$libsBlock) {
-			Core_Loader::blockLoader("base");
+		if (!self::$libsBlock) {			
 			self::$libsBlock = new self();
 		}
 		return self::$libsBlock;
@@ -101,17 +101,16 @@ class Libs_Block {
 	 * Charge les blocks
 	 */
 	private function launchAllBlock() {
-		$sql = Core_Sql::getInstance();
-		$sql->select(
+		Core_Sql::select(
 			Core_Table::$BLOCKS_TABLE,
 			array("block_id", "side", "position", "title", "content", "type", "rang", "mods"),
 			array("side > 0", "&& rang >= 0"),
 			array("side", "position")
 		);
 		
-		if ($sql->affectedRows() > 0) {
+		if (Core_Sql::affectedRows() > 0) {
 			// Récuperation des données des blocks
-			while (list($block['blockId'], $block['side'], $block['position'], $block['title'], $block['content'], $block['type'], $block['rang'], $block['mods']) = $sql->fetchArray()) {
+			while (list($block['blockId'], $block['side'], $block['position'], $block['title'], $block['content'], $block['type'], $block['rang'], $block['mods']) = Core_Sql::fetchArray()) {
 				$block['mods'] = $this->arrayContent($block['mods']);
 				
 				if ($this->isBlock($block['type']) // Si le block existe
@@ -134,15 +133,14 @@ class Libs_Block {
 		$blockId = Core_Secure::checkVariable("block");
 		
 		if (is_numeric($blockId)) {
-			$sql = Core_Sql::getInstance();
-			$sql->select(
+			Core_Sql::select(
 				Core_Table::$BLOCKS_TABLE,
 				array("side", "position", "title", "content", "type", "rang", "mods"),
 				array("block_id = '" . $blockId . "'")
 			);
 			
-			if ($sql->affectedRows() > 0) {
-				$block = $sql->fetchArray();
+			if (Core_Sql::affectedRows() > 0) {
+				$block = Core_Sql::fetchArray();
 				$block['blockId'] = $blockId;
 				
 				if ($this->isBlock($block['type']) // Si le block existe
@@ -166,7 +164,7 @@ class Libs_Block {
 		
 		// Vérification du block
 		if (class_exists("Block_" . ucfirst($block['type']))) {
-			
+			// Vérification de l'accès
 			if ($block['type'] != "base" && Core_Acces::autorize("block" . $block['blockId'], $block['rang'])) {
 				$blockClassName = "Block_" . ucfirst($block['type']);
 				$BlockClass = new $blockClassName();
@@ -213,7 +211,7 @@ class Libs_Block {
 	 * @param $side String or int
 	 * @return String or int
 	 */
-	public function getSide($side, $type = "numeric") {
+	private function getSide($side, $type = "numeric") {
 		if ($type == "letters") {
 			switch ($side) {
 				case 1: $side = "right"; break;

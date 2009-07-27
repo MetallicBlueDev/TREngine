@@ -132,15 +132,14 @@ class Libs_Module {
 		// Retourne le cache
 		if (isset($this->modules[$modName])) return $this->modules[$modName];
 		
-		$sql = Core_Sql::getInstance();		
-		$sql->select(
+		Core_Sql::select(
 			Core_Table::$MODULES_TABLE,
 			array("mod_id", "rang", "configs", "count"),
 			array("name =  '" . ((!$module) ? self::$module : $module) . "'")			
 		);
 		
-		if ($sql->affectedRows() > 0) {
-			list($modId, $rang, $configs, $count) = $sql->fetchArray();
+		if (Core_Sql::affectedRows() > 0) {
+			list($modId, $rang, $configs, $count) = Core_Sql::fetchArray();
 			
 			if (!$module || self::$module == $module) {
 				self::$modId = $modId;

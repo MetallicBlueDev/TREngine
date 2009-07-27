@@ -93,13 +93,12 @@ class Core_Main {
 	 */
 	private function getConfigDb() {
 		$config = array();
-		$sql = Core_Sql::getInstance();
 		Core_CacheBuffer::setSectionName("tmp");
 		$content = "";
 		
 		// Requête vers la base de donnée de configs
-		$sql->select(Core_Table::$CONFIG_TABLE, array("name", "value"));
-		while ($row = $sql->fetchArray()) {
+		Core_Sql::select(Core_Table::$CONFIG_TABLE, array("name", "value"));
+		while ($row = Core_Sql::fetchArray()) {
 			$config[$row['name']] = stripslashes(htmlentities($row['value'], ENT_NOQUOTES));
 			$content .= "$" . Core_CacheBuffer::getSectionName() . "['" . $row['name'] . "'] = \"" . Core_CacheBuffer::preparingCaching($config[$row['name']]) . "\"; ";
 		}

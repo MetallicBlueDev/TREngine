@@ -254,16 +254,15 @@ class Core_Session {
 				}
 		    } else if ($userId != "") {
 				// Si plus de fichier cache, on tente de retrouver le client
-				$sql = Core_Sql::getInstance();
-				$sql->select(
+				Core_Sql::select(
 					Core_Table::$USERS_TABLE,
 					array("user_name", "user_rang", "user_language", "user_template"),
 					array("user_id = '" . $userId . "'")
 				);
 				
-				if ($sql->affectedRows() > 0) {
+				if (Core_Sql::affectedRows() > 0) {
 					// Si le client a été trouvé, on recupere les informations
-					list($userName, $userRang, $userLanguage, $userTemplate) = $sql->fetchArray();
+					list($userName, $userRang, $userLanguage, $userTemplate) = Core_Sql::fetchArray();
 					
 					// Injection des informations du client
 					self::$userId = $userId;
@@ -310,7 +309,7 @@ class Core_Session {
 		if (!$userId) $userId = self::$userId;
 		
 		// Envoie la requête Sql
-		return Core_Sql::getInstance()->update(Core_Table::$USERS_TABLE, 
+		return Core_Sql::update(Core_Table::$USERS_TABLE, 
 			array("last_connect" => "NOW()"), 
 			array("user_id" => $userId));
 	}
@@ -422,19 +421,18 @@ class Core_Session {
 	public function startConnection($userName, $userPass, $auto) {
 		// Arrête de la session courante si il y en a une
 		$this->stopConnection();
-		$sql = Core_Sql::getInstance();
 		
 		$userName = Exec_Crypt::md5Decrypt($userName, $this->getSalt());
 		
-		$sql->select(
+		Core_Sql::select(
 			Core_Table::$USERS_TABLE,
 			array("user_id", "user_rang", "user_language", "user_template"),
 			array("user_name = '" . $userName . "'", "&& user_pass = '" . $userPass . "'")
 		);
 		
-		if ($sql->affectedRows() > 0) {
+		if (Core_Sql::affectedRows() > 0) {
 			// Si le client a été trouvé, on recupere les informations
-			list($userId, $userRang, $userLanguage, $userTemplate) = $sql->fetchArray();
+			list($userId, $userRang, $userLanguage, $userTemplate) = Core_Sql::fetchArray();
 			
 			// Injection des informations du client
 			self::$userId = $userId;
@@ -473,16 +471,14 @@ class Core_Session {
 		if (!$userIdAdmin) $userIdAdmin = self::$userId;
 		else $userIdAdmin = Exec_Entities::secureText($userIdAdmin);
 		
-		$sql = Core_Sql::getInstance();
-		$sql->select(
+		Core_Sql::select(
 			Core_Table::$ADMIN_USERS_TABLE,
 			array("rights"),
 			array("user_id = '" . $userIdAdmin . "'")
 		);
-		list($rights) = $sql->fetchArray();
-		$adminRows = $sql->affectedRows();
 		
-		if ($sql->affectedRows() > 0) {
+		if (Core_Sql::affectedRows() > 0) {
+			list($rights) = Core_Sql::fetchArray();
 			return explode("|", $rights);
 		}
 		return false;

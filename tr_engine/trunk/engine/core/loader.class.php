@@ -97,7 +97,7 @@ class Core_Loader {
 			if (is_file($path)) {
 				require($path);
 				self::$loaded[$name] = 1;
-			} else { 
+			} else {
 				throw new Exception("Loader");
 			}
 		}

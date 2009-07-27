@@ -1,4 +1,4 @@
-<?php
+<?php 
 if (!defined("TR_ENGINE_INDEX")) {
 	require("../core/secure.class.php");
 	new Core_Secure();
@@ -10,52 +10,29 @@ if (!defined("TR_ENGINE_INDEX")) {
  * @author Sébastien Villemain
  * 
  */
-class Base_MySql extends Core_Sql {
+class Base_Mysql extends Core_Sql {
 	
-	public function Base_MySql($db) {
-		$this->__construct($db);
-	}
-	
-	/**
-	 * Surcharge du constructeur de base pour n'avoir aucun parametre
-	 */
-	public function __construct($db) {
-		// Parametrage
-		$this->dbHost = $db['host'];
-		$this->dbUser = $db['user'];
-		$this->dbPass = $db['pass'];
-		$this->dbName = $db['name'];
-		$this->dbType = $db['type'];
-		
-		// Connexion au serveur
-		$this->dbConnect();
-		
-		// Selection d'une base de donnée
-		if (!$this->dbSelect()) {
-			throw new Exception("sqlConnect");
-		}
+	public function __construct() {echo "oui";
+		parent::__construct();
 	}
 	
 	public function __destruct() {
-		$this->connId = $this->dbDeconnect();
+		parent::__destruct();
 	}
-	
+		
 	/**
 	 * Etablie une connexion à la base de donnée
 	 */
-	private function dbConnect() {
+	public function dbConnect() {
 		$this->connId = @mysql_connect($this->dbHost, $this->dbUser, $this->dbPass);
-		
-		if ($this->connId == false) {
-			throw new Exception("sqlConnect");
-		}
 	}
 	
 	/**
 	 * Selectionne une base de donnée
+	 * 
 	 * @return boolean true succes
 	 */
-	private function dbSelect() {
+	public function dbSelect() {
 		if ($this->connId) {
 			return @mysql_select_db($this->dbName, $this->connId);
 		}
@@ -64,14 +41,12 @@ class Base_MySql extends Core_Sql {
 	
 	/**
 	 * Déconnexion à la base de donnée
-	 * 
-	 * @return boolean true succes
 	 */
-	private function dbDeconnect() {
+	public function dbDeconnect() {
 		if ($this->connId) {
-			return @mysql_close($this->connId);
+			$this->connId = @mysql_close($this->connId);
 		}
-		return false;
+		$this->connId = false;
 	}
 	
 	/**
@@ -81,19 +56,19 @@ class Base_MySql extends Core_Sql {
 	 */
 	public function query($sql) {
 		$this->queries = @mysql_query($sql, $this->connId);
-		
-		if (!$this->queries) throw new Exception("sqlReq");
 	}
 	
 	/**
-	 * Retourne un tableau qui contient la ligne demandée
+	 * Retourne un tableau qui contient les lignes demandées
+	 * 
+	 * @return array
 	 */
 	public function fetchArray() {
 		return mysql_fetch_array($this->queries);
 	}
 	
 	/**
-	 * Get number of affected rows 
+	 * Get number of LAST affected rows 
 	 * 
 	 * @return int
 	 */
@@ -102,12 +77,13 @@ class Base_MySql extends Core_Sql {
 	}
 	
 	/**
-	 * Get number of LAST affected rows 
+	 * Get number of affected rows 
 	 * 
+	 * @param $queries
 	 * @return int
 	 */
-	public function numRows() {
-		return mysql_num_rows($this->queries);
+	public function numRows($queries) {
+		return mysql_num_rows($queries);
 	}
 	
 	/**
@@ -127,7 +103,6 @@ class Base_MySql extends Core_Sql {
 	 * @param $where array
 	 * @param $orderby array
 	 * @param $limit
-	 * @return ressource ID ou false
 	 */
 	public function update($table, $values, $where, $orderby = array(), $limit = false) {
 		// Affectation des clès a leurs valeurs
@@ -147,11 +122,7 @@ class Base_MySql extends Core_Sql {
 		$sql .= ($where != "" && count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
 		$sql .= $orderby . $limit;
 		
-		try {
-			$this->query($sql);
-		} catch (Exception $ie) {
-			Core_Secure::getInstance()->debug($ie);
-		}
+		$this->sql = $sql;
 	}
 	
 	/**
@@ -160,7 +131,6 @@ class Base_MySql extends Core_Sql {
 	 * @param $table Nom de la table
 	 * @param $keys
 	 * @param $values
-	 * @return ressource ID ou false
 	 */
 	public function insert($table, $keys, $values) {
 		if (!is_array($keys)) $keys = array($keys);
@@ -170,11 +140,7 @@ class Base_MySql extends Core_Sql {
 		. implode(", ", $this->converKey($keys)) . ") VALUES ("
 		. implode(", ", $this->converValue($values)) . ")";
 		
-		try {
-			$this->query($sql);
-		} catch (Exception $ie) {
-			Core_Secure::getInstance()->debug($ie);
-		}	
+		$this->sql = $sql;
 	}
 	
 	/**
@@ -184,7 +150,6 @@ class Base_MySql extends Core_Sql {
 	 * @param $where
 	 * @param $like
 	 * @param $limit
-	 * @return ressource ID ou false
 	 */
 	public function delete($table, $where = array(), $like = array(), $limit = false) {
 		// Mise en place du WHERE
@@ -203,11 +168,7 @@ class Base_MySql extends Core_Sql {
 		$limit = (!$limit) ? "" : " LIMIT " . $limit;
 		$sql = "DELETE FROM " . $table . $where . $like . $limit;
 		
-		try {
-			$this->query($sql);
-		} catch (Exception $ie) {
-			Core_Secure::getInstance()->debug($ie);
-		}	
+		$this->sql = $sql;
 	}
 	
 	/**
@@ -218,7 +179,6 @@ class Base_MySql extends Core_Sql {
 	 * @param $where array
 	 * @param $orderby array
 	 * @param $limit
-	 * @return ressource ID ou false
 	 */
 	public function select($table, $values, $where = array(), $orderby = array(), $limit = false) {
 		// Mise en place des valeurs selectionnées
@@ -236,11 +196,7 @@ class Base_MySql extends Core_Sql {
 		// Mise en forme de la requête finale
 		$sql = "SELECT " . $values . " FROM " . $table . $where . $orderby . $limit;
 		
-		try {
-			$this->query($sql);
-		} catch (Exception $ie) {
-			Core_Secure::getInstance()->debug($ie);
-		}				
+		$this->sql = $sql;
 	}
 	
 	/**

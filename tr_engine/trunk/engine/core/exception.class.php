@@ -145,6 +145,7 @@ class Core_Exception {
 		. "Core : " . Exec_Marker::getTime("core")
 		. "<br />Launcher : " . Exec_Marker::getTime("launcher")
 		. "<br />All : " . Exec_Marker::getTime("all")
+		. "<br />Appreciation : <span style=\"color: " . (((0.4000 - Exec_Marker::getTime("all")) > 0.3) ? "green;\">IMPECCABLE" : "red;\">INSUFFISANT") . "</span>"
 		. "</div>";
 	}
 	

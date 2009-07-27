@@ -38,7 +38,21 @@ class Core_Html {
 	 * 
 	 * @var String
 	 */
-	private $javaScript = "";
+	private $javaScriptCode = "";
+	
+	/**
+	 * Fichiers de javascript demandées
+	 * 
+	 * @var array
+	 */
+	private $javaScriptFile = array();
+	
+	/**
+	 * Fichier de style CSS demandées
+	 * 
+	 * @var array
+	 */
+	private $cssFile = array();
 	
 	/**
 	 * Titre de la page courante
@@ -98,26 +112,52 @@ class Core_Html {
 	}
 	
 	/**
-	 * Retourne le script de detection javascript
+	 * Retourne les scripts à inclure
 	 * 
 	 * @return String
 	 */
 	private function includeJavaScript() {
-		$script = "";
-		if (Core_Request::getRequest() != "POST") {
-			$script .= "<script type=\"text/javascript\" src=\"includes/js/javascriptactived.js\"></script>\n";
-			
-			if (class_exists("Exec_Agent") && Exec_Agent::$userBrowserName == "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") {
-				$script .= "<script defer type=\"text/javascript\" src=\"includes/js/pngfix.js\"></script>\n";
-			}
-			
+		if (Core_Request::getRequest() != "POST") {			
 			if (class_exists("Core_Main")) $fullScreen = Core_Main::isFullScreen();
 			else $fullScreen = true;
 			
 			if ($fullScreen && $this->isJavaScriptActived()) {
-				$script .= "<script type=\"text/javascript\" src=\"includes/js/tr_engine.js\"></script>\n"
-				. "<script type=\"text/javascript\" src=\"includes/js/jquery.js\"></script>\n";
+				if ($this->javaScriptCode != "") $this->addJavaScriptFile("jquery.js");
+				$this->addJavaScriptFile("tr_engine.js");
+			} else {
+				// Tous fichier inclus est superflue donc reset
+				$this->resetJavaScript();
 			}
+			
+			$this->addJavaScriptFile("javascriptactived.js");
+			
+			if (class_exists("Exec_Agent") && Exec_Agent::$userBrowserName == "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") {
+				$this->addJavaScriptFile("pngfix.js", "defer");
+			}
+		} else {
+			$this->resetJavaScript();
+		}
+		
+		// Conception de l'entête
+		$script = "";
+		foreach($this->javaScriptFile as $file => $options) {
+			if ($options != "") $options = " " . $options;
+			$script .= "<script" . $options . " type=\"text/javascript\" src=\"includes/js/" . $file . "\"></script>\n";
+		}
+		return $script;
+	}
+	
+	/**
+	 * Retourne les fichiers de css à inclure
+	 * 
+	 * @return String
+	 */
+	private function includeCss() {
+		// Conception de l'entête
+		$script = "";
+		foreach($this->cssFile as $file => $options) {
+			if ($options != "") $options = " " . $options;
+			$script .= "<link rel=\"stylesheet\" href=\"includes/css/" . $file . "\" type=\"text/css\" />\n";			
 		}
 		return $script;
 	}
@@ -128,16 +168,10 @@ class Core_Html {
 	 * @return String
 	 */
 	private function executeJavaScript() {
-		$script = "";
 		$script .= "<script type=\"text/javascript\">\n"
 		. "javaScriptActived('" . $this->cookieTestName . "');\n";
 		
-		if (class_exists("Core_Main")) $fullScreen = Core_Main::isFullScreen();
-		else $fullScreen = true;		
-		
-		if ($fullScreen && $this->isJavaScriptActived() && $this->javaScript != "") {
-			$script .= $this->javaScript . "\n";
-		}
+		if ($this->javaScriptCode != "") $script .= $this->javaScriptCode . "\n";
 		
 		$script .= "</script>\n";
 		
@@ -149,9 +183,41 @@ class Core_Html {
 	 * 
 	 * @param $javaScript String
 	 */
-	public function addJavaScript($javaScript) {
-		if ($this->javaScript != "") $this->javaScript .= "\n";
-		$this->javaScript .= $javaScript;
+	public function addJavaScriptCode($javaScript) {
+		if ($this->javaScriptCode != "") $this->javaScriptCode .= "\n";
+		$this->javaScriptCode .= $javaScript;
+	}
+	
+	/**
+	 * Ajoute un fichier javascript a l'entête
+	 * 
+	 * @param $fileName String
+	 * @param $options String
+	 */
+	public function addJavaScriptFile($fileName, $options = "") {
+		if (!array_key_exists($fileName, $this->javaScriptFile)) {
+			$this->javaScriptFile[$fileName] = $options;
+		}
+	}
+	
+	/**
+	 * Ajoute un fichier de style CSS a l'entête
+	 * 
+	 * @param $fileName String
+	 * @param $options String
+	 */
+	public function addCssFile($fileName, $options = "") {
+		if (!array_key_exists($fileName, $this->cssFile)) {
+			$this->cssFile[$fileName] = $options;
+		}
+	}
+	
+	/**
+	 * Reset des codes et fichier inclus javascript
+	 */
+	private function resetJavaScript() {
+		$this->javaScriptCode = "";
+		$this->javaScriptFile = array();
 	}
 	
 	/**
@@ -187,7 +253,8 @@ class Core_Html {
 		. "<meta http-equiv=\"content-script-type\" content=\"text/javascript\" />\n"
 		. "<meta http-equiv=\"content-style-type\" content=\"text/css\" />\n"
 		. "<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"" . Libs_MakeStyle::getTemplatesDir() . "/" . Libs_MakeStyle::getTemplateUsedDir() . "/favicon.ico\" />\n"
-		. $this->includeJavaScript();
+		. $this->includeJavaScript()
+		. $this->includeCss();
 		
 		// TODO ajouter un support RSS XML
 	}
