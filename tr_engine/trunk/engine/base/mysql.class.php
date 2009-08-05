@@ -10,10 +10,10 @@ if (!defined("TR_ENGINE_INDEX")) {
  * @author Sébastien Villemain
  * 
  */
-class Base_Mysql extends Core_Sql {
+class Base_Mysql extends Base_Model {
 	
-	public function __construct() {echo "oui";
-		parent::__construct();
+	public function __construct($db) {
+		parent::__construct($db);
 	}
 	
 	public function __destruct() {
@@ -65,6 +65,28 @@ class Base_Mysql extends Core_Sql {
 	 */
 	public function fetchArray() {
 		return mysql_fetch_array($this->queries);
+	}
+	
+	/**
+	 * Retourne un objet qui contient les lignes demandées
+	 * 
+	 * @return object
+	 */
+	public function fetchObject() {
+		return mysql_fetch_object($this->queries);
+	}
+	
+	/**
+	 * Libere la memoire du resultat
+	 * 
+	 * @param $querie Resource Id
+	 * @return boolean
+	 */
+	public function freeResult($querie) {
+		if (is_resource($querie)) {
+			return mysql_free_result($querie);
+		}
+		return false;
 	}
 	
 	/**
@@ -121,7 +143,6 @@ class Base_Mysql extends Core_Sql {
 		$sql = "UPDATE " . $table . " SET " . implode(", ", $valuesString);
 		$sql .= ($where != "" && count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
 		$sql .= $orderby . $limit;
-		
 		$this->sql = $sql;
 	}
 	
@@ -139,7 +160,6 @@ class Base_Mysql extends Core_Sql {
 		$sql = "INSERT INTO " . $table . " ("
 		. implode(", ", $this->converKey($keys)) . ") VALUES ("
 		. implode(", ", $this->converValue($values)) . ")";
-		
 		$this->sql = $sql;
 	}
 	
@@ -167,7 +187,6 @@ class Base_Mysql extends Core_Sql {
 
 		$limit = (!$limit) ? "" : " LIMIT " . $limit;
 		$sql = "DELETE FROM " . $table . $where . $like . $limit;
-		
 		$this->sql = $sql;
 	}
 	
@@ -195,7 +214,6 @@ class Base_Mysql extends Core_Sql {
 		
 		// Mise en forme de la requête finale
 		$sql = "SELECT " . $values . " FROM " . $table . $where . $orderby . $limit;
-		
 		$this->sql = $sql;
 	}
 	
@@ -237,7 +255,6 @@ class Base_Mysql extends Core_Sql {
 		
 		// Convertie les multiples espaces (tabulation, espace en trop) en espace simple
 		$key = preg_replace("/[\t ]+/", " ", $key);
-		
 		return $key;
 	}
 	
@@ -255,6 +272,15 @@ class Base_Mysql extends Core_Sql {
 		} else {
 			return addslashes($str);
 		}
+	}
+	
+	/**
+	 * Vérifie que le module mysql est chargé
+	 * 
+	 * @return boolean
+	 */
+	public function test() {
+		return (function_exists("mysql_connect"));
 	}
 }
 ?>

@@ -218,7 +218,7 @@ class Core_Translate {
 		// Langue finale
 		$language = "";
 		// Langage du client via le cookie de session
-		if (class_exists("Core_Session")) $userLanguage = strtolower(trim(Core_Session::$userLanguage));
+		if (Core_Loader::isCallable("Core_Session")) $userLanguage = strtolower(trim(Core_Session::$userLanguage));
 		else $userLanguage = "";
 		
 		if (self::isValid($userLanguage)) {
@@ -234,7 +234,7 @@ class Core_Translate {
 			// Si la langue trouvé en invalide
 			if (!self::isValid($language)) {
 				// Utilisation de la langue par défaut du site
-				if (class_exists("Core_Main")) $language = Core_Main::$coreConfig['defaultLanguage'];
+				if (Core_Loader::isCallable("Core_Main")) $language = Core_Main::$coreConfig['defaultLanguage'];
 				else $language = "";
 				
 				// Malheureusement la langue par défaut est aussi invalide
@@ -333,8 +333,8 @@ class Core_Translate {
 			$content = "";
 			
 			// Recherche dans le cache
-			if (class_exists("Core_CacheBuffer")) Core_CacheBuffer::setSectionName("lang");
-			if (!class_exists("Core_CacheBuffer") 
+			if (Core_Loader::isCallable("Core_CacheBuffer")) Core_CacheBuffer::setSectionName("lang");
+			if (!Core_Loader::isCallable("Core_CacheBuffer") 
 					|| !Core_CacheBuffer::cached($langCacheFile)
 					|| (Core_CacheBuffer::cacheMTime($langCacheFile) < @filemtime(TR_ENGINE_DIR . "/" . $pathLang))) {
 				// Ecriture du fichier cache
@@ -349,12 +349,12 @@ class Core_Translate {
 							$content .= "define(\"" . $key . "\",\"" . self::entitiesTranslate($value) . "\");";
 						}
 					}
-					if (class_exists("Core_CacheBuffer")) Core_CacheBuffer::writingCache($langCacheFile, $content);
+					if (Core_Loader::isCallable("Core_CacheBuffer")) Core_CacheBuffer::writingCache($langCacheFile, $content);
 				}
 			}
 			
 			// Donnée de traduction
-			if (class_exists("Core_CacheBuffer") && Core_CacheBuffer::cached($langCacheFile)) $data = "require(TR_ENGINE_DIR . '/tmp/lang/" . $langCacheFile . "');";
+			if (Core_Loader::isCallable("Core_CacheBuffer") && Core_CacheBuffer::cached($langCacheFile)) $data = "require(TR_ENGINE_DIR . '/tmp/lang/" . $langCacheFile . "');";
 			else if ($content != "") $data = $content;
 			else $data = "";
 			

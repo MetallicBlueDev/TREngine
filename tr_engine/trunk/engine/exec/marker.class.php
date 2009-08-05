@@ -51,7 +51,9 @@ class Exec_Marker {
 	public static function getTime($name, $virgule = 4) {
 		if (isset(self::$startTime[$name]) 
 				&& isset(self::$finishTime[$name])) {
-			return round(self::$finishTime[$name] - self::$startTime[$name], $virgule);
+					$rslt = self::$finishTime[$name] - self::$startTime[$name];
+					$rslt = round($rslt, $virgule);
+					return $rslt;
 		} else {
 			return 0;
 		}

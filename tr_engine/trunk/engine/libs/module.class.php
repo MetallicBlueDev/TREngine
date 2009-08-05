@@ -4,6 +4,12 @@ if (!defined("TR_ENGINE_INDEX")) {
 	new Core_Secure();
 }
 
+/**
+ * Gestionnaire de module
+ * 
+ * @author Sebastien Villemain
+ *
+ */
 class Libs_Module {
 	
 	/**
@@ -86,7 +92,7 @@ class Libs_Module {
 	 * 
 	 * @return Libs_Module
 	 */
-	public static function getInstance($module = "", $page = "", $view = "") {
+	public static function &getInstance($module = "", $page = "", $view = "") {
 		if (!self::$libsModule) {
 			// Injection des informations
 			self::$module = $module;

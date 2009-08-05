@@ -137,7 +137,7 @@ class Core_Session {
 	 * 
 	 * @return Core_Session
 	 */
-	public static function getInstance() {
+	public static function &getInstance() {
 		if (!self::$session) {
 			self::$session = new self();
 		}
@@ -245,7 +245,7 @@ class Core_Session {
 				} else {
 					// Injection des informations du client
 					self::$userId = $sessions['userId'];
-					self::$userName = $sessions['userName'];
+					self::$userName = Exec_Entities::stripSlashes($sessions['userName']);
 					self::$userRang = $sessions['userRang'];
 					self::$sessionId = $sessions['sessionId'];
 					self::$userLanguage = ($userLanguage != "") ? $userLanguage : $sessions['userLanguage'];
@@ -376,7 +376,7 @@ class Core_Session {
 				// Préparation des informations pour le cache
 				$content = "";
 				foreach ($this->user as $key => $value) {
-					$content .= "$" . Core_CacheBuffer::getSectionName() . "[" . $key . "] = \"" . Core_CacheBuffer::preparingCaching($value) . "\"; ";
+					$content .= "$" . Core_CacheBuffer::getSectionName() . "[" . $key . "] = \"" . Exec_Entities::addSlashes($value) . "\"; ";
 				}
 				// Ecriture du cache
 				Core_CacheBuffer::writingCache(self::$sessionId . ".php",	$content);

@@ -125,7 +125,7 @@ class Exec_Entities {
 	public static function textDisplay($text) {
 		$text = self::entitiesUtf8($text);
 		//$text = self::stripSlashes($text);
-		if (class_exists("Core_TextEditor")) {
+		if (Core_Loader::isCallable("Core_TextEditor")) {
 			$text = Core_TextEditor::text($text);
 			$text = Core_TextEditor::smilies($text);
 		}

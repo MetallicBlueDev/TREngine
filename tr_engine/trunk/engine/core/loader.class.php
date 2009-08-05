@@ -113,5 +113,31 @@ class Core_Loader {
 		if (isset(self::$loaded[$name])) return true;
 		else return false;
 	}
+	
+	/**
+	 * Vérifie la disponibilité de la classe et de ca methode éventuellement
+	 * 
+	 * @param $className String or Object
+	 * @param $methodName String
+	 * @param $static boolean
+	 * @return boolean
+	 */
+	public static function isCallable($className, $methodName = "", $static = false) {
+		if (is_object($className)) {
+			$className = get_class($className);
+		}
+		
+		if ($methodName != "") {
+			// Define Callable
+			if ($static) {
+				$callable = "{$className}::{$methodName}";
+			} else {
+				$callable = array($className, $methodName);
+			}
+			return is_callable($callable);
+		} else {
+			return class_exists($className);
+		}
+	}
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-class Block_Menu extends Block_Base {
+class Block_Menu extends Block_Model {
 	
 	/**
 	 * TAG pour les options
@@ -16,12 +16,15 @@ class Block_Menu extends Block_Base {
 	 */
 	private $blockIdFocused = 0;
 	
-	/**
-	 * Donnée du menu
-	 * 
-	 * @var array
-	 */
-	private $menu = array();
+	public function display() {
+		
+		$this->getMenu();
+		
+		$libsMakeStyle = new Libs_MakeStyle();
+		$libsMakeStyle->assign("blockTitle", $this->title);
+		$libsMakeStyle->assign("blockContent", "");
+		$libsMakeStyle->display($this->templateName);
+	}
 	
 	/**
 	 * Configure l'id du block menu actif
@@ -34,29 +37,20 @@ class Block_Menu extends Block_Base {
 		}
 	}
 	
-	public function display() {
-		
-		$this->getMenu();
-		
-		$libsMakeStyle = new Libs_MakeStyle();
-		$libsMakeStyle->assign("blockTitle", $this->title);
-		$libsMakeStyle->assign("blockContent", "");
-		$libsMakeStyle->display($this->templateName);
-	}
-	
 	public function getMenu() {
 		$this->init();
 		
-		Core_Sql::select(
-			Core_Table::$MENUS_TABLES,
-			array("menu_id", "parent_id", "content"),
-			array("block_id = '" . $this->blockIdFocused . "'")
+		Core_Loader::classLoader("Libs_Menu");
+		$menus = new Libs_Menu(
+			"block" . $this->blockIdFocused,
+			array(
+				"table" => Core_Table::$MENUS_TABLES,
+				"select" => array("menu_id", "block_id", "parent_id", "content", "sublevel", "position", "rang"),
+				"where" => array("block_id = '" . $this->blockIdFocused . "'"),
+				"orderby" => array("sublevel", "parent_id", "position"),
+				"limit" => array()
+			)
 		);
-		/*
-		if ($sql->affectedRows() > 0) {
-			$this->menu = $sql->fetchArray();
-			print_r($this->menu);
-		}*/
 	}
 	
 	/**

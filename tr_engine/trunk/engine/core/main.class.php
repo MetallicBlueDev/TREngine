@@ -15,7 +15,7 @@ class Core_Main {
 	/**
 	 * Tableau d'information de configuration
 	 */ 
-	public static $coreConfig = array();
+	public static $coreConfig;
 	
 	/**
 	 * Mode de mise en page courante
@@ -62,6 +62,9 @@ class Core_Main {
 		// Connexion à la base de donnée
 		$this->setCoreSql($coreConfigLoader->getDatabase());
 		
+		// Chargement du convertiseur d'entities
+		Core_Loader::classLoader("Exec_Entities");
+		
 		// Récuperation de la configuration
 		$this->setCoreConfig($coreConfigLoader->getConfig());
 		
@@ -82,7 +85,7 @@ class Core_Main {
 	 */
 	private function setCoreSql($db) {
 		Core_Loader::classLoader("Core_Sql");
-		Core_Sql::getInstance($db);
+		Core_Sql::makeInstance($db);
 		Core_Table::setPrefix($db['prefix']);
 	}
 	
@@ -100,7 +103,7 @@ class Core_Main {
 		Core_Sql::select(Core_Table::$CONFIG_TABLE, array("name", "value"));
 		while ($row = Core_Sql::fetchArray()) {
 			$config[$row['name']] = stripslashes(htmlentities($row['value'], ENT_NOQUOTES));
-			$content .= "$" . Core_CacheBuffer::getSectionName() . "['" . $row['name'] . "'] = \"" . Core_CacheBuffer::preparingCaching($config[$row['name']]) . "\"; ";
+			$content .= "$" . Core_CacheBuffer::getSectionName() . "['" . $row['name'] . "'] = \"" . Exec_Entities::addSlashes($config[$row['name']]) . "\"; ";
 		}
 		// Mise en cache
 		Core_CacheBuffer::writingCache("configs.php", $content, true);
@@ -116,7 +119,7 @@ class Core_Main {
 	private function addToConfig($config) {
 		if (is_array($config)) {
 			foreach($config as $key => $value) {
-				self::$coreConfig[$key] = $value;
+				self::$coreConfig[$key] = Exec_Entities::stripSlashes($value);
 			}
 		}
 	}
@@ -172,10 +175,9 @@ class Core_Main {
 		Core_Translate::makeInstance();
 		
 		// Configure les informations de page demandées
-		$this->launchUrl();
-		
-		// Chargement du convertiseur d'entities
-		Core_Loader::classLoader("Exec_Entities");
+		$this->loadLayout();
+		$this->loadModule(); // Même si le module n'est pas utilisé, il vaut mieux le laisser
+		$this->loadMakeStyle();
 		
 		// Chargement du traitement HTML
 		Core_Loader::classLoader("Core_TextEditor");
@@ -189,7 +191,7 @@ class Core_Main {
 		Core_Html::getInstance();
 		
 		// TODO a décommenter
-		//$this->openCompression();
+		//$this->compressionOpen();
 		
 		// Comportement different en fonction du type de client
 		if (!Core_BlackBan::isBlackUser()) {
@@ -225,7 +227,7 @@ class Core_Main {
 		}
 		
 		// TODO a décommenter
-		//$this->closeCompression();
+		//$this->compressionClose();
 		
 		Exec_Marker::stopTimer("launcher");
 	}
@@ -234,7 +236,7 @@ class Core_Main {
 	 * Lance le tampon de sortie
 	 * Entête & tamporisation de sortie
 	 */
-	private function openCompression() {
+	private function compressionOpen() {
 		header("Vary: Cookie, Accept-Encoding");
 		if (extension_loaded('zlib') 
 				&& !ini_get('zlib.output_compression') 
@@ -249,25 +251,16 @@ class Core_Main {
 	/**
 	 * Relachement des tampons de sortie
 	 */
-	private function closeCompression() {
+	private function compressionClose() {
 		while (ob_end_flush());
 	}
 	
 	/**
-	 * Récupere les informations de l'url relatif a la page ciblé
+	 * Assignation et vérification de fonction layout
 	 */
-	private function launchUrl() {
+	private function loadLayout() {
 		// Assignation et vérification de fonction layout
 		$layout = strtolower(Core_Request::getWord("layout"));
-		
-		// Assignation et vérification du module
-		$module = Core_Request::getWord("mod");
-		
-		// Assignation et vérification de la page
-		$page = Core_Request::getWord("page");
-		
-		// Assignation et vérification de fonction view
-		$view = Core_Request::getWord("view");
 		
 		// Configuration du layout
 		if ($layout != "default" 
@@ -276,18 +269,29 @@ class Core_Main {
 			$layout = "default";
 		}
 		self::$layout = $layout;
-		
-		// Création de l'instance du module
-		// Même si ce n'est pas utilisé, il vaut mieux le laisser
+	}
+	
+	/**
+	 * Création de l'instance du module
+	 */
+	private function loadModule() {
 		Core_Loader::classLoader("Libs_Module");	
-		Libs_Module::getInstance($module, $page, $view);
-		
-		// Assignation et vérification du template
+		Libs_Module::getInstance(
+			Core_Request::getWord("mod"), 
+			Core_Request::getWord("page"), 
+			Core_Request::getWord("view")
+		);
+	}
+	
+	/**
+	 * Assignation et vérification du template
+	 */
+	private function loadMakeStyle() {		
 		$template = (!Core_Session::$userTemplate) ? self::$coreConfig['defaultTemplate'] : Core_Session::$userTemplate;
 		Core_Loader::classLoader("Libs_MakeStyle");		
 		Libs_MakeStyle::getTemplateUsedDir($template);
 	}
-	
+		
 	/**
 	 * Vérifie si l'affichage se fait en écran complet
 	 * 

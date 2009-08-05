@@ -68,7 +68,7 @@ class Exec_Crypt {
 			case 'my411':
 				return '*'.sha1(pack("H*", sha1($data)));
 			default:
-				if (class_exists("Core_Exception")) {
+				if (Core_Loader::isCallable("Core_Exception")) {
 					Core_Exception::setException("Unsupported crypt method. Method : " . $method);
 				}
 				return self::cryptData($data, $salt);

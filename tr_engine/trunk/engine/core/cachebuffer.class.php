@@ -43,7 +43,8 @@ class Core_CacheBuffer {
 		"tmp" => "tmp",
 		"log" => "tmp/log",
 		"sessions" => "tmp/sessions",
-		"lang" => "tmp/lang"
+		"lang" => "tmp/lang",
+		"menus" => "tmp/menus"
 	);
 	
 	/**
@@ -245,8 +246,7 @@ class Core_CacheBuffer {
 	 * Capture le cache ciblé dans un tableau
 	 * 
 	 * @param $path Chemin du cache
-	 * @param $varName nom de la variable
-	 * @return unknown_type
+	 * @return mixed
 	 */
 	public static function getCache($path) {
 		// Réglage avant capture
@@ -259,16 +259,6 @@ class Core_CacheBuffer {
 			require(self::getPath($path));
 		}
 		return ${$variableName};
-	}
-	
-	/**
-	 * Prépare le contenu a être mise en cache
-	 * 
-	 * @param $value contenu
-	 * @return String cache préparé
-	 */
-	public static function preparingCaching($value) {
-		return addslashes($value);
 	}
 	
 	/**

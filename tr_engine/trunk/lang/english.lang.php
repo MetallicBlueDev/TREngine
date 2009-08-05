@@ -15,6 +15,8 @@ $lang = array(
 // Erreur critique, mode debug via Core_Secure
 "ERROR_DEBUG_CLOSE" => "The site is currently closed.",
 "ERROR_DEBUG_SQLCONNECT" => "Error connecting to the database.",
+"ERROR_DEBUG_SQLDBSELECT" => "Error selecting the database.",
+"ERROR_DEBUG_SQLTEST" => "The module needed to communicate with the database isn't loaded.",
 "ERROR_DEBUG_SQLREQ" => "Error SQL query.",
 "ERROR_DEBUG_SQLTYPE" => "The type of database isn't supported.",
 "ERROR_DEBUG_SQLPATH" => "Database file not found.",

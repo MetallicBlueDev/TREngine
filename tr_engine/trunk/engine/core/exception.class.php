@@ -142,9 +142,9 @@ class Core_Exception {
 		
 		echo "<div style=\"color: " . $color . ";\"><br />" . $error . "</div>\n"
 		. "<div style=\"color: blue;\"><br />BenchMaker :<br />\n"
-		. "Core : " . Exec_Marker::getTime("core")
-		. "<br />Launcher : " . Exec_Marker::getTime("launcher")
-		. "<br />All : " . Exec_Marker::getTime("all")
+		. "Core : " . Exec_Marker::getTime("core") . " seconde\n"
+		. "<br />Launcher : " . Exec_Marker::getTime("launcher") . " seconde\n"
+		. "<br />All : " . Exec_Marker::getTime("all") . " seconde\n"
 		. "<br />Appreciation : <span style=\"color: " . (((0.4000 - Exec_Marker::getTime("all")) > 0.3) ? "green;\">IMPECCABLE" : "red;\">INSUFFISANT") . "</span>"
 		. "</div>";
 	}

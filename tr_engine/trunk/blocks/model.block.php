@@ -6,7 +6,7 @@
  * @author Sebastien Villemain
  *
  */
-class Block_Base {
+class Block_Model {
 	
 	/**
 	 * Identifiant du block

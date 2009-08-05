@@ -34,7 +34,7 @@ class Libs_Block {
 	private $blocksCompiled = array();
 	
 	public function __construct() {
-		Core_Loader::blockLoader("base");
+		Core_Loader::blockLoader("model");
 	}
 	
 	/**
@@ -42,7 +42,7 @@ class Libs_Block {
 	 * 
 	 * @return Libs_Block
 	 */
-	public static function getInstance() {
+	public static function &getInstance() {
 		if (!self::$libsBlock) {			
 			self::$libsBlock = new self();
 		}
@@ -110,15 +110,16 @@ class Libs_Block {
 		
 		if (Core_Sql::affectedRows() > 0) {
 			// Récuperation des données des blocks
-			while (list($block['blockId'], $block['side'], $block['position'], $block['title'], $block['content'], $block['type'], $block['rang'], $block['mods']) = Core_Sql::fetchArray()) {
-				$block['mods'] = $this->arrayContent($block['mods']);
+			Core_Sql::addBuffer("block");
+			while ($block = Core_Sql::fetchBuffer("block")) {
+				$block->mods = $this->arrayContent($block->mods);
 				
-				if ($this->isBlock($block['type']) // Si le block existe
-						&& $this->blockActiveMod($block['mods']) // Et qu'il est actif sur la page courante
-						&& Core_Session::$userRang >= $block['rang']) { // Et que le client est assez gradé
-					$block['title'] = Exec_Entities::textDisplay($block['title']);
+				if ($this->isBlock($block->type) // Si le block existe
+						&& $this->blockActiveMod($block->mods) // Et qu'il est actif sur la page courante
+						&& Core_Session::$userRang >= $block->rang) { // Et que le client est assez gradé
+					$block->title = Exec_Entities::textDisplay($block->title);
 					
-					self::$blocksConfig[$block['side']][] = $block;
+					self::$blocksConfig[$block->side][] = $block;
 					$this->get($block);
 				}
 			}
@@ -135,19 +136,18 @@ class Libs_Block {
 		if (is_numeric($blockId)) {
 			Core_Sql::select(
 				Core_Table::$BLOCKS_TABLE,
-				array("side", "position", "title", "content", "type", "rang", "mods"),
+				array("block_id", "side", "position", "title", "content", "type", "rang", "mods"),
 				array("block_id = '" . $blockId . "'")
 			);
 			
 			if (Core_Sql::affectedRows() > 0) {
-				$block = Core_Sql::fetchArray();
-				$block['blockId'] = $blockId;
+				$block = Core_Sql::fetchObject();
 				
-				if ($this->isBlock($block['type']) // Si le block existe
-						&& Core_Session::$userRang >= $block['rang']) { // Et que le client est assez gradé
-					$block['title'] = Exec_Entities::textDisplay($block['title']);
+				if ($this->isBlock($block->type) // Si le block existe
+						&& Core_Session::$userRang >= $block->rang) { // Et que le client est assez gradé
+					$block->title = Exec_Entities::textDisplay($block->title);
 					
-					self::$blocksConfig[$block['side']][] = $block;
+					self::$blocksConfig[$block->side][] = $block;
 					$this->get($block);
 				}
 			}
@@ -160,26 +160,26 @@ class Libs_Block {
 	 * @param $block array
 	 */
 	private function get($block) {
-		Core_Loader::blockLoader($block['type']);
+		Core_Loader::blockLoader($block->type);
+		$blockClassName = "Block_" . ucfirst($block->type);
 		
 		// Vérification du block
-		if (class_exists("Block_" . ucfirst($block['type']))) {
+		if (Core_Loader::isCallable($blockClassName, "display")) {
 			// Vérification de l'accès
-			if ($block['type'] != "base" && Core_Acces::autorize("block" . $block['blockId'], $block['rang'])) {
-				$blockClassName = "Block_" . ucfirst($block['type']);
+			if (Core_Acces::autorize("block" . $block->block_id, $block->rang)) {
 				$BlockClass = new $blockClassName();
-				$BlockClass->blockId = $block['blockId'];
-				$BlockClass->side = $block['side'];
-				$BlockClass->sideName = $this->getSide($block['side'], "letters");
+				$BlockClass->blockId = $block->block_id;
+				$BlockClass->side = $block->side;
+				$BlockClass->sideName = $this->getSide($block->side, "letters");
 				$BlockClass->templateName = "block_" . $BlockClass->sideName . ".tpl";
-				$BlockClass->title = $block['title'];
-				$BlockClass->content = $block['content'];
-				$BlockClass->rang = $block['rang'];
+				$BlockClass->title = $block->title;
+				$BlockClass->content = $block->content;
+				$BlockClass->rang = $block->rang;
 				
 				// Capture des données d'affichage
 				ob_start();
 				$BlockClass->display($block);
-				$this->blocksCompiled[$block['side']][] = ob_get_contents();
+				$this->blocksCompiled[$block->side][] = ob_get_contents();
 				ob_end_clean();
 			}
 		} else {

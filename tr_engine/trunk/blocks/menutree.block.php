@@ -5,13 +5,10 @@ Core_Loader::blockLoader("menu");
 
 class Block_Menutree extends Block_Menu {
 	
-	public function display() {
-		
-		$this->getMenu();
-		
+	public function display() {		
 		$libsMakeStyle = new Libs_MakeStyle();
 		$libsMakeStyle->assign("blockTitle", $this->title);
-		$libsMakeStyle->assign("blockContent", "");
+		$libsMakeStyle->assign("blockContent", "vide pour le moment...");
 		$libsMakeStyle->display($this->templateName);
 	}
 }

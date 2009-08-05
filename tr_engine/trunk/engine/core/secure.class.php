@@ -39,7 +39,7 @@ class Core_Secure {
 	 * 
 	 * @return Core_Secure
 	 */
-	public static function getInstance() {
+	public static function &makeInstance() {
 		if (!self::$secure) {
 			self::$secure = new self();
 		}

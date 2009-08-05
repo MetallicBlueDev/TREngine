@@ -10,7 +10,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  * @author Sébastien Villemain
  * 
  */
-abstract class Core_Sql {
+class Core_Sql {
 	
 	/**
 	 * Instance de la base
@@ -20,98 +20,28 @@ abstract class Core_Sql {
 	protected static $base;
 	
 	/**
-	 * Nom d'host de la base
-	 * 
-	 * @var String
-	 */
-	protected $dbHost;
-	
-	/**
-	 * Nom d'utilisateur de la base
-	 * 
-	 * @var String
-	 */
-	protected $dbUser;
-	
-	/**
-	 * Mot de passe de la base
-	 * 
-	 * @var String
-	 */
-	protected $dbPass;
-	
-	/**
-	 * Nom de la base
-	 * 
-	 * @var String
-	 */
-	protected $dbName;
-	
-	/**
-	 * Type de base de donnée
-	 * 
-	 * @var String
-	 */
-	protected $dbType;
-	
-	/**
-	 * ID de la connexion
-	 * 
-	 * @var String
-	 */
-	protected $connId = false;
-	
-	/**
-	 * Dernier resultat de la derniere requête SQL
-	 * 
-	 * @var String ressources ID
-	 */
-	protected $queries = "";
-	
-	/**
-	 * Derniere requête SQL
-	 * 
-	 * @var String
-	 */
-	protected $sql = "";
-	
-	public function __construct($db) {
-		$this->dbHost = $db['host'];
-		$this->dbUser = $db['user'];
-		$this->dbPass = $db['pass'];
-		$this->dbName = $db['name'];
-		$this->dbType = $db['type'];
-		echo "oui";
-		// Connexion au serveur
-		self::dbConnect();
-		
-		// Selection d'une base de donnée
-		self::dbSelect();
-	}
-	
-	/**
 	 * Démarre une instance de communication avec la base
 	 * 
 	 * @param $db array
 	 * @return Base_Type
 	 */
-	public static function getInstance($db = array()) {
-		if (!self::$base && count($db) >= 5) {
-			// Base par défaut
-			if (!$db['type']) $db['type'] = "mysql";
-			
+	public static function &makeInstance($db = array()) {
+		if (!self::$base && count($db) >= 5) {			
 			// Vérification du type de base de donnée
 			if (!is_file(TR_ENGINE_DIR . "/engine/base/" . $db['type'] . ".class.php")) {
 				Core_Secure::getInstance()->debug("sqlType");
 			}
 			
+			// Chargement du modele de base de donnée
+			Core_Loader::classLoader("Base_Model");
+			
 			// Chargement des drivers pour la base
 			$BaseClass = "Base_" . ucfirst($db['type']);
 			Core_Loader::classLoader($BaseClass);
 			
-			try {echo "oui";
+			try {
 				self::$base = new $BaseClass($db);
-			} catch (Exception $ie) {echo "non";
+			} catch (Exception $ie) {
 				Core_Secure::getInstance()->debug($ie);
 			}
 		}
@@ -123,10 +53,6 @@ abstract class Core_Sql {
 	 */
 	public static function dbConnect() {
 		self::$base->dbConnect();
-		
-		if (self::$base->connId == false) {
-			throw new Exception("sqlConnect");
-		}
 	}
 	
 	/**
@@ -136,10 +62,6 @@ abstract class Core_Sql {
 	 */
 	public static function dbSelect() {
 		$rslt = self::$base->dbSelect();
-		
-		if (!$rslt) {
-			throw new Exception("sqlConnect");
-		}
 		return $rslt;
 	}
 	
@@ -177,6 +99,15 @@ abstract class Core_Sql {
 	 */
 	public static function fetchArray() {
 		return self::$base->fetchArray();
+	}
+	
+	/**
+	 * Retourne un objet qui contient les lignes demandées
+	 * 
+	 * @return object
+	 */
+	public static function fetchObject() {
+		return self::$base->fetchObject();
 	}
 	
 	/**
@@ -267,20 +198,12 @@ abstract class Core_Sql {
 	}
 	
 	/**
-	 * Destruction de la communication
-	 */
-	public function __destruct() {
-		self::$base = false;
-		self::dbDeconnect();
-	}
-	
-	/**
 	 * Retourne dernier résultat de la dernière requête executée
 	 *
 	 * @return mixed Ressource ID ou boolean false
 	 */
 	public static function getQueries() {
-		return self::$base->queries;
+		return self::$base->getQueries();
 	}
 	
 	/**
@@ -289,7 +212,49 @@ abstract class Core_Sql {
 	 * @return String
 	 */
 	public static function getSql() {
-		return self::$base->sql;
+		return self::$base->getSql();
+	}
+	
+	/**
+	 * Libere la memoire du resultat
+	 * 
+	 * @param $querie Resource Id
+	 * @return boolean
+	 */
+	public static function freeResult($querie = "") {
+		$querie = ($querie != "") ? $querie : self::getQueries();
+		return self::$base->freeResult($querie);
+	}
+	
+	/**
+	 * Ajoute un bout de donnée dans le buffer
+	 * 
+	 * @param $key String cles a utiliser
+	 * @param $name String
+	 */
+	public static function addBuffer($name, $key = "") {
+		self::$base->addBuffer($name, $key);
+		self::freeResult();
+	}
+	
+	/**
+	 * Retourne le buffer courant puis l'incremente
+	 * 
+	 * @param $name String
+	 * @return array - object
+	 */
+	public static function fetchBuffer($name) {
+		return self::$base->fetchBuffer($name);
+	}
+	
+	/**
+	 * Retourne le buffer complet choisis
+	 * 
+	 * @param $name String
+	 * @return array - object
+	 */
+	public static function getBuffer($name) {
+		return self::$base->getBuffer($name);
 	}
 }
 ?>

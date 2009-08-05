@@ -77,7 +77,7 @@ class Core_Html {
 	
 	public function __construct() {
 		// Configuration du préfixe accessible
-		if (class_exists("Core_Main")) $prefix = Core_Main::$coreConfig['cookiePrefix'];
+		if (Core_Loader::isCallable("Core_Main")) $prefix = Core_Main::$coreConfig['cookiePrefix'];
 		else $prefix = "tr";
 		
 		// Composition du nom du cookie de test
@@ -94,7 +94,7 @@ class Core_Html {
 	 * 
 	 * @return Core_Html
 	 */
-	public static function getInstance() {
+	public static function &getInstance() {
 		if (!self::$html) {
 			self::$html = new self();
 		}
@@ -118,7 +118,7 @@ class Core_Html {
 	 */
 	private function includeJavaScript() {
 		if (Core_Request::getRequest() != "POST") {			
-			if (class_exists("Core_Main")) $fullScreen = Core_Main::isFullScreen();
+			if (Core_Loader::isCallable("Core_Main")) $fullScreen = Core_Main::isFullScreen();
 			else $fullScreen = true;
 			
 			if ($fullScreen && $this->isJavaScriptActived()) {
@@ -131,7 +131,7 @@ class Core_Html {
 			
 			$this->addJavaScriptFile("javascriptactived.js");
 			
-			if (class_exists("Exec_Agent") && Exec_Agent::$userBrowserName == "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") {
+			if (Core_Loader::isCallable("Exec_Agent") && Exec_Agent::$userBrowserName == "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") {
 				$this->addJavaScriptFile("pngfix.js", "defer");
 			}
 		} else {
@@ -236,7 +236,7 @@ class Core_Html {
 	 */
 	public function getMetaHeaders() {
 		$title = "";
-		if (class_exists("Core_Main") && Core_Main::$coreConfig['defaultSiteName'] != "") {
+		if (Core_Loader::isCallable("Core_Main") && Core_Main::$coreConfig['defaultSiteName'] != "") {
 			if (!$this->title) $title = Core_Main::$coreConfig['defaultSiteName'] . " - " . Core_Main::$coreConfig['defaultSiteSlogan'];
 			else $title = Core_Main::$coreConfig['defaultSiteName'] . " - " . $this->title;
 		} else {
@@ -278,7 +278,7 @@ class Core_Html {
 		// 500 caractères maximum
 		$keywords = (strlen($keywords) > 500) ? substr($keywords, 0, 500) : $keywords;
 		
-		if (class_exists("Core_Main")) {
+		if (Core_Loader::isCallable("Core_Main")) {
 			if (!$this->description) $this->description = Core_Main::$coreConfig['defaultDescription'];
 			if (!$keywords) $keywords = Core_Main::$coreConfig['defaultKeyWords'];
 		}
@@ -339,7 +339,7 @@ class Core_Html {
 	 */
 	private function getSalt() {
 		// Configuration de la clès accessible
-		if (class_exists("Core_Main")) $key = Core_Main::$coreConfig['cryptKey'];
+		if (Core_Loader::isCallable("Core_Main")) $key = Core_Main::$coreConfig['cryptKey'];
 		else $key = "A4bT9D4V";
 		return $key;
 	}
