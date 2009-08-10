@@ -47,6 +47,7 @@ class Exec_Marker {
 	 * Retourne le temps qui a été mis pour généré la page
 	 * 
 	 * @param $virgule int chiffre après la virgule
+	 * @return int le temps de génération
 	 */
 	public static function getTime($name, $virgule = 4) {
 		if (isset(self::$startTime[$name]) 

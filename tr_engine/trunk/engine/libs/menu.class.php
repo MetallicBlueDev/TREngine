@@ -17,7 +17,7 @@ class Libs_Menu {
 	 * 
 	 * @var String
 	 */
-	private $menuIdentifier = "";
+	private $identifier = "";
 	
 	/**
 	 * Menu complet et son arborescence
@@ -29,25 +29,27 @@ class Libs_Menu {
 	/**
 	 * Construction du menu
 	 * 
-	 * @param $menuIdentifier Identifiant du menu par exemple "block22"
+	 * @param $identifier Identifiant du menu par exemple "block22"
 	 * @param $sql array
 	 */
-	public function __construct($menuIdentifier, $sql = array()) {
-		$this->menuIdentifier = $menuIdentifier;
+	public function __construct($identifier, $sql = array()) {
+		$this->identifier = $identifier;
 		
 		Core_CacheBuffer::setSectionName("menus");
 		if ($this->isCached()) {
 			$this->loadFromCache();
 		} else if (count($sql) >= 3) {
 			$this->loadFromDb($sql);
-		}		
+		}
+		
+		$this->structure();
 	}
 	
 	/**
 	 * Chargement du menu via le cache
 	 */
 	private function loadFromCache() {
-		$data = Core_CacheBuffer::getCache($this->menuIdentifier . ".php");
+		$data = Core_CacheBuffer::getCache($this->identifier . ".php");
 		$this->items = unserialize(Exec_Entities::stripSlashes($data));
 	}
 	
@@ -57,7 +59,7 @@ class Libs_Menu {
 	 * @return boolean
 	 */
 	private function isCached() {
-		return (Core_CacheBuffer::cached($this->menuIdentifier . ".php"));
+		return (Core_CacheBuffer::cached($this->identifier . ".php"));
 	}
 	
 	/**
@@ -75,93 +77,29 @@ class Libs_Menu {
 		);
 		
 		if (Core_Sql::affectedRows() > 0) {
-			Core_Sql::addBuffer($this->menuIdentifier, "menu_id");
-			$menus = Core_Sql::getBuffer($this->menuIdentifier);
+			// Création d'un buffer
+			Core_Sql::addBuffer($this->identifier, "menu_id");
+			$menus = Core_Sql::getBuffer($this->identifier);
 			
-			foreach($menus as $key => $menu) {
-				$parentRoute = "";
-				$parentTree = array();
-				
-				// Get parent information
-				$parentId = $menus[$key]->parent_id;
-				if (isset($menus[$parentId]) && isset($menus[$parentId]->route) && isset($menus[$parentId]->tree)) {
-					$parentRoute = $menus[$parentId]->route . "/";
-					$parentTree  = $menus[$parentId]->tree;
-				}
-				
-				// Create tree
-				$parentTree[] = $menus[$key]->menu_id;
-				$menus[$key]->tree = $parentTree;
-			
-				// Create route
-				$menus[$key]->route = $parentRoute . str_replace(" ", "-", $menus[$key]->content);
+			// Ajoute et monte tout les items
+			foreach($menus as $key => $item) {
+				$this->items[$key] = new Libs_MenuElement($item, $this->items);
 			}
 			
 			Core_CacheBuffer::writingCache(
-				$this->menuIdentifier . ".php", 
-				"$" . Core_CacheBuffer::getSectionName() . " = \"" . Exec_Entities::addSlashes(serialize($menus)) . "\""
+				$this->identifier . ".php", 
+				"$" . Core_CacheBuffer::getSectionName() . " = \"" . Exec_Entities::addSlashes(serialize($this->items)) . "\""
 			);
-			$this->items = $menus;
 		}
 	}
 	
-	// TODO a supprimer
-	private function get() {
-		// establish the hierarchy of the menu
-		$children = array();
-		
-		// first pass - collect children
-		$cacheIndex = array();
-		foreach ($this->items as $index => $item) {
-			if ($item['rang'] <= Core_Session::$userRang)  {
-				$list = (isset($children[$item['parent']])) ? $children[$item['parent']] : array();
-				$list[] = $item;
-				$children[$item['parent']] = $list;
+	private function structure() {
+		$outPut = "";
+		$count = count($this->items);
+		foreach($this->items as $key => $item) {
+			if ($item->data->parent_id == 0) {
+				$outPut .= $this->toString($item);
 			}
-			$cacheIndex[$item['menu_id']] = $index;
-		}
-		
-		// second pass - collect 'open' menus
-		$itemId = Core_Request::getInt("itemid", 0);
-		$open = array($itemId);
-		$count = 20; // maximum levels - to prevent runaway loop
-		
-		while (--$count) {
-			if (isset($cacheIndex[$itemId])) {				
-				if (isset($this->items[$cacheIndex[$id]]) && $this->items[$cacheIndex[$id]]['parent'] > 0) {
-					$open[] = $this->items[$cacheIndex[$id]]['parent'];
-				} else {
-					break;
-				}
-			}
-		}
-		
-		$this->recurse(0, 0, $children, $open);
-	}
-	
-	// TODO a supprimer
-	private function recurse($niveau, $level, &$children, &$open) {
-		if (isset($children[0])) {
-			$niveau = min($level, count($indents) - 1);
-			// Séparateur de menu haut
-			//echo "\n" . $indents[$niveau][0];
-			
-			foreach ($children[0] as $row) {
-				// Ouverture balise
-				//echo "\n" . $indents[$niveau][1];
-				
-				// Contenu TXT
-				//echo mosGetMenuLink($row, $level, $params, $open);
-				
-				// show menu with menu expanded - submenus visible
-				if (in_array($row->id, $open)) {
-					$this->recurse($row['menu_id'], $level + 1, $children, $open);
-				}
-				// Fermeture balise
-				//echo $indents[$niveau][2];
-			}
-			// Séparateur de menu bas
-			//echo "\n" . $indents[$niveau][3];
 		}
 	}
 	
@@ -217,6 +155,109 @@ class Libs_Menu {
 
 		//Return the final output
 		return $out;
+	}
+}
+
+/**
+ * Membre d'un menu
+ * 
+ * @author Sebastien Villemain
+ *
+ */
+class Libs_MenuElement {
+	
+	/**
+	 * Item info du menu
+	 * 
+	 * @var array - object
+	 */
+	public $data = array();
+	
+	private $attributs = array();
+	
+	private $child = array();
+	
+	/**
+	 * Construction de l'element du menu
+	 * 
+	 * @param $item array - object
+	 */
+	public function __construct($item, &$items) {
+		// Ajout des infos de l'item
+		$this->data = $item;
+		
+		// Recherche d'enfant
+		if ($item->parent_id > 0) {
+			$this->addAttributs("class", "item" . $item->menu_id);
+			$items[$item->parent_id]->addChild($this);
+		} else {
+			$this->addAttributs("class", "parent");
+		}
+	}
+	
+	/**
+	 * Ajoute un attribut a la liste
+	 * 
+	 * @param $name String nom de l'attribut
+	 * @param $value String valeur de l'attribut
+	 */
+	public function addAttributs($name, $value) {
+		if ($name != "") {
+			$this->attributs[$name] = $value;
+		}
+	}
+	
+	/**
+	 * Supprime un attributs
+	 * 
+	 * @param $nameString nom de l'attribut
+	 */
+	public function removeAttributs($name = "") {
+		if ($name != "") {
+			unset($this->attributs[$name]);
+		} else {
+			foreach($this->attributs as $key => $attributs) {
+				unset($this->attributs[$key]);
+			}
+		}
+	}
+	
+	/**
+	 * Ajoute un enfant a l'item courant
+	 * 
+	 * @param $child Libs_MenuElement or array - object
+	 * @param $items array - object
+	 */
+	public function &addChild(&$child, &$items = array()) {
+		if (!is_object($child)) {
+			$child = new Libs_MenuElement($child, $items);
+		}
+		$this->child[$child->data->menu_id] = &$child;
+	}
+	
+	/**
+	 * Supprime un enfant
+	 * 
+	 * @param $child Libs_MenuElement or array - object
+	 * @param $items array - object
+	 */
+	public function removeChild(&$child = "", &$items = array()) {
+		if (empty($child)) {
+			foreach($this->child as $key => $child) {
+				unset($this->child[$key]);
+			}
+		} else {
+			if (!is_object($child)) {
+				$child = &$items[$child->menu_id];
+			}
+			unset($this->child[$child->data->menu_id]);
+		}
+	}
+	
+	public function __destruct() {
+		$this->item = array();
+		$this->removeAttributs();
+		$this->removeChild();
 	}
 }
 
