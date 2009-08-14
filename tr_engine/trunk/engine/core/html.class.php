@@ -41,6 +41,13 @@ class Core_Html {
 	private $javaScriptCode = "";
 	
 	/**
+	 * Codes javascript JQUERY demandées
+	 * 
+	 * @var String
+	 */
+	private $javaScriptJquery = "";
+	
+	/**
 	 * Fichiers de javascript demandées
 	 * 
 	 * @var array
@@ -122,7 +129,7 @@ class Core_Html {
 			else $fullScreen = true;
 			
 			if ($fullScreen && $this->isJavaScriptActived()) {
-				if ($this->javaScriptCode != "") $this->addJavaScriptFile("jquery.js");
+				if ($this->javaScriptJquery != "") $this->addJavaScriptFile("jquery.js");
 				$this->addJavaScriptFile("tr_engine.js");
 			} else {
 				// Tous fichier inclus est superflue donc reset
@@ -142,7 +149,11 @@ class Core_Html {
 		$script = "";
 		foreach($this->javaScriptFile as $file => $options) {
 			if ($options != "") $options = " " . $options;
-			$script .= "<script" . $options . " type=\"text/javascript\" src=\"includes/js/" . $file . "\"></script>\n";
+			if ($file == "jquery.js") {
+				$script = "<script" . $options . " type=\"text/javascript\" src=\"includes/js/" . $file . "\"></script>\n" . $script;
+			} else {
+				$script .= "<script" . $options . " type=\"text/javascript\" src=\"includes/js/" . $file . "\"></script>\n";
+			}
 		}
 		return $script;
 	}
@@ -171,11 +182,28 @@ class Core_Html {
 		$script .= "<script type=\"text/javascript\">\n"
 		. "javaScriptActived('" . $this->cookieTestName . "');\n";
 		
-		if ($this->javaScriptCode != "") $script .= $this->javaScriptCode . "\n";
+		if ($this->javaScriptCode != "") {
+			$script .= $this->javaScriptCode;
+		}
+		
+		if ($this->javaScriptJquery != "") {
+			$script .= "$(document).ready(function(){";
+			$script .= $this->javaScriptJquery;
+			$script .= "});";
+		}
 		
 		$script .= "</script>\n";
-		
 		return $script;
+	}
+	
+	/**
+	 * Ajoute un code javaScript JQUERY à executer
+	 * 
+	 * @param $javaScript String
+	 */
+	public function addJavaScriptJquery($javaScript) {
+		if ($this->javaScriptJquery!= "") $this->javaScriptJquery .= "\n";
+		$this->javaScriptJquery .= $javaScript;
 	}
 	
 	/**

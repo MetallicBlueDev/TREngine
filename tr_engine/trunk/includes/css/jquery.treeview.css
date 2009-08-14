@@ -5,7 +5,6 @@
 }
 
 .treeview ul {
-	background-color: white;
 	margin-top: 4px;
 }
 
@@ -28,13 +27,9 @@
 	padding: 3px 0pt 3px 16px;
 }
 
-.treeview a.selected {
-	background-color: #eee;
-}
-
 #treecontrol { margin: 1em 0; display: none; }
 
-.treeview .hover { color: red; cursor: pointer; }
+.treeview .hover { cursor: pointer; }
 
 .treeview li { background: url(images/treeview-default-line.gif) 0 0 no-repeat; }
 .treeview li.collapsable, .treeview li.expandable { background-position: 0 -176px; }

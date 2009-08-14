@@ -9,6 +9,13 @@
 class Core_Request {
 	
 	/**
+	 * Tableau buffer des requêtes
+	 * 
+	 * @var array
+	 */
+	private static $buffer = array();
+	
+	/**
 	 * Récupère, analyse et vérifie une variable URL
 	 * 
 	 * @param $name String Nom de la variable
@@ -18,13 +25,20 @@ class Core_Request {
 	 * @return mixed
 	 */
 	public static function getVars($name, $type, $default = "", $hash = "default") {
-		// Recherche de la méthode courante
-		$input = self::getRequest($hash);
-		
-		if (isset($input[$name]) && $input[$name] !== null) {
-			return self::protect($input[$name], $type);
+		$var = urlencode($name);
+		if (isset(self::$buffer[$var])) {
+			return self::$buffer[$var];
+		} else {
+			// Recherche de la méthode courante
+			$input = self::getRequest($hash);
+			
+			if (isset($input[$name]) && $input[$name] !== null) {
+				$rslt = self::protect($input[$name], $type);
+				self::$buffer[$var] = $rslt;
+				return $rslt;
+			}
+			return $default;
 		}
-		return $default;
 	}
 	
 	/**

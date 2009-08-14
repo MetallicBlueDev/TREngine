@@ -10,7 +10,7 @@
 </object>
 </div>
 <div class="block_middle">
-	<div style="padding-left: 10px;">
+	<div class="block_content">
 		<?php echo $blockContent; ?>
 	</div>
 </div>

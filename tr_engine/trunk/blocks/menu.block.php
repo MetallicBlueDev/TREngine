@@ -1,5 +1,15 @@
 <?php
+if (!defined("TR_ENGINE_INDEX")) {
+	require("../engine/core/secure.class.php");
+	new Core_Secure();
+}
 
+/**
+ * Block de menu
+ * 
+ * @author Sebastien Villemain
+ *
+ */
 class Block_Menu extends Block_Model {
 	
 	/**
@@ -9,48 +19,28 @@ class Block_Menu extends Block_Model {
 	 */
 	private static $optionsTag = "__OPTIONS__";
 	
-	/**
-	 * Id du block menu actif
-	 * 
-	 * @var int
-	 */
-	private $blockIdFocused = 0;
-	
 	public function display() {
-		
-		$this->getMenu();
+		$menus = $this->getMenu();
 		
 		$libsMakeStyle = new Libs_MakeStyle();
 		$libsMakeStyle->assign("blockTitle", $this->title);
-		$libsMakeStyle->assign("blockContent", "");
+		$libsMakeStyle->assign("blockContent", "<div class=\"menu\">" . $menus->render() . "</div>");
 		$libsMakeStyle->display($this->templateName);
 	}
 	
-	/**
-	 * Configure l'id du block menu actif
-	 */
-	private function init() {
-		if (is_numeric($this->content)) {
-			$this->blockIdFocused = $this->content;
-		} else {
-			$this->blockIdFocused = $this->blockId;
-		}
-	}
-	
-	public function getMenu() {
-		$this->init();
-		
+	public function getMenu() {		
 		Core_Loader::classLoader("Libs_Menu");
 		$menus = new Libs_Menu(
-			"block" . $this->blockIdFocused,
+			"block" . $this->blockId,
 			array(
 				"table" => Core_Table::$MENUS_TABLES,
 				"select" => array("menu_id", "block_id", "parent_id", "content", "sublevel", "position", "rang"),
-				"where" => array("block_id = '" . $this->blockIdFocused . "'"),
+				"where" => array("block_id = '" . $this->blockId . "'"),
 				"orderby" => array("sublevel", "parent_id", "position"),
 				"limit" => array()
 			)
 		);
+		return $menus;
 	}
 	
 	/**
@@ -62,7 +52,7 @@ class Block_Menu extends Block_Model {
 	 * @param $line String
 	 * @return String
 	 */
-	public function getLine($line) {
+	public static function getLine($line) {
 		$outPut = "";
 		if (preg_match("/(.+)" . self::$optionsTag . "(.*?)" . self::$optionsTag . "/", $line, $matches)) {
 			// Conversion du texte
@@ -104,7 +94,7 @@ class Block_Menu extends Block_Model {
 	 * @param $options array Options choisis
 	 * @return String
 	 */
-	public function setLine($text, $options = array()) {
+	public static function setLine($text, $options = array()) {
 		$optionsString = "";
 		
 		// Formate les options

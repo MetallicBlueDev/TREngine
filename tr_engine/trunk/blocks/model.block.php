@@ -1,4 +1,8 @@
 <?php
+if (!defined("TR_ENGINE_INDEX")) {
+	require("../engine/core/secure.class.php");
+	new Core_Secure();
+}
 
 /**
  * Block de base, hérité par tous les autres blocks

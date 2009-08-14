@@ -27,7 +27,12 @@ class Libs_Breadcrumb {
 	private $breadcrumbTrail = array();
 	
 	public function __construct() {
-		
+		// Ajoute la page principal
+		$this->addTrail(Core_Main::$coreConfig['defaultSiteName'], "index.php");
+		// Ajout le module courant
+		if (Libs_Module::$module != "") {
+			$this->addTrail(Libs_Module::$module, "?mod=" . Libs_Module::$module);
+		}
 	}
 	
 	/**
@@ -36,7 +41,7 @@ class Libs_Breadcrumb {
 	 * @return Libs_Breadcrumb
 	 */
 	public static function &getInstance() {
-		if (!$breadcrumb) {
+		if (!self::$breadcrumb) {
 			self::$breadcrumb = new self();
 		}
 		return self::$breadcrumb;
@@ -45,18 +50,14 @@ class Libs_Breadcrumb {
 	/**
 	 * Ajoute un tracé au fil d'Ariane
 	 * 
-	 * @param $trail array or String
+	 * @param $trail String
+	 * @param $link String
 	 */
-	public function addTrail($trail) {
-		if (is_array($trail)) {
-			foreach ($trail as $value) {
-				if ($value != "") {
-					$this->breadcrumbTrail[] = $value;
-				}
-			}
-		} else {
-			$this->breadcrumbTrail[] = $trail;
+	public function addTrail($trail, $link = "") {
+		if ($link != "") {
+			$trail = "<a href=\"" . $link . "\">" . $trail . "</a>";
 		}
+		$this->breadcrumbTrail[] = $trail;
 	}
 	
 	/**
@@ -68,8 +69,8 @@ class Libs_Breadcrumb {
 	public function getBreadcrumbTrail($separator = " >> ") {
 		$rslt = "";
 		foreach($this->breadcrumbTrail as $trail) {
-			if ($rslt != "") $rslt .= $separator . $trail;
-			else $rslt .= $trail;
+			if ($rslt != "") $rslt .= $separator;
+			$rslt .= $trail;
 		}
 		return $rslt;
 	}

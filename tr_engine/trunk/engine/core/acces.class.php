@@ -116,9 +116,9 @@ class Core_Acces  {
 		}
 		
 		if ($zoneRang !== false) {
-			if ($zoneRang == 3 && self::moderate($zoneIdentifiant)) return true; // Accès admin avec droits
+			if ($zoneRang == 0) return true; // Accès public
 			else if ($zoneRang > 0 && $zoneRang < 3 && Core_Session::$userRang >= $zoneRang) return true; // Accès membre ou admin
-			else if ($zoneRang == 0) return true; // Accès public
+			else if ($zoneRang == 3 && self::moderate($zoneIdentifiant)) return true; // Accès admin avec droits
 		}
 		return false;
 	}

@@ -139,5 +139,19 @@ class Core_Loader {
 			return class_exists($className);
 		}
 	}
+	
+	/**
+	 * Appel une methode ou un object ou une classe statique callback
+	 * 
+	 * @param $callback String or array Nom de la callback
+	 * @return callback resultat
+	 */
+	public static function callback($callback) {
+		if (TR_ENGINE_PHP_VERSION < "5.2.3" && strpos($callback, "::") !== false) {
+			$callback = explode("::", $callback);
+		}
+		$args = array_splice(func_get_args(), 1, 1);
+		return call_user_func_array($callback, $args);
+	}
 }
 ?>

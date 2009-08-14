@@ -31,6 +31,8 @@
 	
 	<div id="middle">
 	
+	<div id="breadcrumb"><?php echo Libs_Breadcrumb::getInstance()->getBreadcrumbTrail(" >> "); ?></div>
+	
 		<?php if (Core_Exception::exceptionDetected()) { ?>
 			<div class="block_error">
 				<ul id="exception">

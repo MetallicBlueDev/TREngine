@@ -190,8 +190,7 @@ class Core_Main {
 		Core_Loader::classLoader("Core_Html");
 		Core_Html::getInstance();
 		
-		// TODO a décommenter
-		//$this->compressionOpen();
+		$this->compressionOpen();
 		
 		// Comportement different en fonction du type de client
 		if (!Core_BlackBan::isBlackUser()) {
@@ -205,6 +204,10 @@ class Core_Main {
 			Core_Loader::classLoader("Libs_Block");
 			
 			if (self::isFullScreen()) {
+				// Chargement et construction du fil d'ariane
+				Core_Loader::classLoader("Libs_Breadcrumb");
+				Libs_Breadcrumb::getInstance();
+				
 				Libs_Block::getInstance()->launch();
 				Libs_Module::getInstance()->launch();
 				Exec_Marker::stopTimer("main");

@@ -11,6 +11,16 @@ body {
 	border: 0px;
 }
 
+a:link, a:visited, a:active {
+	color: #404040;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #e6eaeb;
+	text-decoration: underline;
+}
+
 /* Entête */
 #header {
 	position: relative;
@@ -82,6 +92,11 @@ body {
 	background: url(images/block_bottom.jpg);
 }
 
+.block_content {
+	padding-left: 10px;
+	padding-right: 8px;
+}
+
 .block_error {
 	margin-top: 10px;
 	padding: 10px 25px 10px 10px;
@@ -114,4 +129,17 @@ body {
 	width: 645px;
 	float: left;
 	position: relative;
+}
+
+#breadcrumb a:hover {
+	color: #05587b;
+}
+
+.menu ul {
+	margin: 0px;
+	padding: 10px;
+}
+
+.menu ul li a:link, .menu ul li a:visited {
+	font-weight: bold;
 }
