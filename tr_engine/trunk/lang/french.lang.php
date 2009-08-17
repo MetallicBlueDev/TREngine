@@ -31,7 +31,7 @@ $lang = array(
 "ERROR_BLOCK_IMPLEMENT" => "Le code d'un block n'est pas correctement implémenté.",
 "ERROR_SESSION_COOKIE" => "Impossible d'ouvrir une session, vérifiez vos paramètre cookie.",
 
-//
+// Divers
 "WELCOME" => "Bienvenue",
 "MY_ACCOUNT" => "Mon compte",
 "MY_RECEIPTBOX" => "Mes messages",

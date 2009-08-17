@@ -97,10 +97,10 @@ class Core_Acces  {
 		}
 		
 		// Si on veut le type d'erreur pour un acces
-		if ($moduleInfo['rang'] == -1) return "ERROR_ACCES_OFF";
-		else if ($moduleInfo['rang'] == 1 && Core_Session::$userRang == 0) return "ERROR_ACCES_MEMBER";
-		else if ($moduleInfo['rang'] > 1 && Core_Session::$userRang < $rang) return "ERROR_ACCES_ADMIN";
-		else return "ERROR_ACCES_FORBIDDEN";
+		if ($moduleInfo['rang'] == -1) return ERROR_ACCES_OFF;
+		else if ($moduleInfo['rang'] == 1 && Core_Session::$userRang == 0) return ERROR_ACCES_MEMBER;
+		else if ($moduleInfo['rang'] > 1 && Core_Session::$userRang < $rang) return ERROR_ACCES_ADMIN;
+		else return ERROR_ACCES_FORBIDDEN;
 	}
 	
 	/**

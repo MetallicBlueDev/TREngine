@@ -141,7 +141,7 @@ class Libs_Module {
 			
 			$configs = explode("|", $configs);
 			
-			if (empty($module) || self::$module == $module) {
+			if (self::$module == $modName) {
 				self::$modId = $modId;
 				self::$rang = $rang;
 				self::$configs = $configs;
@@ -155,6 +155,8 @@ class Libs_Module {
 			);
 			return $this->modules[$modName];
 		}
+		// Insert la variable vide car aucune donnée
+		$this->modules[$modName] = "";
 		return false;
 	}
 	

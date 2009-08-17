@@ -189,8 +189,8 @@ class Core_Main {
 		// Chargement du gestionnaire HTML
 		Core_Loader::classLoader("Core_Html");
 		Core_Html::getInstance();
-		
-		$this->compressionOpen();
+		// TODO a supprimer
+		//$this->compressionOpen();
 		
 		// Comportement different en fonction du type de client
 		if (!Core_BlackBan::isBlackUser()) {

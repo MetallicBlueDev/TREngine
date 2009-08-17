@@ -72,7 +72,7 @@ class Core_BlackBan {
 			$deleteOldBlackBan = true;
 			Core_CacheBuffer::writingCache("deleteOldBlackBan.txt", "1");
 		} else if ((time() - 2*24*60*60) < Core_CacheBuffer::cacheMTime("deleteOldBlackBan.txt")) {
-			$deleteOldBlackBan = true;
+			$deleteOldBlackBan = false;
 			Core_CacheBuffer::touchCache("deleteOldBlackBan.txt");
 		}
 		

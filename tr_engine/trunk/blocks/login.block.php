@@ -57,9 +57,9 @@ class Block_Login extends Block_Model {
 			}
 		} else {
 			$moreLink = "<ul><li><a href=\"" . Core_Html::getLink("mod=connect&view=forgetlogin") . "\">" . FORGET_LOGIN . "</a></li>"
-			. "<ul><li><a href=\"" . Core_Html::getLink("mod=connect&view=forgetpass") . "\">" . FORGET_PASS . "</a></li>";
+			. "<li><a href=\"" . Core_Html::getLink("mod=connect&view=forgetpass") . "\">" . FORGET_PASS . "</a></li>";
 			if (Core_Main::isRegistrationAllowed()) {
-				$moreLink .= "<li><a href=\"" . Core_Html::getLink("mod=connect&view=registration") . "\">" . BECOME_MEMBER . "</a></li>";
+				$moreLink .= "<li><a href=\"" . Core_Html::getLink("mod=connect&view=registration") . "\"><b>" . BECOME_MEMBER . "</b></a></li>";
 			}
 			$moreLink .= "</ul>";
 			
