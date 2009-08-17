@@ -18,7 +18,7 @@ class Core_BlackBan {
 	 * @return boolean true le client est bannis
 	 */
 	public static function isBlackUser() {
-		return ((Core_Session::$userIpBan != "") ? true : false);
+		return ((!empty(Core_Session::$userIpBan)) ? true : false);
 	}
 	
 	/**
@@ -32,8 +32,8 @@ class Core_BlackBan {
 		);
 		
 		if (Core_Sql::affectedRows() > 0) {
-			$mail = (Core_Main::$coreConfig['defaultAdministratorMail'] != "") ? Core_Main::$coreConfig['defaultAdministratorMail'] : TR_ENGINE_MAIL;
-			$name = (Core_Main::$coreConfig['defaultSiteName'] != "") ? Core_Main::$coreConfig['defaultSiteName'] : "";
+			$mail = (!empty(Core_Main::$coreConfig['defaultAdministratorMail'])) ? Core_Main::$coreConfig['defaultAdministratorMail'] : TR_ENGINE_MAIL;
+			$name = (!empty(Core_Main::$coreConfig['defaultSiteName'])) ? Core_Main::$coreConfig['defaultSiteName'] : "";
 			
 			Core_Loader::classLoader("Exec_Mailer");
 			$mail = Exec_Mailer::protectedDisplay($mail, $name);
@@ -42,7 +42,7 @@ class Core_BlackBan {
 			$libsMakeStyle->assign("mail", $mail);
 			$libsMakeStyle->assign("name", $name);
 			$libsMakeStyle->assign("reason", Exec_Entities::textDisplay($reason));
-			$libsMakeStyle->assign("slogan", (Core_Main::$coreConfig['defaultSiteSlogan'] != "") ? Core_Main::$coreConfig['defaultSiteSlogan'] : "");
+			$libsMakeStyle->assign("slogan", (!empty(Core_Main::$coreConfig['defaultSiteSlogan'])) ? Core_Main::$coreConfig['defaultSiteSlogan'] : "");
 			$libsMakeStyle->display("blackban.tpl");
 		}
 		
@@ -95,7 +95,7 @@ class Core_BlackBan {
 	private static function checkBan() {	
 		$userIp = Exec_Agent::$userIp;
 		
-		if (Core_Session::$userIpBan != "") {
+		if (!empty(Core_Session::$userIpBan)) {
 			// Si l'ip n'est plus du tout valide
 			if (Core_Session::$userIpBan != $userIp 
 					&& !preg_match("/" . Core_Session::$userIpBan . "/", $userIp)) {
@@ -135,7 +135,7 @@ class Core_BlackBan {
 				$banIp = explode(".", $blackBanIp);
 				
 				// Filtre pour la vérification
-				if (isset($banIp[3]) && $banIp[3] != "") {
+				if (isset($banIp[3]) && !empty($banIp[3])) {
 					$banList = $blackBanIp;
 					$searchIp = $userIp;
 				} else {
@@ -148,7 +148,7 @@ class Core_BlackBan {
 				if ($searchIp == $banList) {
 					// IP bannis !
 					Core_Session::$userIpBan = $blackBanIp;
-				} else if (Core_Session::$userName != "" && Core_Session::$userName = $blackBanName) {
+				} else if (!empty(Core_Session::$userName) && Core_Session::$userName = $blackBanName) {
 					// Pseudo bannis !
 					Core_Session::$userIpBan = $blackBanIp;
 				} else {
@@ -156,7 +156,7 @@ class Core_BlackBan {
 				} 
 				
 				// La vérification a déjà aboutie, on arrête
-				if (Core_Session::$userIpBan != "") break;
+				if (!empty(Core_Session::$userIpBan)) break;
 			}
 		}
 	}

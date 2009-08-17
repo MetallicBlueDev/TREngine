@@ -102,7 +102,7 @@ class Core_Html {
 	 * @return Core_Html
 	 */
 	public static function &getInstance() {
-		if (!self::$html) {
+		if (self::$html === false) {
 			self::$html = new self();
 		}
 		return self::$html;
@@ -129,7 +129,7 @@ class Core_Html {
 			else $fullScreen = true;
 			
 			if ($fullScreen && $this->isJavaScriptActived()) {
-				if ($this->javaScriptJquery != "") $this->addJavaScriptFile("jquery.js");
+				if (!empty($this->javaScriptJquery)) $this->addJavaScriptFile("jquery.js");
 				$this->addJavaScriptFile("tr_engine.js");
 			} else {
 				// Tous fichier inclus est superflue donc reset
@@ -148,7 +148,7 @@ class Core_Html {
 		// Conception de l'entête
 		$script = "";
 		foreach($this->javaScriptFile as $file => $options) {
-			if ($options != "") $options = " " . $options;
+			if (!empty($options)) $options = " " . $options;
 			if ($file == "jquery.js") {
 				$script = "<script" . $options . " type=\"text/javascript\" src=\"includes/js/" . $file . "\"></script>\n" . $script;
 			} else {
@@ -167,7 +167,7 @@ class Core_Html {
 		// Conception de l'entête
 		$script = "";
 		foreach($this->cssFile as $file => $options) {
-			if ($options != "") $options = " " . $options;
+			if (!empty($options)) $options = " " . $options;
 			$script .= "<link rel=\"stylesheet\" href=\"includes/css/" . $file . "\" type=\"text/css\" />\n";			
 		}
 		return $script;
@@ -182,11 +182,11 @@ class Core_Html {
 		$script .= "<script type=\"text/javascript\">\n"
 		. "javaScriptActived('" . $this->cookieTestName . "');\n";
 		
-		if ($this->javaScriptCode != "") {
+		if (!empty($this->javaScriptCode)) {
 			$script .= $this->javaScriptCode;
 		}
 		
-		if ($this->javaScriptJquery != "") {
+		if (!empty($this->javaScriptJquery)) {
 			$script .= "$(document).ready(function(){";
 			$script .= $this->javaScriptJquery;
 			$script .= "});";
@@ -202,7 +202,7 @@ class Core_Html {
 	 * @param $javaScript String
 	 */
 	public function addJavaScriptJquery($javaScript) {
-		if ($this->javaScriptJquery!= "") $this->javaScriptJquery .= "\n";
+		if (!empty($this->javaScriptJquery)) $this->javaScriptJquery .= "\n";
 		$this->javaScriptJquery .= $javaScript;
 	}
 	
@@ -212,7 +212,7 @@ class Core_Html {
 	 * @param $javaScript String
 	 */
 	public function addJavaScriptCode($javaScript) {
-		if ($this->javaScriptCode != "") $this->javaScriptCode .= "\n";
+		if (!empty($this->javaScriptCode)) $this->javaScriptCode .= "\n";
 		$this->javaScriptCode .= $javaScript;
 	}
 	
@@ -264,11 +264,11 @@ class Core_Html {
 	 */
 	public function getMetaHeaders() {
 		$title = "";
-		if (Core_Loader::isCallable("Core_Main") && Core_Main::$coreConfig['defaultSiteName'] != "") {
-			if (!$this->title) $title = Core_Main::$coreConfig['defaultSiteName'] . " - " . Core_Main::$coreConfig['defaultSiteSlogan'];
+		if (Core_Loader::isCallable("Core_Main") && !empty(Core_Main::$coreConfig['defaultSiteName'])) {
+			if (empty($this->title)) $title = Core_Main::$coreConfig['defaultSiteName'] . " - " . Core_Main::$coreConfig['defaultSiteSlogan'];
 			else $title = Core_Main::$coreConfig['defaultSiteName'] . " - " . $this->title;
 		} else {
-			if (!$this->title) $title = Core_Request::getString("SERVER_NAME", "", "SERVER");
+			if (empty($this->title)) $title = Core_Request::getString("SERVER_NAME", "", "SERVER");
 			else $title = Core_Request::getString("SERVER_NAME", "", "SERVER") . " - " . $this->title;
 		}
 		
@@ -307,8 +307,8 @@ class Core_Html {
 		$keywords = (strlen($keywords) > 500) ? substr($keywords, 0, 500) : $keywords;
 		
 		if (Core_Loader::isCallable("Core_Main")) {
-			if (!$this->description) $this->description = Core_Main::$coreConfig['defaultDescription'];
-			if (!$keywords) $keywords = Core_Main::$coreConfig['defaultKeyWords'];
+			if (empty($this->description)) $this->description = Core_Main::$coreConfig['defaultDescription'];
+			if (empty($keywords)) $keywords = Core_Main::$coreConfig['defaultKeyWords'];
 		}
 		
 		Core_Loader::classLoader("Exec_Entities");
@@ -344,7 +344,7 @@ class Core_Html {
 			$keywords = str_replace(",", " ", $keywords);
 			$keywords = explode(" ", $keywords);
 			foreach($keywords as $keyword) {
-				if ($keyword != "") { // Filtre les entrées vides
+				if (!empty($keyword)) { // Filtre les entrées vides
 					$this->keywords[] = trim($keyword);
 				}
 			}
@@ -371,7 +371,44 @@ class Core_Html {
 		else $key = "A4bT9D4V";
 		return $key;
 	}
+	
+	/**
+	 * Réécriture d'une URL
+	 * 
+	 * @param $link String or array adresse URL a réécrire
+	 * @param $layout boolean true ajouter le layout
+	 * @return String or array
+	 */
+	public static function getLink($link, $layout = false) {
+		if (is_array($link)) {
+			foreach ($link as $key => $value) {
+				$link[$key] = self::getLink($value, $layout);
+			}
+		} else {
+			if ($layout) {
+				// Configuration du layout
+				$layout = "&amp;layout=";
+				if (strpos($link, "block=") !== false) {
+					$layout .= "block";
+				} else if (strpos($link, "mod=") !== false) {
+					$layout .= "module";
+				} else {
+					$layout .= "default";
+				}
+				$link .= $layout;
+			}
+			if (strpos($link, "index.php?") === false) {
+				if ($link[0] == "?") {
+					$link = "index.php" . $link;
+				} else {
+					$link = "index.php?" . $link;
+				}
+			}
+			if (Core_Main::doUrlRewriting()) {
+				$link = Core_UrlRewriting::rewriteLink($link);
+			}
+		}
+		return $link;
+	}
 }
-
-
 ?>

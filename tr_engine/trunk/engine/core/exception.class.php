@@ -36,6 +36,13 @@ class Core_Exception {
 	private static $writeLog = true;
 	
 	/**
+	 * Nombre de requête Sql executées
+	 * 
+	 * @var int
+	 */
+	public static $numberOfRequest = 0;
+	
+	/**
 	 * Activer ou désactiver le rapport d'erreur dans un log
 	 * 
 	 * @param boolean $active
@@ -145,6 +152,7 @@ class Core_Exception {
 		. "Core : " . Exec_Marker::getTime("core") . " seconde\n"
 		. "<br />Launcher : " . Exec_Marker::getTime("launcher") . " seconde\n"
 		. "<br />All : " . Exec_Marker::getTime("all") . " seconde\n"
+		. "<br />Number of Sql request : " . self::$numberOfRequest . "\n"
 		. "<br />Appreciation : <span style=\"color: " . (((0.4000 - Exec_Marker::getTime("all")) > 0.3) ? "green;\">IMPECCABLE" : "red;\">INSUFFISANT") . "</span>"
 		. "</div>";
 	}

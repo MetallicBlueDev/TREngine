@@ -76,7 +76,7 @@ class Block_Menu extends Block_Model {
 			if ($underline) $text = "<u>" . $text . "</u>";
 			if ($big) $text = "<big>" . $text . "</big>";
 			if ($small) $text = "<small>" . $text . "</small>";
-			if ($link != "") $text = "<a href=\"" . (($popup) ? "javascript:window.open('" . $link . "')" : $link) . "\" alt=\"\" title=\"\">" . $text . "</a>";
+			if (!empty($link)) $text = "<a href=\"" . (($popup) ? "javascript:window.open('" . $link . "')" : $link) . "\" alt=\"\" title=\"\">" . $text . "</a>";
 			
 			$outPut = $text;
 		} else {
@@ -112,7 +112,7 @@ class Block_Menu extends Block_Model {
 		}
 		
 		// Termine le tag des options
-		if ($optionsString != "") $optionsString = self::$optionsTag . $optionsString . self::$optionsTag;
+		if (!empty($optionsString)) $optionsString = self::$optionsTag . $optionsString . self::$optionsTag;
 		
 		return $text . $optionsString;
 	}

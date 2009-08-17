@@ -243,9 +243,10 @@ class Exec_FileManager {
 	 * Mise à jour de la date de dernière modification
 	 * 
 	 * @param $path chemin vers le fichier cache
+	 * @param $updateTime
 	 */
 	public function touchCache($path, $updateTime = "") {
-		if (!$updateTime) $updateTime = time();
+		if (empty($updateTime)) $updateTime = time();
 		if (!@touch(TR_ENGINE_DIR . "/" . $path, $updateTime)) {
 			Core_Exception::setException("touch error on " . $path);
 		}

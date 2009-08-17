@@ -43,7 +43,7 @@ class Libs_Block {
 	 * @return Libs_Block
 	 */
 	public static function &getInstance() {
-		if (!self::$libsBlock) {			
+		if (self::$libsBlock === false) {			
 			self::$libsBlock = new self();
 		}
 		return self::$libsBlock;
@@ -66,22 +66,14 @@ class Libs_Block {
 	 * @return boolean true le block doit être actif
 	 */
 	private function blockActiveMod($modules = array("all")) {
-		foreach ($modules as $modSelected)  {
-			if (Libs_Module::$module == $modSelected || $modSelected == "all") {
-				return true;
+		if (Core_Loader::isCallable("Libs_Module")) {
+			foreach ($modules as $modSelected)  {
+				if (Libs_Module::$module == $modSelected || $modSelected == "all") {
+					return true;
+				}
 			}
 		}
 		return false;
-	}
-	
-	/**
-	 * Retourne un tableau de donnée
-	 * 
-	 * @param $content String
-	 * @return array
-	 */
-	private function arrayContent($content) {
-		return explode("|", $content);
 	}
 	
 	/**
@@ -112,7 +104,7 @@ class Libs_Block {
 			// Récuperation des données des blocks
 			Core_Sql::addBuffer("block");
 			while ($block = Core_Sql::fetchBuffer("block")) {
-				$block->mods = $this->arrayContent($block->mods);
+				$block->mods = explode("|", $block->mods);
 				
 				if ($this->isBlock($block->type) // Si le block existe
 						&& $this->blockActiveMod($block->mods) // Et qu'il est actif sur la page courante
@@ -131,7 +123,7 @@ class Libs_Block {
 	 */
 	private function launchOneBlock() {
 		// Capture de la variable
-		$blockId = Core_Secure::checkVariable("block");
+		$blockId = Core_Request::getInt("block");
 		
 		if (is_numeric($blockId)) {
 			Core_Sql::select(
@@ -194,15 +186,15 @@ class Libs_Block {
 	 * @return String
 	 */
 	public function getBlocks($side) {
-		$side = $this->getSide($side);
+		$side = $this->getSide($side, "numeric");
 		
 		$blockSide = "";
 		if (isset($this->blocksCompiled[$side])) {
-			foreach($this->blocksCompiled[$side] as $block) {
-				$blockSide .= $block;
+			foreach($this->blocksCompiled[$side] as $key => $block) {
+				$blockSide .= $this->outPut($block, $this->doRewriteBuffer($side, $key));
 			}
 		}
-		return $this->outPut($blockSide);
+		return $blockSide;
 	}
 	
 	/**
@@ -244,11 +236,22 @@ class Libs_Block {
 	 * @param $buffer String
 	 * @return $buffer String
 	 */
-	private function outPut($buffer) {
-		if (Core_Main::$coreConfig['urlRewriting']) {
-			$buffer = Core_UrlRewriting::rewrite($buffer);
+	private function outPut($buffer, $rewriteBuffer = false) {
+		if (Core_Main::doUrlRewriting() && $rewriteBuffer) {
+			$buffer = Core_UrlRewriting::rewriteBuffer($buffer);
 		}
 		return $buffer;
+	}
+	
+	/**
+	 * Recherche le parametre indiquand qu'il doit y avoir une réécriture du buffer
+	 * 
+	 * @param $side int coté ou se trouve le block
+	 * @param $key int cles du block
+	 * @return boolean true il doit y avoir réécriture
+	 */
+	private function doRewriteBuffer($side, $key) {
+		return (strpos(self::$blocksConfig[$side][$key]->content, "rewriteBuffer") !== false) ? true : false;
 	}
 	
 	/**
@@ -258,8 +261,8 @@ class Libs_Block {
 	 */
 	public function getBlock() {
 		if (Core_Main::isBlockScreen()) {
-			foreach(self::$blocksConfig as $key => $block) {
-				return $this->outPut($this->blocksCompiled[$key][0]);
+			foreach($this->blocksCompiled as $side => $compiled) {
+				return $this->outPut($this->blocksCompiled[$side][0], $this->doRewriteBuffer($side, 0));
 			}
 		} else {
 			Core_Secure::getInstance()->debug("blockDisplay");

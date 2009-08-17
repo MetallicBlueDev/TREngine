@@ -40,7 +40,7 @@ class Core_Table {
 	 */
 	public static function setPrefix($prefix) {
 		// Aucun préfixe n'a été renseigné
-		if (!self::$prefix && $prefix != "") {
+		if (empty(self::$prefix) && !empty($prefix)) {
 			self::$prefix = $prefix;
 			// Application du préfixe
 			foreach (self::$tables as $value) {

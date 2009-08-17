@@ -252,15 +252,19 @@ class Exec_Agent {
 	
 	/**
 	 * Renseigne l'adresse IP (v4) correcte du client
+	 * 
+	 * @return $userIp String
 	 */
 	private static function checkUserIp() {
 		// Recherche de l'IP
-		if (Core_Request::getString("HTTP_CLIENT_IP", "", "SERVER")) $userIp = Core_Request::getString("HTTP_CLIENT_IP", "", "SERVER");
-		else if (Core_Request::getString("HTTP_X_FORWARDED_FOR", "", "SERVER")) $userIp = Core_Request::getString("HTTP_X_FORWARDED_FOR", "", "SERVER");
-		else if (Core_Request::getString("REMOTE_ADDR", "", "SERVER")) $userIp = Core_Request::getString("REMOTE_ADDR", "", "SERVER");
-		
-		if (isset($userIp) && $userIp != "" && preg_match("/([0-9]{1,3}\.){3}[0-9]{1,3}/", $userIp)) return $userIp;
-		return "";
+		$userIp = Core_Request::getString("HTTP_CLIENT_IP", "", "SERVER");
+		if (empty($userIp)) {
+			$userIp = Core_Request::getString("HTTP_X_FORWARDED_FOR", "", "SERVER");
+			if (empty($userIp)) {
+				$userIp = Core_Request::getString("REMOTE_ADDR", "", "SERVER");
+			}
+		}
+		return $userIp;
 	}
 }
 ?>

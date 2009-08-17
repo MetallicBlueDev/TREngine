@@ -11,6 +11,21 @@ body {
 	border: 0px;
 }
 
+.input {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	background-color: #d0dfe6;
+	border-top: 2px solid #7194a4;
+	border-bottom: 2px solid #7194a4;
+	color: #05587b;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.input:hover {
+	background-color: #fff;
+}
+
 a:link, a:visited, a:active {
 	color: #404040;
 	text-decoration: none;
@@ -51,6 +66,7 @@ a:hover {
 	background: url(images/footer.jpg);
 }
 
+/* Cadre des modules */
 #module_top {
 	margin-top: 20px;
 	width: 645px;
@@ -69,6 +85,7 @@ a:hover {
 	background: url(images/module_bottom.jpg);
 }
 
+/* Cadre des blocks */
 .block_top {
 	margin-top: 10px;
 	margin-left: 30px;
@@ -97,6 +114,12 @@ a:hover {
 	padding-right: 8px;
 }
 
+.block_content ul {
+	padding-top: 5px;
+	list-style-type: none;
+}
+
+/* Block erreur */
 .block_error {
 	margin-top: 10px;
 	padding: 10px 25px 10px 10px;
@@ -119,25 +142,29 @@ a:hover {
 	background: url(images/block_error_info.png) no-repeat 0 0;
 }
 
+/* Partie gauche */
 #left {
 	width: 214px;
 	float: left;
 	position: relative;
 }
 
+/* Interieur */
 #middle {
 	width: 645px;
 	float: left;
 	position: relative;
 }
 
+/* Fil ariane */
 #breadcrumb a:hover {
 	color: #05587b;
 }
 
+/* Menu basique */
 .menu ul {
 	margin: 0px;
-	padding: 10px;
+	padding: 5px;
 }
 
 .menu ul li a:link, .menu ul li a:visited {

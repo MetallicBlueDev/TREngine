@@ -21,7 +21,7 @@ class Exec_Cookie {
 	 * @return boolean true succès
 	 */
 	public static function createCookie($cookieName, $cookieContent, $cookieTimeLimit = "") {
-		if (!$cookieTimeLimit) $rslt = setcookie($cookieName, $cookieContent);
+		if (empty($cookieTimeLimit)) $rslt = setcookie($cookieName, $cookieContent);
 		else if ($cookieTimeLimit == "-1" && isset($_COOKIE[$cookieName])) $rslt = setcookie($cookieName, "");
 		else $rslt = setcookie($cookieName, $cookieContent, $cookieTimeLimit);
 		return $rslt;

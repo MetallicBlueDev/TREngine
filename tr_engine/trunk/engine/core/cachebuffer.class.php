@@ -49,6 +49,8 @@ class Core_CacheBuffer {
 	
 	/**
 	 * Nom de la section courante
+	 * 
+	 * @var String
 	 */
 	protected static $sectionName = "";
 	
@@ -75,9 +77,9 @@ class Core_CacheBuffer {
 	 * 
 	 * @param $sectionName
 	 */
-	public static function setSectionName($sectionName) {
-		if (self::$sectionName != "" 
-			&& isset(self::$sectionDir[self::$sectionName])) {
+	public static function setSectionName($sectionName = "") {
+		if (!empty($sectionName) 
+				&& isset(self::$sectionDir[$sectionName])) {
 			self::$sectionName = $sectionName;
 		} else {
 			self::$sectionName = "tmp";
@@ -91,7 +93,7 @@ class Core_CacheBuffer {
 	 */
 	private static function getSectionPath() {
 		// Si pas de section, on met par défaut
-		if (!self::$sectionName) self::setSectionName("");
+		if (empty(self::$sectionName)) self::setSectionName();
 		// Chemin de la section courante
 		return self::$sectionDir[self::$sectionName];
 	}
@@ -128,7 +130,7 @@ class Core_CacheBuffer {
 	 */
 	public static function removeCache($dir, $timeLimit = 0) {
 		// Configuration du path
-		if ($dir != "") $dir = "/" . $dir;
+		if (!empty($dir)) $dir = "/" . $dir;
 		$dir = self::getSectionPath() . $dir;
 		self::$removeCache[self::encodePath(self::getSectionPath() . $dir)] = $timeLimit;
 	}

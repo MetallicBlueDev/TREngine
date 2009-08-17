@@ -68,9 +68,9 @@ class Core_Info {
 			$path = str_replace($baseName, "", $currentPath);
 			$path = substr($path, 1); // Suppression du slash
 			
-			if ($path != "") { // Recherche du chemin complet
+			if (!empty($path)) { // Recherche du chemin complet
 				// Vérification en se reperant sur l'emplacement du fichier config
-				while (!@is_file($baseName . "/" . $path . "/configs/config.inc.php")) {
+				while (!is_file($baseName . "/" . $path . "/configs/config.inc.php")) {
 					// On remonte d'un cran
 					$path = dirname($path);
 					// La recherche n'aboutira pas
@@ -79,7 +79,7 @@ class Core_Info {
 			}
 			
 			// Verification du résultat
-			if ($path != "" && is_file($baseName . "/" . $path . "/configs/config.inc.php")) $baseDir = $baseName . "/" . $path;
+			if (!empty($path) && is_file($baseName . "/" . $path . "/configs/config.inc.php")) $baseDir = $baseName . "/" . $path;
 			else if (is_file($baseName . "/configs/config.inc.php")) $baseDir = $baseName;
 			else $baseDir = $baseName;
 		}
@@ -106,11 +106,11 @@ class Core_Info {
 		$urlFinal = "";
 		for($i = count($urlTmp)-1; $i >= 0; $i--) {
 			if ($urlTmp[$i] == $urlBase) {
-				if (!$urlFinal) $urlFinal = $urlTmp[$i];
+				if (empty($urlFinal)) $urlFinal = $urlTmp[$i];
 				else $urlFinal = $urlTmp[$i] . "/" . $urlFinal;
 			}
 		}		
-		return ((!$urlFinal) ? $_SERVER["SERVER_NAME"] : $_SERVER["SERVER_NAME"] . "/" . $urlFinal);
+		return ((empty($urlFinal)) ? $_SERVER["SERVER_NAME"] : $_SERVER["SERVER_NAME"] . "/" . $urlFinal);
 	}
 }
 

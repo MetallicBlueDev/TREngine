@@ -144,12 +144,12 @@ class Exec_FtpManager {
 		if (preg_match("/(.+)(\/)/", $ftp['host'], $matches)) $ftp['host'] = $matches[1];
 		
 		// Réglage de configuration
-		$this->$ftp['host'] = (!$ftp['host']) ? "127.0.0.1" : $ftp['host'];
+		$this->$ftp['host'] = (empty($ftp['host'])) ? "127.0.0.1" : $ftp['host'];
 		$this->$ftp['port'] = (is_numeric($ftp_port)) ? $ftp['port'] : 21;
-		$this->$ftp['user'] = (!$ftp['user']) ? "root" : $ftp['user'];
-		$this->$ftp['pass'] = (!$ftp['pass']) ? "" : $ftp['pass'];
+		$this->$ftp['user'] = (empty($ftp['user'])) ? "root" : $ftp['user'];
+		$this->$ftp['pass'] = (empty($ftp['pass'])) ? "" : $ftp['pass'];
 		// Le dossier root sera redéfinie après être logué
-		$this->ftp['root'] = (!$ftp['root']) ? "/" : $ftp['root'];
+		$this->ftp['root'] = (empty($ftp['root'])) ? "/" : $ftp['root'];
 		
 		$this->$ftp = $ftp;
 	}
@@ -573,7 +573,7 @@ class Exec_FtpManager {
 		// Vérification du root path
 		if (@is_file("/" . $pathRebuild . "/" . $pathFound . "/engine/core/secure.class.php")) {
 			$this->$ftp['root'] = $pathFound;
-		} else if (!$this->$ftp['root']) {
+		} else if (empty($this->$ftp['root'])) {
 			Core_Exception::setException("Unable to configure root path.");
 		}
 	}
@@ -692,7 +692,7 @@ class Exec_FtpManager {
 			foreach($dirs as $dir) {
 				$count++;
 				// Si le dernier élèment est un fichier ou simplement vide
-				if (($count == $nbDir && !$pathIsDir) || !$dir) {
+				if (($count == $nbDir && !$pathIsDir) || empty($dir)) {
 					break; // on passe a la suite...
 				}
 				

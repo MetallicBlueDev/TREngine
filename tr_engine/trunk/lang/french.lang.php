@@ -8,11 +8,7 @@ $lang = array(
 "ERROR_ACCES_ADMIN" => "Vous ne possedez pas les droits suffisants pour afficher cette page.",
 "ERROR_ACCES_FORBIDDEN" => "Vous n'avez pas l'autorisation d'afficher cette page.",
 
-"ERROR_404" => "Erreur 404, la page demandée est introuvable.",
-"ERROR_BLOCK_CODE" => "Le code d'un block n'est pas utilisable.",
-"ERROR_BLOCK_IMPLEMENT" => "Le code d'un block n'est pas correctement implémenté.",
-
-// Erreur critique, mode debug via Core_Secure
+// Erreur critique généré par Core_Secure::debug()
 "ERROR_DEBUG_CLOSE" => "Le site est actuellement fermé.",
 "ERROR_DEBUG_SQLCONNECT" => "Erreur de connexion à la base de donnée.",
 "ERROR_DEBUG_SQLDBSELECT" => "Erreur lors de la sélection de la base de donnée.",
@@ -28,6 +24,25 @@ $lang = array(
 "ERROR_DEBUG_PHPVERSION" => "Votre version de PHP n'est malheureusement pas utilisable avec TR ENGINE.",
 "ERROR_DEBUG_BLOCKSIDE" => "Un block tente de s'afficher dans une position invalide.",
 "ERROR_DEBUG_BLOCKDISPLAY" => "Impossible d'afficher un block: ça configuration ne semble pas valide.",
+
+// Erreur diverse
+"ERROR_404" => "Erreur 404, la page demandée est introuvable.",
+"ERROR_BLOCK_CODE" => "Le code d'un block n'est pas utilisable.",
+"ERROR_BLOCK_IMPLEMENT" => "Le code d'un block n'est pas correctement implémenté.",
+"ERROR_SESSION_COOKIE" => "Impossible d'ouvrir une session, vérifiez vos paramètre cookie.",
+
+//
+"WELCOME" => "Bienvenue",
+"MY_ACCOUNT" => "Mon compte",
+"MY_RECEIPTBOX" => "Mes messages",
+"LOGOUT" => "Déconnexion",
+"FORGET_PASS" => "Mot de passe oublié",
+"FORGET_LOGIN" => "Identifiant oublié",
+"BECOME_MEMBER" => "Devenir membre",
+"LOGIN" => "Identifiant",
+"LOGIN_PLEASE" => "Merci de vous identifier !",
+"PASSWORD" => "Mot de passe",
+"LOGIN_SUBMIT" => "Connexion",
 
 "TEST" => "test"
 

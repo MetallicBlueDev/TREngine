@@ -42,11 +42,11 @@ class Exec_Crypt {
 	 */
 	public static function cryptData($data, $salt = "", $method = "") {
 		// Réglage de la méthode utilisé
-		if (!$method) $method= "smd5";
+		if (empty($method)) $method= "smd5";
 		$method = strtolower($method);
 		
 		// Préparation du salt
-		if (!$salt) $salt = self::creatId(16);
+		if (empty($salt)) $salt = self::creatId(16);
 		
 		switch($method) {
 			case 'smd5':

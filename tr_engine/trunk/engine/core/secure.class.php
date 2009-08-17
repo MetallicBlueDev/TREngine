@@ -40,7 +40,7 @@ class Core_Secure {
 	 * @return Core_Secure
 	 */
 	public static function &makeInstance() {
-		if (!self::$secure) {
+		if (self::$secure === false) {
 			self::$secure = new self();
 		}
 		return self::$secure;
@@ -77,7 +77,7 @@ class Core_Secure {
 	 */
 	private function checkRequestReferer() {
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
-			if ($_SERVER['HTTP_REFERER'] != "") { 
+			if (!empty($_SERVER['HTTP_REFERER'])) { 
 				if (!preg_match("/" . $_SERVER['HTTP_HOST'] . "/", $_SERVER['HTTP_REFERER'])) $this->debug();
 			}
 		}
@@ -174,7 +174,7 @@ class Core_Secure {
 				}
 				
 				// Remplissage dans avec les autres erreurs
-				if ($errorLine != "") {
+				if (!empty($errorLine)) {
 					$errorMessage[] = $errorLine;
 				}
 			}

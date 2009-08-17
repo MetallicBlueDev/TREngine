@@ -33,6 +33,11 @@ class Libs_Menu {
 	 */
 	private $itemActive = 0;
 	
+	/**
+	 * Attributs de l'element principal
+	 * 
+	 * @var String
+	 */
 	private $attribtus = "";
 	
 	/**
@@ -132,7 +137,7 @@ class Libs_Menu {
 				// Ajout du tableau route dans l'element principal
 				if ($key == $route[0]) $item->setRoute($route);
 				// Création du rendu
-				$out .= $this->items[$key]->toString($callback);
+				$out .= $this->items[$key]->toString($callback, $this->classParent, $this->classActive);
 			}
 		}
 		$out .= "</ul>";
@@ -262,7 +267,7 @@ class Libs_MenuElement {
 	 * @return String
 	 */
 	public function getAttributs($attributs = "") {
-		if (!$attributs) {
+		if (empty($attributs)) {
 			$attributs = $this->attributs;
 		}
 		$rslt = "";

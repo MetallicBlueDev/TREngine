@@ -17,7 +17,7 @@ class Core_Sql {
 	 * 
 	 * @var Base_xxxx
 	 */ 
-	protected static $base;
+	protected static $base = false;
 	
 	/**
 	 * Démarre une instance de communication avec la base
@@ -26,7 +26,7 @@ class Core_Sql {
 	 * @return Base_Type
 	 */
 	public static function &makeInstance($db = array()) {
-		if (!self::$base && count($db) >= 5) {			
+		if (self::$base === false && count($db) >= 5) {			
 			// Vérification du type de base de donnée
 			if (!is_file(TR_ENGINE_DIR . "/engine/base/" . $db['type'] . ".class.php")) {
 				Core_Secure::getInstance()->debug("sqlType");
@@ -143,7 +143,7 @@ class Core_Sql {
 	 * @return int
 	 */
 	public static function numRows($queries = "") {
-		$queries = ($queries != "") ? $queries : self::getQueries();
+		$queries = (!empty($queries)) ? $queries : self::getQueries();
 		return self::$base->numRow($queries);
 	}
 	
@@ -153,10 +153,14 @@ class Core_Sql {
 	 * @param $Sql
 	 */
 	public static function query($sql = "") {
-		$sql = ($sql != "") ? $sql : self::getSql();
+		$sql = (!empty($sql)) ? $sql : self::getSql();
 		self::$base->query($sql);
 		
-		if (!self::getQueries()) throw new Exception("sqlReq");
+		// Création d'une exception si une réponse est négative (false)
+		if (self::getQueries() === false) throw new Exception("sqlReq");
+		
+		// Incremente le nombre de requête effectuées
+		Core_Exception::$numberOfRequest++;
 	}
 	
 	/**
@@ -222,7 +226,7 @@ class Core_Sql {
 	 * @return boolean
 	 */
 	public static function freeResult($querie = "") {
-		$querie = ($querie != "") ? $querie : self::getQueries();
+		$querie = (!empty($querie)) ? $querie : self::getQueries();
 		return self::$base->freeResult($querie);
 	}
 	

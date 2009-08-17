@@ -23,7 +23,7 @@ class Core_Acces  {
 		// Rang 3 exigé !
 		if (Core_Session::$userRang == 3) {
 			// Recherche des droits admin
-			$right = Core_Session::getInstance()->getAdminRight($userIdAdmin);
+			$right = self::getAdminRight($userIdAdmin);
 			
 			if (substr($zoneIdentifiant, 0, 5) == "block") {
 				$zone = "BLOCK";
@@ -32,14 +32,18 @@ class Core_Acces  {
 				$module = substr($zoneIdentifiant, 0, $pathPos);
 				$page = substr($zoneIdentifiant, $pathPos, strlen($zoneIdentifiant));
 				
-				if (Libs_Module::getInstance()->isModule($module, $page)) {
+				if (Core_Loader::isCallable("Libs_Module") && Libs_Module::getInstance()->isModule($module, $page)) {
 					$zone = "PAGE";
 					$identifiant = $zoneIdentifiant;
 				}
 			} else {
 				// Recherche des infos du module
 				$zone = "MODULE";
-				$moduleInfo = Libs_Module::getInstance()->getInfoModule($zoneIdentifiant);
+				if (Core_Loader::isCallable("Libs_Module")) {
+					$moduleInfo = Libs_Module::getInstance()->getInfoModule($zoneIdentifiant);
+				} else {
+					$moduleInfo = false;
+				}
 				$identifiant = $moduleInfo['modId'];
 			}
 			
@@ -86,7 +90,11 @@ class Core_Acces  {
 	 */
 	public static function getModuleAccesError($mod) {
 		// Recherche des infos du module
-		$moduleInfo = Libs_Module::getInstance()->getInfoModule();
+		if (Core_Loader::isCallable("Libs_Module")) {
+			$moduleInfo = Libs_Module::getInstance()->getInfoModule();
+		} else {
+			$moduleInfo = false;
+		}
 		
 		// Si on veut le type d'erreur pour un acces
 		if ($moduleInfo['rang'] == -1) return "ERROR_ACCES_OFF";
@@ -104,8 +112,13 @@ class Core_Acces  {
 	 */
 	public static function autorize($zoneIdentifiant = "", $zoneRang = "") {
 		// Si ce n'est pas un block ou une page particuliere
-		if (substr($zoneIdentifiant, 0, 5) != "block" && !$zoneRang) {
-			$moduleInfo = Libs_Module::getInstance()->getInfoModule($mod);
+		if (substr($zoneIdentifiant, 0, 5) != "block" && empty($zoneRang)) {
+			// Recherche des infos du module
+			if (Core_Loader::isCallable("Libs_Module")) {
+				$moduleInfo = Libs_Module::getInstance()->getInfoModule($mod);
+			} else {
+				$moduleInfo = false;
+			}
 			
 			if ($moduleInfo != false) {
 				$zoneIdentifiant = Libs_Module::$module;
@@ -119,6 +132,30 @@ class Core_Acces  {
 			if ($zoneRang == 0) return true; // Accès public
 			else if ($zoneRang > 0 && $zoneRang < 3 && Core_Session::$userRang >= $zoneRang) return true; // Accès membre ou admin
 			else if ($zoneRang == 3 && self::moderate($zoneIdentifiant)) return true; // Accès admin avec droits
+		}
+		return false;
+	}
+	
+	/**
+	 * Retourne les droits de l'admin ciblé
+	 * 
+	 * @param $userIdAdmin String userId
+	 * @return mixed array liste des droits ou false
+	 */
+	public static function getAdminRight($userIdAdmin = "") {
+		// Id du client courant sinon utilisation de l'id indiqué
+		if (empty($userIdAdmin)) $userIdAdmin = Core_Session::$userId;
+		else $userIdAdmin = Exec_Entities::secureText($userIdAdmin);
+		
+		Core_Sql::select(
+			Core_Table::$ADMIN_USERS_TABLE,
+			array("rights"),
+			array("user_id = '" . $userIdAdmin . "'")
+		);
+		
+		if (Core_Sql::affectedRows() > 0) {
+			list($rights) = Core_Sql::fetchArray();
+			return explode("|", $rights);
 		}
 		return false;
 	}

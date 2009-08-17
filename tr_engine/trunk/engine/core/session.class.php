@@ -24,21 +24,21 @@ class Core_Session {
 	 * 
 	 * @var int
 	 */ 
-	private $timer;
+	private $timer = 0;
 	
 	/**
 	 * Limite de temps pour le cache
 	 * 
 	 * @var int
 	 */ 
-	private $cacheTimeLimit;
+	private $cacheTimeLimit = 0;
 	
 	/**
 	 * Limite de temps pour les cookies
 	 * 
 	 * @var int
 	 */ 
-	private $cookieTimeLimit;
+	private $cookieTimeLimit = 0;
 	
 	/**
 	 * Id du client
@@ -88,6 +88,34 @@ class Core_Session {
 	 * @var String
 	 */
 	public static $userIpBan = "";
+	
+	/**
+	 * URL de l'avatar de l'utilisateur
+	 * 
+	 * @var String
+	 */
+	public static $userAvatar = "includes/avatars/nopic.png";
+	
+	/**
+	 * Adresse email du client
+	 * 
+	 * @var String
+	 */
+	public static $userMail = "";
+	
+	/**
+	 * Date d'inscription du client
+	 * 
+	 * @var String
+	 */
+	public static $userInscriptionDate = "";
+	
+	/**
+	 * Signature du client
+	 * 
+	 * @var String
+	 */
+	public static $userSignature = "";
 
 	/**
 	 * Nom des cookies
@@ -138,7 +166,7 @@ class Core_Session {
 	 * @return Core_Session
 	 */
 	public static function &getInstance() {
-		if (!self::$session) {
+		if (self::$session === false) {
 			self::$session = new self();
 		}
 		return self::$session;
@@ -163,9 +191,10 @@ class Core_Session {
 	 * @return boolean true une session peut être recupere
 	 */
 	private function sessionFound() {
-		if (Exec_Cookie::getCookie($this->cookieName['SESSION']) != ""
-				&& Exec_Cookie::getCookie($this->cookieName['USER']) != "") {
-			return true;	
+		$cookieSession = Exec_Cookie::getCookie($this->cookieName['SESSION']);
+		$cookieUser = Exec_Cookie::getCookie($this->cookieName['USER']);
+		if (!empty($cookieSession) && !empty($cookieUser)) {
+			return true;
 		}
 		return false;
 	}
@@ -174,7 +203,7 @@ class Core_Session {
 	 * Recuperation d'une session ouverte
 	 */
 	private function sessionSelect() {
-		if ($this->sessionFound()) {			
+		if ($this->sessionFound()) {
 			// Cookie de l'id du client
 			$userId = Exec_Crypt::md5Decrypt(
 				Exec_Cookie::getCookie(
@@ -202,7 +231,8 @@ class Core_Session {
 					), $this->getSalt()
 				)
 			);
-			// Cookie de langue
+			self::$userLanguage = $userLanguage;
+			// Cookie de template
 			$userTemplate = Exec_Crypt::md5Decrypt(
 				Exec_Cookie::getCookie(
 					Exec_Crypt::md5Encrypt(
@@ -211,6 +241,7 @@ class Core_Session {
 					), $this->getSalt()
 				)
 			);
+			self::$userTemplate = $userTemplate;
 			// Cookie de l'IP BAN voir Core_BlackBan
 			$userIpBan = Exec_Crypt::md5Decrypt(
 				Exec_Cookie::getCookie(
@@ -220,16 +251,17 @@ class Core_Session {
 					), $this->getSalt()
 				)
 			);
+			self::$userIpBan = $userIpBan;
 			
-		    if ($userId != "" && $sessionId != "" && Core_CacheBuffer::cached($sessionId . ".php")) {
+		    if (!empty($userId) && !empty($sessionId) && Core_CacheBuffer::cached($sessionId . ".php")) {
 				// Si fichier cache trouvé, on l'utilise
 				$sessions = Core_CacheBuffer::getCache($sessionId . ".php");
 				
 				// Verification + mise à jour toute les 5 minutes
-				if ($sessions['userId'] == $userId) {
+				if ($sessions['user_id'] == $userId) {
 					// Mise à jour toute les 5 min
 					if ((Core_CacheBuffer::cacheMTime($sessions['sessionId'] . ".php") + (5*60)) < $this->timer) {
-						$updVerif = $this->updateLastConnect($sessions['userId']);
+						$updVerif = $this->updateLastConnect($sessions['user_id']);
 						// Mise a jour du dernier accès
 						Core_CacheBuffer::touchCache($sessions['sessionId'] . ".php");
 					} else {
@@ -243,40 +275,21 @@ class Core_Session {
 					// La mise à jour a échoué, on détruit la session
 					$this->sessionClose();
 				} else {
-					// Injection des informations du client
-					self::$userId = $sessions['userId'];
-					self::$userName = Exec_Entities::stripSlashes($sessions['userName']);
-					self::$userRang = $sessions['userRang'];
-					self::$sessionId = $sessions['sessionId'];
-					self::$userLanguage = ($userLanguage != "") ? $userLanguage : $sessions['userLanguage'];
-					self::$userTemplate = ($userTemplate != "") ? $userTemplate : $sessions['userTemplate'];
-					self::$userIpBan = $userIpBan;
+					// Injection des informations du client					
+					$this->setUser($sessions);
 				}
-		    } else if ($userId != "") {
+		    } else if (!empty($userId)) {
 				// Si plus de fichier cache, on tente de retrouver le client
-				Core_Sql::select(
-					Core_Table::$USERS_TABLE,
-					array("user_name", "user_rang", "user_language", "user_template"),
-					array("user_id = '" . $userId . "'")
-				);
-				
-				if (Core_Sql::affectedRows() > 0) {
-					// Si le client a été trouvé, on recupere les informations
-					list($userName, $userRang, $userLanguage, $userTemplate) = Core_Sql::fetchArray();
-					
+				$user = $this->getUserInfo(array("user_id = '" . $userId . "'"));
+				if (count($user) > 1) {					
 					// Injection des informations du client
-					self::$userId = $userId;
-					self::$userName = $userName;
-					self::$userRang = $userRang;
-					self::$userLanguage = $userLanguage;
-					self::$userTemplate = $userTemplate;
-					self::$userIpBan = $userIpBan;
+					$this->setUser($user);
 					
 					// Mise à jour de derniere connexion
 					$this->updateLastConnect();
 										
 					// Creation d'une nouvelle session
-					$this->sessionOpen(1);
+					$this->sessionOpen();
 				} else {
 					// userId invalide, on détruit
 					$this->sessionClose();
@@ -286,11 +299,68 @@ class Core_Session {
 	}
 	
 	/**
+	 * Injection des informations du client
+	 * 
+	 * @param $info array
+	 */
+	private function setUser($info) {	
+		self::$userId = $info['user_id'];
+		self::$userName = Exec_Entities::stripSlashes($info['name']);
+		self::$userMail = $info['mail'];
+		self::$userRang = (int) $info['rang'];
+		self::$userInscriptionDate = $info['date'];
+		self::$userAvatar = $info['avatar'];
+		self::$userSignature = Exec_Entities::stripSlashes($info['signature']);
+		self::$sessionId = $info['sessionId'];
+		if (empty(self::$userLanguage)) self::$userLanguage = $info['langue'];
+		if (empty(self::$userTemplate)) self::$userTemplate = $info['template'];
+		if (empty(self::$userIpBan)) self::$userIpBan = $info['userIpBan'];
+	}
+	
+	/**
+	 * Mise en chaine de caractères des infos du client
+	 * Préparation des informations pour le cache
+	 * 
+	 * @return String
+	 */
+	private function getUser() {
+		$rslt = "$" . Core_CacheBuffer::getSectionName() . "['user_id'] = \"" . self::$userId . "\"; ";
+		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['name'] = \"" . Exec_Entities::addSlashes(self::$userName) . "\"; ";
+		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['mail'] = \"" . self::$userMail . "\"; ";
+		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['rang'] = \"" . self::$userRang . "\"; ";
+		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['date'] = \"" . self::$userInscriptionDate . "\"; ";
+		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['avatar'] = \"" . self::$userAvatar . "\"; ";
+		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['signature'] = \"" . Exec_Entities::addSlashes(self::$userSignature) . "\"; ";
+		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['langue'] = \"" . self::$userLanguage . "\"; ";
+		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['template'] = \"" . self::$userTemplate . "\"; ";
+		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['userIpBan'] = \"" . self::$userIpBan . "\"; ";
+		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['sessionId'] = \"" . self::$sessionId . "\"; ";
+		return $rslt;
+	}
+	
+	/**
+	 * Retourne les infos utilisateur via la base de donnée
+	 * 
+	 * @return array
+	 */
+	private function getUserInfo($where) {
+		Core_Sql::select(
+			Core_Table::$USERS_TABLE,
+			array("user_id", "name", "mail", "rang", "date", "avatar", "signature", "template", "langue"),
+			$where
+		);
+		
+		if (Core_Sql::affectedRows() == 1) {
+			return Core_Sql::fetchArray();
+		}
+		return array();
+	}
+	
+	/**
 	 * Suppression de l'Ip bannie
 	 */
 	public function deleteUserIpBan() {
 		self::$userIpBan = "";
-		
 		Exec_Cookie::destroyCookie(
 			Exec_Crypt::md5Encrypt(
 				$this->cookieName['BLACKBAN'],
@@ -306,12 +376,13 @@ class Core_Session {
 	 */
 	private function updateLastConnect($userId = "") {
 		// Récupere l'id du client
-		if (!$userId) $userId = self::$userId;
+		if (empty($userId)) $userId = self::$userId;
 		
 		// Envoie la requête Sql
 		return Core_Sql::update(Core_Table::$USERS_TABLE, 
 			array("last_connect" => "NOW()"), 
-			array("user_id" => $userId));
+			array("user_id" => $userId)
+		);
 	}
 	
 	/**
@@ -319,10 +390,10 @@ class Core_Session {
 	 * 
 	 * @return boolean true c'est un client
 	 */
-	private function isUser() {
-		if (self::$userId != ""
-			&& self::$userName != ""
-			&& self::$sessionId != "") {
+	public function isUser() {
+		if (!empty(self::$userId)
+			&& !empty(self::$userName)
+			&& !empty(self::$sessionId)) {
 				return true;
 		} else {
 			return false;
@@ -346,41 +417,36 @@ class Core_Session {
 	 * Ouvre une nouvelle session
 	 * 
 	 * @param $auto int connexion automatique
-	 * @return unknown_type
 	 */
-	private function sessionOpen($auto = 1) {		
-		// Destruction d'une éventuelle session
-		$this->sessionClose();
+	private function sessionOpen($auto = 1) {
 		self::$sessionId = Exec_Crypt::creatId(32);
 		
 		// Connexion automatique via cookie
 		if ($auto == 1) $cookieTimeLimit = $this->cookieTimeLimit;
 		else $cookieTimeLimit = "";
 		
-		if (Exec_Cookie::createCookie(
-				Exec_Crypt::md5Encrypt(
-					$this->cookieName['USER'], 
-					$this->getSalt()
-				), Exec_Crypt::md5Encrypt(
-					$this->user['userId'], 
-					$this->getSalt()
-				), $cookieTimeLimit)) {
-			if (Exec_Cookie::createCookie(
-					Exec_Crypt::md5Encrypt(
-						$this->cookieName['SESSION'],
-						$this->getSalt()
-					), Exec_Crypt::md5Encrypt(
-						$this->user['sessionId'],
-						$this->getSalt()
-					), $cookieTimeLimit)) {
-				// Préparation des informations pour le cache
-				$content = "";
-				foreach ($this->user as $key => $value) {
-					$content .= "$" . Core_CacheBuffer::getSectionName() . "[" . $key . "] = \"" . Exec_Entities::addSlashes($value) . "\"; ";
-				}
-				// Ecriture du cache
-				Core_CacheBuffer::writingCache(self::$sessionId . ".php",	$content);
-			}
+		$cookieUser = Exec_Cookie::createCookie(
+			Exec_Crypt::md5Encrypt(
+				$this->cookieName['USER'], 
+				$this->getSalt()
+			), Exec_Crypt::md5Encrypt(
+				$this->user['userId'], 
+				$this->getSalt()
+		), $cookieTimeLimit);
+		$cookieSession = Exec_Cookie::createCookie(
+			Exec_Crypt::md5Encrypt(
+				$this->cookieName['SESSION'],
+				$this->getSalt()
+			), Exec_Crypt::md5Encrypt(
+				$this->user['sessionId'],
+				$this->getSalt()
+		), $cookieTimeLimit);
+		
+		if ($cookieUser && $cookieSession) {
+			// Ecriture du cache
+			Core_CacheBuffer::writingCache(self::$sessionId . ".php", $this->getUser());
+		} else {
+			Core_Exception::setMinorError("ERROR_SESSION_COOKIE");
 		}
 	}
 	
@@ -423,23 +489,12 @@ class Core_Session {
 		$this->stopConnection();
 		
 		$userName = Exec_Crypt::md5Decrypt($userName, $this->getSalt());
+		// TODO prévoir un cryptage du pass, ici le passe doit déjà être crypté
 		
-		Core_Sql::select(
-			Core_Table::$USERS_TABLE,
-			array("user_id", "user_rang", "user_language", "user_template"),
-			array("user_name = '" . $userName . "'", "&& user_pass = '" . $userPass . "'")
-		);
-		
-		if (Core_Sql::affectedRows() > 0) {
-			// Si le client a été trouvé, on recupere les informations
-			list($userId, $userRang, $userLanguage, $userTemplate) = Core_Sql::fetchArray();
-			
+		$user = $this->getUserInfo(array("user_name = '" . $userName . "'", "&& user_pass = '" . $userPass . "'"));
+		if (count($user) > 1) {	
 			// Injection des informations du client
-			self::$userId = $userId;
-			self::$userName = $userName;
-			self::$userRang = $userRang;
-			self::$userLanguage = $userLanguage;
-			self::$userTemplate = $userTemplate;
+			$this->setUser($user);
 			
 			// Tentative d'ouverture de session
 			return $this->sessionOpen($auto);
@@ -464,24 +519,6 @@ class Core_Session {
 	 */
 	private function getSalt() {
 		return Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowserName;
-	}
-	
-	public function getAdminRight($userIdAdmin = "") {
-		// Id du client courant sinon utilisation de l'id indiqué
-		if (!$userIdAdmin) $userIdAdmin = self::$userId;
-		else $userIdAdmin = Exec_Entities::secureText($userIdAdmin);
-		
-		Core_Sql::select(
-			Core_Table::$ADMIN_USERS_TABLE,
-			array("rights"),
-			array("user_id = '" . $userIdAdmin . "'")
-		);
-		
-		if (Core_Sql::affectedRows() > 0) {
-			list($rights) = Core_Sql::fetchArray();
-			return explode("|", $rights);
-		}
-		return false;
 	}
 }
 ?>

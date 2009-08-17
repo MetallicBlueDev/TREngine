@@ -18,11 +18,41 @@ class Core_UrlRewriting {
 	 * @return boolean true c'est activé
 	 */
 	public static function isActived() {
+		if (Core_Main::doUrlRewriting() && self::testPassed()) {
+			return true;
+		}
 		return false;
 	}
 	
-	public static function rewrite($buffer) {
-		echo "";
+	/**
+	 * Vérifie si la classe peut être activé
+	 * Alias de isActived()
+	 * 
+	 * @return boolean
+	 */
+	public static function test() {
+		return self::isActived();
+	}
+	
+	/**
+	 * Vérifie si les tests ont été passés avec succès
+	 * 
+	 * @return boolean
+	 */
+	private static function testPassed() {
+		// TODO vérifie si fichier tmp de test est OK
+		// si pas OK et pas de fichier tmp pour signaler la désactivation
+		// on tente de mettre urlRewriting a 0 puis on créé le fichier tmp de désactivation
+		// si déjà fichier tmp de décastivation ajouter erreur dans Core_Exception
+		return false;
+	}
+	
+	public static function rewriteLink($link) {
+		return $link;
+	}
+	
+	public static function rewriteBuffer($buffer) {
+		return $buffer;
 	}
 }
 ?>

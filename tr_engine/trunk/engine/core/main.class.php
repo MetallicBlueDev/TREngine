@@ -203,6 +203,12 @@ class Core_Main {
 			// Chargement des blocks
 			Core_Loader::classLoader("Libs_Block");
 			
+			// Chargement de la réécriture d'URL
+			if (self::doUrlRewriting()) {
+				Core_Loader::classLoader("Core_UrlRewriting");
+				Core_UrlRewriting::test();
+			}
+			
 			if (self::isFullScreen()) {
 				// Chargement et construction du fil d'ariane
 				Core_Loader::classLoader("Libs_Breadcrumb");
@@ -210,6 +216,7 @@ class Core_Main {
 				
 				Libs_Block::getInstance()->launch();
 				Libs_Module::getInstance()->launch();
+				
 				Exec_Marker::stopTimer("main");
 				$libsMakeStyle = new Libs_MakeStyle();
 				$libsMakeStyle->display("index.tpl");
@@ -244,7 +251,7 @@ class Core_Main {
 		if (extension_loaded('zlib') 
 				&& !ini_get('zlib.output_compression') 
 				&& function_exists("ob_gzhandler") 
-				&& !self::$coreConfig['urlRewriting']) {
+				&& !self::doUrlRewriting()) {
 			ob_start("ob_gzhandler");
 		} else {
 			ob_start();
@@ -320,6 +327,24 @@ class Core_Main {
 	 */
 	public static function isBlockScreen() {
 		return ((self::$layout == "block") ? true : false);
+	}
+	
+	/**
+	 * Vérifie si l'url rewriting est activé
+	 * 
+	 * @return boolean
+	 */
+	public static function doUrlRewriting() {
+		return (self::$coreConfig['urlRewriting'] == 1) ? true : false;
+	}
+	
+	/**
+	 * Etat des inscriptions au site
+	 * 
+	 * @return boolean
+	 */
+	public static function isRegistrationAllowed() {
+		return (self::$coreConfig['registrationAllowed'] == 1) ? true : false;
 	}
 	
 	/**

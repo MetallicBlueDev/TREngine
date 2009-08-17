@@ -30,7 +30,7 @@ class Libs_Breadcrumb {
 		// Ajoute la page principal
 		$this->addTrail(Core_Main::$coreConfig['defaultSiteName'], "index.php");
 		// Ajout le module courant
-		if (Libs_Module::$module != "") {
+		if (Core_Loader::isCallable("Libs_Module") && Libs_Module::$module != "") {
 			$this->addTrail(Libs_Module::$module, "?mod=" . Libs_Module::$module);
 		}
 	}
@@ -41,7 +41,7 @@ class Libs_Breadcrumb {
 	 * @return Libs_Breadcrumb
 	 */
 	public static function &getInstance() {
-		if (!self::$breadcrumb) {
+		if (self::$breadcrumb === false) {
 			self::$breadcrumb = new self();
 		}
 		return self::$breadcrumb;

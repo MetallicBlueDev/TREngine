@@ -31,7 +31,7 @@ class Libs_MakeStyle {
 	 * 
 	 * @var String
 	 */ 
-	private $templateName;
+	private $templateName = "";
 	
 	/**
 	 * Variables assignées
@@ -47,10 +47,6 @@ class Libs_MakeStyle {
 	 */
 	private $debugMode = false;
 	
-	public function Libs_MakeStyle() {
-		$this->__construct();
-	}
-	
 	public function __construct($templateName = "") {
 		// Mode normale
 		$this->debugMode = false;
@@ -60,7 +56,7 @@ class Libs_MakeStyle {
 			$this->templateName = $templateName;
 		}
 		
-		if (!self::$templatesDir || !self::$templateUsedDir) {
+		if (empty(self::$templatesDir) || empty(self::$templateUsedDir)) {
 			Core_Secure::getInstance()->debug("makeStyleConfig");
 		}
 	}
@@ -151,6 +147,7 @@ class Libs_MakeStyle {
 	
 	/**
 	 * Retourne le chemin jusqu'au template
+	 * 
 	 * @return path String
 	 */
 	private function getTemplatePath() {
@@ -161,10 +158,11 @@ class Libs_MakeStyle {
 	
 	/**
 	 * Vérifie la validité du template
+	 * 
 	 * @return boolean true si le chemin du template est valide
 	 */
 	private function isTemplate() {
-		return @is_file($this->getTemplatePath());
+		return is_file($this->getTemplatePath());
 	}
 	
 	/**
@@ -191,6 +189,7 @@ class Libs_MakeStyle {
 	
 	/**
 	 * Retourne le dossier vers les templates
+	 * 
 	 * @return String
 	 */
 	public static function getTemplatesDir() {
@@ -199,6 +198,7 @@ class Libs_MakeStyle {
 	
 	/**
 	 * Retourne le dossier du template utilisé
+	 * 
 	 * @return String
 	 */
 	public static function getTemplateUsedDir() {

@@ -110,8 +110,7 @@ class Core_Loader {
 	 * @return boolean true si c'est déjà chargé
 	 */
 	private static function isLoaded($name) {
-		if (isset(self::$loaded[$name])) return true;
-		else return false;
+		return isset(self::$loaded[$name]);
 	}
 	
 	/**
@@ -127,7 +126,7 @@ class Core_Loader {
 			$className = get_class($className);
 		}
 		
-		if ($methodName != "") {
+		if (!empty($methodName)) {
 			// Define Callable
 			if ($static) {
 				$callable = "{$className}::{$methodName}";
@@ -136,6 +135,10 @@ class Core_Loader {
 			}
 			return is_callable($callable);
 		} else {
+			// Utilisation du buffer si possible
+			if (self::isLoaded($className)) {
+				return true;
+			}
 			return class_exists($className);
 		}
 	}

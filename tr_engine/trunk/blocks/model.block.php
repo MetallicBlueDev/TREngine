@@ -62,7 +62,7 @@ class Block_Model {
 	public $rang = "";
 	
 	public function display() {
-		Core_Exception::setMinorError(ERROR_BLOCK_IMPLEMENT . (($this->title != "") ? " (" . $this->title . ")" : ""));
+		Core_Exception::setMinorError(ERROR_BLOCK_IMPLEMENT . ((!empty($this->title)) ? " (" . $this->title . ")" : ""));
 	}
 }
 

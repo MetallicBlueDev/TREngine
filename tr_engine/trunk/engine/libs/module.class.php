@@ -84,32 +84,7 @@ class Libs_Module {
 	private $modules = array();
 	
 	public function __construct() {
-		$this->configuration();
-	}
-	
-	/**
-	 * Création et récuperation de l'instance du module
-	 * 
-	 * @return Libs_Module
-	 */
-	public static function &getInstance($module = "", $page = "", $view = "") {
-		if (!self::$libsModule) {
-			// Injection des informations
-			self::$module = $module;
-			self::$page = $page;
-			self::$view = $view;
-			
-			self::$libsModule = new self();
-		}
-		return self::$libsModule;
-	}
-	
-	/**
-	 * Configure l'instance du module
-	 */
-	private function configuration() {
-		
-		if (self::$module != "" && !self::$page) {
+		if (!empty(self::$module) && empty(self::$page)) {
 			self::$page = self::$module;
 		}
 		
@@ -126,6 +101,23 @@ class Libs_Module {
 	}
 	
 	/**
+	 * Création et récuperation de l'instance du module
+	 * 
+	 * @return Libs_Module
+	 */
+	public static function &getInstance($module = "", $page = "", $view = "") {
+		if (self::$libsModule === false) {
+			// Injection des informations
+			self::$module = $module;
+			self::$page = $page;
+			self::$view = $view;
+			
+			self::$libsModule = new self();
+		}
+		return self::$libsModule;
+	}
+	
+	/**
 	 * Retourne les informations du module cible
 	 * 
 	 * @param $module String le nom du module, par défaut le module courant
@@ -133,21 +125,23 @@ class Libs_Module {
 	 */
 	public function getInfoModule($module = "") {
 		// Nom du module cible 
-		$modName = ((!$module) ? self::$module : $module);
+		$modName = ((empty($module)) ? self::$module : $module);
 		
-		// Retourne le cache
+		// Retourne le buffer
 		if (isset($this->modules[$modName])) return $this->modules[$modName];
 		
 		Core_Sql::select(
 			Core_Table::$MODULES_TABLE,
 			array("mod_id", "rang", "configs", "count"),
-			array("name =  '" . ((!$module) ? self::$module : $module) . "'")			
+			array("name =  '" . $modName . "'")			
 		);
 		
 		if (Core_Sql::affectedRows() > 0) {
 			list($modId, $rang, $configs, $count) = Core_Sql::fetchArray();
 			
-			if (!$module || self::$module == $module) {
+			$configs = explode("|", $configs);
+			
+			if (empty($module) || self::$module == $module) {
 				self::$modId = $modId;
 				self::$rang = $rang;
 				self::$configs = $configs;
@@ -182,7 +176,7 @@ class Libs_Module {
 	public function launch() {
 		// Vérification du niveau d'acces 
 		if (Core_Acces::autorize(self::$module)) {
-			if (!$this->moduleCompiled && $this->isModule()) {
+			if (empty($this->moduleCompiled) && $this->isModule()) {
 				Core_Translate::translate("modules/" . self::$module);
 				
 				ob_start();
@@ -203,8 +197,8 @@ class Libs_Module {
 	 * @return boolean true le module existe
 	 */
 	public function isModule($module = "", $page = "") {
-		if (!$module) $module = self::$module;
-		if (!$page) $page = self::$page;
+		if (empty($module)) $module = self::$module;
+		if (empty($page)) $page = self::$page;
 		return is_file(TR_ENGINE_DIR . "/modules/" . $module . "/" . $page . ".mod.php");
 	}
 	
@@ -213,11 +207,11 @@ class Libs_Module {
 	 * 
 	 * @return String
 	 */
-	public function getModule() {
+	public function getModule($rewriteBuffer = false) {
 		$buffer = $this->moduleCompiled;
 		// Tamporisation de sortie
-		if (Core_Main::$coreConfig['urlRewriting']) {
-			$buffer = Core_UrlRewriting::rewrite($buffer);
+		if (Core_Main::doUrlRewriting() && ($rewriteBuffer || in_array("rewriteBuffer", self::$configs))) {
+			$buffer = Core_UrlRewriting::rewriteBuffer($buffer);
 		}
 		// Relachement des tampon
 		return $buffer;

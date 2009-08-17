@@ -70,10 +70,10 @@ class Core_ConfigsLoader {
 			if (is_int($config['cacheTimeLimit']) && $config['cacheTimeLimit'] >= 1) $this->config['cacheTimeLimit'] = $config['cacheTimeLimit'];
 			else $this->config['cacheTimeLimit'] = 7;
 			
-			if ($config['cookiePrefix'] != "") $this->config['cookiePrefix'] = $config['cookiePrefix'];
+			if (!empty($config['cookiePrefix'])) $this->config['cookiePrefix'] = $config['cookiePrefix'];
 			else $this->config['cookiePrefix'] = "tr";
 			
-			if ($config['cryptKey'] != "") $this->config['cryptKey'] = $config['cryptKey'];
+			if (!empty($config['cryptKey'])) $this->config['cryptKey'] = $config['cryptKey'];
 		} else {
 			Core_Secure::getInstance()->debug("configPath", $configPath);
 		}

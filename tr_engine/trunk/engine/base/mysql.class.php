@@ -141,7 +141,7 @@ class Base_Mysql extends Base_Model {
 		
 		// Mise en forme de la requête finale
 		$sql = "UPDATE " . $table . " SET " . implode(", ", $valuesString);
-		$sql .= ($where != "" && count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
+		$sql .= (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
 		$sql .= $orderby . $limit;
 		$this->sql = $sql;
 	}
@@ -181,7 +181,7 @@ class Base_Mysql extends Base_Model {
 		$like = (count($like) >= 1) ? " LIKE " . implode(" ", $like) : "";
 		
 		// Fonction ET entre WHERE et LIKE
-		if ($where != "" && $like != "") {
+		if (!empty($where) && !empty($like)) {
 			$where .= "AND";
 		}
 

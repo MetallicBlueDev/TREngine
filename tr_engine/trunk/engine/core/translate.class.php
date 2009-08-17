@@ -203,7 +203,7 @@ class Core_Translate {
 	 * Configure et charge les 1ere données de traduction
 	 */
 	public static function makeInstance() {
-		if (!self::$currentLanguage) {
+		if (empty(self::$currentLanguage)) {
 			self::setLanguage();
 			self::translate();
 		}
@@ -257,7 +257,7 @@ class Core_Translate {
 			// Tentative de formatage via le nom de la langue
 			if (!setlocale(LC_TIME, self::$currentLanguage)) {
 				// Si la recherche n'a pas été faite, on la lance maintenant
-				if (!self::$currentLanguageExtension) self::setCurrentLanguageExtension();
+				if (empty(self::$currentLanguageExtension)) self::setCurrentLanguageExtension();
 				// Dernère tentative de formatage sous forme "fr_FR"
 				setlocale(LC_TIME, strtolower(self::$currentLanguageExtension) . "_" . strtoupper(self::$currentLanguageExtension));
 			}
@@ -274,7 +274,7 @@ class Core_Translate {
 		$languageClient = explode(',', Core_Request::getString("HTTP_ACCEPT_LANGUAGE", "", "SERVER"));
 		$languageClient = strtolower(substr(trim($languageClient[0]), 0, 2));
 		
-		if (self::$languageList[$languageClient] != "") {
+		if (isset(self::$languageList[$languageClient])) {
 			self::$currentLanguageExtension = $languageClient;
 		} else {
 			// Recherche de l'URL
@@ -286,7 +286,7 @@ class Core_Translate {
 			preg_match('/[^.]+\.[^.]+$/', $matches[1], $matches);
 			preg_match('/[^.]+$/', $matches[0], $languageExtension);
 			
-			if (self::$languageList[$languageExtension[0]] != "") {
+			if (isset(self::$languageList[$languageExtension[0]])) {
 				self::$currentLanguageExtension = $languageExtension[0];
 			}
 		}
@@ -299,8 +299,7 @@ class Core_Translate {
 	 * @return boolean true langue disponible
 	 */
 	private static function isValid($language) {
-		if ($language != "" && is_file(TR_ENGINE_DIR . "/lang/" . $language . ".lang.php")) return true;
-		else return false;
+		return is_file(TR_ENGINE_DIR . "/lang/" . $language . ".lang.php");
 	}
 	
 	/**
@@ -309,8 +308,10 @@ class Core_Translate {
 	 * @param $pathLang
 	 * @return String
 	 */
-	private static function getPath($pathLang) {
-		if ($pathLang != "" && substr($pathLang, -1) != "/") $pathLang .= "/";
+	private static function getPath($pathLang = "") {
+		if (!empty($pathLang) && substr($pathLang, -1) != "/") {
+			$pathLang .= "/";
+		}
 		return $pathLang . "lang/" . self::$currentLanguage . ".lang.php";
 	}
 	
@@ -323,25 +324,25 @@ class Core_Translate {
 		// Capture du chemin vers le fichier
 		$pathLang = self::getPath($pathLang);
 		
-		// Fichier déjà traduit
-		if (self::$translated[$pathLang] != "") return null;
+		// On stop si le fichier a déjà été traduit
+		if (isset(self::$translated[$pathLang])) return null;
+		// Chemin vers le fichier langue source
+		$langOriginalPath = TR_ENGINE_DIR . "/" . $pathLang;
 		
 		// Vérification du fichier de langue
-		if (is_file(TR_ENGINE_DIR . "/" . $pathLang)) {		
+		if (is_file($langOriginalPath)) {		
 			// Préparation du Path et du contenu
-			$langCacheFile = str_replace("/", "_", $pathLang);
+			$langCacheFileName = str_replace("/", "_", $pathLang);
 			$content = "";
 			
 			// Recherche dans le cache
 			if (Core_Loader::isCallable("Core_CacheBuffer")) Core_CacheBuffer::setSectionName("lang");
 			if (!Core_Loader::isCallable("Core_CacheBuffer") 
-					|| !Core_CacheBuffer::cached($langCacheFile)
-					|| (Core_CacheBuffer::cacheMTime($langCacheFile) < @filemtime(TR_ENGINE_DIR . "/" . $pathLang))) {
-				// Ecriture du fichier cache
-				$lang = "";
-				
+					|| !Core_CacheBuffer::cached($langCacheFileName)
+					|| (Core_CacheBuffer::cacheMTime($langCacheFileName) < filemtime($langOriginalPath))) {				
 				// Fichier de traduction original
-				require(TR_ENGINE_DIR . "/" . $pathLang);
+				$lang = "";
+				require($langOriginalPath);
 				
 				if (is_array($lang)) {
 					foreach ($lang as $key => $value) {
@@ -349,17 +350,17 @@ class Core_Translate {
 							$content .= "define(\"" . $key . "\",\"" . self::entitiesTranslate($value) . "\");";
 						}
 					}
-					if (Core_Loader::isCallable("Core_CacheBuffer")) Core_CacheBuffer::writingCache($langCacheFile, $content);
+					if (Core_Loader::isCallable("Core_CacheBuffer")) Core_CacheBuffer::writingCache($langCacheFileName, $content);
 				}
 			}
 			
 			// Donnée de traduction
-			if (Core_Loader::isCallable("Core_CacheBuffer") && Core_CacheBuffer::cached($langCacheFile)) $data = "require(TR_ENGINE_DIR . '/tmp/lang/" . $langCacheFile . "');";
-			else if ($content != "") $data = $content;
+			if (Core_Loader::isCallable("Core_CacheBuffer") && Core_CacheBuffer::cached($langCacheFileName)) $data = "require(TR_ENGINE_DIR . '/tmp/lang/" . $langCacheFileName . "');";
+			else if (!empty($content)) $data = $content;
 			else $data = "";
 			
 			// Traduction disponible
-			if ($data != "") {
+			if (!empty($data)) {
 				// Ajoute le fichier traduit dans le tableau
 				self::$translated[$pathLang] = "1";
 				
