@@ -17,7 +17,7 @@ Exec_Marker::startTimer("main");
 
 // Chargement du système de sécurité
 Core_Loader::classLoader("Core_Secure");
-Core_Secure::makeInstance();
+Core_Secure::getInstance();
 
 // Chargement de la classe principal
 Core_Loader::classLoader("Core_Main");

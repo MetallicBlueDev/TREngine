@@ -488,10 +488,9 @@ class Core_Session {
 		// Arrête de la session courante si il y en a une
 		$this->stopConnection();
 		
-		$userName = Exec_Crypt::md5Decrypt($userName, $this->getSalt());
-		// TODO prévoir un cryptage du pass, ici le passe doit déjà être crypté
-		
+		$userName = Exec_Crypt::md5Decrypt($userName, $this->getSalt());		
 		$user = $this->getUserInfo(array("user_name = '" . $userName . "'", "&& user_pass = '" . $userPass . "'"));
+		
 		if (count($user) > 1) {	
 			// Injection des informations du client
 			$this->setUser($user);

@@ -29,6 +29,9 @@ $lang = array(
 "ERROR_404" => "Erreur 404, la page demandée est introuvable.",
 "ERROR_BLOCK_CODE" => "Le code d'un block n'est pas utilisable.",
 "ERROR_BLOCK_IMPLEMENT" => "Le code d'un block n'est pas correctement implémenté.",
+"ERROR_BLOCK_NO_FILE" => "Le fichier d'un block n'a pas été trouvé.",
+"ERROR_MODULE_CODE" => "Le code d'un module n'est pas utilisable.",
+"ERROR_MODULE_NO_FILE" => "Le fichier d'un module n'a pas été trouvé.",
 "ERROR_SESSION_COOKIE" => "Impossible d'ouvrir une session, vérifiez vos paramètre cookie.",
 
 // Divers

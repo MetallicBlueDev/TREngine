@@ -5,7 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 // Résolution de la dépendance du block menu
-Core_Loader::blockLoader("menu");
+Core_Loader::classLoader("Block_Menu");
 
 /**
  * Block de menu style jdMenu by Jonathan Sharp

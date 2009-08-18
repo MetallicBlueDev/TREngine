@@ -83,9 +83,17 @@ class Libs_Module {
 	 */
 	private $modules = array();
 	
+	private $defaultModule = "";
+	private $defaultPage = "";
+	private $defaultView = "";
+	
 	public function __construct() {
+		$this->defaultModule = Core_Main::$coreConfig['defaultMod'];
+		$this->defaultPage = "index";
+		$this->defaultView = "display";
+		
 		if (!empty(self::$module) && empty(self::$page)) {
-			self::$page = self::$module;
+			self::$page = $this->defaultPage;
 		}
 		
 		// Erreur dans la configuration
@@ -94,9 +102,12 @@ class Libs_Module {
 				// Afficher une erreur 404
 				Core_Exception::setMinorError(ERROR_404);
 			}
-			self::$module = Core_Main::$coreConfig['defaultMod'];
-			self::$page = Core_Main::$coreConfig['defaultMod'];
-			self::$view = "";
+			self::$module = $this->defaultModule;
+			self::$page = $this->defaultPage;
+			self::$view = $this->defaultView;
+		}
+		if (empty(self::$view)) {
+			self::$view = $this->defaultView;
 		}
 	}
 	
@@ -178,13 +189,35 @@ class Libs_Module {
 	public function launch() {
 		// Vérification du niveau d'acces 
 		if (Core_Acces::autorize(self::$module)) {
-			if (empty($this->moduleCompiled) && $this->isModule()) {
-				Core_Translate::translate("modules/" . self::$module);
+			if (empty($this->moduleCompiled) && $this->isModule()) {		
+				// Execution du module
+				$moduleClassName = "Module_" . ucfirst(self::$module) . "_" . ucfirst(self::$page);
+				$loaded = Core_Loader::classLoader($moduleClassName);
 				
-				ob_start();
-				Core_Loader::moduleLoader(self::$module . "_" . self::$page);
-				$this->moduleCompiled = ob_get_contents();
-				ob_end_clean();
+				if ($loaded) {
+					// Configuration du view demandé
+					$viewPage = "";					
+					if (Core_Loader::isCallable($moduleClassName, self::$view)) {
+						$viewPage = self::$view;
+					} else if (self::$view != $this->defaultView && Core_Loader::isCallable($moduleClassName, $this->defaultView)) {
+						$viewPage = $this->defaultView;
+					} else {
+						$viewPage = "";
+					}
+					// Affichage du module si possible
+					if (!empty($viewPage)) {
+						Core_Translate::translate("modules/" . self::$module);
+						$ModuleClass = new $moduleClassName();
+						
+						// Capture des données d'affichage
+						ob_start();
+						$ModuleClass->$viewPage();
+						$this->moduleCompiled = ob_get_contents();
+						ob_end_clean();
+					} else {echo $viewPage;
+						Core_Exception::setMinorError(ERROR_MODULE_CODE . " (" . self::$module . ")");
+					}
+				}
 			}
 		} else {
 			Core_Exception::setMinorError(ERROR_ACCES_ZONE . " " . Core_Acces::getModuleAccesError(self::$module));
@@ -201,7 +234,7 @@ class Libs_Module {
 	public function isModule($module = "", $page = "") {
 		if (empty($module)) $module = self::$module;
 		if (empty($page)) $page = self::$page;
-		return is_file(TR_ENGINE_DIR . "/modules/" . $module . "/" . $page . ".mod.php");
+		return is_file(TR_ENGINE_DIR . "/modules/" . $module . "/" . $page . ".module.php");
 	}
 	
 	/**

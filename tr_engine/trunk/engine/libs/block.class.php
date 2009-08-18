@@ -34,7 +34,7 @@ class Libs_Block {
 	private $blocksCompiled = array();
 	
 	public function __construct() {
-		Core_Loader::blockLoader("model");
+		Core_Loader::classLoader("Block_Model");
 	}
 	
 	/**
@@ -152,30 +152,32 @@ class Libs_Block {
 	 * @param $block array
 	 */
 	private function get($block) {
-		Core_Loader::blockLoader($block->type);
 		$blockClassName = "Block_" . ucfirst($block->type);
+		$loaded = Core_Loader::classLoader($blockClassName);
 		
 		// Vérification du block
-		if (Core_Loader::isCallable($blockClassName, "display")) {
-			// Vérification de l'accès
-			if (Core_Acces::autorize("block" . $block->block_id, $block->rang)) {
-				$BlockClass = new $blockClassName();
-				$BlockClass->blockId = $block->block_id;
-				$BlockClass->side = $block->side;
-				$BlockClass->sideName = $this->getSide($block->side, "letters");
-				$BlockClass->templateName = "block_" . $BlockClass->sideName . ".tpl";
-				$BlockClass->title = $block->title;
-				$BlockClass->content = $block->content;
-				$BlockClass->rang = $block->rang;
-				
-				// Capture des données d'affichage
-				ob_start();
-				$BlockClass->display($block);
-				$this->blocksCompiled[$block->side][] = ob_get_contents();
-				ob_end_clean();
+		if ($loaded) {
+			if (Core_Loader::isCallable($blockClassName, "display")) {
+				// Vérification de l'accès
+				if (Core_Acces::autorize("block" . $block->block_id, $block->rang)) {
+					$BlockClass = new $blockClassName();
+					$BlockClass->blockId = $block->block_id;
+					$BlockClass->side = $block->side;
+					$BlockClass->sideName = $this->getSide($block->side, "letters");
+					$BlockClass->templateName = "block_" . $BlockClass->sideName . ".tpl";
+					$BlockClass->title = $block->title;
+					$BlockClass->content = $block->content;
+					$BlockClass->rang = $block->rang;
+					
+					// Capture des données d'affichage
+					ob_start();
+					$BlockClass->display();
+					$this->blocksCompiled[$block->side][] = ob_get_contents();
+					ob_end_clean();
+				}
+			} else {
+				Core_Exception::setMinorError(ERROR_BLOCK_CODE);
 			}
-		} else {
-			Core_Exception::setMinorError(ERROR_BLOCK_CODE);
 		}
 	}
 	

@@ -22,49 +22,25 @@ class Core_Loader {
 	 * Chargeur de classe
 	 * 
 	 * @param $class Nom de la classe
+	 * @return boolean true chargé
 	 */
 	public static function classLoader($class) {
 		try {
-			self::load($class, "class");
+			return self::load($class);
 		} catch (Exception $ie) {
 			Core_Secure::getInstance()->debug($ie);
-		}		
+		}
 	}
 	
 	/**
 	 * Chargeur de fichier include
 	 * 
 	 * @param $include Nom de l'include
+	 * @return boolean true chargé
 	 */
 	public static function includeLoader($include) {
 		try {
-			self::load($include, "inc");
-		} catch (Exception $ie) {
-			Core_Secure::getInstance()->debug($ie);
-		}
-	}
-	
-	/**
-	 * Chargeur de block
-	 * 
-	 * @param $block Nom ou type du block
-	 */
-	public static function blockLoader($block) {
-		try {
-			self::load($block, "block");
-		} catch (Exception $ie) {
-			Core_Secure::getInstance()->debug($ie);
-		}
-	}
-	
-	/**
-	 * Chargeur de module
-	 * 
-	 * @param $module Nom du module
-	 */
-	public static function moduleLoader($module) {
-		try {
-			self::load($module, "mod");
+			return self::load($include, "inc");
 		} catch (Exception $ie) {
 			Core_Secure::getInstance()->debug($ie);
 		}
@@ -75,30 +51,47 @@ class Core_Loader {
 	 * 
 	 * @param $name Nom de la classe/ du fichier
 	 * @param $ext Extension
+	 * @return boolean true chargé
 	 */
-	private static function load($name, $ext) {
+	private static function load($name, $ext = "") {
 		// Si ce n'est pas déjà chargé
 		if (!self::isLoaded($name)) {
-			// Retrouve le chemin via le nom
-			$path = str_replace("_", "/", $name);
-			
-			// Repertoire principal
-			if ($ext == "block") {
-				$directory = "blocks";
-			} else if ($ext == "mod") {
-				$directory = "modules";
+			$path = "";
+			// Retrouve l'extension
+			if (empty($ext)) {
+				if (strpos($name, "Block_") !== false) {
+					$ext = "block";
+					$path = str_replace("Block_", "blocks_", $name);
+				} else if (strpos($name, "Module_") !== false) {
+					$ext = "module";
+					$path = str_replace("Module_", "modules_", $name);
+				} else {
+					$ext = "class";
+					$path = "engine_" . $name;
+				}
 			} else {
-				$directory = "engine";
+				$path = "engine_" . $name;
 			}
-			
-			// Chemin finale
-			$path = TR_ENGINE_DIR . "/" . $directory . "/" . strtolower($path) . "." . $ext . ".php";
+			$path = str_replace("_", "/", $path);
+			$path = TR_ENGINE_DIR . "/" . strtolower($path) . "." . $ext . ".php";
 			
 			if (is_file($path)) {
 				require($path);
 				self::$loaded[$name] = 1;
+				return true;
 			} else {
-				throw new Exception("Loader");
+				switch($ext) {
+					case 'block':
+						Core_Exception::setMinorError(ERROR_BLOCK_NO_FILE);
+						break;
+					case 'module':
+						Core_Exception::setMinorError(ERROR_MODULE_NO_FILE);
+						break;
+					default:
+						throw new Exception("Loader");
+						break;
+				}
+				return false;
 			}
 		}
 	}
