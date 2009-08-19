@@ -410,5 +410,34 @@ class Core_Html {
 		}
 		return $link;
 	}
+	
+	// TODO a completer
+	public function redirect($url = "", $tps = 0, $method = "window") {
+		// Configuration du temps
+		if (!is_numeric($tps)) {
+			$tps = 0;
+		}
+		// Configuration de l'url
+		if (empty($url)) {
+			$url = "index.php";
+		}
+		
+		if ($this->isJavaScriptActived()) {
+			if (Core_Request::getString("REQUEST_METHOD", "", "SERVER") == "POST") {
+				// Commande ajax pour la redirection
+				if ($method != "window") {
+					
+				} else {
+					
+				}
+			} else {
+				// Commande par défaut
+				$this->addJavaScriptCode("setTimeout('window.location = \"" . $url . "\"','" . $tps*1000 . "');");
+			}
+		} else {
+			// Redirection php sans timeout
+			header("Location: " . $url);
+		}
+	}
 }
 ?>

@@ -32,19 +32,7 @@ $lang = array(
 "ERROR_SESSION_COOKIE" => "Unable to log on, check your cookie settings.",
 
 //
-"WELCOME" => "Welcome",
-"MY_ACCOUNT" => "My account",
-"MY_RECEIPTBOX" => "my receiptbox",
-"LOGOUT" => "Logout",
-"FORGET_PASS" => "Forget password?",
-"FORGET_LOGIN" => "Forget login?",
-"BECOME_MEMBER" => "Sign up now, it's free!",
-"LOGIN" => "Login",
-"LOGIN_PLEASE" => "Please login!",
-"PASSWORD" => "Password",
-"LOGIN_SUBMIT" => "Connect!",
-
-"TEST" => "test"
+"WELCOME" => "Welcome"
 
 );
 

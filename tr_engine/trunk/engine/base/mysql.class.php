@@ -64,7 +64,7 @@ class Base_Mysql extends Base_Model {
 	 * @return array
 	 */
 	public function fetchArray() {
-		return mysql_fetch_array($this->queries);
+		return mysql_fetch_array($this->queries, MYSQL_ASSOC);
 	}
 	
 	/**

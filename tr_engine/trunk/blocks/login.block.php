@@ -48,11 +48,11 @@ class Block_Login extends Block_Model {
 			}
 			if ($this->displayAvatar) {
 				Core_Loader::classLoader("Exec_Image");
-				$content .= "<a href=\"" . Core_Html::getLink("mod=account") . "\">" . Exec_Image::resize(Core_Session::$userAvatar, 80) . "</a><br />";
+				$content .= "<a href=\"" . Core_Html::getLink("mod=connect&view=account") . "\">" . Exec_Image::resize(Core_Session::$userAvatar, 80) . "</a><br />";
 			}
 			if ($this->displayIcons) {
 				$content .= "<a href=\"" . Core_Html::getLink("mod=connect&view=logout") . "\" title=\"" . LOGOUT . "\">" . LOGOUT . "</a><br />";
-				$content .= "<a href=\"" . Core_Html::getLink("mod=user") . "\" title=\"" . MY_ACCOUNT . "\">" . MY_ACCOUNT. "</a><br />";
+				$content .= "<a href=\"" . Core_Html::getLink("mod=connect&view=account") . "\" title=\"" . MY_ACCOUNT . "\">" . MY_ACCOUNT. "</a><br />";
 				$content .= "<a href=\"" . Core_Html::getLink("mod=receiptbox") . "\" title=\"" . MY_RECEIPTBOX . "\">" . MY_RECEIPTBOX . " (?)</a><br />";
 			}
 		} else {
@@ -68,7 +68,7 @@ class Block_Login extends Block_Model {
 				$form = new Libs_Form("logon", Core_Html::getLink("mod=connect&view=logon", true));
 				$form->addInputText("login", LOGIN, "", "maxlength=\"180\"");
 				$form->addInputText("pass", PASSWORD, "", "maxlength=\"180\"");
-				$form->addInputHidden("referer", "value=\"" . urlencode(base64_encode($_SERVER['QUERY_STRING'])) . "\"");
+				$form->addInputHidden("referer", "value=\"" . urlencode(base64_encode(Core_Request::getString("QUERY_STRING", "", "SERVER"))) . "\"");
 				$form->addInputSubmit("submit", "", "value=\"" . LOGIN_SUBMIT . "\"");
 				$form->addHtmlInFieldset($moreLink);
 				$content .= $form->render();

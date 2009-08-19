@@ -416,14 +416,13 @@ class Core_Session {
 	/**
 	 * Ouvre une nouvelle session
 	 * 
-	 * @param $auto int connexion automatique
+	 * @param $auto boolean connexion automatique
 	 */
-	private function sessionOpen($auto = 1) {
+	private function sessionOpen($auto = true) {
 		self::$sessionId = Exec_Crypt::creatId(32);
 		
 		// Connexion automatique via cookie
-		if ($auto == 1) $cookieTimeLimit = $this->cookieTimeLimit;
-		else $cookieTimeLimit = "";
+		$cookieTimeLimit = ($auto) ? $this->cookieTimeLimit : "";
 		
 		$cookieUser = Exec_Cookie::createCookie(
 			Exec_Crypt::md5Encrypt(
@@ -479,9 +478,9 @@ class Core_Session {
 	/**
 	 * Tentative de creation d'un nouvelle session
 	 * 
-	 * @param $name Nom du compte (identifiant) crypté !
-	 * @param $pass Mot de passe du compte crypté !
-	 * @param $auto Connexion automatique
+	 * @param $name String Nom du compte (identifiant) crypté !
+	 * @param $pass String Mot de passe du compte crypté !
+	 * @param $auto boolean Connexion automatique
 	 * @return boolean ture succès
 	 */
 	public function startConnection($userName, $userPass, $auto) {

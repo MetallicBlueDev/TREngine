@@ -40,20 +40,12 @@ class Libs_Module {
 	 */
 	public static $rang;
 	
-	
 	/**
 	 * Configuration du module
 	 * 
 	 * @var array
 	 */
 	public static $configs = array();
-	
-	/**
-	 * Compteur de visites du module
-	 * 
-	 * @var int
-	 */
-	public static $count;
 	
 	/**
 	 * Module compilé
@@ -139,36 +131,58 @@ class Libs_Module {
 		$modName = ((empty($module)) ? self::$module : $module);
 		
 		// Retourne le buffer
-		if (isset($this->modules[$modName])) return $this->modules[$modName];
-		
-		Core_Sql::select(
-			Core_Table::$MODULES_TABLE,
-			array("mod_id", "rang", "configs", "count"),
-			array("name =  '" . $modName . "'")			
-		);
-		
-		if (Core_Sql::affectedRows() > 0) {
-			list($modId, $rang, $configs, $count) = Core_Sql::fetchArray();
-			
-			$configs = explode("|", $configs);
-			
-			if (self::$module == $modName) {
-				self::$modId = $modId;
-				self::$rang = $rang;
-				self::$configs = $configs;
-				self::$count = $count;
-			}
-			$this->modules[$modName] = array(
-				"modId" => $modId,
-				"rang" => $rang,
-				"configs" => $configs,
-				"count" => $count
-			);
+		if (isset($this->modules[$modName])) {
 			return $this->modules[$modName];
 		}
-		// Insert la variable vide car aucune donnée
-		$this->modules[$modName] = "";
-		return false;
+		
+		$moduleInfo = array();
+		
+		// Recherche dans le cache
+		Core_CacheBuffer::setSectionName("modules");
+		if (!Core_CacheBuffer::cached($modName . ".php")) {
+			Core_Sql::select(
+				Core_Table::$MODULES_TABLE,
+				array("mod_id", "rang", "configs"),
+				array("name =  '" . $modName . "'")			
+			);
+		
+			if (Core_Sql::affectedRows() > 0) {
+				$moduleInfo = Core_Sql::fetchArray();
+				$moduleInfo['configs'] = explode("|", $moduleInfo['configs']);
+				$configs = array();
+				foreach($moduleInfo['configs'] as $value) {
+					$value = explode("=", $value);
+					$configs[$value[0]] = $value[1];
+				}
+				$moduleInfo['configs'] = $configs;
+				
+				// Mise en cache
+				$content = Core_CacheBuffer::linearizeCache($moduleInfo);
+				Core_CacheBuffer::writingCache($modName . ".php", $content);
+			}
+		} else {
+			$moduleInfo = Core_CacheBuffer::getCache($modName . ".php");
+		}
+		
+		// Vérification des informations
+		if (count($moduleInfo) >= 3) {			
+			// Injection des informations du module
+			if (self::$module == $modName) {
+				self::$modId = $moduleInfo['mod_id'];
+				self::$rang = $moduleInfo['rang'];
+				self::$configs = $moduleInfo['configs'];
+			}
+			$this->modules[$modName] = array(
+				"modId" => $moduleInfo['mod_id'],
+				"rang" => $moduleInfo['rang'],
+				"configs" => $moduleInfo['configs']
+			);
+			return $this->modules[$modName];
+		} else {
+			// Insert la variable vide car aucune donnée
+			$this->modules[$modName] = "";
+			return false;
+		}
 	}
 	
 	/**
@@ -206,8 +220,10 @@ class Libs_Module {
 					}
 					// Affichage du module si possible
 					if (!empty($viewPage)) {
+						$this->updateCount();
 						Core_Translate::translate("modules/" . self::$module);
 						$ModuleClass = new $moduleClassName();
+						$ModuleClass->configs = self::$configs;
 						
 						// Capture des données d'affichage
 						ob_start();
@@ -222,6 +238,17 @@ class Libs_Module {
 		} else {
 			Core_Exception::setMinorError(ERROR_ACCES_ZONE . " " . Core_Acces::getModuleAccesError(self::$module));
 		}
+	}
+	
+	/**
+	 * Mise à jour du compteur de visite du module courant
+	 */
+	private function updateCount() {
+		Core_Sql::update(
+			Core_Table::$MODULES_TABLE,
+			array("count" => "count + 1"),
+			array("mod_id = '" . self::$modId . "'")
+		);
 	}
 	
 	/**
@@ -250,6 +277,65 @@ class Libs_Module {
 		}
 		// Relachement des tampon
 		return $buffer;
+	}
+}
+
+/**
+ * Module de base, hérité par tous les autres modules
+ * Modèle pour le contenu d'un module
+ * 
+ * @author Sebastien Villemain
+ *
+ */
+class Module_Model {
+	
+	/**
+	 * Configuration du module
+	 * 
+	 * @var array
+	 */
+	private $configs = array();
+	
+	/**
+	 * Id du module
+	 * 
+	 * @var int
+	 */	
+	private $modId = 0;
+	
+	/**
+	 * Nom du module courant
+	 * 
+	 * @var String
+	 */
+	private $module = "";
+	
+	/**
+	 * Nom de la page courante
+	 * 
+	 * @var String
+	 */
+	private $page = "";
+	
+	/**
+	 * Rang du module
+	 * 
+	 * @var int
+	 */
+	private $rang = "";
+	
+	/**
+	 * Nom du viewer courant
+	 * 
+	 * @var String
+	 */
+	private $view = "";
+	
+	/**
+	 * Fonction d'affichage par défaut
+	 */
+	public function display() {
+		Core_Exception::setMinorError(ERROR_MODULE_IMPLEMENT . ((!empty($this->module)) ? " (" . $this->module . ")" : ""));
 	}
 }
 

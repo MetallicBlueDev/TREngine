@@ -34,7 +34,6 @@ class Libs_Block {
 	private $blocksCompiled = array();
 	
 	public function __construct() {
-		Core_Loader::classLoader("Block_Model");
 	}
 	
 	/**
@@ -160,6 +159,7 @@ class Libs_Block {
 			if (Core_Loader::isCallable($blockClassName, "display")) {
 				// Vérification de l'accès
 				if (Core_Acces::autorize("block" . $block->block_id, $block->rang)) {
+					Core_Translate::translate("blocks/" . $block->type);
 					$BlockClass = new $blockClassName();
 					$BlockClass->blockId = $block->block_id;
 					$BlockClass->side = $block->side;
@@ -272,5 +272,66 @@ class Libs_Block {
 	}
 }
 
-
+/**
+ * Block de base, hérité par tous les autres blocks
+ * Modèle pour le contenu d'un block
+ * 
+ * @author Sebastien Villemain
+ *
+ */
+class Block_Model {
+	
+	/**
+	 * Identifiant du block
+	 * 
+	 * @var int
+	 */
+	public $blockId = 0;
+	
+	/**
+	 * Position du block en chiffre
+	 * 
+	 * @var int
+	 */
+	public $side = 0;
+	
+	/**
+	 * Position du block en lettre
+	 * 
+	 * @var String
+	 */
+	public $sideName = "";
+	
+	/**
+	 * Nom complet du template de block a utiliser
+	 * 
+	 * @var String
+	 */
+	public $templateName = "";
+	
+	/**
+	 * Titre du block
+	 * 
+	 * @var String
+	 */
+	public $title = "";
+	
+	/**
+	 * Contenu du block
+	 * 
+	 * @var String
+	 */
+	public $content = "";
+	
+	/**
+	 * Rang pour acceder au block
+	 * 
+	 * @var int
+	 */
+	public $rang = "";
+	
+	public function display() {
+		Core_Exception::setMinorError(ERROR_BLOCK_IMPLEMENT . ((!empty($this->title)) ? " (" . $this->title . ")" : ""));
+	}
+}
 ?>

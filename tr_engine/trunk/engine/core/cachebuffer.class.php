@@ -44,7 +44,8 @@ class Core_CacheBuffer {
 		"log" => "tmp/log",
 		"sessions" => "tmp/sessions",
 		"lang" => "tmp/lang",
-		"menus" => "tmp/menus"
+		"menus" => "tmp/menus",
+		"modules" => "tmp/modules"
 	);
 	
 	/**
@@ -91,7 +92,7 @@ class Core_CacheBuffer {
 	 * 
 	 * @return String
 	 */
-	private static function getSectionPath() {
+	private static function &getSectionPath() {
 		// Si pas de section, on met par défaut
 		if (empty(self::$sectionName)) self::setSectionName();
 		// Chemin de la section courante
@@ -103,7 +104,7 @@ class Core_CacheBuffer {
 	 * 
 	 * @return String Section courante
 	 */
-	public static function getSectionName() {
+	public static function &getSectionName() {
 		return self::$sectionName;
 	}
 	
@@ -220,7 +221,7 @@ class Core_CacheBuffer {
 	 * @param String $path
 	 * @return String
 	 */
-	protected static function encodePath($path) {
+	protected static function &encodePath($path) {
 		return $path;
 	}
 	
@@ -230,7 +231,7 @@ class Core_CacheBuffer {
 	 * @param String $encodePath
 	 * @return String
 	 */
-	protected static function decodePath($encodePath) {
+	protected static function &decodePath($encodePath) {
 		return $encodePath;
 	}
 	
@@ -313,7 +314,7 @@ class Core_CacheBuffer {
 	 * @param $content
 	 * @return String $content
 	 */
-	public static function getHeader($pathFile, $content) {
+	public static function &getHeader($pathFile, $content) {
 		$ext = substr($pathFile, -3);
 		// Entête des fichier PHP
 		if ($ext == "php") {
@@ -331,6 +332,26 @@ class Core_CacheBuffer {
 			. "// Generated on " . date('Y-m-d H:i:s') . "\n"
 			. $content
 			. "\n?>";
+		}
+		return $content;
+	}
+	
+	/**
+	 * Retourne une chaine de caratère l'integalité d'un tableau
+	 * 
+	 * @param $array array
+	 * @param $lastKey String
+	 * @return String
+	 */
+	public static function &linearizeCache($array, $lastKey = "") {
+		$content = "";
+		foreach($array as $key => $value) {
+			if (is_array($value)) {
+				$lastKey .= "['" . $key . "']";
+				$content .= self::linearizeCache($value, $lastKey);
+			} else {
+				$content .= "$" . Core_CacheBuffer::getSectionName() . $lastKey . "['" . $key . "'] = \"" . $value . "\"; ";
+			}
 		}
 		return $content;
 	}

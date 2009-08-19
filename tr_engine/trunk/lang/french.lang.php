@@ -31,23 +31,12 @@ $lang = array(
 "ERROR_BLOCK_IMPLEMENT" => "Le code d'un block n'est pas correctement implémenté.",
 "ERROR_BLOCK_NO_FILE" => "Le fichier d'un block n'a pas été trouvé.",
 "ERROR_MODULE_CODE" => "Le code d'un module n'est pas utilisable.",
+"ERROR_MODULE_IMPLEMENT" => "Le code d'un module n'est pas correctement implémenté.",
 "ERROR_MODULE_NO_FILE" => "Le fichier d'un module n'a pas été trouvé.",
 "ERROR_SESSION_COOKIE" => "Impossible d'ouvrir une session, vérifiez vos paramètre cookie.",
 
 // Divers
-"WELCOME" => "Bienvenue",
-"MY_ACCOUNT" => "Mon compte",
-"MY_RECEIPTBOX" => "Mes messages",
-"LOGOUT" => "Déconnexion",
-"FORGET_PASS" => "Mot de passe oublié",
-"FORGET_LOGIN" => "Identifiant oublié",
-"BECOME_MEMBER" => "Devenir membre",
-"LOGIN" => "Identifiant",
-"LOGIN_PLEASE" => "Merci de vous identifier !",
-"PASSWORD" => "Mot de passe",
-"LOGIN_SUBMIT" => "Connexion",
-
-"TEST" => "test"
+"WELCOME" => "Bienvenue"
 
 );
 
