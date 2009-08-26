@@ -65,13 +65,18 @@ class Block_Login extends Block_Model {
 			
 			if (!Core_Loader::isCallable("Libs_Module") || Libs_Module::$view != "logon") {
 				Core_Loader::classLoader("Libs_Form");
-				$form = new Libs_Form("logon", Core_Html::getLink("mod=connect&view=logon", true));
+				$form = new Libs_Form("logon");
 				$form->addInputText("login", LOGIN, "", "maxlength=\"180\"");
-				$form->addInputText("pass", PASSWORD, "", "maxlength=\"180\"");
-				$form->addInputHidden("referer", "value=\"" . urlencode(base64_encode(Core_Request::getString("QUERY_STRING", "", "SERVER"))) . "\"");
+				$form->addInputPassword("password", PASSWORD, "", "maxlength=\"180\"");
+				$form->addInputCheckbox("auto", REMEMBER_ME, true);
+				$form->addInputHidden("referer", urlencode(base64_encode(Core_Request::getString("QUERY_STRING", "", "SERVER"))));
+				$form->addInputHidden("mod", "connect");
+				$form->addInputHidden("view", "logon");
+				$form->addInputHidden("layout", "module");
 				$form->addInputSubmit("submit", "", "value=\"" . LOGIN_SUBMIT . "\"");
 				$form->addHtmlInFieldset($moreLink);
 				$content .= $form->render();
+				Core_Html::getInstance()->addJavaScriptJquery(Core_Session::getJavascriptLogon("form-logon", "form-logon-login-input", "form-logon-password-input"));
 			} else {
 				$content .= LOGIN_PLEASE . $moreLink;
 			}

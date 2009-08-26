@@ -44,9 +44,9 @@ class Libs_Form {
 	
 	private $doFieldset = false;
 	
-	public function __construct($name, $urlAction) {
+	public function __construct($name, $urlAction = "") {
 		$this->name = $name;
-		$this->urlAction = $urlAction;
+		$this->urlAction = !empty($urlAction) ? $urlAction : "index.php";
 	}
 	
 	/**
@@ -98,9 +98,11 @@ class Libs_Form {
 	 * Ajouter un champs caché
 	 * 
 	 * @param $name String
+	 * @param $value String
 	 * @param $options String
 	 */
-	public function addInputHidden($name, $options) {
+	public function addInputHidden($name, $value, $options = "") {
+		$options = "value=\"" . $value . "\"" . ((!empty($options)) ? " " . $options : "");
 		$this->addInput($name, "", "hidden", "", $options);		
 	}
 	
@@ -133,11 +135,15 @@ class Libs_Form {
 	 * 
 	 * @param $name String
 	 * @param $description String
+	 * @param $checked boolean
 	 * @param $class String
 	 * @param $options String
 	 */
-	public function addInputCheckbox($name, $description = "", $class = "", $options = "") {
+	public function addInputCheckbox($name, $description = "", $checked = false, $class = "", $options = "") {
 		if (empty($class)) $class = "checkbox";
+		if ($checked) {
+			$options = "checked=\"checked\"" . ((!empty($options)) ? " " . $options : "");
+		}
 		$this->addInput($name, $description, "checkbox", $class, $options);		
 	}
 	
@@ -217,10 +223,12 @@ class Libs_Form {
 	 * 
 	 * @param $value String
 	 * @param $description String
+	 * @param $selected boolean
 	 * @param $options String
 	 */
-	public function addSelectItemTag($value, $description = "", $options = "") {
+	public function addSelectItemTag($value, $description = "", $selected = false, $options = "") {
 		$data .= " <option value=\"" . $value . "\""
+		. (($selected) ? " selected=\"selected\"" : "")
 		. ((!empty($options)) ? " " . $options : ""). ">"
 		. ((!empty($description)) ? Exec_Entities::textDisplay($description) : $value)
 		. "</option>";

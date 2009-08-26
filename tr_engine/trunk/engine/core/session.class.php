@@ -131,6 +131,13 @@ class Core_Session {
 	);
 	
 	/**
+	 * Message d'erreur de connexion
+	 * 
+	 * @var array
+	 */
+	private $errorMessage = array();
+	
+	/**
 	 * Démarrage du système de session
 	 */
 	public function __construct() {
@@ -417,6 +424,7 @@ class Core_Session {
 	 * Ouvre une nouvelle session
 	 * 
 	 * @param $auto boolean connexion automatique
+	 * @return boolean ture succès
 	 */
 	private function sessionOpen($auto = true) {
 		self::$sessionId = Exec_Crypt::creatId(32);
@@ -444,8 +452,10 @@ class Core_Session {
 		if ($cookieUser && $cookieSession) {
 			// Ecriture du cache
 			Core_CacheBuffer::writingCache(self::$sessionId . ".php", $this->getUser());
+			return true;
 		} else {
-			Core_Exception::setMinorError("ERROR_SESSION_COOKIE");
+			Core_Exception::setNoteError("ERROR_SESSION_COOKIE");
+			return false;
 		}
 	}
 	
@@ -478,8 +488,8 @@ class Core_Session {
 	/**
 	 * Tentative de creation d'un nouvelle session
 	 * 
-	 * @param $name String Nom du compte (identifiant) crypté !
-	 * @param $pass String Mot de passe du compte crypté !
+	 * @param $name String Nom du compte (identifiant)
+	 * @param $pass String Mot de passe du compte
 	 * @param $auto boolean Connexion automatique
 	 * @return boolean ture succès
 	 */
@@ -487,18 +497,21 @@ class Core_Session {
 		// Arrête de la session courante si il y en a une
 		$this->stopConnection();
 		
-		$userName = Exec_Crypt::md5Decrypt($userName, $this->getSalt());		
-		$user = $this->getUserInfo(array("user_name = '" . $userName . "'", "&& user_pass = '" . $userPass . "'"));
-		
-		if (count($user) > 1) {	
-			// Injection des informations du client
-			$this->setUser($user);
+		if ($this->validLogin($userName) && $this->validPassword($userPass)) {
+			$userPass = Exec_Crypt::cryptData($userPass, "", "my411");
+			$user = $this->getUserInfo(array("user_name = '" . $userName . "'", "&& user_pass = '" . $userPass . "'"));
 			
-			// Tentative d'ouverture de session
-			return $this->sessionOpen($auto);
-		} else {
-			return false;
+			if (count($user) > 1) {	
+				// Injection des informations du client
+				$this->setUser($user);
+				
+				// Tentative d'ouverture de session
+				return $this->sessionOpen($auto);
+			} else {
+				$this->errorMessage['login'] = ERROR_LOGIN_OR_PASSWORD_INVALID;
+			}
 		}
+		return false;
 	}
 	
 	/**
@@ -517,6 +530,74 @@ class Core_Session {
 	 */
 	private function getSalt() {
 		return Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowserName;
+	}
+	
+	/**
+	 * Vérification du login
+	 * 
+	 * @param $login
+	 * @return boolean true login valide
+	 */
+	public function validLogin($login) {
+		if (!empty($login)) {
+			$len = strlen($login);
+			if ($len >= 3 && $len <= 16) {
+				if (preg_match("/^[A-Za-z0-9_-]{3,16}$/ie", $login)) {
+					return true;
+				} else {
+					$this->errorMessage['login'] = ERROR_LOGIN_CARACTERE;
+				}
+			} else {
+				$this->errorMessage['login'] = ERROR_LOGIN_NUMBER_CARACTERE;
+			}
+		} else {
+			$this->errorMessage['login'] = ERROR_LOGIN_EMPTY;
+		}
+		return false;
+	}
+	
+	/**
+	 * Vérification du password
+	 * 
+	 * @param $password
+	 * @return boolean true password valide
+	 */
+	public function validPassword($password) {
+		if (!empty($password)) {
+			if (strlen($login) >= 5) {
+				return true;
+			} else {
+				$this->errorMessage['password'] = ERROR_PASSWORD_NUMBER_CARACTERE;
+			}
+		} else {
+			$this->errorMessage['password'] = ERROR_PASSWORD_EMPTY;
+		}
+		return false;
+	}
+	
+	/**
+	 * Retourne un message d'erreur
+	 * 
+	 * @param $key
+	 * @return String
+	 */
+	public function getErrorMessage($key = "") {
+		if (!empty($key)) return $this->errorMessage[$key];
+		return $this->errorMessage;
+	}
+	
+	/**
+	 * Retourne le code javascript vérifiant le login et le mot de passe
+	 * 
+	 * @param $loginId String id du champs login
+	 * @param $passwordId String id du champs password
+	 * @return String
+	 */
+	public static function getJavascriptLogon($formId, $loginId, $passwordId) {
+		$formId = "#" . $formId;
+		$loginId = "#" . $loginId;
+		$passwordId = "#" . $passwordId;
+		return "validLogin('" . $formId . "', '" . $loginId . "', '" . $passwordId . "');";
 	}
 }
 ?>

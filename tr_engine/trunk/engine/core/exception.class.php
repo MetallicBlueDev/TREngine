@@ -21,12 +21,28 @@ class Core_Exception {
 	private static $exception = array();
 	
 	/**
-	 * Tableau contenant toutes les erreurs mineurs rencontrées
+	 * Tableau contenant toutes les erreurs mineurs de type warning / alerte rencontrées
 	 * Destiné au client
 	 * 
 	 * @var array
 	 */
-	private static $minorError = array();
+	private static $alertError = array();
+	
+	/**
+	 * Tableau contenant toutes les erreurs mineurs de type informative rencontrées
+	 * Destiné au client
+	 * 
+	 * @var array
+	 */
+	private static $noteError = array();
+	
+	/**
+	 * Tableau contenant toutes les erreurs de type informative rencontrées
+	 * Destiné au client
+	 * 
+	 * @var array
+	 */
+	private static $infoError = array();
 	
 	/**
 	 * Activer l'écrire dans une fichier log
@@ -48,8 +64,7 @@ class Core_Exception {
 	 * @param boolean $active
 	 */
 	public static function setWriteLog($active) {
-		if ($active) self::$writeLog = true;
-		else self::$writeLog = false;
+		self::$writeLog = ($active) ? true : false;
 	}
 	
 	/**
@@ -64,21 +79,78 @@ class Core_Exception {
 	}
 	
 	/**
-	 * Ajoute une nouvelle erreur mineur
+	 * Ajouter une erreur mineur de type alerte
 	 * 
-	 * @param $msg
+	 * @param $msg String
 	 */
-	public static function setMinorError($msg) {
-		self::$minorError[] = $msg;
+	public static function setAlertError($msg) {
+		self::setMinorError($msg, "alert");
 	}
 	
 	/**
-	 * Retourne le tableau d'erreur mineur
+	 * Ajouter une erreur mineur de type note
 	 * 
-	 * @return array string
+	 * @param $msg String
+	 */
+	public static function setNoteError($msg) {
+		self::setMinorError($msg, "note");
+	}
+	
+	/**
+	 * Ajouter une erreur informative
+	 * 
+	 * @param $msg String
+	 */
+	public static function setInfoError($msg) {
+		self::setMinorError($msg, "info");
+	}
+	
+	/**
+	 * Ajoute une nouvelle erreur mineur
+	 * 
+	 * @param $msg String
+	 * @param $type String le type d'erreur (alert / note / info)
+	 */
+	public static function setMinorError($msg, $type = "alert") {
+		switch ($type) {
+			case 'alert':
+				self::$alertError[] = $msg;
+				break;
+			case 'note':
+				self::$noteError[] = $msg;
+				break;
+			case 'info':
+				self::$infoError[] = $msg;
+				break;
+			default:
+				self::setMinorError($msg);
+				break;
+		}		
+	}
+	
+	/**
+	 * Retourne une liste contenant les erreurs mineurs
+	 * 
+	 * @return String
 	 */
 	public static function getMinorError() {
-		return self::$minorError;
+		$display = "none";
+		$rslt = "";
+		if (self::minorErrorDetected()) {
+			$display = "block";
+			$rslt .= "<ul class=\"exception\">";
+				foreach(self::$alertError as $alertError) {
+				$rslt .= "<li class=\"alert\"><div>" . $alertError . "</div></li>";
+			}
+			foreach(self::$noteError as $noteError) {
+				$rslt .= "<li class=\"note\"><div>" . $noteError . "</div></li>";
+			}
+			foreach(self::$infoError as $infoError) {
+				$rslt .= "<li class=\"info\"><div>" . $infoError . "</div></li>";
+			}
+			$rslt .= "</ul>";
+		}
+		return "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
 	}
 	
 	/**
@@ -96,7 +168,7 @@ class Core_Exception {
 	 * @return boolean
 	 */
 	public static function exceptionDetected() {
-		return (is_array(self::$exception) && count(self::$exception) > 0);
+		return (!empty(self::$exception));
 	}
 	
 	/**
@@ -105,7 +177,7 @@ class Core_Exception {
 	 * @return boolean
 	 */
 	public static function minorErrorDetected() {
-		return (is_array(self::$minorError) && count(self::$minorError) > 0);
+		return (!empty(self::$alertError) || !empty(self::$noteError) || !empty(self::$infoError));
 	}
 	
 	/**

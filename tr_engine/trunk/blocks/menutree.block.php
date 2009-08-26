@@ -41,17 +41,7 @@ class Block_Menutree extends Block_Menu {
 		
 		Core_Html::getInstance()->addCssFile("jquery.treeview.css");
 		Core_Html::getInstance()->addJavaScriptFile("jquery.treeview.js");
-		Core_Html::getInstance()->addJavaScriptJquery(
-"$('#block" . $this->blockId . "').treeview({
-	animated: 'fast',
-	collapsed: true,
-	unique: true,
-	persist: 'location',
-	toggle: function() {
-		window.console && console.log('%o was toggled', this);
-	}
-});"
-		);
+		Core_Html::getInstance()->addJavaScriptJquery("$('#block" . $this->blockId . "').treeview({animated: 'fast', collapsed: true, unique: true, persist: 'location'});");
 		
 	}
 }

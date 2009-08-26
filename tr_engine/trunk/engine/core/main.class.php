@@ -20,8 +20,10 @@ class Core_Main {
 	/**
 	 * Mode de mise en page courante
 	 * default : affichage normale et complet
-	 * module : affichage du module uniquement
-	 * block : affichage du block uniquement
+	 * module : affichage uniquement du module si javascript activé
+	 * block : affichage uniquement du block si javascript activé
+	 * modulepage : affichage uniquement du module forcé 
+	 * blockpage : affichage uniquement du block forcé
 	 * 
 	 * @var String
 	 */
@@ -174,11 +176,6 @@ class Core_Main {
 		Core_Loader::classLoader("Core_Translate");
 		Core_Translate::makeInstance();
 		
-		// Configure les informations de page demandées
-		$this->loadLayout();
-		$this->loadModule(); // Même si le module n'est pas utilisé, il vaut mieux le laisser
-		$this->loadMakeStyle();
-		
 		// Chargement du traitement HTML
 		Core_Loader::classLoader("Core_TextEditor");
 		
@@ -189,6 +186,11 @@ class Core_Main {
 		// Chargement du gestionnaire HTML
 		Core_Loader::classLoader("Core_Html");
 		Core_Html::getInstance();
+		
+		// Configure les informations de page demandées
+		$this->loadLayout();
+		$this->loadModule();
+		$this->loadMakeStyle();
 		// TODO a décommenter
 		//$this->compressionOpen();
 		
@@ -273,9 +275,8 @@ class Core_Main {
 		$layout = strtolower(Core_Request::getWord("layout"));
 		
 		// Configuration du layout
-		if ($layout != "default" 
-				&& $layout != "block" 
-				&& $layout != "module") {
+		if ($layout != "default" && $layout != "modulepage"	&& $layout != "blockpage" 
+				&& (($layout != "block" && $layout != "module") || (!Core_Html::getInstance()->isJavaScriptActived()))) {
 			$layout = "default";
 		}
 		self::$layout = $layout;
@@ -317,7 +318,7 @@ class Core_Main {
 	 * @return boolean true c'est un affichage de module uniquement
 	 */
 	public static function isModuleScreen() {
-		return ((self::$layout == "module") ? true : false);
+		return ((self::$layout == "module" || self::$layout == "modulepage") ? true : false);
 	}
 	
 	/**
@@ -326,7 +327,7 @@ class Core_Main {
 	 * @return boolean true c'est un affichage de block uniquement
 	 */
 	public static function isBlockScreen() {
-		return ((self::$layout == "block") ? true : false);
+		return ((self::$layout == "block" || self::$layout == "blockpage") ? true : false);
 	}
 	
 	/**

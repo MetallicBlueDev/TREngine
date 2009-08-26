@@ -31,33 +31,19 @@
 	
 	<div id="middle">
 	
+	<?php echo Core_Html::getInstance()->getLoader(); ?>
+	
 	<div id="breadcrumb"><?php echo Libs_Breadcrumb::getInstance()->getBreadcrumbTrail(" >> "); ?></div>
 	
-		<?php if (Core_Exception::exceptionDetected()) { ?>
-			<div class="block_error">
-				<ul id="exception">
-					<?php foreach(Core_Exception::getException() as $exception) { ?>
-						<li><?php echo $exception; ?></li>
-					<?php } ?>
-				</ul>
-			</div>
-		<?php } ?>
-		
-		<?php echo Libs_Block::getInstance()->getBlocks("top"); ?>
-		
-		<?php if (Core_Exception::minorErrorDetected()) { ?>
-			<div class="block_error">
-				<ul id="minor_error">
-					<?php foreach(Core_Exception::getMinorError() as $minorError) { ?>
-						<li><?php echo $minorError; ?></li>
-					<?php } ?>
-				</ul>
-			</div>
-		<?php } ?>
-		
-		<?php include(TR_ENGINE_DIR . "/templates/default/module.tpl"); ?>
-		
-		<?php echo Libs_Block::getInstance()->getBlocks("bottom"); ?>
+	<div class="cleaner"></div>
+	
+	<?php echo Core_Exception::getMinorError(); ?>
+	
+	<?php echo Libs_Block::getInstance()->getBlocks("top"); ?>
+	
+	<?php include(TR_ENGINE_DIR . "/templates/default/module.tpl"); ?>
+	
+	<?php echo Libs_Block::getInstance()->getBlocks("bottom"); ?>
 	
 	</div>
 </div>

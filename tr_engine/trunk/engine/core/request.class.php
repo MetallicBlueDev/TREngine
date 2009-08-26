@@ -24,8 +24,8 @@ class Core_Request {
 	 * @param $hash String Provenance de la variable
 	 * @return mixed
 	 */
-	public static function getVars($name, $type, $default = "", $hash = "default") {
-		$var = urlencode($name);
+	public static function &getVars($name, $type, $default = "", $hash = "default") {
+		$var = $name;
 		if (isset(self::$buffer[$var])) {
 			return self::$buffer[$var];
 		} else {
@@ -49,7 +49,7 @@ class Core_Request {
 	 * @param $hash String Provenance de la variable
 	 * @return int
 	 */
-	public static function getInt($name, $default = 0, $hash = "default") {
+	public static function &getInt($name, $default = 0, $hash = "default") {
 		return self::getVars($name, "INT", $default, $hash);
 	}
 	
@@ -61,7 +61,7 @@ class Core_Request {
 	 * @param $hash String Provenance de la variable
 	 * @return float
 	 */
-	public static function getFloat($name, $default = 0.0, $hash = "default") {
+	public static function &getFloat($name, $default = 0.0, $hash = "default") {
 		return self::getVars($name, "FLOAT", $default, $hash);
 	}
 	
@@ -73,7 +73,7 @@ class Core_Request {
 	 * @param $hash String Provenance de la variable
 	 * @return double
 	 */
-	public static function getDouble($name, $default = 0.0, $hash = "default") {
+	public static function &getDouble($name, $default = 0.0, $hash = "default") {
 		return self::getVars($name, "DOUBLE", $default, $hash);
 	}
 	
@@ -85,7 +85,7 @@ class Core_Request {
 	 * @param $hash String Provenance de la variable
 	 * @return String
 	 */
-	public static function getBase64($name, $default = "", $hash = "default") {
+	public static function &getBase64($name, $default = "", $hash = "default") {
 		return self::getVars($name, "BASE64", $default, $hash);
 	}
 	
@@ -97,7 +97,7 @@ class Core_Request {
 	 * @param $hash String Provenance de la variable
 	 * @return String
 	 */
-	public static function getWord($name, $default = "", $hash = "default") {
+	public static function &getWord($name, $default = "", $hash = "default") {
 		return self::getVars($name, "WORD", $default, $hash);
 	}
 	
@@ -109,7 +109,7 @@ class Core_Request {
 	 * @param $hash String Provenance de la variable
 	 * @return String
 	 */
-	public static function getString($name, $default = "", $hash = "default") {
+	public static function &getString($name, $default = "", $hash = "default") {
 		return self::getVars($name, "STRING", $default, $hash);
 	}
 	
@@ -141,7 +141,7 @@ class Core_Request {
 	 * @param $type String
 	 * @return mixed
 	 */
-	public static function protect($content, $type) {
+	public static function &protect($content, $type) {
 		$type = strtoupper($type);
 		
 		switch($type) {

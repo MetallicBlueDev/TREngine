@@ -12,18 +12,20 @@ body {
 }
 
 .input {
-	margin-top: 5px;
-	margin-bottom: 5px;
 	background-color: #d0dfe6;
 	border-top: 2px solid #7194a4;
 	border-bottom: 2px solid #7194a4;
 	color: #05587b;
-	padding-left: 3px;
-	padding-right: 3px;
 }
 
 .input:hover {
 	background-color: #fff;
+}
+
+.error {
+	background-color: #de9da1;
+	border-left: 0px solid #de9da1;
+	border-right: 0px solid #de9da1;
 }
 
 a:link, a:visited, a:active {
@@ -120,26 +122,35 @@ a:hover {
 }
 
 /* Block erreur */
-.block_error {
+#block_message {
+	padding: 5px;
+}
+
+#block_message .exception {
+	margin: 5px;
+}
+
+#block_message .exception li {
 	margin-top: 10px;
-	padding: 10px 25px 10px 10px;
-	background: url(images/block_error.png);
-}
-
-.block_error #exception li {
 	list-style-type: none;
 	padding-left: 25px;
 	height: 20px;
 	font-size: 13px;
-	background: url(images/block_error_failed.png) no-repeat 0 0;
 }
 
-.block_error #minor_error li {
-	list-style-type: none;
-	padding-left: 25px;
-	height: 20px;
-	font-size: 13px;
-	background: url(images/block_error_info.png) no-repeat 0 0;
+#block_message .exception .alert {
+	background: url(images/block_error_alert.png) no-repeat 2px 2px;
+	background-color: #efaaa9;
+}
+
+#block_message .exception .note {
+	background: url(images/block_error_note.png) no-repeat 2px 2px;
+	background-color: #f7c259;
+}
+
+#block_message .exception .info {
+	background: url(images/block_error_info.png) no-repeat 2px 2px;
+	background-color: #98c3f1;
 }
 
 /* Partie gauche */
@@ -157,16 +168,24 @@ a:hover {
 }
 
 /* Fil ariane */
+#breadcrumb {
+	float: left;
+	position: relative;
+	height: 11px; /* pour être correctement aligné avec le loader */
+}
+
 #breadcrumb a:hover {
 	color: #05587b;
 }
 
-/* Menu basique */
-.menu ul {
-	margin: 0px;
-	padding: 5px;
+/* Chargeur annimé */
+#loader {
+	float: left;
+	position: relative;
+	background: url(images/loader.gif) no-repeat 0 0;
 }
 
-.menu ul li a:link, .menu ul li a:visited {
-	font-weight: bold;
+/* Cleaner */
+.cleaner {
+	clear: both;
 }

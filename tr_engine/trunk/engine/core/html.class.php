@@ -82,6 +82,13 @@ class Core_Html {
 	 */
 	private $description = "";
 	
+	/**
+	 * Pour forcer l'inclusion des fichiers javascript
+	 * 
+	 * @var boolean
+	 */
+	private $forceIncludes = false;
+	
 	public function __construct() {
 		// Configuration du préfixe accessible
 		if (Core_Loader::isCallable("Core_Main")) $prefix = Core_Main::$coreConfig['cookiePrefix'];
@@ -124,11 +131,11 @@ class Core_Html {
 	 * @return String
 	 */
 	private function includeJavaScript() {
-		if (Core_Request::getRequest() != "POST") {			
+		if (Core_Request::getRequest() != "POST" && !$this->forceIncludes) {			
 			if (Core_Loader::isCallable("Core_Main")) $fullScreen = Core_Main::isFullScreen();
 			else $fullScreen = true;
 			
-			if ($fullScreen && $this->isJavaScriptActived()) {
+			if (($fullScreen || $this->forceIncludes) && $this->isJavaScriptActived()) {
 				if (!empty($this->javaScriptJquery)) $this->addJavaScriptFile("jquery.js");
 				$this->addJavaScriptFile("tr_engine.js");
 			} else {
@@ -164,6 +171,7 @@ class Core_Html {
 	 * @return String
 	 */
 	private function includeCss() {
+		$this->addCssFile("default.css");
 		// Conception de l'entête
 		$script = "";
 		foreach($this->cssFile as $file => $options) {
@@ -411,12 +419,19 @@ class Core_Html {
 		return $link;
 	}
 	
-	// TODO a completer
+	/**
+	 * Redirection vers une page
+	 * 
+	 * @param $url String page demandée a chargé
+	 * @param $tps int temps avant le chargement de la page
+	 * @param $method String block de destination si ce n'est pas toutes la page
+	 */
 	public function redirect($url = "", $tps = 0, $method = "window") {
 		// Configuration du temps
 		if (!is_numeric($tps)) {
 			$tps = 0;
 		}
+		$tps = $tps*1000;
 		// Configuration de l'url
 		if (empty($url)) {
 			$url = "index.php";
@@ -426,18 +441,32 @@ class Core_Html {
 			if (Core_Request::getString("REQUEST_METHOD", "", "SERVER") == "POST") {
 				// Commande ajax pour la redirection
 				if ($method != "window") {
-					
+					$this->addJavaScriptJquery("setTimeout(function () { $('" . $method . "').load('" . $url . "'); }, 4000);");
+					echo $this->includeJavaScript() . $this->executeJavaScript();
 				} else {
-					
+					$this->addJavaScriptCode("setTimeout('window.location = \"" . $url . "\"','" . $tps . "');");
+					echo $this->executeJavaScript();
 				}
 			} else {
 				// Commande par défaut
-				$this->addJavaScriptCode("setTimeout('window.location = \"" . $url . "\"','" . $tps*1000 . "');");
+				$this->addJavaScriptCode("setTimeout('window.location = \"" . $url . "\"','" . $tps . "');");
 			}
 		} else {
 			// Redirection php sans timeout
 			header("Location: " . $url);
 		}
+	}
+	
+	/**
+	 * Retourne le loader annimé
+	 * 
+	 * @return String
+	 */
+	public function getLoader() {
+		if ($this->isJavaScriptActived()) {
+			return "<div id=\"loader\"></div>";
+		}
+		return "";
 	}
 }
 ?>

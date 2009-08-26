@@ -92,7 +92,7 @@ class Libs_Module {
 		if (!$this->isModule()) {
 			if (self::$module != "" || self::$page != "") {
 				// Afficher une erreur 404
-				Core_Exception::setMinorError(ERROR_404);
+				Core_Exception::setInfoError(ERROR_404);
 			}
 			self::$module = $this->defaultModule;
 			self::$page = $this->defaultPage;
@@ -230,13 +230,13 @@ class Libs_Module {
 						$ModuleClass->$viewPage();
 						$this->moduleCompiled = ob_get_contents();
 						ob_end_clean();
-					} else {echo $viewPage;
-						Core_Exception::setMinorError(ERROR_MODULE_CODE . " (" . self::$module . ")");
+					} else {
+						Core_Exception::setAlertError(ERROR_MODULE_CODE . " (" . self::$module . ")");
 					}
 				}
 			}
 		} else {
-			Core_Exception::setMinorError(ERROR_ACCES_ZONE . " " . Core_Acces::getModuleAccesError(self::$module));
+			Core_Exception::setAlertError(ERROR_ACCES_ZONE . " " . Core_Acces::getModuleAccesError(self::$module));
 		}
 	}
 	
@@ -335,7 +335,7 @@ class Module_Model {
 	 * Fonction d'affichage par défaut
 	 */
 	public function display() {
-		Core_Exception::setMinorError(ERROR_MODULE_IMPLEMENT . ((!empty($this->module)) ? " (" . $this->module . ")" : ""));
+		Core_Exception::setAlertError(ERROR_MODULE_IMPLEMENT . ((!empty($this->module)) ? " (" . $this->module . ")" : ""));
 	}
 }
 
