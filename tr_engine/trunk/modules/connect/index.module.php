@@ -30,13 +30,35 @@ class Module_Connect_Index extends Module_Model {
 			} else {
 				$this->errorBox();
 			}
+			
+			if (!Core_Html::getInstance()->isJavaScriptActived() || (empty($login) && empty($password))) {
+				Core_Loader::classLoader("Libs_Form");
+				$form = new Libs_Form("logon");
+				$form->addInputText("login", LOGIN . " ", "", "maxlength=\"180\" value=\"" . $login . "\"");
+				$form->addInputPassword("password", PASSWORD . " ", "", "maxlength=\"180\"");
+				$form->addInputCheckbox("auto", REMEMBER_ME, true);
+				$form->addInputHidden("referer", urlencode(base64_encode(Core_Request::getString("QUERY_STRING", "", "SERVER"))));
+				$form->addInputHidden("mod", "connect");
+				$form->addInputHidden("view", "logon");
+				$form->addInputHidden("layout", "module");
+				$form->addInputSubmit("submit", "", "value=\"" . LOGIN_SUBMIT . "\"");
+				$form->addHtmlInFieldset($moreLink);
+				echo $form->render();
+				Core_Html::getInstance()->addJavaScriptJquery(Core_Session::getJavascriptLogon("form-logon", "form-logon-login-input", "form-logon-password-input"));
+			}
 		} else {
 			$this->display();
 		}
 	}
 	
+	/**
+	 * Envoie des messages d'erreurs
+	 */
 	private function errorBox() {
-		//echo $this->errorMessage[0];
+		$errorMessages = Core_Session::getInstance()->getErrorMessage();
+		foreach($errorMessages as $errorMessage) {
+			Core_Exception::addNoteError($errorMessage);
+		}
 	}
 	
 	/**

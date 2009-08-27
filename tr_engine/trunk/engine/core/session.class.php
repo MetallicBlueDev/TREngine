@@ -454,7 +454,7 @@ class Core_Session {
 			Core_CacheBuffer::writingCache(self::$sessionId . ".php", $this->getUser());
 			return true;
 		} else {
-			Core_Exception::setNoteError("ERROR_SESSION_COOKIE");
+			Core_Exception::addNoteError(ERROR_SESSION_COOKIE);
 			return false;
 		}
 	}
@@ -499,7 +499,7 @@ class Core_Session {
 		
 		if ($this->validLogin($userName) && $this->validPassword($userPass)) {
 			$userPass = Exec_Crypt::cryptData($userPass, "", "my411");
-			$user = $this->getUserInfo(array("user_name = '" . $userName . "'", "&& user_pass = '" . $userPass . "'"));
+			$user = $this->getUserInfo(array("name = '" . $userName . "'", "&& pass = '" . $userPass . "'"));
 			
 			if (count($user) > 1) {	
 				// Injection des informations du client
@@ -564,7 +564,7 @@ class Core_Session {
 	 */
 	public function validPassword($password) {
 		if (!empty($password)) {
-			if (strlen($login) >= 5) {
+			if (strlen($password) >= 5) {
 				return true;
 			} else {
 				$this->errorMessage['password'] = ERROR_PASSWORD_NUMBER_CARACTERE;

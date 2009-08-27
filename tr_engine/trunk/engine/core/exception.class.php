@@ -83,8 +83,8 @@ class Core_Exception {
 	 * 
 	 * @param $msg String
 	 */
-	public static function setAlertError($msg) {
-		self::setMinorError($msg, "alert");
+	public static function addAlertError($msg) {
+		self::addMinorError($msg, "alert");
 	}
 	
 	/**
@@ -92,8 +92,8 @@ class Core_Exception {
 	 * 
 	 * @param $msg String
 	 */
-	public static function setNoteError($msg) {
-		self::setMinorError($msg, "note");
+	public static function addNoteError($msg) {
+		self::addMinorError($msg, "note");
 	}
 	
 	/**
@@ -101,8 +101,8 @@ class Core_Exception {
 	 * 
 	 * @param $msg String
 	 */
-	public static function setInfoError($msg) {
-		self::setMinorError($msg, "info");
+	public static function addInfoError($msg) {
+		self::addMinorError($msg, "info");
 	}
 	
 	/**
@@ -111,7 +111,7 @@ class Core_Exception {
 	 * @param $msg String
 	 * @param $type String le type d'erreur (alert / note / info)
 	 */
-	public static function setMinorError($msg, $type = "alert") {
+	public static function addMinorError($msg, $type = "alert") {
 		switch ($type) {
 			case 'alert':
 				self::$alertError[] = $msg;
@@ -123,7 +123,7 @@ class Core_Exception {
 				self::$infoError[] = $msg;
 				break;
 			default:
-				self::setMinorError($msg);
+				self::addMinorError($msg);
 				break;
 		}		
 	}
@@ -150,7 +150,13 @@ class Core_Exception {
 			}
 			$rslt .= "</ul>";
 		}
-		return "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
+		
+		// Réaction différente en fonction du type d'affichage demandée
+		if (Core_Main::isFullScreen()) {
+			return "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
+		} else {
+			return $rslt;
+		}
 	}
 	
 	/**
@@ -225,7 +231,7 @@ class Core_Exception {
 		. "<br />Launcher : " . Exec_Marker::getTime("launcher") . " seconde\n"
 		. "<br />All : " . Exec_Marker::getTime("all") . " seconde\n"
 		. "<br />Number of Sql request : " . self::$numberOfRequest . "\n"
-		. "<br />Appreciation : <span style=\"color: " . (((0.4000 - Exec_Marker::getTime("all")) > 0.3) ? "green;\">IMPECCABLE" : "red;\">INSUFFISANT") . "</span>"
+		. "<br />Appreciation : <span style=\"color: " . (((0.4000 - Exec_Marker::getTime("all")) > 0.3) ? "green;\">OK" : "red;\">Failed") . "</span>"
 		. "</div>";
 	}
 	

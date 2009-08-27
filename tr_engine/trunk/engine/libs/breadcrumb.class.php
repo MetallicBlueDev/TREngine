@@ -29,9 +29,13 @@ class Libs_Breadcrumb {
 	public function __construct() {
 		// Ajoute la page principal
 		$this->addTrail(Core_Main::$coreConfig['defaultSiteName'], "index.php");
-		// Ajout le module courant
-		if (Core_Loader::isCallable("Libs_Module") && Libs_Module::$module != "") {
+			// Ajout le module courant
+		if (Core_Loader::isCallable("Libs_Module") && !empty(Libs_Module::$module)) {
 			$this->addTrail(Libs_Module::$module, "?mod=" . Libs_Module::$module);
+			// Ajout du view courant
+			if (!empty(Libs_Module::$view)) {
+				$this->addTrail(Libs_Module::$view, "?mod=" . Libs_Module::$module . "&view=" . Libs_Module::$view);
+			}
 		}
 	}
 	

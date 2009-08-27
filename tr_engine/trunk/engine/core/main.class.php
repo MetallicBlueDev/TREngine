@@ -222,12 +222,17 @@ class Core_Main {
 				Exec_Marker::stopTimer("main");
 				$libsMakeStyle = new Libs_MakeStyle();
 				$libsMakeStyle->display("index.tpl");
-			} else if (self::isModuleScreen()) {
-				Libs_Module::getInstance()->launch();
-				echo Libs_Module::getInstance()->getModule();
-			} else if (self::isBlockScreen()) {
-				Libs_Block::getInstance()->launch();
-				echo Libs_Block::getInstance()->getBlock();
+			} else {
+				// Affichage autonome des modules et blocks
+				if (self::isModuleScreen()) {
+					Libs_Module::getInstance()->launch();
+					echo Libs_Module::getInstance()->getModule();
+				} else if (self::isBlockScreen()) {
+					Libs_Block::getInstance()->launch();
+					echo Libs_Block::getInstance()->getBlock();
+				}
+				// Execute le commande de récupération d'erreur
+				echo Core_Exception::getMinorError();
 			}
 			
 			// Validation du cache / Routine du cache

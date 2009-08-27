@@ -82,10 +82,10 @@ class Core_Loader {
 			} else {
 				switch($ext) {
 					case 'block':
-						Core_Exception::setAlertError(ERROR_BLOCK_NO_FILE);
+						Core_Exception::addAlertError(ERROR_BLOCK_NO_FILE);
 						break;
 					case 'module':
-						Core_Exception::setAlertError(ERROR_MODULE_NO_FILE);
+						Core_Exception::addAlertError(ERROR_MODULE_NO_FILE);
 						break;
 					default:
 						throw new Exception("Loader");

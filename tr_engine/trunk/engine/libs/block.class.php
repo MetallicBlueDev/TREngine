@@ -176,7 +176,7 @@ class Libs_Block {
 					ob_end_clean();
 				}
 			} else {
-				Core_Exception::setAlertError(ERROR_BLOCK_CODE);
+				Core_Exception::addAlertError(ERROR_BLOCK_CODE);
 			}
 		}
 	}
@@ -331,7 +331,7 @@ class Block_Model {
 	public $rang = "";
 	
 	public function display() {
-		Core_Exception::setAlertError(ERROR_BLOCK_IMPLEMENT . ((!empty($this->title)) ? " (" . $this->title . ")" : ""));
+		Core_Exception::addAlertError(ERROR_BLOCK_IMPLEMENT . ((!empty($this->title)) ? " (" . $this->title . ")" : ""));
 	}
 }
 ?>
