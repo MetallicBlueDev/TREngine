@@ -52,7 +52,7 @@ class Libs_MakeStyle {
 		$this->debugMode = false;
 		
 		// Si le nom du template est précisé a la construction
-		if ($templateName != "") {
+		if (!empty($templateName)) {
 			$this->templateName = $templateName;
 		}
 		
@@ -68,7 +68,7 @@ class Libs_MakeStyle {
 	 * @param $templateName String
 	 */
 	private function checkTemplate($templateName = "") {
-		if ($templateName != "") $this->templateName = $templateName;
+		if (!empty($templateName)) $this->templateName = $templateName;
 		
 		if (!$this->isTemplate()) {
 			Core_Secure::getInstance()->debug("makeStyle", $this->getTemplatePath());
@@ -135,7 +135,7 @@ class Libs_MakeStyle {
 	 * @return String
 	 */
 	public function renderDebug($templateName = "") {
-		if ($templateName != "") $this->templateName = $templateName;
+		if (!empty($templateName)) $this->templateName = $templateName;
 		
 		// Si le template ne contient pas le fichier debug
 		if (!$this->isTemplate()) {

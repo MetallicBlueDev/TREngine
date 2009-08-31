@@ -11,6 +11,22 @@ body {
 	border: 0px;
 }
 
+a:link, a:visited, a:active {
+	color: #404040;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #e6eaeb;
+	text-decoration: underline;
+}
+
+/* Style graphique pour mettre en valeur quelques elements dans un texte */
+.bolder {
+	font-weight: bolder;
+	color: #05587b;
+}
+
 .input {
 	background-color: #d0dfe6;
 	border-top: 2px solid #7194a4;
@@ -22,20 +38,43 @@ body {
 	background-color: #fff;
 }
 
+input[type='text'], input[type='password'] {
+	width: 130px;
+}
+
+/* Style générale des formulaires */
+form {
+	padding: 8px;
+	width: 90%;
+	position: relative;
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto;
+	background-image: url(images/background_form.png);
+}
+
+/* Style additionnel pour les formulaires standard */
+.form fieldset {
+	border-top: 1px solid #05587b;
+	font-weight: bolder;
+}
+
+.form label {
+	font-weight: normal;
+}
+
+.form legend {
+	color: #05587b;
+	font-size: 14px;
+	padding: 5px;
+}
+
+/* Classe d'erreur (input incomplet par exemple) */
 .error {
 	background-color: #de9da1;
 	border-left: 0px solid #de9da1;
 	border-right: 0px solid #de9da1;
-}
-
-a:link, a:visited, a:active {
-	color: #404040;
-	text-decoration: none;
-}
-
-a:hover {
-	color: #e6eaeb;
-	text-decoration: underline;
 }
 
 /* Entête */
@@ -113,7 +152,7 @@ a:hover {
 
 .block_content {
 	padding-left: 10px;
-	padding-right: 8px;
+	padding-right: 12px;
 }
 
 .block_content ul {
@@ -121,11 +160,12 @@ a:hover {
 	list-style-type: none;
 }
 
-/* Block erreur */
+/* Block de message (ajax et autre) */
 #block_message {
 	padding: 5px;
 }
 
+/* Liste d'erreur rencontrée */
 #block_message .exception {
 	margin: 5px;
 }
@@ -136,6 +176,11 @@ a:hover {
 	padding-left: 25px;
 	height: 20px;
 	font-size: 13px;
+}
+
+/* Texte de l'erreur */
+#block_message .exception li div {
+	padding-top: 2px;
 }
 
 #block_message .exception .alert {

@@ -33,11 +33,15 @@ class Block_Login extends Block_Model {
 	 */
 	private $displayIcons = false;
 	
+	private $localView = "";
+	
 	public function configure() {
 		list($activeText, $activeAvatar, $activeIcons) = explode('|', $this->content);
 		$this->displayText = ($activeText == 1) ? true : false;
 		$this->displayAvatar = ($activeAvatar == 1) ? true : false;
 		$this->displayIcons = ($activeIcons == 1) ? true : false;
+		
+		$this->localView = Core_Request::getString("localView", "", "GET");
 	}
 	
 	public function render() {
@@ -56,41 +60,108 @@ class Block_Login extends Block_Model {
 				$content .= "<a href=\"" . Core_Html::getLink("mod=receiptbox") . "\" title=\"" . MY_RECEIPTBOX . "\">" . MY_RECEIPTBOX . " (?)</a><br />";
 			}
 		} else {
-			$moreLink = "<ul><li><a href=\"" . Core_Html::getLink("mod=connect&view=forgetlogin") . "\">" . FORGET_LOGIN . "</a></li>"
-			. "<li><a href=\"" . Core_Html::getLink("mod=connect&view=forgetpass") . "\">" . FORGET_PASS . "</a></li>";
+			$moreLink = "<ul>";
 			if (Core_Main::isRegistrationAllowed()) {
-				$moreLink .= "<li><a href=\"" . Core_Html::getLink("mod=connect&view=registration") . "\"><b>" . BECOME_MEMBER . "</b></a></li>";
+				$moreLink .= "<li><b>" . Core_Html::getLinkForBlock("mod=connect&view=registration", "block=" . $this->blockId . "&localView=registration", "#logonblock", GET_ACCOUNT) . "</b></li>";
 			}
-			$moreLink .= "</ul>";
+			$moreLink .= "<li>" . Core_Html::getLinkForBlock("mod=connect&view=logon", "block=" . $this->blockId . "&localView=logon", "#logonblock", GET_LOGON) . "</li>"
+			. "<li>" . Core_Html::getLinkForBlock("mod=connect&view=forgetlogin", "block=" . $this->blockId . "&localView=forgetlogin", "#logonblock", GET_FORGET_LOGIN) . "</li>"
+			. "<li>" . Core_Html::getLinkForBlock("mod=connect&view=forgetpass", "block=" . $this->blockId . "&localView=forgetpass", "#logonblock", GET_FORGET_PASS) . "</li></ul>";
 			
-			if (!Core_Loader::isCallable("Libs_Module") || Libs_Module::$view != "logon") {
-				Core_Loader::classLoader("Libs_Form");
-				$form = new Libs_Form("logon");
-				$form->addInputText("login", LOGIN, "", "maxlength=\"180\"");
-				$form->addInputPassword("password", PASSWORD, "", "maxlength=\"180\"");
-				$form->addInputCheckbox("auto", REMEMBER_ME, true);
-				$form->addInputHidden("referer", urlencode(base64_encode(Core_Request::getString("QUERY_STRING", "", "SERVER"))));
-				$form->addInputHidden("mod", "connect");
-				$form->addInputHidden("view", "logon");
-				$form->addInputHidden("layout", "module");
-				$form->addInputSubmit("submit", "", "value=\"" . LOGIN_SUBMIT . "\"");
-				$form->addHtmlInFieldset($moreLink);
-				$content .= $form->render();
-				Core_Html::getInstance()->addJavaScriptJquery(Core_Session::getJavascriptLogon("form-logon", "form-logon-login-input", "form-logon-password-input"));
-			} else {
-				$content .= LOGIN_PLEASE . $moreLink;
+			$content .= "<div id=\"logonblock\">";
+			switch($this->localView) {
+				case 'logon': 
+					$content .= $this->logon($moreLink);
+					break;
+				case 'forgetlogin':
+					$content .= $this->forgetlogin($moreLink);
+					break;
+				case 'forgetpass':
+					$content .= $this->forgetpass($moreLink);
+					break;
+				case 'registration':
+					$content .= $this->registration($moreLink);
+					break;
+				default:
+					$content .= $this->logon($moreLink);
+					break;
 			}
+			$content .= "</div>";
 		}
 		return $content;
+	}
+	
+	/**
+	 * Formulaire de connexion
+	 * 
+	 * @param $moreLink String
+	 * @return String
+	 */
+	private function logon($moreLink) {
+		Core_Loader::classLoader("Libs_Form");
+		$form = new Libs_Form("logonblock");
+		$form->addInputText("login", LOGIN, "", "maxlength=\"180\"");
+		$form->addInputPassword("password", PASSWORD, "", "maxlength=\"180\"");
+		$form->addInputCheckbox("auto", REMEMBER_ME, true);
+		$form->addInputHidden("referer", urlencode(base64_encode(Core_Request::getString("QUERY_STRING", "", "SERVER"))));
+		$form->addInputHidden("mod", "connect");
+		$form->addInputHidden("view", "logon");
+		$form->addInputHidden("layout", "module");
+		$form->addInputSubmit("submit", "", "value=\"" . GET_LOGON . "\"");
+		$form->addHtmlInFieldset($moreLink);
+		Core_Html::getInstance()->addJavaScriptJquery("validLogin('#form-logonblock', '#form-logonblock-login-input', '#form-logonblock-password-input');");
+		return $form->render("logonblock");
+	}
+	
+	/**
+	 * Formulaire de login oublié
+	 * 
+	 * @param $moreLink String
+	 * @return String
+	 */
+	private function forgetlogin($moreLink) {
+		Core_Loader::classLoader("Libs_Form");
+		$form = new Libs_Form("forgetloginblock");
+		$form->addInputText("mail", MAIL . " ");
+		$form->addInputHidden("mod", "connect");
+		$form->addInputHidden("view", "forgetlogin");
+		$form->addInputHidden("layout", "module");
+		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
+		$form->addHtmlInFieldset($moreLink);
+		Core_Html::getInstance()->addJavaScriptJquery("validMail('#form-forgetloginblock', '#form-forgetloginblock-mail-input');");
+		return $form->render("forgetloginblock");
+	}
+	
+	/**
+	 * Formulaire de mot de passe oublié
+	 * 
+	 * @param $moreLink String
+	 * @return String
+	 */
+	private function forgetpass($moreLink) {
+		Core_Loader::classLoader("Libs_Form");
+		$form = new Libs_Form("forgetpassblock");
+		$form->addInputText("login", LOGIN . " ");
+		$form->addInputHidden("mod", "connect");
+		$form->addInputHidden("view", "forgetpass");
+		$form->addInputHidden("layout", "module");
+		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
+		$form->addHtmlInFieldset($moreLink);
+		Core_Html::getInstance()->addJavaScriptJquery("validMail('#form-forgetpassblock', '#form-forgetpassblock-login-input');");
+		return $form->render("forgetpassblock");
 	}
 	
 	public function display() {
 		$this->configure();
 		
-		$libsMakeStyle = new Libs_MakeStyle();
-		$libsMakeStyle->assign("blockTitle", $this->title);
-		$libsMakeStyle->assign("blockContent", $this->render());
-		$libsMakeStyle->display($this->templateName);
+		if (!empty($this->localView)) {
+			echo $this->render();
+		} else {
+			$libsMakeStyle = new Libs_MakeStyle();
+			$libsMakeStyle->assign("blockTitle", $this->title);
+			$libsMakeStyle->assign("blockContent", $this->render());
+			$libsMakeStyle->display($this->templateName);
+		}
 	}
 }
 

@@ -585,19 +585,5 @@ class Core_Session {
 		if (!empty($key)) return $this->errorMessage[$key];
 		return $this->errorMessage;
 	}
-	
-	/**
-	 * Retourne le code javascript vérifiant le login et le mot de passe
-	 * 
-	 * @param $loginId String id du champs login
-	 * @param $passwordId String id du champs password
-	 * @return String
-	 */
-	public static function getJavascriptLogon($formId, $loginId, $passwordId) {
-		$formId = "#" . $formId;
-		$loginId = "#" . $loginId;
-		$passwordId = "#" . $passwordId;
-		return "validLogin('" . $formId . "', '" . $loginId . "', '" . $passwordId . "');";
-	}
 }
 ?>

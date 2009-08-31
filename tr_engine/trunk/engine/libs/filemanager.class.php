@@ -137,7 +137,7 @@ class Exec_FileManager {
 	 * @param $timeLimit limite de temps
 	 */
 	public function removeCache($dir = "", $timeLimit = 0) {
-		if ($dir != "" && is_file(TR_ENGINE_DIR . "/" . $dir)) {
+		if (!empty($dir) && is_file(TR_ENGINE_DIR . "/" . $dir)) {
 			// C'est un fichier a supprimer
 			$this->removeFile($dir, $timeLimit);
 		} else if (is_dir(TR_ENGINE_DIR . "/" . $dir)) {

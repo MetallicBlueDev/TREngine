@@ -320,7 +320,7 @@ class Exec_FtpManager {
 	 * @param $timeLimit limite de temps
 	 */
 	public function removeCache($dir = "", $timeLimit = 0) {
-		if ($dir != "" && is_file($this->getRootPath($dir))) {
+		if (!empty($dir) && is_file($this->getRootPath($dir))) {
 			// C'est un fichier a supprimer
 			$this->removeFile($dir, $timeLimit);
 		} else if (is_dir($this->getRootPath($dir))) {
@@ -551,15 +551,15 @@ class Exec_FtpManager {
 				foreach($listNames as $dirName) {
 					foreach($listNamesSearch as $dirNameSearch) {
 						// On construit le lien
-						if (($dirNameSearch == $dirName) || $pathFound != "") {
-							$pathFound = ($pathFound != "") ? $pathFound . "/" . $dirNameSearch : $dirNameSearch;
+						if (($dirNameSearch == $dirName) || !empty($pathFound)) {
+							$pathFound = (!empty($pathFound)) ? $pathFound . "/" . $dirNameSearch : $dirNameSearch;
 						} else {
-							$pathRebuild = ($pathRebuild != "") ? $pathRebuild . "/" . $dirNameSearch : $dirNameSearch;
+							$pathRebuild = (!empty($pathRebuild)) ? $pathRebuild . "/" . $dirNameSearch : $dirNameSearch;
 						}
 					}
 		
 					// On verifie si c'est bon et on arrete si c'est trouvé 
-					if ($pathFound != "" 
+					if (!empty($pathFound) 
 						&& is_file("/" . $pathRebuild . "/" . $pathFound . "/engine/core/secure.class.php")) {
 						break;
 					} else {
@@ -661,7 +661,7 @@ class Exec_FtpManager {
 						
 						// Ligne suivante
 						$content = substr($content, $responseSource);
-					} while ($content != "");
+					} while (!empty($content));
 					@fclose($this->passiveData);
 					
 					// Verification

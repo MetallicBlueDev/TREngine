@@ -58,7 +58,9 @@ class Libs_Breadcrumb {
 	 * @param $link String
 	 */
 	public function addTrail($trail, $link = "") {
-		if ($link != "") {
+		$constant = "TRAIL_" . strtoupper($trail);
+		if (defined($constant)) $trail = constant($constant);
+		if (!empty($link)) {
 			$trail = "<a href=\"" . $link . "\">" . $trail . "</a>";
 		}
 		$this->breadcrumbTrail[] = $trail;
@@ -73,7 +75,7 @@ class Libs_Breadcrumb {
 	public function getBreadcrumbTrail($separator = " >> ") {
 		$rslt = "";
 		foreach($this->breadcrumbTrail as $trail) {
-			if ($rslt != "") $rslt .= $separator;
+			if (!empty($rslt)) $rslt .= $separator;
 			$rslt .= $trail;
 		}
 		return $rslt;

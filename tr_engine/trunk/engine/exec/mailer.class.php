@@ -41,5 +41,9 @@ class Exec_Mailer {
 			return $protected;
 		}
 	}
+	
+	public static function sendMail() {
+		
+	}
 }
 ?>

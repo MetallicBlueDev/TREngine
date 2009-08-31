@@ -82,13 +82,6 @@ class Core_Html {
 	 */
 	private $description = "";
 	
-	/**
-	 * Pour forcer l'inclusion des fichiers javascript
-	 * 
-	 * @var boolean
-	 */
-	private $forceIncludes = false;
-	
 	public function __construct() {
 		// Configuration du préfixe accessible
 		if (Core_Loader::isCallable("Core_Main")) $prefix = Core_Main::$coreConfig['cookiePrefix'];
@@ -128,14 +121,15 @@ class Core_Html {
 	/**
 	 * Retourne les scripts à inclure
 	 * 
+	 * @param $forceIncludes boolean Pour forcer l'inclusion des fichiers javascript
 	 * @return String
 	 */
-	private function includeJavaScript() {
-		if (Core_Request::getRequest() != "POST" && !$this->forceIncludes) {			
+	private function includeJavaScript($forceIncludes = false) {
+		if (Core_Request::getRequest() != "POST" || $forceIncludes) {
 			if (Core_Loader::isCallable("Core_Main")) $fullScreen = Core_Main::isFullScreen();
 			else $fullScreen = true;
 			
-			if (($fullScreen || $this->forceIncludes) && $this->isJavaScriptActived()) {
+			if (($fullScreen || $forceIncludes) && $this->isJavaScriptActived()) {
 				if (!empty($this->javaScriptJquery)) $this->addJavaScriptFile("jquery.js");
 				$this->addJavaScriptFile("tr_engine.js");
 			} else {
@@ -193,7 +187,6 @@ class Core_Html {
 		if (!empty($this->javaScriptCode)) {
 			$script .= $this->javaScriptCode;
 		}
-		
 		if (!empty($this->javaScriptJquery)) {
 			$script .= "$(document).ready(function(){";
 			$script .= $this->javaScriptJquery;
@@ -294,7 +287,7 @@ class Core_Html {
 		
 		// TODO ajouter un support RSS XML
 	}
-	
+	// TODO continuer le footer
 	public function getMetaFooters() {
 		return $this->executeJavaScript();
 	}
@@ -420,6 +413,19 @@ class Core_Html {
 	}
 	
 	/**
+	 * Retourne un lien web utilisable avec et sans javascript
+	 * 
+	 * @param $fullLink String le lien vers une page (utilisé sans javascript)
+	 * @param $blockLink String le lien vers une page (utilisé avec javascript)
+	 * @param $divId String id du block
+	 * @param $title String Titre du lien
+	 * @return String
+	 */
+	public static function getLinkForBlock($fullLink, $blockLink, $divId, $title) {
+		return "<a href=\"" . self::getLink($fullLink) . "\" onclick=\"validLink('" . $divId . "', '" . Core_Html::getLink($blockLink, true) . "');return false;\">" . $title . "</a>";
+	}
+	
+	/**
 	 * Redirection vers une page
 	 * 
 	 * @param $url String page demandée a chargé
@@ -442,10 +448,8 @@ class Core_Html {
 				// Commande ajax pour la redirection
 				if ($method != "window") {
 					$this->addJavaScriptJquery("setTimeout(function () { $('" . $method . "').load('" . $url . "'); }, 4000);");
-					echo $this->includeJavaScript() . $this->executeJavaScript();
 				} else {
 					$this->addJavaScriptCode("setTimeout('window.location = \"" . $url . "\"','" . $tps . "');");
-					echo $this->executeJavaScript();
 				}
 			} else {
 				// Commande par défaut
@@ -458,6 +462,13 @@ class Core_Html {
 	}
 	
 	/**
+	 * Inclus et execute le javascript de facon autonome
+	 */
+	public function selfJavascript() {
+		echo $this->includeJavaScript(true) . $this->executeJavaScript();
+	}
+	
+	/**
 	 * Retourne le loader annimé
 	 * 
 	 * @return String
@@ -467,6 +478,16 @@ class Core_Html {
 			return "<div id=\"loader\"></div>";
 		}
 		return "";
+	}
+	
+	/**
+	 * Ajoute le style du template
+	 * 
+	 * @param $text
+	 * @return String
+	 */
+	public static function bolder($text) {
+		return "<span class=\"bolder\">" . $text . "</span>";
 	}
 }
 ?>

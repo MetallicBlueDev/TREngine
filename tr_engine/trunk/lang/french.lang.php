@@ -36,7 +36,11 @@ $lang = array(
 "ERROR_SESSION_COOKIE" => "Impossible d'ouvrir une session, vérifiez vos paramètre cookie.",
 
 // Divers
-"WELCOME" => "Bienvenue"
+"WELCOME" => "Bienvenue",
+"MAIL" => "Votre adresse email",
+"LOGIN" => "Votre identifiant",
+"PASSWORD" => "Votre mot de passe",
+"VALID" => "Valider"
 
 );
 

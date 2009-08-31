@@ -40,10 +40,26 @@ class Libs_Form {
 	 */
 	private $description = "";
 	
+	/**
+	 * Donnée contenu dans le formulaire
+	 * 
+	 * @var String
+	 */
 	private $inputData = "";
 	
+	/**
+	 * Fermeture de la balise fieldset
+	 * 
+	 * @var boolean
+	 */
 	private $doFieldset = false;
 	
+	/**
+	 * Nouveau formulaire
+	 * 
+	 * @param $name String
+	 * @param $urlAction String
+	 */
 	public function __construct($name, $urlAction = "") {
 		$this->name = $name;
 		$this->urlAction = !empty($urlAction) ? $urlAction : "index.php";
@@ -294,7 +310,7 @@ class Libs_Form {
 	public function render($class = "") {
 		// Définition du form
 		$content = "<form action=\"" . $this->urlAction . "\" method=\"post\" id=\"form-" . $this->name . "\" name=\"" . $this->name . "\""
-		. ((!empty($class)) ? " class=\"" . $class . "\"" : "") . ">"
+		. " class=\"" . ((!empty($class)) ? $class : "form") . "\"><fieldset>"
 		. ((!empty($this->title)) ? "<legend>" . Exec_Entities::textDisplay($this->title) . "</legend>" : "")
 		. ((!empty($this->description)) ? "<p id=\"" . $this->getId("description") . "\">" . Exec_Entities::textDisplay($this->description) . "</p>" : "")
 		. $this->inputData
@@ -303,6 +319,5 @@ class Libs_Form {
 		return $content;
 	}
 }
-
 
 ?>

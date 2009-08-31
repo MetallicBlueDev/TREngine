@@ -136,10 +136,11 @@ class Core_Exception {
 	public static function getMinorError() {
 		$display = "none";
 		$rslt = "";
-		if (self::minorErrorDetected()) {
+		$error = self::minorErrorDetected();
+		if ($error) {
 			$display = "block";
 			$rslt .= "<ul class=\"exception\">";
-				foreach(self::$alertError as $alertError) {
+			foreach(self::$alertError as $alertError) {
 				$rslt .= "<li class=\"alert\"><div>" . $alertError . "</div></li>";
 			}
 			foreach(self::$noteError as $noteError) {
@@ -154,9 +155,10 @@ class Core_Exception {
 		// Réaction différente en fonction du type d'affichage demandée
 		if (Core_Main::isFullScreen()) {
 			return "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
-		} else {
-			return $rslt;
+		} else if ($error) {
+			Core_Html::getInstance()->addJavaScriptJquery("displayMessage('" . addslashes($rslt) . "');");
 		}
+		return "";
 	}
 	
 	/**

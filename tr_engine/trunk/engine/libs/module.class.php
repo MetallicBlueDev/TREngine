@@ -90,7 +90,7 @@ class Libs_Module {
 		
 		// Erreur dans la configuration
 		if (!$this->isModule()) {
-			if (self::$module != "" || self::$page != "") {
+			if (!empty(self::$module) || !empty(self::$page)) {
 				// Afficher une erreur 404
 				Core_Exception::addInfoError(ERROR_404);
 			}
@@ -221,7 +221,6 @@ class Libs_Module {
 					// Affichage du module si possible
 					if (!empty($viewPage)) {
 						$this->updateCount();
-						Core_Translate::translate("modules/" . self::$module);
 						$ModuleClass = new $moduleClassName();
 						$ModuleClass->configs = self::$configs;
 						
@@ -287,7 +286,7 @@ class Libs_Module {
  * @author Sebastien Villemain
  *
  */
-class Module_Model {
+abstract class Module_Model {
 	
 	/**
 	 * Configuration du module

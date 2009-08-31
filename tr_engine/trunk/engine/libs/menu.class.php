@@ -251,7 +251,7 @@ class Libs_MenuElement {
 	 * @param $name String nom de l'attribut
 	 */
 	public function removeAttributs($name = "") {
-		if ($name != "") {
+		if (!empty($name)) {
 			unset($this->attributs[$name]);
 		} else {
 			foreach($this->attributs as $key => $attributs) {
@@ -278,7 +278,7 @@ class Libs_MenuElement {
 			if (is_array($value)) {
 				$rslt .= $this->getAttributs($value);
 			} else {
-				if ($rslt != "" && is_int($attributsName)) $rslt .= " ";
+				if (!empty($rslt) && is_int($attributsName)) $rslt .= " ";
 				$rslt .= htmlspecialchars($value);			
 			}
 			if (!is_int($attributsName)) {
@@ -357,7 +357,7 @@ class Libs_MenuElement {
 	public function toString($callback = "") {		
 		// Mise en forme du texte via la callback
 		$text = $this->data->content;
-		if ($callback != "" && $text != "") {
+		if (!empty($callback) && !empty($text)) {
 			$text = Core_Loader::callback($callback, $text);
 		}
 		

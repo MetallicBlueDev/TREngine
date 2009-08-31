@@ -279,7 +279,7 @@ class Libs_Block {
  * @author Sebastien Villemain
  *
  */
-class Block_Model {
+abstract class Block_Model {
 	
 	/**
 	 * Identifiant du block

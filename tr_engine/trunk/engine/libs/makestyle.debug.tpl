@@ -4,7 +4,7 @@
 
 
 
-<?php if ($errorMessage[0] != "") { ?>
+<?php if (!empty($errorMessage)) { ?>
 Error details:<br />
 <ul>
 <?php foreach($errorMessage as $value) { ?>

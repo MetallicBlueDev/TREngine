@@ -211,7 +211,10 @@ class Core_Main {
 				Core_UrlRewriting::test();
 			}
 			
-			if (self::isFullScreen()) {
+			if (self::isFullScreen() && Core_Loader::isCallable("Libs_Block") && Core_Loader::isCallable("Libs_Module")) {
+				// Traduction du module
+				Core_Translate::translate("modules/" . Libs_Module::$module);
+				
 				// Chargement et construction du fil d'ariane
 				Core_Loader::classLoader("Libs_Breadcrumb");
 				Libs_Breadcrumb::getInstance();
@@ -224,15 +227,18 @@ class Core_Main {
 				$libsMakeStyle->display("index.tpl");
 			} else {
 				// Affichage autonome des modules et blocks
-				if (self::isModuleScreen()) {
+				if (self::isModuleScreen() && Core_Loader::isCallable("Libs_Module")) {
+					Core_Translate::translate("modules/" . Libs_Module::$module);
 					Libs_Module::getInstance()->launch();
 					echo Libs_Module::getInstance()->getModule();
-				} else if (self::isBlockScreen()) {
+				} else if (self::isBlockScreen() && Core_Loader::isCallable("Libs_Block")) {
 					Libs_Block::getInstance()->launch();
 					echo Libs_Block::getInstance()->getBlock();
 				}
-				// Execute le commande de récupération d'erreur
-				echo Core_Exception::getMinorError();
+				// Execute la commande de récupération d'erreur
+				Core_Exception::getMinorError();
+				// Javascript autonome
+				Core_Html::getInstance()->selfJavascript();
 			}
 			
 			// Validation du cache / Routine du cache

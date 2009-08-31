@@ -1,6 +1,6 @@
 <?php
 
-if (isset($_GET['mode']) && $_GET['mode'] == "code" && $_GET['code'] != "")
+if (isset($_GET['mode']) && $_GET['mode'] == "code" && !empty($_GET['code']))
 {	// Methode captcha code
 	// Cryptage
 	$text = md5($_GET['code']);
@@ -25,7 +25,7 @@ if (isset($_GET['mode']) && $_GET['mode'] == "code" && $_GET['code'] != "")
     imagedestroy($im);
     imagedestroy($id);
 }
-else if (isset($_GET['mode']) && $_GET['mode'] == "text" && $_GET['text'] != "")
+else if (isset($_GET['mode']) && $_GET['mode'] == "text" && !empty($_GET['text']))
 {	// Methode text & mail
 	// Décryptage
 	$text = $_GET['text'];
