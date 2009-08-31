@@ -31,7 +31,7 @@ class Core_Html {
 	 * 
 	 * @var boolean
 	 */
-	private $javaScriptActived = false;
+	private $javaScriptEnabled = false;
 	
 	/**
 	 * Fonctions et codes javascript demandées
@@ -93,7 +93,7 @@ class Core_Html {
 			$this->getSalt(), "md5"
 		);
 		// Vérification du javascript du client
-		$this->checkJavaScriptActived();
+		$this->checkJavascriptEnabled();
 	}
 	
 	/**
@@ -111,11 +111,11 @@ class Core_Html {
 	/**
 	 * Detection du javascript chez le client
 	 */
-	private function checkJavaScriptActived() {
+	private function checkJavascriptEnabled() {
 		// Récuperation du cookie en php
 		$cookieTest = Exec_Cookie::getCookie($this->cookieTestName);
 		// Vérification de l'existance du cookie
-		$this->javaScriptActived = ($cookieTest == 1) ? true : false;
+		$this->javaScriptEnabled = ($cookieTest == 1) ? true : false;
 	}
 	
 	/**
@@ -124,26 +124,30 @@ class Core_Html {
 	 * @param $forceIncludes boolean Pour forcer l'inclusion des fichiers javascript
 	 * @return String
 	 */
-	private function includeJavaScript($forceIncludes = false) {
+	private function includeJavascript($forceIncludes = false) {
 		if (Core_Request::getRequest() != "POST" || $forceIncludes) {
 			if (Core_Loader::isCallable("Core_Main")) $fullScreen = Core_Main::isFullScreen();
 			else $fullScreen = true;
 			
-			if (($fullScreen || $forceIncludes) && $this->isJavaScriptActived()) {
-				if (!empty($this->javaScriptJquery)) $this->addJavaScriptFile("jquery.js");
-				$this->addJavaScriptFile("tr_engine.js");
+			if (($fullScreen || $forceIncludes) && $this->isJavascriptEnabled()) {
+				if (!empty($this->javaScriptJquery)) $this->addJavascriptFile("jquery.js");
+				$this->addJavascriptFile("tr_engine.js");
 			} else {
 				// Tous fichier inclus est superflue donc reset
-				$this->resetJavaScript();
+				$this->resetJavascript();
 			}
 			
-			$this->addJavaScriptFile("javascriptactived.js");
+			// Lorsque l'on ne force pas l'inclusion on fait un nouveau test
+			if (!$forceIncludes) {
+				$this->addJavascriptFile("javascriptenabled.js");
+				$this->addJavascriptCode("javascriptEnabled('" . $this->cookieTestName . "');");
+			}
 			
 			if (Core_Loader::isCallable("Exec_Agent") && Exec_Agent::$userBrowserName == "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") {
-				$this->addJavaScriptFile("pngfix.js", "defer");
+				$this->addJavascriptFile("pngfix.js", "defer");
 			}
 		} else {
-			$this->resetJavaScript();
+			$this->resetJavascript();
 		}
 		
 		// Conception de l'entête
@@ -180,10 +184,8 @@ class Core_Html {
 	 * 
 	 * @return String
 	 */
-	private function executeJavaScript() {
-		$script .= "<script type=\"text/javascript\">\n"
-		. "javaScriptActived('" . $this->cookieTestName . "');\n";
-		
+	private function executeJavascript() {
+		$script .= "<script type=\"text/javascript\">\n";
 		if (!empty($this->javaScriptCode)) {
 			$script .= $this->javaScriptCode;
 		}
@@ -192,7 +194,6 @@ class Core_Html {
 			$script .= $this->javaScriptJquery;
 			$script .= "});";
 		}
-		
 		$script .= "</script>\n";
 		return $script;
 	}
@@ -202,28 +203,40 @@ class Core_Html {
 	 * 
 	 * @param $javaScript String
 	 */
-	public function addJavaScriptJquery($javaScript) {
+	public function addJavascriptJquery($javaScript) {
 		if (!empty($this->javaScriptJquery)) $this->javaScriptJquery .= "\n";
 		$this->javaScriptJquery .= $javaScript;
 	}
 	
 	/**
-	 * Ajoute un code javaScript à executer
+	 * Ajoute un code javaScript pur à executer
 	 * 
 	 * @param $javaScript String
 	 */
-	public function addJavaScriptCode($javaScript) {
+	public function addJavascriptCode($javaScript) {
 		if (!empty($this->javaScriptCode)) $this->javaScriptCode .= "\n";
 		$this->javaScriptCode .= $javaScript;
 	}
 	
+	/**
+	 * Ajoute un code javascript Jquery ou autre automatiquement à executer
+	 * 
+	 * @param $javaScript String
+	 */
+	public function addJavascript($javaScript) {
+		if ($this->isJavascriptEnabled() && Core_Main::isFullScreen()) {
+			$this->addJavascriptJquery($javaScript);
+		} else {
+			$this->addJavascriptCode($javaScript);
+		}
+	}
 	/**
 	 * Ajoute un fichier javascript a l'entête
 	 * 
 	 * @param $fileName String
 	 * @param $options String
 	 */
-	public function addJavaScriptFile($fileName, $options = "") {
+	public function addJavascriptFile($fileName, $options = "") {
 		if (!array_key_exists($fileName, $this->javaScriptFile)) {
 			$this->javaScriptFile[$fileName] = $options;
 		}
@@ -244,7 +257,7 @@ class Core_Html {
 	/**
 	 * Reset des codes et fichier inclus javascript
 	 */
-	private function resetJavaScript() {
+	private function resetJavascript() {
 		$this->javaScriptCode = "";
 		$this->javaScriptFile = array();
 	}
@@ -254,8 +267,8 @@ class Core_Html {
 	 * 
 	 * @return boolean
 	 */
-	public function isJavaScriptActived() {
-		return $this->javaScriptActived;
+	public function isJavascriptEnabled() {
+		return $this->javaScriptEnabled;
 	}
 	
 	/**
@@ -282,14 +295,14 @@ class Core_Html {
 		. "<meta http-equiv=\"content-script-type\" content=\"text/javascript\" />\n"
 		. "<meta http-equiv=\"content-style-type\" content=\"text/css\" />\n"
 		. "<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"" . Libs_MakeStyle::getTemplatesDir() . "/" . Libs_MakeStyle::getTemplateUsedDir() . "/favicon.ico\" />\n"
-		. $this->includeJavaScript()
+		. $this->includeJavascript()
 		. $this->includeCss();
 		
 		// TODO ajouter un support RSS XML
 	}
 	// TODO continuer le footer
 	public function getMetaFooters() {
-		return $this->executeJavaScript();
+		return $this->executeJavascript();
 	}
 	
 	/**
@@ -426,7 +439,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Redirection vers une page
+	 * Redirection ou chargement via javascript vers une page
 	 * 
 	 * @param $url String page demandée a chargé
 	 * @param $tps int temps avant le chargement de la page
@@ -434,26 +447,17 @@ class Core_Html {
 	 */
 	public function redirect($url = "", $tps = 0, $method = "window") {
 		// Configuration du temps
-		if (!is_numeric($tps)) {
-			$tps = 0;
-		}
-		$tps = $tps*1000;
+		$tps = ((!is_numeric($tps)) ? 0 : $tps) * 1000;
 		// Configuration de l'url
-		if (empty($url)) {
-			$url = "index.php";
-		}
-		
-		if ($this->isJavaScriptActived()) {
-			if (Core_Request::getString("REQUEST_METHOD", "", "SERVER") == "POST") {
+		if (empty($url) || $url == "index.php?") $url = "index.php";
+		// Redirection
+		if ($this->isJavascriptEnabled()) {
+			if (Core_Request::getString("REQUEST_METHOD", "", "SERVER") == "POST" && $method != "window") {
 				// Commande ajax pour la redirection
-				if ($method != "window") {
-					$this->addJavaScriptJquery("setTimeout(function () { $('" . $method . "').load('" . $url . "'); }, 4000);");
-				} else {
-					$this->addJavaScriptCode("setTimeout('window.location = \"" . $url . "\"','" . $tps . "');");
-				}
+				$this->addJavascriptCode("setTimeout(function(){ $('" . $method . "').load('" . $url . "'); }, $tps);");
 			} else {
 				// Commande par défaut
-				$this->addJavaScriptCode("setTimeout('window.location = \"" . $url . "\"','" . $tps . "');");
+				$this->addJavascriptCode("setTimeout('window.location = \"" . $url . "\"','" . $tps . "');");
 			}
 		} else {
 			// Redirection php sans timeout
@@ -465,7 +469,7 @@ class Core_Html {
 	 * Inclus et execute le javascript de facon autonome
 	 */
 	public function selfJavascript() {
-		echo $this->includeJavaScript(true) . $this->executeJavaScript();
+		echo $this->includeJavascript(true) . $this->executeJavascript();
 	}
 	
 	/**
@@ -474,7 +478,7 @@ class Core_Html {
 	 * @return String
 	 */
 	public function getLoader() {
-		if ($this->isJavaScriptActived()) {
+		if ($this->isJavascriptEnabled()) {
 			return "<div id=\"loader\"></div>";
 		}
 		return "";

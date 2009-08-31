@@ -137,12 +137,19 @@ class Core_CacheBuffer {
 	}
 	
 	/**
+	 * Parcours récursivement le dossier cache courant afin de supprimer les fichiers trop vieux
 	 * Nettoie le dossier courant du cache
 	 * 
 	 * @param $timeLimit La limite de temps
 	 */
 	public static function cleanCache($timeLimit) {
-		self::removeCache("", $timeLimit);
+		// Vérification de la validité du checker
+		if (!self::checked($timeLimit)) {
+			// Mise à jour ou creation du fichier checker
+			self::touchChecker();
+			// Suppression du cache périmé
+			self::removeCache("", $timeLimit);
+		}
 	}
 	
 	/**
@@ -195,7 +202,7 @@ class Core_CacheBuffer {
 	 * Ecriture du checker
 	 */
 	private static function writingChecker() {
-		self::writingCache("checker.txt", "ok");
+		self::writingCache("checker.txt", "1");
 	}
 	
 	/**

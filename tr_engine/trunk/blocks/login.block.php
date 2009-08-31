@@ -109,7 +109,7 @@ class Block_Login extends Block_Model {
 		$form->addInputHidden("layout", "module");
 		$form->addInputSubmit("submit", "", "value=\"" . GET_LOGON . "\"");
 		$form->addHtmlInFieldset($moreLink);
-		Core_Html::getInstance()->addJavaScriptJquery("validLogin('#form-logonblock', '#form-logonblock-login-input', '#form-logonblock-password-input');");
+		Core_Html::getInstance()->addJavascript("validLogon('#form-logonblock', '#form-logonblock-login-input', '#form-logonblock-password-input');");
 		return $form->render("logonblock");
 	}
 	
@@ -128,7 +128,7 @@ class Block_Login extends Block_Model {
 		$form->addInputHidden("layout", "module");
 		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
 		$form->addHtmlInFieldset($moreLink);
-		Core_Html::getInstance()->addJavaScriptJquery("validMail('#form-forgetloginblock', '#form-forgetloginblock-mail-input');");
+		Core_Html::getInstance()->addJavascript("validForgetLogin('#form-forgetloginblock', '#form-forgetloginblock-mail-input');");
 		return $form->render("forgetloginblock");
 	}
 	
@@ -147,7 +147,7 @@ class Block_Login extends Block_Model {
 		$form->addInputHidden("layout", "module");
 		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
 		$form->addHtmlInFieldset($moreLink);
-		Core_Html::getInstance()->addJavaScriptJquery("validMail('#form-forgetpassblock', '#form-forgetpassblock-login-input');");
+		Core_Html::getInstance()->addJavascript("validForgetPass('#form-forgetpassblock', '#form-forgetpassblock-login-input');");
 		return $form->render("forgetpassblock");
 	}
 	

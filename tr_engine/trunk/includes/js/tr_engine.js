@@ -1,23 +1,22 @@
 $().ajaxSend(function(r,s){$("#loader").show();});
 $().ajaxStop(function(r,s){$("#loader").fadeOut('fast');});
 
-function displayMessage(message) {alert(message);$('#block_message').empty().append(message).show();}
+function displayMessage(message) {$('#block_message').empty().append(message).show();}
 
-function validLogin(formId, loginId, passwordId) {
+function validLogon(formId, loginId, passwordId) {
 	$(formId).submit(function(){
 		var isLogin = false;
 		var isPassword = false;
 		var login = $(loginId);
 		var password = $(passwordId);
-		var filter = new RegExp('^[A-Za-z0-9_-]{3,16}$');
-		if (login.val().length >= 3 && filter.test(login.val())) {
+		if (checkLogin(login.val())) {
 			login.removeClass('error');
 			isLogin = true;
 		} else {
 			login.addClass('error');
 			isLogin = false;
 		}
-		if (password.val().length >= 5) {
+		if (checkPassword(password.val())) {
 			password.removeClass('error');
 			isPassword = true;
 		} else {
@@ -29,7 +28,7 @@ function validLogin(formId, loginId, passwordId) {
 	});
 }
 
-function validMail(formId, mailId) {
+function validForgetLogin(formId, mailId) {
 	$(formId).submit(function(){
 		var mail = $(mailId);
 		if (checkMail(mail.val())) {
@@ -37,6 +36,19 @@ function validMail(formId, mailId) {
 			postForm(this);
 		} else {
 			mail.addClass('error');
+		}
+		return false;
+	});
+}
+
+function validForgetPass(formId, loginId) {
+	$(formId).submit(function(){
+		var login = $(loginId);
+		if (checkLogin(login.val())) {
+			login.removeClass('error');
+			postForm(this);
+		} else {
+			login.addClass('error');
 		}
 		return false;
 	});
@@ -63,13 +75,18 @@ function disableForm(form) {
 	$(submitButton).attr("value", $(submitButton).attr("value") + "...");
 	$(submitButton).attr("disabled", "disabled");
 }
-
 function enableForm(form) {
 	var submitButton = $(form).find("input[type='submit']");
 	$(submitButton).attr("value", $(submitButton).attr("value").substr(0,  $(submitButton).attr("value").length - 3));
 	$(submitButton).removeAttr("disabled");
 }
-
+function checkPassword(password) {
+	return (password.length >= 5);
+}
+function checkLogin(login) {
+	var filter = new RegExp('^[A-Za-z0-9_-]{3,16}$');
+	return (login.length >= 3 && filter.test(login));
+}
 function checkMail(mail) {
 	var filter = new RegExp('^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$');
 	return filter.test(mail);

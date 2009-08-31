@@ -35,6 +35,7 @@ $lang = array(
 "FORGET_LOGIN_DESCRIPTION" => "Entrez l'adresse email de votre compte.",
 "FORGET_LOGIN_SUBMIT" => "Envoyer mon identifiant",
 "FORGET_LOGIN_INVALID_MAIL_ACCOUNT" => "L'adresse email saisi ne correspond à aucun compte enregistré",
+"FORGET_LOGIN_INVALID_MAIL" => "L'adresse email saisi n'est pas valide",
 "FORGET_LOGIN_IS_SUBMIT_TO" => "Un email contenant votre identifiant vient d'être envoyé à"
 
 );

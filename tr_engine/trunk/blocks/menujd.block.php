@@ -30,13 +30,13 @@ class Block_Menujd extends Block_Menu {
 		// Ajout du fichier de style
 		Core_Html::getInstance()->addCssFile("jquery.jdMenu.css");
 		// Ajout des fichier javascript
-		Core_Html::getInstance()->addJavaScriptFile("jquery.dimensions.js");
-		Core_Html::getInstance()->addJavaScriptFile("jquery.positionBy.js");
-		Core_Html::getInstance()->addJavaScriptFile("jquery.bgiframe.js");
-		Core_Html::getInstance()->addJavaScriptFile("jquery.jdMenu.js");
+		Core_Html::getInstance()->addJavascriptFile("jquery.dimensions.js");
+		Core_Html::getInstance()->addJavascriptFile("jquery.positionBy.js");
+		Core_Html::getInstance()->addJavascriptFile("jquery.bgiframe.js");
+		Core_Html::getInstance()->addJavascriptFile("jquery.jdMenu.js");
 		
 		// Ajout du code d'excution
-		Core_Html::getInstance()->addJavaScriptJquery("$('ul.jd_menu').jdMenu();");
+		Core_Html::getInstance()->addJavascriptJquery("$('ul.jd_menu').jdMenu();");
 	}
 }
 

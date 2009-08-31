@@ -109,7 +109,7 @@ form {
 
 /* Cadre des modules */
 #module_top {
-	margin-top: 20px;
+	margin-top: 5px;
 	width: 645px;
 	height: 60px;
 	background: url(images/module_top.jpg);

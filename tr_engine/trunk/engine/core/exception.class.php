@@ -156,7 +156,11 @@ class Core_Exception {
 		if (Core_Main::isFullScreen()) {
 			return "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
 		} else if ($error) {
-			Core_Html::getInstance()->addJavaScriptJquery("displayMessage('" . addslashes($rslt) . "');");
+			if (Core_Html::getInstance()->isJavascriptEnabled()) {
+				Core_Html::getInstance()->addJavascript("displayMessage('" . addslashes($rslt) . "');");
+			} else {
+				return $rslt;
+			}
 		}
 		return "";
 	}

@@ -7,6 +7,9 @@
 <head>
 <?php echo Core_Html::getInstance()->getMetaHeaders(); ?>
 <link rel="stylesheet" href="templates/default/style.css" type="text/css" />
+<?php if (Core_Loader::isCallable("Exec_Agent") && Exec_Agent::$userBrowserName == "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") { ?>
+<link rel="stylesheet" href="templates/default/ie6.css" type="text/css" />
+<?php } ?>
 </head>
 <body>
 

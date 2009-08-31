@@ -287,7 +287,7 @@ class Core_Main {
 		
 		// Configuration du layout
 		if ($layout != "default" && $layout != "modulepage"	&& $layout != "blockpage" 
-				&& (($layout != "block" && $layout != "module") || (!Core_Html::getInstance()->isJavaScriptActived()))) {
+				&& (($layout != "block" && $layout != "module") || (!Core_Html::getInstance()->isJavascriptEnabled()))) {
 			$layout = "default";
 		}
 		self::$layout = $layout;

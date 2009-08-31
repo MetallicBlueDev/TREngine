@@ -36,7 +36,7 @@ class Module_Connect_Index extends Module_Model {
 				}
 			}
 			
-			if (!Core_Html::getInstance()->isJavaScriptActived() || (empty($login) && empty($password))) {
+			if (!Core_Html::getInstance()->isJavascriptEnabled() || (empty($login) && empty($password))) {
 				Core_Loader::classLoader("Libs_Form");
 				$form = new Libs_Form("logon");
 				$form->setTitle(LOGIN_FORM_TITLE);
@@ -51,7 +51,7 @@ class Module_Connect_Index extends Module_Model {
 				$form->addInputSubmit("submit", "", "value=\"" . CONNECT . "\"");
 				$form->addHtmlInFieldset($moreLink);
 				echo $form->render();
-				Core_Html::getInstance()->addJavaScriptJquery("validLogin('#form-logon', '#form-logon-login-input', '#form-logon-password-input');");
+				Core_Html::getInstance()->addJavascript("validLogon('#form-logon', '#form-logon-login-input', '#form-logon-password-input');");
 			}
 		} else {
 			$this->display();
@@ -100,14 +100,14 @@ class Module_Connect_Index extends Module_Model {
 					}
 					if (!$ok) Core_Exception::addNoteError(FORGET_LOGIN_INVALID_MAIL_ACCOUNT);
 				} else {
-					$this->errorBox();
+					Core_Exception::addNoteError(FORGET_LOGIN_INVALID_MAIL);
 				}
 			}
 			
 			if ($ok) {
 				Core_Exception::addInfoError(FORGET_LOGIN_IS_SUBMIT_TO . " " . $mail);
 			} else {
-				if (!Core_Html::getInstance()->isJavaScriptActived() || empty($mail)) {
+				if (!Core_Html::getInstance()->isJavascriptEnabled() || empty($mail)) {
 					Core_Loader::classLoader("Libs_Form");
 					$form = new Libs_Form("forgetlogin");
 					$form->setTitle(FORGET_LOGIN_TITLE);
@@ -118,7 +118,7 @@ class Module_Connect_Index extends Module_Model {
 					$form->addInputHidden("layout", "module");
 					$form->addInputSubmit("submit", "", "value=\"" . FORGET_LOGIN_SUBMIT . "\"");
 					echo $form->render();
-					Core_Html::getInstance()->addJavaScriptJquery("validMail('#form-forgetlogin', '#form-forgetlogin-mail-input');");
+					Core_Html::getInstance()->addJavascript("validForgetLogin('#form-forgetlogin', '#form-forgetlogin-mail-input');");
 				}
 			}
 		} else {
@@ -156,7 +156,7 @@ class Module_Connect_Index extends Module_Model {
 			if ($ok) {
 				Core_Exception::addInfoError(FORGET_PASSWORD_IS_SUBMIT_TO . " " . $mail);
 			} else {
-				if (!Core_Html::getInstance()->isJavaScriptActived() || empty($login)) {
+				if (!Core_Html::getInstance()->isJavascriptEnabled() || empty($login)) {
 					Core_Loader::classLoader("Libs_Form");
 					$form = new Libs_Form("forgetpass");
 					$form->setTitle(FORGET_PASSWORD_TITLE);
@@ -167,7 +167,7 @@ class Module_Connect_Index extends Module_Model {
 					$form->addInputHidden("layout", "module");
 					$form->addInputSubmit("submit", "", "value=\"" . FORGET_PASSWORD_SUBMIT . "\"");
 					echo $form->render();
-					Core_Html::getInstance()->addJavaScriptJquery("validMail('#form-forgetpass', '#form-forgetpass-login-input');");
+					Core_Html::getInstance()->addJavascript("validForgetPass('#form-forgetpass', '#form-forgetpass-login-input');");
 				}
 			}
 		} else {

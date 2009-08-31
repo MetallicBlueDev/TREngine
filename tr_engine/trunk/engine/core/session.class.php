@@ -159,9 +159,8 @@ class Core_Session {
 		
 		// Configuration du gestionnaire de cache
 		Core_CacheBuffer::setSectionName("sessions");
-		
 		// Nettoyage du cache
-		$this->checkSessionCache();
+		Core_CacheBuffer::cleanCache($this->timer - $this->cacheTimeLimit);
 		
 		// Lanceur de session
 		$this->sessionSelect();
@@ -177,19 +176,6 @@ class Core_Session {
 			self::$session = new self();
 		}
 		return self::$session;
-	}
-	
-	/**
-	 * Parcours récursivement le dossier cache des sessions afin de supprimer les fichiers trop vieux
-	 */
-	private function checkSessionCache() {
-		// Vérification de la validité du checker
-		if (!Core_CacheBuffer::checked($this->timer - $this->cacheTimeLimit)) {
-			// Mise à jour ou creation du fichier checker
-			Core_CacheBuffer::touchChecker();
-			// Suppression du cache périmé
-			Core_CacheBuffer::cleanCache($this->timer - $this->cacheTimeLimit);
-		} 
 	}
 	
 	/**
@@ -212,52 +198,17 @@ class Core_Session {
 	private function sessionSelect() {
 		if ($this->sessionFound()) {
 			// Cookie de l'id du client
-			$userId = Exec_Crypt::md5Decrypt(
-				Exec_Cookie::getCookie(
-					Exec_Crypt::md5Encrypt(
-						$this->cookieName['USER'],
-						$this->getSalt()
-					), $this->getSalt()
-				)
-			);
+			$userId = $this->getCookie($this->cookieName['USER']);
 			// Cookie de session
-			$sessionId = Exec_Crypt::md5Decrypt(
-				Exec_Cookie::getCookie(
-					Exec_Crypt::md5Encrypt(
-						$this->cookieName['SESSION'],
-						$this->getSalt()
-					), $this->getSalt()
-				)
-			);
+			$sessionId = $this->getCookie($this->cookieName['SESSION']);
 			// Cookie de langue
-			$userLanguage = Exec_Crypt::md5Decrypt(
-				Exec_Cookie::getCookie(
-					Exec_Crypt::md5Encrypt(
-						$this->cookieName['LANGUE'],
-						$this->getSalt()
-					), $this->getSalt()
-				)
-			);
+			$userLanguage = $this->getCookie($this->cookieName['LANGUE']);
 			self::$userLanguage = $userLanguage;
 			// Cookie de template
-			$userTemplate = Exec_Crypt::md5Decrypt(
-				Exec_Cookie::getCookie(
-					Exec_Crypt::md5Encrypt(
-						$this->cookieName['TEMPLATE'],
-						$this->getSalt()
-					), $this->getSalt()
-				)
-			);
+			$userTemplate = $this->getCookie($this->cookieName['TEMPLATE']);
 			self::$userTemplate = $userTemplate;
 			// Cookie de l'IP BAN voir Core_BlackBan
-			$userIpBan = Exec_Crypt::md5Decrypt(
-				Exec_Cookie::getCookie(
-					Exec_Crypt::md5Encrypt(
-						$this->cookieName['BLACKBAN'],
-						$this->getSalt()
-					), $this->getSalt()
-				)
-			);
+			$userIpBan = $this->getCookie($this->cookieName['BLACKBAN']);
 			self::$userIpBan = $userIpBan;
 			
 		    if (!empty($userId) && !empty($sessionId) && Core_CacheBuffer::cached($sessionId . ".php")) {
@@ -530,6 +481,23 @@ class Core_Session {
 	 */
 	private function getSalt() {
 		return Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowserName;
+	}
+	
+	/**
+	 * Retourne le contenu décrypté du cookie
+	 * 
+	 * @param $cookieName String
+	 * @return String
+	 */
+	private function getCookie($cookieName) {
+		return Exec_Crypt::md5Decrypt(
+			Exec_Cookie::getCookie(
+				Exec_Crypt::md5Encrypt(
+					$cookieName,
+					$this->getSalt()
+				), $this->getSalt()
+			)
+		);
 	}
 	
 	/**
