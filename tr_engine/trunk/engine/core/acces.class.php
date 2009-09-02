@@ -44,7 +44,7 @@ class Core_Acces  {
 				} else {
 					$moduleInfo = false;
 				}
-				$identifiant = $moduleInfo['modId'];
+				$identifiant = $moduleInfo['mod_id'];
 			}
 			
 			// Si les réponses retourné sont correcte
@@ -115,7 +115,7 @@ class Core_Acces  {
 		if (substr($zoneIdentifiant, 0, 5) != "block" && empty($zoneRang)) {
 			// Recherche des infos du module
 			if (Core_Loader::isCallable("Libs_Module")) {
-				$moduleInfo = Libs_Module::getInstance()->getInfoModule($mod);
+				$moduleInfo = Libs_Module::getInstance()->getInfoModule($zoneIdentifiant);
 			} else {
 				$moduleInfo = false;
 			}

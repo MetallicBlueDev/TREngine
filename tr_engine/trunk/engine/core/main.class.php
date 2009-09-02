@@ -29,19 +29,17 @@ class Core_Main {
 	 */
 	public static $layout = "default";
 	
-	/**
-	 * Préparation TR ENGINE
-	 */
-	public function __construct() {
-		$this->starter();
-	}
+	private $statisticMarker = false;
 	
 	/**
+	 * Préparation TR ENGINE
 	 * Procédure de préparation du moteur
 	 * Une étape avant le démarrage réel
 	 */
-	private function starter() {
-		Exec_Marker::startTimer("core");
+	public function __construct($statisticMarker = false) {
+		$this->statisticMarker = $statisticMarker;
+		
+		if ($this->statisticMarker) Exec_Marker::startTimer("core");
 		
 		// Vérification de la version PHP
 		if (TR_ENGINE_PHP_VERSION < "5.0.0") {
@@ -73,7 +71,10 @@ class Core_Main {
 		// Destruction du chargeur de configs
 		unset($coreConfigLoader);
 		
-		Exec_Marker::stopTimer("core");
+		// Chargement du gestionnaire d'accès url
+		Core_Loader::classLoader("Core_Request");
+		
+		if ($this->statisticMarker) Exec_Marker::stopTimer("core");
 		
 		// TODO isoler l'installation
 		$installPath = TR_ENGINE_DIR . "/install/index.php";
@@ -153,10 +154,7 @@ class Core_Main {
 	 * Démarrage TR ENGINE
 	 */
 	public function start() {
-		Exec_Marker::startTimer("launcher");
-		
-		// Chargement du gestionnaire d'accès url
-		Core_Loader::classLoader("Core_Request");
+		if ($this->statisticMarker) Exec_Marker::startTimer("launcher");
 		
 		// Gestionnaire des cookie
 		Core_Loader::classLoader("Exec_Cookie");
@@ -198,9 +196,6 @@ class Core_Main {
 		if (!Core_BlackBan::isBlackUser()) {
 			// Chargement du gestionnaire d'autorisation
 			Core_Loader::classLoader("Core_Acces");
-			
-			// Chargement du système de validation par code
-			Core_Loader::classLoader("Libs_Captcha");
 			
 			// Chargement des blocks
 			Core_Loader::classLoader("Libs_Block");
@@ -252,7 +247,7 @@ class Core_Main {
 		// TODO a décommenter
 		//$this->compressionClose();
 		
-		Exec_Marker::stopTimer("launcher");
+		if ($this->statisticMarker) Exec_Marker::stopTimer("launcher");
 	}
 	
 	/**
@@ -357,14 +352,6 @@ class Core_Main {
 	 */
 	public static function isRegistrationAllowed() {
 		return (self::$coreConfig['registrationAllowed'] == 1) ? true : false;
-	}
-	
-	/**
-	 * Déconnexion de la base
-	 */
-	public function __destruct() {
-		unset($this->coreSql);
-		unset($coreConfig);
 	}
 }
 ?>

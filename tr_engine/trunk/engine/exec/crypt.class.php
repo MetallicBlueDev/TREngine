@@ -18,18 +18,71 @@ class Exec_Crypt {
 	 * @param $taille int
 	 * @return String
 	 */
-	public static function creatId($taille = 32) {
+	public static function createKey($taille = 32, $letter = true, $number = true, $caseSensitive = true) {
 		$randKey = "";
-		$lettres = "abcdefghijklmnopqrstuvwxyz";
-		$chiffres = "0123456789";
+		$string = "";
+		$letters = "abcdefghijklmnopqrstuvwxyz";
+		$numbers = "0123456789";
 		
+		if ($letter && $number) {
+			$string = $letters.$numbers;
+		} else if ($letter) {
+			$string = $letters;
+		} else {
+			$string = $numbers;
+		}
+		
+		// Initialisation
 		srand(time());
 		
 		for ($i = 0; $i < $taille; $i++) {
-			$lettres = (rand(0, 1) == 1) ? strtoupper($lettres) : strtolower($lettres);
-			$randKey .= substr($lettres.$chiffres, (rand() % (strlen($lettres.$chiffres))), 1);
+			$key = substr($string, (rand() % (strlen($string))), 1);
+			if ($caseSensitive) {
+				$key = (rand(0, 1) == 1) ? strtoupper($key) : strtolower($key);
+			}
+			$randKey .= $key;
 		}
 		return $randKey;
+	}
+	
+	/**
+	 * Creation d'un ID unique avec des chiffres, lettres et sensible à la case
+	 * 
+	 * @param $taille int
+	 * @return String
+	 */
+	public static function createId($taille = 32) {
+		return self::createKey($taille, true, true, true);
+	}
+	
+	/**
+	 * Creation d'un ID unique avec des chiffres
+	 * 
+	 * @param $taille int
+	 * @return String
+	 */
+	public static function createIdNumbers($taille = 32) {
+		return self::createKey($taille, false, true, false);
+	}
+	
+	/**
+	 * Creation d'un ID unique avec des lettres
+	 * 
+	 * @param $taille int
+	 * @return String
+	 */
+	public static function createIdLettres($taille = 32) {
+		return self::createKey($taille, true, false, false);
+	}
+	
+	/**
+	 * Creation d'un ID unique avec des lettres et sensible à la case
+	 * 
+	 * @param $taille int
+	 * @return String
+	 */
+	public static function createIdLettresCaseSensitive($taille = 32) {
+		return self::createKey($taille, true, false, true);
 	}
 	
 	/**
@@ -46,7 +99,7 @@ class Exec_Crypt {
 		$method = strtolower($method);
 		
 		// Préparation du salt
-		if (empty($salt)) $salt = self::creatId(16);
+		if (empty($salt)) $salt = self::createId(16);
 		
 		switch($method) {
 			case 'smd5':

@@ -29,14 +29,6 @@ class Libs_Breadcrumb {
 	public function __construct() {
 		// Ajoute la page principal
 		$this->addTrail(Core_Main::$coreConfig['defaultSiteName'], "index.php");
-			// Ajout le module courant
-		if (Core_Loader::isCallable("Libs_Module") && !empty(Libs_Module::$module)) {
-			$this->addTrail(Libs_Module::$module, "?mod=" . Libs_Module::$module);
-			// Ajout du view courant
-			if (!empty(Libs_Module::$view)) {
-				$this->addTrail(Libs_Module::$view, "?mod=" . Libs_Module::$module . "&view=" . Libs_Module::$view);
-			}
-		}
 	}
 	
 	/**
@@ -58,12 +50,14 @@ class Libs_Breadcrumb {
 	 * @param $link String
 	 */
 	public function addTrail($trail, $link = "") {
-		$constant = "TRAIL_" . strtoupper($trail);
-		if (defined($constant)) $trail = constant($constant);
-		if (!empty($link)) {
-			$trail = "<a href=\"" . $link . "\">" . $trail . "</a>";
+		if (!empty($trail)) {
+			$constant = "TRAIL_" . strtoupper($trail);
+			if (defined($constant)) $trail = constant($constant);
+			if (!empty($link)) {
+				$trail = "<a href=\"" . $link . "\">" . $trail . "</a>";
+			}
+			$this->breadcrumbTrail[] = $trail;
 		}
-		$this->breadcrumbTrail[] = $trail;
 	}
 	
 	/**

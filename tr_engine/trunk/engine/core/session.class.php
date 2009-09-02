@@ -351,7 +351,8 @@ class Core_Session {
 	public function isUser() {
 		if (!empty(self::$userId)
 			&& !empty(self::$userName)
-			&& !empty(self::$sessionId)) {
+			&& !empty(self::$sessionId)
+			&& self::$userRang > 0) {
 				return true;
 		} else {
 			return false;
@@ -378,7 +379,7 @@ class Core_Session {
 	 * @return boolean ture succès
 	 */
 	private function sessionOpen($auto = true) {
-		self::$sessionId = Exec_Crypt::creatId(32);
+		self::$sessionId = Exec_Crypt::createId(32);
 		
 		// Connexion automatique via cookie
 		$cookieTimeLimit = ($auto) ? $this->cookieTimeLimit : "";

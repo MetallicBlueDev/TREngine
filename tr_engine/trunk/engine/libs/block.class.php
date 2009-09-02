@@ -80,10 +80,10 @@ class Libs_Block {
 	 */
 	public function launch() {
 		if (Core_Main::isBlockScreen()) {
-			// Chargement de tout les blocks
+			// Chargement d'un seul block
 			$this->launchOneBlock();
 		} else {
-			// Chargement d'un seul block
+			// Chargement de tout les blocks
 			$this->launchAllBlock();
 		}
 	}
@@ -91,6 +91,7 @@ class Libs_Block {
 	/**
 	 * Charge les blocks
 	 */
+	// TODO mettre en cache la requete
 	private function launchAllBlock() {
 		Core_Sql::select(
 			Core_Table::$BLOCKS_TABLE,
@@ -120,6 +121,7 @@ class Libs_Block {
 	/**
 	 * Charge un block
 	 */
+	// TODO mettre en cache la requete
 	private function launchOneBlock() {
 		// Capture de la variable
 		$blockId = Core_Request::getInt("block");

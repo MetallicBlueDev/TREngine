@@ -35,6 +35,25 @@ $lang = array(
 "ERROR_MODULE_NO_FILE" => "Le fichier d'un module n'a pas été trouvé.",
 "ERROR_SESSION_COOKIE" => "Impossible d'ouvrir une session, vérifiez vos paramètre cookie.",
 
+// Date
+"JANUARY" => "Janvier",
+"FEBRUARY" => "Février",
+"MARCH" => "Mars",
+"APRIL" => "Avril",
+"MAY" => "Mai",
+"JUNE" => "Juin",
+"JULY" => "Juillet",
+"AUGUST" => "Août",
+"SEPTEMBER" => "Septembre",
+"OCTOBER" => "Octobre",
+"NOVEMBER" => "Novembre",
+"DECEMBER" => "Décembre",/*
+"DATE" => "Date",
+"DAYS" => "jours",
+"HOURS" => "heures",
+"MINUTES" => "minutes",
+"SECONDS" => "secondes",*/
+
 // Divers
 "WELCOME" => "Bienvenue",
 "MAIL" => "Votre adresse email",

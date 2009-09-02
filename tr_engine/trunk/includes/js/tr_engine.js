@@ -1,8 +1,6 @@
 $().ajaxSend(function(r,s){$("#loader").show();});
 $().ajaxStop(function(r,s){$("#loader").fadeOut('fast');});
-
 function displayMessage(message) {$('#block_message').empty().append(message).show();}
-
 function validLogon(formId, loginId, passwordId) {
 	$(formId).submit(function(){
 		var isLogin = false;
@@ -27,7 +25,6 @@ function validLogon(formId, loginId, passwordId) {
 		return false;
 	});
 }
-
 function validForgetLogin(formId, mailId) {
 	$(formId).submit(function(){
 		var mail = $(mailId);
@@ -40,7 +37,6 @@ function validForgetLogin(formId, mailId) {
 		return false;
 	});
 }
-
 function validForgetPass(formId, loginId) {
 	$(formId).submit(function(){
 		var login = $(loginId);
@@ -53,12 +49,10 @@ function validForgetPass(formId, loginId) {
 		return false;
 	});
 }
-
 function validLink(divId, link) {
 	$(divId).load(link);
 	return false;
 }
-
 function postForm(form) {
 	disableForm(form);
 	$.ajax({
@@ -69,7 +63,6 @@ function postForm(form) {
 	});
 	enableForm(form);
 }
-
 function disableForm(form) {
 	var submitButton = $(form).find("input[type='submit']");
 	$(submitButton).attr("value", $(submitButton).attr("value") + "...");

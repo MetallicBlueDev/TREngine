@@ -75,17 +75,13 @@ class Libs_Module {
 	 */
 	private $modules = array();
 	
-	private $defaultModule = "";
-	private $defaultPage = "";
-	private $defaultView = "";
-	
 	public function __construct() {
-		$this->defaultModule = Core_Main::$coreConfig['defaultMod'];
-		$this->defaultPage = "index";
-		$this->defaultView = "display";
+		$defaultModule = Core_Main::$coreConfig['defaultMod'];
+		$defaultPage = "index";
+		$defaultView = "display";
 		
 		if (!empty(self::$module) && empty(self::$page)) {
-			self::$page = $this->defaultPage;
+			self::$page = $defaultPage;
 		}
 		
 		// Erreur dans la configuration
@@ -94,12 +90,12 @@ class Libs_Module {
 				// Afficher une erreur 404
 				Core_Exception::addInfoError(ERROR_404);
 			}
-			self::$module = $this->defaultModule;
-			self::$page = $this->defaultPage;
-			self::$view = $this->defaultView;
+			self::$module = $defaultModule;
+			self::$page = $defaultPage;
+			self::$view = $defaultView;
 		}
 		if (empty(self::$view)) {
-			self::$view = $this->defaultView;
+			self::$view = $defaultView;
 		}
 	}
 	
@@ -126,24 +122,28 @@ class Libs_Module {
 	 * @param $module String le nom du module, par défaut le module courant
 	 * @return mixed tableau array d'informations ou boolean false si echec
 	 */
-	public function getInfoModule($module = "") {
+	public function &getInfoModule($moduleName = "") {
 		// Nom du module cible 
-		$modName = ((empty($module)) ? self::$module : $module);
+		$moduleName = ((empty($moduleName)) ? self::$module : $moduleName);
 		
 		// Retourne le buffer
-		if (isset($this->modules[$modName])) {
-			return $this->modules[$modName];
+		if (isset($this->modules[$moduleName])) {
+			if (is_array($this->modules[$moduleName])) {
+				return $this->modules[$moduleName];
+			} else {
+				return false;
+			}
 		}
 		
 		$moduleInfo = array();
 		
 		// Recherche dans le cache
 		Core_CacheBuffer::setSectionName("modules");
-		if (!Core_CacheBuffer::cached($modName . ".php")) {
+		if (!Core_CacheBuffer::cached($moduleName . ".php")) {
 			Core_Sql::select(
 				Core_Table::$MODULES_TABLE,
 				array("mod_id", "rang", "configs"),
-				array("name =  '" . $modName . "'")			
+				array("name =  '" . $moduleName . "'")			
 			);
 		
 			if (Core_Sql::affectedRows() > 0) {
@@ -158,29 +158,25 @@ class Libs_Module {
 				
 				// Mise en cache
 				$content = Core_CacheBuffer::linearizeCache($moduleInfo);
-				Core_CacheBuffer::writingCache($modName . ".php", $content);
+				Core_CacheBuffer::writingCache($moduleName . ".php", $content);
 			}
 		} else {
-			$moduleInfo = Core_CacheBuffer::getCache($modName . ".php");
+			$moduleInfo = Core_CacheBuffer::getCache($moduleName . ".php");
 		}
 		
 		// Vérification des informations
-		if (count($moduleInfo) >= 3) {			
+		if (count($moduleInfo) >= 3) {
 			// Injection des informations du module
-			if (self::$module == $modName) {
+			if (self::$module == $moduleName) {
 				self::$modId = $moduleInfo['mod_id'];
 				self::$rang = $moduleInfo['rang'];
 				self::$configs = $moduleInfo['configs'];
 			}
-			$this->modules[$modName] = array(
-				"modId" => $moduleInfo['mod_id'],
-				"rang" => $moduleInfo['rang'],
-				"configs" => $moduleInfo['configs']
-			);
-			return $this->modules[$modName];
+			$this->modules[$moduleName] =& $moduleInfo;
+			return $moduleInfo;
 		} else {
 			// Insert la variable vide car aucune donnée
-			$this->modules[$modName] = "";
+			$this->modules[$moduleName] = "";
 			return false;
 		}
 	}
@@ -191,9 +187,10 @@ class Libs_Module {
 	 * @param $mod String
 	 * @return int
 	 */
-	public function getRang($mod) {
+	public function getRang($moduleName) {
+		$moduleName = (empty($moduleName)) ? self::$module : $moduleName;
 		// Recherche des infos du module
-		$moduleInfo = $this->getInfoModule($mod);
+		$moduleInfo = $this->getInfoModule($moduleName);
 		return $moduleInfo['rang'];
 	}
 	
@@ -204,39 +201,79 @@ class Libs_Module {
 		// Vérification du niveau d'acces 
 		if (Core_Acces::autorize(self::$module)) {
 			if (empty($this->moduleCompiled) && $this->isModule()) {		
-				// Execution du module
-				$moduleClassName = "Module_" . ucfirst(self::$module) . "_" . ucfirst(self::$page);
-				$loaded = Core_Loader::classLoader($moduleClassName);
-				
-				if ($loaded) {
-					// Configuration du view demandé
-					$viewPage = "";					
-					if (Core_Loader::isCallable($moduleClassName, self::$view)) {
-						$viewPage = self::$view;
-					} else if (self::$view != $this->defaultView && Core_Loader::isCallable($moduleClassName, $this->defaultView)) {
-						$viewPage = $this->defaultView;
-					} else {
-						$viewPage = "";
-					}
-					// Affichage du module si possible
-					if (!empty($viewPage)) {
-						$this->updateCount();
-						$ModuleClass = new $moduleClassName();
-						$ModuleClass->configs = self::$configs;
-						
-						// Capture des données d'affichage
-						ob_start();
-						$ModuleClass->$viewPage();
-						$this->moduleCompiled = ob_get_contents();
-						ob_end_clean();
-					} else {
-						Core_Exception::addAlertError(ERROR_MODULE_CODE . " (" . self::$module . ")");
-					}
+				$this->get();
+				if (Core_Loader::isCallable("Libs_Breadcrumb")) {
+					Libs_Breadcrumb::getInstance()->addTrail(self::$module, "?mod=" . self::$module);
+					Libs_Breadcrumb::getInstance()->addTrail(self::$view, "?mod=" . self::$module . "&view=" . Libs_Module::$view);
 				}
 			}
 		} else {
 			Core_Exception::addAlertError(ERROR_ACCES_ZONE . " " . Core_Acces::getModuleAccesError(self::$module));
 		}
+	}
+	
+	/**
+	 * Retourne un view valide sinon une chaine vide
+	 * 
+	 * @param $pageInfo array
+	 * @param $setAlternative boolean
+	 * @return String
+	 */
+	private function viewPage($pageInfo, $setAlternative = true) {
+		$default = "display";
+		if (Core_Loader::isCallable($pageInfo[0], $pageInfo[1])) {
+			if ($pageInfo[1] == "install" && ($this->installed() || Core_Session::$userRang < 2)) {
+				return $this->viewPage(array($pageInfo[0], $default), false);
+			}
+			if ($pageInfo[1] == "uninstall" && (!$this->installed() || !Core_Acces::moderate(self::$module))) {
+				return $this->viewPage(array($pageInfo[0], $default), false);
+			}
+			return $pageInfo[1];
+		} else if ($setAlternative && $pageInfo[1] != $default) {
+			return $this->viewPage(array($pageInfo[0], $default), false);
+		}
+		return "";
+	}
+	
+	/**
+	 * Récupère le module
+	 * 
+	 * @param $viewPage String
+	 */
+	private function get() {
+		$moduleClassName = "Module_" . ucfirst(self::$module) . "_" . ucfirst(self::$page);
+		$loaded = Core_Loader::classLoader($moduleClassName);
+		
+		if ($loaded) {
+			self::$view = $this->viewPage(array($moduleClassName, ($this->installed()) ? self::$view : "install"), false);
+			// Affichage du module si possible
+			if (!empty(self::$view)) {
+				$this->updateCount();
+				$ModuleClass = new $moduleClassName();
+				$ModuleClass->configs = self::$configs;
+				
+				// Capture des données d'affichage
+				ob_start();
+				$ModuleClass->{self::$view}();
+				$this->moduleCompiled = ob_get_contents();
+				ob_end_clean();
+			} else {
+				Core_Exception::addAlertError(ERROR_MODULE_CODE . " (" . self::$module . ")");
+			}
+		}
+	}
+	
+	/**
+	 * Vérifie que le module est installé
+	 * 
+	 * @param $moduleName String
+	 * @return boolean
+	 */
+	private function installed($moduleName = "") {
+		$moduleName = (empty($moduleName)) ? self::$module : $moduleName;
+		// Recherche des infos du module
+		$moduleInfo = $this->getInfoModule($moduleName);
+		return (isset($moduleInfo['mod_id']));
 	}
 	
 	/**
@@ -268,7 +305,7 @@ class Libs_Module {
 	 * 
 	 * @return String
 	 */
-	public function getModule($rewriteBuffer = false) {
+	public function &getModule($rewriteBuffer = false) {
 		$buffer = $this->moduleCompiled;
 		// Tamporisation de sortie
 		if (Core_Main::doUrlRewriting() && ($rewriteBuffer || in_array("rewriteBuffer", self::$configs))) {
@@ -335,6 +372,27 @@ abstract class Module_Model {
 	 */
 	public function display() {
 		Core_Exception::addAlertError(ERROR_MODULE_IMPLEMENT . ((!empty($this->module)) ? " (" . $this->module . ")" : ""));
+	}
+	
+	/**
+	 * Installation du module courant
+	 */
+	public function install() {
+		Core_Sql::insert(
+			Core_Table::$MODULES_TABLE,
+			array("name", "rang", "configs"),
+			array(Libs_Module::$module, 0, "")
+		);
+	}
+	
+	/**
+	 * Désinstallation du module courant
+	 */
+	public function uninstall() {
+		Core_Sql::delete(
+			Core_Table::$MODULES_TABLE,
+			array("name = '" . Libs_Module::$module . "'")
+		);
 	}
 }
 
