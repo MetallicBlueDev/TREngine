@@ -27,10 +27,10 @@ class Module_Connect_Index extends Module_Model {
 			$password = Core_Request::getString("password", "", "POST");
 			$auto = (Core_Request::getWord("auto", "", "POST") == "on") ? true : false;
 			
-			if (!empty($login) || !empty($password)) {			
+			if (!empty($login) || !empty($password)) {
 				if (Core_Session::getInstance()->startConnection($login, $password, $auto)) {
-					$url = (!empty($this->configs['defaultUrlAfterLogon'])) ? $this->configs['defaultUrlAfterLogon'] : "index.php";
-					Core_Html::getInstance()->redirect($url);
+					$url = (!empty($this->configs['defaultUrlAfterLogon'])) ? $this->configs['defaultUrlAfterLogon'] : "home";
+					Core_Html::getInstance()->redirect("index.php?mod=" . $url);
 				} else {
 					$this->errorBox();
 				}
@@ -48,6 +48,7 @@ class Module_Connect_Index extends Module_Model {
 				$form->addInputHidden("mod", "connect");
 				$form->addInputHidden("view", "logon");
 				$form->addInputHidden("layout", "module");
+				Core_Loader::classLoader("Libs_Captcha");
 				$form->addInputSubmit("submit", "", "value=\"" . CONNECT . "\"");
 				$form->addHtmlInFieldset($moreLink);
 				echo $form->render();
@@ -73,7 +74,7 @@ class Module_Connect_Index extends Module_Model {
 	 */
 	public function logout() {
 		Core_Session::getInstance()->stopConnection();
-		Core_Html::getInstance()->redirect("", 3);
+		Core_Html::getInstance()->redirect();
 	}
 	
 	/**
