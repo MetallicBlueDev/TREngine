@@ -5,6 +5,7 @@ $lang = array(
 "TRAIL_LOGON" => "Connexion à un compte",
 "TRAIL_FORGETLOGIN" => "Identifiant oublié",
 "TRAIL_FORGETPASS" => "Mot de passe oublié",
+"TRAIL_ACCOUNT" => "Votre compte",
 
 // Générale
 

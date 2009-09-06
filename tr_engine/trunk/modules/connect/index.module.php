@@ -1,5 +1,15 @@
 <?php
+if (!defined("TR_ENGINE_INDEX")) {
+	require("../core/secure.class.php");
+	new Core_Secure();
+}
 
+/**
+ * Module d'interface entre le site et le client
+ * 
+ * @author Sebastien Villemain
+ *
+ */
 class Module_Connect_Index extends Module_Model {
 	
 	public function display() {
@@ -12,10 +22,42 @@ class Module_Connect_Index extends Module_Model {
 	
 	public function account() {
 		if (Core_Session::isUser()) {
+			Core_Loader::classLoader("Libs_Form");
+			$profile = "";
 			
+			if (Core_Html::getInstance()->isJavascriptEnabled()) {
+				$profile = $this->profile();
+			} else {
+				$idTab = Core_Request::getString("selectedTab");
+				switch($idTab) {
+					case 'idTab0':
+						$profile = $this->profile();
+						break;
+					default:
+						$profile = $this->profile();
+						break;
+				}
+			}
+			
+			// Ajout des formulaires dans les onglets
+			Core_Loader::classLoader("Libs_Tabs");
+			$accountTabs = new Libs_Tabs("account");
+			$accountTabs->addTab("Votre profil", $profile);
+			echo $accountTabs->render();
 		} else {
 			$this->display();
 		}
+	}
+	
+	private function profile() {
+		$profile = new Libs_Form("profile");
+		$profile->setTitle("Edition de votre profil");
+		$profile->setDescription("Editer votre profil comme vous le souhaitez");
+		$profile->addInputHidden("mod", "connect");
+		$profile->addInputHidden("view", "account");
+		$profile->addInputHidden("layout", "module");
+		$profile->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
+		return $profile->render();
 	}
 	
 	/**
@@ -48,7 +90,6 @@ class Module_Connect_Index extends Module_Model {
 				$form->addInputHidden("mod", "connect");
 				$form->addInputHidden("view", "logon");
 				$form->addInputHidden("layout", "module");
-				Core_Loader::classLoader("Libs_Captcha");
 				$form->addInputSubmit("submit", "", "value=\"" . CONNECT . "\"");
 				$form->addHtmlInFieldset($moreLink);
 				echo $form->render();
