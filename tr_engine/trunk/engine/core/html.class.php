@@ -90,7 +90,7 @@ class Core_Html {
 		// Composition du nom du cookie de test
 		$this->cookieTestName = Exec_Crypt::cryptData(
 			$prefix . "_" . $this->cookieTestName, 
-			$this->getSalt(), "md5"
+			$this->getSalt(), "md5+"
 		);
 		// Vérification du javascript du client
 		$this->checkJavascriptEnabled();
@@ -451,7 +451,7 @@ class Core_Html {
 		// Configuration de l'url
 		if (empty($url) || $url == "index.php?") $url = "index.php";
 		// Redirection
-		if ($this->isJavascriptEnabled()) {
+		if ($this->isJavascriptEnabled() && ($tps > 0 || $method != "windows") ) {
 			if (Core_Request::getString("REQUEST_METHOD", "", "SERVER") == "POST" && $method != "window") {
 				// Commande ajax pour la redirection
 				$this->addJavascriptCode("setTimeout(function(){ $('" . $method . "').load('" . $url . "'); }, $tps);");

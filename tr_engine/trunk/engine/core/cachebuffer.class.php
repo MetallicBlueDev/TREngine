@@ -132,8 +132,8 @@ class Core_CacheBuffer {
 	public static function removeCache($dir, $timeLimit = 0) {
 		// Configuration du path
 		if (!empty($dir)) $dir = "/" . $dir;
-		$dir = self::getSectionPath() . $dir;
-		self::$removeCache[self::encodePath(self::getSectionPath() . $dir)] = $timeLimit;
+		$dir = self::encodePath(self::getSectionPath() . $dir);
+		self::$removeCache[$dir] = $timeLimit;
 	}
 	
 	/**
@@ -357,7 +357,7 @@ class Core_CacheBuffer {
 				$lastKey .= "['" . $key . "']";
 				$content .= self::linearizeCache($value, $lastKey);
 			} else {
-				$content .= "$" . Core_CacheBuffer::getSectionName() . $lastKey . "['" . $key . "'] = \"" . $value . "\"; ";
+				$content .= "$" . self::getSectionName() . $lastKey . "['" . $key . "'] = \"" . $value . "\"; ";
 			}
 		}
 		return $content;
@@ -428,7 +428,7 @@ class Core_CacheBuffer {
 			// Suppression de cache demandée
 			if (self::cacheRequired(self::$removeCache)) {
 				foreach(self::$removeCache as $dir => $timeLimit) {
-					$execProtocol->removeCache($dir, $dir);
+					$execProtocol->removeCache($dir, $timeLimit);
 				}
 			}
 			

@@ -105,21 +105,25 @@ class Exec_Crypt {
 			case 'smd5':
 				// Si le crypt md5 est activé
 				if (defined("CRYPT_MD5") && CRYPT_MD5) {
-					return crypt($data,'$1$'. substr($salt, 0, 8).'$');
+					return crypt($data, "$1$" . substr($salt, 0, 8) . "$");
 				}
 				// Sinon utilisation du simple md5
 				return self::cryptData($data, $salt, "md5");
 			case 'md5':
 				return md5($data);
+			case 'jmd5': // Joomla md5 :)
+				return md5($data . $salt) . ":" . $salt;
+			case 'md5+': // TR ENGINE md5 !
+				return "TR" . md5($data . substr($salt, 0, 8));
 			case 'crypt':
 				return crypt($data, substr($salt, 0, 2));
 			case 'sha1':
 				return sha1($data);
 			case 'ssha':
 				$salt = substr($salt, 0, 4);
-				return '{SSHA}' . base64_encode(pack("H*", sha1($data . $salt)) . $salt);
+				return "{SSHA}" . base64_encode(pack("H*", sha1($data . $salt)) . $salt);
 			case 'my411':
-				return '*'.sha1(pack("H*", sha1($data)));
+				return "*" . sha1(pack("H*", sha1($data)));
 			default:
 				if (Core_Loader::isCallable("Core_Exception")) {
 					Core_Exception::setException("Unsupported crypt method. Method : " . $method);

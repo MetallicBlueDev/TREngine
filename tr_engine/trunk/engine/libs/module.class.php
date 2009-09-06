@@ -152,7 +152,7 @@ class Libs_Module {
 				$configs = array();
 				foreach($moduleInfo['configs'] as $value) {
 					$value = explode("=", $value);
-					$configs[$value[0]] = $value[1];
+					$configs[$value[0]] = urldecode($value[1]); // Chaine encodé en urlencode
 				}
 				$moduleInfo['configs'] = $configs;
 				
@@ -199,7 +199,7 @@ class Libs_Module {
 	 */
 	public function launch() {
 		// Vérification du niveau d'acces 
-		if (Core_Acces::autorize(self::$module)) {
+		if (($this->installed() && Core_Acces::autorize(self::$module)) || (!$this->installed() && Core_Session::$userRang > 1)) {
 			if (empty($this->moduleCompiled) && $this->isModule()) {		
 				$this->get();
 				if (Core_Loader::isCallable("Libs_Breadcrumb")) {
@@ -226,6 +226,9 @@ class Libs_Module {
 				return $this->viewPage(array($pageInfo[0], $default), false);
 			}
 			if ($pageInfo[1] == "uninstall" && (!$this->installed() || !Core_Acces::moderate(self::$module))) {
+				return $this->viewPage(array($pageInfo[0], $default), false);
+			}
+			if ($pageInfo[1] == "setting" && (!$this->installed() || !Core_Acces::moderate(self::$module))) {
 				return $this->viewPage(array($pageInfo[0], $default), false);
 			}
 			return $pageInfo[1];
@@ -393,6 +396,15 @@ abstract class Module_Model {
 			Core_Table::$MODULES_TABLE,
 			array("name = '" . Libs_Module::$module . "'")
 		);
+		Core_CacheBuffer::setSectionName("modules");
+		Core_CacheBuffer::removeCache(Libs_Module::$module . ".php");
+	}
+	
+	/**
+	 * Configuration du module courant
+	 */
+	public function setting() {
+		// TODO mettre un forumlaire basique pour changer quelque configuration
 	}
 }
 

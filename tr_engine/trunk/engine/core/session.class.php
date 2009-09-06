@@ -184,9 +184,9 @@ class Core_Session {
 	 * @return boolean true une session peut être recupere
 	 */
 	private function sessionFound() {
-		$cookieSession = Exec_Cookie::getCookie($this->cookieName['SESSION']);
-		$cookieUser = Exec_Cookie::getCookie($this->cookieName['USER']);
-		if (!empty($cookieSession) && !empty($cookieUser)) {
+		$cookieUser = $this->getCookie($this->cookieName['USER']);
+		$cookieSession = $this->getCookie($this->cookieName['SESSION']);
+		if (!empty($cookieUser) && !empty($cookieSession)) {
 			return true;
 		}
 		return false;
@@ -216,7 +216,7 @@ class Core_Session {
 				$sessions = Core_CacheBuffer::getCache($sessionId . ".php");
 				
 				// Verification + mise à jour toute les 5 minutes
-				if ($sessions['user_id'] == $userId) {
+				if ($sessions['user_id'] == $userId && $sessions['sessionId'] == $sessionId) {
 					// Mise à jour toute les 5 min
 					if ((Core_CacheBuffer::cacheMTime($sessions['sessionId'] . ".php") + (5*60)) < $this->timer) {
 						$updVerif = $this->updateLastConnect($sessions['user_id']);
@@ -236,7 +236,7 @@ class Core_Session {
 					// Injection des informations du client					
 					$this->setUser($sessions);
 				}
-		    } else if (!empty($userId)) {
+		    }/* else if (!empty($userId)) {
 				// Si plus de fichier cache, on tente de retrouver le client
 				$user = $this->getUserInfo(array("user_id = '" . $userId . "'"));
 				if (count($user) > 1) {					
@@ -252,7 +252,7 @@ class Core_Session {
 					// userId invalide, on détruit
 					$this->sessionClose();
 				}
-			}
+			}*/
 		}
 	}
 	
@@ -307,7 +307,6 @@ class Core_Session {
 			array("user_id", "name", "mail", "rang", "date", "avatar", "signature", "template", "langue"),
 			$where
 		);
-		
 		if (Core_Sql::affectedRows() == 1) {
 			return Core_Sql::fetchArray();
 		}
@@ -319,12 +318,7 @@ class Core_Session {
 	 */
 	public function deleteUserIpBan() {
 		self::$userIpBan = "";
-		Exec_Cookie::destroyCookie(
-			Exec_Crypt::md5Encrypt(
-				$this->cookieName['BLACKBAN'],
-				$this->getSalt()
-			)
-		);
+		Exec_Cookie::destroyCookie($this->getCookieName($this->cookieName['BLACKBAN']));
 	}
 	
 	/**
@@ -383,26 +377,27 @@ class Core_Session {
 		
 		// Connexion automatique via cookie
 		$cookieTimeLimit = ($auto) ? $this->cookieTimeLimit : "";
-		
+		// Creation des cookies
 		$cookieUser = Exec_Cookie::createCookie(
+			$this->getCookieName($this->cookieName['USER']), 
 			Exec_Crypt::md5Encrypt(
-				$this->cookieName['USER'], 
+				self::$userId, 
 				$this->getSalt()
-			), Exec_Crypt::md5Encrypt(
-				$this->user['userId'], 
-				$this->getSalt()
-		), $cookieTimeLimit);
+			), 
+			$cookieTimeLimit
+		);
 		$cookieSession = Exec_Cookie::createCookie(
+			$this->getCookieName($this->cookieName['SESSION']), 
 			Exec_Crypt::md5Encrypt(
-				$this->cookieName['SESSION'],
+				self::$sessionId, 
 				$this->getSalt()
-			), Exec_Crypt::md5Encrypt(
-				$this->user['sessionId'],
-				$this->getSalt()
-		), $cookieTimeLimit);
+			), 
+			$cookieTimeLimit
+		);
 		
 		if ($cookieUser && $cookieSession) {
 			// Ecriture du cache
+			Core_CacheBuffer::setSectionName("sessions");
 			Core_CacheBuffer::writingCache(self::$sessionId . ".php", $this->getUser());
 			return true;
 		} else {
@@ -416,6 +411,7 @@ class Core_Session {
 	 */
 	private function sessionClose() {
 		// Destruction du fichier de session
+		Core_CacheBuffer::setSectionName("sessions");
 		if (Core_CacheBuffer::cached(self::$sessionId . ".php")) {
 			Core_CacheBuffer::removeCache(self::$sessionId . ".php");
 		}
@@ -427,13 +423,7 @@ class Core_Session {
 		foreach ($this->cookieName as $key => $value) {
 			// On évite de supprimer le cookie de bannissement
 			if ($key == "BLACKBAN") continue;
-			
-			Exec_Cookie::destroyCookie(
-				Exec_Crypt::md5Encrypt(
-					$this->cookieName[$key],
-					$this->getSalt()
-				)
-			);
+			Exec_Cookie::destroyCookie($this->getCookieName($this->cookieName[$key]));
 		}
 	}
 	
@@ -450,10 +440,10 @@ class Core_Session {
 		$this->stopConnection();
 		
 		if ($this->validLogin($userName) && $this->validPassword($userPass)) {
-			$userPass = Exec_Crypt::cryptData($userPass, "", "my411");
+			$userPass = Exec_Crypt::cryptData($userPass, $userPass, "md5+");
 			$user = $this->getUserInfo(array("name = '" . $userName . "'", "&& pass = '" . $userPass . "'"));
 			
-			if (count($user) > 1) {	
+			if (count($user) > 1) {
 				// Injection des informations du client
 				$this->setUser($user);
 				
@@ -491,14 +481,19 @@ class Core_Session {
 	 * @return String
 	 */
 	private function getCookie($cookieName) {
-		return Exec_Crypt::md5Decrypt(
-			Exec_Cookie::getCookie(
-				Exec_Crypt::md5Encrypt(
-					$cookieName,
-					$this->getSalt()
-				), $this->getSalt()
-			)
-		);
+		$cookieName = $this->getCookieName($cookieName);
+		$cookieContent = Exec_Cookie::getCookie($cookieName);
+		return Exec_Crypt::md5Decrypt($cookieContent, $this->getSalt());
+	}
+	
+	/**
+	 * Retourne le nom crypté du cookie
+	 * 
+	 * @param $cookieName String
+	 * @return String
+	 */
+	private function getCookieName($cookieName) {
+		return Exec_Crypt::cryptData($cookieName, $this->getSalt(), "md5+");
 	}
 	
 	/**

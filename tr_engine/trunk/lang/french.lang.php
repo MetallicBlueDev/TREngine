@@ -54,6 +54,16 @@ $lang = array(
 "MINUTES" => "minutes",
 "SECONDS" => "secondes",*/
 
+// Captcha
+"CAPTCHA_MAKE_LETTER" => "Écrivez la lettre de l'alphabet correspondant au chiffre",
+"CAPTCHA_MAKE_LETTERS" => "Écrivez les premières lettres de l'alphabet jusqu'a",
+"CAPTCHA_MAKE_NUMBER_TO_MONTH" => "Écrivez le mois correspondant chiffre",
+"CAPTCHA_MAKE_MONTH_TO_NUMBER" => "Écrivez le chiffre correspondant au mois de",
+"CAPTCHA_MAKE_NUMBERS" => "En partant du chiffre 0, écrivez jusqu'au chiffre",
+"CAPTCHA_MAKE_PICTURE_CODE" => "Recopiez le code de l'image",
+"CAPTCHA_MAKE_SIMPLE_CALCULATION" => "Calculez l'opération suivante",
+"CAPTCHA_INVALID" => "Le code de sécurité que vous avez entré n'est pas valide",
+
 // Divers
 "WELCOME" => "Bienvenue",
 "MAIL" => "Votre adresse email",

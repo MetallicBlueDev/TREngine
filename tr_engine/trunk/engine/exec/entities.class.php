@@ -103,7 +103,7 @@ class Exec_Entities {
 	 * @return String
 	 */
 	public static function addSlashes($text) {
-		return addSlashes($text);
+		return addslashes($text);
 	}
 	
 	/**

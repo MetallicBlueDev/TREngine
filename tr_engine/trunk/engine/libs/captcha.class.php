@@ -95,7 +95,7 @@ class Libs_Captcha {
 		if (!self::$iniRand) {
 			$this->initRand();
 		}
-		return mt_rand(0, 9);
+		return mt_rand($mini, $max);
 	}
 	
 	/**
@@ -146,7 +146,7 @@ class Libs_Captcha {
 		// Nombre aléatoire
 		$number = $this->randInt(1, 6);
 		$this->question = CAPTCHA_MAKE_LETTER . " " . $number;
-		$this->response = substr("abcdef", $number, 0);
+		$this->response = substr("abcdef", $number - 1, 1);
 	}
 	
 	/**
@@ -156,7 +156,7 @@ class Libs_Captcha {
 		// Nombre aléatoire
 		$number = $this->randInt(1, 6);
 		$this->question = CAPTCHA_MAKE_NUMBERS . " " . $number;
-		$this->response = substr("012345", 0, $number);
+		$this->response = substr("012345", 0, $number + 1);
 	}
 	
 	/**
@@ -225,14 +225,14 @@ class Libs_Captcha {
 			}
 			
 			if ($this->type == "form") {
-				$this->object->addInputText("cles", $this->question);
+				$this->object->addInputText("cles", $this->question, "input captcha");
 				$this->object->addInputHidden($this->inputRobotName, "");
 			} else {
 				$rslt = $this->question . " <input name=\"cles\" type=\"text\" value=\"\" />"
 				. "<input name=\"" . $this->inputRobotName . "\" type=\"hidden\" value=\"\" />";
 			}
 		}
-		$_SESSION['captchaObject'] = $this;
+		Exec_Cookie::createCookie("captcha", addslashes(serialize($this)));
 		return $rslt;
 	}
 	
@@ -248,6 +248,7 @@ class Libs_Captcha {
 		if (empty($inputRobot) && $code == $this->response) {
 			return true;
 		}
+		Core_Exception::addNoteError(CAPTCHA_INVALID);
 		return false;
 	}
 	
@@ -259,12 +260,12 @@ class Libs_Captcha {
 	 */
 	public static function check($object = "") {
 		if (!is_object($object)) {
-			$object = $_SESSION['captchaObject'];
+			$object = unserialize(stripslashes(Exec_Cookie::getCookie("captcha")));
 		}
-		
 		if (is_object($object)) {
 			return $object->verif();
 		}
+		Core_Exception::addNoteError(CAPTCHA_INVALID);
 		return false;
 	}
 }

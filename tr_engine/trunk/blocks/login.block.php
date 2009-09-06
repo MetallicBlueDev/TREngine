@@ -48,9 +48,9 @@ class Block_Login extends Block_Model {
 		$content = "";
 		if (Core_Session::isUser()) {
 			if ($this->displayText) {
-				$content .= "<b>" . WELCOME . " <b>" . Core_Session::$userName . "</b> !<br />";
+				$content .= WELCOME . " <b>" . Core_Session::$userName . "</b> !<br />";
 			}
-			if ($this->displayAvatar) {
+			if ($this->displayAvatar && !empty(Core_Session::$userAvatar)) {
 				Core_Loader::classLoader("Exec_Image");
 				$content .= "<a href=\"" . Core_Html::getLink("mod=connect&view=account") . "\">" . Exec_Image::resize(Core_Session::$userAvatar, 80) . "</a><br />";
 			}

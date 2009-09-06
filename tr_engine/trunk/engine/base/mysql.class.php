@@ -158,8 +158,8 @@ class Base_Mysql extends Base_Model {
 		if (!is_array($values)) $values = array($values);
 		
 		$sql = "INSERT INTO " . $table . " ("
-		. implode(", ", $this->converKey($keys)) . ") VALUES ("
-		. implode(", ", $this->converValue($values)) . ")";
+		. implode(", ", $this->converKey($keys)) . ") VALUES ('"
+		. implode("', '", $this->converValue($values)) . "')";
 		$this->sql = $sql;
 	}
 	
@@ -251,6 +251,8 @@ class Base_Mysql extends Base_Model {
 			foreach($key as $realKey => $keyValue) {
 				$key[$realKey] = $this->converKey($keyValue);
 			}
+		} else {
+			$key = "`" . $key . "`";
 		}
 		
 		// Convertie les multiples espaces (tabulation, espace en trop) en espace simple
@@ -267,7 +269,7 @@ class Base_Mysql extends Base_Model {
 	private function converEscapeString($str) {
 		if (function_exists("mysql_real_escape_string") && is_resource($this->conn_id)) {
 			return mysql_real_escape_string($str, $this->conn_id);
-		} elseif (function_exists("mysql_escape_string")) {
+		} elseif (function_exists("mysql_escape_string")) {// WARNING: DEPRECATED
 			return mysql_escape_string($str);
 		} else {
 			return addslashes($str);

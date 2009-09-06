@@ -21,6 +21,8 @@ class Exec_Cookie {
 	 * @return boolean true succès
 	 */
 	public static function createCookie($cookieName, $cookieContent, $cookieTimeLimit = "") {
+		$cookieName = urlencode($cookieName);
+		$cookieContent = urlencode($cookieContent);
 		if (empty($cookieTimeLimit)) $rslt = setcookie($cookieName, $cookieContent);
 		else if ($cookieTimeLimit == "-1" && isset($_COOKIE[$cookieName])) $rslt = setcookie($cookieName, "");
 		else $rslt = setcookie($cookieName, $cookieContent, $cookieTimeLimit);
@@ -43,9 +45,10 @@ class Exec_Cookie {
 	 * @param $cookieName String
 	 * @return String
 	 */
-	public static function getCookie($cookieName) {
+	public static function &getCookie($cookieName) {
+		$cookieName = urlencode($cookieName);
 		$cookie = Core_Request::getString($cookieName, "", "COOKIE");
-		return $cookie;
+		return urldecode($cookie);
 	}
 }
 ?>
