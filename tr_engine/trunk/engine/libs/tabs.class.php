@@ -13,6 +13,13 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Libs_Tabs {
 	
 	/**
+	 * Vérifie si c'est la 1ère instance
+	 * 
+	 * @var boolean
+	 */
+	private static $firstInstance = true;
+	
+	/**
 	 * Nom du groupe d'onglets
 	 * 
 	 * @var String
@@ -52,7 +59,12 @@ class Libs_Tabs {
 	 * @param $name String Nom du groupe d'onglet
 	 */
 	public function __construct($name) {
-		Core_Html::getInstance()->addJavascriptFile("jquery.idTabs.js");
+		if (self::$firstInstance) {
+			Core_Html::getInstance()->addJavascriptFile("jquery.idTabs.js");
+			Core_Html::getInstance()->addCssFile("jquery.idTabs.css");
+			Core_Html::getInstance()->addJavascript("$().idTabs();");
+			self::$firstInstance = false;
+		}
 		$this->selected = Core_Request::getString("selectedTab");
 		$this->name = $name;
 	}
@@ -63,11 +75,11 @@ class Libs_Tabs {
 	 * @param $title String titre de l'onglet
 	 * @param $htmlContent String contenu de l'onglet
 	 */
-	public function addTab($title, $htmlContent) {
+	public function addTab($title, $htmlContent) {$this->selected = "idTab0";
 		$idTab = "idTab" . $this->tabCounter++;
-		$class = ($this->selected == $idTab) ? "selected" : "";
-		$this->tabs .= "<li><a href=\"#" . $idTab . "\"" . $class . ">" . Exec_Entities::textDisplay($title) . "</a></li>";
-		$this->tabsContent .= "<div id=\"" . $idTab . \">" . $htmlContent . "</div>";
+		$this->tabs .= "<li><a href=\"#" . $idTab . "\""
+		. (($this->selected == $idTab) ? "class=\"selected\"" : "") . ">" . Exec_Entities::textDisplay($title) . "</a></li>";
+		$this->tabsContent .= "<div id=\"" . $idTab . "\">" . $htmlContent . "</div>";
 	}
 	
 	/**

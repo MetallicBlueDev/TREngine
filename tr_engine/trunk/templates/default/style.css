@@ -234,3 +234,16 @@ form {
 .cleaner {
 	clear: both;
 }
+
+/* Menu et contenu des onglets (idTabs) */
+.tabs ul a {
+	background: #848e97;
+}
+.tabs ul a:hover { background: #6f8592; }
+.tabs ul a.selected {
+	background: #848e97;
+	border-bottom: 1px solid #848e97;
+}
+.tabs div {
+	background: #848e97;
+}

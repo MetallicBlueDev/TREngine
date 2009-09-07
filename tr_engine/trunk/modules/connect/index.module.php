@@ -23,18 +23,22 @@ class Module_Connect_Index extends Module_Model {
 	public function account() {
 		if (Core_Session::isUser()) {
 			Core_Loader::classLoader("Libs_Form");
-			$profile = "";
+			$profile = $account = "";
 			
 			if (Core_Html::getInstance()->isJavascriptEnabled()) {
-				$profile = $this->profile();
+				$profile = $this->tabProfile();
+				$account = $this->tabAccount();
 			} else {
 				$idTab = Core_Request::getString("selectedTab");
 				switch($idTab) {
 					case 'idTab0':
-						$profile = $this->profile();
+						$profile = $this->tabProfile();
+						break;
+					case 'idTab1':
+						$account = $this->tabAccount();
 						break;
 					default:
-						$profile = $this->profile();
+						$profile = $this->tabProfile();
 						break;
 				}
 			}
@@ -43,13 +47,14 @@ class Module_Connect_Index extends Module_Model {
 			Core_Loader::classLoader("Libs_Tabs");
 			$accountTabs = new Libs_Tabs("account");
 			$accountTabs->addTab("Votre profil", $profile);
+			$accountTabs->addTab("Votre compte", $account);
 			echo $accountTabs->render();
 		} else {
 			$this->display();
 		}
 	}
 	
-	private function profile() {
+	private function tabProfile() {
 		$profile = new Libs_Form("profile");
 		$profile->setTitle("Edition de votre profil");
 		$profile->setDescription("Editer votre profil comme vous le souhaitez");
@@ -58,6 +63,17 @@ class Module_Connect_Index extends Module_Model {
 		$profile->addInputHidden("layout", "module");
 		$profile->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
 		return $profile->render();
+	}
+	
+	private function tabAccount() {
+		$account = new Libs_Form("profile");
+		$account->setTitle("Edition de votre profil");
+		$account->setDescription("Editer votre profil comme vous le souhaitez");
+		$account->addInputHidden("mod", "connect");
+		$account->addInputHidden("view", "account");
+		$account->addInputHidden("layout", "module");
+		$account->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
+		return $account->render();
 	}
 	
 	/**
