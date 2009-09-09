@@ -62,10 +62,12 @@ class Libs_Tabs {
 		if (self::$firstInstance) {
 			Core_Html::getInstance()->addJavascriptFile("jquery.idTabs.js");
 			Core_Html::getInstance()->addCssFile("jquery.idTabs.css");
-			Core_Html::getInstance()->addJavascript("$().idTabs();");
 			self::$firstInstance = false;
 		}
 		$this->selected = Core_Request::getString("selectedTab");
+		if (empty($this->selected) && !Core_Html::getInstance()->isJavascriptEnabled()) {
+			$this->selected = "idTab0";
+		}
 		$this->name = $name;
 	}
 	
@@ -75,11 +77,27 @@ class Libs_Tabs {
 	 * @param $title String titre de l'onglet
 	 * @param $htmlContent String contenu de l'onglet
 	 */
-	public function addTab($title, $htmlContent) {$this->selected = "idTab0";
+	public function addTab($title, $htmlContent) {
+		// Id de l'onget courant
 		$idTab = "idTab" . $this->tabCounter++;
-		$this->tabs .= "<li><a href=\"#" . $idTab . "\""
+		// Création de l'onget
+		$this->tabs .= "<li><a href=\"";
+		if (Core_Html::getInstance()->isJavascriptEnabled()) {
+			// Une simple balise pour le javascript
+			$this->tabs .= "#" . $idTab;
+		} else {
+			// Un lien complet sans le javascript
+			$queryString = Core_Request::getString("QUERY_STRING", "", "SERVER");
+			$queryString = str_replace("selectedTab=" . $this->selected, "", $queryString);
+			$queryString = (substr($queryString, -1) != "&") ? $queryString . "&" : $queryString;
+			$this->tabs .= "index.php?" . $queryString . "selectedTab=" . $idTab;
+		}
+		$this->tabs .= "\""
 		. (($this->selected == $idTab) ? "class=\"selected\"" : "") . ">" . Exec_Entities::textDisplay($title) . "</a></li>";
-		$this->tabsContent .= "<div id=\"" . $idTab . "\">" . $htmlContent . "</div>";
+		// Si le javascript est actif ou que nous sommes dans l'onget courant
+		if (Core_Html::getInstance()->isJavascriptEnabled() || $this->selected == $idTab) {
+			$this->tabsContent .= "<div id=\"" . $idTab . "\">" . $htmlContent . "</div>";
+		}
 	}
 	
 	/**
@@ -88,7 +106,7 @@ class Libs_Tabs {
 	 * @param $class String
 	 * @return String
 	 */
-	public function render($class = "") {
+	public function &render($class = "") {
 		$content = "<div id=\"" . $this->name . "\""
 		. " class=\"" . ((!empty($class)) ? $class : "tabs") . "\">"
 		. "<ul class=\"idTabs\">"

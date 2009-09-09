@@ -34,13 +34,6 @@ class Core_Session {
 	private $cacheTimeLimit = 0;
 	
 	/**
-	 * Limite de temps pour les cookies
-	 * 
-	 * @var int
-	 */ 
-	private $cookieTimeLimit = 0;
-	
-	/**
 	 * Id du client
 	 * 
 	 * @var String
@@ -149,8 +142,6 @@ class Core_Session {
 		
 		// Durée de validité du cache en jours
 		$this->cacheTimeLimit = Core_Main::$coreConfig['cacheTimeLimit'] * 86400;
-		// Durée de validité des cookies
-		$this->cookieTimeLimit = $this->timer + (Core_Main::$coreConfig['cookieTimeLimit'] * 86400);
 		
 		// Complète le nom des cookies
 		foreach ($this->cookieName as $key => $name) {
@@ -211,48 +202,34 @@ class Core_Session {
 			$userIpBan = $this->getCookie($this->cookieName['BLACKBAN']);
 			self::$userIpBan = $userIpBan;
 			
-		    if (!empty($userId) && !empty($sessionId) && Core_CacheBuffer::cached($sessionId . ".php")) {
-				// Si fichier cache trouvé, on l'utilise
-				$sessions = Core_CacheBuffer::getCache($sessionId . ".php");
-				
-				// Verification + mise à jour toute les 5 minutes
-				if ($sessions['user_id'] == $userId && $sessions['sessionId'] == $sessionId) {
-					// Mise à jour toute les 5 min
-					if ((Core_CacheBuffer::cacheMTime($sessions['sessionId'] . ".php") + (5*60)) < $this->timer) {
-						$updVerif = $this->updateLastConnect($sessions['user_id']);
-						// Mise a jour du dernier accès
-						Core_CacheBuffer::touchCache($sessions['sessionId'] . ".php");
-					} else {
-						$updVerif = 1;
-					}
-				} else {
-					$updVerif = false;
-				}
-				
-				if ($updVerif == false) {
-					// La mise à jour a échoué, on détruit la session
-					$this->sessionClose();
-				} else {
-					// Injection des informations du client					
-					$this->setUser($sessions);
-				}
-		    }/* else if (!empty($userId)) {
-				// Si plus de fichier cache, on tente de retrouver le client
-				$user = $this->getUserInfo(array("user_id = '" . $userId . "'"));
-				if (count($user) > 1) {					
-					// Injection des informations du client
-					$this->setUser($user);
+		    if (!empty($userId) && !empty($sessionId)) {
+		    	if (Core_CacheBuffer::cached($sessionId . ".php")) {
+					// Si fichier cache trouvé, on l'utilise
+					$sessions = Core_CacheBuffer::getCache($sessionId . ".php");
 					
-					// Mise à jour de derniere connexion
-					$this->updateLastConnect();
-										
-					// Creation d'une nouvelle session
-					$this->sessionOpen();
-				} else {
-					// userId invalide, on détruit
-					$this->sessionClose();
-				}
-			}*/
+					// Verification + mise à jour toute les 5 minutes
+					$updVerif = false;
+					if ($sessions['user_id'] == $userId && $sessions['sessionId'] == $sessionId) {
+						// Mise à jour toute les 5 min
+						if ((Core_CacheBuffer::cacheMTime($sessions['sessionId'] . ".php") + 5*60) < $this->timer) {
+							// Mise a jour du dernier accès
+							$updVerif = $this->updateLastConnect($sessions['user_id']);
+							Core_CacheBuffer::touchCache($sessions['sessionId'] . ".php");
+						} else {
+							$updVerif = true;
+						}
+					}
+					if ($updVerif === true) {
+						// Injection des informations du client					
+						$this->setUser($sessions);
+					} else {
+						// La mise à jour a échoué, on détruit la session
+						$this->sessionClose();
+					}
+		    	} else {
+		    		$this->sessionClose();
+		    	}
+		    }
 		}
 	}
 	
@@ -324,17 +301,18 @@ class Core_Session {
 	/**
 	 * Mise à jour de la dernière connexion
 	 * 
-	 * @return ressource ID ou false 
+	 * @param $userId String
+	 * @return boolean true succes de la mise à jour
 	 */
 	private function updateLastConnect($userId = "") {
 		// Récupere l'id du client
 		if (empty($userId)) $userId = self::$userId;
-		
-		// Envoie la requête Sql
-		return Core_Sql::update(Core_Table::$USERS_TABLE, 
+		// Envoie la requête Sql de mise à jour
+		Core_Sql::update(Core_Table::$USERS_TABLE, 
 			array("last_connect" => "NOW()"), 
-			array("user_id" => $userId)
+			array("user_id = '" . $userId . "'")
 		);
+		return ((Core_Sql::affectedRows() == 1) ? true : false);
 	}
 	
 	/**
@@ -376,7 +354,7 @@ class Core_Session {
 		self::$sessionId = Exec_Crypt::createId(32);
 		
 		// Connexion automatique via cookie
-		$cookieTimeLimit = ($auto) ? $this->cookieTimeLimit : "";
+		$cookieTimeLimit = ($auto) ? $this->timer + $this->cacheTimeLimit : "";
 		// Creation des cookies
 		$cookieUser = Exec_Cookie::createCookie(
 			$this->getCookieName($this->cookieName['USER']), 

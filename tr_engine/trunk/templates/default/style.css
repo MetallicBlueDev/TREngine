@@ -27,14 +27,14 @@ a:hover {
 	color: #05587b;
 }
 
-.input {
+.input, .textarea {
 	background-color: #d0dfe6;
 	border-top: 2px solid #7194a4;
 	border-bottom: 2px solid #7194a4;
 	color: #05587b;
 }
 
-.input:hover {
+.input:hover, .textarea:hover {
 	background-color: #fff;
 }
 

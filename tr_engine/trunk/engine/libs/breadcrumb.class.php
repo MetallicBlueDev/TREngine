@@ -66,7 +66,7 @@ class Libs_Breadcrumb {
 	 * @param $separator String séparateur de tracé
 	 * @return String
 	 */
-	public function getBreadcrumbTrail($separator = " >> ") {
+	public function &getBreadcrumbTrail($separator = " >> ") {
 		$rslt = "";
 		foreach($this->breadcrumbTrail as $trail) {
 			if (!empty($rslt)) $rslt .= $separator;

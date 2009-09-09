@@ -18,7 +18,9 @@ class Block_Menujd extends Block_Menu {
 	public function display() {
 		$this->configure();
 		$menus = $this->getMenu();
-		$menus->addAttributs("class", "jd_menu" . (($this->side == 1 || $this->side == 2) ? " jd_menu_vertical" : ""));
+		if (Core_Html::getInstance()->isJavascriptEnabled()) {
+			$menus->addAttributs("class", "jd_menu" . (($this->side == 1 || $this->side == 2) ? " jd_menu_vertical" : ""));
+		}
 		
 		$libsMakeStyle = new Libs_MakeStyle();
 		$libsMakeStyle->assign("blockTitle", $this->title);

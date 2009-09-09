@@ -153,6 +153,8 @@ class Core_Sql {
 		$sql = (!empty($sql)) ? $sql : self::getSql();
 		self::$base->query($sql);
 		
+		if (Core_Main::statisticMarker()) Core_Exception::setSqlRequest($sql);
+		
 		// Création d'une exception si une réponse est négative (false)
 		if (self::getQueries() === false) throw new Exception("sqlReq");
 		

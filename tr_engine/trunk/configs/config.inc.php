@@ -28,9 +28,6 @@ $config["TR_ENGINE_STATUT"] = "open";
 // -------------------------------------------------------------------------//
 // Données des sessions
 //
-// Durée en jours d'une session cookie
-$config['cookieTimeLimit'] = 7;
-//
 // Durée en jours de validité des fichiers de sessions mise en cache
 $config['cacheTimeLimit'] = 7;
 //

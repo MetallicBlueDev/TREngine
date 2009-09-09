@@ -55,6 +55,12 @@ class Libs_Captcha {
 	 */
 	private $question = "";
 	
+	/**
+	 * Configuration d'un nouveau captcha
+	 * 
+	 * @param $type String ("form")
+	 * @param $object Object (Libs_Form Object)
+	 */
 	public function __construct($type = "", &$object = "") {
 		// Mode du captcha
 		$captchaMode = Core_Main::$coreConfig['captchaMode'];
@@ -207,7 +213,7 @@ class Libs_Captcha {
 	 * 
 	 * @return String
 	 */
-	public function create() {
+	public function &create() {
 		$rslt = "";
 		if ($this->enabled) {
 			$this->inputRobotName = Exec_Crypt::createIdLettres($this->randInt(5, 9));

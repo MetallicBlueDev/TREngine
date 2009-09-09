@@ -23,57 +23,56 @@ class Module_Connect_Index extends Module_Model {
 	public function account() {
 		if (Core_Session::isUser()) {
 			Core_Loader::classLoader("Libs_Form");
-			$profile = $account = "";
-			
-			if (Core_Html::getInstance()->isJavascriptEnabled()) {
-				$profile = $this->tabProfile();
-				$account = $this->tabAccount();
-			} else {
-				$idTab = Core_Request::getString("selectedTab");
-				switch($idTab) {
-					case 'idTab0':
-						$profile = $this->tabProfile();
-						break;
-					case 'idTab1':
-						$account = $this->tabAccount();
-						break;
-					default:
-						$profile = $this->tabProfile();
-						break;
-				}
-			}
-			
-			// Ajout des formulaires dans les onglets
 			Core_Loader::classLoader("Libs_Tabs");
-			$accountTabs = new Libs_Tabs("account");
-			$accountTabs->addTab("Votre profil", $profile);
-			$accountTabs->addTab("Votre compte", $account);
+			// Ajout des formulaires dans les onglets
+			$accountTabs = new Libs_Tabs("accounttabs");
+			$accountTabs->addTab(ACCOUNT_PROFILE, $this->tabProfile());
+			$accountTabs->addTab(ACCOUNT_PRIVATE, $this->tabAccount());
+			$accountTabs->addTab(ACCOUNT_AVATAR, $this->tabAvatar());
 			echo $accountTabs->render();
 		} else {
 			$this->display();
 		}
 	}
 	
-	private function tabProfile() {
-		$profile = new Libs_Form("profile");
-		$profile->setTitle("Edition de votre profil");
-		$profile->setDescription("Editer votre profil comme vous le souhaitez");
-		$profile->addInputHidden("mod", "connect");
-		$profile->addInputHidden("view", "account");
-		$profile->addInputHidden("layout", "module");
-		$profile->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
-		return $profile->render();
+	private function &tabProfile() {
+		$form = new Libs_Form("profile");
+		$form->setTitle(ACCOUNT_PROFILE_TITLE);
+		$form->setDescription(ACCOUNT_PROFILE_DESCRIPTION);
+		$form->addTextarea("signature", ACCOUNT_PROFILE_SIGNATURE, "", "style=\"display: block;\" rows=\"5\" cols=\"50\"", Core_Session::$userSignature);
+		$form->addInputHidden("mod", "connect");
+		$form->addInputHidden("view", "account");
+		$form->addInputHidden("layout", "module");
+		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
+		return $form->render();
 	}
 	
-	private function tabAccount() {
-		$account = new Libs_Form("profile");
-		$account->setTitle("Edition de votre profil");
-		$account->setDescription("Editer votre profil comme vous le souhaitez");
-		$account->addInputHidden("mod", "connect");
-		$account->addInputHidden("view", "account");
-		$account->addInputHidden("layout", "module");
-		$account->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
-		return $account->render();
+	private function &tabAccount() {
+		$form = new Libs_Form("accountprivate");
+		$form->setTitle(ACCOUNT_PRIVATE_TITLE);
+		$form->setDescription(ACCOUNT_PRIVATE_DESCRIPTION);
+		$form->addInputText("name", LOGIN);
+		$form->addInputText("pass", PASSWORD);
+		$form->addInputText("mail", MAIL);
+		$form->addSelectOpenTag("langue", LANGUE);
+		$form->addSelectItemTag("value", "texte");
+		$form->addSelectCloseTag();
+		$form->addInputHidden("mod", "connect");
+		$form->addInputHidden("view", "account");
+		$form->addInputHidden("layout", "module");
+		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
+		return $form->render();
+	}
+	
+	private function &tabAvatar() {
+		$form = new Libs_Form("avatar");
+		$form->setTitle(ACCOUNT_AVATAR_TITLE);
+		$form->setDescription(ACCOUNT_AVATAR_DESCRIPTION);
+		$form->addInputHidden("mod", "connect");
+		$form->addInputHidden("view", "account");
+		$form->addInputHidden("layout", "module");
+		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
+		return $form->render();
 	}
 	
 	/**
@@ -99,8 +98,8 @@ class Module_Connect_Index extends Module_Model {
 				$form = new Libs_Form("logon");
 				$form->setTitle(LOGIN_FORM_TITLE);
 				$form->setDescription(LOGIN_FORM_DESCRIPTION);
-				$form->addInputText("login", LOGIN . " ", "", "maxlength=\"180\" value=\"" . $login . "\"");
-				$form->addInputPassword("password", PASSWORD . " ", "", "maxlength=\"180\"");
+				$form->addInputText("login", LOGIN, "", "maxlength=\"180\" value=\"" . $login . "\"");
+				$form->addInputPassword("password", PASSWORD, "", "maxlength=\"180\"");
 				$form->addInputCheckbox("auto", REMEMBER_ME, true);
 				$form->addInputHidden("referer", urlencode(base64_encode(Core_Request::getString("QUERY_STRING", "", "SERVER"))));
 				$form->addInputHidden("mod", "connect");
@@ -170,7 +169,7 @@ class Module_Connect_Index extends Module_Model {
 					$form = new Libs_Form("forgetlogin");
 					$form->setTitle(FORGET_LOGIN_TITLE);
 					$form->setDescription(FORGET_LOGIN_DESCRIPTION);
-					$form->addInputText("mail", MAIL . " ");
+					$form->addInputText("mail", MAIL);
 					$form->addInputHidden("mod", "connect");
 					$form->addInputHidden("view", "forgetlogin");
 					$form->addInputHidden("layout", "module");
@@ -183,7 +182,10 @@ class Module_Connect_Index extends Module_Model {
 			$this->display();
 		}
 	}
-	
+
+	/**
+	 * Formulaire de mot de passe oublié
+	 */
 	public function forgetpass() {
 		if (!Core_Session::isUser()) {
 			$ok = false;
@@ -219,7 +221,7 @@ class Module_Connect_Index extends Module_Model {
 					$form = new Libs_Form("forgetpass");
 					$form->setTitle(FORGET_PASSWORD_TITLE);
 					$form->setDescription(FORGET_PASSWORD_DESCRIPTION);
-					$form->addInputText("login", LOGIN . " ");
+					$form->addInputText("login", LOGIN);
 					$form->addInputHidden("mod", "connect");
 					$form->addInputHidden("view", "forgetpass");
 					$form->addInputHidden("layout", "module");

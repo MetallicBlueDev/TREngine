@@ -188,7 +188,7 @@ class Exec_FileManager {
 	/**
 	 * Supprime le dossier
 	 * 
-	 * @param $dir
+	 * @param $dirPath
 	 * @param $timeLimit
 	 */
 	private function removeDirectory($dirPath, $timeLimit) {
@@ -203,7 +203,7 @@ class Exec_FileManager {
 					&& $file != "index.htm"
 					&& $file != "index.php"
 					&& $file != ".htaccess"
-					&& $file != "checker.txt") {				
+					&& $file != "checker.txt") {
 				// Vérification avant suppression
 				if ($timeLimit > 0) {
 					if (is_file($dirPath . "/" . $file)) {
@@ -250,6 +250,37 @@ class Exec_FileManager {
 		if (!@touch(TR_ENGINE_DIR . "/" . $path, $updateTime)) {
 			Core_Exception::setException("touch error on " . $path);
 		}
+	}
+	
+	/**
+	 * Retourne le listing avec uniquement les fichiers présent
+	 * 
+	 * @param $dirPath
+	 * @return array
+	 */
+	private function &filesList($dirPath) {
+		$filesList = array();
+		// Ouverture du dossier
+		$handle = @opendir(TR_ENGINE_DIR . "/" . $dirPath);
+		// Boucle sur les fichiers
+		while (false !== ($file = @readdir($handle))) {
+			// Si c'est un fichier valide
+			if ($file != ".." 
+					&& $file != "."
+					&& $file != "index.html"
+					&& $file != "index.htm"
+					&& $file != "index.php"
+					&& $file != ".htaccess"
+					&& $file != "checker.txt") {
+				$filesList[] = $file;
+			}
+		}
+		// Fermeture du dossier
+		@closedir($handle);
+		// Rangement et mise à zéro du tableau
+		sort($filesList);
+		reset($filesList);
+		return $filesList;
 	}
 }
 

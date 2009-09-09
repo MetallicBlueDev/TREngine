@@ -386,5 +386,14 @@ class Core_Translate {
 		//$text = Exec_Entities::addSlashes($text);
 		return $text;
 	}
+	
+	public static function getLangues() {
+		$langues = "";
+		Core_CacheBuffer::setSectionName();
+		if (Core_CacheBuffer::cached("langues.php")) {
+			$langues = Core_CacheBuffer::getCache("langues.php");
+		} else {
+		}
+	}
 }
 ?>

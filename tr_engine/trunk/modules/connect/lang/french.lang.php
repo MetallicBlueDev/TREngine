@@ -7,9 +7,6 @@ $lang = array(
 "TRAIL_FORGETPASS" => "Mot de passe oublié",
 "TRAIL_ACCOUNT" => "Votre compte",
 
-// Générale
-
-
 // Erreur de connexion
 "ERROR_LOGIN_CARACTERE" => "Votre identifiant ne peut contenir que des lettres, des chiffres et les caractères suivant : -_",
 "ERROR_LOGIN_NUMBER_CARACTERE" => "Votre identifant doit être de 3 caratères minimum.",
@@ -17,6 +14,18 @@ $lang = array(
 "ERROR_PASSWORD_NUMBER_CARACTERE" => "Votre mot de passe doit être de 5 caratères minimum.",
 "ERROR_PASSWORD_EMPTY" => "Votre mot de passe doit être renseigné.",
 "ERROR_LOGIN_OR_PASSWORD_INVALID" => "Votre identifiant ou votre mot de passe n'est pas valide.",
+
+// Votre compte
+"ACCOUNT_PROFILE" => "Votre profil",
+"ACCOUNT_PROFILE_TITLE" => "Edition de votre profil",
+"ACCOUNT_PROFILE_DESCRIPTION" => "Modifiez votre profil public afin qu'il vous ressemble au mieux",
+"ACCOUNT_PROFILE_SIGNATURE" => "Votre signature",
+"ACCOUNT_PRIVATE" => "Votre compte",
+"ACCOUNT_PRIVATE_TITLE" => "Edition des informations personnelles",
+"ACCOUNT_PRIVATE_DESCRIPTION" => "Modifiez toutes vos informations personnelles simplement",
+"ACCOUNT_AVATAR" => "Votre avatar",
+"ACCOUNT_AVATAR_TITLE" => "Edition de votre avatar",
+"ACCOUNT_AVATAR_DESCRIPTION" => "Choisissez une image vous représentant",
 
 // Identification 
 "LOGIN_FORM_TITLE" => "Accès membres",

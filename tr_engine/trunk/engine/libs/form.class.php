@@ -187,7 +187,7 @@ class Libs_Form {
 	 */
 	public function addInput($name, $description, $type, $class = "", $options = "") {
 		$data = ((!empty($description)) ? "<p id=\"" . $this->getId($name) . "\">" . $this->getLabel($name, $description) : "")
-		. "<input id=\"" . $this->getId($name, "input") . "\" name=\"" . $name . "\" type=\"" . $type . "\""
+		. " <input id=\"" . $this->getId($name, "input") . "\" name=\"" . $name . "\" type=\"" . $type . "\""
 		. ((!empty($class)) ? " class=\"" . $class . "\"" : "")
 		. ((!empty($options)) ? " " . $options : "") . " />"
 		. ((!empty($description)) ? "</p>" : "");
@@ -207,7 +207,7 @@ class Libs_Form {
 		if (empty($class)) $class = "textarea";
 		$data = "<p id=\"" . $this->getId($name) . "\">"
 		. $this->getLabel($name, $description)
-		. "<textarea id=\"" . $this->getId($name, "input") . "\" name=\"" . $name . "\""
+		. " <textarea id=\"" . $this->getId($name, "input") . "\" name=\"" . $name . "\""
 		. ((!empty($class)) ? " class=\"" . $class . "\"" : "")
 		. ((!empty($options)) ? " " . $options : "") . ">"
 		. ((!empty($defaultText)) ? Exec_Entities::stripSlashes($defaultText) : "")
@@ -227,7 +227,7 @@ class Libs_Form {
 		if (empty($class)) $class = "select";
 		$data = "<p id=\"" . $this->getId($name) . "\">"
 		. $this->getLabel($name, $description)
-		. "<select id=\"" . $this->getId($name, "input") . "\" name=\"" . $name . "\""
+		. " <select id=\"" . $this->getId($name, "input") . "\" name=\"" . $name . "\""
 		. ((!empty($class)) ? " class=\"" . $class . "\"" : "")
 		. ((!empty($options)) ? " " . $options : "")
 		. ">";
@@ -307,7 +307,7 @@ class Libs_Form {
 	 * @param $class String
 	 * @return String
 	 */
-	public function render($class = "") {
+	public function &render($class = "") {
 		// Définition du form
 		$content = "<form action=\"" . $this->urlAction . "\" method=\"post\" id=\"form-" . $this->name . "\" name=\"" . $this->name . "\""
 		. " class=\"" . ((!empty($class)) ? $class : "form") . "\"><fieldset>"

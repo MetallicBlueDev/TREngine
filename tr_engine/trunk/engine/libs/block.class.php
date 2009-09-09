@@ -189,7 +189,7 @@ class Libs_Block {
 	 * @param $side String or int
 	 * @return String
 	 */
-	public function getBlocks($side) {
+	public function &getBlocks($side) {
 		$side = $this->getSide($side, "numeric");
 		
 		$blockSide = "";
@@ -207,7 +207,7 @@ class Libs_Block {
 	 * @param $side String or int
 	 * @return String or int
 	 */
-	private function getSide($side, $type = "numeric") {
+	private function &getSide($side, $type = "numeric") {
 		if ($type == "letters") {
 			switch ($side) {
 				case 1: $side = "right"; break;
@@ -240,7 +240,7 @@ class Libs_Block {
 	 * @param $buffer String
 	 * @return $buffer String
 	 */
-	private function outPut($buffer, $rewriteBuffer = false) {
+	private function &outPut(&$buffer, $rewriteBuffer = false) {
 		if (Core_Main::doUrlRewriting() && $rewriteBuffer) {
 			$buffer = Core_UrlRewriting::rewriteBuffer($buffer);
 		}

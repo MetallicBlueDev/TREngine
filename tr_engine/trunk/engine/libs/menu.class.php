@@ -127,7 +127,7 @@ class Libs_Menu {
 	 * @param $callback
 	 * @return String
 	 */
-	public function render($callback = "Block_Menu::getLine") {
+	public function &render($callback = "Block_Menu::getLine") {
 		// Creation du tableau route
 		$route = $this->items[$this->itemActive]->data->route;
 		// Début de rendu
@@ -354,7 +354,7 @@ class Libs_MenuElement {
 	 * 
 	 * @param $callback
 	 */
-	public function toString($callback = "") {		
+	public function &toString($callback = "") {		
 		// Mise en forme du texte via la callback
 		$text = $this->data->content;
 		if (!empty($callback) && !empty($text)) {

@@ -59,6 +59,13 @@ class Core_Exception {
 	public static $numberOfRequest = 0;
 	
 	/**
+	 * Tableau contenant toutes les lignes sql envoyées
+	 * 
+	 * @var array
+	 */
+	private static $sqlRequest = array();
+	
+	/**
 	 * Activer ou désactiver le rapport d'erreur dans un log
 	 * 
 	 * @param boolean $active
@@ -76,6 +83,15 @@ class Core_Exception {
 		$msg = strtolower($msg);
 		$msg[0] = strtoupper($msg[0]);
 		self::$exception[] = date('Y-m-d H:i:s') . " : " . $msg . ".";
+	}
+	
+	/**
+	 * Ajoute une requête sql
+	 * 
+	 * @param $sql String
+	 */
+	public static function setSqlRequest($sql) {
+		self::$sqlRequest[] = $sql;
 	}
 	
 	/**
@@ -133,7 +149,7 @@ class Core_Exception {
 	 * 
 	 * @return String
 	 */
-	public static function getMinorError() {
+	public static function &getMinorError() {
 		$display = "none";
 		$rslt = "";
 		$error = self::minorErrorDetected();
@@ -198,10 +214,10 @@ class Core_Exception {
 	 * @param $var array
 	 * @return String
 	 */
-	private static function linearize($var) {
+	private static function &linearize($var) {
 		$content = "";
 		foreach ($var as $msg) {
-			$content .= $content . $msg . "\n";
+			$content .= $msg . "\n";
 		}
 		return $content;
 	}
@@ -211,33 +227,35 @@ class Core_Exception {
 	 */
 	public static function displayException() {
 		$error = "";
-		$color = "green";
+		$color = "#008000";
 		// Vérification de la présence des exceptions
 		if (self::exceptionDetected()) {
-			$color = "red";
-			$nbStars = 45;
-			for ($i = 0; $i < $nbStars; $i++) {
-				if ($i == (int)($nbStars / 2)) {
-					$nbException = count(self::$exception);
-					$add = ($nbException > 1) ? "S" : "";
-					$error .= $nbException . " DIFFERENT" . $add . " EXCEPTION" . $add;
-				} else {
-					$error .= "*";
-				}
-			}
-			$exceptions = str_replace("\n", "<br />", self::linearize(self::$exception));
-			$error .= "<br />" . $exceptions;
+			$color = "#800000";
+			$error .= "************************"
+			. count(self::$exception) . " EXCEPTIONS"
+			. "************************"
+			. "<br />" . str_replace("\n", "<br />", self::linearize(self::$exception));
 		} else {
 			$error .= "No exception detected.";
 		}
 		
-		echo "<div style=\"color: " . $color . ";\"><br />" . $error . "</div>\n"
+		$sql = "************************" 
+		. self::$numberOfRequest 
+		. " SQL REQUESTS************************<br />";
+		if (!empty(self::$sqlRequest)) {
+			$sql .= str_replace("\n", "<br />", self::linearize(self::$sqlRequest));
+		} else {
+			$sql .= "No sql request registred.";
+		}
+		
+		echo "<div style=\"color: blue;\"><br />" . $sql . "</div>\n"
+		. "<div style=\"color: " . $color . ";\"><br />" . $error . "</div>\n"
 		. "<div style=\"color: blue;\"><br />BenchMaker :<br />\n"
 		. "Core : " . Exec_Marker::getTime("core") . " seconde\n"
 		. "<br />Launcher : " . Exec_Marker::getTime("launcher") . " seconde\n"
 		. "<br />All : " . Exec_Marker::getTime("all") . " seconde\n"
 		. "<br />Number of Sql request : " . self::$numberOfRequest . "\n"
-		. "<br />Appreciation : <span style=\"color: " . (((0.4000 - Exec_Marker::getTime("all")) > 0.3) ? "green;\">OK" : "red;\">Failed") . "</span>"
+		. "<br />Appreciation : <span style=\"color: " . (((0.4000 - Exec_Marker::getTime("all")) > 0.3) ? "green;\">OK" : "red;\">FAILED") . "</span>"
 		. "</div>";
 	}
 	

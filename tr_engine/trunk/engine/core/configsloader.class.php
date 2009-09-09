@@ -64,9 +64,6 @@ class Core_ConfigsLoader {
 				Core_Secure::getInstance()->debug("close");
 			}
 			
-			if (is_int($config['cookieTimeLimit']) && $config['cookieTimeLimit'] >= 1) $this->config['cookieTimeLimit'] = $config['cookieTimeLimit'];
-			else $this->config['cookieTimeLimit'] = 365;
-			
 			if (is_int($config['cacheTimeLimit']) && $config['cacheTimeLimit'] >= 1) $this->config['cacheTimeLimit'] = $config['cacheTimeLimit'];
 			else $this->config['cacheTimeLimit'] = 7;
 			

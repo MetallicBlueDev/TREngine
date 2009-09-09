@@ -7,39 +7,46 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Core_CacheBuffer {
 	
 	/**
+	 * Instance d'un protocole déjà initialisé
+	 * 
+	 * @var mixed
+	 */
+	private static $execProtocol = false;
+	
+	/**
 	 * Réécriture du cache
 	 * 
 	 * @var array
 	 */
-	protected static $writingCache = array();
+	private static $writingCache = array();
 	
 	/**
 	 * Ecriture du cache a la suite
 	 * 
 	 * @var array
 	 */
-	protected static $addCache = array();
+	private static $addCache = array();
 	
 	/**
 	 * Suppression du cache
 	 * 
 	 * @var array
 	 */
-	protected static $removeCache = array();
+	private static $removeCache = array();
 	
 	/**
 	 * Mise à jour de derniere modification du cache
 	 * 
 	 * @var array
 	 */
-	protected static $updateCache = array();
+	private static $updateCache = array();
 	
 	/**
 	 * Tableau avec les chemins des differentes rubriques
 	 * 
 	 * @var array
 	 */
-	protected static $sectionDir = array(
+	private static $sectionDir = array(
 		"tmp" => "tmp",
 		"log" => "tmp/log",
 		"sessions" => "tmp/sessions",
@@ -53,14 +60,14 @@ class Core_CacheBuffer {
 	 * 
 	 * @var String
 	 */
-	protected static $sectionName = "";
+	private static $sectionName = "";
 	
 	/**
 	 * Etat des modes de gestion des fichiers
 	 * 
 	 * @var arry
 	 */
-	protected static $modeActived = array (
+	private static $modeActived = array (
 		"php" => false,
 		"ftp" => false,
 		"sftp" => false
@@ -71,7 +78,7 @@ class Core_CacheBuffer {
 	 * 
 	 * @var array
 	 */
-	protected static $ftp = array();
+	private static $ftp = array();
 	
 	/**
 	 * Modifier le nom de la section courante
@@ -79,8 +86,7 @@ class Core_CacheBuffer {
 	 * @param $sectionName
 	 */
 	public static function setSectionName($sectionName = "") {
-		if (!empty($sectionName) 
-				&& isset(self::$sectionDir[$sectionName])) {
+		if (!empty($sectionName) && isset(self::$sectionDir[$sectionName])) {
 			self::$sectionName = $sectionName;
 		} else {
 			self::$sectionName = "tmp";
@@ -116,6 +122,9 @@ class Core_CacheBuffer {
 	 * @param $overWrite boolean true réécriture complete, false écriture a la suite
 	 */
 	public static function writingCache($path, $content, $overWrite = true) {
+		if (!is_string($content)) {
+			$content = self::linearizeCache($content);
+		}
 		// Mise en forme de la cles
 		$key = self::encodePath(self::getSectionPath(). "/" . $path);
 		// Ajout dans le cache
@@ -167,7 +176,7 @@ class Core_CacheBuffer {
 	 * @param $path chemin vers le fichier cache
 	 * @return boolean true le fichier est en cache
 	 */
-	public static function cached($path) {
+	public static function &cached($path) {
 		return is_file(self::getPath($path));
 	}
 	
@@ -177,7 +186,7 @@ class Core_CacheBuffer {
 	 * @param $path chemin vers le fichier cache
 	 * @return int Unix timestamp ou false
 	 */
-	public static function cacheMTime($path) {
+	public static function &cacheMTime($path) {
 		return filemtime(self::getPath($path));
 	}
 	
@@ -186,7 +195,7 @@ class Core_CacheBuffer {
 	 * 
 	 * @return boolean true le checker est valide
 	 */
-	public static function checked($timeLimit = 0) {
+	public static function &checked($timeLimit = 0) {
 		if (self::cached("checker.txt")) {
 			// On a demandé un comparaison de temps
 			if ($timeLimit > 0) {
@@ -218,7 +227,7 @@ class Core_CacheBuffer {
 	 * 
 	 * @return int Unix timestamp ou false
 	 */
-	public static function checkerMTime() {
+	public static function &checkerMTime() {
 		return self::cacheMTime("checker.txt");
 	}
 	
@@ -228,7 +237,7 @@ class Core_CacheBuffer {
 	 * @param String $path
 	 * @return String
 	 */
-	protected static function &encodePath($path) {
+	private static function &encodePath($path) {
 		return $path;
 	}
 	
@@ -238,7 +247,7 @@ class Core_CacheBuffer {
 	 * @param String $encodePath
 	 * @return String
 	 */
-	protected static function &decodePath($encodePath) {
+	private static function &decodePath($encodePath) {
 		return $encodePath;
 	}
 	
@@ -248,7 +257,7 @@ class Core_CacheBuffer {
 	 * @param $path chemin du fichier
 	 * @return String chemin complet
 	 */
-	public static function getPath($path) {
+	public static function &getPath($path) {
 		return TR_ENGINE_DIR . "/" . self::getSectionPath() . "/" . $path;
 	}
 	
@@ -258,7 +267,7 @@ class Core_CacheBuffer {
 	 * @param $path Chemin du cache
 	 * @return mixed
 	 */
-	public static function getCache($path) {
+	public static function &getCache($path) {
 		// Réglage avant capture
 		$variableName = self::$sectionName;
 		// Rend la variable global a la fonction
@@ -277,7 +286,7 @@ class Core_CacheBuffer {
 	 * @param array $required
 	 * @return boolean true action demandée
 	 */
-	private static function cacheRequired($required) {
+	private static function &cacheRequired($required) {
 		if (is_array($required) && count($required) > 0) {
 			return true;
 		}
@@ -290,7 +299,7 @@ class Core_CacheBuffer {
 	 * @param $path
 	 * @return boolean true c'est un dossier
 	 */
-	public static function isDir($path) {
+	public static function &isDir($path) {
 		$pathIsDir = false;
 		
 		if (substr($path, -1) == "/") {
@@ -388,6 +397,49 @@ class Core_CacheBuffer {
 	}
 	
 	/**
+	 * Retourne le listing avec uniquement les fichiers présent
+	 * 
+	 * @param $dirPath
+	 * @return array
+	 */
+	public static function &getFilesList($dirPath) {
+		$execProtocol = self::getExecProtocol();
+		if ($execProtocol != null) {
+			return $execProtocol->filesList($dirPath);
+		}
+		return array();
+	}
+	
+	/**
+	 * Démarre et retourne le protocole du cache
+	 * 
+	 * @return mixed
+	 */
+	private static function &getExecProtocol() {
+		if (self::$execProtocol == false) {
+			if (self::$modeActived['php']) {
+				// Démarrage du gestionnaire de fichier
+				Core_Loader::classLoader("Libs_FileManager");
+				self::$execProtocol = new Exec_FileManager();
+			} else if (self::$modeActived['ftp']) {
+				// Démarrage du gestionnaire FTP
+				Core_Loader::classLoader("Libs_FtpManager");
+				self::$execProtocol = new Exec_FtpManager();
+				self::$execProtocol->setFtp(self::$ftp);
+			} else if (self::$modeActived['sftp']) {
+				// Démarrage du gestionnaire SFTP
+				Core_Loader::classLoader("Libs_SftpManager");
+				self::$execProtocol = new Exec_SftpManager();
+				self::$execProtocol->setFtp(self::$ftp);
+			} else {
+				Core_Exception::setException("No protocol actived for cache.");
+				return null;
+			}
+		}
+		return self::$execProtocol;
+	}
+	
+	/**
 	 * Execute la routine du cache
 	 */
 	public static function valideCacheBuffer() {
@@ -396,63 +448,38 @@ class Core_CacheBuffer {
 			|| self::cacheRequired(self::$writingCache)
 			|| self::cacheRequired(self::$addCache)
 			|| self::cacheRequired(self::$updateCache)) {
+			// Protocole a utiliser
+			$execProtocol = self::getExecProtocol();
+			
+			if ($execProtocol != null) {
+				// Suppression de cache demandée
+				if (self::cacheRequired(self::$removeCache)) {
+					foreach(self::$removeCache as $dir => $timeLimit) {
+						$execProtocol->removeCache($dir, $timeLimit);
+					}
+				}
 				
+				// Ecriture de cache demandée
+				if (self::cacheRequired(self::$writingCache)) {
+					foreach(self::$writingCache as $path => $content) {
+						$execProtocol->writingCache($path, $content, true);
+					}
+				}
 				
-			/**
-			 * TODO code sur la détection du mode a utiliser a faire
-			 * Parametrage du gestionnaire
-			 * Détection du mode a utiliser
-			 * Mode PHP, utilisation des fonctions classique PHP
-			 * Mode FTP, utilisation de la classe FTP dédié
-			 */
-			
-			if (self::$modeActived['php']) {
-				// Démarrage du gestionnaire de fichier
-				Core_Loader::classLoader("Libs_FileManager");
-				$execProtocol = new Exec_FileManager();
-			} else if (self::$modeActived['ftp']) {
-				// Démarrage du gestionnaire FTP
-				Core_Loader::classLoader("Libs_FtpManager");
-				$execProtocol = new Exec_FtpManager();
-				$execProtocol->setFtp(self::$ftp);
-			} else if (self::$modeActived['sftp']) {
-				// Démarrage du gestionnaire SFTP
-				Core_Loader::classLoader("Libs_SftpManager");
-				$execProtocol = new Exec_SftpManager();
-				$execProtocol->setFtp(self::$ftp);
-			} else {
-				Core_Exception::setException("no protocol actived for cache.");
-				return null;
-			}
-			
-			// Suppression de cache demandée
-			if (self::cacheRequired(self::$removeCache)) {
-				foreach(self::$removeCache as $dir => $timeLimit) {
-					$execProtocol->removeCache($dir, $timeLimit);
+				// Ecriture à la suite de cache demandée
+				if (self::cacheRequired(self::$addCache)) {
+					foreach(self::$addCache as $path => $content) {
+						$execProtocol->writingCache($path, $content, false);
+					}
+				}
+				
+				// Mise à jour de cache demandée
+				if (self::cacheRequired(self::$updateCache)) {
+					foreach(self::$updateCache as $path => $updateTime) {
+						$execProtocol->touchCache($path, $updateTime);
+					}
 				}
 			}
-			
-			// Ecriture de cache demandée
-			if (self::cacheRequired(self::$writingCache)) {
-				foreach(self::$writingCache as $path => $content) {
-					$execProtocol->writingCache($path, $content, true);
-				}
-			}
-			
-			// Ecriture à la suite de cache demandée
-			if (self::cacheRequired(self::$addCache)) {
-				foreach(self::$addCache as $path => $content) {
-					$execProtocol->writingCache($path, $content, false);
-				}
-			}
-			
-			// Mise à jour de cache demandée
-			if (self::cacheRequired(self::$updateCache)) {
-				foreach(self::$updateCache as $path => $updateTime) {
-					$execProtocol->touchCache($path, $updateTime);
-				}
-			}
-			
 			// Destruction du gestionnaire
 			unset($execProtocol);
 		}

@@ -29,7 +29,12 @@ class Core_Main {
 	 */
 	public static $layout = "default";
 	
-	private $statisticMarker = false;
+	/**
+	 * Statistique et debug mode
+	 * 
+	 * @var boolean
+	 */
+	private static $statisticMarker = false;
 	
 	/**
 	 * Préparation TR ENGINE
@@ -37,9 +42,9 @@ class Core_Main {
 	 * Une étape avant le démarrage réel
 	 */
 	public function __construct($statisticMarker = false) {
-		$this->statisticMarker = $statisticMarker;
+		self::$statisticMarker = $statisticMarker;
 		
-		if ($this->statisticMarker) Exec_Marker::startTimer("core");
+		if (self::$statisticMarker) Exec_Marker::startTimer("core");
 		
 		// Vérification de la version PHP
 		if (TR_ENGINE_PHP_VERSION < "5.0.0") {
@@ -74,7 +79,7 @@ class Core_Main {
 		// Chargement du gestionnaire d'accès url
 		Core_Loader::classLoader("Core_Request");
 		
-		if ($this->statisticMarker) Exec_Marker::stopTimer("core");
+		if (self::$statisticMarker) Exec_Marker::stopTimer("core");
 		
 		// TODO isoler l'installation
 		$installPath = TR_ENGINE_DIR . "/install/index.php";
@@ -154,7 +159,7 @@ class Core_Main {
 	 * Démarrage TR ENGINE
 	 */
 	public function start() {
-		if ($this->statisticMarker) Exec_Marker::startTimer("launcher");
+		if (self::$statisticMarker) Exec_Marker::startTimer("launcher");
 		
 		// Gestionnaire des cookie
 		Core_Loader::classLoader("Exec_Cookie");
@@ -189,8 +194,8 @@ class Core_Main {
 		$this->loadLayout();
 		$this->loadModule();
 		$this->loadMakeStyle();
-		// TODO a décommenter
-		//$this->compressionOpen();
+		
+		if (!self::$statisticMarker) $this->compressionOpen();
 		
 		// Comportement different en fonction du type de client
 		if (!Core_BlackBan::isBlackUser()) {
@@ -244,10 +249,11 @@ class Core_Main {
 			Core_BlackBan::displayBlackPage();
 		}
 		
-		// TODO a décommenter
-		//$this->compressionClose();
-		
-		if ($this->statisticMarker) Exec_Marker::stopTimer("launcher");
+		if (self::$statisticMarker) {
+			Exec_Marker::stopTimer("launcher");
+		} else {
+			$this->compressionClose();
+		}
 	}
 	
 	/**
@@ -352,6 +358,15 @@ class Core_Main {
 	 */
 	public static function isRegistrationAllowed() {
 		return (self::$coreConfig['registrationAllowed'] == 1) ? true : false;
+	}
+	
+	/**
+	 * Vérifie si le mode de statistique et de debug est actif
+	 * 
+	 * @return boolean
+	 */
+	public static function &statisticMarker() {
+		return self::$statisticMarker;
 	}
 }
 ?>

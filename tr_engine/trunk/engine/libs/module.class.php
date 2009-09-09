@@ -394,7 +394,7 @@ abstract class Module_Model {
 	public function uninstall() {
 		Core_Sql::delete(
 			Core_Table::$MODULES_TABLE,
-			array("name = '" . Libs_Module::$module . "'")
+			array("mod_id = '" . $this->modId . "'")
 		);
 		Core_CacheBuffer::setSectionName("modules");
 		Core_CacheBuffer::removeCache(Libs_Module::$module . ".php");

@@ -197,7 +197,7 @@ class Exec_FtpManager {
 	 *
 	 * @return boolean : true si aucune erreur
 	 */
-	private function deconnect() {
+	public function deconnect() {
 		if ($this->isConnected()) {
 			if ($this->nativeMode) {
 				return ftp_close($this->connId);
@@ -305,7 +305,7 @@ class Exec_FtpManager {
 	 * 
 	 * @return boolean true le timeout a été configuré sur le serveur
 	 */
-	private function setTimeOut() {
+	private function &setTimeOut() {
 		if ($this->nativeMode) {
 			return ftp_set_option($this->connId, FTP_TIMEOUT_SEC, $this->timeout);
 		} else {
@@ -422,7 +422,7 @@ class Exec_FtpManager {
 	 * @param string $path : chemin où doit être listé les dossiers
 	 * @return mixed : array string liste des dossiers trouvés, boolean false si il y a une erreur
 	 */
-	private function listNames($path = NULL) {
+	public function &listNames($path = NULL) {
 		if ($this->isConnected()) {
 			$dirList = NULL;
 	
@@ -475,7 +475,7 @@ class Exec_FtpManager {
 	 * @param $path
 	 * @return mixed : int date de derniere modification or false
 	 */
-	private function getMTime($path) {
+	public function &getMTime($path) {
 		if ($this->isConnected()) {
 			if ($this->nativeMode) {
 				$rslt = ftp_mdtm($this->connId, $this->getRootPath($path));
@@ -724,6 +724,10 @@ class Exec_FtpManager {
 				}
 			}
 		}
+	}
+	
+	private function &filesList($dirPath) {
+		// TODO fonction a implémenter
 	}
 	
 	public function __destruct() {

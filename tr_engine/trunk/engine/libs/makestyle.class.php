@@ -84,7 +84,6 @@ class Libs_MakeStyle {
 	 */
 	public function assign($key, $value) {
 		$this->templateVars[$key] = is_object($value) ? $value->display() : $value;
-		return $this;
 	}
 	
 	/**
@@ -113,7 +112,7 @@ class Libs_MakeStyle {
 	 * @param $templateName String
 	 * @return String
 	 */
-	public function render($templateName = "") {
+	public function &render($templateName = "") {
 		// Vérifie le template
 		$this->checkTemplate($templateName);
 		
@@ -134,7 +133,7 @@ class Libs_MakeStyle {
 	 * @param $templateName String
 	 * @return String
 	 */
-	public function renderDebug($templateName = "") {
+	public function &renderDebug($templateName = "") {
 		if (!empty($templateName)) $this->templateName = $templateName;
 		
 		// Si le template ne contient pas le fichier debug
