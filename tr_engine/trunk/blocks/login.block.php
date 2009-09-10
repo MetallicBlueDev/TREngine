@@ -44,7 +44,7 @@ class Block_Login extends Block_Model {
 		$this->localView = Core_Request::getString("localView", "", "GET");
 	}
 	
-	public function render() {
+	public function &render() {
 		$content = "";
 		if (Core_Session::isUser()) {
 			if ($this->displayText) {
@@ -97,7 +97,7 @@ class Block_Login extends Block_Model {
 	 * @param $moreLink String
 	 * @return String
 	 */
-	private function logon($moreLink) {
+	private function &logon($moreLink) {
 		Core_Loader::classLoader("Libs_Form");
 		$form = new Libs_Form("logonblock");
 		$form->addInputText("login", LOGIN, "", "maxlength=\"180\"");
@@ -119,7 +119,7 @@ class Block_Login extends Block_Model {
 	 * @param $moreLink String
 	 * @return String
 	 */
-	private function forgetlogin($moreLink) {
+	private function &forgetlogin($moreLink) {
 		Core_Loader::classLoader("Libs_Form");
 		$form = new Libs_Form("forgetloginblock");
 		$form->addInputText("mail", MAIL . " ");
@@ -138,7 +138,7 @@ class Block_Login extends Block_Model {
 	 * @param $moreLink String
 	 * @return String
 	 */
-	private function forgetpass($moreLink) {
+	private function &forgetpass($moreLink) {
 		Core_Loader::classLoader("Libs_Form");
 		$form = new Libs_Form("forgetpassblock");
 		$form->addInputText("login", LOGIN . " ");

@@ -153,14 +153,14 @@ class Libs_Block {
 	 * @param $block array
 	 */
 	private function get($block) {
-		$blockClassName = "Block_" . ucfirst($block->type);
-		$loaded = Core_Loader::classLoader($blockClassName);
-		
-		// Vérification du block
-		if ($loaded) {
-			if (Core_Loader::isCallable($blockClassName, "display")) {
-				// Vérification de l'accès
-				if (Core_Acces::autorize("block" . $block->block_id, $block->rang)) {
+		// Vérification de l'accès
+		if (Core_Acces::autorize("block" . $block->block_id, $block->rang)) {
+			$blockClassName = "Block_" . ucfirst($block->type);
+			$loaded = Core_Loader::classLoader($blockClassName);
+			
+			// Vérification du block
+			if ($loaded) {
+				if (Core_Loader::isCallable($blockClassName, "display")) {
 					Core_Translate::translate("blocks/" . $block->type);
 					$BlockClass = new $blockClassName();
 					$BlockClass->blockId = $block->block_id;
@@ -174,11 +174,11 @@ class Libs_Block {
 					// Capture des données d'affichage
 					ob_start();
 					$BlockClass->display();
-					$this->blocksCompiled[$block->side][] = ob_get_contents();
-					ob_end_clean();
+						$this->blocksCompiled[$block->side][] = ob_get_contents();
+						ob_end_clean();
+				} else {
+					Core_Exception::addAlertError(ERROR_BLOCK_CODE);
 				}
-			} else {
-				Core_Exception::addAlertError(ERROR_BLOCK_CODE);
 			}
 		}
 	}
@@ -214,6 +214,8 @@ class Libs_Block {
 				case 2: $side = "left"; break;
 				case 3: $side = "top"; break;
 				case 4: $side = "bottom"; break;
+				case 5: $side = "moduletop"; break;
+				case 6: $side = "modulebottom"; break;
 				default : Core_Secure::getInstance()->debug("blockSide");
 			}
 		} else {
@@ -227,6 +229,8 @@ class Libs_Block {
 					case 'left': $side = 2; break;
 					case 'top': $side = 3; break;
 					case 'bottom': $side = 4; break;
+					case 'moduletop': $side = 5; break;
+					case 'modulebottom': $side = 6; break;
 					default : Core_Secure::getInstance()->debug("blockSide");
 				}
 			}

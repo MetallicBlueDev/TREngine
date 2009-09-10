@@ -90,7 +90,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Retourne un tableau qui contient les lignes demandées
+	 * Retourne un tableau qui contient le ligne demandée
 	 * 
 	 * @return array
 	 */
@@ -99,7 +99,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Retourne un objet qui contient les lignes demandées
+	 * Retourne un objet qui contient le ligne demandée
 	 * 
 	 * @return object
 	 */
@@ -530,7 +530,7 @@ abstract class Base_Model {
 				if ($key) $this->buffer[$name][$row->$key] = $row;
 				else $this->buffer[$name][] = $row;
 			}
-			reset($this->buffer);
+			$reset = $this->buffer[$name][0];
 		}
 	}
 	

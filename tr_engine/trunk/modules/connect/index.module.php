@@ -121,21 +121,32 @@ class Module_Connect_Index extends Module_Model {
 		// Liste des droits
 		$form->addSpace();
 		$form->addHtmlInFieldset("<u>" . ACCOUNT_ADMIN_RIGHT . ":</u>");
-		$modules = array();
+		// Requête pour la liste des blocks
 		Core_Sql::select(
-			Core_Table::$MODULES_TABLE,
-			array("mod_id", "name")
+			Core_Table::$BLOCKS_TABLE,
+			array("block_id", "title")
 		);
 		if (Core_Sql::affectedRows() > 0) {
-			$modules = Core_Sql::fetchArray();echo print_r($modules);
+			Core_Sql::addBuffer("blocks");
+			$blocks = Core_Sql::getBuffer("blocks");
 		}
+		$zone = $identifiant = "";
 		foreach($rights as $key => $right) {
 			if ($right == "all") {
 				$form->addHtmlInFieldset(ADMIN_RIGHT_ALL);
-			} else if (is_numeric($right)) {
-				$pos = array_search($right, $modules);
-				if ($pos !== false) {
-					$form->addHtmlInFieldset(ADMIN_RIGHT_MODULE . " " . $modules['name'][$pos]);
+			} else if (Core_Acces::accessType($right, $zone, $identifiant)) {
+				if ($zone == "MODULE") {
+					$form->addHtmlInFieldset(ADMIN_RIGHT_MODULE . " <b>" . $right . "</b> (#" . $identifiant . ")");
+				} else if ($zone == "BLOCK") {
+					foreach($blocks as $block) {
+						if ($block->block_id == $identifiant) {
+							$right = "<b>" . $block->title . "</b> (#" . $identifiant . ")";
+							break;
+						}
+					}
+					$form->addHtmlInFieldset(ADMIN_RIGHT_BLOCK . " " . $right);
+				} else if ($zone == "PAGE") {
+					$form->addHtmlInFieldset(ADMIN_RIGHT_PAGE . " <b>" . $identifiant . "</b>");
 				}
 			}
 		}

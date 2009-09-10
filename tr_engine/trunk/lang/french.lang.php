@@ -2,8 +2,10 @@
 $lang = array(
 
 // Administration
-"ADMIN_RIGHT_ALL" => "Vous disposez de tout les droits et actions de modérations et d'administration du site, sans limitation aucune.",
-"ADMIN_RIGHT_MODULE" => "Droit concernant la modération du module",
+"ADMIN_RIGHT_ALL" => "Tous droits et actions de modérations et d'administration du site, sans limitation.",
+"ADMIN_RIGHT_MODULE" => "Droit concernant la visualisation et/ou la modération du module",
+"ADMIN_RIGHT_BLOCK" => "Droit concernant la visualisation et/ou la modération du block",
+"ADMIN_RIGHT_PAGE" => "Droit concernant la visualisation et/ou la modération de la page",
 
 // Erreur d'acces, droits insuffisants
 "ERROR_ACCES_ZONE" => "Désolé, mais il n'y pas possible de continuer.",

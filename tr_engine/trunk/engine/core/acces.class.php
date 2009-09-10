@@ -15,7 +15,7 @@ class Core_Acces  {
 	/**
 	 * Vérifie si le client a les droits suffisant pour acceder au module
 	 * 
-	 * @param $mod String module ou page administrateur ou id du block sous forme block + Id
+	 * @param $zoneIdentifiant String module ou page administrateur ou id du block sous forme block + Id
 	 * @param $userIdAdmin String Id de l'administrateur a vérifier
 	 * @return boolean true le client visé a la droit
 	 */
@@ -25,31 +25,8 @@ class Core_Acces  {
 			// Recherche des droits admin
 			$right = self::getAdminRight($userIdAdmin);
 			
-			if (substr($zoneIdentifiant, 0, 5) == "block") {
-				$zone = "BLOCK";
-				$identifiant = substr($zoneIdentifiant, 5, strlen($zoneIdentifiant));
-			} else if (($pathPos = strrpos($zoneIdentifiant, "/")) !== false) {
-				$module = substr($zoneIdentifiant, 0, $pathPos);
-				$page = substr($zoneIdentifiant, $pathPos, strlen($zoneIdentifiant));
-				
-				if (Core_Loader::isCallable("Libs_Module") && Libs_Module::getInstance()->isModule($module, $page)) {
-					$zone = "PAGE";
-					$identifiant = $zoneIdentifiant;
-				}
-			} else {
-				// Recherche des infos du module
-				$zone = "MODULE";
-				if (Core_Loader::isCallable("Libs_Module")) {
-					$moduleInfo = Libs_Module::getInstance()->getInfoModule($zoneIdentifiant);
-				} else {
-					$moduleInfo = false;
-				}
-				$identifiant = $moduleInfo['mod_id'];
-			}
-			
 			// Si les réponses retourné sont correcte
-			if (($right != false && count($right) > 0)
-					&& (is_numeric($identifiant) || $zone == "PAGE")) {
+			if ($right != false && count($right) > 0 && self::accessType($zoneIdentifiant, $zone, $identifiant)) {
 				$nbRights = count($right);
 				
 				if ($nbRights > 0) {
@@ -155,6 +132,42 @@ class Core_Acces  {
 		if (Core_Sql::affectedRows() > 0) {
 			$admin = Core_Sql::fetchArray();
 			return explode("|", $admin['rights']);
+		}
+		return false;
+	}
+	
+	/**
+	 * Identifie le type d'acces lié a l'identifiant entré
+	 * 
+	 * @param $zoneIdentifiant String module ou page administrateur ou id du block sous forme block + Id 
+	 * @param $zone String la zone type trouvée (BLOCK/PAGE/MODULE)
+	 * @param $identifiant String l'identifiant lié au type trouvé
+	 * @return boolean true identifiant valide
+	 */
+	public static function &accessType(&$zoneIdentifiant, &$zone, &$identifiant) {
+		if (substr($zoneIdentifiant, 0, 5) == "block") {
+			$zone = "BLOCK";
+			$identifiant = substr($zoneIdentifiant, 5, strlen($zoneIdentifiant));
+			return true;
+		} else if (($pathPos = strrpos($zoneIdentifiant, "/")) !== false) {
+			$module = substr($zoneIdentifiant, 0, $pathPos);
+			$page = substr($zoneIdentifiant, $pathPos, strlen($zoneIdentifiant));
+			
+			if (Core_Loader::isCallable("Libs_Module") && Libs_Module::getInstance()->isModule($module, $page)) {
+				$zone = "PAGE";
+				$identifiant = $zoneIdentifiant;
+				return true;
+			}
+		} else {
+			// Recherche des infos du module
+			$zone = "MODULE";
+			if (Core_Loader::isCallable("Libs_Module")) {
+				$moduleInfo = Libs_Module::getInstance()->getInfoModule($zoneIdentifiant);
+			} else {
+				$moduleInfo = false;
+			}
+			$identifiant = $moduleInfo['mod_id'];
+			if (is_numeric($identifiant)) return true;
 		}
 		return false;
 	}

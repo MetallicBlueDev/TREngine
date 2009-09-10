@@ -19,7 +19,7 @@ class Base_Mysql extends Base_Model {
 	public function __destruct() {
 		parent::__destruct();
 	}
-		
+	
 	/**
 	 * Etablie une connexion à la base de donnée
 	 */
@@ -59,7 +59,7 @@ class Base_Mysql extends Base_Model {
 	}
 	
 	/**
-	 * Retourne un tableau qui contient les lignes demandées
+	 * Retourne un tableau qui contient la ligne demandée
 	 * 
 	 * @return array
 	 */
@@ -68,7 +68,7 @@ class Base_Mysql extends Base_Model {
 	}
 	
 	/**
-	 * Retourne un objet qui contient les lignes demandées
+	 * Retourne un objet qui contient les ligne demandée
 	 * 
 	 * @return object
 	 */

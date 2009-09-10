@@ -93,6 +93,8 @@ class Core_Loader {
 				}
 				return false;
 			}
+		} else {
+			return true;
 		}
 	}
 	
