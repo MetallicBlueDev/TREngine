@@ -199,11 +199,7 @@ class Exec_FileManager {
 			// Si c'est un fichier valide
 			if ($file != ".." 
 					&& $file != "."
-					&& $file != "index.html"
-					&& $file != "index.htm"
-					&& $file != "index.php"
-					&& $file != ".htaccess"
-					&& $file != "checker.txt") {
+					&& $file != ".svn") {
 				// Vérification avant suppression
 				if ($timeLimit > 0) {
 					if (is_file($dirPath . "/" . $file)) {
@@ -258,8 +254,8 @@ class Exec_FileManager {
 	 * @param $dirPath
 	 * @return array
 	 */
-	private function &filesList($dirPath) {
-		$filesList = array();
+	public function &listNames($dirPath) {
+		$dirList = array();
 		// Ouverture du dossier
 		$handle = @opendir(TR_ENGINE_DIR . "/" . $dirPath);
 		// Boucle sur les fichiers
@@ -271,16 +267,17 @@ class Exec_FileManager {
 					&& $file != "index.htm"
 					&& $file != "index.php"
 					&& $file != ".htaccess"
+					&& $file != ".svn"
 					&& $file != "checker.txt") {
-				$filesList[] = $file;
+				$dirList[] = $file;
 			}
 		}
 		// Fermeture du dossier
 		@closedir($handle);
 		// Rangement et mise à zéro du tableau
-		sort($filesList);
-		reset($filesList);
-		return $filesList;
+		sort($dirList);
+		reset($dirList);
+		return $dirList;
 	}
 }
 

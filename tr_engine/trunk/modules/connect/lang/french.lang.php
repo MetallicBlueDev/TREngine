@@ -23,9 +23,17 @@ $lang = array(
 "ACCOUNT_PRIVATE" => "Votre compte",
 "ACCOUNT_PRIVATE_TITLE" => "Edition des informations personnelles",
 "ACCOUNT_PRIVATE_DESCRIPTION" => "Modifiez toutes vos informations personnelles simplement",
+"ACCOUNT_PRIVATE_LANGUE" => "Votre langue",
+"ACCOUNT_PRIVATE_TEMPLATE" => "Design du site",
 "ACCOUNT_AVATAR" => "Votre avatar",
 "ACCOUNT_AVATAR_TITLE" => "Edition de votre avatar",
 "ACCOUNT_AVATAR_DESCRIPTION" => "Choisissez une image vous représentant",
+"ACCOUNT_ADMIN" => "Vos droits",
+"ACCOUNT_ADMIN_TITLE" => "Vos droits de modération et d'administration",
+"ACCOUNT_ADMIN_DESCRIPTION" => "Retrouvez sur cette page le résumé de tout vos droits de modération et d'administration du site",
+"ACCOUNT_ADMIN_RIGHT_MAX" => "Vous êtes administrateur de ce site",
+"ACCOUNT_ADMIN_RIGHT_HIG" => "Vous êtes modérateur avec droits",
+"ACCOUNT_ADMIN_RIGHT_MED" => "Vous êtes modérateur",
 
 // Identification 
 "LOGIN_FORM_TITLE" => "Accès membres",

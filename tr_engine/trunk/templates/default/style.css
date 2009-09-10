@@ -27,7 +27,7 @@ a:hover {
 	color: #05587b;
 }
 
-.input, .textarea {
+.input, .textarea, select {
 	background-color: #d0dfe6;
 	border-top: 2px solid #7194a4;
 	border-bottom: 2px solid #7194a4;

@@ -455,14 +455,25 @@ class Exec_FtpManager {
 			}
 		}
 		
-		if (is_array($dir_list)) {
+		if (is_array($dirList)) {
 			// On supprime les mauvaises cles
-			$dirListKeys = array_merge(array_keys($dirList, "."), array_keys($dirList, ".."));
+			$dirListKeys = array_merge(
+				array_keys($dirList, ".."), 
+				array_keys($dirList, "."),
+				array_keys($dirList, "index.html"), 
+				array_keys($dirList, "index.htm"),
+				array_keys($dirList, "index.php"),
+				array_keys($dirList, ".htaccess"),
+				array_keys($dirList, ".svn"),
+				array_keys($dirList, "checker.txt")
+			);
 			if (is_array($dirListKeys)) {
 				foreach ($dirListKeys as $key) {
 					unset($dirList[$key]);
 				}
 			}
+			sort($dirList);
+			reset($dirList);
 			return $dirList;
 		} else {
 			return false;
@@ -724,10 +735,6 @@ class Exec_FtpManager {
 				}
 			}
 		}
-	}
-	
-	private function &filesList($dirPath) {
-		// TODO fonction a implémenter
 	}
 	
 	public function __destruct() {

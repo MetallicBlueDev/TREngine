@@ -239,9 +239,9 @@ class Core_Exception {
 			$error .= "No exception detected.";
 		}
 		
-		$sql = "************************" 
+		$sql = "***********************" 
 		. self::$numberOfRequest 
-		. " SQL REQUESTS************************<br />";
+		. " SQL REQUESTS***********************<br />";
 		if (!empty(self::$sqlRequest)) {
 			$sql .= str_replace("\n", "<br />", self::linearize(self::$sqlRequest));
 		} else {

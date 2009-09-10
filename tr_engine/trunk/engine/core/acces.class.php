@@ -143,9 +143,8 @@ class Core_Acces  {
 	 * @return mixed array liste des droits ou false
 	 */
 	public static function getAdminRight($userIdAdmin = "") {
-		// Id du client courant sinon utilisation de l'id indiqué
-		if (empty($userIdAdmin)) $userIdAdmin = Core_Session::$userId;
-		else $userIdAdmin = Exec_Entities::secureText($userIdAdmin);
+		if (!empty($userIdAdmin)) $userIdAdmin = Exec_Entities::secureText($userIdAdmin);
+		else $userIdAdmin = Core_Session::$userId;
 		
 		Core_Sql::select(
 			Core_Table::$ADMIN_USERS_TABLE,
@@ -154,8 +153,8 @@ class Core_Acces  {
 		);
 		
 		if (Core_Sql::affectedRows() > 0) {
-			list($rights) = Core_Sql::fetchArray();
-			return explode("|", $rights);
+			$admin = Core_Sql::fetchArray();
+			return explode("|", $admin['rights']);
 		}
 		return false;
 	}

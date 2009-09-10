@@ -24,21 +24,21 @@ class Libs_MakeStyle {
 	 * 
 	 * @var String
 	 */ 
-	private static $templateUsedDir = "default";
+	private static $currentTemplate = "default";
 	
 	/**
 	 * Nom du fichier template
 	 * 
 	 * @var String
 	 */ 
-	private $templateName = "";
+	private $fileName = "";
 	
 	/**
 	 * Variables assignées
 	 * 
 	 * @var array
 	 */ 
-	private $templateVars = array();
+	private $fileVars = array();
 	
 	/**
 	 * Indique si l'instance courante est en mode debug
@@ -47,16 +47,16 @@ class Libs_MakeStyle {
 	 */
 	private $debugMode = false;
 	
-	public function __construct($templateName = "") {
+	public function __construct($fileName = "") {
 		// Mode normale
 		$this->debugMode = false;
 		
 		// Si le nom du template est précisé a la construction
-		if (!empty($templateName)) {
-			$this->templateName = $templateName;
+		if (!empty($fileName)) {
+			$this->fileName = $fileName;
 		}
 		
-		if (empty(self::$templatesDir) || empty(self::$templateUsedDir)) {
+		if (empty(self::$templatesDir) || empty(self::$currentTemplate)) {
 			Core_Secure::getInstance()->debug("makeStyleConfig");
 		}
 	}
@@ -65,10 +65,10 @@ class Libs_MakeStyle {
 	 * Assigne le nom du template et vérifie ca validité
 	 * Affiche une erreur si détecté
 	 * 
-	 * @param $templateName String
+	 * @param $fileName String
 	 */
-	private function checkTemplate($templateName = "") {
-		if (!empty($templateName)) $this->templateName = $templateName;
+	private function checkTemplate($fileName = "") {
+		if (!empty($fileName)) $this->fileName = $fileName;
 		
 		if (!$this->isTemplate()) {
 			Core_Secure::getInstance()->debug("makeStyle", $this->getTemplatePath());
@@ -83,41 +83,41 @@ class Libs_MakeStyle {
 	 * @return Libs_MakeStyle
 	 */
 	public function assign($key, $value) {
-		$this->templateVars[$key] = is_object($value) ? $value->display() : $value;
+		$this->fileVars[$key] = is_object($value) ? $value->display() : $value;
 	}
 	
 	/**
 	 * Execute et affiche le template
 	 * 
-	 * @param $templateName String
+	 * @param $fileName String
 	 * @return $output L'affichage finale du template
 	 */
-	public function display($templateName = "") {
-		echo $this->render($templateName);
+	public function display($fileName = "") {
+		echo $this->render($fileName);
 	}
 	
 	/**
 	 * Execute et affiche le template en mode debug
 	 * Si le fichier de template debug n'est pas trouvé, le fichier debug par défaut est utilisé
 	 * 
-	 * @param $templateName String
+	 * @param $fileName String
 	 */
-	public function displayDebug($templateName = "") {
-		echo $this->renderDebug($templateName);
+	public function displayDebug($fileName = "") {
+		echo $this->renderDebug($fileName);
 	}
 	
 	/**
 	 * Retourne le rendu du template
 	 * 
-	 * @param $templateName String
+	 * @param $fileName String
 	 * @return String
 	 */
-	public function &render($templateName = "") {
+	public function &render($fileName = "") {
 		// Vérifie le template
-		$this->checkTemplate($templateName);
+		$this->checkTemplate($fileName);
 		
 		// Extrait les variables en local
-		extract($this->templateVars);
+		extract($this->fileVars);
 		
 		// Traitement du template
 		ob_start();
@@ -130,18 +130,18 @@ class Libs_MakeStyle {
 	/**
 	 * Active le mode debug si besoin et retourne le rendu du template
 	 * 
-	 * @param $templateName String
+	 * @param $fileName String
 	 * @return String
 	 */
-	public function &renderDebug($templateName = "") {
-		if (!empty($templateName)) $this->templateName = $templateName;
+	public function &renderDebug($fileName = "") {
+		if (!empty($fileName)) $this->fileName = $fileName;
 		
 		// Si le template ne contient pas le fichier debug
 		if (!$this->isTemplate()) {
 			// Activation du mode debug
 			$this->debugMode = true;
 		}
-		return $this->render($templateName);
+		return $this->render($fileName);
 	}
 	
 	/**
@@ -149,10 +149,10 @@ class Libs_MakeStyle {
 	 * 
 	 * @return path String
 	 */
-	private function getTemplatePath() {
+	private function &getTemplatePath() {
 		// Si le mode debug est activé, on utilise le fichier par défaut
 		if ($this->debugMode) return TR_ENGINE_DIR . "/engine/libs/makestyle.debug.tpl";
-		else return TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . self::$templateUsedDir . "/" . $this->templateName;
+		else return TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . self::$currentTemplate . "/" . $this->fileName;
 	}
 	
 	/**
@@ -160,7 +160,7 @@ class Libs_MakeStyle {
 	 * 
 	 * @return boolean true si le chemin du template est valide
 	 */
-	private function isTemplate() {
+	private function &isTemplate() {
 		return is_file($this->getTemplatePath());
 	}
 	
@@ -178,11 +178,11 @@ class Libs_MakeStyle {
 	/**
 	 * Configure le dossier du template courament utilisé
 	 * 
-	 * @param $templateUsedDir String
+	 * @param $currentTemplate String
 	 */
-	public static function setTemplateUsedDir($templateUsedDir) {
-		if (is_dir(TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . $templateUsedDir)) {
-			self::$templateUsedDir = $templateUsedDir;
+	public static function setCurrentTemplate($currentTemplate) {
+		if (is_dir(TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . $currentTemplate)) {
+			self::$currentTemplate = $currentTemplate;
 		}		
 	}
 	
@@ -191,7 +191,7 @@ class Libs_MakeStyle {
 	 * 
 	 * @return String
 	 */
-	public static function getTemplatesDir() {
+	public static function &getTemplatesDir() {
 		return self::$templatesDir;
 	}
 	
@@ -200,8 +200,19 @@ class Libs_MakeStyle {
 	 * 
 	 * @return String
 	 */
-	public static function getTemplateUsedDir() {
-		return self::$templateUsedDir;
+	public static function &getCurrentTemplate() {
+		return self::$currentTemplate;
+	}
+	
+	/**
+	 * Retourne la liste de templates disponibles
+	 * 
+	 * @return array
+	 */
+	public static function &listTemplates() {
+		$templates = array();
+		$dirs = Core_CacheBuffer::listNames(self::$templatesDir);
+		return $dirs;
 	}
 }
 ?>

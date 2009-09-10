@@ -298,7 +298,7 @@ class Core_Translate {
 	 * @param $language
 	 * @return boolean true langue disponible
 	 */
-	private static function isValid($language) {
+	private static function &isValid($language) {
 		return is_file(TR_ENGINE_DIR . "/lang/" . $language . ".lang.php");
 	}
 	
@@ -308,7 +308,7 @@ class Core_Translate {
 	 * @param $pathLang
 	 * @return String
 	 */
-	private static function getPath($pathLang = "") {
+	private static function &getPath($pathLang = "") {
 		if (!empty($pathLang) && substr($pathLang, -1) != "/") {
 			$pathLang .= "/";
 		}
@@ -320,7 +320,7 @@ class Core_Translate {
 	 * 
 	 * @param string $path_lang : chemin du fichier de traduction
 	 */
-	public static function translate($pathLang = "") {
+	public static function &translate($pathLang = "") {
 		// Capture du chemin vers le fichier
 		$pathLang = self::getPath($pathLang);
 		
@@ -362,7 +362,7 @@ class Core_Translate {
 			// Traduction disponible
 			if (!empty($data)) {
 				// Ajoute le fichier traduit dans le tableau
-				self::$translated[$pathLang] = "1";
+				self::$translated[$pathLang] = 1;
 				
 				ob_start();
 				print eval(" $data ");
@@ -380,20 +380,37 @@ class Core_Translate {
 	 * @param String
 	 * @return String
 	 */
-	private static function entitiesTranslate($text) {
+	private static function &entitiesTranslate($text) {
 		Core_Loader::classLoader("Exec_Entities");
 		$text = Exec_Entities::entitiesUtf8($text);
 		//$text = Exec_Entities::addSlashes($text);
 		return $text;
 	}
 	
-	public static function getLangues() {
-		$langues = "";
-		Core_CacheBuffer::setSectionName();
-		if (Core_CacheBuffer::cached("langues.php")) {
-			$langues = Core_CacheBuffer::getCache("langues.php");
-		} else {
+	/**
+	 * Retourne la langue courante
+	 * 
+	 * @return String
+	 */
+	public static function &getCurrentLanguage() {
+		return self::$currentLanguage;
+	}
+	
+	/**
+	 * Retourne un tableau contenant les langues disponibles
+	 * 
+	 * @return array
+	 */
+	public static function &listLanguages() {
+		$langues = array();
+		$files = Core_CacheBuffer::listNames("lang");
+		foreach($files as $key => $fileName) {
+			$pos = strpos($fileName, ".lang");
+			if ($pos !== false && $pos > 0) {
+				$langues[] = substr($fileName, 0, $pos);
+			}
 		}
+		return $langues;
 	}
 }
 ?>

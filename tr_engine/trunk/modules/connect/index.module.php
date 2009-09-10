@@ -29,6 +29,9 @@ class Module_Connect_Index extends Module_Model {
 			$accountTabs->addTab(ACCOUNT_PROFILE, $this->tabProfile());
 			$accountTabs->addTab(ACCOUNT_PRIVATE, $this->tabAccount());
 			$accountTabs->addTab(ACCOUNT_AVATAR, $this->tabAvatar());
+			if (Core_Session::$userRang > 1) {
+				$accountTabs->addTab(ACCOUNT_ADMIN, $this->tabAdmin());
+			}
 			echo $accountTabs->render();
 		} else {
 			$this->display();
@@ -54,9 +57,28 @@ class Module_Connect_Index extends Module_Model {
 		$form->addInputText("name", LOGIN);
 		$form->addInputText("pass", PASSWORD);
 		$form->addInputText("mail", MAIL);
-		$form->addSelectOpenTag("langue", LANGUE);
-		$form->addSelectItemTag("value", "texte");
+		$form->addSelectOpenTag("langue", ACCOUNT_PRIVATE_LANGUE);
+		// Liste des langages disponibles
+		$langues = Core_Translate::listLanguages();
+		$currentLanguage = Core_Translate::getCurrentLanguage();
+		$form->addSelectItemTag($currentLanguage, "", true);
+		foreach($langues as $langue) {
+			if ($langue == $currentLanguage) continue;
+			$form->addSelectItemTag($langue);
+		}
 		$form->addSelectCloseTag();
+		// Liste des templates disponibles
+		if (Core_Loader::isCallable("Libs_MakeStyle")) {
+			$form->addSelectOpenTag("template", ACCOUNT_PRIVATE_TEMPLATE);
+			$templates = Libs_MakeStyle::listTemplates();
+			$currentTemplate = Libs_MakeStyle::getCurrentTemplate();
+			$form->addSelectItemTag($currentTemplate, "", true);
+			foreach($templates as $template) {
+				if ($template == $currentTemplate) continue;
+				$form->addSelectItemTag($template);
+			}
+			$form->addSelectCloseTag();
+		}
 		$form->addInputHidden("mod", "connect");
 		$form->addInputHidden("view", "account");
 		$form->addInputHidden("layout", "module");
@@ -72,6 +94,28 @@ class Module_Connect_Index extends Module_Model {
 		$form->addInputHidden("view", "account");
 		$form->addInputHidden("layout", "module");
 		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
+		return $form->render();
+	}
+	
+	private function &tabAdmin() {
+		$form = new Libs_Form("admin");
+		$form->setTitle(ACCOUNT_ADMIN_TITLE);
+		$form->setDescription(ACCOUNT_ADMIN_DESCRIPTION);
+		// Type de compte admin
+		$rights = Core_Acces::getAdminRight();
+		$rangDescription = "";
+		if (Core_Session::$userRang == 3 && $rights[0] == "all") $rangDescription = ACCOUNT_ADMIN_RIGHT_MAX;
+		else if (Core_Session::$userRang == 3) $rangDescription = ACCOUNT_ADMIN_RIGHT_HIG;
+		else $rangDescription = ACCOUNT_ADMIN_RIGHT_MED;
+		$form->addInputCheckbox("accounttype", $rangDescription, true, "", "disabled=\"disabled\"");
+		// Liste des droits
+		$rights = Core_Acces::getAdminRight();
+		foreach($rights as $key => $right) {
+			$form->addInputCheckbox("right" . $key, $right, true, "", "disabled=\"disabled\"");
+		}
+		$form->addInputHidden("mod", "connect");
+		$form->addInputHidden("view", "account");
+		$form->addInputHidden("layout", "module");
 		return $form->render();
 	}
 	

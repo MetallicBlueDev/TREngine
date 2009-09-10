@@ -312,7 +312,7 @@ class Core_Main {
 	private function loadMakeStyle() {		
 		$template = (!Core_Session::$userTemplate) ? self::$coreConfig['defaultTemplate'] : Core_Session::$userTemplate;
 		Core_Loader::classLoader("Libs_MakeStyle");		
-		Libs_MakeStyle::getTemplateUsedDir($template);
+		Libs_MakeStyle::getCurrentTemplate($template);
 	}
 		
 	/**

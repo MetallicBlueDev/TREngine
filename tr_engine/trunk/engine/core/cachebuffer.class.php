@@ -52,7 +52,8 @@ class Core_CacheBuffer {
 		"sessions" => "tmp/sessions",
 		"lang" => "tmp/lang",
 		"menus" => "tmp/menus",
-		"modules" => "tmp/modules"
+		"modules" => "tmp/modules",
+		"fileList" => "tmp/fileList"
 	);
 	
 	/**
@@ -402,10 +403,18 @@ class Core_CacheBuffer {
 	 * @param $dirPath
 	 * @return array
 	 */
-	public static function &getFilesList($dirPath) {
-		$execProtocol = self::getExecProtocol();
-		if ($execProtocol != null) {
-			return $execProtocol->filesList($dirPath);
+	public static function &listNames($dirPath) {
+		self::setSectionName("fileList");
+		$fileName = str_replace("/", "_", $dirPath) . ".php";
+		if (Core_CacheBuffer::cached($fileName)) {
+			return self::getCache($fileName);
+		} else {
+			$execProtocol = self::getExecProtocol();
+			if ($execProtocol != null) {
+				$dirList = $execProtocol->listNames($dirPath);
+				self::writingCache($fileName, $dirList);
+				return $dirList;
+			}
 		}
 		return array();
 	}
