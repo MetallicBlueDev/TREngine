@@ -34,6 +34,7 @@ $lang = array(
 "ACCOUNT_ADMIN_RIGHT_MAX" => "Vous êtes administrateur de ce site",
 "ACCOUNT_ADMIN_RIGHT_HIG" => "Vous êtes modérateur avec droits",
 "ACCOUNT_ADMIN_RIGHT_MED" => "Vous êtes modérateur",
+"ACCOUNT_ADMIN_RIGHT" => "Vous disposez des droits suivant",
 
 // Identification 
 "LOGIN_FORM_TITLE" => "Accès membres",

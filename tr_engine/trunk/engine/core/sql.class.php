@@ -57,7 +57,7 @@ class Core_Sql {
 	 * 
 	 * @return boolean true succes
 	 */
-	public static function dbSelect() {
+	public static function &dbSelect() {
 		$rslt = self::$base->dbSelect();
 		return $rslt;
 	}
@@ -67,7 +67,7 @@ class Core_Sql {
 	 * 
 	 * @return int
 	 */
-	public static function affectedRows() {
+	public static function &affectedRows() {
 		return self::$base->affectedRows();
 	}
 	
@@ -94,7 +94,7 @@ class Core_Sql {
 	 * 
 	 * @return array
 	 */
-	public static function fetchArray() {
+	public static function &fetchArray() {
 		return self::$base->fetchArray();
 	}
 	
@@ -103,7 +103,7 @@ class Core_Sql {
 	 * 
 	 * @return object
 	 */
-	public static function fetchObject() {
+	public static function &fetchObject() {
 		return self::$base->fetchObject();
 	}
 	
@@ -129,7 +129,7 @@ class Core_Sql {
 	 * 
 	 * @return int
 	 */
-	public static function insertId() {
+	public static function &insertId() {
 		return self::$base->insertId();
 	}
 	
@@ -139,7 +139,7 @@ class Core_Sql {
 	 * @param $queries
 	 * @return int
 	 */
-	public static function numRows($queries = "") {
+	public static function &numRows($queries = "") {
 		$queries = (!empty($queries)) ? $queries : self::getQueries();
 		return self::$base->numRow($queries);
 	}
@@ -205,7 +205,7 @@ class Core_Sql {
 	 *
 	 * @return mixed Ressource ID ou boolean false
 	 */
-	public static function getQueries() {
+	public static function &getQueries() {
 		return self::$base->getQueries();
 	}
 	
@@ -214,7 +214,7 @@ class Core_Sql {
 	 * 
 	 * @return String
 	 */
-	public static function getSql() {
+	public static function &getSql() {
 		return self::$base->getSql();
 	}
 	
@@ -224,7 +224,7 @@ class Core_Sql {
 	 * @param $querie Resource Id
 	 * @return boolean
 	 */
-	public static function freeResult($querie = "") {
+	public static function &freeResult($querie = "") {
 		$querie = (!empty($querie)) ? $querie : self::getQueries();
 		return self::$base->freeResult($querie);
 	}
@@ -246,7 +246,7 @@ class Core_Sql {
 	 * @param $name String
 	 * @return array - object
 	 */
-	public static function fetchBuffer($name) {
+	public static function &fetchBuffer($name) {
 		return self::$base->fetchBuffer($name);
 	}
 	
@@ -256,7 +256,7 @@ class Core_Sql {
 	 * @param $name String
 	 * @return array - object
 	 */
-	public static function getBuffer($name) {
+	public static function &getBuffer($name) {
 		return self::$base->getBuffer($name);
 	}
 }
@@ -371,7 +371,7 @@ abstract class Base_Model {
 	 * 
 	 * @return boolean true succes
 	 */
-	public function dbSelect() {
+	public function &dbSelect() {
 		return false;
 	}
 	
@@ -380,7 +380,7 @@ abstract class Base_Model {
 	 * 
 	 * @return int
 	 */
-	public function affectedRows() {
+	public function &affectedRows() {
 		return 0;
 	}
 	
@@ -400,7 +400,7 @@ abstract class Base_Model {
 	 * 
 	 * @return array
 	 */
-	public function fetchArray() {
+	public function &fetchArray() {
 		return array();
 	}
 	
@@ -409,7 +409,7 @@ abstract class Base_Model {
 	 * 
 	 * @return object
 	 */
-	public function fetchObject() {
+	public function &fetchObject() {
 		return array();
 	}
 	
@@ -428,7 +428,7 @@ abstract class Base_Model {
 	 * 
 	 * @return int
 	 */
-	public function insertId() {
+	public function &insertId() {
 		return 0;
 	}
 	
@@ -438,7 +438,7 @@ abstract class Base_Model {
 	 * @param $queries
 	 * @return int
 	 */
-	public function numRows($queries = "") {
+	public function &numRows($queries = "") {
 		return 0;
 	}
 	
@@ -486,7 +486,7 @@ abstract class Base_Model {
 	 *
 	 * @return mixed Ressource ID ou boolean false
 	 */
-	public function getQueries() {
+	public function &getQueries() {
 		return $this->queries;
 	}
 	
@@ -495,7 +495,7 @@ abstract class Base_Model {
 	 * 
 	 * @return String
 	 */
-	public function getSql() {
+	public function &getSql() {
 		return $this->sql;
 	}
 	
@@ -504,7 +504,7 @@ abstract class Base_Model {
 	 * 
 	 * @return boolean
 	 */
-	public function isConnected() {
+	public function &isConnected() {
 		return ($this->connId != false) ? true : false;
 	}
 	
@@ -514,7 +514,7 @@ abstract class Base_Model {
 	 * @param $querie Resource Id
 	 * @return boolean
 	 */
-	public function freeResult($querie) {
+	public function &freeResult($querie) {
 		return false;
 	}
 	
@@ -540,7 +540,7 @@ abstract class Base_Model {
 	 * @param $name String
 	 * @return array - object
 	 */
-	public function fetchBuffer($name) {
+	public function &fetchBuffer($name) {
 		$buffer = current($this->buffer[$name]);
 		next($this->buffer[$name]);
 		return $buffer;
@@ -552,7 +552,7 @@ abstract class Base_Model {
 	 * @param $name String
 	 * @return array - object
 	 */
-	public function getBuffer($name) {
+	public function &getBuffer($name) {
 		return $this->buffer[$name];
 	}
 	
@@ -561,7 +561,7 @@ abstract class Base_Model {
 	 * 
 	 * @return boolean
 	 */
-	public function test() {
+	public function &test() {
 		return false;
 	}
 }

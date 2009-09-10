@@ -1,6 +1,10 @@
 <?php
 $lang = array(
 
+// Administration
+"ADMIN_RIGHT_ALL" => "Vous disposez de tout les droits et actions de modérations et d'administration du site, sans limitation aucune.",
+"ADMIN_RIGHT_MODULE" => "Droit concernant la modération du module",
+
 // Erreur d'acces, droits insuffisants
 "ERROR_ACCES_ZONE" => "Désolé, mais il n'y pas possible de continuer.",
 "ERROR_ACCES_OFF" => "L'accès à cette page a été desactivé.",

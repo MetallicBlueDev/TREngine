@@ -32,7 +32,7 @@ class Base_Mysql extends Base_Model {
 	 * 
 	 * @return boolean true succes
 	 */
-	public function dbSelect() {
+	public function &dbSelect() {
 		if ($this->connId) {
 			return @mysql_select_db($this->dbName, $this->connId);
 		}
@@ -63,7 +63,7 @@ class Base_Mysql extends Base_Model {
 	 * 
 	 * @return array
 	 */
-	public function fetchArray() {
+	public function &fetchArray() {
 		return mysql_fetch_array($this->queries, MYSQL_ASSOC);
 	}
 	
@@ -72,7 +72,7 @@ class Base_Mysql extends Base_Model {
 	 * 
 	 * @return object
 	 */
-	public function fetchObject() {
+	public function &fetchObject() {
 		return mysql_fetch_object($this->queries);
 	}
 	
@@ -82,7 +82,7 @@ class Base_Mysql extends Base_Model {
 	 * @param $querie Resource Id
 	 * @return boolean
 	 */
-	public function freeResult($querie) {
+	public function &freeResult($querie) {
 		if (is_resource($querie)) {
 			return mysql_free_result($querie);
 		}
@@ -94,7 +94,7 @@ class Base_Mysql extends Base_Model {
 	 * 
 	 * @return int
 	 */
-	public function affectedRows() {
+	public function &affectedRows() {
 		return mysql_affected_rows($this->connId);
 	}
 	
@@ -104,7 +104,7 @@ class Base_Mysql extends Base_Model {
 	 * @param $queries
 	 * @return int
 	 */
-	public function numRows($queries) {
+	public function &numRows($queries) {
 		return mysql_num_rows($queries);
 	}
 	
@@ -113,7 +113,7 @@ class Base_Mysql extends Base_Model {
 	 * 
 	 * @return int
 	 */
-	public function insertId() {
+	public function &insertId() {
 		return mysql_insert_id($this->connId);
 	}
 	
@@ -223,7 +223,7 @@ class Base_Mysql extends Base_Model {
 	 * @param $value mixed type
 	 * @return $value
 	 */
-	private function converValue($value) {
+	private function &converValue($value) {
 		if (is_array($value)) {
 			foreach($value as $key => $realValue) {
 				$value[$key] = $this->converValue($realValue);
@@ -246,7 +246,7 @@ class Base_Mysql extends Base_Model {
 	 * @param $key
 	 * @return $key
 	 */
-	private function converKey($key) {
+	private function &converKey($key) {
 		if (is_array($key)) {
 			foreach($key as $realKey => $keyValue) {
 				$key[$realKey] = $this->converKey($keyValue);
@@ -266,7 +266,7 @@ class Base_Mysql extends Base_Model {
 	 * @param $str
 	 * @return String
 	 */
-	private function converEscapeString($str) {
+	private function &converEscapeString($str) {
 		if (function_exists("mysql_real_escape_string") && is_resource($this->conn_id)) {
 			return mysql_real_escape_string($str, $this->conn_id);
 		} elseif (function_exists("mysql_escape_string")) {// WARNING: DEPRECATED
@@ -281,7 +281,7 @@ class Base_Mysql extends Base_Model {
 	 * 
 	 * @return boolean
 	 */
-	public function test() {
+	public function &test() {
 		return (function_exists("mysql_connect"));
 	}
 }

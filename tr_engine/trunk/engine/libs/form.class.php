@@ -263,7 +263,14 @@ class Libs_Form {
 	 * @param $html String
 	 */
 	public function addHtmlInFieldset($html) {
-		$this->inputData .= $html;
+		$this->inputData .= "<p>" . $html . "</p>";
+	}
+	
+	/**
+	 * Ajoute un espace
+	 */
+	public function addSpace() {
+		$this->inputData .= "<p><br /></p>";
 	}
 	
 	/**
@@ -276,7 +283,7 @@ class Libs_Form {
 			$this->inputData .= "</fieldset>";
 			$this->doFieldset = false;
 		}
-		$this->inputData .= $html;
+		$this->inputData .= "<p>" . $html . "</p>";
 	}
 	
 	/**
@@ -311,7 +318,7 @@ class Libs_Form {
 		// Définition du form
 		$content = "<form action=\"" . $this->urlAction . "\" method=\"post\" id=\"form-" . $this->name . "\" name=\"" . $this->name . "\""
 		. " class=\"" . ((!empty($class)) ? $class : "form") . "\"><fieldset>"
-		. ((!empty($this->title)) ? "<legend>" . Exec_Entities::textDisplay($this->title) . "</legend>" : "")
+		. ((!empty($this->title)) ? "<legend><b>" . Exec_Entities::textDisplay($this->title) . "</b></legend>" : "")
 		. ((!empty($this->description)) ? "<p id=\"" . $this->getId("description") . "\">" . Exec_Entities::textDisplay($this->description) . "</p>" : "")
 		. $this->inputData
 		. (($this->doFieldset) ? "</fieldset>" : "")
