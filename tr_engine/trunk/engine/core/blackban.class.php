@@ -114,7 +114,7 @@ class Core_BlackBan {
 					// Mise à jour de l'ip
 					Core_Sql::update(
 						Core_Table::$BANNED_TABLE,
-						array("ip = '" . $userIp . "'"),
+						array("ip" => $userIp),
 						array("ban_id = '" . $banId . "'")
 					);
 					Core_Session::$userIpBan = $userIp;

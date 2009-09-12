@@ -13,7 +13,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Module_Connect_Index extends Module_Model {
 	
 	public function display() {
-		if (Core_Session::isUser()) {
+		if (Core_Session::getInstance()->isUser()) {
 			$this->account();
 		} else {
 			$this->logon();
@@ -21,7 +21,7 @@ class Module_Connect_Index extends Module_Model {
 	}
 	
 	public function account() {
-		if (Core_Session::isUser()) {
+		if (Core_Session::getInstance()->isUser()) {
 			Core_Loader::classLoader("Libs_Form");
 			Core_Loader::classLoader("Libs_Tabs");
 			// Ajout des formulaires dans les onglets
@@ -51,14 +51,15 @@ class Module_Connect_Index extends Module_Model {
 		return $form->render();
 	}
 	
-	private function &tabAccount() {
+	private function &tabAccount() {		
 		$form = new Libs_Form("accountprivate");
 		$form->setTitle(ACCOUNT_PRIVATE_TITLE);
 		$form->setDescription(ACCOUNT_PRIVATE_DESCRIPTION);
 		$form->addSpace();
-		$form->addInputText("name", LOGIN);
-		$form->addInputText("pass", PASSWORD);
-		$form->addInputText("mail", MAIL);
+		$form->addInputText("name", LOGIN, "", "value=\"" . Core_Session::$userName . "\"");
+		$form->addInputPassword("pass", PASSWORD);
+		$form->addInputPassword("pass2", ACCOUNT_PRIVATE_PASSWORD_CONFIRME);
+		$form->addInputText("mail", MAIL, "", "value=\"" . Core_Session::$userMail . "\"");
 		
 		// Liste des langages disponibles
 		$form->addSpace();
@@ -86,10 +87,74 @@ class Module_Connect_Index extends Module_Model {
 		}
 		$form->addSpace();
 		$form->addInputHidden("mod", "connect");
-		$form->addInputHidden("view", "account");
+		$form->addInputHidden("view", "sendAccount");
 		$form->addInputHidden("layout", "module");
 		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
+		Core_Html::getInstance()->addJavascript("validAccount('#form-accountprivate', '#form-accountprivate-name-input', '#form-accountprivate-pass-input', '#form-accountprivate-pass2-input', '#form-accountprivate-mail-input');");
 		return $form->render();
+	}
+	
+	public function sendAccount() {
+		$name = Core_Request::getWord("name");
+		$pass = Core_Request::getString("pass");
+		$pass2 = Core_Request::getString("pass2");
+		$mail = Core_Request::getString("mail");
+		$langue = Core_Request::getString("langue");
+		$template = Core_Request::getString("template");
+		
+		if (Core_Session::$userName != $name || Core_Session::$userMail != $mail || Core_Session::$userLanguage != $langue || Core_Session::$userTemplate != $template) {
+			if (Core_Session::getInstance()->validLogin($name)) {
+				$validName = true;
+				if (Core_Session::$userName != $name) {
+					$name = Exec_Entities::secureText($name);
+					Core_Sql::select(
+						Core_Table::$USERS_TABLE,
+						array("user_id"),
+						array("name = '" . $name . "'")
+					);
+					if (Core_Sql::affectedRows() > 0) {
+						$validName = false;
+						Core_Exception::addNoteError(ACCOUNT_PRIVATE_LOGIN_IS_ALLOWED);
+					}
+				}
+				if ($validName) {
+					Core_Loader::classLoader("Exec_Mailer");
+					if (Exec_Mailer::validMail($mail)) {
+						$values = array();
+						if (!empty($pass) || !empty($pass2)) {
+							if ($pass == $pass2) {
+								if (Core_Session::getInstance()->validPassword($pass)) {
+									$values['pass'] = Core_Session::getInstance()->cryptPass($pass);
+								} else {
+									$this->errorBox();
+								}
+							} else {
+								Core_Exception::addNoteError(ACCOUNT_PRIVATE_PASSWORD_INVALID_CONFIRME);
+							}
+						}
+						$values['name'] = $name;
+						$values['mail'] = $mail;
+						$values['langue'] = $langue;
+						$values['template'] = $template;
+						Core_Sql::update(
+							Core_Table::$USERS_TABLE,
+							$values,
+							array("user_id = '" . Core_Session::$userId . "'")
+						);
+						if (Core_Sql::numRows() == 1) {
+							Core_Exception::addInfoError(DATA_SAVED);
+						}
+					} else {
+						Core_Exception::addNoteError(INVALID_MAIL);
+					}
+				}
+			} else {
+				$this->errorBox();
+			}
+		}
+		if (!Core_Html::getInstance()->isJavascriptEnabled()) {
+			//Core_Html::getInstance()->redirect("index.php?mod=connect&view=account&selectedTab=accounttabsidTab1");
+		}
 	}
 	
 	private function &tabAvatar() {
@@ -160,7 +225,7 @@ class Module_Connect_Index extends Module_Model {
 	 * Formulaire de connexion
 	 */
 	public function logon() {
-		if (!Core_Session::isUser()) {
+		if (!Core_Session::getInstance()->isUser()) {
 			$login = Core_Request::getString("login", "", "POST");
 			$password = Core_Request::getString("password", "", "POST");
 			$auto = (Core_Request::getWord("auto", "", "POST") == "on") ? true : false;
@@ -218,7 +283,7 @@ class Module_Connect_Index extends Module_Model {
 	 * Formulaire d'identifiant oublié
 	 */
 	public function forgetlogin() {
-		if (!Core_Session::isUser()) {
+		if (!Core_Session::getInstance()->isUser()) {
 			$login = "";
 			$ok = false;
 			$mail = Core_Request::getString("mail", "", "POST");
@@ -238,7 +303,7 @@ class Module_Connect_Index extends Module_Model {
 					}
 					if (!$ok) Core_Exception::addNoteError(FORGET_LOGIN_INVALID_MAIL_ACCOUNT);
 				} else {
-					Core_Exception::addNoteError(FORGET_LOGIN_INVALID_MAIL);
+					Core_Exception::addNoteError(INVALID_MAIL);
 				}
 			}
 			
@@ -268,13 +333,13 @@ class Module_Connect_Index extends Module_Model {
 	 * Formulaire de mot de passe oublié
 	 */
 	public function forgetpass() {
-		if (!Core_Session::isUser()) {
+		if (!Core_Session::getInstance()->isUser()) {
 			$ok = false;
 			$mail = "";
 			$login = Core_Request::getString("login", "", "POST");
 			
 			if (!empty($login)) {
-				if (Core_Session::validLogin($login)) {
+				if (Core_Session::getInstance()->validLogin($login)) {
 					Core_Sql::select(
 						Core_Table::$USERS_TABLE,
 						array("name, mail"),

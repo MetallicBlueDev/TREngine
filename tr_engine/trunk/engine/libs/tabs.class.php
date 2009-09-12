@@ -59,16 +59,16 @@ class Libs_Tabs {
 	 * @param $name String Nom du groupe d'onglet
 	 */
 	public function __construct($name) {
+		$this->name = $name;
+		$this->selected = Core_Request::getString("selectedTab");
 		if (self::$firstInstance) {
 			Core_Html::getInstance()->addJavascriptFile("jquery.idTabs.js");
 			Core_Html::getInstance()->addCssFile("jquery.idTabs.css");
 			self::$firstInstance = false;
 		}
-		$this->selected = Core_Request::getString("selectedTab");
 		if (empty($this->selected) && !Core_Html::getInstance()->isJavascriptEnabled()) {
-			$this->selected = "idTab0";
+			$this->selected = $this->name . "idTab0";
 		}
-		$this->name = $name;
 	}
 	
 	/**
@@ -79,7 +79,7 @@ class Libs_Tabs {
 	 */
 	public function addTab($title, $htmlContent) {
 		// Id de l'onget courant
-		$idTab = "idTab" . $this->tabCounter++;
+		$idTab = $this->name . "idTab" . $this->tabCounter++;
 		// Création de l'onget
 		$this->tabs .= "<li><a href=\"";
 		if (Core_Html::getInstance()->isJavascriptEnabled()) {
@@ -93,7 +93,7 @@ class Libs_Tabs {
 			$this->tabs .= "index.php?" . $queryString . "selectedTab=" . $idTab;
 		}
 		$this->tabs .= "\""
-		. (($this->selected == $idTab) ? "class=\"selected\"" : "") . ">" . Exec_Entities::textDisplay($title) . "</a></li>";
+		. (($this->selected == $idTab) ? "class=\"selected\"" : "display=\"none;\"") . ">" . Exec_Entities::textDisplay($title) . "</a></li>";
 		// Si le javascript est actif ou que nous sommes dans l'onget courant
 		if (Core_Html::getInstance()->isJavascriptEnabled() || $this->selected == $idTab) {
 			$this->tabsContent .= "<div id=\"" . $idTab . "\">" . $htmlContent . "</div>";

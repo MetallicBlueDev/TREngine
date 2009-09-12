@@ -50,7 +50,7 @@ class Exec_Image {
 	 * @param $heightDefault int
 	 * @return String balise img complete
 	 */
-	public static function resize($url, $widthDefault = 350, $heightDefault = "") {
+	public static function &resize($url, $widthDefault = 350, $heightDefault = "") {
 		$img = "";
 		if (self::isValid($url)) {
 			// Reset des variables
@@ -101,7 +101,7 @@ class Exec_Image {
 	 * @param $url String
 	 * @return boolean true image valide
 	 */
-	public static function isValid($url) {
+	public static function &isValid($url) {
 		if (is_file($url)) {
 			$type = self::getType($url);
 			if (in_array($type, self::$allowed)) {
@@ -122,7 +122,7 @@ class Exec_Image {
 	 * @param $url String
 	 * @return Constante IMAGETYPE_xxx
 	 */
-	public static function getType($url) {
+	public static function &getType($url) {
 		$key = self::getKey($url);
 		if (isset(self::$type[$key])) {
 			$type = self::$type[$key];
@@ -151,7 +151,7 @@ class Exec_Image {
 	 * @param $url String
 	 * @return String
 	 */
-	public static function getKey($url) {
+	public static function &getKey($url) {
 		return urlencode($url);
 	}
 }

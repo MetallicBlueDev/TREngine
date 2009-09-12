@@ -18,7 +18,7 @@ class Exec_Crypt {
 	 * @param $taille int
 	 * @return String
 	 */
-	public static function createKey($taille = 32, $letter = true, $number = true, $caseSensitive = true) {
+	public static function &createKey($taille = 32, $letter = true, $number = true, $caseSensitive = true) {
 		$randKey = "";
 		$string = "";
 		$letters = "abcdefghijklmnopqrstuvwxyz";
@@ -51,7 +51,7 @@ class Exec_Crypt {
 	 * @param $taille int
 	 * @return String
 	 */
-	public static function createId($taille = 32) {
+	public static function &createId($taille = 32) {
 		return self::createKey($taille, true, true, true);
 	}
 	
@@ -61,7 +61,7 @@ class Exec_Crypt {
 	 * @param $taille int
 	 * @return String
 	 */
-	public static function createIdNumbers($taille = 32) {
+	public static function &createIdNumbers($taille = 32) {
 		return self::createKey($taille, false, true, false);
 	}
 	
@@ -71,7 +71,7 @@ class Exec_Crypt {
 	 * @param $taille int
 	 * @return String
 	 */
-	public static function createIdLettres($taille = 32) {
+	public static function &createIdLettres($taille = 32) {
 		return self::createKey($taille, true, false, false);
 	}
 	
@@ -81,7 +81,7 @@ class Exec_Crypt {
 	 * @param $taille int
 	 * @return String
 	 */
-	public static function createIdLettresCaseSensitive($taille = 32) {
+	public static function &createIdLettresCaseSensitive($taille = 32) {
 		return self::createKey($taille, true, false, true);
 	}
 	
@@ -93,7 +93,7 @@ class Exec_Crypt {
 	 * @param $method String méthode de cryptage
 	 * @return String
 	 */
-	public static function cryptData($data, $salt = "", $method = "") {
+	public static function &cryptData($data, $salt = "", $method = "") {
 		// Réglage de la méthode utilisé
 		if (empty($method)) $method= "smd5";
 		$method = strtolower($method);
@@ -142,7 +142,7 @@ class Exec_Crypt {
 	 * @param $iv_len
 	 * @return String
 	 */
-	public static function md5Encrypt($plain_text, $password, $iv_len = 16) {
+	public static function &md5Encrypt($plain_text, $password, $iv_len = 16) {
 		$plain_text .= "\x13";
 		$n = strlen($plain_text);
 		if ($n % 16) $plain_text .= str_repeat("\0", 16 - ($n % 16));
@@ -169,7 +169,7 @@ class Exec_Crypt {
 	 * @param $iv_len
 	 * @return String
 	 */
-	public static function md5Decrypt($enc_text, $password, $iv_len = 16) {
+	public static function &md5Decrypt($enc_text, $password, $iv_len = 16) {
 		$enc_text = base64_decode($enc_text);
 		$n = strlen($enc_text);
 		
@@ -193,7 +193,7 @@ class Exec_Crypt {
 	 * @param $iv_len
 	 * @return String
 	 */
-	private static function getRandIv($iv_len) {
+	private static function &getRandIv($iv_len) {
 		$iv = '';
 		while ($iv_len-- > 0) {
 			$iv .= chr(mt_rand() & 0xff);

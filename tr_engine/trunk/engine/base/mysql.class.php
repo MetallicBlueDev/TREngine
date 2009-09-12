@@ -105,7 +105,10 @@ class Base_Mysql extends Base_Model {
 	 * @return int
 	 */
 	public function &numRows($queries) {
-		return mysql_num_rows($queries);
+		if (is_resource($querie)) {
+			return mysql_num_rows($queries);
+		}
+		return 0;
 	}
 	
 	/**
@@ -121,15 +124,15 @@ class Base_Mysql extends Base_Model {
 	 * Mise à jour d'une table
 	 * 
 	 * @param $table Nom de la table
-	 * @param $values array() $value[$key]
+	 * @param $values array) Sous la forme array("keyName" => "newValue")
 	 * @param $where array
 	 * @param $orderby array
-	 * @param $limit
+	 * @param $limit String
 	 */
 	public function update($table, $values, $where, $orderby = array(), $limit = false) {
 		// Affectation des clès a leurs valeurs
 		foreach($values as $key => $value) {
-			$valuesString[] = $this->converKey($key) ." = " . $this->converValue($value);
+			$valuesString[] = $this->converKey($key) ." = " . $this->converValue($value, $key);
 		}
 		
 		// Mise en place du where
@@ -149,9 +152,9 @@ class Base_Mysql extends Base_Model {
 	/**
 	 * Insere une ou des valeurs dans une table
 	 * 
-	 * @param $table Nom de la table
-	 * @param $keys
-	 * @param $values
+	 * @param $table String Nom de la table
+	 * @param $keys array
+	 * @param $values array
 	 */
 	public function insert($table, $keys, $values) {
 		if (!is_array($keys)) $keys = array($keys);
@@ -166,10 +169,10 @@ class Base_Mysql extends Base_Model {
 	/**
 	 * Supprime des informations
 	 * 
-	 * @param $table Nom de la table
-	 * @param $where
-	 * @param $like
-	 * @param $limit
+	 * @param $table String Nom de la table
+	 * @param $where array
+	 * @param $like array
+	 * @param $limit String
 	 */
 	public function delete($table, $where = array(), $like = array(), $limit = false) {
 		// Mise en place du WHERE
@@ -197,7 +200,7 @@ class Base_Mysql extends Base_Model {
 	 * @param $values array
 	 * @param $where array
 	 * @param $orderby array
-	 * @param $limit
+	 * @param $limit String
 	 */
 	public function select($table, $values, $where = array(), $orderby = array(), $limit = false) {
 		// Mise en place des valeurs selectionnées
@@ -218,71 +221,23 @@ class Base_Mysql extends Base_Model {
 	}
 	
 	/**
-	 * Convertie les valeurs dite PHP en valeurs semblable SQL
-	 * 
-	 * @param $value mixed type
-	 * @return $value
-	 */
-	private function &converValue($value) {
-		if (is_array($value)) {
-			foreach($value as $key => $realValue) {
-				$value[$key] = $this->converValue($realValue);
-			}
-		}
-		
-		if (is_bool($value)) {
-			$value = ($value == false) ? 0 : 1;
-		} else if (is_null($value)) {
-			$value = "NULL";
-		} else if (is_string($value)) {
-			$value = $this->converEscapeString($value);
-		}
-		return $value;
-	}
-	
-	/**
-	 * Convertie les clès
-	 * 
-	 * @param $key
-	 * @return $key
-	 */
-	private function &converKey($key) {
-		if (is_array($key)) {
-			foreach($key as $realKey => $keyValue) {
-				$key[$realKey] = $this->converKey($keyValue);
-			}
-		} else {
-			$key = "`" . $key . "`";
-		}
-		
-		// Convertie les multiples espaces (tabulation, espace en trop) en espace simple
-		$key = preg_replace("/[\t ]+/", " ", $key);
-		return $key;
-	}
-	
-	/**
-	 * Retourne le bon espacement dans une string
-	 * 
-	 * @param $str
-	 * @return String
-	 */
-	private function &converEscapeString($str) {
-		if (function_exists("mysql_real_escape_string") && is_resource($this->conn_id)) {
-			return mysql_real_escape_string($str, $this->conn_id);
-		} elseif (function_exists("mysql_escape_string")) {// WARNING: DEPRECATED
-			return mysql_escape_string($str);
-		} else {
-			return addslashes($str);
-		}
-	}
-	
-	/**
 	 * Vérifie que le module mysql est chargé
 	 * 
 	 * @return boolean
 	 */
 	public function &test() {
 		return (function_exists("mysql_connect"));
+	}
+	
+	/**
+	 * Retourne les dernieres erreurs
+	 * 
+	 * @return array
+	 */
+	public function &getLastError() {
+		$error = parent::getLastError();
+		$error[] ="<b>MySql response</b> : " . mysql_error();
+		return $error;
 	}
 }
 ?>

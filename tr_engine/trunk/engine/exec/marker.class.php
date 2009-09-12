@@ -49,7 +49,7 @@ class Exec_Marker {
 	 * @param $virgule int chiffre après la virgule
 	 * @return int le temps de génération
 	 */
-	public static function getTime($name, $virgule = 4) {
+	public static function &getTime($name, $virgule = 4) {
 		if (isset(self::$startTime[$name]) 
 				&& isset(self::$finishTime[$name])) {
 					$rslt = self::$finishTime[$name] - self::$startTime[$name];

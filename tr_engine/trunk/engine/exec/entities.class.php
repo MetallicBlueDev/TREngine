@@ -21,7 +21,7 @@ class Exec_Entities {
 	 * @param string $source : la chaine
 	 * @return string $encodedString : chaine et ses entitées
 	 */
-	public static function entitiesUtf8($source) {
+	public static function &entitiesUtf8($source) {
 		// Remplace les entités numériques
 		$source = preg_replace('~&#x([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', $source);
 		$source = preg_replace('~&#([0-9]+);~e', 'chr("\\1")', $source);
@@ -102,7 +102,7 @@ class Exec_Entities {
 	 * @param $text String
 	 * @return String
 	 */
-	public static function addSlashes($text) {
+	public static function &addSlashes($text) {
 		return addslashes($text);
 	}
 	
@@ -112,7 +112,7 @@ class Exec_Entities {
 	 * @param $text
 	 * @return String
 	 */
-	public static function stripSlashes($text) {
+	public static function &stripSlashes($text) {
 		return stripslashes($text);
 	}
 	
@@ -122,7 +122,7 @@ class Exec_Entities {
 	 * @param $text
 	 * @return String
 	 */
-	public static function textDisplay($text) {
+	public static function &textDisplay($text) {
 		$text = self::entitiesUtf8($text);
 		//$text = self::stripSlashes($text);
 		if (Core_Loader::isCallable("Core_TextEditor")) {
@@ -134,23 +134,12 @@ class Exec_Entities {
 	}
 	
 	/**
-	 * Prépare le texte pour un ajout dans une base de donnée
-	 * 
-	 * @param $text
-	 * @return String
-	 */
-	public static function textDb($text) {
-		//$text = addslashes($text);
-		return $texte;
-	}
-	
-	/**
 	 * Sécurise le texte
 	 * 
 	 * @param $string
 	 * @return String
 	 */
-	public static function secureText($string) {
+	public static function &secureText($string) {
 		$secure = array(
 			"content-disposition:" => "&#99;&#111;&#110;&#116;&#101;&#110;&#116;&#45;&#100;&#105;&#115;&#112;&#111;&#115;&#105;&#116;&#105;&#111;&#110;&#58;",
 			"content-type:" => "&#99;&#111;&#110;&#116;&#101;&#110;&#116;&#45;&#116;&#121;&#112;&#101;&#58;",

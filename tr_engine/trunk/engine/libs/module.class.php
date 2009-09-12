@@ -122,7 +122,7 @@ class Libs_Module {
 	 * @param $module String le nom du module, par défaut le module courant
 	 * @return mixed tableau array d'informations ou boolean false si echec
 	 */
-	public function &getInfoModule($moduleName = "") {
+	public function getInfoModule($moduleName = "") {
 		// Nom du module cible 
 		$moduleName = ((empty($moduleName)) ? self::$module : $moduleName);
 		
@@ -283,6 +283,7 @@ class Libs_Module {
 	 * Mise à jour du compteur de visite du module courant
 	 */
 	private function updateCount() {
+		Core_Sql::addQuoted("", "count + 1");
 		Core_Sql::update(
 			Core_Table::$MODULES_TABLE,
 			array("count" => "count + 1"),

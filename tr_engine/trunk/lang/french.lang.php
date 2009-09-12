@@ -72,7 +72,7 @@ $lang = array(
 
 // Divers
 "WELCOME" => "Bienvenue",
-"DATA_SAUVED" => "Les informations ont été correctement sauvegardée",
+"DATA_SAVED" => "Les informations ont été correctement sauvegardée",
 "MAIL" => "Votre adresse email",
 "LOGIN" => "Votre identifiant",
 "PASSWORD" => "Votre mot de passe",

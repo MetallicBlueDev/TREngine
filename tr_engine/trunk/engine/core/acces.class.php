@@ -124,7 +124,7 @@ class Core_Acces  {
 		else $userIdAdmin = Core_Session::$userId;
 		
 		Core_Sql::select(
-			Core_Table::$ADMIN_USERS_TABLE,
+			Core_Table::$USERS_ADMIN_TABLE,
 			array("rights"),
 			array("user_id = '" . $userIdAdmin . "'")
 		);
@@ -158,16 +158,17 @@ class Core_Acces  {
 				$identifiant = $zoneIdentifiant;
 				return true;
 			}
-		} else {
-			// Recherche des infos du module
-			$zone = "MODULE";
+		} else if (!is_numeric($zoneIdentifiant)) {
 			if (Core_Loader::isCallable("Libs_Module")) {
 				$moduleInfo = Libs_Module::getInstance()->getInfoModule($zoneIdentifiant);
 			} else {
 				$moduleInfo = false;
 			}
-			$identifiant = $moduleInfo['mod_id'];
-			if (is_numeric($identifiant)) return true;
+			if (is_numeric($moduleInfo['mod_id'])) {
+				$zone = "MODULE";
+				$identifiant = $moduleInfo['mod_id'];
+				return true;
+			}
 		}
 		return false;
 	}

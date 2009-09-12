@@ -20,7 +20,7 @@ class Exec_Cookie {
 	 * @param $cookieTimeLimit
 	 * @return boolean true succès
 	 */
-	public static function createCookie($cookieName, $cookieContent, $cookieTimeLimit = "") {
+	public static function &createCookie($cookieName, $cookieContent, $cookieTimeLimit = "") {
 		$cookieName = urlencode($cookieName);
 		$cookieContent = urlencode($cookieContent);
 		if (empty($cookieTimeLimit)) $rslt = setcookie($cookieName, $cookieContent);
@@ -35,7 +35,7 @@ class Exec_Cookie {
 	 * @param $cookieName
 	 * @return boolean true succès
 	 */
-	public static function destroyCookie($cookieName) {
+	public static function &destroyCookie($cookieName) {
 		return self::createCookie($cookieName, "", "-1");
 	}
 	

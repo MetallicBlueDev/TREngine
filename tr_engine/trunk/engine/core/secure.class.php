@@ -172,12 +172,14 @@ class Core_Secure {
 						}					
 					}
 				}
-				
 				// Remplissage dans avec les autres erreurs
 				if (!empty($errorLine)) {
 					$errorMessage[] = $errorLine;
 				}
 			}
+		}
+		if (Core_Loader::isCallable("Core_Session") && Core_Loader::isCallable("Core_Sql") && Core_Session::$userRang > 1) {
+			$errorMessage = array_merge($errorMessage, (array) Core_Sql::getLastError());
 		}
 		return $errorMessage;
 	}
@@ -199,7 +201,7 @@ class Core_Secure {
 		if (defined($errorMessageTitle)) {
 			return constant($errorMessageTitle);
 		} else {
-			return "Stop loading.";
+			return "Stop loading (Fatal error unknown).";
 		}
 	}
 }

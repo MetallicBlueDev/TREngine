@@ -74,10 +74,10 @@ class Core_Sql {
 	/**
 	 * Supprime des informations
 	 * 
-	 * @param $table Nom de la table
-	 * @param $where
-	 * @param $like
-	 * @param $limit
+	 * @param $table String Nom de la table
+	 * @param $where array
+	 * @param $like array
+	 * @param $limit String
 	 */
 	public static function delete($table, $where = array(), $like = array(), $limit = false) {
 		self::$base->delete($table, $where, $like, $limit);
@@ -108,11 +108,11 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Insere de valeurs dans une table
+	 * Insere une ou des valeurs dans une table
 	 * 
-	 * @param $table Nom de la table
-	 * @param $keys
-	 * @param $values
+	 * @param $table String Nom de la table
+	 * @param $keys array
+	 * @param $values array
 	 */
 	public static function insert($table, $keys, $values) {
 		self::$base->insert($table, $keys, $values);
@@ -141,7 +141,7 @@ class Core_Sql {
 	 */
 	public static function &numRows($queries = "") {
 		$queries = (!empty($queries)) ? $queries : self::getQueries();
-		return self::$base->numRow($queries);
+		return self::$base->numRows($queries);
 	}
 	
 	/**
@@ -152,6 +152,7 @@ class Core_Sql {
 	public static function query($sql = "") {
 		$sql = (!empty($sql)) ? $sql : self::getSql();
 		self::$base->query($sql);
+		self::$base->resetQuoted();
 		
 		if (Core_Main::statisticMarker()) Core_Exception::setSqlRequest($sql);
 		
@@ -169,7 +170,7 @@ class Core_Sql {
 	 * @param $values array
 	 * @param $where array
 	 * @param $orderby array
-	 * @param $limit
+	 * @param $limit String
 	 */
 	public static function select($table, $values, $where = array(), $orderby = array(), $limit = false) {
 		self::$base->select($table, $values, $where, $orderby, $limit);
@@ -185,10 +186,10 @@ class Core_Sql {
 	 * Mise à jour d'une table
 	 * 
 	 * @param $table Nom de la table
-	 * @param $values array() $value[$key]
+	 * @param $values array) Sous la forme array("keyName" => "newValue")
 	 * @param $where array
 	 * @param $orderby array
-	 * @param $limit
+	 * @param $limit String
 	 */
 	public static function update($table, $values, $where, $orderby = array(), $limit = false) {
 		self::$base->update($table, $values, $where, $orderby, $limit);
@@ -258,6 +259,24 @@ class Core_Sql {
 	 */
 	public static function &getBuffer($name) {
 		return self::$base->getBuffer($name);
+	}
+	
+	/**
+	 * Retourne les dernieres erreurs
+	 * 
+	 * @return array
+	 */
+	public static function &getLastError() {
+		return self::$base->getLastError();
+	}
+	
+	/**
+	 * Marqué une cles comme déjà quoté
+	 * 
+	 * @param $key String
+	 */
+	public static function addQuoted($key, $value = 1) {
+		self::$base->addQuoted($key, $value);
 	}
 }
 
@@ -333,6 +352,27 @@ abstract class Base_Model {
 	protected $buffer = array();
 	
 	/**
+	 * Quote pour les objects, champs...
+	 * 
+	 * @var String
+	 */
+	protected $quoteKey = "`";
+	
+	/**
+	 * Quote pour les valeurs uniquement
+	 * 
+	 * @var String
+	 */
+	protected $quoteValue = "'";
+	
+	/**
+	 * Tableau contenant les cles déjà quoté
+	 * 
+	 * @var array
+	 */
+	protected $quoted = array();
+	
+	/**
 	 * Parametre la connexion, test la connexion puis engage une connexion
 	 * 
 	 * @param $db array
@@ -358,6 +398,13 @@ abstract class Base_Model {
 		} else {
 			throw new Exception("sqlTest");
 		}
+	}
+	
+	/**
+	 * Destruction de la communication
+	 */
+	public function __destruct() {
+		$this->dbDeconnect();
 	}
 	
 	/**
@@ -475,13 +522,6 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Destruction de la communication
-	 */
-	public function __destruct() {
-		$this->dbDeconnect();
-	}
-	
-	/**
 	 * Retourne dernier résultat de la dernière requête executée
 	 *
 	 * @return mixed Ressource ID ou boolean false
@@ -563,6 +603,109 @@ abstract class Base_Model {
 	 */
 	public function &test() {
 		return false;
+	}
+	
+	/**
+	 * Retourne les dernieres erreurs
+	 * 
+	 * @return array
+	 */
+	public function &getLastError() {
+		return array("<b>Last Sql query</b> : " . $this->getSql());
+	}
+	
+	/**
+	 * Quote les identifiants et les valeurs
+	 * 
+	 * @param $s String
+	 * @return String
+	 */
+	protected function &addQuote($s, $isValue = false) {
+		// Ne pas quoter les champs avec la notation avec les point
+		if (($isValue && !in_array($s, $this->quoted)) || (!$isValue && strpos($s, "." ) === false && !isset($this->quoted[$s]))) {
+			if ($isValue) $q = $this->quoteValue;
+			else $q = $this->quoteKey;
+			$s = $q . $s . $q;
+		}
+		return $s;
+	}
+	
+	/**
+	 * Marqué une cles et/ou une valeur comme déjà quoté
+	 * 
+	 * @param $key String
+	 */
+	public function addQuoted($key, $value = 1) {
+		if (!empty($key)) $this->quoted[$key] = $value;
+		else $this->quoted[] = $value;
+	}
+	
+	/**
+	 * Remise à zéro du tableau de cles déjà quoté
+	 */
+	public function resetQuoted() {
+		$this->quoted = array();
+	}
+	
+	/**
+	 * Conversion des valeurs dite PHP en valeurs semblable SQL
+	 * 
+	 * @param $value mixed type
+	 * @return $value mixed type
+	 */
+	protected function &converValue($value) {
+		if (is_array($value)) {
+			foreach($value as $realKey => $realValue) {
+				$value[$realKey] = $this->converValue($realValue);
+			}
+		}
+		
+		if (is_bool($value)) {
+			$value = ($value == false) ? 0 : 1;
+		} else if (is_null($value)) {
+			$value = "NULL";
+		} else if (is_string($value)) {
+			$value = $this->converEscapeString($value);
+		}
+		$value = $this->addQuote($value, true);
+		return $value;
+	}
+	
+	/**
+	 * Conversion des clès
+	 * 
+	 * @param $key mixed type
+	 * @return $key mixed type
+	 */
+	protected function &converKey($key) {
+		if (is_array($key)) {
+			foreach($key as $realKey => $keyValue) {
+				$key[$realKey] = $this->converKey($keyValue);
+			}
+		} else {
+			$key = $this->addQuote($key);
+		}
+		
+		// Convertie les multiples espaces (tabulation, espace en trop) en espace simple
+		$key = preg_replace("/[\t ]+/", " ", $key);
+		return $key;
+	}
+	
+	/**
+	 * Retourne le bon espacement dans une string
+	 * 
+	 * @param $str String
+	 * @return String
+	 */
+	protected function &converEscapeString($str) {
+		if (function_exists("mysql_real_escape_string") && is_resource($this->conn_id)) {
+			$str = mysql_real_escape_string($str, $this->conn_id);
+		} elseif (function_exists("mysql_escape_string")) {// WARNING: DEPRECATED
+			$str = mysql_escape_string($str);
+		} else {
+			$str = addslashes($str);
+		}
+		return $str;
 	}
 }
 ?>

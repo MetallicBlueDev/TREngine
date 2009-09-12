@@ -53,6 +53,41 @@ function validLink(divId, link) {
 	$(divId).load(link);
 	return false;
 }
+function validAccount(formId, loginId, passwordId, passwordConfirmeId, mailId) {
+	$(formId).submit(function(){
+		var isLogin = false;
+		var isPassword = false;
+		var isMail = false;
+		if (checkLogin($(loginId).val())) {
+			$(loginId).removeClass('error');
+			isLogin = true;
+		} else {
+			$(loginId).addClass('error');
+		}
+		if ($(passwordId).val().length > 0 || $(passwordConfirmeId).val() > 0) {
+			if (checkPassword($(passwordId).val()) && $(passwordId).val() == $(passwordConfirmeId).val()) {
+				isPassword = true;
+				$(passwordId).removeClass('error');
+				$(passwordConfirmeId).removeClass('error');
+			} else {
+				$(passwordId).addClass('error');
+				$(passwordConfirmeId).addClass('error');
+			}
+		} else {
+			isPassword = true;
+			$(passwordId).removeClass('error');
+			$(passwordConfirmeId).removeClass('error');
+		}
+		if (checkMail($(mailId).val())) {
+			$(mailId).removeClass('error');
+			isMail = true;
+		} else {
+			$(mailId).addClass('error');
+		}
+		if (isLogin && isPassword && isMail) {postForm(this);}
+		return false;
+	});
+}
 function postForm(form) {
 	disableForm(form);
 	$.ajax({

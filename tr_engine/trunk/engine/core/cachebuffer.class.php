@@ -123,7 +123,7 @@ class Core_CacheBuffer {
 	 * @param $overWrite boolean true réécriture complete, false écriture a la suite
 	 */
 	public static function writingCache($path, $content, $overWrite = true) {
-		if (!is_string($content)) {
+		if (is_array($content)) {
 			$content = self::linearizeCache($content);
 		}
 		// Mise en forme de la cles

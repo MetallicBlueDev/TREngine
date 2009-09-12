@@ -205,7 +205,7 @@ class Exec_Agent {
 	 * 
 	 * @return String
 	 */
-	private static function checkUserBrower() {
+	private static function &checkUserBrower() {
 		// Boucle sur tout les Browsers et Bot connus
 		foreach (self::$browserRessouces as $browserAgent => $browserName) {
 			if (preg_match("/" . $browserAgent . "[ \/]([0-9\.]+)/ie", self::$userAgent, $version)
@@ -222,7 +222,7 @@ class Exec_Agent {
 	 * 
 	 * @return String
 	 */
-	private static function checkUserOs() {
+	private static function &checkUserOs() {
 		// Boucle sur tout les systemes d'exploitations
 		foreach (self::$osRessources as $osAgent => $osName) {
 			if (preg_match("/" . $osAgent . "/ie", self::$userAgent)) {
@@ -255,7 +255,7 @@ class Exec_Agent {
 	 * 
 	 * @return $userIp String
 	 */
-	private static function checkUserIp() {
+	private static function &checkUserIp() {
 		// Recherche de l'IP
 		$userIp = Core_Request::getString("HTTP_CLIENT_IP", "", "SERVER");
 		if (empty($userIp)) {

@@ -174,7 +174,7 @@ class Core_Session {
 	 * 
 	 * @return boolean true une session peut être recupere
 	 */
-	private function sessionFound() {
+	private function &sessionFound() {
 		$cookieUser = $this->getCookie($this->cookieName['USER']);
 		$cookieSession = $this->getCookie($this->cookieName['SESSION']);
 		if (!empty($cookieUser) && !empty($cookieSession)) {
@@ -258,7 +258,7 @@ class Core_Session {
 	 * 
 	 * @return String
 	 */
-	private function getUser() {
+	private function &getUser() {
 		$rslt = "$" . Core_CacheBuffer::getSectionName() . "['user_id'] = \"" . self::$userId . "\"; ";
 		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['name'] = \"" . Exec_Entities::addSlashes(self::$userName) . "\"; ";
 		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['mail'] = \"" . self::$userMail . "\"; ";
@@ -304,9 +304,10 @@ class Core_Session {
 	 * @param $userId String
 	 * @return boolean true succes de la mise à jour
 	 */
-	private function updateLastConnect($userId = "") {
+	private function &updateLastConnect($userId = "") {
 		// Récupere l'id du client
 		if (empty($userId)) $userId = self::$userId;
+		Core_Sql::addQuoted("", "NOW()");
 		// Envoie la requête Sql de mise à jour
 		Core_Sql::update(Core_Table::$USERS_TABLE, 
 			array("last_connect" => "NOW()"), 
@@ -320,7 +321,7 @@ class Core_Session {
 	 * 
 	 * @return boolean true c'est un client
 	 */
-	public function isUser() {
+	public function &isUser() {
 		if (!empty(self::$userId)
 			&& !empty(self::$userName)
 			&& !empty(self::$sessionId)
@@ -350,7 +351,7 @@ class Core_Session {
 	 * @param $auto boolean connexion automatique
 	 * @return boolean ture succès
 	 */
-	private function sessionOpen($auto = true) {
+	private function &sessionOpen($auto = true) {
 		self::$sessionId = Exec_Crypt::createId(32);
 		
 		// Connexion automatique via cookie
@@ -413,12 +414,12 @@ class Core_Session {
 	 * @param $auto boolean Connexion automatique
 	 * @return boolean ture succès
 	 */
-	public function startConnection($userName, $userPass, $auto) {
+	public function &startConnection($userName, $userPass, $auto) {
 		// Arrête de la session courante si il y en a une
 		$this->stopConnection();
 		
 		if ($this->validLogin($userName) && $this->validPassword($userPass)) {
-			$userPass = Exec_Crypt::cryptData($userPass, $userPass, "md5+");
+			$userPass = $this->cryptPass($userPass);
 			$user = $this->getUserInfo(array("name = '" . $userName . "'", "&& pass = '" . $userPass . "'"));
 			
 			if (count($user) > 1) {
@@ -448,8 +449,18 @@ class Core_Session {
 	 * 
 	 * @return String
 	 */
-	private function getSalt() {
+	private function &getSalt() {
 		return Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowserName;
+	}
+	
+	/**
+	 * Crypte un mot de passe pour un compte client
+	 * 
+	 * @param $pass String
+	 * @return String
+	 */
+	public function &cryptPass($pass) {
+		return Exec_Crypt::cryptData($pass, $pass, "md5+");
 	}
 	
 	/**
@@ -458,7 +469,7 @@ class Core_Session {
 	 * @param $cookieName String
 	 * @return String
 	 */
-	private function getCookie($cookieName) {
+	private function &getCookie($cookieName) {
 		$cookieName = $this->getCookieName($cookieName);
 		$cookieContent = Exec_Cookie::getCookie($cookieName);
 		return Exec_Crypt::md5Decrypt($cookieContent, $this->getSalt());
@@ -470,7 +481,7 @@ class Core_Session {
 	 * @param $cookieName String
 	 * @return String
 	 */
-	private function getCookieName($cookieName) {
+	private function &getCookieName($cookieName) {
 		return Exec_Crypt::cryptData($cookieName, $this->getSalt(), "md5+");
 	}
 	
@@ -480,7 +491,7 @@ class Core_Session {
 	 * @param $login
 	 * @return boolean true login valide
 	 */
-	public function validLogin($login) {
+	public function &validLogin($login) {
 		if (!empty($login)) {
 			$len = strlen($login);
 			if ($len >= 3 && $len <= 16) {
@@ -504,7 +515,7 @@ class Core_Session {
 	 * @param $password
 	 * @return boolean true password valide
 	 */
-	public function validPassword($password) {
+	public function &validPassword($password) {
 		if (!empty($password)) {
 			if (strlen($password) >= 5) {
 				return true;
@@ -521,7 +532,7 @@ class Core_Session {
 	 * Retourne un message d'erreur
 	 * 
 	 * @param $key
-	 * @return String
+	 * @return String or array
 	 */
 	public function getErrorMessage($key = "") {
 		if (!empty($key)) return $this->errorMessage[$key];

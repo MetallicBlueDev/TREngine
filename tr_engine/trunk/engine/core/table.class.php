@@ -24,12 +24,12 @@ class Core_Table {
 	public static $MENUS_TABLES = "menus";
 	public static $MODULES_TABLE = "modules";
 	public static $USERS_TABLE = "users";
-	public static $ADMIN_USERS_TABLE = "users_admin";
+	public static $USERS_ADMIN_TABLE = "users_admin";
 	
 	private static $tables = array(
 		"CONFIG_TABLE", "USERS_TABLE",
 		"BANNED_TABLE", "BLOCKS_TABLE",
-		"MODULES_TABLE", "ADMIN_USERS_TABLE",
+		"MODULES_TABLE", "USERS_ADMIN_TABLE",
 		"MENUS_TABLES"
 	);
 	
