@@ -141,6 +141,7 @@ class Module_Connect_Index extends Module_Model {
 							$values,
 							array("user_id = '" . Core_Session::$userId . "'")
 						);
+						Core_Session::getInstance()->refreshConnection();
 						if (Core_Sql::numRows() == 1) {
 							Core_Exception::addInfoError(DATA_SAVED);
 						}

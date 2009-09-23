@@ -246,10 +246,10 @@ class Core_Session {
 		self::$userInscriptionDate = $info['date'];
 		self::$userAvatar = $info['avatar'];
 		self::$userSignature = Exec_Entities::stripSlashes($info['signature']);
-		self::$sessionId = $info['sessionId'];
+		self::$sessionId = (!empty($info['sessionId'])) ? $info['sessionId'] : self::$sessionId;
 		if (empty(self::$userLanguage)) self::$userLanguage = $info['langue'];
 		if (empty(self::$userTemplate)) self::$userTemplate = $info['template'];
-		if (empty(self::$userIpBan)) self::$userIpBan = $info['userIpBan'];
+		if (empty(self::$userIpBan)) self::$userIpBan = (!empty($info['userIpBan'])) ? $info['userIpBan'] : self::$userIpBan;
 	}
 	
 	/**
@@ -386,6 +386,19 @@ class Core_Session {
 	}
 	
 	/**
+	 * Rafraichir le cache de session
+	 */
+	private function sessionRefresh() {
+		$user = $this->getUserInfo(array("user_id = '" . self::$userId . "'"));
+
+		if (count($user) > 1) {
+			$this->setUser($user);
+			Core_CacheBuffer::setSectionName("sessions");
+			Core_CacheBuffer::writingCache(self::$sessionId . ".php", $this->getUser(), true);
+		}
+	}
+	
+	/**
 	 * Ferme une session ouverte
 	 */
 	private function sessionClose() {
@@ -441,6 +454,15 @@ class Core_Session {
 	public function stopConnection() {
 		if ($this->isUser()) {
 			$this->sessionClose();
+		}
+	}
+	
+	/**
+	 * Rafraichis la connexion courante avec le client
+	 */
+	public function refreshConnection() {
+		if ($this->isUser()) {
+			$this->sessionRefresh();
 		}
 	}
 	
