@@ -12,6 +12,14 @@ if (!defined("TR_ENGINE_INDEX")) {
  */
 class Base_Mysql extends Base_Model {
 	
+	/**
+	 * Le type de la dernière commande
+	 * SELECT, DELETE, INSERT, REPLACE, UPDATE
+	 * 
+	 * @var String
+	 */
+	private $lastSqlCommand = "";
+	
 	public function __construct($db) {
 		parent::__construct($db);
 	}
@@ -90,25 +98,34 @@ class Base_Mysql extends Base_Model {
 	}
 	
 	/**
-	 * Get number of LAST affected rows 
+	 * Get number of LAST affected rows
 	 * 
 	 * @return int
 	 */
 	public function &affectedRows() {
+		if ($this->lastSqlCommand == "SELECT" || $this->lastSqlCommand == "SHOW") {
+			return $this->mysqlNumRows($this->queries);
+		}
+		return $this->mysqlAffectedRows();
+	}
+	
+	/**
+	 * Get number of LAST affected rows (for DELETE, UPDATE, INSERT, REPLACE)
+	 * 
+	 * @return int
+	 */
+	private function &mysqlAffectedRows() {
 		return mysql_affected_rows($this->connId);
 	}
 	
 	/**
-	 * Get number of affected rows 
+	 * Get number of affected rows (for SELECT only)
 	 * 
 	 * @param $queries
 	 * @return int
 	 */
-	public function &numRows($queries) {
-		if (is_resource($querie)) {
-			return mysql_num_rows($queries);
-		}
-		return 0;
+	private function &mysqlNumRows($queries) {
+		return mysql_num_rows($queries);
 	}
 	
 	/**
@@ -130,6 +147,8 @@ class Base_Mysql extends Base_Model {
 	 * @param $limit String
 	 */
 	public function update($table, $values, $where, $orderby = array(), $limit = false) {
+		$this->lastSqlCommand = "UPDATE";
+		
 		// Affectation des clès a leurs valeurs
 		foreach($values as $key => $value) {
 			$valuesString[] = $this->converKey($key) ." = " . $this->converValue($value, $key);
@@ -157,6 +176,8 @@ class Base_Mysql extends Base_Model {
 	 * @param $values array
 	 */
 	public function insert($table, $keys, $values) {
+		$this->lastSqlCommand = "INSERT";
+		
 		if (!is_array($keys)) $keys = array($keys);
 		if (!is_array($values)) $values = array($values);
 		
@@ -175,6 +196,8 @@ class Base_Mysql extends Base_Model {
 	 * @param $limit String
 	 */
 	public function delete($table, $where = array(), $like = array(), $limit = false) {
+		$this->lastSqlCommand = "DELETE";
+		
 		// Mise en place du WHERE
 		if (!is_array($where)) $where = array($where);
 		$where = (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
@@ -203,6 +226,8 @@ class Base_Mysql extends Base_Model {
 	 * @param $limit String
 	 */
 	public function select($table, $values, $where = array(), $orderby = array(), $limit = false) {
+		$this->lastSqlCommand = "SELECT";
+		
 		// Mise en place des valeurs selectionnées
 		if (!is_array($values)) $values = array($values);
 		$values = implode(", ", $values);

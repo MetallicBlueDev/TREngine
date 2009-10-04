@@ -237,8 +237,9 @@ class Core_Session {
 	 * Injection des informations du client
 	 * 
 	 * @param $info array
+	 * @param $refreshAll boolean
 	 */
-	private function setUser($info) {	
+	private function setUser($info, $refreshAll = false) {	
 		self::$userId = $info['user_id'];
 		self::$userName = Exec_Entities::stripSlashes($info['name']);
 		self::$userMail = $info['mail'];
@@ -247,9 +248,14 @@ class Core_Session {
 		self::$userAvatar = $info['avatar'];
 		self::$userSignature = Exec_Entities::stripSlashes($info['signature']);
 		self::$sessionId = (!empty($info['sessionId'])) ? $info['sessionId'] : self::$sessionId;
-		if (empty(self::$userLanguage)) self::$userLanguage = $info['langue'];
-		if (empty(self::$userTemplate)) self::$userTemplate = $info['template'];
-		if (empty(self::$userIpBan)) self::$userIpBan = (!empty($info['userIpBan'])) ? $info['userIpBan'] : self::$userIpBan;
+		self::$userIpBan = (!empty($info['userIpBan'])) ? $info['userIpBan'] : self::$userIpBan;
+		if ($refreshAll)  {
+			self::$userLanguage = $info['langue'];
+			self::$userTemplate = $info['template'];
+		} else {
+			if (empty(self::$userLanguage)) self::$userLanguage = $info['langue'];
+			if (empty(self::$userTemplate)) self::$userTemplate = $info['template'];
+		}
 	}
 	
 	/**
@@ -392,7 +398,7 @@ class Core_Session {
 		$user = $this->getUserInfo(array("user_id = '" . self::$userId . "'"));
 
 		if (count($user) > 1) {
-			$this->setUser($user);
+			$this->setUser($user, true);
 			Core_CacheBuffer::setSectionName("sessions");
 			Core_CacheBuffer::writingCache(self::$sessionId . ".php", $this->getUser(), true);
 		}

@@ -63,12 +63,12 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Get number of LAST affected rows 
+	 * Get number of LAST affected rows (for all : SELECT, SHOW, DELETE, INSERT, REPLACE and UPDATE)
 	 * 
 	 * @return int
 	 */
-	public static function &affectedRows() {
-		return self::$base->affectedRows();
+	public static function &affectedRows() {$int = self::$base->affectedRows(); echo $int . "..";
+		return $int;
 	}
 	
 	/**
@@ -131,17 +131,6 @@ class Core_Sql {
 	 */
 	public static function &insertId() {
 		return self::$base->insertId();
-	}
-	
-	/**
-	 * Get number of affected rows 
-	 * 
-	 * @param $queries
-	 * @return int
-	 */
-	public static function &numRows($queries = "") {
-		$queries = (!empty($queries)) ? $queries : self::getQueries();
-		return self::$base->numRows($queries);
 	}
 	
 	/**
@@ -476,16 +465,6 @@ abstract class Base_Model {
 	 * @return int
 	 */
 	public function &insertId() {
-		return 0;
-	}
-	
-	/**
-	 * Get number of affected rows 
-	 * 
-	 * @param $queries
-	 * @return int
-	 */
-	public function &numRows($queries = "") {
 		return 0;
 	}
 	
