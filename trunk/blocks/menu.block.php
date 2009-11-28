@@ -66,7 +66,7 @@ class Block_Menu extends Block_Model {
 				if ($value == "U") $underline = 1;
 				if ($value == "BIG") $big = 1;
 				if ($value == "SMALL") $small = 1;
-				if ($value == "A") $link = $matches[2][$key+1];
+				if ($value == "A") $link = $options[$key+1];
 				if ($value == "POPUP") $popup = 1;
 			}
 			
