@@ -12,26 +12,28 @@ require("engine/core/loader.class.php");
 
 // Chargement du Marker
 Core_Loader::classLoader("Exec_Marker");
-$statisticMarker = true;
-if ($statisticMarker) Exec_Marker::startTimer("all");
+
+$debugMode = true;
+
+if ($debugMode) Exec_Marker::startTimer("all");
 Exec_Marker::startTimer("main");
 
 // Chargement du système de sécurité
 Core_Loader::classLoader("Core_Secure");
-Core_Secure::getInstance();
+Core_Secure::getInstance($debugMode);
 
 // Chargement de la classe principal
 Core_Loader::classLoader("Core_Main");
 
 // Préparation du moteur
-$TR_ENGINE = new Core_Main($statisticMarker);
+$TR_ENGINE = new Core_Main($debugMode);
 
 // Démarrage du moteur
 $TR_ENGINE->start();
 
-if ($statisticMarker)  Exec_Marker::stopTimer("all");
+if ($debugMode)  Exec_Marker::stopTimer("all");
 
 // Affichage des exceptions
-if ($statisticMarker)  Core_Exception::displayException();
+if ($debugMode)  Core_Exception::displayException();
 
 ?>

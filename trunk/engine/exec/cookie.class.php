@@ -47,8 +47,9 @@ class Exec_Cookie {
 	 */
 	public static function &getCookie($cookieName) {
 		$cookieName = urlencode($cookieName);
-		$cookie = Core_Request::getString($cookieName, "", "COOKIE");
-		return urldecode($cookie);
+		$cookieContent = Core_Request::getString($cookieName, "", "COOKIE");
+		$cookieContent = urldecode($cookieContent);
+		return $cookieContent;
 	}
 }
 ?>

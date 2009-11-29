@@ -148,7 +148,8 @@ class Core_Loader {
 		if (TR_ENGINE_PHP_VERSION < "5.2.3" && strpos($callback, "::") !== false) {
 			$callback = explode("::", $callback);
 		}
-		$args = array_splice(func_get_args(), 1, 1);
+		$args = func_get_args();
+		$args = array_splice($args, 1, 1);
 		return call_user_func_array($callback, $args);
 	}
 }

@@ -15,9 +15,18 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Core_Secure {
 	
 	/**
-	 * Instance de cette classe
+	 * Instance de cette classe.
+	 * 
+	 * @var Core_Secure
 	 */ 
 	private static $secure = false;
+	
+	/**
+	 * Statistique et debug mode
+	 * 
+	 * @var boolean
+	 */
+	private static $debugMode = false;
 	
 	public function __construct() {
 		$this->checkError();
@@ -39,8 +48,9 @@ class Core_Secure {
 	 * 
 	 * @return Core_Secure
 	 */
-	public static function &getInstance() {
+	public static function &getInstance($debugMode = false) {
 		if (self::$secure === false) {
+			self::$debugMode = $debugMode;
 			self::$secure = new self();
 		}
 		return self::$secure;
@@ -51,7 +61,12 @@ class Core_Secure {
 	 */
 	private function checkError() {
 		// Réglages des sorties d'erreur
-		error_reporting(E_ERROR | E_WARNING | E_PARSE);
+		$errorReporting = E_ERROR | E_WARNING | E_PARSE;
+		
+		if (self::$debugMode) {
+			$errorReporting = $errorReporting | E_DEPRECATED | E_STRICT;
+		}
+		error_reporting($errorReporting);
 	}
 	
 	/**
@@ -87,13 +102,12 @@ class Core_Secure {
 	 * Fonction de substitution pour MAGIC_QUOTES_GPC
 	 */
 	private function checkGPC() {
-		if (function_exists("magic_quotes_runtime") 
-				&& function_exists("set_magic_quotes_runtime")) {
+		if (TR_ENGINE_PHP_VERSION < "5.3.0" && function_exists("set_magic_quotes_runtime")) {
 			set_magic_quotes_runtime(0);
 		}
-		
-		$GPC = array("_GET", "_POST", "_COOKIE");
-		foreach ($GPC as $KEY) $this->addSlashesForQuotes($$KEY);
+		$this->addSlashesForQuotes($_GET);
+		$this->addSlashesForQuotes($_POST);
+		$this->addSlashesForQuotes($_COOKIE);
 	}
 	
 	/**

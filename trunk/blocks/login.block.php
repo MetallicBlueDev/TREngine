@@ -46,7 +46,7 @@ class Block_Login extends Block_Model {
 	
 	public function &render() {
 		$content = "";
-		if (Core_Session::isUser()) {
+		if (Core_Session::getInstance()->isUser()) {
 			if ($this->displayText) {
 				$content .= WELCOME . " <b>" . Core_Session::$userName . "</b> !<br />";
 			}

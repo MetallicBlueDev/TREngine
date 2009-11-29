@@ -124,7 +124,7 @@ class Core_Html {
 	 * @param $forceIncludes boolean Pour forcer l'inclusion des fichiers javascript
 	 * @return String
 	 */
-	private function includeJavascript($forceIncludes = false) {
+	private function &includeJavascript($forceIncludes = false) {
 		if (Core_Request::getRequest() != "POST" || $forceIncludes) {
 			if (Core_Loader::isCallable("Core_Main")) $fullScreen = Core_Main::isFullScreen();
 			else $fullScreen = true;
@@ -168,7 +168,7 @@ class Core_Html {
 	 * 
 	 * @return String
 	 */
-	private function includeCss() {
+	private function &includeCss() {
 		$this->addCssFile("default.css");
 		// Conception de l'entête
 		$script = "";
@@ -184,8 +184,8 @@ class Core_Html {
 	 * 
 	 * @return String
 	 */
-	private function executeJavascript() {
-		$script .= "<script type=\"text/javascript\">\n";
+	private function &executeJavascript() {
+		$script = "<script type=\"text/javascript\">\n";
 		if (!empty($this->javaScriptCode)) {
 			$script .= $this->javaScriptCode;
 		}
@@ -393,7 +393,7 @@ class Core_Html {
 	 * @param $layout boolean true ajouter le layout
 	 * @return String or array
 	 */
-	public static function getLink($link, $layout = false) {
+	public static function &getLink($link, $layout = false) {
 		if (is_array($link)) {
 			foreach ($link as $key => $value) {
 				$link[$key] = self::getLink($value, $layout);

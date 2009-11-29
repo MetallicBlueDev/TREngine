@@ -170,15 +170,14 @@ class Core_Exception {
 		
 		// Réaction différente en fonction du type d'affichage demandée
 		if (Core_Main::isFullScreen()) {
-			return "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
+			$rslt = "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
 		} else if ($error) {
 			if (Core_Html::getInstance()->isJavascriptEnabled()) {
 				Core_Html::getInstance()->addJavascript("displayMessage('" . addslashes($rslt) . "');");
-			} else {
-				return $rslt;
+				return null;
 			}
 		}
-		return "";
+		return $rslt;
 	}
 	
 	/**

@@ -174,13 +174,10 @@ class Core_Session {
 	 * 
 	 * @return boolean true une session peut être recupere
 	 */
-	private function &sessionFound() {
-		$cookieUser = $this->getCookie($this->cookieName['USER']);
+	private function sessionFound() {
+		$cookieUser = $this->getCookie($this->cookieName['USER']);echo $cookieUser;
 		$cookieSession = $this->getCookie($this->cookieName['SESSION']);
-		if (!empty($cookieUser) && !empty($cookieSession)) {
-			return true;
-		}
-		return false;
+		return (!empty($cookieUser) && !empty($cookieSession));
 	}
 	
 	/**
@@ -478,7 +475,8 @@ class Core_Session {
 	 * @return String
 	 */
 	private function &getSalt() {
-		return Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowserName;
+		$salt = Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowserName;
+		return $salt;
 	}
 	
 	/**
@@ -499,8 +497,9 @@ class Core_Session {
 	 */
 	private function &getCookie($cookieName) {
 		$cookieName = $this->getCookieName($cookieName);
-		$cookieContent = Exec_Cookie::getCookie($cookieName);
-		return Exec_Crypt::md5Decrypt($cookieContent, $this->getSalt());
+		$cookieContent = Exec_Cookie::getCookie($cookieName);echo $cookieContent . "<br>";
+		$cookieContent = Exec_Crypt::md5Decrypt($cookieContent, $this->getSalt());
+		return $cookieContent;
 	}
 	
 	/**

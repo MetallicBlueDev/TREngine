@@ -5,7 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Module d'interface entre le site et le client
+ * Module d'interface et de traitement entre le site et le client
  * 
  * @author Sebastien Villemain
  *

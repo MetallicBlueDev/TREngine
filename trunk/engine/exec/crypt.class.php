@@ -52,7 +52,8 @@ class Exec_Crypt {
 	 * @return String
 	 */
 	public static function &createId($taille = 32) {
-		return self::createKey($taille, true, true, true);
+		$key = self::createKey($taille, true, true, true);
+		return $key;
 	}
 	
 	/**
@@ -62,7 +63,8 @@ class Exec_Crypt {
 	 * @return String
 	 */
 	public static function &createIdNumbers($taille = 32) {
-		return self::createKey($taille, false, true, false);
+		$key = self::createKey($taille, false, true, false);
+		return $key;
 	}
 	
 	/**
@@ -72,7 +74,8 @@ class Exec_Crypt {
 	 * @return String
 	 */
 	public static function &createIdLettres($taille = 32) {
-		return self::createKey($taille, true, false, false);
+		$key = self::createKey($taille, true, false, false);
+		return $key;
 	}
 	
 	/**
@@ -82,7 +85,8 @@ class Exec_Crypt {
 	 * @return String
 	 */
 	public static function &createIdLettresCaseSensitive($taille = 32) {
-		return self::createKey($taille, true, false, true);
+		$key = self::createKey($taille, true, false, true);
+		return $key;
 	}
 	
 	/**
@@ -97,6 +101,7 @@ class Exec_Crypt {
 		// Réglage de la méthode utilisé
 		if (empty($method)) $method= "smd5";
 		$method = strtolower($method);
+		$cryptData = "";
 		
 		// Préparation du salt
 		if (empty($salt)) $salt = self::createId(16);
@@ -105,31 +110,42 @@ class Exec_Crypt {
 			case 'smd5':
 				// Si le crypt md5 est activé
 				if (defined("CRYPT_MD5") && CRYPT_MD5) {
-					return crypt($data, "$1$" . substr($salt, 0, 8) . "$");
+					$cryptData = crypt($data, "$1$" . substr($salt, 0, 8) . "$");
+					break;
 				}
 				// Sinon utilisation du simple md5
-				return self::cryptData($data, $salt, "md5");
+				$cryptData = self::cryptData($data, $salt, "md5");
+				break;
 			case 'md5':
-				return md5($data);
+				$cryptData = md5($data);
+				break;
 			case 'jmd5': // Joomla md5 :)
-				return md5($data . $salt) . ":" . $salt;
+				$cryptData = md5($data . $salt) . ":" . $salt;
+				break;
 			case 'md5+': // TR ENGINE md5 !
-				return "TR" . md5($data . substr($salt, 0, 8));
+				$cryptData = "TR" . md5($data . substr($salt, 0, 8));
+				break;
 			case 'crypt':
-				return crypt($data, substr($salt, 0, 2));
+				$cryptData = crypt($data, substr($salt, 0, 2));
+				break;
 			case 'sha1':
-				return sha1($data);
+				$cryptData = sha1($data);
+				break;
 			case 'ssha':
 				$salt = substr($salt, 0, 4);
-				return "{SSHA}" . base64_encode(pack("H*", sha1($data . $salt)) . $salt);
+				$cryptData = "{SSHA}" . base64_encode(pack("H*", sha1($data . $salt)) . $salt);
+				break;
 			case 'my411':
-				return "*" . sha1(pack("H*", sha1($data)));
+				$cryptData = "*" . sha1(pack("H*", sha1($data)));
+				break;
 			default:
 				if (Core_Loader::isCallable("Core_Exception")) {
 					Core_Exception::setException("Unsupported crypt method. Method : " . $method);
 				}
-				return self::cryptData($data, $salt);
+				$cryptData = self::cryptData($data, $salt);
+				break;
 		}
+		return $cryptData;
 	}
 	
 	/**
@@ -156,7 +172,8 @@ class Exec_Crypt {
 			$iv = substr($block . $iv, 0, 512) ^ $password;
 			$i += 16;
 		}
-		return base64_encode($enc_text);
+		$enc_text = base64_encode($enc_text);
+		return $enc_text;
 	}
 	
 	/**
@@ -182,7 +199,8 @@ class Exec_Crypt {
 			$iv = substr($block . $iv, 0, 512) ^ $password;
 			$i += 16;
 		}
-		return preg_replace('/\\x13\\x00*$/', '', $plain_text);
+		$plain_text = preg_replace('/\\x13\\x00*$/', '', $plain_text);
+		return $plain_text;
 	}
 	
 	/**
@@ -194,7 +212,7 @@ class Exec_Crypt {
 	 * @return String
 	 */
 	private static function &getRandIv($iv_len) {
-		$iv = '';
+		$iv = "";
 		while ($iv_len-- > 0) {
 			$iv .= chr(mt_rand() & 0xff);
 		}

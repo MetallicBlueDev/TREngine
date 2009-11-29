@@ -34,17 +34,17 @@ class Core_Main {
 	 * 
 	 * @var boolean
 	 */
-	private static $statisticMarker = false;
+	private static $debugMode = false;
 	
 	/**
 	 * Préparation TR ENGINE
 	 * Procédure de préparation du moteur
 	 * Une étape avant le démarrage réel
 	 */
-	public function __construct($statisticMarker = false) {
-		self::$statisticMarker = $statisticMarker;
+	public function __construct($debugMode = false) {
+		self::$debugMode = $debugMode;
 		
-		if (self::$statisticMarker) Exec_Marker::startTimer("core");
+		if (self::$debugMode) Exec_Marker::startTimer("core");
 		
 		// Vérification de la version PHP
 		if (TR_ENGINE_PHP_VERSION < "5.0.0") {
@@ -79,7 +79,7 @@ class Core_Main {
 		// Chargement du gestionnaire d'accès url
 		Core_Loader::classLoader("Core_Request");
 		
-		if (self::$statisticMarker) Exec_Marker::stopTimer("core");
+		if (self::$debugMode) Exec_Marker::stopTimer("core");
 		
 		// TODO isoler l'installation
 		$installPath = TR_ENGINE_DIR . "/install/index.php";
@@ -159,7 +159,7 @@ class Core_Main {
 	 * Démarrage TR ENGINE
 	 */
 	public function start() {
-		if (self::$statisticMarker) Exec_Marker::startTimer("launcher");
+		if (self::$debugMode) Exec_Marker::startTimer("launcher");
 		
 		// Gestionnaire des cookie
 		Core_Loader::classLoader("Exec_Cookie");
@@ -195,7 +195,7 @@ class Core_Main {
 		$this->loadModule();
 		$this->loadMakeStyle();
 		
-		if (!self::$statisticMarker) $this->compressionOpen();
+		if (!self::$debugMode) $this->compressionOpen();
 		
 		// Comportement different en fonction du type de client
 		if (!Core_BlackBan::isBlackUser()) {
@@ -249,7 +249,7 @@ class Core_Main {
 			Core_BlackBan::displayBlackPage();
 		}
 		
-		if (self::$statisticMarker) {
+		if (self::$debugMode) {
 			Exec_Marker::stopTimer("launcher");
 		} else {
 			$this->compressionClose();
@@ -365,8 +365,8 @@ class Core_Main {
 	 * 
 	 * @return boolean
 	 */
-	public static function &statisticMarker() {
-		return self::$statisticMarker;
+	public static function &debugMode() {
+		return self::$debugMode;
 	}
 }
 ?>

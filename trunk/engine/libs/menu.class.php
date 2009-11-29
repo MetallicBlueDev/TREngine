@@ -129,7 +129,11 @@ class Libs_Menu {
 	 */
 	public function &render($callback = "Block_Menu::getLine") {
 		// Creation du tableau route
-		$route = $this->items[$this->itemActive]->data->route;
+		$route = array();
+		if (is_object($this->items[$this->itemActive])) {
+			$route = $this->items[$this->itemActive]->data->route;
+		}
+		
 		// Début de rendu
 		$out = "<ul id=\"" . $this->identifier . "\"" . $this->attribtus . ">";
 		foreach($this->items as $key => $item) {
@@ -266,7 +270,7 @@ class Libs_MenuElement {
 	 * @param $attributs array
 	 * @return String
 	 */
-	public function getAttributs($attributs = "") {
+	public function &getAttributs($attributs = "") {
 		if (empty($attributs)) {
 			$attributs = $this->attributs;
 		}

@@ -298,7 +298,7 @@ class Core_Translate {
 	 * @param $language
 	 * @return boolean true langue disponible
 	 */
-	private static function &isValid($language) {
+	private static function isValid($language) {
 		return is_file(TR_ENGINE_DIR . "/lang/" . $language . ".lang.php");
 	}
 	
@@ -312,15 +312,17 @@ class Core_Translate {
 		if (!empty($pathLang) && substr($pathLang, -1) != "/") {
 			$pathLang .= "/";
 		}
-		return $pathLang . "lang/" . self::$currentLanguage . ".lang.php";
+		$pathLang = $pathLang . "lang/" . self::$currentLanguage . ".lang.php";
+		return $pathLang;
 	}
 	
 	/**
 	 * Traduction de la page via le fichier
 	 * 
 	 * @param string $path_lang : chemin du fichier de traduction
+	 * @return String
 	 */
-	public static function &translate($pathLang = "") {
+	public static function translate($pathLang = "") {
 		// Capture du chemin vers le fichier
 		$pathLang = self::getPath($pathLang);
 		
@@ -330,46 +332,46 @@ class Core_Translate {
 		$langOriginalPath = TR_ENGINE_DIR . "/" . $pathLang;
 		
 		// Vérification du fichier de langue
-		if (is_file($langOriginalPath)) {		
-			// Préparation du Path et du contenu
-			$langCacheFileName = str_replace("/", "_", $pathLang);
-			$content = "";
+		if (!is_file($langOriginalPath)) return null;
+		
+		// Préparation du Path et du contenu
+		$langCacheFileName = str_replace("/", "_", $pathLang);
+		$content = "";
+		
+		// Recherche dans le cache
+		if (Core_Loader::isCallable("Core_CacheBuffer")) Core_CacheBuffer::setSectionName("lang");
+		if (!Core_Loader::isCallable("Core_CacheBuffer") 
+				|| !Core_CacheBuffer::cached($langCacheFileName)
+				|| (Core_CacheBuffer::cacheMTime($langCacheFileName) < filemtime($langOriginalPath))) {				
+			// Fichier de traduction original
+			$lang = "";
+			require($langOriginalPath);
 			
-			// Recherche dans le cache
-			if (Core_Loader::isCallable("Core_CacheBuffer")) Core_CacheBuffer::setSectionName("lang");
-			if (!Core_Loader::isCallable("Core_CacheBuffer") 
-					|| !Core_CacheBuffer::cached($langCacheFileName)
-					|| (Core_CacheBuffer::cacheMTime($langCacheFileName) < filemtime($langOriginalPath))) {				
-				// Fichier de traduction original
-				$lang = "";
-				require($langOriginalPath);
-				
-				if (is_array($lang)) {
-					foreach ($lang as $key => $value) {
-						if ($key && $value) {
-							$content .= "define(\"" . $key . "\",\"" . self::entitiesTranslate($value) . "\");";
-						}
+			if (is_array($lang)) {
+				foreach ($lang as $key => $value) {
+					if ($key && $value) {
+						$content .= "define(\"" . $key . "\",\"" . self::entitiesTranslate($value) . "\");";
 					}
-					if (Core_Loader::isCallable("Core_CacheBuffer")) Core_CacheBuffer::writingCache($langCacheFileName, $content);
 				}
+				if (Core_Loader::isCallable("Core_CacheBuffer")) Core_CacheBuffer::writingCache($langCacheFileName, $content);
 			}
+		}
+		
+		// Donnée de traduction
+		if (Core_Loader::isCallable("Core_CacheBuffer") && Core_CacheBuffer::cached($langCacheFileName)) $data = "require(TR_ENGINE_DIR . '/tmp/lang/" . $langCacheFileName . "');";
+		else if (!empty($content)) $data = $content;
+		else $data = "";
+		
+		// Traduction disponible
+		if (!empty($data)) {
+			// Ajoute le fichier traduit dans le tableau
+			self::$translated[$pathLang] = 1;
 			
-			// Donnée de traduction
-			if (Core_Loader::isCallable("Core_CacheBuffer") && Core_CacheBuffer::cached($langCacheFileName)) $data = "require(TR_ENGINE_DIR . '/tmp/lang/" . $langCacheFileName . "');";
-			else if (!empty($content)) $data = $content;
-			else $data = "";
-			
-			// Traduction disponible
-			if (!empty($data)) {
-				// Ajoute le fichier traduit dans le tableau
-				self::$translated[$pathLang] = 1;
-				
-				ob_start();
-				print eval(" $data ");
-				$langDefine = ob_get_contents();
-				ob_end_clean();
-				return $langDefine;
-			}
+			ob_start();
+			print eval(" $data ");
+			$langDefine = ob_get_contents();
+			ob_end_clean();
+			return $langDefine;
 		}
 	}
 	

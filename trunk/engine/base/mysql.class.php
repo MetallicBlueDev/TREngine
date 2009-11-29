@@ -14,7 +14,7 @@ class Base_Mysql extends Base_Model {
 	
 	/**
 	 * Le type de la dernière commande
-	 * SELECT, DELETE, INSERT, REPLACE, UPDATE
+	 * SELECT, DELETE, UPDATE, INSERT, REPLACE
 	 * 
 	 * @var String
 	 */
@@ -40,7 +40,7 @@ class Base_Mysql extends Base_Model {
 	 * 
 	 * @return boolean true succes
 	 */
-	public function &dbSelect() {
+	public function dbSelect() {
 		if ($this->connId) {
 			return @mysql_select_db($this->dbName, $this->connId);
 		}
@@ -71,7 +71,7 @@ class Base_Mysql extends Base_Model {
 	 * 
 	 * @return array
 	 */
-	public function &fetchArray() {
+	public function fetchArray() {
 		return mysql_fetch_array($this->queries, MYSQL_ASSOC);
 	}
 	
@@ -80,7 +80,7 @@ class Base_Mysql extends Base_Model {
 	 * 
 	 * @return object
 	 */
-	public function &fetchObject() {
+	public function fetchObject() {
 		return mysql_fetch_object($this->queries);
 	}
 	
@@ -90,7 +90,7 @@ class Base_Mysql extends Base_Model {
 	 * @param $querie Resource Id
 	 * @return boolean
 	 */
-	public function &freeResult($querie) {
+	public function freeResult($querie) {
 		if (is_resource($querie)) {
 			return mysql_free_result($querie);
 		}
@@ -102,7 +102,7 @@ class Base_Mysql extends Base_Model {
 	 * 
 	 * @return int
 	 */
-	public function &affectedRows() {
+	public function affectedRows() {
 		if ($this->lastSqlCommand == "SELECT" || $this->lastSqlCommand == "SHOW") {
 			return $this->mysqlNumRows($this->queries);
 		}
@@ -114,7 +114,7 @@ class Base_Mysql extends Base_Model {
 	 * 
 	 * @return int
 	 */
-	private function &mysqlAffectedRows() {
+	private function mysqlAffectedRows() {
 		return mysql_affected_rows($this->connId);
 	}
 	
@@ -124,7 +124,7 @@ class Base_Mysql extends Base_Model {
 	 * @param $queries
 	 * @return int
 	 */
-	private function &mysqlNumRows($queries) {
+	private function mysqlNumRows($queries) {
 		return mysql_num_rows($queries);
 	}
 	
@@ -133,7 +133,7 @@ class Base_Mysql extends Base_Model {
 	 * 
 	 * @return int
 	 */
-	public function &insertId() {
+	public function insertId() {
 		return mysql_insert_id($this->connId);
 	}
 	
@@ -250,7 +250,7 @@ class Base_Mysql extends Base_Model {
 	 * 
 	 * @return boolean
 	 */
-	public function &test() {
+	public function test() {
 		return (function_exists("mysql_connect"));
 	}
 	

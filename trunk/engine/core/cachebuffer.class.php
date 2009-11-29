@@ -177,7 +177,7 @@ class Core_CacheBuffer {
 	 * @param $path chemin vers le fichier cache
 	 * @return boolean true le fichier est en cache
 	 */
-	public static function &cached($path) {
+	public static function cached($path) {
 		return is_file(self::getPath($path));
 	}
 	
@@ -187,7 +187,7 @@ class Core_CacheBuffer {
 	 * @param $path chemin vers le fichier cache
 	 * @return int Unix timestamp ou false
 	 */
-	public static function &cacheMTime($path) {
+	public static function cacheMTime($path) {
 		return filemtime(self::getPath($path));
 	}
 	
@@ -196,7 +196,7 @@ class Core_CacheBuffer {
 	 * 
 	 * @return boolean true le checker est valide
 	 */
-	public static function &checked($timeLimit = 0) {
+	public static function checked($timeLimit = 0) {
 		if (self::cached("checker.txt")) {
 			// On a demandé un comparaison de temps
 			if ($timeLimit > 0) {
@@ -228,7 +228,7 @@ class Core_CacheBuffer {
 	 * 
 	 * @return int Unix timestamp ou false
 	 */
-	public static function &checkerMTime() {
+	public static function checkerMTime() {
 		return self::cacheMTime("checker.txt");
 	}
 	
@@ -259,7 +259,8 @@ class Core_CacheBuffer {
 	 * @return String chemin complet
 	 */
 	public static function &getPath($path) {
-		return TR_ENGINE_DIR . "/" . self::getSectionPath() . "/" . $path;
+		$path = TR_ENGINE_DIR . "/" . self::getSectionPath() . "/" . $path;
+		return $path;
 	}
 	
 	/**
@@ -287,11 +288,8 @@ class Core_CacheBuffer {
 	 * @param array $required
 	 * @return boolean true action demandée
 	 */
-	private static function &cacheRequired($required) {
-		if (is_array($required) && count($required) > 0) {
-			return true;
-		}
-		return false;
+	private static function cacheRequired($required) {
+		return (is_array($required) && count($required) > 0);
 	}
 	
 	/**
@@ -404,19 +402,21 @@ class Core_CacheBuffer {
 	 * @return array
 	 */
 	public static function &listNames($dirPath) {
+		$dirList = array();
+		
 		self::setSectionName("fileList");
 		$fileName = str_replace("/", "_", $dirPath) . ".php";
+		
 		if (Core_CacheBuffer::cached($fileName)) {
-			return self::getCache($fileName);
+			$dirList = self::getCache($fileName);
 		} else {
 			$execProtocol = self::getExecProtocol();
 			if ($execProtocol != null) {
 				$dirList = $execProtocol->listNames($dirPath);
 				self::writingCache($fileName, $dirList);
-				return $dirList;
 			}
 		}
-		return array();
+		return $dirList;
 	}
 	
 	/**

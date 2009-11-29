@@ -133,7 +133,7 @@ class Libs_MakeStyle {
 	 * @param $fileName String
 	 * @return String
 	 */
-	public function &renderDebug($fileName = "") {
+	public function renderDebug($fileName = "") {
 		if (!empty($fileName)) $this->fileName = $fileName;
 		
 		// Si le template ne contient pas le fichier debug
@@ -151,8 +151,10 @@ class Libs_MakeStyle {
 	 */
 	private function &getTemplatePath() {
 		// Si le mode debug est activé, on utilise le fichier par défaut
-		if ($this->debugMode) return TR_ENGINE_DIR . "/engine/libs/makestyle.debug.tpl";
-		else return TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . self::$currentTemplate . "/" . $this->fileName;
+		$path = "";
+		if ($this->debugMode) $path = TR_ENGINE_DIR . "/engine/libs/makestyle.debug.tpl";
+		else $path = TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . self::$currentTemplate . "/" . $this->fileName;
+		return $path;
 	}
 	
 	/**
@@ -160,7 +162,7 @@ class Libs_MakeStyle {
 	 * 
 	 * @return boolean true si le chemin du template est valide
 	 */
-	private function &isTemplate() {
+	private function isTemplate() {
 		return is_file($this->getTemplatePath());
 	}
 	

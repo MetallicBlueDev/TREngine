@@ -57,9 +57,8 @@ class Core_Sql {
 	 * 
 	 * @return boolean true succes
 	 */
-	public static function &dbSelect() {
-		$rslt = self::$base->dbSelect();
-		return $rslt;
+	public static function dbSelect() {
+		return self::$base->dbSelect();;
 	}
 	
 	/**
@@ -67,8 +66,8 @@ class Core_Sql {
 	 * 
 	 * @return int
 	 */
-	public static function &affectedRows() {$int = self::$base->affectedRows(); echo $int . "..";
-		return $int;
+	public static function affectedRows() {
+		return self::$base->affectedRows();
 	}
 	
 	/**
@@ -94,7 +93,7 @@ class Core_Sql {
 	 * 
 	 * @return array
 	 */
-	public static function &fetchArray() {
+	public static function fetchArray() {
 		return self::$base->fetchArray();
 	}
 	
@@ -103,7 +102,7 @@ class Core_Sql {
 	 * 
 	 * @return object
 	 */
-	public static function &fetchObject() {
+	public static function fetchObject() {
 		return self::$base->fetchObject();
 	}
 	
@@ -129,7 +128,7 @@ class Core_Sql {
 	 * 
 	 * @return int
 	 */
-	public static function &insertId() {
+	public static function insertId() {
 		return self::$base->insertId();
 	}
 	
@@ -143,7 +142,7 @@ class Core_Sql {
 		self::$base->query($sql);
 		self::$base->resetQuoted();
 		
-		if (Core_Main::statisticMarker()) Core_Exception::setSqlRequest($sql);
+		if (Core_Main::debugMode()) Core_Exception::setSqlRequest($sql);
 		
 		// Création d'une exception si une réponse est négative (false)
 		if (self::getQueries() === false) throw new Exception("sqlReq");
@@ -195,7 +194,7 @@ class Core_Sql {
 	 *
 	 * @return mixed Ressource ID ou boolean false
 	 */
-	public static function &getQueries() {
+	public static function getQueries() {
 		return self::$base->getQueries();
 	}
 	
@@ -204,7 +203,7 @@ class Core_Sql {
 	 * 
 	 * @return String
 	 */
-	public static function &getSql() {
+	public static function getSql() {
 		return self::$base->getSql();
 	}
 	
@@ -214,7 +213,7 @@ class Core_Sql {
 	 * @param $querie Resource Id
 	 * @return boolean
 	 */
-	public static function &freeResult($querie = "") {
+	public static function freeResult($querie = "") {
 		$querie = (!empty($querie)) ? $querie : self::getQueries();
 		return self::$base->freeResult($querie);
 	}
@@ -236,7 +235,7 @@ class Core_Sql {
 	 * @param $name String
 	 * @return array - object
 	 */
-	public static function &fetchBuffer($name) {
+	public static function fetchBuffer($name) {
 		return self::$base->fetchBuffer($name);
 	}
 	
@@ -246,7 +245,7 @@ class Core_Sql {
 	 * @param $name String
 	 * @return array - object
 	 */
-	public static function &getBuffer($name) {
+	public static function getBuffer($name) {
 		return self::$base->getBuffer($name);
 	}
 	
@@ -255,7 +254,7 @@ class Core_Sql {
 	 * 
 	 * @return array
 	 */
-	public static function &getLastError() {
+	public static function getLastError() {
 		return self::$base->getLastError();
 	}
 	
@@ -407,7 +406,7 @@ abstract class Base_Model {
 	 * 
 	 * @return boolean true succes
 	 */
-	public function &dbSelect() {
+	public function dbSelect() {
 		return false;
 	}
 	
@@ -416,7 +415,7 @@ abstract class Base_Model {
 	 * 
 	 * @return int
 	 */
-	public function &affectedRows() {
+	public function affectedRows() {
 		return 0;
 	}
 	
@@ -436,7 +435,7 @@ abstract class Base_Model {
 	 * 
 	 * @return array
 	 */
-	public function &fetchArray() {
+	public function fetchArray() {
 		return array();
 	}
 	
@@ -445,7 +444,7 @@ abstract class Base_Model {
 	 * 
 	 * @return object
 	 */
-	public function &fetchObject() {
+	public function fetchObject() {
 		return array();
 	}
 	
@@ -464,7 +463,7 @@ abstract class Base_Model {
 	 * 
 	 * @return int
 	 */
-	public function &insertId() {
+	public function insertId() {
 		return 0;
 	}
 	
@@ -473,7 +472,7 @@ abstract class Base_Model {
 	 * 
 	 * @param $Sql
 	 */
-	public function query($sql = "") {
+	public function query($sql) {
 	}
 	
 	/**
@@ -505,7 +504,7 @@ abstract class Base_Model {
 	 *
 	 * @return mixed Ressource ID ou boolean false
 	 */
-	public function &getQueries() {
+	public function getQueries() {
 		return $this->queries;
 	}
 	
@@ -514,7 +513,7 @@ abstract class Base_Model {
 	 * 
 	 * @return String
 	 */
-	public function &getSql() {
+	public function getSql() {
 		return $this->sql;
 	}
 	
@@ -523,7 +522,7 @@ abstract class Base_Model {
 	 * 
 	 * @return boolean
 	 */
-	public function &isConnected() {
+	public function isConnected() {
 		return ($this->connId != false) ? true : false;
 	}
 	
@@ -533,7 +532,7 @@ abstract class Base_Model {
 	 * @param $querie Resource Id
 	 * @return boolean
 	 */
-	public function &freeResult($querie) {
+	public function freeResult($querie) {
 		return false;
 	}
 	
@@ -571,7 +570,7 @@ abstract class Base_Model {
 	 * @param $name String
 	 * @return array - object
 	 */
-	public function &getBuffer($name) {
+	public function getBuffer($name) {
 		return $this->buffer[$name];
 	}
 	
@@ -580,7 +579,7 @@ abstract class Base_Model {
 	 * 
 	 * @return boolean
 	 */
-	public function &test() {
+	public function test() {
 		return false;
 	}
 	
@@ -590,7 +589,8 @@ abstract class Base_Model {
 	 * @return array
 	 */
 	public function &getLastError() {
-		return array("<b>Last Sql query</b> : " . $this->getSql());
+		$error = array("<b>Last Sql query</b> : " . $this->getSql());
+		return $error;
 	}
 	
 	/**
@@ -677,8 +677,8 @@ abstract class Base_Model {
 	 * @return String
 	 */
 	protected function &converEscapeString($str) {
-		if (function_exists("mysql_real_escape_string") && is_resource($this->conn_id)) {
-			$str = mysql_real_escape_string($str, $this->conn_id);
+		if (function_exists("mysql_real_escape_string") && is_resource($this->connId)) {
+			$str = mysql_real_escape_string($str, $this->connId);
 		} elseif (function_exists("mysql_escape_string")) {// WARNING: DEPRECATED
 			$str = mysql_escape_string($str);
 		} else {
