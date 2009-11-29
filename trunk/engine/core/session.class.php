@@ -175,7 +175,7 @@ class Core_Session {
 	 * @return boolean true une session peut être recupere
 	 */
 	private function sessionFound() {
-		$cookieUser = $this->getCookie($this->cookieName['USER']);echo $cookieUser;
+		$cookieUser = $this->getCookie($this->cookieName['USER']);
 		$cookieSession = $this->getCookie($this->cookieName['SESSION']);
 		return (!empty($cookieUser) && !empty($cookieSession));
 	}
@@ -497,7 +497,7 @@ class Core_Session {
 	 */
 	private function &getCookie($cookieName) {
 		$cookieName = $this->getCookieName($cookieName);
-		$cookieContent = Exec_Cookie::getCookie($cookieName);echo $cookieContent . "<br>";
+		$cookieContent = Exec_Cookie::getCookie($cookieName);
 		$cookieContent = Exec_Crypt::md5Decrypt($cookieContent, $this->getSalt());
 		return $cookieContent;
 	}

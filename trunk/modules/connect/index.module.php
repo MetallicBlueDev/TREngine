@@ -141,8 +141,8 @@ class Module_Connect_Index extends Module_Model {
 							$values,
 							array("user_id = '" . Core_Session::$userId . "'")
 						);
-						echo "essai..";
-						if (Core_Sql::affectedRows() > 0) {echo "OKKKK";
+						
+						if (Core_Sql::affectedRows() > 0) {
 							Core_Session::getInstance()->refreshConnection();
 							Core_Exception::addInfoError(DATA_SAVED);
 						}
@@ -155,7 +155,7 @@ class Module_Connect_Index extends Module_Model {
 			}
 		}
 		if (!Core_Html::getInstance()->isJavascriptEnabled()) {
-			//Core_Html::getInstance()->redirect("index.php?mod=connect&view=account&selectedTab=accounttabsidTab1");
+			Core_Html::getInstance()->redirect("index.php?mod=connect&view=account&selectedTab=accounttabsidTab1");
 		}
 	}
 	
@@ -188,15 +188,21 @@ class Module_Connect_Index extends Module_Model {
 		// Liste des droits
 		$form->addSpace();
 		$form->addHtmlInFieldset("<u>" . ACCOUNT_ADMIN_RIGHT . ":</u>");
+		
 		// Requête pour la liste des blocks
-		Core_Sql::select(
-			Core_Table::$BLOCKS_TABLE,
-			array("block_id", "title")
-		);
-		if (Core_Sql::affectedRows() > 0) {
-			Core_Sql::addBuffer("blocks");
-			$blocks = Core_Sql::getBuffer("blocks");
+		$blocks = array();
+		
+		if ($rights[0] != "all") {
+			Core_Sql::select(
+				Core_Table::$BLOCKS_TABLE,
+				array("block_id", "title")
+			);
+			if (Core_Sql::affectedRows() > 0) {
+				Core_Sql::addBuffer("blocks");
+				$blocks = Core_Sql::getBuffer("blocks");
+			}
 		}
+		
 		$zone = $identifiant = "";
 		foreach($rights as $key => $right) {
 			if ($right == "all") {

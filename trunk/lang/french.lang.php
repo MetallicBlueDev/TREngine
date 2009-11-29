@@ -1,6 +1,9 @@
 <?php
 $lang = array(
 
+// Chemin par défaut
+"TRAIL_DISPLAY" => "Accueil",
+
 // Administration
 "ADMIN_RIGHT_ALL" => "Tous droits et actions de modérations et d'administration du site, sans limitation.",
 "ADMIN_RIGHT_MODULE" => "Droit concernant la visualisation et/ou la modération du module",
