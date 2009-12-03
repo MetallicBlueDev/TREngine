@@ -38,20 +38,51 @@ class Module_Connect_Index extends Module_Model {
 		}
 	}
 	
-	private function &tabProfile() {
+	private function tabProfile() {
 		$form = new Libs_Form("profile");
 		$form->setTitle(ACCOUNT_PROFILE_TITLE);
 		$form->setDescription(ACCOUNT_PROFILE_DESCRIPTION);
 		$form->addSpace();
+		$form->addInputText("website", ACCOUNT_PROFILE_WEBSITE);
 		$form->addTextarea("signature", ACCOUNT_PROFILE_SIGNATURE, "", "style=\"display: block;\" rows=\"5\" cols=\"50\"", Core_Session::$userSignature);
 		$form->addInputHidden("mod", "connect");
-		$form->addInputHidden("view", "account");
+		$form->addInputHidden("view", "sendProfile");
 		$form->addInputHidden("layout", "module");
 		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
 		return $form->render();
 	}
 	
-	private function &tabAccount() {		
+	public function sendProfile() {
+		$values = array();
+		$website = Core_Request::getString("website", "", "POST");
+		$signature = Core_Request::getString("signature", "", "POST");
+		
+		if (!empty($website)) {
+			Core_Loader::classLoader("Exec_Url");
+			$values['website'] = Exec_Url::cleanUrl($website);
+		}
+		if (!empty($signature)) {
+			$values['signature'] = $signature;
+		}
+		
+		if (!empty($values)) {
+			Core_Sql::update(
+				Core_Table::$USERS_TABLE,
+				$values,
+				array("user_id = '" . Core_Session::$userId . "'")
+			);
+			
+			if (Core_Sql::affectedRows() > 0) {
+				Core_Session::getInstance()->refreshConnection();
+				Core_Exception::addInfoError(DATA_SAVED);
+			}
+		}
+		if (!Core_Html::getInstance()->isJavascriptEnabled()) {
+			Core_Html::getInstance()->redirect("index.php?mod=connect&view=account&selectedTab=accounttabsidTab0");
+		}
+	}
+	
+	private function tabAccount() {
 		$form = new Libs_Form("accountprivate");
 		$form->setTitle(ACCOUNT_PRIVATE_TITLE);
 		$form->setDescription(ACCOUNT_PRIVATE_DESCRIPTION);
@@ -95,12 +126,12 @@ class Module_Connect_Index extends Module_Model {
 	}
 	
 	public function sendAccount() {
-		$name = Core_Request::getWord("name");
-		$pass = Core_Request::getString("pass");
-		$pass2 = Core_Request::getString("pass2");
-		$mail = Core_Request::getString("mail");
-		$langue = Core_Request::getString("langue");
-		$template = Core_Request::getString("template");
+		$name = Core_Request::getWord("name", "", "POST");
+		$pass = Core_Request::getString("pass", "", "POST");
+		$pass2 = Core_Request::getString("pass2", "", "POST");
+		$mail = Core_Request::getString("mail", "", "POST");
+		$langue = Core_Request::getString("langue", "", "POST");
+		$template = Core_Request::getString("template", "", "POST");
 		
 		if (Core_Session::$userName != $name || Core_Session::$userMail != $mail || Core_Session::$userLanguage != $langue || Core_Session::$userTemplate != $template) {
 			if (Core_Session::getInstance()->validLogin($name)) {
@@ -159,7 +190,7 @@ class Module_Connect_Index extends Module_Model {
 		}
 	}
 	
-	private function &tabAvatar() {
+	private function tabAvatar() {
 		$form = new Libs_Form("avatar");
 		$form->setTitle(ACCOUNT_AVATAR_TITLE);
 		$form->setDescription(ACCOUNT_AVATAR_DESCRIPTION);
@@ -171,7 +202,7 @@ class Module_Connect_Index extends Module_Model {
 		return $form->render();
 	}
 	
-	private function &tabAdmin() {
+	private function tabAdmin() {
 		$form = new Libs_Form("admin");
 		$form->setTitle(ACCOUNT_ADMIN_TITLE);
 		$form->setDescription(ACCOUNT_ADMIN_DESCRIPTION);
@@ -307,7 +338,7 @@ class Module_Connect_Index extends Module_Model {
 					
 					if (Core_Sql::affectedRows() == 1) {
 						list($login) = Core_Sql::fetchArray();
-						$ok = Exec_Mailer::sendMail();
+						$ok = Exec_Mailer::sendMail(); // TODO envoyer un mail
 					}
 					if (!$ok) Core_Exception::addNoteError(FORGET_LOGIN_INVALID_MAIL_ACCOUNT);
 				} else {
@@ -357,8 +388,8 @@ class Module_Connect_Index extends Module_Model {
 					if (Core_Sql::affectedRows() == 1) {
 						list($name, $mail) = Core_Sql::fetchArray();
 						if ($name == $login) {
-							// Ajouter générateur d'id
-							$ok = Exec_Mailer::sendMail();
+							// TODO Ajouter un générateur d'id
+							$ok = Exec_Mailer::sendMail(); // TODO envoyer un mail
 						}
 					}
 					if (!$ok) Core_Exception::addNoteError(FORGET_PASSWORD_INVALID_LOGIN_ACCOUNT);

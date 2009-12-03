@@ -109,6 +109,13 @@ class Core_Session {
 	 * @var String
 	 */
 	public static $userSignature = "";
+	
+	/**
+	 * Site Internet du client
+	 * 
+	 * @var String
+	 */
+	public static $userWebSite = "";
 
 	/**
 	 * Nom des cookies
@@ -244,6 +251,7 @@ class Core_Session {
 		self::$userInscriptionDate = $info['date'];
 		self::$userAvatar = $info['avatar'];
 		self::$userSignature = Exec_Entities::stripSlashes($info['signature']);
+		self::$userWebSite = Exec_Entities::stripSlashes($info['website']);
 		self::$sessionId = (!empty($info['sessionId'])) ? $info['sessionId'] : self::$sessionId;
 		self::$userIpBan = (!empty($info['userIpBan'])) ? $info['userIpBan'] : self::$userIpBan;
 		if ($refreshAll)  {
@@ -269,6 +277,7 @@ class Core_Session {
 		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['date'] = \"" . self::$userInscriptionDate . "\"; ";
 		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['avatar'] = \"" . self::$userAvatar . "\"; ";
 		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['signature'] = \"" . Exec_Entities::addSlashes(self::$userSignature) . "\"; ";
+		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['website'] = \"" . Exec_Entities::addSlashes(self::$userWebSite) . "\"; ";
 		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['langue'] = \"" . self::$userLanguage . "\"; ";
 		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['template'] = \"" . self::$userTemplate . "\"; ";
 		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['userIpBan'] = \"" . self::$userIpBan . "\"; ";
@@ -284,7 +293,7 @@ class Core_Session {
 	private function getUserInfo($where) {
 		Core_Sql::select(
 			Core_Table::$USERS_TABLE,
-			array("user_id", "name", "mail", "rang", "date", "avatar", "signature", "template", "langue"),
+			array("user_id", "name", "mail", "rang", "date", "avatar", "website", "signature", "template", "langue"),
 			$where
 		);
 		if (Core_Sql::affectedRows() == 1) {

@@ -22,6 +22,7 @@ $lang = array(
 "ACCOUNT_PROFILE" => "Votre profil",
 "ACCOUNT_PROFILE_TITLE" => "Edition de votre profil",
 "ACCOUNT_PROFILE_DESCRIPTION" => "Modifiez votre profil public afin qu'il vous ressemble au mieux",
+"ACCOUNT_PROFILE_WEBSITE" => "Votre site Internet",
 "ACCOUNT_PROFILE_SIGNATURE" => "Votre signature",
 "ACCOUNT_PRIVATE" => "Votre compte",
 "ACCOUNT_PRIVATE_TITLE" => "Edition des informations personnelles",
