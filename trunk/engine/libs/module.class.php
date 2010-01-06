@@ -248,7 +248,9 @@ class Libs_Module {
 		$loaded = Core_Loader::classLoader($moduleClassName);
 		
 		if ($loaded) {
+			// Retourne un view valide sinon une chaine vide
 			self::$view = $this->viewPage(array($moduleClassName, ($this->installed()) ? self::$view : "install"), false);
+			
 			// Affichage du module si possible
 			if (!empty(self::$view)) {
 				$this->updateCount();
