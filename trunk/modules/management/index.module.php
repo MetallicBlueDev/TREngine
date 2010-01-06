@@ -28,7 +28,7 @@ class Module_Management_Index extends Module_Model {
 		$pages = array();
 		$files = Core_CacheBuffer::listNames("modules/management/pages");
 		foreach($files as $key => $fileName) {
-			$pos = strpos($fileName, ".php");
+			$pos = strpos($fileName, ".page");
 			if ($pos !== false && $pos > 0) {
 				$pages[] = substr($fileName, 0, $pos);
 			}
