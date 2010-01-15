@@ -1,4 +1,0 @@
-<?php
-if (!defined("TR_ENGINE_INDEX")){if(!class_exists("Core_Secure")){include("../engine/core/secure.class.php");}new Core_Secure();}// Generated on 2009-09-06 16:59:01
-$tmp['defaultTemplate'] = "default"; $tmp['defaultMod'] = "home"; $tmp['defaultLanguage'] = "french"; $tmp['defaultAdministratorMail'] = "villemain.sebastien@orange.fr"; $tmp['defaultSiteName'] = "Trancer-Studio.net"; $tmp['defaultSiteSlogan'] = "Rapide, simple et efficace !"; $tmp['defaultKeyWords'] = "mots, cles, par, defaut"; $tmp['defaultDescription'] = "description par defaut !"; $tmp['urlRewriting'] = "0"; $tmp['registrationAllowed'] = "0"; $tmp['captchaMode'] = "auto"; 
-?>

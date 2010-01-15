@@ -1,4 +1,0 @@
-<?php
-if (!defined("TR_ENGINE_INDEX")){if(!class_exists("Core_Secure")){include("../../engine/core/secure.class.php");}new Core_Secure();}// Generated on 2009-09-10 18:21:46
-$menus = "a:1:{i:11;O:16:\"Libs_MenuElement\":5:{s:4:\"data\";O:8:\"stdClass\":8:{s:7:\"menu_id\";s:2:\"11\";s:8:\"block_id\";s:1:\"3\";s:9:\"parent_id\";s:1:\"0\";s:7:\"content\";s:4:\"test\";s:8:\"sublevel\";s:1:\"0\";s:8:\"position\";s:1:\"0\";s:4:\"rang\";s:1:\"0\";s:5:\"route\";a:1:{i:0;i:11;}}s:27:\"\0Libs_MenuElement\0attributs\";a:1:{s:5:\"class\";s:6:\"parent\";}s:23:\"\0Libs_MenuElement\0child\";a:0:{}s:22:\"\0Libs_MenuElement\0tags\";a:1:{i:0;s:2:\"li\";}s:23:\"\0Libs_MenuElement\0route\";a:0:{}}}"
-?>
