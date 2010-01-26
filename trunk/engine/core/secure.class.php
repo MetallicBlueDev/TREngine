@@ -214,9 +214,8 @@ class Core_Secure {
 		
 		if (defined($errorMessageTitle)) {
 			return constant($errorMessageTitle);
-		} else {
-			return "Stop loading (Fatal error unknown).";
 		}
+		return "Stop loading (Fatal error unknown).";
 	}
 }
 

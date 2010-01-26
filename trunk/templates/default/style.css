@@ -1,3 +1,4 @@
+/* element de base */
 body {
 	background: #6b737b;
 	font-family: verdana, Arial, Sans-serif;
@@ -19,10 +20,7 @@ a:hover {
 }
 
 /* Style graphique pour mettre en valeur quelques elements dans un texte */
-.bolder {
-	font-weight: bolder;
-	color: #05587b;
-}
+/* Classe écritent en dur dans le code */
 .input, .textarea, select {
 	background-color: #d0dfe6;
 	border-top: 2px solid #7194a4;
@@ -61,12 +59,15 @@ form {
 	padding: 5px;
 }
 
-/* Classe d'erreur (input incomplet par exemple) */
+/* Classe d'erreur utilisé par l'AJAX (input incomplet par exemple) */
+/* Classe écrite en dur dans le code */
 .error {
 	background-color: #de9da1;
 	border-left: 0px solid #de9da1;
 	border-right: 0px solid #de9da1;
 }
+
+/* Style additionnel du thème */
 /* Entête */
 #header {
 	position: relative;

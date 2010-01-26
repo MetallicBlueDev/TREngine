@@ -483,15 +483,5 @@ class Core_Html {
 		}
 		return "";
 	}
-	
-	/**
-	 * Ajoute le style du template
-	 * 
-	 * @param $text
-	 * @return String
-	 */
-	public static function bolder($text) {
-		return "<span class=\"bolder\">" . $text . "</span>";
-	}
 }
 ?>

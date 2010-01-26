@@ -18,7 +18,7 @@
 // Informations générales
 //
 // Adresse email du webmaster (principal)
-$config["TR_ENGINE_MAIL"] = "the-trancer.postmaster@orange.fr";
+$config["TR_ENGINE_MAIL"] = "villemain.sebastien@trancer-studio.net";
 //
 // Statut du site ("open" = ouvert | "close" = fermé)
 $config["TR_ENGINE_STATUT"] = "open";

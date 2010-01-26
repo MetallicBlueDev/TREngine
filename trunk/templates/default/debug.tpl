@@ -1,14 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xml:lang="fr"
-    lang="fr"
-    dir="ltr">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
+<link rel="stylesheet" href="templates/default/style.css" type="text/css" />
 <?php echo Core_Html::getInstance()->getMetaHeaders(); ?>
 </head>
 <body>
-
+<div>
 <b><?php echo $errorMessageTitle; ?></b>
 <br /><br />
 
@@ -22,5 +19,6 @@ Error details:<br />
 <?php } ?>
 
 <?php echo Core_Html::getInstance()->getMetaFooters(); ?>
+</div>
 </body>
 </html>
