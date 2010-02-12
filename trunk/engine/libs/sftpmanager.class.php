@@ -4,7 +4,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 	new Core_Secure();
 }
 
-class Exec_SftpManager {
+class Libs_SftpManager {
 	
 	// TODO classe a coder...
 	public function __construct() {

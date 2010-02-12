@@ -11,7 +11,7 @@ class Core_CacheBuffer {
 	 * 
 	 * @var mixed
 	 */
-	private static $execProtocol = false;
+	private static $protocol = null;
 	
 	/**
 	 * Réécriture du cache
@@ -307,6 +307,7 @@ class Core_CacheBuffer {
 			$pathIsDir = true;
 		} else {
 			// Recherche du bout du path
+			$last = "";
 			$pos = strrpos("/", $path);
 			if (!is_bool($pos)) {
 				$last = substr($path, $pos);
@@ -425,27 +426,27 @@ class Core_CacheBuffer {
 	 * @return mixed
 	 */
 	private static function &getExecProtocol() {
-		if (self::$execProtocol == false) {
+		if (self::$protocol == null) {
 			if (self::$modeActived['php']) {
 				// Démarrage du gestionnaire de fichier
 				Core_Loader::classLoader("Libs_FileManager");
-				self::$execProtocol = new Exec_FileManager();
+				self::$protocol = new Libs_FileManager();
 			} else if (self::$modeActived['ftp']) {
 				// Démarrage du gestionnaire FTP
 				Core_Loader::classLoader("Libs_FtpManager");
-				self::$execProtocol = new Exec_FtpManager();
-				self::$execProtocol->setFtp(self::$ftp);
+				self::$protocol = new Libs_FtpManager();
+				self::$protocol->setFtp(self::$ftp);
 			} else if (self::$modeActived['sftp']) {
 				// Démarrage du gestionnaire SFTP
 				Core_Loader::classLoader("Libs_SftpManager");
-				self::$execProtocol = new Exec_SftpManager();
-				self::$execProtocol->setFtp(self::$ftp);
+				self::$protocol = new Libs_SftpManager();
+				self::$protocol->setFtp(self::$ftp);
 			} else {
 				Core_Exception::setException("No protocol actived for cache.");
 				return null;
 			}
 		}
-		return self::$execProtocol;
+		return self::$protocol;
 	}
 	
 	/**
@@ -458,40 +459,55 @@ class Core_CacheBuffer {
 			|| self::cacheRequired(self::$addCache)
 			|| self::cacheRequired(self::$updateCache)) {
 			// Protocole a utiliser
-			$execProtocol = self::getExecProtocol();
+			$protocol = self::getExecProtocol();
 			
-			if ($execProtocol != null) {
+			if ($protocol != null) {
 				// Suppression de cache demandée
 				if (self::cacheRequired(self::$removeCache)) {
 					foreach(self::$removeCache as $dir => $timeLimit) {
-						$execProtocol->removeCache($dir, $timeLimit);
+						$protocol->removeCache($dir, $timeLimit);
 					}
 				}
 				
 				// Ecriture de cache demandée
 				if (self::cacheRequired(self::$writingCache)) {
 					foreach(self::$writingCache as $path => $content) {
-						$execProtocol->writingCache($path, $content, true);
+						$protocol->writingCache($path, $content, true);
 					}
 				}
 				
 				// Ecriture à la suite de cache demandée
 				if (self::cacheRequired(self::$addCache)) {
 					foreach(self::$addCache as $path => $content) {
-						$execProtocol->writingCache($path, $content, false);
+						$protocol->writingCache($path, $content, false);
 					}
 				}
 				
 				// Mise à jour de cache demandée
 				if (self::cacheRequired(self::$updateCache)) {
 					foreach(self::$updateCache as $path => $updateTime) {
-						$execProtocol->touchCache($path, $updateTime);
+						$protocol->touchCache($path, $updateTime);
 					}
 				}
 			}
 			// Destruction du gestionnaire
-			unset($execProtocol);
+			unset($protocol);
 		}
+	}
+}
+
+abstract class Cache_Model {
+	
+	public function writingCache($path, $content, $overWrite = true) {
+	}
+	
+	public function touchCache($path, $updateTime = "") {
+	}
+	
+	public function removeCache($dir = "", $timeLimit = 0) {
+	}
+	
+	public function &listNames($dirPath = null) {
 	}
 }
 ?>

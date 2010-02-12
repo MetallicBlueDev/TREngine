@@ -10,7 +10,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  * @author Sébastien Villemain
  *
  */
-class Exec_FtpManager {
+class Libs_FtpManager extends Cache_Model {
 	
 	/**
 	 * Utilisation du mode natif avec extension
@@ -422,9 +422,9 @@ class Exec_FtpManager {
 	 * @param string $path : chemin où doit être listé les dossiers
 	 * @return mixed : array string liste des dossiers trouvés, boolean false si il y a une erreur
 	 */
-	public function &listNames($path = NULL) {
+	public function &listNames($path = null) {
 		if ($this->isConnected()) {
-			$dirList = NULL;
+			$dirList = null;
 	
 			// Demarrage du mode passif
 			if ($this->setPassiveMode()) {
@@ -433,7 +433,7 @@ class Exec_FtpManager {
 					$dirList = preg_replace('#^' . preg_quote($this->getRootPath($path), '#') . '[/\\\\]?#', '', $dirList);
 				} else {
 					// Si un chemin est précisé, on ajoute un espace pour la commande
-					$path = ($path != NULL) ? " " . $this->getRootPath($path) : NULL;
+					$path = ($path != null) ? " " . $this->getRootPath($path) : null;
 					
 					// Envoie de la requete				
 					if ($this->setCommand("NLST" . $path, array (150, 125))) {
@@ -735,6 +735,10 @@ class Exec_FtpManager {
 				}
 			}
 		}
+	}
+	
+	public function touchCache($path, $updateTime = "") {
+		// TODO a coder
 	}
 	
 	public function __destruct() {

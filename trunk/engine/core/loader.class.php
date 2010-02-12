@@ -128,7 +128,7 @@ class Core_Loader {
 			} else {
 				$callable = array($className, $methodName);
 			}
-			return is_callable($callable);
+			return @is_callable($callable);
 		} else {
 			// Utilisation du buffer si possible
 			if (self::isLoaded($className)) {

@@ -6,12 +6,11 @@ if (!defined("TR_ENGINE_INDEX")) {
 
 /**
  * Gestionnaire de fichier
- * Se configure et se lance en mode de gestion des fichiers en PHP ou en FTP
  * 
  * @author Sébastien Villemain
  *
  */
-class Exec_FileManager {
+class Libs_FileManager extends Cache_Model {
 	
 	/**
 	 * CHMOD à utiliser
@@ -55,7 +54,8 @@ class Exec_FileManager {
 		}
 			
 		// Tentative d'écriture du fichier
-		if ($fp = @fopen(TR_ENGINE_DIR . "/" . $pathFile, 'a')) {
+		// Des problèmes on été constaté avec l'utilisation du chemin absolu TR_ENGINE_DIR
+		if ($fp = @fopen($pathFile, 'a')) {
 			 // Verrouiller le fichier destination
 			@flock($fp, LOCK_EX);
 			
@@ -65,19 +65,33 @@ class Exec_FileManager {
 			}
 			
 			// Ecriture du fichier cache
-			$nbBytesCmd = @fwrite($fp, $content, $nbBytesFile = strlen($content));
+			$nbBytesFile = strlen($content);
+			$nbBytesCmd = @fwrite($fp, $content, $nbBytesFile);
 			
 			// Vérification des bytes écris
 			if ($nbBytesCmd != $nbBytesFile) {
 				@unlink(TR_ENGINE_DIR . "/" . $pathFile);
 				Core_Exception::setException("bad response for fwrite command. Path : " . $pathFile . ". "
-				. "Server response : " . $nbBytesCmd . " bytes writed, " . $nbBytesFile . " bytes readed.");
+				. "Server response : " . $nbBytesCmd . " bytes writed, " . $nbBytesFile . " bytes readed");
 			}
 			
 			// Libere le verrou
 			@flock($fp, LOCK_UN);
 			@fclose($fp);
 		} else {
+			// Recherche d'un fichier htaccess
+			$strlen = strlen($pathFile);
+			$isHtaccessFile = (substr($pathFile, -9, $strlen) == ".htaccess");
+			
+			// Si c'est un htaccess, on essai de corriger le problème
+			if ($isHtaccessFile) {
+				// On créée le même fichier en HTML
+				$htaccessPath = substr($pathFile, 0, $strlen - 9);
+				$this->writingFile($htaccessPath . "index.html", $content, $overWrite);
+				
+				// Puis on renomme
+				@rename($htaccessPath . "index.html", $htaccessPath . ".htaccess");
+			}
 			Core_Exception::setException("bad response for fopen command. Path : " . $pathFile);
 		}
 	}
@@ -98,15 +112,16 @@ class Exec_FileManager {
 		$count = 0;
 		
 		if ($nbDir > 0) {
-			foreach($dirs as $dir) {
+			foreach ($dirs as $dir) {
 				$count++;
 				// Si le dernier élèment est un fichier ou simplement vide
-				if (($count == $nbDir && !$pathIsDir) || !$dir) {
-					break; // on passe a la suite...
+				if (($count == $nbDir && !$pathIsDir) || empty($dir)) {
+					// Il vaut mieux continuer, plutot que de faire un arret avec break
+					continue; // on passe a la suite...
 				}
 				
 				// Mise à jour du dossier courant
-				$currentPath = ($count == 1) ? $currentPath = $dir : $currentPath . "/" . $dir;
+				$currentPath = ($count == 1) ? $dir : $currentPath . "/" . $dir;
 				
 				if (!is_dir($currentPath)) {
 					// Création du dossier
@@ -254,7 +269,12 @@ class Exec_FileManager {
 	 * @param $dirPath
 	 * @return array
 	 */
-	public function &listNames($dirPath) {
+	public function &listNames($dirPath = null) {
+		// Si le dossier est null
+		if ($dirPath == null) {
+			// On prend le dossier par défaut
+			$dirPath = "";
+		}
 		$dirList = array();
 		// Ouverture du dossier
 		$handle = @opendir(TR_ENGINE_DIR . "/" . $dirPath);
