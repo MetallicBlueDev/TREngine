@@ -120,22 +120,20 @@ class Libs_Module {
 	 * Retourne les informations du module cible
 	 * 
 	 * @param $module String le nom du module, par défaut le module courant
-	 * @return mixed tableau array d'informations ou boolean false si echec
+	 * @return array informations sur le module
 	 */
-	public function getInfoModule($moduleName = "") {
+	public function &getInfoModule($moduleName = "") {
+		$moduleInfo = array();
 		// Nom du module cible 
-		$moduleName = ((empty($moduleName)) ? self::$module : $moduleName);
+		$moduleName = empty($moduleName) ? self::$module : $moduleName;
 		
 		// Retourne le buffer
 		if (isset($this->modules[$moduleName])) {
 			if (is_array($this->modules[$moduleName])) {
-				return $this->modules[$moduleName];
-			} else {
-				return false;
+				$moduleInfo = $this->modules[$moduleName];
 			}
+			return $moduleInfo;
 		}
-		
-		$moduleInfo = array();
 		
 		// Recherche dans le cache
 		Core_CacheBuffer::setSectionName("modules");
@@ -174,11 +172,12 @@ class Libs_Module {
 			}
 			$this->modules[$moduleName] =& $moduleInfo;
 			return $moduleInfo;
-		} else {
-			// Insert la variable vide car aucune donnée
-			$this->modules[$moduleName] = "";
-			return false;
 		}
+		
+		// Insert la variable vide car aucune donnée
+		$moduleInfo = array();
+		$this->modules[$moduleName] = $moduleInfo;
+		return $moduleInfo;
 	}
 	
 	/**

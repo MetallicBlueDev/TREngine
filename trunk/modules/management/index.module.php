@@ -15,7 +15,7 @@ class Module_Management_Index extends Module_Model {
 	public function display() {
 		$pages = self::listManagementPages();
 		foreach($pages as $page) {
-			echo "<a href=\"?mod=management&page=" . $page . "\">";
+			echo "<a href=\"?mod=management&page=" . $page . "\">" . $page . "</a>";
 		}
 	}
 	

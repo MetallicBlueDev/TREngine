@@ -192,7 +192,7 @@ class Core_Sql {
 	/**
 	 * Retourne dernier résultat de la dernière requête executée
 	 *
-	 * @return mixed Ressource ID ou boolean false
+	 * @return Ressource ID
 	 */
 	public static function getQueries() {
 		return self::$base->getQueries();
@@ -500,9 +500,9 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Retourne dernier résultat de la dernière requête executée
+	 * Retourne le dernier résultat de la dernière requête executée
 	 *
-	 * @return mixed Ressource ID ou boolean false
+	 * @return Ressource ID
 	 */
 	public function getQueries() {
 		return $this->queries;
@@ -629,8 +629,8 @@ abstract class Base_Model {
 	/**
 	 * Conversion des valeurs dite PHP en valeurs semblable SQL
 	 * 
-	 * @param $value mixed type
-	 * @return $value mixed type
+	 * @param $value Object
+	 * @return Object
 	 */
 	protected function &converValue($value) {
 		if (is_array($value)) {
@@ -653,8 +653,8 @@ abstract class Base_Model {
 	/**
 	 * Conversion des clès
 	 * 
-	 * @param $key mixed type
-	 * @return $key mixed type
+	 * @param $key Object
+	 * @return Object
 	 */
 	protected function &converKey($key) {
 		if (is_array($key)) {

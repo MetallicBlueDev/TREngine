@@ -109,10 +109,8 @@ class Libs_FtpManager extends Cache_Model {
 	/**
 	 * Creation de la connexion
 	 * Paramatrage de la connexion
-	 * 
-	 * @param $ftp array
 	 */
-	public function __construct($ftp) {
+	public function __construct() {
 		// Recherche de l'extension FTP
 		if (extension_loaded("ftp") && function_exists('ftp_connect')) {
 			$this->nativeMode = true;
@@ -144,20 +142,20 @@ class Libs_FtpManager extends Cache_Model {
 		if (preg_match("/(.+)(\/)/", $ftp['host'], $matches)) $ftp['host'] = $matches[1];
 		
 		// Réglage de configuration
-		$this->$ftp['host'] = (empty($ftp['host'])) ? "127.0.0.1" : $ftp['host'];
-		$this->$ftp['port'] = (is_numeric($ftp_port)) ? $ftp['port'] : 21;
-		$this->$ftp['user'] = (empty($ftp['user'])) ? "root" : $ftp['user'];
-		$this->$ftp['pass'] = (empty($ftp['pass'])) ? "" : $ftp['pass'];
+		$ftp['host'] = (empty($ftp['host'])) ? "127.0.0.1" : $ftp['host'];
+		$ftp['port'] = (is_numeric($ftp_port)) ? $ftp['port'] : 21;
+		$ftp['user'] = (empty($ftp['user'])) ? "root" : $ftp['user'];
+		$ftp['pass'] = (empty($ftp['pass'])) ? "" : $ftp['pass'];
 		// Le dossier root sera redéfinie après être logué
-		$this->ftp['root'] = (empty($ftp['root'])) ? "/" : $ftp['root'];
+		$ftp['root'] = (empty($ftp['root'])) ? "/" : $ftp['root'];
 		
-		$this->$ftp = $ftp;
+		$this->ftp = $ftp;
 	}
 	
 	/**
 	 * Connexion au serveur FTP
 	 *
-	 * @return boolean : true si aucune erreur
+	 * @return boolean true si aucune erreur
 	 */
 	private function connect() {
 		// Si aucune connexion engagé
@@ -215,7 +213,7 @@ class Libs_FtpManager extends Cache_Model {
 	 * 
 	 * @param string $cmd : la commande à executer
 	 * @param string $expectedResponse : code de réponse attendu
-	 * @return boolean : true si aucune erreur
+	 * @return boolean true si aucune erreur
 	 */
 	private function setCommand($cmd, $expectedResponse) {
 		if ($this->isConnected()) {
@@ -232,7 +230,7 @@ class Libs_FtpManager extends Cache_Model {
 	 * Vérification du code de réponse reçu
 	 * 
 	 * @param string $expected : code de réponse attendu
-	 * @return boolean : true si aucune erreur
+	 * @return boolean true si aucune erreur
 	 */
 	private function responseCode($expected) {
 		// Si une connexion est engagé
@@ -268,7 +266,7 @@ class Libs_FtpManager extends Cache_Model {
 	/**
 	 * Démarre le mode passif du serveur FTP
 	 * 
-	 * @return boolean : true si aucune erreur
+	 * @return boolean true si aucune erreur
 	 */
 	private function setPassiveMode() {
 		if ($this->isConnected()) {
@@ -308,9 +306,8 @@ class Libs_FtpManager extends Cache_Model {
 	private function &setTimeOut() {
 		if ($this->nativeMode) {
 			return ftp_set_option($this->connId, FTP_TIMEOUT_SEC, $this->timeout);
-		} else {
-			return stream_set_timeout($this->connId, $this->timeout);
 		}
+		return stream_set_timeout($this->connId, $this->timeout);
 	}
 	
 	/**
@@ -420,27 +417,32 @@ class Libs_FtpManager extends Cache_Model {
 	 * Récupération de la liste des dossiers au chemin path 
 	 * 
 	 * @param string $path : chemin où doit être listé les dossiers
-	 * @return mixed : array string liste des dossiers trouvés, boolean false si il y a une erreur
+	 * @return array string liste des dossiers trouvés
 	 */
-	public function &listNames($path = null) {
+	public function &listNames($path = "") {
+		$dirList = array();
 		if ($this->isConnected()) {
-			$dirList = null;
-	
 			// Demarrage du mode passif
 			if ($this->setPassiveMode()) {
 				if ($this->nativeMode) {
+					// Recherche la liste
 					$dirList = @ftp_nlist($this->connId, $this->getRootPath($path));
-					$dirList = preg_replace('#^' . preg_quote($this->getRootPath($path), '#') . '[/\\\\]?#', '', $dirList);
+					// Si aucune erreur, on nettoie
+					if (!is_bool($dirList)) {
+						$dirList = preg_replace('#^' . preg_quote($this->getRootPath($path), '#') . '[/\\\\]?#', '', $dirList);
+					}
 				} else {
 					// Si un chemin est précisé, on ajoute un espace pour la commande
-					$path = ($path != null) ? " " . $this->getRootPath($path) : null;
+					$path = (!empty($path)) ? " " . $this->getRootPath($path) : "";
+					// Chaine contenant tous les dossiers
+					$dirListString = "";
 					
 					// Envoie de la requete				
 					if ($this->setCommand("NLST" . $path, array (150, 125))) {
 						// On évite la boucle infinie
 						if ($this->passiveData !== false) {
 							while (!feof($this->passiveData)) {
-								$dirList .= fread($this->passiveData, 4096);
+								$dirListString .= fread($this->passiveData, 4096);
 							}
 						}
 					}
@@ -448,45 +450,42 @@ class Libs_FtpManager extends Cache_Model {
 					
 					// Verification
 					if ($this->responseCode(226)) {
-						$dirList = preg_split("/[" . $this->CRLF . "]+/", $dirList, -1, PREG_SPLIT_NO_EMPTY);
+						$dirList = preg_split("/[" . $this->CRLF . "]+/", $dirListString, -1, PREG_SPLIT_NO_EMPTY);
 						$dirList = preg_replace('#^'.preg_quote(substr($path, 1), '#').'[/\\\\]?#', '', $dirList);
 					}
 				}
 			}
 		}
 		
-		if (is_array($dirList)) {
-			// On supprime les mauvaises cles
-			$dirListKeys = array_merge(
-				array_keys($dirList, ".."), 
-				array_keys($dirList, "."),
-				array_keys($dirList, "index.html"), 
-				array_keys($dirList, "index.htm"),
-				array_keys($dirList, "index.php"),
-				array_keys($dirList, ".htaccess"),
-				array_keys($dirList, ".svn"),
-				array_keys($dirList, "checker.txt")
-			);
-			if (is_array($dirListKeys)) {
-				foreach ($dirListKeys as $key) {
-					unset($dirList[$key]);
-				}
+		// On supprime les mauvaises cles
+		$dirListKeys = array_merge(
+			array_keys($dirList, ".."), 
+			array_keys($dirList, "."),
+			array_keys($dirList, "index.html"), 
+			array_keys($dirList, "index.htm"),
+			array_keys($dirList, "index.php"),
+			array_keys($dirList, ".htaccess"),
+			array_keys($dirList, ".svn"),
+			array_keys($dirList, "checker.txt")
+		);
+		if (is_array($dirListKeys)) {
+			foreach ($dirListKeys as $key) {
+				unset($dirList[$key]);
 			}
-			sort($dirList);
-			reset($dirList);
-			return $dirList;
-		} else {
-			return false;
 		}
+		sort($dirList);
+		reset($dirList);
+		return $dirList;
 	}
 	
 	/**
 	 * Recherche la date de derniere modification du fichier
 	 * 
 	 * @param $path
-	 * @return mixed : int date de derniere modification or false
+	 * @return int date de derniere modification
 	 */
-	public function &getMTime($path) {
+	private function &getMTime($path) {
+		$mTime = 0;
 		if ($this->isConnected()) {
 			if ($this->nativeMode) {
 				$rslt = ftp_mdtm($this->connId, $this->getRootPath($path));
@@ -495,17 +494,18 @@ class Libs_FtpManager extends Cache_Model {
 					$this->nativeMode = false;
 					Core_Exception::setException("bad response for ftp_mdtm command. Path : " . $path
 					. " Turn off the native command.");
-					return $this->getMTime($path);
+					$mTime = $this->getMTime($path);
+				} else {
+					$mTime = $rslt;
 				}
-				return $rslt;
 			} else {
 				if (!$this->setCommand("MDTM " . $this->getRootPath($path), 250)) {
 					Core_Exception::setException("bad response for MDTM command. Path : " . $path);
 				}
-				return $this->responseMsg;
+				$mTime = $this->responseMsg;
 			}
 		}
-		return false;
+		return $mTime;
 	}
 	
 	/**
@@ -737,7 +737,7 @@ class Libs_FtpManager extends Cache_Model {
 		}
 	}
 	
-	public function touchCache($path, $updateTime = "") {
+	public function touchCache($path, $updateTime = 0) {
 		// TODO a coder
 	}
 	

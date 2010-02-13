@@ -20,9 +20,9 @@ class Core_Request {
 	 * 
 	 * @param $name String Nom de la variable
 	 * @param $type String Type de donnée
-	 * @param $default mixed Donnée par défaut
+	 * @param $default Object Donnée par défaut
 	 * @param $hash String Provenance de la variable
-	 * @return mixed
+	 * @return Object
 	 */
 	public static function &getVars($name, $type, $default = "", $hash = "default") {
 		$var = $name;
@@ -45,7 +45,7 @@ class Core_Request {
 	 * Retourne la variable demandée de type int
 	 * 
 	 * @param $name String Nom de la variable
-	 * @param $default mixed Donnée par défaut
+	 * @param $default int Donnée par défaut
 	 * @param $hash String Provenance de la variable
 	 * @return int
 	 */
@@ -57,7 +57,7 @@ class Core_Request {
 	 * Retourne la variable demandée de type float
 	 * 
 	 * @param $name String Nom de la variable
-	 * @param $default mixed Donnée par défaut
+	 * @param $default float Donnée par défaut
 	 * @param $hash String Provenance de la variable
 	 * @return float
 	 */
@@ -69,7 +69,7 @@ class Core_Request {
 	 * Retourne la variable demandée de type double
 	 * 
 	 * @param $name String Nom de la variable
-	 * @param $default mixed Donnée par défaut
+	 * @param $default double Donnée par défaut
 	 * @param $hash String Provenance de la variable
 	 * @return double
 	 */
@@ -81,7 +81,7 @@ class Core_Request {
 	 * Retourne la variable demandée de type String valide base64
 	 * 
 	 * @param $name String Nom de la variable
-	 * @param $default mixed Donnée par défaut
+	 * @param $default String Donnée par défaut
 	 * @param $hash String Provenance de la variable
 	 * @return String
 	 */
@@ -93,7 +93,7 @@ class Core_Request {
 	 * Retourne la variable demandée de type String
 	 * 
 	 * @param $name String Nom de la variable
-	 * @param $default mixed Donnée par défaut
+	 * @param $default String Donnée par défaut
 	 * @param $hash String Provenance de la variable
 	 * @return String
 	 */
@@ -105,7 +105,7 @@ class Core_Request {
 	 * Retourne la variable demandée de type String
 	 * 
 	 * @param $name String Nom de la variable
-	 * @param $default mixed Donnée par défaut
+	 * @param $default String Donnée par défaut
 	 * @param $hash String Provenance de la variable
 	 * @return String
 	 */
@@ -137,9 +137,9 @@ class Core_Request {
 	/**
 	 * Vérifie le contenu des données importées
 	 * 
-	 * @param $content mixed
+	 * @param $content Object
 	 * @param $type String
-	 * @return mixed
+	 * @return Object
 	 */
 	public static function &protect($content, $type) {
 		$type = strtoupper($type);

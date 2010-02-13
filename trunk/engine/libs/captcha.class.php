@@ -4,6 +4,12 @@ if (!defined("TR_ENGINE_INDEX")) {
 	new Core_Secure();
 }
 
+/**
+ * Générateur de captcha, anti-robot, anti-spam
+ * 
+ * @author Sebastien Villemain
+ *
+ */
 class Libs_Captcha {
 	
 	/**
@@ -21,16 +27,9 @@ class Libs_Captcha {
 	private $enabled = false;
 	
 	/**
-	 * Type de mise en forme
-	 * 
-	 * @var String
-	 */
-	private $type = "";
-	
-	/**
 	 * Un object utilisé suivant le type
 	 * 
-	 * @var mixed
+	 * @var Object
 	 */
 	private $object = "";
 	
@@ -58,10 +57,9 @@ class Libs_Captcha {
 	/**
 	 * Configuration d'un nouveau captcha
 	 * 
-	 * @param $type String ("form")
-	 * @param $object Object (Libs_Form Object)
+	 * @param $object Object (Libs_Form Object par exemple)
 	 */
-	public function __construct($type = "", &$object = "") {
+	public function __construct(&$object = null) {
 		// Mode du captcha
 		$captchaMode = Core_Main::$coreConfig['captchaMode'];
 		$captchaMode = ($captchaMode == "off" || $captchaMode == "auto" || $captchaMode == "manu") ? $captchaMode : "auto";
@@ -72,13 +70,7 @@ class Libs_Captcha {
 		else $this->enabled = true;
 		
 		if ($this->enabled) {
-			if ($type == "form" && is_object($object)) {
-				$this->type = "form";
-				$this->object = &$object;
-			} else {
-				$this->type = "";
-				$this->object = "";
-			}
+			$this->object = ($object != null && is_object($object)) ? $object : null;
 		}
 	}
 	
@@ -203,15 +195,16 @@ class Libs_Captcha {
 	/**
 	 * Génére une image
 	 */
-	private function makePicture() {
+	private function makePicture() {// TODO a vérifier
 		$this->response = Exec_Crypt::createId($this->randInt(3, 6));
-		$question = CAPTCHA_MAKE_PICTURE_CODE . ": " . "<img src=\"engine/libs/imagegenerator.php?mode=code&amp;code=" . $this->response . "\" alt=\"\" />\n";
+		$this->question = CAPTCHA_MAKE_PICTURE_CODE . ": " . "<img src=\"engine/libs/imagegenerator.php?mode=code&amp;code=" . $this->response . "\" alt=\"\" />\n";
 	}
 	
 	/**
 	 * Creation du captcha
+	 * Captcha créée dans l'objet valide sinon retourne en code HTML
 	 * 
-	 * @return String
+	 * @return String le code HTML a incruster dans la page ou une chaine vide si un objet valide est utilisé
 	 */
 	public function &create() {
 		$rslt = "";
@@ -230,9 +223,11 @@ class Libs_Captcha {
 				default: $this->makeLetter(); break;
 			}
 			
-			if ($this->type == "form") {
-				$this->object->addInputText("cles", $this->question, "input captcha");
-				$this->object->addInputHidden($this->inputRobotName, "");
+			if ($this->object != null) {
+				if ($this->object instanceOf Libs_Form) { // A vérifier
+					$this->object->addInputText("cles", $this->question, "input captcha");
+					$this->object->addInputHidden($this->inputRobotName, "");
+				}
 			} else {
 				$rslt = $this->question . " <input name=\"cles\" type=\"text\" value=\"\" />"
 				. "<input name=\"" . $this->inputRobotName . "\" type=\"hidden\" value=\"\" />";

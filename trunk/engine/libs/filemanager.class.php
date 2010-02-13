@@ -256,8 +256,8 @@ class Libs_FileManager extends Cache_Model {
 	 * @param $path chemin vers le fichier cache
 	 * @param $updateTime
 	 */
-	public function touchCache($path, $updateTime = "") {
-		if (empty($updateTime)) $updateTime = time();
+	public function touchCache($path, $updateTime = 0) {
+		if ($updateTime < 1) $updateTime = time();
 		if (!@touch(TR_ENGINE_DIR . "/" . $path, $updateTime)) {
 			Core_Exception::setException("touch error on " . $path);
 		}
@@ -269,15 +269,13 @@ class Libs_FileManager extends Cache_Model {
 	 * @param $dirPath
 	 * @return array
 	 */
-	public function &listNames($dirPath = null) {
-		// Si le dossier est null
-		if ($dirPath == null) {
-			// On prend le dossier par défaut
-			$dirPath = "";
-		}
+	public function &listNames($dirPath = "") {
+		// Si le dossier est vide, on prend le dossier par défaut
+		$dirPath = !empty($dirPath) ? TR_ENGINE_DIR . "/" . $dirPath : TR_ENGINE_DIR;
+		
 		$dirList = array();
 		// Ouverture du dossier
-		$handle = @opendir(TR_ENGINE_DIR . "/" . $dirPath);
+		$handle = @opendir($dirPath);
 		// Boucle sur les fichiers
 		while (false !== ($file = @readdir($handle))) {
 			// Si c'est un fichier valide

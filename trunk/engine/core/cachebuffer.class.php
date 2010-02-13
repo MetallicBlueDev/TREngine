@@ -9,7 +9,7 @@ class Core_CacheBuffer {
 	/**
 	 * Instance d'un protocole déjà initialisé
 	 * 
-	 * @var mixed
+	 * @var Cache_Model
 	 */
 	private static $protocol = null;
 	
@@ -198,7 +198,7 @@ class Core_CacheBuffer {
 	 */
 	public static function checked($timeLimit = 0) {
 		if (self::cached("checker.txt")) {
-			// On a demandé un comparaison de temps
+			// Si on a demandé un comparaison de temps
 			if ($timeLimit > 0) {
 				if ($timeLimit < self::checkerMTime()) return true;
 			} else {
@@ -267,7 +267,7 @@ class Core_CacheBuffer {
 	 * Capture le cache ciblé dans un tableau
 	 * 
 	 * @param $path Chemin du cache
-	 * @return mixed
+	 * @return String
 	 */
 	public static function &getCache($path) {
 		// Réglage avant capture
@@ -411,9 +411,9 @@ class Core_CacheBuffer {
 		if (Core_CacheBuffer::cached($fileName)) {
 			$dirList = self::getCache($fileName);
 		} else {
-			$execProtocol = self::getExecProtocol();
-			if ($execProtocol != null) {
-				$dirList = $execProtocol->listNames($dirPath);
+			$protocol = self::getExecProtocol();
+			if ($protocol != null) {
+				$dirList = $protocol->listNames($dirPath);
 				self::writingCache($fileName, $dirList);
 			}
 		}
@@ -423,7 +423,7 @@ class Core_CacheBuffer {
 	/**
 	 * Démarre et retourne le protocole du cache
 	 * 
-	 * @return mixed
+	 * @return Cache_Model
 	 */
 	private static function &getExecProtocol() {
 		if (self::$protocol == null) {
@@ -435,17 +435,16 @@ class Core_CacheBuffer {
 				// Démarrage du gestionnaire FTP
 				Core_Loader::classLoader("Libs_FtpManager");
 				self::$protocol = new Libs_FtpManager();
-				self::$protocol->setFtp(self::$ftp);
 			} else if (self::$modeActived['sftp']) {
 				// Démarrage du gestionnaire SFTP
 				Core_Loader::classLoader("Libs_SftpManager");
 				self::$protocol = new Libs_SftpManager();
-				self::$protocol->setFtp(self::$ftp);
 			} else {
 				Core_Exception::setException("No protocol actived for cache.");
 				return null;
 			}
 		}
+		self::$protocol->setFtp(self::$ftp);
 		return self::$protocol;
 	}
 	
@@ -496,18 +495,55 @@ class Core_CacheBuffer {
 	}
 }
 
+/**
+ * Modèle de classe pour un gestionnaire de fichier
+ * 
+ * @author Sebastien Villemain
+ *
+ */
 abstract class Cache_Model {
 	
-	public function writingCache($path, $content, $overWrite = true) {
+	/**
+	 * Ecriture du fichier cache
+	 * 
+	 * @param $path String
+	 * @param $content String
+	 * @param $overWrite boolean
+	 */
+	public function writingCache($path, $content, $overWrite = true) {}
+	
+	/**
+	 * Mise à jour de la date de dernière modification
+	 * 
+	 * @param $path String
+	 * @param $updateTime int
+	 */
+	public function touchCache($path, $updateTime = 0) {}
+	
+	/**
+	 * Supprime un fichier ou supprime tout fichier trop vieux
+	 * 
+	 * @param $dir String
+	 * @param $timeLimit int
+	 */
+	public function removeCache($dir = "", $timeLimit = 0) {}
+	
+	/**
+	 * Retourne le listing avec uniquement les fichiers présent
+	 * 
+	 * @param $dirPath String
+	 * @return array
+	 */
+	public function &listNames($dirPath = "") {
+		$list = array();
+		return $list;
 	}
 	
-	public function touchCache($path, $updateTime = "") {
-	}
-	
-	public function removeCache($dir = "", $timeLimit = 0) {
-	}
-	
-	public function &listNames($dirPath = null) {
-	}
+	/**
+	 * Ajout des informations du FTP
+	 * 
+	 * @param $ftp array
+	 */
+	public function setFtp($ftp = array()) {}
 }
 ?>

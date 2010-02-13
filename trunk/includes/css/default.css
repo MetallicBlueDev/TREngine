@@ -1,3 +1,4 @@
+/* Chargement */
 #loader {
 	display: none;
 	background: url(images/loader.gif) no-repeat 0 0;
@@ -6,6 +7,7 @@
 	margin-right: 5px;
 }
 
+/* Zone de texte, bouton... */
 .input {
 	margin-top: 5px;
 	margin-bottom: 5px;
@@ -13,6 +15,7 @@
 	padding-right: 3px;
 }
 
+/* Boite à cocher */
 .checkbox {
 	margin-left: 5px;
 }
@@ -27,7 +30,17 @@
 	margin: 0px;
 	padding: 5px;
 }
-
 .menu ul li a:link, .menu ul li a:visited {
 	font-weight: bold;
+}
+
+/* Block de message d'information, attention et alerte (ajax et autre) */
+#block_message .exception .alert div {
+	background-color: #efaaa9;
+}
+#block_message .exception .note div {
+	background-color: #f7c259;
+}
+#block_message .exception .info div {
+	background-color: #98c3f1;
 }

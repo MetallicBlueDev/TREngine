@@ -4,11 +4,8 @@ if (!defined("TR_ENGINE_INDEX")) {
 	new Core_Secure();
 }
 
-class Libs_SftpManager {
+class Libs_SftpManager extends Cache_Model {
 	
 	// TODO classe a coder...
-	public function __construct() {
-		
-	}
 }
 ?>

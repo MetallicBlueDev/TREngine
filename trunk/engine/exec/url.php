@@ -12,8 +12,16 @@ if (!defined("TR_ENGINE_INDEX")) {
  */
 class Exec_Url {
 	
+	/**
+	 * Nettoie l'adresse web (URL) du protocole
+	 * 
+	 * @param String $url
+	 * @return String
+	 */
 	public static function &cleanUrl($url) {
-		// TODO coder une détection de l'url avec http dedans etc..
+		if (substr($url, 0, 7) == "http://") {
+			$url = substr($url, 7, strlen($url));
+		}
 		return $url;
 	}
 	

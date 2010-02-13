@@ -152,12 +152,11 @@ form {
 	margin-top: 10px;
 	list-style-type: none;
 	padding-left: 25px;
-	height: 20px;
 	font-size: 13px;
 }
 /* Texte de l'erreur */
 #block_message .exception li div {
-	padding-top: 2px;
+	padding: 2px;
 }
 #block_message .exception .alert {
 	background: url(images/block_error_alert.png) no-repeat 2px 2px;
