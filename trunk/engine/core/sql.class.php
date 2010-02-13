@@ -142,7 +142,7 @@ class Core_Sql {
 		self::$base->query($sql);
 		self::$base->resetQuoted();
 		
-		if (Core_Main::debugMode()) Core_Exception::setSqlRequest($sql);
+		if (Core_Secure::isDebuggingMode()) Core_Exception::setSqlRequest($sql);
 		
 		// Création d'une exception si une réponse est négative (false)
 		if (self::getQueries() === false) throw new Exception("sqlReq");

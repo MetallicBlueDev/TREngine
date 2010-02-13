@@ -22,11 +22,11 @@ class Core_Secure {
 	private static $secure = false;
 	
 	/**
-	 * Statistique et debug mode
+	 * Stats et debug mode
 	 * 
 	 * @var boolean
 	 */
-	private static $debugMode = false;
+	private static $debuggingMode = false;
 	
 	public function __construct() {
 		$this->checkError();
@@ -48,9 +48,9 @@ class Core_Secure {
 	 * 
 	 * @return Core_Secure
 	 */
-	public static function &getInstance($debugMode = false) {
+	public static function &getInstance($debuggingMode = false) {
 		if (self::$secure === false) {
-			self::$debugMode = $debugMode;
+			self::$debuggingMode = $debuggingMode;
 			self::$secure = new self();
 		}
 		return self::$secure;
@@ -63,7 +63,7 @@ class Core_Secure {
 		// Réglages des sorties d'erreur
 		$errorReporting = E_ERROR | E_WARNING | E_PARSE;
 		
-		if (self::$debugMode) {
+		if (self::$debuggingMode) {
 			$errorReporting = $errorReporting | E_DEPRECATED | E_STRICT;
 		}
 		error_reporting($errorReporting);
@@ -216,6 +216,15 @@ class Core_Secure {
 			return constant($errorMessageTitle);
 		}
 		return "Stop loading (Fatal error unknown).";
+	}
+	
+	/**
+	 * Vérifie si le mode de statistique et de debug est actif
+	 * 
+	 * @return boolean
+	 */
+	public static function &isDebuggingMode() {
+		return self::$debuggingMode;
 	}
 }
 

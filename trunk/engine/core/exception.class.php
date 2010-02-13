@@ -225,37 +225,39 @@ class Core_Exception {
 	 * Affichage des exceptions courante
 	 */
 	public static function displayException() {
-		$error = "";
-		$color = "#008000";
-		// Vérification de la présence des exceptions
-		if (self::exceptionDetected()) {
-			$color = "#800000";
-			$error .= "************************"
-			. count(self::$exception) . " EXCEPTIONS"
-			. "************************"
-			. "<br />" . str_replace("\n", "<br />", self::linearize(self::$exception));
-		} else {
-			$error .= "No exception detected.";
+		if (Core_Main::isFullScreen()) {
+			$error = "";
+			$color = "#008000";
+			// Vérification de la présence des exceptions
+			if (self::exceptionDetected()) {
+				$color = "#800000";
+				$error .= "************************"
+				. count(self::$exception) . " EXCEPTIONS"
+				. "************************"
+				. "<br />" . str_replace("\n", "<br />", self::linearize(self::$exception));
+			} else {
+				$error .= "No exception detected.";
+			}
+			
+			$sql = "***********************" 
+			. self::$numberOfRequest 
+			. " SQL REQUESTS***********************<br />";
+			if (!empty(self::$sqlRequest)) {
+				$sql .= str_replace("\n", "<br />", self::linearize(self::$sqlRequest));
+			} else {
+				$sql .= "No sql request registred.";
+			}
+			
+			echo "<div style=\"color: blue;\"><br />" . $sql . "</div>\n"
+			. "<div style=\"color: " . $color . ";\"><br />" . $error . "</div>\n"
+			. "<div style=\"color: blue;\"><br />BenchMaker :<br />\n"
+			. "Core : " . Exec_Marker::getTime("core") . " seconde\n"
+			. "<br />Launcher : " . Exec_Marker::getTime("launcher") . " seconde\n"
+			. "<br />All : " . Exec_Marker::getTime("all") . " seconde\n"
+			. "<br />Number of Sql request : " . self::$numberOfRequest . "\n"
+			. "<br />Appreciation : <span style=\"color: " . (((0.4000 - Exec_Marker::getTime("all")) > 0.3) ? "green;\">OK" : "red;\">FAILED") . "</span>"
+			. "</div>";
 		}
-		
-		$sql = "***********************" 
-		. self::$numberOfRequest 
-		. " SQL REQUESTS***********************<br />";
-		if (!empty(self::$sqlRequest)) {
-			$sql .= str_replace("\n", "<br />", self::linearize(self::$sqlRequest));
-		} else {
-			$sql .= "No sql request registred.";
-		}
-		
-		echo "<div style=\"color: blue;\"><br />" . $sql . "</div>\n"
-		. "<div style=\"color: " . $color . ";\"><br />" . $error . "</div>\n"
-		. "<div style=\"color: blue;\"><br />BenchMaker :<br />\n"
-		. "Core : " . Exec_Marker::getTime("core") . " seconde\n"
-		. "<br />Launcher : " . Exec_Marker::getTime("launcher") . " seconde\n"
-		. "<br />All : " . Exec_Marker::getTime("all") . " seconde\n"
-		. "<br />Number of Sql request : " . self::$numberOfRequest . "\n"
-		. "<br />Appreciation : <span style=\"color: " . (((0.4000 - Exec_Marker::getTime("all")) > 0.3) ? "green;\">OK" : "red;\">FAILED") . "</span>"
-		. "</div>";
 	}
 	
 	/**

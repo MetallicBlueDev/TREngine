@@ -738,7 +738,7 @@ class Libs_FtpManager extends Cache_Model {
 	}
 	
 	public function touchCache($path, $updateTime = 0) {
-		// TODO a coder
+		// TODO mise a jour de la date de modif a coder
 	}
 	
 	public function __destruct() {

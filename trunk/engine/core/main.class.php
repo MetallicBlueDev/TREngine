@@ -30,21 +30,12 @@ class Core_Main {
 	public static $layout = "default";
 	
 	/**
-	 * Statistique et debug mode
-	 * 
-	 * @var boolean
-	 */
-	private static $debugMode = false;
-	
-	/**
 	 * Préparation TR ENGINE
 	 * Procédure de préparation du moteur
 	 * Une étape avant le démarrage réel
 	 */
-	public function __construct($debugMode = false) {
-		self::$debugMode = $debugMode;
-		
-		if (self::$debugMode) Exec_Marker::startTimer("core");
+	public function __construct() {
+		if (Core_Secure::isDebuggingMode()) Exec_Marker::startTimer("core");
 		
 		// Vérification de la version PHP
 		if (TR_ENGINE_PHP_VERSION < "5.0.0") {
@@ -79,13 +70,7 @@ class Core_Main {
 		// Chargement du gestionnaire d'accès url
 		Core_Loader::classLoader("Core_Request");
 		
-		if (self::$debugMode) Exec_Marker::stopTimer("core");
-		
-		// TODO isoler l'installation
-		$installPath = TR_ENGINE_DIR . "/install/index.php";
-		if (is_file($installPath)) {
-			require($installPath);
-		}
+		if (Core_Secure::isDebuggingMode()) Exec_Marker::stopTimer("core");
 	}
 	
 	/**
@@ -159,7 +144,7 @@ class Core_Main {
 	 * Démarrage TR ENGINE
 	 */
 	public function start() {
-		if (self::$debugMode) Exec_Marker::startTimer("launcher");
+		if (Core_Secure::isDebuggingMode()) Exec_Marker::startTimer("launcher");
 		
 		// Gestionnaire des cookie
 		Core_Loader::classLoader("Exec_Cookie");
@@ -195,7 +180,7 @@ class Core_Main {
 		$this->loadModule();
 		$this->loadMakeStyle();
 		
-		if (!self::$debugMode) $this->compressionOpen();
+		if (!Core_Secure::isDebuggingMode()) $this->compressionOpen();
 		
 		// Comportement different en fonction du type de client
 		if (!Core_BlackBan::isBlackUser()) {
@@ -249,10 +234,31 @@ class Core_Main {
 			Core_BlackBan::displayBlackPage();
 		}
 		
-		if (self::$debugMode) {
+		if (Core_Secure::isDebuggingMode()) {
 			Exec_Marker::stopTimer("launcher");
 		} else {
 			$this->compressionClose();
+		}
+	}
+	
+	/**
+	 * Recherche de nouveau composant
+	 * 
+	 * @return boolean true nouveau composant détecté
+	 */
+	public function newComponentDetected() {
+		// TODO détection de nouveau module a coder
+		return false;
+	}
+	
+	/**
+	 * Démarrage de l'installeur
+	 */
+	public function install() {
+		// TODO installation a coder
+		$installPath = TR_ENGINE_DIR . "/install/index.php";
+		if (is_file($installPath)) {
+			require($installPath);
 		}
 	}
 	
@@ -358,15 +364,6 @@ class Core_Main {
 	 */
 	public static function isRegistrationAllowed() {
 		return (self::$coreConfig['registrationAllowed'] == 1) ? true : false;
-	}
-	
-	/**
-	 * Vérifie si le mode de statistique et de debug est actif
-	 * 
-	 * @return boolean
-	 */
-	public static function &debugMode() {
-		return self::$debugMode;
 	}
 }
 ?>
