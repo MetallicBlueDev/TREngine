@@ -10,30 +10,36 @@ require("engine/core/info.class.php");
 // Inclusion du chargeur
 require("engine/core/loader.class.php");
 
+// Chargement du système de sécurité
+Core_Loader::classLoader("Core_Secure");
+Core_Secure::getInstance(true);
+
 // Chargement du Marker
 Core_Loader::classLoader("Exec_Marker");
 
-$debugMode = true;
-
-if ($debugMode) Exec_Marker::startTimer("all");
+if (Core_Secure::isDebuggingMode()) {
+	Exec_Marker::startTimer("all");
+}
 Exec_Marker::startTimer("main");
-
-// Chargement du système de sécurité
-Core_Loader::classLoader("Core_Secure");
-Core_Secure::getInstance($debugMode);
 
 // Chargement de la classe principal
 Core_Loader::classLoader("Core_Main");
 
 // Préparation du moteur
-$TR_ENGINE = new Core_Main($debugMode);
+$TR_ENGINE = new Core_Main();
 
-// Démarrage du moteur
-$TR_ENGINE->start();
+// Recherche de nouveau composant
+if ($TR_ENGINE->newComponentDetected()) {
+	// Installtion des nouveaux composants
+	$TR_ENGINE->install();
+} else {
+	// Démarrage du moteur
+	$TR_ENGINE->start();
+}
 
-if ($debugMode)  Exec_Marker::stopTimer("all");
-
-// Affichage des exceptions
-if ($debugMode)  Core_Exception::displayException();
+if (Core_Secure::isDebuggingMode()) {
+	Exec_Marker::stopTimer("all");
+	Core_Exception::displayException();
+}
 
 ?>
