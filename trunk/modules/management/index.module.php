@@ -13,22 +13,24 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Module_Management_Index extends Module_Model {
 	
 	public function display() {
-		// Nom de la page a administrer
-		$manage = Core_Request::getString("manage", "", "GET");
+		// Nom de la page administable
+		$managePage = Core_Request::getString("manage", "", "GET");
 		
 		// Liste de pages de configuration
 		$pageName = array();
 		$pageList = self::listManagementPages($pageName);
 		
-		if (!empty($manage) && in_array($manage, $pageList)) {
-			
-			//Libs_Module::getInstance()->getInfoModule()
-			echo "ok " . $manage;
+		// Préparation de la mise en page
+		$libsMakeStyle = new Libs_MakeStyle();
+		$libsMakeStyle->assign("pageList", $pageList);
+		$libsMakeStyle->assign("pageName", $pageName);
+		
+		// Affichage d'une page de configuration spécial
+		if (!empty($managePage) && in_array($managePage, $pageList)) {
+			require(TR_ENGINE_DIR . "/modules/management/" . $managePage . ".setting.module.php");
+			//$libsMakeStyle->display("management_setting.tpl");
 		} else {
-			$libsMakeStyle = new Libs_MakeStyle();
-			$libsMakeStyle->assign("pageList", $pageList);
-			$libsMakeStyle->assign("pageName", $pageName);
-			
+			// Affichage du panel d'administration complet
 			$libsMakeStyle->display("management_index.tpl");
 		}
 	}
@@ -36,22 +38,28 @@ class Module_Management_Index extends Module_Model {
 	/**
 	 * Retourne un tableau contenant les pages d'administration disponibles
 	 * 
+	 * @param $pageName array le nom des pages
 	 * @return array
 	 */
-	private static function &listManagementPages(&$pageName = array()) {
+	private static function &listManagementPages(&$pageName) {
 		$page = "";
 		$pageList = array();
 		$files = Core_CacheBuffer::listNames("modules/management");
 		foreach($files as $key => $fileName) {
-			$pos = strpos($fileName, ".page");
+			// Nettoyage du nom de la page
+			$pos = strpos($fileName, ".setting.module");
+			// Si c'est une page administrable
 			if ($pos !== false && $pos > 0) {
 				$page = substr($fileName, 0, $pos);
-				$pageList[] = $page;
-				
-				if (defined("PAGE_TITLE_" . strtoupper($page))) {
-					$pageName[] = constant("PAGE_TITLE_" . strtoupper($page));
-				} else {
-					$pageName[] = ucfirst($page);
+				// Vérification des droits de l'utilisateur
+				if (Core_Access::moderate("management/" . $page . ".setting")) {
+					$pageList[] = $page;
+					
+					if (defined("SETTING_TITLE_" . strtoupper($page))) {
+						$pageName[] = constant("SETTING_TITLE_" . strtoupper($page));
+					} else {
+						$pageName[] = ucfirst($page);
+					}
 				}
 			}
 		}

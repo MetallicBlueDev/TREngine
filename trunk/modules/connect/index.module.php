@@ -234,7 +234,8 @@ class Module_Connect_Index extends Module_Model {
 			}
 		}
 		
-		$zone = $identifiant = "";
+		$zone = "";
+		$identifiant = "";
 		foreach($rights as $key => $right) {
 			if ($right == "all") {
 				$form->addHtmlInFieldset(ADMIN_RIGHT_ALL);
@@ -250,7 +251,7 @@ class Module_Connect_Index extends Module_Model {
 					}
 					$form->addHtmlInFieldset(ADMIN_RIGHT_BLOCK . " " . $right);
 				} else if ($zone == "PAGE") {
-					$form->addHtmlInFieldset(ADMIN_RIGHT_PAGE . " <b>" . $identifiant . "</b>");
+					$form->addHtmlInFieldset(ADMIN_RIGHT_PAGE . " <b>" . $identifiant . "</b> (" . $right . ")");
 				}
 			}
 		}

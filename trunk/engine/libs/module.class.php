@@ -186,7 +186,7 @@ class Libs_Module {
 	 * @param $mod String
 	 * @return int
 	 */
-	public function getRang($moduleName) {
+	public function getRang($moduleName = "") {
 		$moduleName = (empty($moduleName)) ? self::$module : $moduleName;
 		// Recherche des infos du module
 		$moduleInfo = $this->getInfoModule($moduleName);
