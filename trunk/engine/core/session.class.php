@@ -17,7 +17,7 @@ class Core_Session {
 	 * 
 	 * @var Core_Session
 	 */
-	private static $session = false;
+	private static $session = null;
 	
 	/**
 	 * Timer générale
@@ -170,7 +170,7 @@ class Core_Session {
 	 * @return Core_Session
 	 */
 	public static function &getInstance() {
-		if (self::$session === false) {
+		if (self::$session == null) {
 			self::$session = new self();
 		}
 		return self::$session;

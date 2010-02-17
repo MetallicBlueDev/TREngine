@@ -10,7 +10,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  * @author Sebastien Villemain
  *
  */
-class Core_Acces  {
+class Core_Access  {
 	
 	/**
 	 * Vérifie si le client a les droits suffisant pour acceder au module

@@ -185,7 +185,7 @@ class Core_Main {
 		// Comportement different en fonction du type de client
 		if (!Core_BlackBan::isBlackUser()) {
 			// Chargement du gestionnaire d'autorisation
-			Core_Loader::classLoader("Core_Acces");
+			Core_Loader::classLoader("Core_Access");
 			
 			// Chargement des blocks
 			Core_Loader::classLoader("Libs_Block");

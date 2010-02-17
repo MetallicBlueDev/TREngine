@@ -13,9 +13,23 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Module_Management_Index extends Module_Model {
 	
 	public function display() {
-		$pages = self::listManagementPages();
-		foreach($pages as $page) {
-			echo "<a href=\"?mod=management&page=" . $page . "\">" . $page . "</a>";
+		// Nom de la page a administrer
+		$manage = Core_Request::getString("manage", "", "GET");
+		
+		// Liste de pages de configuration
+		$pageName = array();
+		$pageList = self::listManagementPages($pageName);
+		
+		if (!empty($manage) && in_array($manage, $pageList)) {
+			
+			//Libs_Module::getInstance()->getInfoModule()
+			echo "ok " . $manage;
+		} else {
+			$libsMakeStyle = new Libs_MakeStyle();
+			$libsMakeStyle->assign("pageList", $pageList);
+			$libsMakeStyle->assign("pageName", $pageName);
+			
+			$libsMakeStyle->display("management_index.tpl");
 		}
 	}
 	
@@ -24,16 +38,24 @@ class Module_Management_Index extends Module_Model {
 	 * 
 	 * @return array
 	 */
-	private static function &listManagementPages() {
-		$pages = array();
-		$files = Core_CacheBuffer::listNames("modules/management/pages");
+	private static function &listManagementPages(&$pageName = array()) {
+		$page = "";
+		$pageList = array();
+		$files = Core_CacheBuffer::listNames("modules/management");
 		foreach($files as $key => $fileName) {
 			$pos = strpos($fileName, ".page");
 			if ($pos !== false && $pos > 0) {
-				$pages[] = substr($fileName, 0, $pos);
+				$page = substr($fileName, 0, $pos);
+				$pageList[] = $page;
+				
+				if (defined("PAGE_TITLE_" . strtoupper($page))) {
+					$pageName[] = constant("PAGE_TITLE_" . strtoupper($page));
+				} else {
+					$pageName[] = ucfirst($page);
+				}
 			}
 		}
-		return $pages;
+		return $pageList;
 	}
 }
 

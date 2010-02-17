@@ -490,7 +490,7 @@ class Libs_FtpManager extends Cache_Model {
 			if ($this->nativeMode) {
 				$rslt = ftp_mdtm($this->connId, $this->getRootPath($path));
 				
-				if ($rslt === false) {
+				if ($rslt == -1) { // Une erreur est survenue
 					$this->nativeMode = false;
 					Core_Exception::setException("bad response for ftp_mdtm command. Path : " . $path
 					. " Turn off the native command.");

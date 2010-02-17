@@ -17,7 +17,7 @@ class Libs_Breadcrumb {
 	 * 
 	 * @var Libs_Breadcrumb
 	 */
-	private static $breadcrumb = false;
+	private static $breadcrumb = null;
 	
 	/**
 	 * Le fil d'Ariane
@@ -37,7 +37,7 @@ class Libs_Breadcrumb {
 	 * @return Libs_Breadcrumb
 	 */
 	public static function &getInstance() {
-		if (self::$breadcrumb === false) {
+		if (self::$breadcrumb == null) {
 			self::$breadcrumb = new self();
 		}
 		return self::$breadcrumb;

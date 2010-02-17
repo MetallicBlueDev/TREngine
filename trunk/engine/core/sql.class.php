@@ -17,7 +17,7 @@ class Core_Sql {
 	 * 
 	 * @var Base_xxxx
 	 */ 
-	protected static $base = false;
+	protected static $base = null;
 	
 	/**
 	 * Démarre une instance de communication avec la base
@@ -26,7 +26,7 @@ class Core_Sql {
 	 * @return Base_Type
 	 */
 	public static function &makeInstance($db = array()) {
-		if (self::$base === false && count($db) >= 5) {			
+		if (self::$base == null && count($db) >= 5) {
 			// Vérification du type de base de donnée
 			if (!is_file(TR_ENGINE_DIR . "/engine/base/" . $db['type'] . ".class.php")) {
 				Core_Secure::getInstance()->debug("sqlType");

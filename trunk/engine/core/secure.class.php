@@ -19,7 +19,7 @@ class Core_Secure {
 	 * 
 	 * @var Core_Secure
 	 */ 
-	private static $secure = false;
+	private static $secure = null;
 	
 	/**
 	 * Stats et debug mode
@@ -28,6 +28,9 @@ class Core_Secure {
 	 */
 	private static $debuggingMode = false;
 	
+	/**
+	 * Routine de sécurisation
+	 */
 	public function __construct() {
 		$this->checkError();
 		$this->checkQueryString();
@@ -49,7 +52,7 @@ class Core_Secure {
 	 * @return Core_Secure
 	 */
 	public static function &getInstance($debuggingMode = false) {
-		if (self::$secure === false) {
+		if (self::$secure == null) {
 			self::$debuggingMode = $debuggingMode;
 			self::$secure = new self();
 		}

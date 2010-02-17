@@ -17,7 +17,7 @@ class Libs_Block {
 	 * 
 	 * @var Libs_Block
 	 */
-	private static $libsBlock = false;
+	private static $libsBlock = null;
 	
 	/**
 	 * Blocks chargés, tableau a deux dimensions
@@ -42,7 +42,7 @@ class Libs_Block {
 	 * @return Libs_Block
 	 */
 	public static function &getInstance() {
-		if (self::$libsBlock === false) {			
+		if (self::$libsBlock == null) {			
 			self::$libsBlock = new self();
 		}
 		return self::$libsBlock;
@@ -154,7 +154,7 @@ class Libs_Block {
 	 */
 	private function get($block) {
 		// Vérification de l'accès
-		if (Core_Acces::autorize("block" . $block->block_id, $block->rang)) {
+		if (Core_Access::autorize("block" . $block->block_id, $block->rang)) {
 			$blockClassName = "Block_" . ucfirst($block->type);
 			$loaded = Core_Loader::classLoader($blockClassName);
 			

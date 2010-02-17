@@ -209,7 +209,7 @@ class Module_Connect_Index extends Module_Model {
 		
 		// Type de compte admin
 		$form->addSpace();
-		$rights = Core_Acces::getAdminRight();
+		$rights = Core_Access::getAdminRight();
 		$form->addHtmlInFieldset("<b>");
 		if (Core_Session::$userRang == 3 && $rights[0] == "all") $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_MAX);
 		else if (Core_Session::$userRang == 3) $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_HIG);
@@ -238,7 +238,7 @@ class Module_Connect_Index extends Module_Model {
 		foreach($rights as $key => $right) {
 			if ($right == "all") {
 				$form->addHtmlInFieldset(ADMIN_RIGHT_ALL);
-			} else if (Core_Acces::accessType($right, $zone, $identifiant)) {
+			} else if (Core_Access::accessType($right, $zone, $identifiant)) {
 				if ($zone == "MODULE") {
 					$form->addHtmlInFieldset(ADMIN_RIGHT_MODULE . " <b>" . $right . "</b> (#" . $identifiant . ")");
 				} else if ($zone == "BLOCK") {

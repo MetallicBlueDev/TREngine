@@ -40,10 +40,9 @@ class Core_BlackBan {
 			
 			$libsMakeStyle = new Libs_MakeStyle();
 			$libsMakeStyle->assign("mail", $mail);
-			$libsMakeStyle->assign("name", $name);
 			$libsMakeStyle->assign("reason", Exec_Entities::textDisplay($reason));
-			$libsMakeStyle->assign("slogan", (!empty(Core_Main::$coreConfig['defaultSiteSlogan'])) ? Core_Main::$coreConfig['defaultSiteSlogan'] : "");
-			$libsMakeStyle->display("blackban.tpl");
+			$libsMakeStyle->assign("ip", Core_Session::$userIpBan);
+			$libsMakeStyle->display("banishment.tpl");
 		}
 		
 	}

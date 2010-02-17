@@ -3,11 +3,11 @@
 <?php 
 $renderModule = Libs_Module::getInstance()->getModule();
 	
-if ($renderModule) {
+if (!empty($renderModule)) {
 ?>
 <div id="module_top"></div>
 <div id="module_middle">
-	<div style="padding: 10px 10px 10px 20px;">
+	<div id="module_middle_content">
 		<?php echo $renderModule; ?>
 	</div>
 </div>

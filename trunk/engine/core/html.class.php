@@ -17,7 +17,7 @@ class Core_Html {
 	 * 
 	 * @var Core_Html
 	 */
-	private static $html = false;
+	private static $html = null;
 	
 	/**
 	 * Nom du cookie de test
@@ -102,7 +102,7 @@ class Core_Html {
 	 * @return Core_Html
 	 */
 	public static function &getInstance() {
-		if (self::$html === false) {
+		if (self::$html == null) {
 			self::$html = new self();
 		}
 		return self::$html;

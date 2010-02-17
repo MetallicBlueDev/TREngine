@@ -17,7 +17,7 @@ class Libs_Module {
 	 * 
 	 * @var Libs_Module
 	 */
-	private static $libsModule = false;
+	private static $libsModule = null;
 	
 	/**
 	 * Nom du module courant
@@ -105,7 +105,7 @@ class Libs_Module {
 	 * @return Libs_Module
 	 */
 	public static function &getInstance($module = "", $page = "", $view = "") {
-		if (self::$libsModule === false) {
+		if (self::$libsModule == null) {
 			// Injection des informations
 			self::$module = $module;
 			self::$page = $page;
@@ -198,7 +198,7 @@ class Libs_Module {
 	 */
 	public function launch() {
 		// Vérification du niveau d'acces 
-		if (($this->installed() && Core_Acces::autorize(self::$module)) || (!$this->installed() && Core_Session::$userRang > 1)) {
+		if (($this->installed() && Core_Access::autorize(self::$module)) || (!$this->installed() && Core_Session::$userRang > 1)) {
 			if (empty($this->moduleCompiled) && $this->isModule()) {		
 				$this->get();
 				if (Core_Loader::isCallable("Libs_Breadcrumb")) {
@@ -207,7 +207,7 @@ class Libs_Module {
 				}
 			}
 		} else {
-			Core_Exception::addAlertError(ERROR_ACCES_ZONE . " " . Core_Acces::getModuleAccesError(self::$module));
+			Core_Exception::addAlertError(ERROR_ACCES_ZONE . " " . Core_Access::getModuleAccesError(self::$module));
 		}
 	}
 	
@@ -224,10 +224,10 @@ class Libs_Module {
 			if ($pageInfo[1] == "install" && ($this->installed() || Core_Session::$userRang < 2)) {
 				return $this->viewPage(array($pageInfo[0], $default), false);
 			}
-			if ($pageInfo[1] == "uninstall" && (!$this->installed() || !Core_Acces::moderate(self::$module))) {
+			if ($pageInfo[1] == "uninstall" && (!$this->installed() || !Core_Access::moderate(self::$module))) {
 				return $this->viewPage(array($pageInfo[0], $default), false);
 			}
-			if ($pageInfo[1] == "setting" && (!$this->installed() || !Core_Acces::moderate(self::$module))) {
+			if ($pageInfo[1] == "setting" && (!$this->installed() || !Core_Access::moderate(self::$module))) {
 				return $this->viewPage(array($pageInfo[0], $default), false);
 			}
 			return $pageInfo[1];

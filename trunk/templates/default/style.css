@@ -106,6 +106,9 @@ form {
 	width: 645px;
 	background: url(images/module_middle.jpg);
 }
+#module_middle_content {
+	padding: 10px 13px 10px 13px;
+}
 #module_bottom {
 	width: 645px;
 	height: 60px;
@@ -212,4 +215,21 @@ form {
 }
 .tabs div {
 	background: #848e97;
+}
+
+/* Panel d'administration */
+#management_index_page {
+	float: left;
+	background: #6b737b;
+}
+
+.management_index_block, .management_index_block:link, .management_index_block:visited, .management_index_block:visited:active {
+	margin: 5px;
+	text-align: center;
+	background-image: url(images/background_form.png);
+	border: 2px solid #6b737b;
+}
+
+.management_index_block:hover {
+	border: 2px solid #7194a4;
 }
