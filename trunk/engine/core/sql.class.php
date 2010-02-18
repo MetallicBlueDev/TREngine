@@ -240,7 +240,8 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Retourne le buffer complet choisis
+	 * Retourne le buffer complet choisi
+	 * Retourne un tableau Sdt object
 	 * 
 	 * @param $name String
 	 * @return array - object
@@ -545,7 +546,7 @@ abstract class Base_Model {
 	public function addBuffer($name, $key) {
 		if (!isset($this->buffer[$name])) {
 			while ($row = $this->fetchObject()) {
-				if ($key) $this->buffer[$name][$row->$key] = $row;
+				if (!empty($key)) $this->buffer[$name][$row->$key] = $row;
 				else $this->buffer[$name][] = $row;
 			}
 			$reset = $this->buffer[$name][0];

@@ -137,16 +137,21 @@ class Core_Access  {
 		if (!empty($userIdAdmin)) $userIdAdmin = Exec_Entities::secureText($userIdAdmin);
 		else $userIdAdmin = Core_Session::$userId;
 		
-		Core_Sql::select(
-			Core_Table::$USERS_ADMIN_TABLE,
-			array("rights"),
-			array("user_id = '" . $userIdAdmin . "'")
-		);
+		$admin = array();
+		$admin = Core_Sql::getBuffer("getAdminRight");
+		if (empty($admin)) { // Si la requête n'est pas en cache
+			Core_Sql::select(
+				Core_Table::$USERS_ADMIN_TABLE,
+				array("rights"),
+				array("user_id = '" . $userIdAdmin . "'")
+			);
+			Core_Sql::addBuffer("getAdminRight");
+			$admin = Core_Sql::getBuffer("getAdminRight");
+		}
 		
 		$rights = array();
-		if (Core_Sql::affectedRows() > 0) {
-			$admin = Core_Sql::fetchArray();
-			$rights = explode("|", $admin['rights']);
+		if (!empty($admin)) {
+			$rights = explode("|", $admin[0]->rights);
 		}
 		return $rights;
 	}

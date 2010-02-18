@@ -9,10 +9,8 @@
 
 /* Zone de texte, bouton... */
 .input {
-	margin-top: 5px;
-	margin-bottom: 5px;
-	padding-left: 3px;
-	padding-right: 3px;
+	margin: 5px 0px 5px 0px;
+	padding: 0px 3px 0px 3px;
 }
 
 /* Boite à cocher */

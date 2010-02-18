@@ -27,10 +27,12 @@ class Module_Management_Index extends Module_Model {
 		
 		// Affichage d'une page de configuration spécial
 		if (!empty($managePage) && in_array($managePage, $pageList)) {
+			$libsMakeStyle->assign("pageSelected", $managePage);
 			require(TR_ENGINE_DIR . "/modules/management/" . $managePage . ".setting.module.php");
 			//$libsMakeStyle->display("management_setting.tpl");
 		} else {
 			// Affichage du panel d'administration complet
+			$libsMakeStyle->assign("pageSelected", "");
 			$libsMakeStyle->display("management_index.tpl");
 		}
 	}

@@ -1,6 +1,6 @@
 /* element de base */
 body {
-	background: #6b737b;
+	background-color: #6b737b;
 	font-family: verdana, Arial, Sans-serif;
 	font-size: 11px;
 	color: #000;
@@ -85,7 +85,7 @@ form {
 	height: auto !important;
 	height: 100%;
 	margin: 0 auto;
-	background: url(images/background_middle.jpg);
+	background-image: url(images/background_middle.jpg);
 	overflow: hidden;
 }
 /* Pieds de page */
@@ -93,14 +93,14 @@ form {
 	width: 900px;
 	height: 130px;
 	margin: 0 auto;
-	background: url(images/footer.jpg);
+	background-image: url(images/footer.jpg);
 }
 /* Cadre des modules */
 #module_top {
 	margin-top: 5px;
 	width: 645px;
 	height: 60px;
-	background: url(images/module_top.jpg);
+	background-image: url(images/module_top.jpg);
 }
 #module_middle {
 	width: 645px;
@@ -112,32 +112,27 @@ form {
 #module_bottom {
 	width: 645px;
 	height: 60px;
-	background: url(images/module_bottom.jpg);
+	background-image: url(images/module_bottom.jpg);
 }
 /* Cadre des blocks */
 .block_top {
-	margin-top: 10px;
-	margin-left: 30px;
-	margin-right: 10px;
+	margin: 10px 10px 0px 30px;
 	width: 174px;
 	height: 57px;
 }
 .block_middle {
-	margin-left: 30px;
-	margin-right: 10px;
+	margin: 0px 10px 0px 30px;
 	width: 174px;
-	background: url(images/block_middle.jpg);
+	background-image: url(images/block_middle.jpg);
 }
 .block_bottom {
-	margin-left: 30px;
-	margin-right: 10px;
+	margin: 0px 10px 0px 30px;
 	width: 174px;
 	height: 35px;
-	background: url(images/block_bottom.jpg);
+	background-image: url(images/block_bottom.jpg);
 }
 .block_content {
-	padding-left: 10px;
-	padding-right: 12px;
+	padding: 0px 12px 0px 10px;
 }
 .block_content ul {
 	padding-top: 5px;
@@ -162,16 +157,13 @@ form {
 	padding: 2px;
 }
 #block_message .exception .alert {
-	background: url(images/block_error_alert.png) no-repeat 2px 2px;
-	background-color: #efaaa9;
+	background: #efaaa9 url(images/block_error_alert.png) no-repeat 2px 2px;
 }
 #block_message .exception .note {
-	background: url(images/block_error_note.png) no-repeat 2px 2px;
-	background-color: #f7c259;
+	background: #f7c259 url(images/block_error_note.png) no-repeat 2px 2px;
 }
 #block_message .exception .info {
-	background: url(images/block_error_info.png) no-repeat 2px 2px;
-	background-color: #98c3f1;
+	background: #98c3f1 url(images/block_error_info.png) no-repeat 2px 2px;
 }
 /* Partie gauche */
 #left {
@@ -206,30 +198,57 @@ form {
 }
 /* Menu et contenu des onglets (idTabs) */
 .tabs ul a {
-	background: #848e97;
+	background-color: #848e97;
 }
 .tabs ul a:hover { background: #6f8592; }
 .tabs ul a.selected {
-	background: #848e97;
+	background-color: #848e97;
 	border-bottom: 1px solid #848e97;
 }
 .tabs div {
-	background: #848e97;
+	background-color: #848e97;
 }
 
 /* Panel d'administration */
 #management_index_page {
 	float: left;
-	background: #6b737b;
+	background-color: #6b737b;
 }
 
 .management_index_block, .management_index_block:link, .management_index_block:visited, .management_index_block:visited:active {
 	margin: 5px;
+	padding: 5px;
 	text-align: center;
 	background-image: url(images/background_form.png);
-	border: 2px solid #6b737b;
+	border: 2px solid #78828a;
 }
-
 .management_index_block:hover {
 	border: 2px solid #7194a4;
+}
+#management_bar {
+	background-image: url(images/background_form.png);
+	padding: 5px;
+	margin: 5px 0px 5px 5px;
+	border: 2px solid #6b737b;
+	height: 50px;
+}
+#management_bar div {
+	float: left;
+	margin-left: 10px;
+}
+#management_bar_setting_page {
+	height: 50px;
+	padding-left: 50px;
+	background: #5985b1 url(management/bar_setting.png) no-repeat top left;
+}
+#management_bar_module_page {
+	height: 50px;
+	padding-left: 50px;
+	background: #5985b1 url(management/bar_module.png) no-repeat top left;
+}
+#management_bar div a {
+	border: 0px;
+}
+#management_bar div select {
+	margin: 13px 4px 0px 5px;
 }

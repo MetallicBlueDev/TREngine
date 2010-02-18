@@ -93,7 +93,7 @@ class Core_BlackBan {
 	 */
 	private static function checkBan() {	
 		$userIp = Exec_Agent::$userIp;
-		
+		// Recherche de bannissement de session
 		if (!empty(Core_Session::$userIpBan)) {
 			// Si l'ip n'est plus du tout valide
 			if (Core_Session::$userIpBan != $userIp 
@@ -122,7 +122,7 @@ class Core_BlackBan {
 				}
 			}
 		} else {
-			// Sinon on recherche dans la base les bannis l'ip et le pseudo
+			// Sinon on recherche dans la base les bannis; leurs ip et leurs pseudo
 			Core_Sql::select(
 				Core_Table::$BANNED_TABLE,
 				array("ip", "name"),
