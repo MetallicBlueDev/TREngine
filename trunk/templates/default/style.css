@@ -221,6 +221,7 @@ form {
 	text-align: center;
 	background-image: url(images/background_form.png);
 	border: 2px solid #78828a;
+	width: 128px;
 }
 .management_index_block:hover {
 	border: 2px solid #7194a4;
@@ -228,7 +229,7 @@ form {
 #management_bar {
 	background-image: url(images/background_form.png);
 	padding: 5px;
-	margin: 5px 0px 5px 5px;
+	margin: 5px;
 	border: 2px solid #6b737b;
 	height: 50px;
 }
