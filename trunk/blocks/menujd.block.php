@@ -30,7 +30,7 @@ class Block_Menujd extends Block_Menu {
 	
 	private function configure() {		
 		// Ajout du fichier de style
-		Core_Html::getInstance()->addCssFile("jquery.jdMenu.css");
+		Core_Html::getInstance()->addCssInculdeFile("jquery.jdMenu.css");
 		// Ajout des fichier javascript
 		Core_Html::getInstance()->addJavascriptFile("jquery.dimensions.js");
 		Core_Html::getInstance()->addJavascriptFile("jquery.positionBy.js");

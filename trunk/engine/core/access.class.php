@@ -145,8 +145,11 @@ class Core_Access  {
 				array("rights"),
 				array("user_id = '" . $userIdAdmin . "'")
 			);
-			Core_Sql::addBuffer("getAdminRight");
-			$admin = Core_Sql::getBuffer("getAdminRight");
+			
+			if (Core_Sql::affectedRows() > 0) {
+				Core_Sql::addBuffer("getAdminRight");
+				$admin = Core_Sql::getBuffer("getAdminRight");
+			}
 		}
 		
 		$rights = array();

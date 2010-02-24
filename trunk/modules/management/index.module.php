@@ -1,6 +1,6 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
-	require("../core/secure.class.php");
+	require("../../engine/core/secure.class.php");
 	new Core_Secure();
 }
 
@@ -13,6 +13,9 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Module_Management_Index extends Module_Model {
 	
 	public function display() {
+		// Ajout du CSS
+		Core_HTML::getInstance()->addCssTemplateFile("management.css");
+		
 		// Nom de la page administable
 		$managePage = Core_Request::getString("manage", "", "GET");
 		
@@ -20,21 +23,77 @@ class Module_Management_Index extends Module_Model {
 		$pageName = array();
 		$pageList = self::listManagementPages($pageName);
 		
+		// Liste des modules
+		$moduleName = array();
+		$moduleList = self::listModules($moduleName);
+		
 		// Préparation de la mise en page
 		$libsMakeStyle = new Libs_MakeStyle();
 		$libsMakeStyle->assign("pageList", $pageList);
 		$libsMakeStyle->assign("pageName", $pageName);
+		$libsMakeStyle->assign("moduleList", $moduleList);
+		$libsMakeStyle->assign("moduleName", $moduleName);
 		
-		// Affichage d'une page de configuration spécial
-		if (!empty($managePage) && in_array($managePage, $pageList)) {
-			$libsMakeStyle->assign("pageSelected", $managePage);
-			require(TR_ENGINE_DIR . "/modules/management/" . $managePage . ".setting.module.php");
-			//$libsMakeStyle->display("management_setting.tpl");
-		} else {
-			// Affichage du panel d'administration complet
-			$libsMakeStyle->assign("pageSelected", "");
-			$libsMakeStyle->display("management_index.tpl");
+		// Affichage de la page d'administration
+		$managementScreen = "management_index.tpl";
+		$pageSelected = "";
+		if (!empty($managePage)) { // Affichage d'une page de configuration spécial
+			$settingPage = in_array($managePage, $pageList);
+			$modulePage = in_array($managePage, $moduleList);
+			
+			// Si c'est une page valide
+			if ($settingPage || $modulePage) {
+				$pageSelected = $managePage; // Page selectionnée
+				$managementScreen = "management_setting.tpl"; // Nom du template
+				
+				// Récuperation du module
+				$moduleClassPage = "";
+				$moduleClassName = "";
+				if ($settingPage) {
+					$moduleClassPage = "Module_Management_" . ucfirst($managePage) . ".setting";
+					$moduleClassName = "Module_Management_" . ucfirst($managePage);
+				} else {
+					$moduleClassPage = $moduleClassName = "Module_" . ucfirst($managePage) . "_Index";
+				}
+				
+				// Si aucune erreur, on lance le module
+				if (Core_Loader::classLoader($moduleClassPage)) {
+					$ModuleClass = new $moduleClassName();
+					
+					$content = "";
+					if (Core_Loader::isCallable($moduleClassName, "setting")) {
+						$content = $ModuleClass->setting();
+					}
+					$libsMakeStyle->assign("content", $content);
+				}
+			}
 		}
+		$libsMakeStyle->assign("pageSelected", $pageSelected);
+		$libsMakeStyle->display($managementScreen);
+	}
+	
+	/**
+	 * Retourne un tableau contenant les modules disponibles
+	 * 
+	 * @param $moduleName array le nom des modules
+	 * @return array
+	 */
+	private static function &listModules(&$moduleName) {
+		$moduleList = array();
+		Core_Sql::select(
+			Core_Table::$MODULES_TABLE,
+			array("name")
+		);
+		
+		if (Core_Sql::affectedRows() > 0) {
+			while($module = Core_Sql::fetchArray()) {
+				if (Core_Access::moderate($module['name'])) {
+					$moduleList[] = $module['name'];
+					$moduleName[] = MODULE_MANAGEMENT . " " . $module['name'];
+				}
+			}
+		}
+		return $moduleList;
 	}
 	
 	/**

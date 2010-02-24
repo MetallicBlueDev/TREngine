@@ -63,7 +63,7 @@ class Libs_Tabs {
 		$this->selected = Core_Request::getString("selectedTab");
 		if (self::$firstInstance) {
 			Core_Html::getInstance()->addJavascriptFile("jquery.idTabs.js");
-			Core_Html::getInstance()->addCssFile("jquery.idTabs.css");
+			Core_Html::getInstance()->addCssInculdeFile("jquery.idTabs.css");
 			self::$firstInstance = false;
 		}
 		if (empty($this->selected) && !Core_Html::getInstance()->isJavascriptEnabled()) {

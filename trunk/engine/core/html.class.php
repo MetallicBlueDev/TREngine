@@ -169,12 +169,12 @@ class Core_Html {
 	 * @return String
 	 */
 	private function &includeCss() {
-		$this->addCssFile("default.css");
+		$this->addCssInculdeFile("default.css");
 		// Conception de l'entête
 		$script = "";
 		foreach($this->cssFile as $file => $options) {
 			if (!empty($options)) $options = " " . $options;
-			$script .= "<link rel=\"stylesheet\" href=\"includes/css/" . $file . "\" type=\"text/css\" />\n";			
+			$script .= "<link rel=\"stylesheet\" href=\"" . $file . "\" type=\"text/css\" />\n";			
 		}
 		return $script;
 	}
@@ -248,9 +248,33 @@ class Core_Html {
 	 * @param $fileName String
 	 * @param $options String
 	 */
-	public function addCssFile($fileName, $options = "") {
-		if (!array_key_exists($fileName, $this->cssFile)) {
-			$this->cssFile[$fileName] = $options;
+	private function addCssFile($fileName, $options = "") {
+		if (is_file(TR_ENGINE_DIR . "/" . $fileName)) {
+			if (!array_key_exists($fileName, $this->cssFile)) {
+				$this->cssFile[$fileName] = $options;
+			}
+		}
+	}
+	
+	/**
+	 * Ajoute un fichier de style CSS venant du dossier includes/css a l'entête
+	 * 
+	 * @param $fileName String
+	 * @param $options String
+	 */
+	public function addCssInculdeFile($fileName, $options = "") {
+		$this->addCssFile("includes/css/" . $fileName, $options);
+	}
+	
+	/**
+	 * Ajoute un fichier de style CSS venant du dossier template a l'entête
+	 * 
+	 * @param $fileName String
+	 * @param $options String
+	 */
+	public function addCssTemplateFile($fileName, $options = "") {
+		if (Core_Loader::isCallable("Libs_Makestyle")) {
+			$this->addCssFile(Libs_Makestyle::getTemplatesDir() . "/" . Libs_Makestyle::getCurrentTemplate() . "/" . $fileName, $options);
 		}
 	}
 	

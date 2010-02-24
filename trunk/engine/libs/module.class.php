@@ -258,7 +258,7 @@ class Libs_Module {
 				
 				// Capture des données d'affichage
 				ob_start();
-				$ModuleClass->{self::$view}();
+				echo $ModuleClass->{self::$view}();
 				$this->moduleCompiled = ob_get_contents();
 				ob_end_clean();
 			} else {

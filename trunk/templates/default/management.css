@@ -1,0 +1,48 @@
+/* Panel d'administration */
+#management_index_page {
+	float: left;
+	position: relative;
+	background-color: #6b737b;
+}
+.management_index_block, .management_index_block:link, .management_index_block:visited, .management_index_block:visited:active {
+	margin: 5px;
+	padding: 5px;
+	text-align: center;
+	background-image: url(images/background_form.png);
+	border: 2px solid #78828a;
+	width: 128px;
+	float: left;
+	position: relative;
+	height: 160px;
+}
+.management_index_block:hover {
+	border: 2px solid #7194a4;
+}
+#management_bar {
+	background-image: url(images/background_form.png);
+	padding: 5px;
+	margin: 5px;
+	border: 2px solid #6b737b;
+	height: 50px;
+}
+#management_bar div {
+	float: left;
+	position: relative;
+	margin-left: 10px;
+}
+#management_bar_setting_page {
+	height: 50px;
+	padding-left: 50px;
+	background: #5985b1 url(management/bar_setting.png) no-repeat top left;
+}
+#management_bar_module_page {
+	height: 50px;
+	padding-left: 50px;
+	background: #5985b1 url(management/bar_module.png) no-repeat top left;
+}
+#management_bar div a {
+	border: 0px;
+}
+#management_bar div select {
+	margin: 13px 4px 0px 5px;
+}

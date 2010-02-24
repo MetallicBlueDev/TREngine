@@ -1,8 +1,10 @@
 <div id="management_bar">
 <div><a href="?mod=management"><img src="templates/default/management/bar_home.png" /></a></div>
-<div><img src="templates/default/management/bar_update.png" /></div>
-<div id="management_bar_setting_page"><select>
-<?php 
+<div><a href="?mod=management&manage=update"><img src="templates/default/management/bar_update.png" /></a></div>
+<div id="management_bar_setting_page">
+<select onchange="document.location='?mod=management&amp;manage='+this.options[this.selectedIndex].value;">
+<option value=""></option>
+<?php
 foreach($pageList as $key => $page) {
 	$selected = ($page == $pageSelected) ? "selected=\"selected\"" : "";
 ?>
@@ -12,11 +14,14 @@ foreach($pageList as $key => $page) {
 ?>
 </select></div>
 
-<div id="management_bar_module_page"><select>
+<div id="management_bar_module_page">
+<select onchange="document.location='?mod=management&amp;manage='+this.options[this.selectedIndex].value;">
+<option value=""></option>
 <?php 
-foreach($pageList as $key => $page) {
+foreach($moduleList as $key => $module) {
+	$selected = ($module == $pageSelected) ? "selected=\"selected\"" : "";
 ?>
-<option value="<?php echo $page; ?>"><?php echo $pageName[$key]; ?></option>
+<option value="<?php echo $module; ?>" <?php echo $selected; ?>><?php echo $moduleName[$key]; ?></option>
 <?php	
 }
 ?>
