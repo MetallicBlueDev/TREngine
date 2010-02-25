@@ -17,7 +17,7 @@ class Core_UrlRewriting {
 	 * 
 	 * @return boolean true c'est activé
 	 */
-	public static function &isActived() {
+	private static function &isActived() {
 		if (Core_Main::doUrlRewriting() && self::testPassed()) {
 			return true;
 		}

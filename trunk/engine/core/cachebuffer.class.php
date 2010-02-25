@@ -427,11 +427,7 @@ class Core_CacheBuffer {
 	 */
 	private static function &getExecProtocol() {
 		if (self::$protocol == null) {
-			if (self::$modeActived['php']) {
-				// Démarrage du gestionnaire de fichier
-				Core_Loader::classLoader("Libs_FileManager");
-				self::$protocol = new Libs_FileManager();
-			} else if (self::$modeActived['ftp']) {
+			if (self::$modeActived['ftp']) {
 				// Démarrage du gestionnaire FTP
 				Core_Loader::classLoader("Libs_FtpManager");
 				self::$protocol = new Libs_FtpManager();
@@ -439,6 +435,10 @@ class Core_CacheBuffer {
 				// Démarrage du gestionnaire SFTP
 				Core_Loader::classLoader("Libs_SftpManager");
 				self::$protocol = new Libs_SftpManager();
+			} else if (self::$modeActived['php']) {
+				// Démarrage du gestionnaire de fichier
+				Core_Loader::classLoader("Libs_FileManager");
+				self::$protocol = new Libs_FileManager();
 			} else {
 				Core_Exception::setException("No protocol actived for cache.");
 				return null;

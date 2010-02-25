@@ -52,7 +52,7 @@ class Libs_Form {
 	 * 
 	 * @var boolean
 	 */
-	private $doFieldset = false;
+	private $doFieldset = true;
 	
 	/**
 	 * Nouveau formulaire
@@ -88,13 +88,15 @@ class Libs_Form {
 	 * 
 	 * @param $class String
 	 */
-	public function addFieldset($class = "input") {
+	public function addFieldset($title = "", $description = "") {
 		if (!$this->doFieldset) {
 			$this->doFieldset = true;
 		} else {
 			$this->inputData .= "</fieldset>";
 		}
-		$this->inputData .= "<fieldset class=\"" . $class . "\">";
+		$this->inputData .= "<fieldset>"
+		. $this->getTitle($title)
+		. $this->getDescription($description);
 	}
 	
 	/**
@@ -107,7 +109,7 @@ class Libs_Form {
 	 */
 	public function addInputText($name, $description = "", $class = "", $options = "") {
 		if (empty($class)) $class = "input";
-		$this->addInput($name, $description, "text", $class, $options);		
+		$this->addInput($name, $name, $description, "text", $class, $options);		
 	}
 	
 	/**
@@ -119,7 +121,7 @@ class Libs_Form {
 	 */
 	public function addInputHidden($name, $value, $options = "") {
 		$options = "value=\"" . $value . "\"" . ((!empty($options)) ? " " . $options : "");
-		$this->addInput($name, "", "hidden", "", $options);		
+		$this->addInput($name, $name, "", "hidden", "", $options);		
 	}
 	
 	/**
@@ -130,37 +132,43 @@ class Libs_Form {
 	 */
 	public function addInputSubmit($name, $class = "", $options) {
 		if (empty($class)) $class = "input";
-		$this->addInput($name, "", "submit", $class, $options);		
+		$this->addInput($name, $name, "", "submit", $class, $options);		
 	}
 	
 	/**
 	 * Ajouter un champs de type bouton radio
 	 * 
 	 * @param $name String
+	 * @param $id String
 	 * @param $description String
+	 * @param $checked boolean
 	 * @param $class String
 	 * @param $options String
 	 */
-	public function addInputRadio($name, $description = "", $class = "", $options = "") {
+	public function addInputRadio($id, $name, $description = "", $checked = false, $class = "", $options = "") {
 		if (empty($class)) $class = "radio";
-		$this->addInput($name, $description, "radio", $class, $options);		
+		if ($checked) {
+			$options = "checked=\"checked\"" . ((!empty($options)) ? " " . $options : "");
+		}
+		$this->addInput($id, $name, $description, "radio", $class, $options);		
 	}
 	
 	/**
 	 * Ajouter un champs de type bouton a cocher
 	 * 
 	 * @param $name String
+	 * @param $id String
 	 * @param $description String
 	 * @param $checked boolean
 	 * @param $class String
 	 * @param $options String
 	 */
-	public function addInputCheckbox($name, $description = "", $checked = false, $class = "", $options = "") {
+	public function addInputCheckbox($id, $name, $description = "", $checked = false, $class = "", $options = "") {
 		if (empty($class)) $class = "checkbox";
 		if ($checked) {
 			$options = "checked=\"checked\"" . ((!empty($options)) ? " " . $options : "");
 		}
-		$this->addInput($name, $description, "checkbox", $class, $options);		
+		$this->addInput($id, $name, $description, "checkbox", $class, $options);		
 	}
 	
 	/**
@@ -173,21 +181,22 @@ class Libs_Form {
 	 */
 	public function addInputPassword($name, $description = "", $class = "", $options = "") {
 		if (empty($class)) $class = "input";
-		$this->addInput($name, $description, "password", $class, $options);		
+		$this->addInput($name, $name, $description, "password", $class, $options);		
 	}
 	
 	/**
 	 * Ajouter un champs
 	 * 
+	 * @param $id String
 	 * @param $name String
 	 * @param $description String
 	 * @param $type String
 	 * @param $class String
 	 * @param $options String
 	 */
-	public function addInput($name, $description, $type, $class = "", $options = "") {
-		$data = ((!empty($description)) ? "<p id=\"" . $this->getId($name) . "\">" . $this->getLabel($name, $description) : "")
-		. " <input id=\"" . $this->getId($name, "input") . "\" name=\"" . $name . "\" type=\"" . $type . "\""
+	private function addInput($id, $name, $description, $type, $class = "", $options = "") {
+		$data = ((!empty($description)) ? "<p id=\"" . $this->getId($name) . "\">" . $this->getLabel($id, $description) : "")
+		. " <input id=\"" . $this->getId($id, "input") . "\" name=\"" . $name . "\" type=\"" . $type . "\""
 		. ((!empty($class)) ? " class=\"" . $class . "\"" : "")
 		. ((!empty($options)) ? " " . $options : "") . " />"
 		. ((!empty($description)) ? "</p>" : "");
@@ -287,7 +296,7 @@ class Libs_Form {
 	}
 	
 	/**
-	 * Retourne le label
+	 * Retourne le code HTML pour le label
 	 * 
 	 * @param $name String
 	 * @param $description String
@@ -295,6 +304,26 @@ class Libs_Form {
 	 */
 	private function getLabel($name, $description) {
 		return "<label for=\"" . $this->getId($name, "input") . "\">" . Exec_Entities::textDisplay($description) . "</label>";
+	}
+	
+	/**
+	 * Retourne le code HTML pour le titre
+	 * 
+	 * @param $title String
+	 * @return String
+	 */
+	private function getTitle($title = "") {
+		return ((!empty($title)) ? "<legend><b>" . Exec_Entities::textDisplay($title) . "</b></legend>" : "");
+	}
+	
+	/**
+	 * Retourne le code HTML pour la description
+	 * 
+	 * @param $description String
+	 * @return String
+	 */
+	private function getDescription($description = "") {
+		return ((!empty($description)) ? "<p class=\"" . $this->getId("description") . "\">" . Exec_Entities::textDisplay($description) . "</p>" : "");
 	}
 	
 	/**
@@ -318,8 +347,8 @@ class Libs_Form {
 		// Définition du form
 		$content = "<form action=\"" . $this->urlAction . "\" method=\"post\" id=\"form-" . $this->name . "\" name=\"" . $this->name . "\""
 		. " class=\"" . ((!empty($class)) ? $class : "form") . "\"><fieldset>"
-		. ((!empty($this->title)) ? "<legend><b>" . Exec_Entities::textDisplay($this->title) . "</b></legend>" : "")
-		. ((!empty($this->description)) ? "<p id=\"" . $this->getId("description") . "\">" . Exec_Entities::textDisplay($this->description) . "</p>" : "")
+		. $this->getTitle($this->title)
+		. $this->getDescription($this->description)
 		. $this->inputData
 		. (($this->doFieldset) ? "</fieldset>" : "")
 		. "</form>";

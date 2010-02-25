@@ -22,10 +22,6 @@ class Core_ConfigsLoader {
 	 */
 	private $database = array();
 	
-	public function Core_ConfigLoader() {
-		$this->__construct();
-	}
-	
 	/**
 	 * Lance le chargeur de configs
 	 */

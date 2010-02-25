@@ -286,7 +286,7 @@ class Module_Connect_Index extends Module_Model {
 				$form->setDescription(LOGIN_FORM_DESCRIPTION);
 				$form->addInputText("login", LOGIN, "", "maxlength=\"180\" value=\"" . $login . "\"");
 				$form->addInputPassword("password", PASSWORD, "", "maxlength=\"180\"");
-				$form->addInputCheckbox("auto", REMEMBER_ME, true);
+				$form->addInputCheckbox("auto", "auto", REMEMBER_ME, true);
 				$form->addInputHidden("referer", urlencode(base64_encode(Core_Request::getString("QUERY_STRING", "", "SERVER"))));
 				$form->addInputHidden("mod", "connect");
 				$form->addInputHidden("view", "logon");

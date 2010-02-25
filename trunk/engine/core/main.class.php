@@ -70,6 +70,9 @@ class Core_Main {
 		// Chargement du gestionnaire d'accès url
 		Core_Loader::classLoader("Core_Request");
 		
+		// Charge la session
+		$this->loadSession();
+		
 		if (Core_Secure::isDebuggingMode()) Exec_Marker::stopTimer("core");
 	}
 	
@@ -127,17 +130,15 @@ class Core_Main {
 		// Ajout a la configuration courante
 		$this->addToConfig($configIncFile);
 		
-		// Configuration via le fichier temporaire
 		Core_CacheBuffer::setSectionName("tmp");
-		if (Core_CacheBuffer::cached("configs.php")) {
-			$configCached = Core_CacheBuffer::getCache("configs.php");
-			$this->addToConfig($configCached);
-		} else {
-			// Recherche de la configuration dans la base de donnée
+		$configDb = array();
+		if (Core_CacheBuffer::cached("configs.php")) { // Configuration via le fichier temporaire
+			$configDb = Core_CacheBuffer::getCache("configs.php");
+		} else { // Recherche de la configuration dans la base de donnée
 			$configDb = $this->getConfigDb();
-			// Ajout a la configuration courante
-			$this->addToConfig($configDb);
 		}
+		// Ajout a la configuration courante
+		$this->addToConfig($configDb);
 	}
 	
 	/**
@@ -145,20 +146,6 @@ class Core_Main {
 	 */
 	public function start() {
 		if (Core_Secure::isDebuggingMode()) Exec_Marker::startTimer("launcher");
-		
-		// Gestionnaire des cookie
-		Core_Loader::classLoader("Exec_Cookie");
-		
-		// Chargement de l'outil de cryptage
-		Core_Loader::classLoader("Exec_Crypt");
-		
-		// Analyse pour les statistiques
-		Core_Loader::classLoader("Exec_Agent");
-		Exec_Agent::getVisitorsStats();
-		
-		// Chargement des sessions
-		Core_Loader::classLoader("Core_Session");
-		Core_Session::getInstance();
 		
 		// Chargement du moteur de traduction
 		Core_Loader::classLoader("Core_Translate");
@@ -263,6 +250,39 @@ class Core_Main {
 	}
 	
 	/**
+	 * Vérifie l'état de maintenance
+	 * 
+	 * @return boolean
+	 */
+	public function inMaintenance() {
+		return (self::isClosed() && Core_Session::$userRang < 2);
+	}
+	
+	/**
+	 * Ecran de site fermé
+	 */
+	public function maintenance() {
+		// Charge la système de template
+		$this->loadMakeStyle();
+		
+		// Chargement du moteur de traduction
+		Core_Loader::classLoader("Core_Translate");
+		Core_Translate::makeInstance();
+		
+		// Chargement du gestionnaire HTML
+		Core_Loader::classLoader("Core_Html");
+		Core_Html::getInstance();
+		
+		$libsMakeStyle = new Libs_MakeStyle();
+		$libsMakeStyle->assign("closeText", ERROR_DEBUG_CLOSE);
+		$libsMakeStyle->assign("closeReason", self::$coreConfig['defaultSiteCloseReason']);
+		$libsMakeStyle->display("close.tpl");
+		
+		// Validation du cache / Routine du cache
+		Core_CacheBuffer::valideCacheBuffer();
+	}
+	
+	/**
 	 * Lance le tampon de sortie
 	 * Entête & tamporisation de sortie
 	 */
@@ -320,6 +340,25 @@ class Core_Main {
 		Core_Loader::classLoader("Libs_MakeStyle");		
 		Libs_MakeStyle::getCurrentTemplate($template);
 	}
+	
+	/**
+	 * Charge les outils de session
+	 */
+	private function loadSession() {
+		// Gestionnaire des cookie
+		Core_Loader::classLoader("Exec_Cookie");
+		
+		// Chargement de l'outil de cryptage
+		Core_Loader::classLoader("Exec_Crypt");
+		
+		// Analyse pour les statistiques
+		Core_Loader::classLoader("Exec_Agent");
+		Exec_Agent::getVisitorsStats();
+		
+		// Chargement des sessions
+		Core_Loader::classLoader("Core_Session");
+		Core_Session::getInstance();
+	}
 		
 	/**
 	 * Vérifie si l'affichage se fait en écran complet
@@ -364,6 +403,15 @@ class Core_Main {
 	 */
 	public static function isRegistrationAllowed() {
 		return (self::$coreConfig['registrationAllowed'] == 1) ? true : false;
+	}
+	
+	/**
+	 * Vérifie si le site est fermé
+	 * 
+	 * @return boolean
+	 */
+	public static function isClosed() {
+		return (self::$coreConfig['defaultSiteStatut'] == "close") ? true : false;
 	}
 }
 ?>

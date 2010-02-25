@@ -78,19 +78,28 @@ class Module_Management_Index extends Module_Model {
 	 * @param $moduleName array le nom des modules
 	 * @return array
 	 */
-	private static function &listModules(&$moduleName) {
+	public static function &listModules(&$moduleName) {
 		$moduleList = array();
-		Core_Sql::select(
-			Core_Table::$MODULES_TABLE,
-			array("name")
-		);
 		
-		if (Core_Sql::affectedRows() > 0) {
-			while($module = Core_Sql::fetchArray()) {
-				if (Core_Access::moderate($module['name'])) {
-					$moduleList[] = $module['name'];
-					$moduleName[] = MODULE_MANAGEMENT . " " . $module['name'];
-				}
+		$modulesInfo = array();
+		$modulesInfo = Core_Sql::getBuffer("listModules");
+		
+		if (empty($modulesInfo)) { // Vérifie si la requête est déjà dans le buffer
+			Core_Sql::select(
+				Core_Table::$MODULES_TABLE,
+				array("name")
+			);
+			
+			if (Core_Sql::affectedRows() > 0) {
+				Core_Sql::addBuffer("listModules");
+				$modulesInfo = Core_Sql::getBuffer("listModules");
+			}
+		}
+		
+		if (!empty($modulesInfo)) {
+			foreach($modulesInfo as $module) {
+				$moduleList[] = $module->name;
+				$moduleName[] = MODULE_MANAGEMENT . " " . $module->name;
 			}
 		}
 		return $moduleList;
@@ -102,7 +111,7 @@ class Module_Management_Index extends Module_Model {
 	 * @param $pageName array le nom des pages
 	 * @return array
 	 */
-	private static function &listManagementPages(&$pageName) {
+	public static function &listManagementPages(&$pageName) {
 		$page = "";
 		$pageList = array();
 		$files = Core_CacheBuffer::listNames("modules/management");

@@ -55,9 +55,8 @@ class Exec_Marker {
 					$rslt = self::$finishTime[$name] - self::$startTime[$name];
 					$rslt = round($rslt, $virgule);
 					return $rslt;
-		} else {
-			return 0;
 		}
+		return 0;
 	}
 }
 
