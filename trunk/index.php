@@ -12,7 +12,7 @@ require("engine/core/loader.class.php");
 
 // Chargement du système de sécurité
 Core_Loader::classLoader("Core_Secure");
-Core_Secure::getInstance(true);
+Core_Secure::getInstance(true); // true = mode debug activé
 
 // Chargement du Marker
 Core_Loader::classLoader("Exec_Marker");
@@ -33,8 +33,12 @@ if ($TR_ENGINE->newComponentDetected()) {
 	// Installtion des nouveaux composants
 	$TR_ENGINE->install();
 } else {
-	// Démarrage du moteur
-	$TR_ENGINE->start();
+	// Vérification de l'état du site
+	if ($TR_ENGINE->inMaintenance()) { // Le site est fermé
+		$TR_ENGINE->maintenance();
+	} else { // Démarrage du moteur
+		$TR_ENGINE->start();
+	}
 }
 
 if (Core_Secure::isDebuggingMode()) {
