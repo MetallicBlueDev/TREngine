@@ -33,7 +33,25 @@ class Block_Login extends Block_Model {
 	 */
 	private $displayIcons = false;
 	
+	/**
+	 * Type d'affichage demandé
+	 * 
+	 * @var String
+	 */
 	private $localView = "";
+	
+	public function display() {
+		$this->configure();
+		
+		if (!empty($this->localView)) {
+			echo $this->render();
+		} else {
+			$libsMakeStyle = new Libs_MakeStyle();
+			$libsMakeStyle->assign("blockTitle", $this->title);
+			$libsMakeStyle->assign("blockContent", $this->render());
+			$libsMakeStyle->display($this->templateName);
+		}
+	}
 	
 	public function configure() {
 		list($activeText, $activeAvatar, $activeIcons) = explode('|', $this->content);
@@ -41,7 +59,9 @@ class Block_Login extends Block_Model {
 		$this->displayAvatar = ($activeAvatar == 1) ? true : false;
 		$this->displayIcons = ($activeIcons == 1) ? true : false;
 		
-		$this->localView = Core_Request::getString("localView", "", "GET");
+		if (Core_Main::isBlockScreen()) { // Si nous sommes dans un affichage type block
+			$this->localView = Core_Request::getString("localView", "", "GET");
+		}
 	}
 	
 	public function &render() {
@@ -55,9 +75,9 @@ class Block_Login extends Block_Model {
 				$content .= "<a href=\"" . Core_Html::getLink("mod=connect&view=account") . "\">" . Exec_Image::resize(Core_Session::$userAvatar, 80) . "</a><br />";
 			}
 			if ($this->displayIcons) {
-				$content .= "<a href=\"" . Core_Html::getLink("mod=connect&view=logout") . "\" title=\"" . LOGOUT . "\">" . LOGOUT . "</a><br />";
-				$content .= "<a href=\"" . Core_Html::getLink("mod=connect&view=account") . "\" title=\"" . MY_ACCOUNT . "\">" . MY_ACCOUNT. "</a><br />";
-				$content .= "<a href=\"" . Core_Html::getLink("mod=receiptbox") . "\" title=\"" . MY_RECEIPTBOX . "\">" . MY_RECEIPTBOX . " (?)</a><br />";
+				$content .= "<a href=\"" . Core_Html::getLink("mod=connect&view=logout") . "\" title=\"" . LOGOUT . "\">" . LOGOUT . "</a><br />"
+				. "<a href=\"" . Core_Html::getLink("mod=connect&view=account") . "\" title=\"" . MY_ACCOUNT . "\">" . MY_ACCOUNT. "</a><br />"
+				. "<a href=\"" . Core_Html::getLink("mod=receiptbox") . "\" title=\"" . MY_RECEIPTBOX . "\">" . MY_RECEIPTBOX . " (?)</a><br />";
 			}
 		} else {
 			$moreLink = "<ul>";
@@ -149,19 +169,6 @@ class Block_Login extends Block_Model {
 		$form->addHtmlInFieldset($moreLink);
 		Core_Html::getInstance()->addJavascript("validForgetPass('#form-forgetpassblock', '#form-forgetpassblock-login-input');");
 		return $form->render("forgetpassblock");
-	}
-	
-	public function display() {
-		$this->configure();
-		
-		if (!empty($this->localView)) {
-			echo $this->render();
-		} else {
-			$libsMakeStyle = new Libs_MakeStyle();
-			$libsMakeStyle->assign("blockTitle", $this->title);
-			$libsMakeStyle->assign("blockContent", $this->render());
-			$libsMakeStyle->display($this->templateName);
-		}
 	}
 }
 

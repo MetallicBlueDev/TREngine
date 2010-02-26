@@ -46,6 +46,25 @@ class Core_Sql {
 	}
 	
 	/**
+	 * Retourne la liste des types de base supporté
+	 * 
+	 * @return array
+	 */
+	public static function &listBase() {
+		$baseList = array();
+		$files = Core_CacheBuffer::listNames("engine/base");
+		foreach($files as $key => $fileName) {
+			// Nettoyage du nom de la page
+			$pos = strpos($fileName, ".class");
+			// Si c'est une page administrable
+			if ($pos !== false && $pos > 0) {
+				$baseList[] = substr($fileName, 0, $pos);
+			}
+		}
+		return $baseList;
+	}
+	
+	/**
 	 * Etablie une connexion à la base de donnée
 	 */
 	public static function dbConnect() {

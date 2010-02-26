@@ -52,9 +52,20 @@ $lang = array(
 // FTP
 "SETTING_SYSTEM_FTP_SETTING_TITLE" => "Configuration du FTP",
 "SETTING_SYSTEM_FTP_SETTING_DESCRIPTION" => "Paramétrez l'accès au FTP",
+"SETTING_SYSTEM_FTP_SETTING_HOST" => "Adresse du FTP (Host)",
+"SETTING_SYSTEM_FTP_SETTING_PORT" => "Port du FTP",
+"SETTING_SYSTEM_FTP_SETTING_USER" => "Nom d'utilisateur",
+"SETTING_SYSTEM_FTP_SETTING_PASSWORD" => "Mot de passe",
+"SETTING_SYSTEM_FTP_SETTING_ROOT" => "Chemin par défaut vers le site (root)",
 // Base de donnée
 "SETTING_SYSTEM_DATABASE_SETTING_TITLE" => "Configuration de la base de donnée",
 "SETTING_SYSTEM_DATABASE_SETTING_DESCRIPTION" => "Paramétrez l'accès à la base de donnée",
+"SETTING_SYSTEM_DATABASE_SETTING_HOST" => "Adresse du la base (Host)",
+"SETTING_SYSTEM_DATABASE_SETTING_USER" => "Nom d'utilisateur",
+"SETTING_SYSTEM_DATABASE_SETTING_PASSWORD" => "Mot de passe",
+"SETTING_SYSTEM_DATABASE_SETTING_NAME" => "Nom de la base de donnée",
+"SETTING_SYSTEM_DATABASE_SETTING_TYPE" => "Type de base de donnée",
+"SETTING_SYSTEM_DATABASE_SETTING_PREFIX" => "Préfix des tables",
 
 // Gestion d'un module X
 "MODULE_MANAGEMENT" => "Module"

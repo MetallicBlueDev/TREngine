@@ -85,6 +85,7 @@ class Module_Management_Setting extends Module_Model {
 		$form->addInputRadio("urlRewriting1", "urlRewriting", SETTING_GENERAL_METADATA_URLREWRITING_ON, $rewriting, "", "value=\"1\"");
 		$form->addInputRadio("urlRewriting2", "urlRewriting", SETTING_GENERAL_METADATA_URLREWRITING_OFF, !$rewriting, "", "value=\"0\"");
 		$form->addSpace();
+		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
 		return $form->render();
 	}
 	
@@ -99,11 +100,30 @@ class Module_Management_Setting extends Module_Model {
 		$form->addFieldset(SETTING_SYSTEM_SESSION_SETTING_TITLE, SETTING_SYSTEM_SESSION_SETTING_DESCRIPTION);
 		$form->addInputText("cookiePrefix", SETTING_SYSTEM_SESSION_SETTING_COOKIE_PREFIX, "", "value=\"" . Core_Main::$coreConfig['cookiePrefix'] . "\"");
 		$form->addSpace();
-		
+		// TODO aller chercher les vrai valeur du ftp et de la base de donnée
 		$form->addFieldset(SETTING_SYSTEM_FTP_SETTING_TITLE, SETTING_SYSTEM_FTP_SETTING_DESCRIPTION);
+		$form->addInputText("ftpHost", SETTING_SYSTEM_FTP_SETTING_HOST, "", "value=\"" . Core_Main::$coreConfig['ftpHost'] . "\"");
+		$form->addInputText("ftpPort", SETTING_SYSTEM_FTP_SETTING_PORT, "", "value=\"" . Core_Main::$coreConfig['ftpPort'] . "\"");
+		$form->addInputText("ftpUser", SETTING_SYSTEM_FTP_SETTING_USER, "", "value=\"" . Core_Main::$coreConfig['ftpPort'] . "\"");
+		$form->addInputPassword("ftpPass", SETTING_SYSTEM_FTP_SETTING_PASSWORD, "", "value=\"" . Core_Main::$coreConfig['ftpPort'] . "\"");
+		$form->addInputText("ftpRoot", SETTING_SYSTEM_FTP_SETTING_ROOT, "", "value=\"" . Core_Main::$coreConfig['ftpPort'] . "\"");
 		$form->addSpace();
 		
 		$form->addFieldset(SETTING_SYSTEM_DATABASE_SETTING_TITLE, SETTING_SYSTEM_DATABASE_SETTING_DESCRIPTION);
+		$form->addInputText("dbHost", SETTING_SYSTEM_DATABASE_SETTING_HOST, "", "value=\"" . Core_Main::$coreConfig['ftpHost'] . "\"");
+		$form->addInputText("dbName", SETTING_SYSTEM_DATABASE_SETTING_NAME, "", "value=\"" . Core_Main::$coreConfig['ftpHost'] . "\"");
+		$form->addInputText("dbPrefix", SETTING_SYSTEM_DATABASE_SETTING_PREFIX, "", "value=\"" . Core_Main::$coreConfig['ftpHost'] . "\"");
+		$form->addInputText("dbUser", SETTING_SYSTEM_DATABASE_SETTING_USER, "", "value=\"" . Core_Main::$coreConfig['ftpHost'] . "\"");
+		$form->addInputText("dbPass", SETTING_SYSTEM_DATABASE_SETTING_PASSWORD, "", "value=\"" . Core_Main::$coreConfig['ftpHost'] . "\"");
+		$form->addInputText("dbType", SETTING_SYSTEM_DATABASE_SETTING_TYPE, "", "value=\"" . Core_Main::$coreConfig['ftpHost'] . "\"");
+		
+		$form->addSelectOpenTag("dbType", SETTING_SYSTEM_DATABASE_SETTING_TYPE);
+		$bases = Core_Sql::listBase();
+		foreach($bases as $base) {
+			$form->addSelectItemTag($base);
+		}
+		$form->addSelectCloseTag();
+		
 		$form->addSpace();
 		return $form->render();
 	}

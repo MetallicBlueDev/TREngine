@@ -272,8 +272,15 @@ class Module_Connect_Index extends Module_Model {
 			
 			if (!empty($login) || !empty($password)) {
 				if (Core_Session::getInstance()->startConnection($login, $password, $auto)) {
-					$url = (!empty($this->configs['defaultUrlAfterLogon'])) ? $this->configs['defaultUrlAfterLogon'] : "home";
-					Core_Html::getInstance()->redirect("index.php?mod=" . $url);
+					// Redirection de la page
+					$url = "";
+					$referer = base64_decode(urldecode(Core_Request::getString("referer", "", "POST")));
+					if (!empty($referer)) {
+						$url = $referer;
+					} else {
+						$url = (!empty($this->configs['defaultUrlAfterLogon'])) ? $this->configs['defaultUrlAfterLogon'] : "mod=home";
+					}
+					Core_Html::getInstance()->redirect("index.php?" . $url);
 				} else {
 					$this->errorBox();
 				}

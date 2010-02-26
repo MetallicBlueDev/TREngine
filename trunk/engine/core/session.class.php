@@ -339,9 +339,8 @@ class Core_Session {
 			&& !empty(self::$sessionId)
 			&& self::$userRang > 0) {
 				return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 	
 	/**
