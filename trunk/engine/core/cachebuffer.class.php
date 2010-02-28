@@ -388,6 +388,15 @@ class Core_CacheBuffer {
 	}
 	
 	/**
+	 * Retourne les modes d'écriture actif
+	 * 
+	 * @return array sous la forme array('php' => true, 'ftp' => false)
+	 */
+	public static function getModeActived() {
+		return self::$modeActived;
+	}
+	
+	/**
 	 * Injecter les données du FTP
 	 * 
 	 * @param array

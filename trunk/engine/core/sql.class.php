@@ -284,6 +284,24 @@ class Core_Sql {
 	public static function addQuoted($key, $value = 1) {
 		self::$base->addQuoted($key, $value);
 	}
+	
+	/**
+	 * Retourne la version de la base de donnée
+	 * 
+	 * @return String
+	 */
+	public static function getVersion() {
+		return self::$base->getVersion();
+	}
+	
+	/**
+	 * Retourne le type d'encodage de la base de donnée
+	 * 
+	 * @return String
+	 */
+	public static function getCollation() {
+		return self::$base->getCollation();
+	}
 }
 
 /**
@@ -703,6 +721,24 @@ abstract class Base_Model {
 			$str = addslashes($str);
 		}
 		return $str;
+	}
+	
+	/**
+	 * Retourne la version de la base
+	 * 
+	 * @return String
+	 */
+	public function getVersion() {
+		return "";
+	}
+	
+	/**
+	 * Retourne le type d'encodage de la base de donnée
+	 * 
+	 * @return String
+	 */
+	public function getCollation() {
+		return "";
 	}
 }
 ?>

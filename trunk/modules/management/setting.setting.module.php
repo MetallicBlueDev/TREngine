@@ -13,6 +13,9 @@ class Module_Management_Setting extends Module_Model {
 				case "sendGeneral":
 					$this->sendGeneral();
 					break;
+				case "sendSystem":
+					$this->sendSystem();
+					break;
 			}
 		} else {
 			Core_Loader::classLoader("Libs_Form");
@@ -271,6 +274,13 @@ class Module_Management_Setting extends Module_Model {
 		
 		$form->addSpace();
 		return $form->render();
+	}
+	
+	// TODO coder la reception des données sendSystem
+	private function sendSystem() {
+		if (!Core_Html::getInstance()->isJavascriptEnabled()) {
+			Core_Html::getInstance()->redirect("index.php?mod=management&manage=setting&selectedTab=settingtabidTab1");
+		}
 	}
 }
 

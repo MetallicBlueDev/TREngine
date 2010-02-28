@@ -13,6 +13,7 @@ $lang = array(
 "SETTING_TITLE_MEDIA" => "Gestion des medias",
 "SETTING_TITLE_UPDATE" => "Centre de mise à jour",
 
+/** Configuration du site **/
 // Configuration générale
 "SETTING_GENERAL_TAB" => "Configuration générale",
 // Configuration du site
@@ -71,6 +72,14 @@ $lang = array(
 "SETTING_SYSTEM_DATABASE_SETTING_NAME" => "Nom de la base de donnée",
 "SETTING_SYSTEM_DATABASE_SETTING_TYPE" => "Type de base de donnée",
 "SETTING_SYSTEM_DATABASE_SETTING_PREFIX" => "Préfix des tables",
+
+/** Information système **/
+// Information sur le système
+"SYSTEMINFO_SYSTEM_INFO_TAB" => "Information sur le système",
+"SYSTEMINFO_SYSTEM_INFO_SETTING" => "Information",
+"SYSTEMINFO_SYSTEM_INFO_VALUE" => "Valeur",
+// PHP INFO
+"SYSTEMINFO_PHP_INFO_TAB" => "Information PHP",
 
 // Gestion d'un module X
 "MODULE_MANAGEMENT" => "Module"

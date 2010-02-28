@@ -264,5 +264,27 @@ class Base_Mysql extends Base_Model {
 		$error[] ="<b>MySql response</b> : " . mysql_error();
 		return $error;
 	}
+	
+	/**
+	 * Retourne la version de mysql
+	 * 
+	 * @return String
+	 */
+	public function getVersion() {
+		$version = @mysql_get_server_info($this->connId);
+		$version = ($version !== false) ? $version : "?";
+		return $version;
+	}
+	
+	/**
+	 * Retourne le type d'encodage utilisé
+	 * 
+	 * @return String
+	 */
+	public function getCollation() {
+		$this->query("SHOW FULL COLUMNS FROM " . Core_Table::$CONFIG_TABLE);
+		$info = $this->fetchArray();
+		return !empty($info['Collation']) ? $info['Collation'] : "?";
+	}
 }
 ?>
