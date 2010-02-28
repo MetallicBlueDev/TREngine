@@ -170,7 +170,7 @@ class Libs_Module {
 				self::$rang = $moduleInfo['rang'];
 				self::$configs = $moduleInfo['configs'];
 			}
-			$this->modules[$moduleName] =& $moduleInfo;
+			$this->modules[$moduleName] = &$moduleInfo;
 			return $moduleInfo;
 		}
 		

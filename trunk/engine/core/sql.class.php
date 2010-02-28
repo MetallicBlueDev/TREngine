@@ -161,13 +161,11 @@ class Core_Sql {
 		self::$base->query($sql);
 		self::$base->resetQuoted();
 		
+		// Ajout la requête au log
 		if (Core_Secure::isDebuggingMode()) Core_Exception::setSqlRequest($sql);
 		
 		// Création d'une exception si une réponse est négative (false)
 		if (self::getQueries() === false) throw new Exception("sqlReq");
-		
-		// Incremente le nombre de requête effectuées
-		Core_Exception::$numberOfRequest++;
 	}
 	
 	/**
@@ -193,7 +191,7 @@ class Core_Sql {
 	 * Mise à jour d'une table
 	 * 
 	 * @param $table Nom de la table
-	 * @param $values array) Sous la forme array("keyName" => "newValue")
+	 * @param $values array Sous la forme array("keyName" => "newValue")
 	 * @param $where array
 	 * @param $orderby array
 	 * @param $limit String
@@ -660,7 +658,7 @@ abstract class Base_Model {
 		}
 		
 		if (is_bool($value)) {
-			$value = ($value == false) ? 0 : 1;
+			$value = ($value == true) ? 1 : 0;
 		} else if (is_null($value)) {
 			$value = "NULL";
 		} else if (is_string($value)) {

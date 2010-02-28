@@ -6,14 +6,47 @@ if (!defined("TR_ENGINE_INDEX")) {
 
 class Module_Management_Setting extends Module_Model {
 	public function setting() {
-		Core_Loader::classLoader("Libs_Form");
-		Core_Loader::classLoader("Libs_Tabs");
+		$localView = Core_Request::getWord("localView", "", "POST");
 		
-		$accountTabs = new Libs_Tabs("accounttabs");
-		$accountTabs->addTab(SETTING_GENERAL_TAB, $this->tabGeneral());
-		$accountTabs->addTab(SETTING_SYSTEM_TAB, $this->tabSystem());
-		
-		return $accountTabs->render();
+		if (!empty($localView)) {
+			switch($localView) {
+				case "sendGeneral":
+					$this->sendGeneral();
+					break;
+			}
+		} else {
+			Core_Loader::classLoader("Libs_Form");
+			Core_Loader::classLoader("Libs_Tabs");
+			
+			$accountTabs = new Libs_Tabs("settingtab");
+			$accountTabs->addTab(SETTING_GENERAL_TAB, $this->tabGeneral());
+			$accountTabs->addTab(SETTING_SYSTEM_TAB, $this->tabSystem());
+			
+			return $accountTabs->render();
+		}
+		return "";
+	}
+	
+	/**
+	 * Supprime le cache
+	 */
+	private function deleteCache() {
+		Core_CacheBuffer::setSectionName("tmp");
+		Core_CacheBuffer::removeCache("configs.php");
+	}
+	
+	/**
+	 * Mise à jour des valeurs de la table de configuration
+	 * 
+	 * @param $values array
+	 * @param $where array
+	 */
+	private function updateTable($key, $value) {
+		Core_Sql::update(
+			Core_Table::$CONFIG_TABLE,
+			array("value" => $value),
+			array("name = '" . $key . "'")
+		);
 	}
 	
 	private function tabGeneral() {
@@ -27,7 +60,6 @@ class Module_Management_Setting extends Module_Model {
 		$form->addInputRadio("defaultSiteStatut1", "defaultSiteStatut", SETTING_GENERAL_SITE_SETTING_SITE_ON, $online, "", "value=\"open\"");
 		$form->addInputRadio("defaultSiteStatut2", "defaultSiteStatut", SETTING_GENERAL_SITE_SETTING_SITE_OFF, !$online, "", "value=\"close\"");
 		$form->addSpace();
-		
 		$form->addTextarea("defaultSiteCloseReason", SETTING_GENERAL_SITE_SETTING_SITE_OFF_REASON, "", "style=\"display: block;\" cols=\"50\"", Core_Main::$coreConfig['defaultSiteCloseReason']);
 		$form->addSpace();
 		
@@ -85,8 +117,121 @@ class Module_Management_Setting extends Module_Model {
 		$form->addInputRadio("urlRewriting1", "urlRewriting", SETTING_GENERAL_METADATA_URLREWRITING_ON, $rewriting, "", "value=\"1\"");
 		$form->addInputRadio("urlRewriting2", "urlRewriting", SETTING_GENERAL_METADATA_URLREWRITING_OFF, !$rewriting, "", "value=\"0\"");
 		$form->addSpace();
+		$form->addInputHidden("mod", "management");
+		$form->addInputHidden("layout", "module");
+		$form->addInputHidden("manage", "setting");
+		$form->addInputHidden("localView", "sendGeneral");
 		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
+		Core_Html::getInstance()->addJavascript("validSetting('#form-generalblock', '#form-generalblock-defaultSiteName-input', '#form-generalblock-defaultAdministratorMail-input');");
 		return $form->render();
+	}
+	
+	private function sendGeneral() {
+		$deleteCache = false;
+		
+		// Etat du site
+		$defaultSiteStatut = Core_Request::getWord("defaultSiteStatut", "", "POST");
+		if (Core_Main::$coreConfig['defaultSiteStatut'] != $defaultSiteStatut) {
+			$defaultSiteStatut = ($defaultSiteStatut == "close") ? "close" : "open";
+			$this->updateTable("defaultSiteStatut", $defaultSiteStatut);
+			$deleteCache = true;
+		}
+		// Raison de femeture
+		$defaultSiteCloseReason = Core_Request::getString("defaultSiteCloseReason", "", "POST");
+		if (Core_Main::$coreConfig['defaultSiteCloseReason'] != $defaultSiteCloseReason) {
+			$this->updateTable("defaultSiteCloseReason", $defaultSiteCloseReason);
+			$deleteCache = true;
+		}
+		// Nom du site
+		$defaultSiteName = Core_Request::getString("defaultSiteName", "", "POST");
+		if (Core_Main::$coreConfig['defaultSiteName'] != $defaultSiteName) {
+			if (!empty($defaultSiteName)) {
+				$this->updateTable("defaultSiteName", $defaultSiteName);
+				$deleteCache = true;
+			} else {
+				Core_Exception::addAlertError(SETTING_GENERAL_DEFAULT_SITE_NAME_INVALID);
+			}
+		}
+		// Slogan du site
+		$defaultSiteSlogan = Core_Request::getString("defaultSiteSlogan", "", "POST");
+		if (Core_Main::$coreConfig['defaultSiteSlogan'] != $defaultSiteSlogan) {
+			$this->updateTable("defaultSiteSlogan", $defaultSiteSlogan);
+			$deleteCache = true;
+		}
+		// Email du site
+		$defaultAdministratorMail = Core_Request::getString("defaultAdministratorMail", "", "POST");
+		if (Core_Main::$coreConfig['defaultAdministratorMail'] != $defaultAdministratorMail) {
+			Core_Loader::classLoader("Exec_Mailer");
+			if (!empty($defaultAdministratorMail) && Exec_Mailer::validMail($defaultAdministratorMail)) {
+				$this->updateTable("defaultAdministratorMail", $defaultAdministratorMail);
+				$deleteCache = true;
+			} else {
+				Core_Exception::addAlertError(SETTING_GENERAL_DEFAULT_ADMIN_MAIL_INVALID);
+			}
+		}
+		// Langue par défaut
+		$defaultLanguage = Core_Request::getString("defaultLanguage", "", "POST");
+		if (Core_Main::$coreConfig['defaultLanguage'] != $defaultLanguage) {
+			$langues = Core_Translate::listLanguages();
+			if (!empty($defaultLanguage) && in_array($defaultLanguage, $langues)) {
+				$this->updateTable("defaultLanguage", $defaultLanguage);
+				$deleteCache = true;
+			} else {
+				Core_Exception::addAlertError(SETTING_GENERAL_DEFAULT_LANGUAGE_INVALID);
+			}
+		}
+		// Template par défaut
+		$defaultTemplate = Core_Request::getString("defaultTemplate", "", "POST");
+		if (Core_Main::$coreConfig['defaultTemplate'] != $defaultTemplate) {
+			$templates = Libs_Makestyle::listTemplates();
+			if (!empty($defaultTemplate) && in_array($defaultTemplate, $templates)) {
+				$this->updateTable("defaultTemplate", $defaultTemplate);
+				$deleteCache = true;
+			} else {
+				Core_Exception::addAlertError(SETTING_GENERAL_DEFAULT_TEMPLATE_INVALID);
+			}
+		}
+		// Module par défaut
+		$defaultMod = Core_Request::getString("defaultMod", "", "POST");
+		if (Core_Main::$coreConfig['defaultMod'] != $defaultMod) {
+			$module = array();
+			$modules = Module_Management_Index::listModules($module);
+			if (!empty($defaultMod) && in_array($defaultMod, $modules)) {
+				$this->updateTable("defaultMod", $defaultMod);
+				$deleteCache = true;
+			} else {
+				Core_Exception::addAlertError(SETTING_GENERAL_DEFAULT_MODULE_INVALID);
+			}
+		}
+		// Description du site
+		$defaultDescription = Core_Request::getString("defaultDescription", "", "POST");
+		if (Core_Main::$coreConfig['defaultDescription'] != $defaultDescription) {
+			$this->updateTable("defaultDescription", $defaultDescription);
+			$deleteCache = true;
+		}
+		// Mot clès du site
+		$defaultKeyWords = Core_Request::getString("defaultKeyWords", "", "POST");
+		if (Core_Main::$coreConfig['defaultKeyWords'] != $defaultKeyWords) {
+			$this->updateTable("defaultKeyWords", $defaultKeyWords);
+			$deleteCache = true;
+		}
+		// Etat de la réécriture des URLs
+		$urlRewriting = Core_Request::getString("urlRewriting", "", "POST");
+		if (Core_Main::$coreConfig['urlRewriting'] != $urlRewriting) {
+			$urlRewriting = ($urlRewriting == 1) ? 1 : 0;
+			$this->updateTable("urlRewriting", $urlRewriting);
+			$deleteCache = true;
+		}
+		
+		// Suppression du cache
+		if ($deleteCache) {
+			$this->deleteCache();
+			Core_Exception::addInfoError(DATA_SAVED);
+		}
+		
+		if (!Core_Html::getInstance()->isJavascriptEnabled()) {
+			Core_Html::getInstance()->redirect("index.php?mod=management&manage=setting&selectedTab=settingtabidTab0");
+		}
 	}
 	
 	private function tabSystem() {

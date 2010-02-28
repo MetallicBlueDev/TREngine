@@ -52,13 +52,6 @@ class Core_Exception {
 	private static $writeLog = true;
 	
 	/**
-	 * Nombre de requête Sql executées
-	 * 
-	 * @var int
-	 */
-	public static $numberOfRequest = 0;
-	
-	/**
 	 * Tableau contenant toutes les lignes sql envoyées
 	 * 
 	 * @var array
@@ -226,35 +219,31 @@ class Core_Exception {
 	 */
 	public static function displayException() {
 		if (Core_Main::isFullScreen()) {
-			$error = "";
-			$color = "#008000";
-			// Vérification de la présence des exceptions
+			$numberOfRequest = count(self::$sqlRequest);
+			
+			echo "<div style=\"color: blue;\"><br />"
+			. "***********************" . $numberOfRequest . " SQL REQUESTS***********************<br />";
+			if (!empty(self::$sqlRequest)) {
+				echo str_replace("\n", "<br />", self::linearize(self::$sqlRequest));
+			} else {
+				echo "No sql request registred.";
+			}
+			
+			echo "</div><div style=\"color: ";
+			
 			if (self::exceptionDetected()) {
-				$color = "#800000";
-				$error .= "************************"
-				. count(self::$exception) . " EXCEPTIONS"
-				. "************************"
+				echo "#800000;\">\n<br />"
+				. "************************" . count(self::$exception) . " EXCEPTIONS" . "************************"
 				. "<br />" . str_replace("\n", "<br />", self::linearize(self::$exception));
 			} else {
-				$error .= "No exception detected.";
+				echo "#008000;\">\n<br />No sql request registred.";
 			}
 			
-			$sql = "***********************" 
-			. self::$numberOfRequest 
-			. " SQL REQUESTS***********************<br />";
-			if (!empty(self::$sqlRequest)) {
-				$sql .= str_replace("\n", "<br />", self::linearize(self::$sqlRequest));
-			} else {
-				$sql .= "No sql request registred.";
-			}
-			
-			echo "<div style=\"color: blue;\"><br />" . $sql . "</div>\n"
-			. "<div style=\"color: " . $color . ";\"><br />" . $error . "</div>\n"
-			. "<div style=\"color: blue;\"><br />BenchMaker :<br />\n"
+			echo "</div>\n<div style=\"color: blue;\"><br />BenchMaker :<br />\n"
 			. "Core : " . Exec_Marker::getTime("core") . " seconde\n"
 			. "<br />Launcher : " . Exec_Marker::getTime("launcher") . " seconde\n"
 			. "<br />All : " . Exec_Marker::getTime("all") . " seconde\n"
-			. "<br />Number of Sql request : " . self::$numberOfRequest . "\n"
+			. "<br />Number of Sql request : " . $numberOfRequest . "\n"
 			. "<br />Appreciation : <span style=\"color: " . (((0.4000 - Exec_Marker::getTime("all")) > 0.3) ? "green;\">OK" : "red;\">FAILED") . "</span>"
 			. "</div>";
 		}

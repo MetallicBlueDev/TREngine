@@ -49,9 +49,7 @@ class Libs_FileManager extends Cache_Model {
 	 * @param $overWrite boolean écrasement du fichier
 	 */
 	private function writingFile($pathFile, $content, $overWrite = true) {
-		if ($overWrite) {
-			$content = Core_CacheBuffer::getHeader($pathFile, $content);
-		}
+		$content = ($overWrite) ? Core_CacheBuffer::getHeader($pathFile, $content) : $content;
 			
 		// Tentative d'écriture du fichier
 		// Des problèmes on été constaté avec l'utilisation du chemin absolu TR_ENGINE_DIR
@@ -219,7 +217,7 @@ class Libs_FileManager extends Cache_Model {
 				if ($timeLimit > 0) {
 					if (is_file($dirPath . "/" . $file)) {
 						// Si le fichier n'est pas périmé, on passe au suivant
-						if ($timeLimit < filemtime(TR_ENGINE_DIR . "/" . $file)) continue;
+						if ($timeLimit < filemtime(TR_ENGINE_DIR . "/" . $dirPath . "/" . $file)) continue;
 					} else {
 						// C'est un dossier, 
 						// on ne souhaite pas le supprimer dans ce mode de fonctionnement

@@ -13,11 +13,12 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Module_Management_Index extends Module_Model {
 	
 	public function display() {
-		// Ajout du CSS
+		// Ajout du CSS du template et du fichier javascript par défaut
 		Core_HTML::getInstance()->addCssTemplateFile("management.css");
+		Core_HTML::getInstance()->addJavascriptFile("management.js");
 		
 		// Nom de la page administable
-		$managePage = Core_Request::getString("manage", "", "GET");
+		$managePage = Core_Request::getString("manage");
 		
 		// Liste de pages de configuration
 		$pageName = array();
@@ -68,8 +69,11 @@ class Module_Management_Index extends Module_Model {
 				}
 			}
 		}
-		$libsMakeStyle->assign("pageSelected", $pageSelected);
-		$libsMakeStyle->display($managementScreen);
+		// Affichage du template uniquement si on est on plein écran
+		if (Core_Main::isFullScreen()) {
+			$libsMakeStyle->assign("pageSelected", $pageSelected);
+			$libsMakeStyle->display($managementScreen);
+		}
 	}
 	
 	/**

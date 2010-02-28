@@ -153,12 +153,7 @@ class Core_Html {
 		// Conception de l'entête
 		$script = "";
 		foreach($this->javaScriptFile as $file => $options) {
-			if (!empty($options)) $options = " " . $options;
-			if ($file == "jquery.js") {
-				$script = "<script" . $options . " type=\"text/javascript\" src=\"includes/js/" . $file . "\"></script>\n" . $script;
-			} else {
-				$script .= "<script" . $options . " type=\"text/javascript\" src=\"includes/js/" . $file . "\"></script>\n";
-			}
+			$script .= "<script" . ((!empty($options)) ? " " . $options : "") . " type=\"text/javascript\" src=\"includes/js/" . $file . "\"></script>\n";
 		}
 		return $script;
 	}
@@ -230,6 +225,7 @@ class Core_Html {
 			$this->addJavascriptCode($javaScript);
 		}
 	}
+	
 	/**
 	 * Ajoute un fichier javascript a l'entête
 	 * 
@@ -238,7 +234,17 @@ class Core_Html {
 	 */
 	public function addJavascriptFile($fileName, $options = "") {
 		if (!array_key_exists($fileName, $this->javaScriptFile)) {
-			$this->javaScriptFile[$fileName] = $options;
+			if ($fileName == "jquery.js") { // Fixe JQuery en 1ere position
+				$this->javaScriptFile = array_merge(array($fileName => $options), $this->javaScriptFile);
+			} else if ($fileName == "tr_engine.js") { // Fixe tr_engine en 2em position
+				if (array_key_exists("jquery.js", $this->javaScriptFile)) {
+					$this->javaScriptFile = array_merge(array("jquery.js" => $this->javaScriptFile['jquery.js'], $fileName => $options), $this->javaScriptFile);
+				} else {
+					$this->javaScriptFile = array_merge(array($fileName => $options), $this->javaScriptFile);
+				}
+			} else {
+				$this->javaScriptFile[$fileName] = $options;
+			}
 		}
 	}
 	

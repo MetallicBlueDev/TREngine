@@ -98,7 +98,7 @@ class Core_Main {
 		// Requête vers la base de donnée de configs
 		Core_Sql::select(Core_Table::$CONFIG_TABLE, array("name", "value"));
 		while ($row = Core_Sql::fetchArray()) {
-			$config[$row['name']] = stripslashes(htmlentities($row['value'], ENT_NOQUOTES));
+			$config[$row['name']] = stripslashes($row['value']);
 			$content .= "$" . Core_CacheBuffer::getSectionName() . "['" . $row['name'] . "'] = \"" . Exec_Entities::addSlashes($config[$row['name']]) . "\"; ";
 		}
 		// Mise en cache

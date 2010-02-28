@@ -636,9 +636,7 @@ class Libs_FtpManager extends Cache_Model {
 	 * @param array string $path : local => chemin valide local jusqu'au fichier, remote => chemin valide FTP (avec le root donc) jusqu'au fichier
 	 */
 	private function writingFile($path, $content, $overWrite = true) {
-		if ($overWrite) {
-			$content = Core_CacheBuffer::getHeader($pathFile, $content);
-		}
+		$content = ($overWrite) ? Core_CacheBuffer::getHeader($pathFile, $content) : $content;
 		
 		if ($this->isConnected()) {
 			// Demarrage du mode passif
