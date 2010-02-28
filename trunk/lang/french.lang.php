@@ -32,7 +32,6 @@ $lang = array(
 "ERROR_DEBUG_MAKESTYLECONFIG" => "La configuration des templates n'est pas valide.",
 "ERROR_DEBUG_PHPVERSION" => "Votre version de PHP n'est malheureusement pas utilisable avec TR ENGINE.",
 "ERROR_DEBUG_BLOCKSIDE" => "Un block tente de s'afficher dans une position invalide.",
-"ERROR_DEBUG_BLOCKDISPLAY" => "Impossible d'afficher un block: ça configuration ne semble pas valide.",
 
 // Erreur diverse
 "ERROR_404" => "Erreur 404, la page demandée est introuvable.",

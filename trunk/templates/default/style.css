@@ -123,13 +123,13 @@ form {
 .block_middle {
 	margin: 0px 10px 0px 30px;
 	width: 174px;
-	background-image: url(images/block_middle.jpg);
+	background-image: url(images/block_middle.png);
 }
 .block_bottom {
 	margin: 0px 10px 0px 30px;
 	width: 174px;
 	height: 35px;
-	background-image: url(images/block_bottom.jpg);
+	background-image: url(images/block_bottom.png);
 }
 .block_content {
 	padding: 0px 12px 0px 10px;

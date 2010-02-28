@@ -14,7 +14,7 @@ class Module_Management_Index extends Module_Model {
 	
 	public function display() {
 		// Ajout du CSS du template et du fichier javascript par défaut
-		Core_HTML::getInstance()->addCssTemplateFile("management.css");
+		Core_HTML::getInstance()->addCssTemplateFile("style_management.css");
 		Core_HTML::getInstance()->addJavascriptFile("management.js");
 		
 		// Nom de la page administable

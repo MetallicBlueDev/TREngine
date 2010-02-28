@@ -219,32 +219,27 @@ class Core_Exception {
 	 */
 	public static function displayException() {
 		if (Core_Main::isFullScreen()) {
-			$numberOfRequest = count(self::$sqlRequest);
-			
 			echo "<div style=\"color: blue;\"><br />"
-			. "***********************" . $numberOfRequest . " SQL REQUESTS***********************<br />";
+			. "***********************SQL REQUESTS (" . count(self::$sqlRequest) . ") :<br />";
 			if (!empty(self::$sqlRequest)) {
 				echo str_replace("\n", "<br />", self::linearize(self::$sqlRequest));
 			} else {
-				echo "No sql request registred.";
+				echo "<span style=\"color: green;\">No sql request registred.</span>";
 			}
 			
-			echo "</div><div style=\"color: ";
+			echo "<br /><br />***********************EXCEPTIONS (" . count(self::$exception) . ") :<br />";
 			
 			if (self::exceptionDetected()) {
-				echo "#800000;\">\n<br />"
-				. "************************" . count(self::$exception) . " EXCEPTIONS" . "************************"
-				. "<br />" . str_replace("\n", "<br />", self::linearize(self::$exception));
+				echo "<span style=\"color: red;\">"
+				. str_replace("\n", "<br />", self::linearize(self::$exception));
 			} else {
-				echo "#008000;\">\n<br />No sql request registred.";
+				echo "<span style=\"color: green;\">No exception registred.</span>";
 			}
 			
-			echo "</div>\n<div style=\"color: blue;\"><br />BenchMaker :<br />\n"
-			. "Core : " . Exec_Marker::getTime("core") . " seconde\n"
-			. "<br />Launcher : " . Exec_Marker::getTime("launcher") . " seconde\n"
-			. "<br />All : " . Exec_Marker::getTime("all") . " seconde\n"
-			. "<br />Number of Sql request : " . $numberOfRequest . "\n"
-			. "<br />Appreciation : <span style=\"color: " . (((0.4000 - Exec_Marker::getTime("all")) > 0.3) ? "green;\">OK" : "red;\">FAILED") . "</span>"
+			echo "<br /><br />***********************BENCHMAKER :<br />"
+			. "Core : " . Exec_Marker::getTime("core") . " seconde"
+			. "<br />Launcher : " . Exec_Marker::getTime("launcher") . " seconde"
+			. "<br />All : " . Exec_Marker::getTime("all") . " seconde"
 			. "</div>";
 		}
 	}

@@ -184,19 +184,29 @@ class Core_Main {
 			}
 			
 			if (self::isFullScreen() && Core_Loader::isCallable("Libs_Block") && Core_Loader::isCallable("Libs_Module")) {
-				// Traduction du module
-				Core_Translate::translate("modules/" . Libs_Module::$module);
-				
-				// Chargement et construction du fil d'ariane
-				Core_Loader::classLoader("Libs_Breadcrumb");
-				Libs_Breadcrumb::getInstance();
-				
-				Libs_Block::getInstance()->launch();
-				Libs_Module::getInstance()->launch();
-				
-				Exec_Marker::stopTimer("main");
-				$libsMakeStyle = new Libs_MakeStyle();
-				$libsMakeStyle->display("index.tpl");
+				if ($this->inMaintenance()) { // Affichage site fermé
+					// Charge le block login
+					Libs_Block::getInstance()->launchOneBlock(array("type = 'login'"));
+					
+					// Affichage des données de la page de maintenance (fermeture)
+					$libsMakeStyle = new Libs_MakeStyle();
+					$libsMakeStyle->assign("closeText", ERROR_DEBUG_CLOSE);
+					$libsMakeStyle->display("close.tpl");
+				} else {
+					// Traduction du module
+					Core_Translate::translate("modules/" . Libs_Module::$module);
+					
+					// Chargement et construction du fil d'ariane
+					Core_Loader::classLoader("Libs_Breadcrumb");
+					Libs_Breadcrumb::getInstance();
+					
+					Libs_Block::getInstance()->launchAllBlock();
+					Libs_Module::getInstance()->launch();
+					
+					Exec_Marker::stopTimer("main");
+					$libsMakeStyle = new Libs_MakeStyle();
+					$libsMakeStyle->display("index.tpl");
+				}
 			} else {
 				// Affichage autonome des modules et blocks
 				if (self::isModuleScreen() && Core_Loader::isCallable("Libs_Module")) {
@@ -204,7 +214,7 @@ class Core_Main {
 					Libs_Module::getInstance()->launch();
 					echo Libs_Module::getInstance()->getModule();
 				} else if (self::isBlockScreen() && Core_Loader::isCallable("Libs_Block")) {
-					Libs_Block::getInstance()->launch();
+					Libs_Block::getInstance()->launchOneBlock();
 					echo Libs_Block::getInstance()->getBlock();
 				}
 				// Execute la commande de récupération d'erreur
@@ -254,32 +264,8 @@ class Core_Main {
 	 * 
 	 * @return boolean
 	 */
-	public function inMaintenance() {
+	private function inMaintenance() {
 		return (self::isClosed() && Core_Session::$userRang < 2);
-	}
-	
-	/**
-	 * Ecran de site fermé
-	 */
-	public function maintenance() {
-		// Charge la système de template
-		$this->loadMakeStyle();
-		
-		// Chargement du moteur de traduction
-		Core_Loader::classLoader("Core_Translate");
-		Core_Translate::makeInstance();
-		
-		// Chargement du gestionnaire HTML
-		Core_Loader::classLoader("Core_Html");
-		Core_Html::getInstance();
-		
-		$libsMakeStyle = new Libs_MakeStyle();
-		$libsMakeStyle->assign("closeText", ERROR_DEBUG_CLOSE);
-		$libsMakeStyle->assign("closeReason", self::$coreConfig['defaultSiteCloseReason']);
-		$libsMakeStyle->display("close.tpl");
-		
-		// Validation du cache / Routine du cache
-		Core_CacheBuffer::valideCacheBuffer();
 	}
 	
 	/**

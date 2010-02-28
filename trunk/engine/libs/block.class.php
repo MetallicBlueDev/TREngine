@@ -76,23 +76,10 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Execute la routine block
-	 */
-	public function launch() {
-		if (Core_Main::isBlockScreen()) {
-			// Chargement d'un seul block
-			$this->launchOneBlock();
-		} else {
-			// Chargement de tout les blocks
-			$this->launchAllBlock();
-		}
-	}
-	
-	/**
 	 * Charge les blocks
 	 */
 	// TODO mettre en cache la requete
-	private function launchAllBlock() {
+	public function launchAllBlock() {
 		Core_Sql::select(
 			Core_Table::$BLOCKS_TABLE,
 			array("block_id", "side", "position", "title", "content", "type", "rang", "mods"),
@@ -120,29 +107,29 @@ class Libs_Block {
 	
 	/**
 	 * Charge un block
+	 * 
+	 * @param $where array exemple array(block_id = '0')
 	 */
 	// TODO mettre en cache la requete
-	private function launchOneBlock() {
-		// Capture de la variable
-		$blockId = Core_Request::getInt("block");
+	public function launchOneBlock($where = array()) {
+		if (empty($where)) { // Capture de la variable
+			$where = array("block_id = '" . Core_Request::getInt("block") . "'");
+		}
 		
-		if (is_numeric($blockId)) {
-			Core_Sql::select(
-				Core_Table::$BLOCKS_TABLE,
-				array("block_id", "side", "position", "title", "content", "type", "rang", "mods"),
-				array("block_id = '" . $blockId . "'")
-			);
+		Core_Sql::select(
+			Core_Table::$BLOCKS_TABLE,
+			array("block_id", "side", "position", "title", "content", "type", "rang", "mods"),
+			$where
+		);
+		if (Core_Sql::affectedRows() > 0) {
+			$block = Core_Sql::fetchObject();
 			
-			if (Core_Sql::affectedRows() > 0) {
-				$block = Core_Sql::fetchObject();
+			if ($this->isBlock($block->type) // Si le block existe
+					&& Core_Session::$userRang >= $block->rang) { // Et que le client est assez gradé
+				$block->title = Exec_Entities::textDisplay($block->title);
 				
-				if ($this->isBlock($block->type) // Si le block existe
-						&& Core_Session::$userRang >= $block->rang) { // Et que le client est assez gradé
-					$block->title = Exec_Entities::textDisplay($block->title);
-					
-					self::$blocksConfig[$block->side][] = $block;
-					$this->get($block);
-				}
+				self::$blocksConfig[$block->side][] = $block;
+				$this->get($block);
 			}
 		}
 	}
@@ -268,12 +255,8 @@ class Libs_Block {
 	 * @return String
 	 */
 	public function getBlock() {
-		if (Core_Main::isBlockScreen()) {
-			foreach($this->blocksCompiled as $side => $compiled) {
-				return $this->outPut($this->blocksCompiled[$side][0], $this->doRewriteBuffer($side, 0));
-			}
-		} else {
-			Core_Secure::getInstance()->debug("blockDisplay");
+		foreach($this->blocksCompiled as $side => $compiled) {
+			return $this->outPut($this->blocksCompiled[$side][0], $this->doRewriteBuffer($side, 0));
 		}
 	}
 }
