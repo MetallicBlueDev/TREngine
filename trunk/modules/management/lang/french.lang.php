@@ -81,6 +81,16 @@ $lang = array(
 // PHP INFO
 "SYSTEMINFO_PHP_INFO_TAB" => "Information PHP",
 
+/** Gestion des blocks **/
+"BLOCK_TYPE" => "Type de block",
+"BLOCK_TITLE" => "Titre du block",
+"BLOCK_SIDE" => "Emplacement du block",
+"BLOCK_POSITION" => "Ordre du block",
+"BLOCK_ACCESS" => "Niveau d'accès",
+"BLOCK_VIEW_MODULE_PAGE" => "Visible sur les pages",
+"BLOCK_ALL_PAGE" => "Toutes",
+"BLOCK_VARIES_PAGE" => "Variable",
+
 // Gestion d'un module X
 "MODULE_MANAGEMENT" => "Module"
 

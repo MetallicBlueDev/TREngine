@@ -72,6 +72,18 @@ $lang = array(
 "CAPTCHA_MAKE_SIMPLE_CALCULATION" => "Calculez l'opération suivante",
 "CAPTCHA_INVALID" => "Le code de sécurité que vous avez entré n'est pas valide",
 
+// Orientation
+"LEFT" => "Gauche",
+"RIGHT" => "Droite",
+"TOP" => "Haut",
+"BOTTOM" => "bas",
+
+// Accessibilité
+"ACCESS_NONE" => "désactivé",
+"ACCESS_PUBLIC" => "Public",
+"ACCESS_ADMIN" => "Administrateur",
+"ACCESS_ADMIN_RIGHT" => "Administrateur avec droit",
+
 // Divers
 "WELCOME" => "Bienvenue",
 "DATA_SAVED" => "Les informations ont été correctement sauvegardée",

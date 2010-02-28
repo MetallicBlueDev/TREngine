@@ -67,6 +67,37 @@ form {
 	border-right: 0px solid #de9da1;
 }
 
+/* Menu et contenu des onglets (idTabs) */
+.tabs ul a {
+	background-color: #848e97;
+}
+.tabs ul a:hover { background: #6f8592; }
+.tabs ul a.selected {
+	background-color: #848e97;
+	border-bottom: 1px solid #848e97;
+}
+.tabs div {
+	background-color: #848e97;
+}
+
+/* Mise en forme des tableaux */
+.table {
+	text-align: left;
+}
+.table .first {
+	background-color: #848e97;
+	text-align: center;
+	font-weight: bolder;
+}
+.table tr:hover {
+	background-color: #848e97;
+}
+.table td {
+	border-bottom: 1px solid #6b737b;
+	border-left: 1px solid #6b737b;
+	padding: 5px;
+}
+
 /* Style additionnel du thème */
 /* Entête */
 #header {
@@ -195,16 +226,4 @@ form {
 /* Cleaner */
 .cleaner {
 	clear: both;
-}
-/* Menu et contenu des onglets (idTabs) */
-.tabs ul a {
-	background-color: #848e97;
-}
-.tabs ul a:hover { background: #6f8592; }
-.tabs ul a.selected {
-	background-color: #848e97;
-	border-bottom: 1px solid #848e97;
-}
-.tabs div {
-	background-color: #848e97;
 }

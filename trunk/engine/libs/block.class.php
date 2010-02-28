@@ -152,7 +152,7 @@ class Libs_Block {
 					$BlockClass = new $blockClassName();
 					$BlockClass->blockId = $block->block_id;
 					$BlockClass->side = $block->side;
-					$BlockClass->sideName = $this->getSide($block->side, "letters");
+					$BlockClass->sideName = self::getSide($block->side, "letters");
 					$BlockClass->templateName = "block_" . $BlockClass->sideName . ".tpl";
 					$BlockClass->title = $block->title;
 					$BlockClass->content = $block->content;
@@ -177,7 +177,7 @@ class Libs_Block {
 	 * @return String
 	 */
 	public function &getBlocks($side) {
-		$side = $this->getSide($side, "numeric");
+		$side = self::getSide($side, "numeric");
 		
 		$blockSide = "";
 		if (isset($this->blocksCompiled[$side])) {
@@ -194,7 +194,7 @@ class Libs_Block {
 	 * @param $side String or int
 	 * @return String or int
 	 */
-	private function &getSide($side, $type = "numeric") {
+	public static function &getSide($side, $type = "numeric") {
 		if ($type == "letters") {
 			switch ($side) {
 				case 1: $side = "right"; break;
@@ -226,6 +226,17 @@ class Libs_Block {
 	}
 	
 	/**
+	 * Retourne le type d'orientation
+	 * 
+	 * @param $side String
+	 */
+	public static function &getLitteralSide($side) {
+		$side = strtoupper(self::getSide($side, "letters"));
+		$side = defined($side) ? constant($side) : $side;
+		return $side;
+	}
+	
+	/**
 	 * Réécriture du tampon de sortie si besoin
 	 * 
 	 * @param $buffer String
@@ -239,7 +250,7 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Recherche le parametre indiquand qu'il doit y avoir une réécriture du buffer
+	 * Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
 	 * 
 	 * @param $side int coté ou se trouve le block
 	 * @param $key int cles du block
@@ -319,6 +330,9 @@ abstract class Block_Model {
 	 */
 	public $rang = "";
 	
+	/**
+	 * Affichage par défaut
+	 */
 	public function display() {
 		Core_Exception::addAlertError(ERROR_BLOCK_IMPLEMENT . ((!empty($this->title)) ? " (" . $this->title . ")" : ""));
 	}

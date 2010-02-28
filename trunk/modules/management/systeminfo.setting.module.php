@@ -16,8 +16,12 @@ class Module_Management_Systeminfo extends Module_Model {
 	}
 	
 	private function tabSystemInfo() {
-		$content = "<table style=\"width: 100%;\">"
-		. "<tr><td style=\"width: 30%:\"><b>" . SYSTEMINFO_SYSTEM_INFO_SETTING . "</b></td><td style=\"width: 70%;\"><b>" . SYSTEMINFO_SYSTEM_INFO_VALUE . "</b></td></tr>";
+		Core_Loader::classLoader("Libs_Rack");
+		$firstLine = array(
+			array(30, SYSTEMINFO_SYSTEM_INFO_SETTING),
+			array(70, SYSTEMINFO_SYSTEM_INFO_VALUE)
+		);
+		$rack = new Libs_Rack($firstLine);
 		
 		$modeActivedContent = "";
 		$modeActived = Core_CacheBuffer::getModeActived();
@@ -43,10 +47,9 @@ class Module_Management_Systeminfo extends Module_Model {
 		);
 		
 		foreach($infos as $key => $value) {
-			$content .= "<tr><td>" . $key . "</td><td>" . $value . "</td></tr>";
+			$rack->addLine(array($key, $value));
 		}
-		$content .= "</table>";
-		return $content;
+		return $rack->render();
 	}
 	
 	private function tabPhpInfo() {
@@ -58,12 +61,14 @@ class Module_Management_Systeminfo extends Module_Model {
 		ob_end_clean();
 
 		preg_match_all('#<body[^>]*>(.*)</body>#siU', $phpinfo, $output);
-		$output = preg_replace('#<table#', '<table class="adminlist" align="center"', $output[1][0]);
+		$output = preg_replace('#<table#', '<table class="table"', $output[1][0]);
 		$output = preg_replace('#(\w),(\w)#', '\1, \2', $output);
 		$output = preg_replace('#border="0" cellpadding="3" width="600"#', 'border="0" cellspacing="1" cellpadding="4" width="95%"', $output);
 		$output = preg_replace('#<hr />#', '', $output);
 		$output = str_replace('<div class="center">', '', $output);
 		$output = str_replace('</div>', '', $output);
+		$output = str_replace('class="e"', '', $output);
+		$output = str_replace('class="v"', '', $output);
 
 		return $output;
 	}

@@ -200,6 +200,34 @@ class Core_Access  {
 		}
 		return $access;
 	}
+	
+	/**
+	 * Retourne le type d'acces suivant le numéro
+	 * 
+	 * @param $rang String or int
+	 * @return String
+	 */
+	public static function &getLitteralRang($rang) {
+		switch($rang) {
+			case -1:
+				$rang = ACCESS_NONE;
+				break;
+			case 0:
+				$rang = ACCESS_PUBLIC;
+				break;
+			case 1:
+				$rang = ACCESS_REGISTRED;
+				break;
+			case 2:
+				$rang = ACCESS_ADMIN;
+				break;
+			case 3:
+				$rang = ACCESS_ADMIN_RIGHT;
+				break;
+		}
+		$rang = defined($rang) ? constant($rang) : $rang;
+		return $rang;
+	}
 }
 
 ?>
