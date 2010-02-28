@@ -1,5 +1,4 @@
 <?php
-
 // On est passé dans l'index
 define("TR_ENGINE_INDEX", 1);
 
@@ -33,12 +32,7 @@ if ($TR_ENGINE->newComponentDetected()) {
 	// Installtion des nouveaux composants
 	$TR_ENGINE->install();
 } else {
-	// Vérification de l'état du site
-	if ($TR_ENGINE->inMaintenance()) { // Le site est fermé
-		$TR_ENGINE->maintenance();
-	} else { // Démarrage du moteur
-		$TR_ENGINE->start();
-	}
+	$TR_ENGINE->start();
 }
 
 if (Core_Secure::isDebuggingMode()) {
