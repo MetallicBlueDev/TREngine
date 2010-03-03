@@ -77,8 +77,8 @@ class Module_Connect_Index extends Module_Model {
 				Core_Exception::addInfoError(DATA_SAVED);
 			}
 		}
-		if (!Core_Html::getInstance()->isJavascriptEnabled()) {
-			Core_Html::getInstance()->redirect("index.php?mod=connect&view=account&selectedTab=accounttabsidTab0");
+		if (Core_Main::isFullScreen()) {
+			Core_Html::getInstance()->redirect("index.php?mod=connect&view=account&selectedTab=accounttabsidTab0", 1);
 		}
 	}
 	
@@ -185,8 +185,8 @@ class Module_Connect_Index extends Module_Model {
 				$this->errorBox();
 			}
 		}
-		if (!Core_Html::getInstance()->isJavascriptEnabled()) {
-			Core_Html::getInstance()->redirect("index.php?mod=connect&view=account&selectedTab=accounttabsidTab1");
+		if (Core_Main::isFullScreen()) {
+			Core_Html::getInstance()->redirect("index.php?mod=connect&view=account&selectedTab=accounttabsidTab1", 1);
 		}
 	}
 	
@@ -286,7 +286,7 @@ class Module_Connect_Index extends Module_Model {
 				}
 			}
 			
-			if (!Core_Html::getInstance()->isJavascriptEnabled() || (empty($login) && empty($password))) {
+			if (Core_Main::isFullScreen() || (empty($login) && empty($password))) {
 				Core_Loader::classLoader("Libs_Form");
 				$form = new Libs_Form("logon");
 				$form->setTitle(LOGIN_FORM_TITLE);
@@ -357,7 +357,7 @@ class Module_Connect_Index extends Module_Model {
 			if ($ok) {
 				Core_Exception::addInfoError(FORGET_LOGIN_IS_SUBMIT_TO . " " . $mail);
 			} else {
-				if (!Core_Html::getInstance()->isJavascriptEnabled() || empty($mail)) {
+				if (Core_Main::isFullScreen() || empty($mail)) {
 					Core_Loader::classLoader("Libs_Form");
 					$form = new Libs_Form("forgetlogin");
 					$form->setTitle(FORGET_LOGIN_TITLE);
@@ -409,7 +409,7 @@ class Module_Connect_Index extends Module_Model {
 			if ($ok) {
 				Core_Exception::addInfoError(FORGET_PASSWORD_IS_SUBMIT_TO . " " . $mail);
 			} else {
-				if (!Core_Html::getInstance()->isJavascriptEnabled() || empty($login)) {
+				if (Core_Main::isFullScreen() || empty($login)) {
 					Core_Loader::classLoader("Libs_Form");
 					$form = new Libs_Form("forgetpass");
 					$form->setTitle(FORGET_PASSWORD_TITLE);
