@@ -8,9 +8,8 @@ class Module_Management_Block extends Module_Model {
 	public function setting() {
 		Core_Loader::classLoader("Libs_Block");
 		
-		$localView = Core_Request::getWord("localView");
-		
 		// Traitement
+		$localView = Core_Request::getWord("localView");
 		switch($localView) {
 			case "moveup":
 				$this->sendMove("up");
@@ -144,7 +143,16 @@ class Module_Management_Block extends Module_Model {
 				$form->setTitle(BLOCK_EDIT_TITLE);
 				$form->setDescription("ID #" . $blockId);
 				$form->addSpace();
-				$form->addInputText("blockTitle", "", $block['title']);
+				$form->addInputText("blockTitle", BLOCK_TITLE, $block['title']);
+				
+				$form->addInputText("blockTitle", BLOCK_TYPE, $block['type']);
+				$form->addInputText("blockTitle", BLOCK_SIDE, $block['side']);
+				$form->addInputText("blockTitle", BLOCK_POSITION, $block['position']);
+				$form->addInputText("blockTitle", BLOCK_ACCESS, $block['rang']);
+				
+				$form->addInputText("blockTitle", BLOCK_VIEW_MODULE_PAGE, $block['mods']);
+				
+				$form->addInputText("blockTitle", "content", $block['content']);
 				
 				$position .= Core_Html::getLinkForBlock("?mod=management&manage=block&localView=movedown&blockId=" . $row['block_id'],
 					"?mod=management&manage=block&localView=movedown&blockId=" . $row['block_id'],
