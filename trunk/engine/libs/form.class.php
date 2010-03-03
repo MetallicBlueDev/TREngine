@@ -104,35 +104,35 @@ class Libs_Form {
 	 * 
 	 * @param $name String
 	 * @param $description String
-	 * @param $class String
+	 * @param $defaultValue String
 	 * @param $options String
+	 * @param $class String
 	 */
-	public function addInputText($name, $description = "", $class = "", $options = "") {
-		if (empty($class)) $class = "input";
-		$this->addInput($name, $name, $description, "text", $class, $options);		
+	public function addInputText($name, $description = "", $defaultValue = "", $options = "", $class = "") {
+		$this->addInput($name, $name, $description, "text", $defaultValue, $options, $class);		
 	}
 	
 	/**
 	 * Ajouter un champs caché
 	 * 
 	 * @param $name String
-	 * @param $value String
+	 * @param $defaultValue String
 	 * @param $options String
 	 */
-	public function addInputHidden($name, $value, $options = "") {
-		$options = "value=\"" . $value . "\"" . ((!empty($options)) ? " " . $options : "");
-		$this->addInput($name, $name, "", "hidden", "", $options);		
+	public function addInputHidden($name, $defaultValue, $options = "") {
+		$this->addInput($name, $name, "", "hidden", $defaultValue, $options, "");		
 	}
 	
 	/**
 	 * Ajouter un bouton d'envoie
 	 * 
 	 * @param $name String
+	 * @param $defaultValue String
 	 * @param $options String
+	 * @param $class String
 	 */
-	public function addInputSubmit($name, $class = "", $options) {
-		if (empty($class)) $class = "input";
-		$this->addInput($name, $name, "", "submit", $class, $options);		
+	public function addInputSubmit($name, $defaultValue, $options = "", $class = "") {
+		$this->addInput($name, $name, "", "submit", $defaultValue, $options, $class);		
 	}
 	
 	/**
@@ -142,15 +142,16 @@ class Libs_Form {
 	 * @param $id String
 	 * @param $description String
 	 * @param $checked boolean
-	 * @param $class String
+	 * @param $defaultValue String
 	 * @param $options String
+	 * @param $class String
 	 */
-	public function addInputRadio($id, $name, $description = "", $checked = false, $class = "", $options = "") {
+	public function addInputRadio($id, $name, $description = "", $checked = false, $defaultValue = "", $options = "", $class = "") {
 		if (empty($class)) $class = "radio";
 		if ($checked) {
 			$options = "checked=\"checked\"" . ((!empty($options)) ? " " . $options : "");
 		}
-		$this->addInput($id, $name, $description, "radio", $class, $options);		
+		$this->addInput($id, $name, $description, "radio", $defaultValue, $options, $class);		
 	}
 	
 	/**
@@ -160,15 +161,16 @@ class Libs_Form {
 	 * @param $id String
 	 * @param $description String
 	 * @param $checked boolean
-	 * @param $class String
+	 * @param $defaultValue String
 	 * @param $options String
+	 * @param $class String
 	 */
-	public function addInputCheckbox($id, $name, $description = "", $checked = false, $class = "", $options = "") {
+	public function addInputCheckbox($id, $name, $description = "", $checked = false, $defaultValue = "", $options = "", $class = "") {
 		if (empty($class)) $class = "checkbox";
 		if ($checked) {
 			$options = "checked=\"checked\"" . ((!empty($options)) ? " " . $options : "");
 		}
-		$this->addInput($id, $name, $description, "checkbox", $class, $options);		
+		$this->addInput($id, $name, $description, "checkbox", $defaultValue, $options, $class);		
 	}
 	
 	/**
@@ -176,12 +178,11 @@ class Libs_Form {
 	 * 
 	 * @param $name String
 	 * @param $description String
-	 * @param $class String
 	 * @param $options String
+	 * @param $class String
 	 */
-	public function addInputPassword($name, $description = "", $class = "", $options = "") {
-		if (empty($class)) $class = "input";
-		$this->addInput($name, $name, $description, "password", $class, $options);		
+	public function addInputPassword($name, $description = "", $options = "", $class = "") {
+		$this->addInput($name, $name, $description, "password", "", $options, $class);		
 	}
 	
 	/**
@@ -191,13 +192,16 @@ class Libs_Form {
 	 * @param $name String
 	 * @param $description String
 	 * @param $type String
-	 * @param $class String
+	 * @param $defaultValue String
 	 * @param $options String
+	 * @param $class String
 	 */
-	private function addInput($id, $name, $description, $type, $class = "", $options = "") {
+	private function addInput($id, $name, $description, $type, $defaultValue = "", $options = "", $class = "") {
+		if (empty($class)) $class = "input";
 		$data = ((!empty($description)) ? "<p id=\"" . $this->getId($name) . "\">" . $this->getLabel($id, $description) : "")
 		. " <input id=\"" . $this->getId($id, "input") . "\" name=\"" . $name . "\" type=\"" . $type . "\""
 		. ((!empty($class)) ? " class=\"" . $class . "\"" : "")
+		. " value=\"" . $defaultValue . "\""
 		. ((!empty($options)) ? " " . $options : "") . " />"
 		. ((!empty($description)) ? "</p>" : "");
 		$this->inputData .= $data;
@@ -208,18 +212,18 @@ class Libs_Form {
 	 * 
 	 * @param $name String
 	 * @param $description String
-	 * @param $class String
+	 * @param $defaultValue String
 	 * @param $options String
-	 * @param $defaultText String
+	 * @param $class String
 	 */
-	public function addTextarea($name, $description, $class = "", $options = "", $defaultText = "") {
+	public function addTextarea($name, $description, $defaultValue = "", $options = "", $class = "") {
 		if (empty($class)) $class = "textarea";
 		$data = "<p id=\"" . $this->getId($name) . "\">"
 		. $this->getLabel($name, $description)
 		. " <textarea id=\"" . $this->getId($name, "input") . "\" name=\"" . $name . "\""
 		. ((!empty($class)) ? " class=\"" . $class . "\"" : "")
 		. ((!empty($options)) ? " " . $options : "") . ">"
-		. ((!empty($defaultText)) ? Exec_Entities::stripSlashes($defaultText) : "")
+		. ((!empty($defaultValue)) ? Exec_Entities::stripSlashes($defaultValue) : "")
 		. "</textarea></p>";
 		$this->inputData .= $data;
 	}
@@ -229,10 +233,10 @@ class Libs_Form {
 	 * 
 	 * @param $name String
 	 * @param $description String
-	 * @param $class String
 	 * @param $options String
+	 * @param $class String
 	 */
-	public function addSelectOpenTag($name, $description, $class = "", $options = "") {
+	public function addSelectOpenTag($name, $description, $options = "", $class = "") {
 		if (empty($class)) $class = "select";
 		$data = "<p id=\"" . $this->getId($name) . "\">"
 		. $this->getLabel($name, $description)

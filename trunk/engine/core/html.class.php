@@ -465,6 +465,7 @@ class Core_Html {
 	 * @return String
 	 */
 	public static function getLinkForBlock($fullLink, $blockLink, $divId, $title) {
+		self::getInstance()->addJavascriptFile("jquery.js");
 		return "<a href=\"" . self::getLink($fullLink) . "\" onclick=\"validLink('" . $divId . "', '" . Core_Html::getLink($blockLink, true) . "');return false;\">" . $title . "</a>";
 	}
 	

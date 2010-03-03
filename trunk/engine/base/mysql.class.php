@@ -72,7 +72,10 @@ class Base_Mysql extends Base_Model {
 	 * @return array
 	 */
 	public function fetchArray() {
-		return mysql_fetch_array($this->queries, MYSQL_ASSOC);
+		if (is_resource($this->queries)) {
+			return mysql_fetch_array($this->queries, MYSQL_ASSOC);
+		}
+		return array();
 	}
 	
 	/**

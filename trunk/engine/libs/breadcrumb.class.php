@@ -54,7 +54,7 @@ class Libs_Breadcrumb {
 			$constant = "TRAIL_" . strtoupper($trail);
 			if (defined($constant)) $trail = constant($constant);
 			if (!empty($link)) {
-				$trail = "<a href=\"" . $link . "\">" . $trail . "</a>";
+				$trail = "<a href=\"" . Core_Html::getLink($link) . "\">" . $trail . "</a>";
 			}
 			$this->breadcrumbTrail[] = $trail;
 		}

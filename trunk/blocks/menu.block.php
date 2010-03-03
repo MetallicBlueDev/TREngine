@@ -76,7 +76,10 @@ class Block_Menu extends Block_Model {
 			if ($underline) $text = "<u>" . $text . "</u>";
 			if ($big) $text = "<big>" . $text . "</big>";
 			if ($small) $text = "<small>" . $text . "</small>";
-			if (!empty($link)) $text = "<a href=\"" . (($popup) ? "javascript:window.open('" . $link . "')" : $link) . "\" alt=\"\" title=\"\">" . $text . "</a>";
+			if (!empty($link)) {
+				$link = Core_Html::getLink($link);
+				$text = "<a href=\"" . (($popup) ? "javascript:window.open('" . $link . "')" : $link) . "\" alt=\"\" title=\"\">" . $text . "</a>";
+			}
 			
 			$outPut = $text;
 		} else {

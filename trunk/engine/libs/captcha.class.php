@@ -225,7 +225,7 @@ class Libs_Captcha {
 			
 			if ($this->object != null) {
 				if ($this->object instanceOf Libs_Form) { // A vérifier
-					$this->object->addInputText("cles", $this->question, "input captcha");
+					$this->object->addInputText("cles", $this->question, "", "", "input captcha");
 					$this->object->addInputHidden($this->inputRobotName, "");
 				}
 			} else {

@@ -44,11 +44,11 @@ class Module_Connect_Index extends Module_Model {
 		$form->setDescription(ACCOUNT_PROFILE_DESCRIPTION);
 		$form->addSpace();
 		$form->addInputText("website", ACCOUNT_PROFILE_WEBSITE);
-		$form->addTextarea("signature", ACCOUNT_PROFILE_SIGNATURE, "", "style=\"display: block;\" rows=\"5\" cols=\"50\"", Core_Session::$userSignature);
+		$form->addTextarea("signature", ACCOUNT_PROFILE_SIGNATURE, Core_Session::$userSignature, "style=\"display: block;\" rows=\"5\" cols=\"50\"");
 		$form->addInputHidden("mod", "connect");
 		$form->addInputHidden("view", "sendProfile");
 		$form->addInputHidden("layout", "module");
-		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
+		$form->addInputSubmit("submit", VALID);
 		return $form->render();
 	}
 	
@@ -87,10 +87,10 @@ class Module_Connect_Index extends Module_Model {
 		$form->setTitle(ACCOUNT_PRIVATE_TITLE);
 		$form->setDescription(ACCOUNT_PRIVATE_DESCRIPTION);
 		$form->addSpace();
-		$form->addInputText("name", LOGIN, "", "value=\"" . Core_Session::$userName . "\"");
+		$form->addInputText("name", LOGIN, Core_Session::$userName);
 		$form->addInputPassword("pass", PASSWORD);
 		$form->addInputPassword("pass2", ACCOUNT_PRIVATE_PASSWORD_CONFIRME);
-		$form->addInputText("mail", MAIL, "", "value=\"" . Core_Session::$userMail . "\"");
+		$form->addInputText("mail", MAIL, Core_Session::$userMail);
 		
 		// Liste des langages disponibles
 		$form->addSpace();
@@ -120,7 +120,7 @@ class Module_Connect_Index extends Module_Model {
 		$form->addInputHidden("mod", "connect");
 		$form->addInputHidden("view", "sendAccount");
 		$form->addInputHidden("layout", "module");
-		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
+		$form->addInputSubmit("submit", VALID);
 		Core_Html::getInstance()->addJavascript("validAccount('#form-accountprivate', '#form-accountprivate-name-input', '#form-accountprivate-pass-input', '#form-accountprivate-pass2-input', '#form-accountprivate-mail-input');");
 		return $form->render();
 	}
@@ -198,7 +198,7 @@ class Module_Connect_Index extends Module_Model {
 		$form->addInputHidden("mod", "connect");
 		$form->addInputHidden("view", "account");
 		$form->addInputHidden("layout", "module");
-		$form->addInputSubmit("submit", "", "value=\"" . VALID . "\"");
+		$form->addInputSubmit("submit", VALID);
 		return $form->render();
 	}
 	
@@ -292,13 +292,13 @@ class Module_Connect_Index extends Module_Model {
 				$form->setTitle(LOGIN_FORM_TITLE);
 				$form->setDescription(LOGIN_FORM_DESCRIPTION);
 				$form->addInputText("login", LOGIN, "", "maxlength=\"180\" value=\"" . $login . "\"");
-				$form->addInputPassword("password", PASSWORD, "", "maxlength=\"180\"");
+				$form->addInputPassword("password", PASSWORD, "maxlength=\"180\"");
 				$form->addInputCheckbox("auto", "auto", REMEMBER_ME, true);
 				$form->addInputHidden("referer", urlencode(base64_encode(Core_Request::getString("QUERY_STRING", "", "SERVER"))));
 				$form->addInputHidden("mod", "connect");
 				$form->addInputHidden("view", "logon");
 				$form->addInputHidden("layout", "module");
-				$form->addInputSubmit("submit", "", "value=\"" . CONNECT . "\"");
+				$form->addInputSubmit("submit", CONNECT);
 				$form->addHtmlInFieldset($moreLink);
 				echo $form->render();
 				Core_Html::getInstance()->addJavascript("validLogon('#form-logon', '#form-logon-login-input', '#form-logon-password-input');");
@@ -366,7 +366,7 @@ class Module_Connect_Index extends Module_Model {
 					$form->addInputHidden("mod", "connect");
 					$form->addInputHidden("view", "forgetlogin");
 					$form->addInputHidden("layout", "module");
-					$form->addInputSubmit("submit", "", "value=\"" . FORGET_LOGIN_SUBMIT . "\"");
+					$form->addInputSubmit("submit", FORGET_LOGIN_SUBMIT);
 					echo $form->render();
 					Core_Html::getInstance()->addJavascript("validForgetLogin('#form-forgetlogin', '#form-forgetlogin-mail-input');");
 				}
@@ -418,7 +418,7 @@ class Module_Connect_Index extends Module_Model {
 					$form->addInputHidden("mod", "connect");
 					$form->addInputHidden("view", "forgetpass");
 					$form->addInputHidden("layout", "module");
-					$form->addInputSubmit("submit", "", "value=\"" . FORGET_PASSWORD_SUBMIT . "\"");
+					$form->addInputSubmit("submit", FORGET_PASSWORD_SUBMIT);
 					echo $form->render();
 					Core_Html::getInstance()->addJavascript("validForgetPass('#form-forgetpass', '#form-forgetpass-login-input');");
 				}

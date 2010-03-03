@@ -90,7 +90,7 @@ class Libs_Tabs {
 			$queryString = Core_Request::getString("QUERY_STRING", "", "SERVER");
 			$queryString = str_replace("selectedTab=" . $this->selected, "", $queryString);
 			$queryString = (substr($queryString, -1) != "&") ? $queryString . "&" : $queryString;
-			$this->tabs .= "index.php?" . $queryString . "selectedTab=" . $idTab;
+			$this->tabs .= Core_Html::getLink("index.php?" . $queryString . "selectedTab=" . $idTab);
 		}
 		$this->tabs .= "\""
 		. (($this->selected == $idTab) ? "class=\"selected\"" : "display=\"none;\"") . ">" . Exec_Entities::textDisplay($title) . "</a></li>";

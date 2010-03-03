@@ -90,6 +90,8 @@ $lang = array(
 "BLOCK_VIEW_MODULE_PAGE" => "Visible sur les pages",
 "BLOCK_ALL_PAGE" => "Toutes",
 "BLOCK_VARIES_PAGE" => "Variable",
+// Edition d'un block
+"BLOCK_EDIT_TITLE" => "Edition d'un block",
 
 // Gestion d'un module X
 "MODULE_MANAGEMENT" => "Module"

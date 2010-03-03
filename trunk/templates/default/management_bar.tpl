@@ -1,8 +1,15 @@
+<?php 
+if (Core_Main::isFullScreen()) {
+?>
 <div id="management_bar">
-<div><a href="?mod=management"><img src="templates/default/management/bar_home.png" /></a></div>
-<div><a href="?mod=management&manage=update"><img src="templates/default/management/bar_update.png" /></a></div>
+<div>
+<a href="<?php echo Core_Html::getLink('?mod=management'); ?>"><img src="templates/default/management/bar_home.png" /></a>
+</div>
+<div>
+<a href="<?php echo Core_Html::getLink('?mod=management&manage=update'); ?>"><img src="templates/default/management/bar_update.png" /></a>
+</div>
 <div id="management_bar_setting_page">
-<select onchange="document.location='?mod=management&amp;manage='+this.options[this.selectedIndex].value;">
+<select onchange="document.location='<?php echo Core_Html::getLink('?mod=management&manage='); ?>'+this.options[this.selectedIndex].value;">
 <option value=""></option>
 <?php
 foreach($pageList as $key => $page) {
@@ -15,7 +22,7 @@ foreach($pageList as $key => $page) {
 </select></div>
 
 <div id="management_bar_module_page">
-<select onchange="document.location='?mod=management&amp;manage='+this.options[this.selectedIndex].value;">
+<select onchange="document.location='<?php echo Core_Html::getLink('?mod=management&manage='); ?>'+this.options[this.selectedIndex].value;">
 <option value=""></option>
 <?php 
 foreach($moduleList as $key => $module) {
@@ -27,3 +34,6 @@ foreach($moduleList as $key => $module) {
 ?>
 </select></div>
 </div>
+<?php
+}
+?>

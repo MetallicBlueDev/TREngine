@@ -69,11 +69,8 @@ class Module_Management_Index extends Module_Model {
 				}
 			}
 		}
-		// Affichage du template uniquement si on est on plein écran
-		if (Core_Main::isFullScreen()) {
-			$libsMakeStyle->assign("pageSelected", $pageSelected);
-			$libsMakeStyle->display($managementScreen);
-		}
+		$libsMakeStyle->assign("pageSelected", $pageSelected);
+		$libsMakeStyle->display($managementScreen);
 	}
 	
 	/**

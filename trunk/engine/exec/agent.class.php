@@ -207,6 +207,7 @@ class Exec_Agent {
 	 */
 	private static function &checkUserBrower() {
 		// Boucle sur tout les Browsers et Bot connus
+		$browserName = "";
 		foreach (self::$browserRessouces as $browserAgent => $browserName) {
 			if (preg_match("/" . $browserAgent . "[ \/]([0-9\.]+)/ie", self::$userAgent, $version)
 					|| preg_match("/" . $browserAgent . "/ie", self::$userAgent, $version)) {
@@ -214,7 +215,8 @@ class Exec_Agent {
 				return $browserName;
 			}
 		}
-		return "Unknown Browser";
+		$browserName = "Unknown Browser";
+		return $browserName;
 	}
 	
 	/**
@@ -224,12 +226,14 @@ class Exec_Agent {
 	 */
 	private static function &checkUserOs() {
 		// Boucle sur tout les systemes d'exploitations
+		$osName = "";
 		foreach (self::$osRessources as $osAgent => $osName) {
 			if (preg_match("/" . $osAgent . "/ie", self::$userAgent)) {
 				return $osName;
 			}
 		}
-		return "Unknown Os";
+		$osName = "Unknown Os";
+		return $osName;
 	}
 	
 	/**
