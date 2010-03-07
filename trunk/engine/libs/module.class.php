@@ -313,7 +313,7 @@ class Libs_Module {
 	public function &getModule($rewriteBuffer = false) {
 		$buffer = $this->moduleCompiled;
 		// Tamporisation de sortie
-		if (Core_Main::doUrlRewriting() && ($rewriteBuffer || Core_Utils::inArray("rewriteBuffer", self::$configs))) {
+		if (Core_Main::doUrlRewriting() && ($rewriteBuffer || Exec_Utils::inArray("rewriteBuffer", self::$configs))) {
 			$buffer = Core_UrlRewriting::rewriteBuffer($buffer);
 		}
 		// Relachement des tampon

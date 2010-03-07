@@ -175,7 +175,7 @@ class Module_Management_Setting extends Module_Model {
 		$defaultLanguage = Core_Request::getString("defaultLanguage", "", "POST");
 		if (Core_Main::$coreConfig['defaultLanguage'] != $defaultLanguage) {
 			$langues = Core_Translate::listLanguages();
-			if (!empty($defaultLanguage) && Core_Utils::inArray($defaultLanguage, $langues)) {
+			if (!empty($defaultLanguage) && Exec_Utils::inArray($defaultLanguage, $langues)) {
 				$this->updateTable("defaultLanguage", $defaultLanguage);
 				$deleteCache = true;
 			} else {
@@ -186,7 +186,7 @@ class Module_Management_Setting extends Module_Model {
 		$defaultTemplate = Core_Request::getString("defaultTemplate", "", "POST");
 		if (Core_Main::$coreConfig['defaultTemplate'] != $defaultTemplate) {
 			$templates = Libs_Makestyle::listTemplates();
-			if (!empty($defaultTemplate) && Core_Utils::inArray($defaultTemplate, $templates)) {
+			if (!empty($defaultTemplate) && Exec_Utils::inArray($defaultTemplate, $templates)) {
 				$this->updateTable("defaultTemplate", $defaultTemplate);
 				$deleteCache = true;
 			} else {

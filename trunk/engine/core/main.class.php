@@ -38,7 +38,7 @@ class Core_Main {
 		if (Core_Secure::isDebuggingMode()) Exec_Marker::startTimer("core");
 		
 		// Utilitaire
-		Core_Loader::classLoader("Core_Utils");
+		Core_Loader::classLoader("Exec_Utils");
 		
 		// Charge le gestionnaire d'exception
 		Core_Loader::classLoader("Core_Exception");

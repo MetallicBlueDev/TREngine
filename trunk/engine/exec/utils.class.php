@@ -1,4 +1,8 @@
 <?php
+if (!defined("TR_ENGINE_INDEX")) {
+	require("../core/secure.class.php");
+	new Core_Secure();
+}
 
 /**
  * Fonction optimisé et utilitaire
@@ -6,7 +10,7 @@
  * @author Sebastien Villemain
  *
  */
-class Core_Utils {
+class Exec_Utils {
 	
 	/**
 	 * Indique si une valeur appartient à un tableau

@@ -230,7 +230,7 @@ class Libs_MenuElement {
 				$this->attributs[$name][] = $firstValue;
 			}
 			// Vérification des valeurs déjà enregistrées
-			if (Core_Utils::inArray($value, $this->attributs[$name]) == false) {
+			if (Exec_Utils::inArray($value, $this->attributs[$name]) == false) {
 				if ($value == "parent") {
 					array_unshift($this->attributs[$name], $value);
 				} else if ($value == "active") {
@@ -366,7 +366,7 @@ class Libs_MenuElement {
 		}
 		
 		// Ajout de la classe active
-		if (isset($this->route) && Core_Utils::inArray($this->data->menu_id, $this->route)) {
+		if (isset($this->route) && Exec_Utils::inArray($this->data->menu_id, $this->route)) {
 			$this->addAttributs("class", "active");
 			Libs_Breadcrumb::getInstance()->addTrail($text);
 		}

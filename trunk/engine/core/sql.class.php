@@ -637,7 +637,7 @@ abstract class Base_Model {
 	 */
 	protected function &addQuote($s, $isValue = false) {
 		// Ne pas quoter les champs avec la notation avec les point
-		if (($isValue && !Core_Utils::inArray($s, $this->quoted)) || (!$isValue && strpos($s, "." ) === false && !isset($this->quoted[$s]))) {
+		if (($isValue && !Exec_Utils::inArray($s, $this->quoted)) || (!$isValue && strpos($s, "." ) === false && !isset($this->quoted[$s]))) {
 			if ($isValue) $q = $this->quoteValue;
 			else $q = $this->quoteKey;
 			$s = $q . $s . $q;

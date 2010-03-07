@@ -252,7 +252,7 @@ class Libs_FtpManager extends Cache_Model {
 				
 				// Verification du code recu
 				if (is_array($expected)) {
-					if (Core_Utils::inArray($this->responseCode, $expected)) return true;
+					if (Exec_Utils::inArray($this->responseCode, $expected)) return true;
 				} else {
 					if ($this->responseCode == $expected) return true;
 				}
