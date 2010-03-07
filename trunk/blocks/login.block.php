@@ -123,7 +123,6 @@ class Block_Login extends Block_Model {
 		$form = new Libs_Form("logonblock");
 		$form->addInputText("login", LOGIN, "", "maxlength=\"180\"");
 		$form->addInputPassword("password", PASSWORD, "maxlength=\"180\"");
-		$form->addInputCheckbox("auto", "auto", REMEMBER_ME, true);
 		$form->addInputHidden("referer", urlencode(base64_encode(Core_Request::getString("QUERY_STRING", "", "SERVER"))));
 		$form->addInputHidden("mod", "connect");
 		$form->addInputHidden("view", "logon");

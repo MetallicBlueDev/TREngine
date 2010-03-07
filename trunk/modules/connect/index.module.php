@@ -268,10 +268,9 @@ class Module_Connect_Index extends Module_Model {
 		if (!Core_Session::getInstance()->isUser()) {
 			$login = Core_Request::getString("login", "", "POST");
 			$password = Core_Request::getString("password", "", "POST");
-			$auto = (Core_Request::getWord("auto", "", "POST") == "on") ? true : false;
 			
 			if (!empty($login) || !empty($password)) {
-				if (Core_Session::getInstance()->startConnection($login, $password, $auto)) {
+				if (Core_Session::getInstance()->startConnection($login, $password)) {
 					// Redirection de la page
 					$url = "";
 					$referer = base64_decode(urldecode(Core_Request::getString("referer", "", "POST")));
@@ -293,7 +292,6 @@ class Module_Connect_Index extends Module_Model {
 				$form->setDescription(LOGIN_FORM_DESCRIPTION);
 				$form->addInputText("login", LOGIN, "", "maxlength=\"180\" value=\"" . $login . "\"");
 				$form->addInputPassword("password", PASSWORD, "maxlength=\"180\"");
-				$form->addInputCheckbox("auto", "auto", REMEMBER_ME, true);
 				$form->addInputHidden("referer", urlencode(base64_encode(Core_Request::getString("QUERY_STRING", "", "SERVER"))));
 				$form->addInputHidden("mod", "connect");
 				$form->addInputHidden("view", "logon");

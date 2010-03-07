@@ -223,11 +223,9 @@ class Core_Session {
 							$updVerif = true;
 						}
 					}
-					if ($updVerif === true) {
-						// Injection des informations du client					
+					if ($updVerif === true) { // Injection des informations du client					
 						$this->setUser($sessions);
-					} else {
-						// La mise à jour a échoué, on détruit la session
+					} else { // La mise à jour a échoué, on détruit la session
 						$this->sessionClose();
 					}
 		    	} else {
@@ -254,7 +252,7 @@ class Core_Session {
 		self::$userWebSite = Exec_Entities::stripSlashes($info['website']);
 		self::$sessionId = (!empty($info['sessionId'])) ? $info['sessionId'] : self::$sessionId;
 		self::$userIpBan = (!empty($info['userIpBan'])) ? $info['userIpBan'] : self::$userIpBan;
-		if ($refreshAll)  {
+		if ($refreshAll) {
 			self::$userLanguage = $info['langue'];
 			self::$userTemplate = $info['template'];
 		} else {
@@ -296,10 +294,7 @@ class Core_Session {
 			array("user_id", "name", "mail", "rang", "date", "avatar", "website", "signature", "template", "langue"),
 			$where
 		);
-		if (Core_Sql::affectedRows() == 1) {
-			return Core_Sql::fetchArray();
-		}
-		return array();
+		return (Core_Sql::affectedRows() == 1) ? Core_Sql::fetchArray() : array();
 	}
 	
 	/**
@@ -325,7 +320,7 @@ class Core_Session {
 			array("last_connect" => "NOW()"), 
 			array("user_id = '" . $userId . "'")
 		);
-		return ((Core_Sql::affectedRows() == 1) ? true : false);
+		return (Core_Sql::affectedRows() == 1) ? true : false;
 	}
 	
 	/**
@@ -359,14 +354,13 @@ class Core_Session {
 	/**
 	 * Ouvre une nouvelle session
 	 * 
-	 * @param $auto boolean connexion automatique
 	 * @return boolean ture succès
 	 */
-	private function &sessionOpen($auto = true) {
+	private function &sessionOpen() {
 		self::$sessionId = Exec_Crypt::createId(32);
 		
-		// Connexion automatique via cookie
-		$cookieTimeLimit = ($auto) ? $this->timer + $this->cacheTimeLimit : "";
+		// Durée de connexion automatique via cookie
+		$cookieTimeLimit = $this->timer + $this->cacheTimeLimit;
 		// Creation des cookies
 		$cookieUser = Exec_Cookie::createCookie(
 			$this->getCookieName($this->cookieName['USER']), 
@@ -435,10 +429,9 @@ class Core_Session {
 	 * 
 	 * @param $name String Nom du compte (identifiant)
 	 * @param $pass String Mot de passe du compte
-	 * @param $auto boolean Connexion automatique
 	 * @return boolean ture succès
 	 */
-	public function &startConnection($userName, $userPass, $auto) {
+	public function &startConnection($userName, $userPass) {
 		// Arrête de la session courante si il y en a une
 		$this->stopConnection();
 		
@@ -451,7 +444,7 @@ class Core_Session {
 				$this->setUser($user);
 				
 				// Tentative d'ouverture de session
-				return $this->sessionOpen($auto);
+				return $this->sessionOpen();
 			} else {
 				$this->errorMessage['login'] = ERROR_LOGIN_OR_PASSWORD_INVALID;
 			}
