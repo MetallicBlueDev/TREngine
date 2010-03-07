@@ -52,7 +52,7 @@ class Module_Management_Block extends Module_Model {
 		
 		Core_Sql::select(
 			Core_Table::$BLOCKS_TABLE, 
-			array("block_id", "side", "position", "title", "content", "type", "rang", "mods"),
+			array("block_id", "side", "position", "title", "content", "type", "rank", "mods"),
 			array(),
 			array("position")
 		);
@@ -73,10 +73,10 @@ class Module_Management_Block extends Module_Model {
 					"#block_main_setting",
 					"v"
 				);
-				$rang = Core_Access::getLitteralRang($row['rang']);
+				$rank = Core_Access::getLitteralRank($row['rank']);
 				$mods = ($row['mods'] == "all") ? BLOCK_ALL_PAGE : BLOCK_VARIES_PAGE;
 				// Ajout de la ligne au tableau
-				$rack->addLine(array($type, $title, $side, $position, $rang, $mods));
+				$rack->addLine(array($type, $title, $side, $position, $rank, $mods));
 			}
 		}
 		return $rack->render();
@@ -132,7 +132,7 @@ class Module_Management_Block extends Module_Model {
 		if ($blockId > -1) { // Si l'id semble valide
 			Core_Sql::select(
 				Core_Table::$BLOCKS_TABLE,
-				array("side", "position", "title", "content", "type", "rang", "mods"),
+				array("side", "position", "title", "content", "type", "rank", "mods"),
 				array("block_id = '" . $blockId . "'")
 			);
 			if (Core_Sql::affectedRows() > 0) { // Si le block existe
@@ -156,10 +156,34 @@ class Module_Management_Block extends Module_Model {
 				}
 				$form->addSelectCloseTag();
 				
-				$form->addInputText("blockTitle", BLOCK_SIDE, $block['side']);
+				$sideList = Libs_Block::listSide();
+				$form->addSelectOpenTag("blockSide", BLOCK_SIDE);
+				$currentSideName = "";
+				foreach($sideList as $blockSide) {
+					if ($blockSide['numeric'] == $block['side']) {
+						$currentSideName = $blockSide['letters'];
+						continue;
+					}
+					$form->addSelectItemTag($blockSide['numeric'], $blockSide['numeric'] . " " . $blockSide['letters']);
+				}
+				$form->addSelectItemTag($block['side'], $block['side'] . " " . $currentSideName, true);
+				$form->addSelectCloseTag();
+				// TODO rafraichir la liste des ordres (position) suivant la liste des positions (side)
 				$form->addInputText("blockTitle", BLOCK_POSITION, $block['position']);
-				$form->addInputText("blockTitle", BLOCK_ACCESS, $block['rang']);
 				
+				$rankList = Core_Access::listRanks();
+				$form->addSelectOpenTag("blockRank", BLOCK_ACCESS);
+				$currentRankName = "";
+				foreach($rankList as $blockRank) {
+					if ($blockRank['numeric'] == $block['rank']) {
+						$currentRankName = $blockRank['letters'];
+						continue;
+					}
+					$form->addSelectItemTag($blockRank['numeric'], $blockRank['numeric'] . " " . $blockRank['letters']);
+				}
+				$form->addSelectItemTag($block['rank'], $block['rank'] . " " . $currentRankName, true);
+				$form->addSelectCloseTag();
+				// TODO faire une liste cliquable avec un bouton radio "toutes les pages" et "aucune page" (= rank -1)
 				$form->addInputText("blockTitle", BLOCK_VIEW_MODULE_PAGE, $block['mods']);
 				
 				$form->addInputText("blockTitle", "content", $block['content']);

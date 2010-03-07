@@ -82,8 +82,8 @@ class Libs_Block {
 	public function launchAllBlock() {
 		Core_Sql::select(
 			Core_Table::$BLOCKS_TABLE,
-			array("block_id", "side", "position", "title", "content", "type", "rang", "mods"),
-			array("side > 0", "&& rang >= 0"),
+			array("block_id", "side", "position", "title", "content", "type", "rank", "mods"),
+			array("side > 0", "&& rank >= 0"),
 			array("side", "position")
 		);
 		
@@ -95,7 +95,7 @@ class Libs_Block {
 				
 				if ($this->isBlock($block->type) // Si le block existe
 						&& $this->blockActiveMod($block->mods) // Et qu'il est actif sur la page courante
-						&& Core_Session::$userRang >= $block->rang) { // Et que le client est assez gradé
+						&& Core_Session::$userRank >= $block->rank) { // Et que le client est assez gradé
 					$block->title = Exec_Entities::textDisplay($block->title);
 					
 					self::$blocksConfig[$block->side][] = $block;
@@ -118,14 +118,14 @@ class Libs_Block {
 		
 		Core_Sql::select(
 			Core_Table::$BLOCKS_TABLE,
-			array("block_id", "side", "position", "title", "content", "type", "rang", "mods"),
+			array("block_id", "side", "position", "title", "content", "type", "rank", "mods"),
 			$where
 		);
 		if (Core_Sql::affectedRows() > 0) {
 			$block = Core_Sql::fetchObject();
 			
 			if ($this->isBlock($block->type) // Si le block existe
-					&& Core_Session::$userRang >= $block->rang) { // Et que le client est assez gradé
+					&& Core_Session::$userRank >= $block->rank) { // Et que le client est assez gradé
 				$block->title = Exec_Entities::textDisplay($block->title);
 				
 				self::$blocksConfig[$block->side][] = $block;
@@ -141,7 +141,7 @@ class Libs_Block {
 	 */
 	private function get($block) {
 		// Vérification de l'accès
-		if (Core_Access::autorize("block" . $block->block_id, $block->rang)) {
+		if (Core_Access::autorize("block" . $block->block_id, $block->rank)) {
 			$blockClassName = "Block_" . ucfirst($block->type);
 			$loaded = Core_Loader::classLoader($blockClassName);
 			
@@ -156,7 +156,7 @@ class Libs_Block {
 					$BlockClass->templateName = "block_" . $BlockClass->sideName . ".tpl";
 					$BlockClass->title = $block->title;
 					$BlockClass->content = $block->content;
-					$BlockClass->rang = $block->rang;
+					$BlockClass->rank = $block->rank;
 					
 					// Capture des données d'affichage
 					ob_start();
@@ -237,11 +237,17 @@ class Libs_Block {
 		return $sideNumeric;
 	}
 	
+	/**
+	 * Liste des orientations possible
+	 * 
+	 * @return array("numeric" => identifiant int, "letters" => nom de la position)
+	 */
 	public static function &listSide() {
 		$sideList = array();
-		for ($i = 1; i < 7; $i++) {
-			$sideList[] = array("numeric" => $i, "letters" => self::getSideLetters($i));
+		for ($i = 1; $i < 7; $i++) {
+			$sideList[] = array("numeric" => $i, "letters" => self::getLitteralSide($i));
 		}
+		return $sideList;
 	}
 	
 	/**
@@ -363,11 +369,11 @@ abstract class Block_Model {
 	public $content = "";
 	
 	/**
-	 * Rang pour acceder au block
+	 * Rank pour acceder au block
 	 * 
 	 * @var int
 	 */
-	public $rang = "";
+	public $rank = "";
 	
 	/**
 	 * Affichage par défaut

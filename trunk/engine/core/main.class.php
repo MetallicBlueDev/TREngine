@@ -263,7 +263,7 @@ class Core_Main {
 	 * @return boolean
 	 */
 	private function inMaintenance() {
-		return (self::isClosed() && Core_Session::$userRang < 2);
+		return (self::isClosed() && Core_Session::$userRank < 2);
 	}
 	
 	/**

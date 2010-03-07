@@ -34,7 +34,7 @@ class Block_Menu extends Block_Model {
 			"block" . $this->blockId,
 			array(
 				"table" => Core_Table::$MENUS_TABLES,
-				"select" => array("menu_id", "block_id", "parent_id", "content", "sublevel", "position", "rang"),
+				"select" => array("menu_id", "block_id", "parent_id", "content", "sublevel", "position", "rank"),
 				"where" => array("block_id = '" . $this->blockId . "'"),
 				"orderby" => array("sublevel", "parent_id", "position"),
 				"limit" => array()

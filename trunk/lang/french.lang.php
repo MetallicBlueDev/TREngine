@@ -76,11 +76,14 @@ $lang = array(
 "LEFT" => "Gauche",
 "RIGHT" => "Droite",
 "TOP" => "Haut",
-"BOTTOM" => "bas",
+"BOTTOM" => "Bas",
+"MODULETOP" => "En haut du module",
+"MODULEBOTTOM" => "En bas du module",
 
 // Accessibilité
-"ACCESS_NONE" => "désactivé",
+"ACCESS_NONE" => "Désactivé",
 "ACCESS_PUBLIC" => "Public",
+"ACCESS_REGISTRED" => "Membre",
 "ACCESS_ADMIN" => "Administrateur",
 "ACCESS_ADMIN_RIGHT" => "Administrateur avec droit",
 

@@ -29,7 +29,7 @@ class Module_Connect_Index extends Module_Model {
 			$accountTabs->addTab(ACCOUNT_PROFILE, $this->tabProfile());
 			$accountTabs->addTab(ACCOUNT_PRIVATE, $this->tabAccount());
 			$accountTabs->addTab(ACCOUNT_AVATAR, $this->tabAvatar());
-			if (Core_Session::$userRang > 1) {
+			if (Core_Session::$userRank > 1) {
 				$accountTabs->addTab(ACCOUNT_ADMIN, $this->tabAdmin());
 			}
 			echo $accountTabs->render();
@@ -211,8 +211,8 @@ class Module_Connect_Index extends Module_Model {
 		$form->addSpace();
 		$rights = Core_Access::getAdminRight();
 		$form->addHtmlInFieldset("<b>");
-		if (Core_Session::$userRang == 3 && $rights[0] == "all") $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_MAX);
-		else if (Core_Session::$userRang == 3) $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_HIG);
+		if (Core_Session::$userRank == 3 && $rights[0] == "all") $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_MAX);
+		else if (Core_Session::$userRank == 3) $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_HIG);
 		else $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_MED);
 		$form->addHtmlInFieldset("</b>");
 		

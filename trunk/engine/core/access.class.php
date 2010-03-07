@@ -20,8 +20,8 @@ class Core_Access  {
 	 * @return boolean true le client visé a la droit
 	 */
 	public static function moderate($zoneIdentifiant, $userIdAdmin = "") {
-		// Rang 3 exigé !
-		if (Core_Session::$userRang == 3) {
+		// Rank 3 exigé !
+		if (Core_Session::$userRank == 3) {
 			// Recherche des droits admin
 			$right = self::getAdminRight($userIdAdmin);
 			$nbRights = count($right);
@@ -83,17 +83,17 @@ class Core_Access  {
 	 */
 	public static function &getModuleAccesError($mod) {
 		// Recherche des infos du module
-		$moduleRang = -2;
+		$moduleRank = -2;
 		if (Core_Loader::isCallable("Libs_Module")) {
-			$moduleRang = Libs_Module::getInstance()->getRang($mod);
+			$moduleRank = Libs_Module::getInstance()->getRank($mod);
 		}
 		
 		$error = ERROR_ACCES_FORBIDDEN;
 		// Si on veut le type d'erreur pour un acces
-		if ($moduleRang > -2) {
-			if ($moduleRang == -1) $error = ERROR_ACCES_OFF;
-			else if ($moduleRang == 1 && Core_Session::$userRang == 0) $error = ERROR_ACCES_MEMBER;
-			else if ($moduleRang > 1 && Core_Session::$userRang < $rang) $error = ERROR_ACCES_ADMIN;
+		if ($moduleRank > -2) {
+			if ($moduleRank == -1) $error = ERROR_ACCES_OFF;
+			else if ($moduleRank == 1 && Core_Session::$userRank == 0) $error = ERROR_ACCES_MEMBER;
+			else if ($moduleRank > 1 && Core_Session::$userRank < $rank) $error = ERROR_ACCES_ADMIN;
 		}
 		return $error;
 	}
@@ -102,13 +102,13 @@ class Core_Access  {
 	 * Autorise ou refuse l'accès a la ressource cible
 	 * 
 	 * @param $zoneIdentifiant String block+Id ou module/page.php ou module
-	 * @param $zoneRang int
+	 * @param $zoneRank int
 	 * @return boolean true accès autorisé
 	 */
-	public static function &autorize($zoneIdentifiant, $zoneRang = -2) {
+	public static function &autorize($zoneIdentifiant, $zoneRank = -2) {
 		$access = false;
 		// Si ce n'est pas un block ou une page particuliere
-		if (substr($zoneIdentifiant, 0, 5) != "block" && $zoneRang < -1) {
+		if (substr($zoneIdentifiant, 0, 5) != "block" && $zoneRank < -1) {
 			// Recherche des infos du module
 			$moduleInfo = array();
 			if (Core_Loader::isCallable("Libs_Module")) {
@@ -117,13 +117,13 @@ class Core_Access  {
 			
 			if (!empty($moduleInfo)) {
 				$zoneIdentifiant = $moduleInfo['name'];
-				$zoneRang = $moduleInfo['rang'];
+				$zoneRank = $moduleInfo['rank'];
 			}
 		}
 		
-		if ($zoneRang == 0) $access = true; // Accès public
-		else if ($zoneRang > 0 && $zoneRang < 3 && Core_Session::$userRang >= $zoneRang) $access = true; // Accès membre ou admin
-		else if ($zoneRang == 3 && self::moderate($zoneIdentifiant)) $access = true; // Accès admin avec droits
+		if ($zoneRank == 0) $access = true; // Accès public
+		else if ($zoneRank > 0 && $zoneRank < 3 && Core_Session::$userRank >= $zoneRank) $access = true; // Accès membre ou admin
+		else if ($zoneRank == 3 && self::moderate($zoneIdentifiant)) $access = true; // Accès admin avec droits
 		return $access;
 	}
 	
@@ -204,29 +204,44 @@ class Core_Access  {
 	/**
 	 * Retourne le type d'acces suivant le numéro
 	 * 
-	 * @param $rang String or int
+	 * @param $rank String or int
 	 * @return String
 	 */
-	public static function &getLitteralRang($rang) {
-		switch($rang) {
-			case -1:
-				$rang = ACCESS_NONE;
-				break;
-			case 0:
-				$rang = ACCESS_PUBLIC;
-				break;
-			case 1:
-				$rang = ACCESS_REGISTRED;
-				break;
-			case 2:
-				$rang = ACCESS_ADMIN;
-				break;
-			case 3:
-				$rang = ACCESS_ADMIN_RIGHT;
-				break;
+	public static function &getLitteralRank($rank) {
+		if (is_numeric($rank)) {
+			switch($rank) {
+				case -1:
+					$rank = ACCESS_NONE;
+					break;
+				case 0:
+					$rank = ACCESS_PUBLIC;
+					break;
+				case 1:
+					$rank = ACCESS_REGISTRED;
+					break;
+				case 2:
+					$rank = ACCESS_ADMIN;
+					break;
+				case 3:
+					$rank = ACCESS_ADMIN_RIGHT;
+					break;
+			}
 		}
-		$rang = defined($rang) ? constant($rang) : $rang;
-		return $rang;
+		$rank = defined($rank) ? constant($rank) : $rank;
+		return $rank;
+	}
+	
+	/**
+	 * Retourne la liste des niveau d'acces disponibles
+	 * 
+	 * @return array("numeric" => identifiant int, "letters" => nom du niveau)
+	 */
+	public static function &listRanks() {
+		$rankList = array();
+		for ($i = -1; $i < 4; $i++) {
+			$rankList[] = array("numeric" => $i, "letters" => self::getLitteralRank($i));
+		}
+		return $rankList;
 	}
 }
 

@@ -34,11 +34,11 @@ class Libs_Module {
 	public static $modId = "";
 	
 	/**
-	 * Rang du module
+	 * Rank du module
 	 * 
 	 * @var int
 	 */
-	public static $rang;
+	public static $rank;
 	
 	/**
 	 * Configuration du module
@@ -140,7 +140,7 @@ class Libs_Module {
 		if (!Core_CacheBuffer::cached($moduleName . ".php")) {
 			Core_Sql::select(
 				Core_Table::$MODULES_TABLE,
-				array("mod_id", "rang", "configs"),
+				array("mod_id", "rank", "configs"),
 				array("name =  '" . $moduleName . "'")			
 			);
 		
@@ -167,7 +167,7 @@ class Libs_Module {
 			// Injection des informations du module
 			if (self::$module == $moduleName) {
 				self::$modId = $moduleInfo['mod_id'];
-				self::$rang = $moduleInfo['rang'];
+				self::$rank = $moduleInfo['rank'];
 				self::$configs = $moduleInfo['configs'];
 			}
 			$this->modules[$moduleName] = &$moduleInfo;
@@ -181,16 +181,16 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Retourne le rang du module
+	 * Retourne le rank du module
 	 * 
 	 * @param $mod String
 	 * @return int
 	 */
-	public function getRang($moduleName = "") {
+	public function getRank($moduleName = "") {
 		$moduleName = (empty($moduleName)) ? self::$module : $moduleName;
 		// Recherche des infos du module
 		$moduleInfo = $this->getInfoModule($moduleName);
-		return $moduleInfo['rang'];
+		return $moduleInfo['rank'];
 	}
 	
 	/**
@@ -198,7 +198,7 @@ class Libs_Module {
 	 */
 	public function launch() {
 		// Vérification du niveau d'acces 
-		if (($this->installed() && Core_Access::autorize(self::$module)) || (!$this->installed() && Core_Session::$userRang > 1)) {
+		if (($this->installed() && Core_Access::autorize(self::$module)) || (!$this->installed() && Core_Session::$userRank > 1)) {
 			if (empty($this->moduleCompiled) && $this->isModule()) {		
 				$this->get();
 				if (Core_Loader::isCallable("Libs_Breadcrumb")) {
@@ -221,7 +221,7 @@ class Libs_Module {
 	private function viewPage($pageInfo, $setAlternative = true) {
 		$default = "display";
 		if (Core_Loader::isCallable($pageInfo[0], $pageInfo[1])) {
-			if ($pageInfo[1] == "install" && ($this->installed() || Core_Session::$userRang < 2)) {
+			if ($pageInfo[1] == "install" && ($this->installed() || Core_Session::$userRank < 2)) {
 				return $this->viewPage(array($pageInfo[0], $default), false);
 			}
 			if ($pageInfo[1] == "uninstall" && (!$this->installed() || !Core_Access::moderate(self::$module))) {
@@ -374,11 +374,11 @@ abstract class Module_Model {
 	private $page = "";
 	
 	/**
-	 * Rang du module
+	 * Rank du module
 	 * 
 	 * @var int
 	 */
-	private $rang = "";
+	private $rank = "";
 	
 	/**
 	 * Nom du viewer courant
@@ -400,7 +400,7 @@ abstract class Module_Model {
 	public function install() {
 		Core_Sql::insert(
 			Core_Table::$MODULES_TABLE,
-			array("name", "rang", "configs"),
+			array("name", "rank", "configs"),
 			array(Libs_Module::$module, 0, "")
 		);
 	}

@@ -52,7 +52,7 @@ class Core_Session {
 	 * 
 	 * @var int
 	 */
-	public static $userRang = 0;
+	public static $userRank = 0;
 	
 	/**
 	 * Id de la session courante du client
@@ -245,7 +245,7 @@ class Core_Session {
 		self::$userId = $info['user_id'];
 		self::$userName = Exec_Entities::stripSlashes($info['name']);
 		self::$userMail = $info['mail'];
-		self::$userRang = (int) $info['rang'];
+		self::$userRank = (int) $info['rank'];
 		self::$userInscriptionDate = $info['date'];
 		self::$userAvatar = $info['avatar'];
 		self::$userSignature = Exec_Entities::stripSlashes($info['signature']);
@@ -271,7 +271,7 @@ class Core_Session {
 		$rslt = "$" . Core_CacheBuffer::getSectionName() . "['user_id'] = \"" . self::$userId . "\"; ";
 		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['name'] = \"" . Exec_Entities::addSlashes(self::$userName) . "\"; ";
 		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['mail'] = \"" . self::$userMail . "\"; ";
-		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['rang'] = \"" . self::$userRang . "\"; ";
+		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['rank'] = \"" . self::$userRank . "\"; ";
 		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['date'] = \"" . self::$userInscriptionDate . "\"; ";
 		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['avatar'] = \"" . self::$userAvatar . "\"; ";
 		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['signature'] = \"" . Exec_Entities::addSlashes(self::$userSignature) . "\"; ";
@@ -291,7 +291,7 @@ class Core_Session {
 	private function getUserInfo($where) {
 		Core_Sql::select(
 			Core_Table::$USERS_TABLE,
-			array("user_id", "name", "mail", "rang", "date", "avatar", "website", "signature", "template", "langue"),
+			array("user_id", "name", "mail", "rank", "date", "avatar", "website", "signature", "template", "langue"),
 			$where
 		);
 		return (Core_Sql::affectedRows() == 1) ? Core_Sql::fetchArray() : array();
@@ -332,7 +332,7 @@ class Core_Session {
 		if (!empty(self::$userId)
 			&& !empty(self::$userName)
 			&& !empty(self::$sessionId)
-			&& self::$userRang > 0) {
+			&& self::$userRank > 0) {
 				return true;
 		}
 		return false;
@@ -344,7 +344,7 @@ class Core_Session {
 	private function resetUser() {
 		self::$userId = "";
 		self::$userName = "";
-		self::$userRang = 0;
+		self::$userRank = 0;
 		self::$sessionId = "";
 		self::$userLanguage = "";
 		self::$userTemplate = "";

@@ -203,7 +203,7 @@ class Core_Secure {
 				$errorMessage[] = $argv;
 			}
 		}
-		if (Core_Loader::isCallable("Core_Session") && Core_Loader::isCallable("Core_Sql") && Core_Session::$userRang > 1) {
+		if (Core_Loader::isCallable("Core_Session") && Core_Loader::isCallable("Core_Sql") && Core_Session::$userRank > 1) {
 			$errorMessage = array_merge($errorMessage, (array) Core_Sql::getLastError());
 		}
 		return $errorMessage;

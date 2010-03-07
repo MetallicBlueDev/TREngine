@@ -137,7 +137,7 @@ class Libs_Menu {
 		// Début de rendu
 		$out = "<ul id=\"" . $this->identifier . "\"" . $this->attribtus . ">";
 		foreach($this->items as $key => $item) {
-			if ($item->data->parent_id == 0 && Core_Access::autorize($this->identifier, $item->data->rang)) {
+			if ($item->data->parent_id == 0 && Core_Access::autorize($this->identifier, $item->data->rank)) {
 				// Ajout du tableau route dans l'element principal
 				if ($key == $route[0]) $item->setRoute($route);
 				// Création du rendu
