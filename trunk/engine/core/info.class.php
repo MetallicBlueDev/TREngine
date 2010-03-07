@@ -69,7 +69,7 @@ class Core_Info {
 			$path = substr($path, 1); // Suppression du slash
 			
 			if (!empty($path)) { // Recherche du chemin complet
-				// Vérification en se reperant sur l'emplacement du fichier config
+				// Vérification en se reperant sur l'emplacement du fichier de configuration
 				while (!is_file($baseName . "/" . $path . "/configs/config.inc.php")) {
 					// On remonte d'un cran
 					$path = dirname($path);

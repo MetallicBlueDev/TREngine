@@ -49,7 +49,7 @@
 
 <div id="footer">
 	<div style="padding: 50px;">
-		Page g&eacute;n&eacute;r&eacute;e en <?php echo Exec_Marker::getTime("main"); ?> seconde.
+		Page g&eacute;n&eacute;r&eacute;e en <?php echo Exec_Marker::getTime("main"); ?> ms.
 	</div>
 </div>
 <?php echo Core_Html::getInstance()->getMetaFooters(); ?>

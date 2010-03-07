@@ -44,17 +44,16 @@ class Exec_Marker {
 	}
 	
 	/**
-	 * Retourne le temps qui a été mis pour généré la page
+	 * Retourne le temps qui a été mis pour généré la page en ms
 	 * 
-	 * @param $virgule int chiffre après la virgule
-	 * @return int le temps de génération
+	 * @return int le temps de génération en milliseconde (ms)
 	 */
-	public static function &getTime($name, $virgule = 4) {
+	public static function &getTime($name) {
 		if (isset(self::$startTime[$name]) 
 				&& isset(self::$finishTime[$name])) {
-					$rslt = self::$finishTime[$name] - self::$startTime[$name];
-					$rslt = round($rslt, $virgule);
-					return $rslt;
+			$rslt = self::$finishTime[$name] - self::$startTime[$name];
+			$rslt = round($rslt, 4) * 1000;
+			return $rslt;
 		}
 		return 0;
 	}

@@ -135,9 +135,10 @@ class Core_Secure {
 	 * La fonction debug affiche un message d'erreur
 	 * Cette fonction est activé si une erreur est détecté
 	 * 
-	 * @param $ie L'exception interne levée
+	 * @param $ie String or object L'exception interne levée
+	 * @param $argv array argument suplementaire d'information sur l'erreur
 	 */
-	public function debug($ie = "") {
+	public function debug($ie = "", $argv = array()) {
 		// Charge le loader si il faut
 		if (!class_exists("Core_Loader")) {
 			require(TR_ENGINE_DIR . "/engine/core/loader.class.php");
@@ -155,11 +156,11 @@ class Core_Secure {
 		// Préparation du template debug
 		$libsMakeStyle = new Libs_MakeStyle();
 		$libsMakeStyle->assign("errorMessageTitle", $this->getErrorMessageTitle($ie));
-		$libsMakeStyle->assign("errorMessage", $this->getDebugMessage($ie));
+		$libsMakeStyle->assign("errorMessage", $this->getDebugMessage($ie, $argv));
 		// Affichage du template en debug si problème
 		$libsMakeStyle->displayDebug("debug.tpl");	
 		
-		exit();
+		exit(); // Arret du moteur
 	}
 	
 	/**
@@ -168,11 +169,11 @@ class Core_Secure {
 	 * @param $ie L'exception interne levée
 	 * @return String $errorMessage
 	 */
-	private function getDebugMessage($ie) {
+	private function getDebugMessage($ie, $argv) {
 		// Tableau avec les lignes d'erreurs
 		$errorMessage = array();
-		// Si l'exception est bien présente
-		if (is_object($ie)) {
+		// Analyse de l'exception
+		if (is_object($ie)) { // Pour un exception levé de type object
 			$trace = $ie->getTrace();
 			$nbTrace = count($trace);
 			
@@ -193,6 +194,13 @@ class Core_Secure {
 				if (!empty($errorLine)) {
 					$errorMessage[] = $errorLine;
 				}
+			}
+		}
+		if (!empty($argv)) { // Si des informations suplementaire sont disponibles
+			if (is_array($argv)) {
+				$errorMessage = array_merge($errorMessage, $argv);
+			} else {
+				$errorMessage[] = $argv;
 			}
 		}
 		if (Core_Loader::isCallable("Core_Session") && Core_Loader::isCallable("Core_Sql") && Core_Session::$userRang > 1) {

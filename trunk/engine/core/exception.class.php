@@ -237,9 +237,9 @@ class Core_Exception {
 			}
 			
 			echo "<br /><br />***********************BENCHMAKER :<br />"
-			. "Core : " . Exec_Marker::getTime("core") . " seconde"
-			. "<br />Launcher : " . Exec_Marker::getTime("launcher") . " seconde"
-			. "<br />All : " . Exec_Marker::getTime("all") . " seconde"
+			. "Core : " . Exec_Marker::getTime("core") . " ms"
+			. "<br />Launcher : " . Exec_Marker::getTime("launcher") . " ms"
+			. "<br />All : " . Exec_Marker::getTime("all") . " ms"
 			. "</div>";
 		}
 	}

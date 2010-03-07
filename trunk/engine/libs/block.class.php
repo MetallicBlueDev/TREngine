@@ -152,7 +152,7 @@ class Libs_Block {
 					$BlockClass = new $blockClassName();
 					$BlockClass->blockId = $block->block_id;
 					$BlockClass->side = $block->side;
-					$BlockClass->sideName = self::getSide($block->side, "letters");
+					$BlockClass->sideName = self::getSideLetters($block->side);
 					$BlockClass->templateName = "block_" . $BlockClass->sideName . ".tpl";
 					$BlockClass->title = $block->title;
 					$BlockClass->content = $block->content;
@@ -173,65 +173,85 @@ class Libs_Block {
 	/**
 	 * Retourne les blocks compilés voulu (right/left/top/bottom)
 	 * 
-	 * @param $side String or int
+	 * @param $side String
 	 * @return String
 	 */
 	public function &getBlocks($side) {
-		$side = self::getSide($side, "numeric");
+		// Conversion du side en identifiant numérique
+		$sidePosition = is_string($side) ? self::getSideNumeric($side) : $side;
 		
 		$blockSide = "";
-		if (isset($this->blocksCompiled[$side])) {
-			foreach($this->blocksCompiled[$side] as $key => $block) {
-				$blockSide .= $this->outPut($block, $this->doRewriteBuffer($side, $key));
+		if (isset($this->blocksCompiled[$sidePosition])) {
+			foreach($this->blocksCompiled[$sidePosition] as $key => $block) {
+				$blockSide .= $this->outPut($block, $this->doRewriteBuffer($sidePosition, $key));
 			}
 		}
 		return $blockSide;
 	}
 	
 	/**
-	 * Retourne la position associé
+	 * Retourne le type d'orientation/postion en lettres
 	 * 
-	 * @param $side String or int
-	 * @return String or int
+	 * @param $side int
+	 * @return String identifiant de la position (right, left...)
 	 */
-	public static function &getSide($side, $type = "numeric") {
-		if ($type == "letters") {
+	private static function &getSideLetters($side) {
+		$sideLetters = $side; // Assignation par défaut
+		
+		// Si on renseigne bien un entier
+		if (is_numeric($side)) { // On recherche la position
 			switch ($side) {
-				case 1: $side = "right"; break;
-				case 2: $side = "left"; break;
-				case 3: $side = "top"; break;
-				case 4: $side = "bottom"; break;
-				case 5: $side = "moduletop"; break;
-				case 6: $side = "modulebottom"; break;
-				default : Core_Secure::getInstance()->debug("blockSide");
-			}
-		} else {
-			if (!is_numeric($side) 
-					|| $side < 0
-					|| $side > 4) {
-				// Recherche de la position
-				$side = strtolower($side);
-				switch ($side) {
-					case 'right': $side = 1; break;
-					case 'left': $side = 2; break;
-					case 'top': $side = 3; break;
-					case 'bottom': $side = 4; break;
-					case 'moduletop': $side = 5; break;
-					case 'modulebottom': $side = 6; break;
-					default : Core_Secure::getInstance()->debug("blockSide");
-				}
+				case 1: $sideLetters = "right"; break;
+				case 2: $sideLetters = "left"; break;
+				case 3: $sideLetters = "top"; break;
+				case 4: $sideLetters = "bottom"; break;
+				case 5: $sideLetters = "moduletop"; break;
+				case 6: $sideLetters = "modulebottom"; break;
+				default : Core_Secure::getInstance()->debug("blockSide", "Numeric side:" . $side);
 			}
 		}
-		return $side;
+		return $sideLetters;
 	}
 	
 	/**
-	 * Retourne le type d'orientation
+	 * Retourne le type d'orientation/position en chiffre
 	 * 
 	 * @param $side String
+	 * @return int identifiant de la position (1, 2..)
+	 */
+	private static function &getSideNumeric($side) {
+		$sideNumeric = $side; // Assignation par défaut
+		
+		// Si on renseigne bien un string
+		if (is_string($side)) { // On recherche la position
+			switch ($side) {
+				case 'right': $sideNumeric = 1; break;
+				case 'left': $sideNumeric = 2; break;
+				case 'top': $sideNumeric = 3; break;
+				case 'bottom': $sideNumeric = 4; break;
+				case 'moduletop': $sideNumeric = 5; break;
+				case 'modulebottom': $sideNumeric = 6; break;
+				default : Core_Secure::getInstance()->debug("blockSide", "Letters side:" . $side);
+			}
+		}
+		return $sideNumeric;
+	}
+	
+	public static function &listSide() {
+		$sideList = array();
+		for ($i = 1; i < 7; $i++) {
+			$sideList[] = array("numeric" => $i, "letters" => self::getSideLetters($i));
+		}
+	}
+	
+	/**
+	 * Retourne le type d'orientation avec la traduction
+	 * 
+	 * @param $side int or String
+	 * @return String postion traduit (si possible)
 	 */
 	public static function &getLitteralSide($side) {
-		$side = strtoupper(self::getSide($side, "letters"));
+		$side = strtoupper(self::getSideLetters($side));
 		$side = defined($side) ? constant($side) : $side;
 		return $side;
 	}
@@ -269,6 +289,25 @@ class Libs_Block {
 		foreach($this->blocksCompiled as $side => $compiled) {
 			return $this->outPut($this->blocksCompiled[$side][0], $this->doRewriteBuffer($side, 0));
 		}
+	}
+	
+	/**
+	 * Retourne la liste des blocks disponibles
+	 * 
+	 * @return array
+	 */
+	public static function &listBlocks() {
+		$blockList = array();
+		$files = Core_CacheBuffer::listNames("blocks");
+		foreach($files as $key => $fileName) {
+			// Nettoyage du nom de la page
+			$pos = strpos($fileName, ".block");
+			// Si c'est un block
+			if ($pos !== false && $pos > 0) {
+				$blockList[] = substr($fileName, 0, $pos);
+			}
+		}
+		return $blockList;
 	}
 }
 

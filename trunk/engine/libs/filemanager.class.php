@@ -262,7 +262,7 @@ class Libs_FileManager extends Cache_Model {
 	}
 	
 	/**
-	 * Retourne le listing avec uniquement les fichiers présent
+	 * Retourne le listing avec uniquement les fichiers et dossiers présent
 	 * 
 	 * @param $dirPath
 	 * @return array

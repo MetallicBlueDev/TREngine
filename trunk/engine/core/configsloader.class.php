@@ -82,13 +82,14 @@ class Core_ConfigsLoader {
 		if (is_file($databasePath)) {
 			require($databasePath);
 			
+			// Vérification du type de base de donnée
 			if (!is_file(TR_ENGINE_DIR . "/engine/base/" . $db['type'] . ".class.php")) {
-				Core_Secure::getInstance()->debug("sqltype");
+				Core_Secure::getInstance()->debug("sqlType", $db['type']);
 			}
 			
 			$this->database = $db;
 		} else {
-			Core_Secure::getInstance()->debug("sqlPath");
+			Core_Secure::getInstance()->debug("sqlPath", $databasePath);
 		}
 	}
 	

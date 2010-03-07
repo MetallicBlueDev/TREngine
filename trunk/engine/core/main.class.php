@@ -37,10 +37,8 @@ class Core_Main {
 	public function __construct() {
 		if (Core_Secure::isDebuggingMode()) Exec_Marker::startTimer("core");
 		
-		// Vérification de la version PHP
-		if (TR_ENGINE_PHP_VERSION < "5.0.0") {
-			Core_Secure::getInstance()->debug("phpVersion");
-		}
+		// Utilitaire
+		Core_Loader::classLoader("Core_Utils");
 		
 		// Charge le gestionnaire d'exception
 		Core_Loader::classLoader("Core_Exception");

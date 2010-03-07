@@ -252,7 +252,7 @@ class Libs_FtpManager extends Cache_Model {
 				
 				// Verification du code recu
 				if (is_array($expected)) {
-					if (in_array($this->responseCode, $expected)) return true;
+					if (Core_Utils::inArray($this->responseCode, $expected)) return true;
 				} else {
 					if ($this->responseCode == $expected) return true;
 				}
@@ -414,7 +414,7 @@ class Libs_FtpManager extends Cache_Model {
 	}
 	
 	/**
-	 * Récupération de la liste des dossiers au chemin path 
+	 * Récupération de la liste des dossiers et fichiers au chemin path 
 	 * 
 	 * @param string $path : chemin où doit être listé les dossiers
 	 * @return array string liste des dossiers trouvés

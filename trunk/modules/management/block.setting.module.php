@@ -141,11 +141,21 @@ class Module_Management_Block extends Module_Model {
 				
 				$form = new Libs_Form("blockedit");
 				$form->setTitle(BLOCK_EDIT_TITLE);
-				$form->setDescription("ID #" . $blockId);
+				$form->setDescription(BLOCK_EDIT_DESCRIPTION);
 				$form->addSpace();
+				
+				$form->addHtmlInFieldset("ID : #" . $blockId);
 				$form->addInputText("blockTitle", BLOCK_TITLE, $block['title']);
 				
-				$form->addInputText("blockTitle", BLOCK_TYPE, $block['type']);
+				$blockList = Libs_Block::listBlocks();
+				$form->addSelectOpenTag("blockType", BLOCK_TYPE);
+				$form->addSelectItemTag($block['type'], "", true);
+				foreach($blockList as $blockType) {
+					if ($blockType == $block['type']) continue;
+					$form->addSelectItemTag($blockType);
+				}
+				$form->addSelectCloseTag();
+				
 				$form->addInputText("blockTitle", BLOCK_SIDE, $block['side']);
 				$form->addInputText("blockTitle", BLOCK_POSITION, $block['position']);
 				$form->addInputText("blockTitle", BLOCK_ACCESS, $block['rang']);

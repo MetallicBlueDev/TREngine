@@ -92,9 +92,7 @@ $lang = array(
 "BLOCK_VARIES_PAGE" => "Variable",
 // Edition d'un block
 "BLOCK_EDIT_TITLE" => "Edition d'un block",
-
-// Gestion d'un module X
-"MODULE_MANAGEMENT" => "Module"
+"BLOCK_EDIT_DESCRIPTION" => "Paramétrez votre block suivant vos besoins."
 
 );
 

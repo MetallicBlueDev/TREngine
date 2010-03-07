@@ -25,12 +25,12 @@ $lang = array(
 "ERROR_DEBUG_SQLREQ" => "Une erreur SQL est survenue lors d'une requête.",
 "ERROR_DEBUG_SQLTYPE" => "Le type de base selectionné n'est pas encore supporté.",
 "ERROR_DEBUG_SQLPATH" => "Le fichier de configuration de la base de donnée est introuvable.",
+"ERROR_DEBUG_SQLCODE" => "Le code d'une base de donnée n'est pas utilisable.",
 "ERROR_DEBUG_BADURL" => "Merci d'utiliser l'index du site pour naviguer correctement.",
 "ERROR_DEBUG_LOADER" => "Une erreur lors du chargement d'un fichier est survenue.",
 "ERROR_DEBUG_CONFIGPATH" => "Le fichier de configuration du site est introuvable.",
 "ERROR_DEBUG_MAKESTYLE" => "Une erreur est survenue lors de la lecture d'un template.",
 "ERROR_DEBUG_MAKESTYLECONFIG" => "La configuration des templates n'est pas valide.",
-"ERROR_DEBUG_PHPVERSION" => "Votre version de PHP n'est malheureusement pas utilisable avec TR ENGINE.",
 "ERROR_DEBUG_BLOCKSIDE" => "Un block tente de s'afficher dans une position invalide.",
 
 // Erreur diverse

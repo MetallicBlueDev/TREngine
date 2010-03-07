@@ -12,10 +12,10 @@ if (Core_Main::isFullScreen()) {
 <select onchange="document.location='<?php echo Core_Html::getLink('?mod=management&manage='); ?>'+this.options[this.selectedIndex].value;">
 <option value=""></option>
 <?php
-foreach($pageList as $key => $page) {
-	$selected = ($page == $pageSelected) ? "selected=\"selected\"" : "";
+foreach($pageList as $page) {
+	$selected = ($page['value'] == $pageSelected) ? "selected=\"selected\"" : "";
 ?>
-<option value="<?php echo $page; ?>" <?php echo $selected; ?>><?php echo $pageName[$key]; ?></option>
+<option value="<?php echo $page['value']; ?>" <?php echo $selected; ?>><?php echo $page['name']; ?></option>
 <?php	
 }
 ?>
@@ -25,10 +25,10 @@ foreach($pageList as $key => $page) {
 <select onchange="document.location='<?php echo Core_Html::getLink('?mod=management&manage='); ?>'+this.options[this.selectedIndex].value;">
 <option value=""></option>
 <?php 
-foreach($moduleList as $key => $module) {
-	$selected = ($module == $pageSelected) ? "selected=\"selected\"" : "";
+foreach($moduleList as $module) {
+	$selected = ($module['value'] == $pageSelected) ? "selected=\"selected\"" : "";
 ?>
-<option value="<?php echo $module; ?>" <?php echo $selected; ?>><?php echo $moduleName[$key]; ?></option>
+<option value="<?php echo $module['value']; ?>" <?php echo $selected; ?>><?php echo $module['name']; ?></option>
 <?php	
 }
 ?>

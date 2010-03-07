@@ -30,6 +30,7 @@ class Core_Loader {
 		} catch (Exception $ie) {
 			Core_Secure::getInstance()->debug($ie);
 		}
+		return false;
 	}
 	
 	/**

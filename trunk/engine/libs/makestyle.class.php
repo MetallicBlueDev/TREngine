@@ -47,6 +47,11 @@ class Libs_MakeStyle {
 	 */
 	private $debugMode = false;
 	
+	/**
+	 * Nouveau template
+	 * 
+	 * @param $fileName nom du template
+	 */
 	public function __construct($fileName = "") {
 		// Mode normale
 		$this->debugMode = false;
@@ -56,8 +61,8 @@ class Libs_MakeStyle {
 			$this->fileName = $fileName;
 		}
 		
-		if (empty(self::$templatesDir) || empty(self::$currentTemplate)) {
-			Core_Secure::getInstance()->debug("makeStyleConfig");
+		if (empty(self::$templatesDir) || empty(self::$currentTemplate)) { // TODO si $templatesDir ou $currentTemplate est vide, le moteur plante !
+			Core_Secure::getInstance()->debug("makeStyleConfig", array("templatesDir = " . self::$templatesDir, "currentTemplate = " . self::$currentTemplate));
 		}
 	}
 	
@@ -68,9 +73,9 @@ class Libs_MakeStyle {
 	 * @param $fileName String
 	 */
 	private function checkTemplate($fileName = "") {
-		if (!empty($fileName)) $this->fileName = $fileName;
+		if (!empty($fileName)) $this->fileName = $fileName; // Nom du template
 		
-		if (!$this->isTemplate()) {
+		if (!$this->isTemplate()) { // Vérification du template
 			Core_Secure::getInstance()->debug("makeStyle", $this->getTemplatePath());
 		}		
 	}
@@ -213,7 +218,9 @@ class Libs_MakeStyle {
 	 */
 	public static function &listTemplates() {
 		$templates = array();
-		$dirs = Core_CacheBuffer::listNames(self::$templatesDir);
+		if (is_dir(TR_ENGINE_DIR . "/" . self::$templatesDir)) { // Vérification du dossier template
+			$dirs = Core_CacheBuffer::listNames(self::$templatesDir);
+		}
 		return $dirs;
 	}
 }

@@ -313,11 +313,26 @@ class Libs_Module {
 	public function &getModule($rewriteBuffer = false) {
 		$buffer = $this->moduleCompiled;
 		// Tamporisation de sortie
-		if (Core_Main::doUrlRewriting() && ($rewriteBuffer || in_array("rewriteBuffer", self::$configs))) {
+		if (Core_Main::doUrlRewriting() && ($rewriteBuffer || Core_Utils::inArray("rewriteBuffer", self::$configs))) {
 			$buffer = Core_UrlRewriting::rewriteBuffer($buffer);
 		}
 		// Relachement des tampon
 		return $buffer;
+	}
+	
+	/**
+	 * Retourne un tableau contenant les modules disponibles
+	 * 
+	 * @return array => array("value" => valeur du module, "name" => nom du module)
+	 */
+	public static function &listModules() {
+		$moduleList = array();
+		$modules = Core_CacheBuffer::listNames("modules");
+		
+		foreach($modules as $module) {
+			$moduleList[] = array("value" => $module, "name" => "Module " . $module);
+		}
+		return $moduleList;
 	}
 }
 

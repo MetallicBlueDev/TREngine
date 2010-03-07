@@ -92,18 +92,17 @@ class Module_Management_Setting extends Module_Model {
 		$form->addSelectCloseTag();
 		
 		$form->addSelectOpenTag("defaultMod", SETTING_GENERAL_DEFAULT_MODULE);
-		$moduleName = array();
-		$modules = Module_Management_Index::listModules($moduleName);
+		$modules = Libs_Module::listModules();
 		$currentModule = Core_Main::$coreConfig['defaultMod'];
-		$currentModuleKey = 0;
-		foreach($modules as $key => $module) {
-			if (module == $currentModule) {
-				$currentModuleKey = $key;
+		$currentModuleName = "";
+		foreach($modules as $module) {
+			if ($module['value'] == $currentModule) {
+				$currentModuleName = $module['name'];
 				continue;
 			}
-			$form->addSelectItemTag($module, $moduleName[$key]);
+			$form->addSelectItemTag($module['value'], $module['name']);
 		}
-		$form->addSelectItemTag($currentModule, $moduleName[$currentModuleKey], true);
+		$form->addSelectItemTag($currentModule, $currentModuleName, true);
 		$form->addSelectCloseTag();
 		$form->addSpace();
 		
@@ -176,7 +175,7 @@ class Module_Management_Setting extends Module_Model {
 		$defaultLanguage = Core_Request::getString("defaultLanguage", "", "POST");
 		if (Core_Main::$coreConfig['defaultLanguage'] != $defaultLanguage) {
 			$langues = Core_Translate::listLanguages();
-			if (!empty($defaultLanguage) && in_array($defaultLanguage, $langues)) {
+			if (!empty($defaultLanguage) && Core_Utils::inArray($defaultLanguage, $langues)) {
 				$this->updateTable("defaultLanguage", $defaultLanguage);
 				$deleteCache = true;
 			} else {
@@ -187,7 +186,7 @@ class Module_Management_Setting extends Module_Model {
 		$defaultTemplate = Core_Request::getString("defaultTemplate", "", "POST");
 		if (Core_Main::$coreConfig['defaultTemplate'] != $defaultTemplate) {
 			$templates = Libs_Makestyle::listTemplates();
-			if (!empty($defaultTemplate) && in_array($defaultTemplate, $templates)) {
+			if (!empty($defaultTemplate) && Core_Utils::inArray($defaultTemplate, $templates)) {
 				$this->updateTable("defaultTemplate", $defaultTemplate);
 				$deleteCache = true;
 			} else {
@@ -197,9 +196,7 @@ class Module_Management_Setting extends Module_Model {
 		// Module par défaut
 		$defaultMod = Core_Request::getString("defaultMod", "", "POST");
 		if (Core_Main::$coreConfig['defaultMod'] != $defaultMod) {
-			$module = array();
-			$modules = Module_Management_Index::listModules($module);
-			if (!empty($defaultMod) && in_array($defaultMod, $modules)) {
+			if (!empty($defaultMod)) {
 				$this->updateTable("defaultMod", $defaultMod);
 				$deleteCache = true;
 			} else {
@@ -266,7 +263,7 @@ class Module_Management_Setting extends Module_Model {
 		$form->addInputText("dbType", SETTING_SYSTEM_DATABASE_SETTING_TYPE, Core_Main::$coreConfig['ftpHost']);
 		
 		$form->addSelectOpenTag("dbType", SETTING_SYSTEM_DATABASE_SETTING_TYPE);
-		$bases = Core_Sql::listBase();
+		$bases = Core_Sql::listBases();
 		foreach($bases as $base) {
 			$form->addSelectItemTag($base);
 		}

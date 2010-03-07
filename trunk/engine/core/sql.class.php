@@ -27,19 +27,19 @@ class Core_Sql {
 	 */
 	public static function &makeInstance($db = array()) {
 		if (self::$base == null && count($db) >= 5) {
-			// Vérification du type de base de donnée
-			if (!is_file(TR_ENGINE_DIR . "/engine/base/" . $db['type'] . ".class.php")) {
-				Core_Secure::getInstance()->debug("sqlType");
-			}
-			
 			// Chargement des drivers pour la base
 			$BaseClass = "Base_" . ucfirst($db['type']);
 			Core_Loader::classLoader($BaseClass);
 			
-			try {
-				self::$base = new $BaseClass($db);
-			} catch (Exception $ie) {
-				Core_Secure::getInstance()->debug($ie);
+			// Si la classe peu être utilisée
+			if (Core_Loader::isCallable($BaseClass)) {
+				try {
+					self::$base = new $BaseClass($db);
+				} catch (Exception $ie) {
+					Core_Secure::getInstance()->debug($ie);
+				}
+			} else {
+				Core_Secure::getInstance()->debug("sqlCode", $BaseClass);
 			}
 		}
 		return self::$base;
@@ -50,7 +50,7 @@ class Core_Sql {
 	 * 
 	 * @return array
 	 */
-	public static function &listBase() {
+	public static function &listBases() {
 		$baseList = array();
 		$files = Core_CacheBuffer::listNames("engine/base");
 		foreach($files as $key => $fileName) {
@@ -165,7 +165,7 @@ class Core_Sql {
 		if (Core_Secure::isDebuggingMode()) Core_Exception::setSqlRequest($sql);
 		
 		// Création d'une exception si une réponse est négative (false)
-		if (self::getQueries() === false) throw new Exception("sqlReq");
+		if (self::getQueries() === false) throw new Exception("sqlReq", $sql);
 	}
 	
 	/**
@@ -637,7 +637,7 @@ abstract class Base_Model {
 	 */
 	protected function &addQuote($s, $isValue = false) {
 		// Ne pas quoter les champs avec la notation avec les point
-		if (($isValue && !in_array($s, $this->quoted)) || (!$isValue && strpos($s, "." ) === false && !isset($this->quoted[$s]))) {
+		if (($isValue && !Core_Utils::inArray($s, $this->quoted)) || (!$isValue && strpos($s, "." ) === false && !isset($this->quoted[$s]))) {
 			if ($isValue) $q = $this->quoteValue;
 			else $q = $this->quoteKey;
 			$s = $q . $s . $q;

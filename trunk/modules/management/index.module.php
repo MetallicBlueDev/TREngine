@@ -20,27 +20,20 @@ class Module_Management_Index extends Module_Model {
 		// Nom de la page administable
 		$managePage = Core_Request::getString("manage");
 		
-		// Liste de pages de configuration
-		$pageName = array();
-		$pageList = self::listManagementPages($pageName);
-		
-		// Liste des modules
-		$moduleName = array();
-		$moduleList = self::listModules($moduleName);
+		$pageList = self::listManagementPages(); // Liste de pages de configuration
+		$moduleList = Libs_Module::listModules(); // Liste des modules
 		
 		// Préparation de la mise en page
 		$libsMakeStyle = new Libs_MakeStyle();
 		$libsMakeStyle->assign("pageList", $pageList);
-		$libsMakeStyle->assign("pageName", $pageName);
 		$libsMakeStyle->assign("moduleList", $moduleList);
-		$libsMakeStyle->assign("moduleName", $moduleName);
 		
 		// Affichage de la page d'administration
 		$managementScreen = "management_index.tpl";
 		$pageSelected = "";
 		if (!empty($managePage)) { // Affichage d'une page de configuration spécial
-			$settingPage = in_array($managePage, $pageList);
-			$moduleSettingPage = in_array($managePage, $moduleList);
+			$settingPage = Core_Utils::inMultiArray($managePage, $pageList);
+			$moduleSettingPage = Core_Utils::inMultiArray($managePage, $moduleList);
 			
 			// Si c'est une page valide
 			if ($settingPage || $moduleSettingPage) {
@@ -74,45 +67,11 @@ class Module_Management_Index extends Module_Model {
 	}
 	
 	/**
-	 * Retourne un tableau contenant les modules disponibles
-	 * 
-	 * @param $moduleName array le nom des modules
-	 * @return array
-	 */
-	public static function &listModules(&$moduleName) {
-		$moduleList = array();
-		
-		$modulesInfo = array();
-		$modulesInfo = Core_Sql::getBuffer("listModules");
-		
-		if (empty($modulesInfo)) { // Vérifie si la requête est déjà dans le buffer
-			Core_Sql::select(
-				Core_Table::$MODULES_TABLE,
-				array("name")
-			);
-			
-			if (Core_Sql::affectedRows() > 0) {
-				Core_Sql::addBuffer("listModules");
-				$modulesInfo = Core_Sql::getBuffer("listModules");
-			}
-		}
-		
-		if (!empty($modulesInfo)) {
-			foreach($modulesInfo as $module) {
-				$moduleList[] = $module->name;
-				$moduleName[] = MODULE_MANAGEMENT . " " . $module->name;
-			}
-		}
-		return $moduleList;
-	}
-	
-	/**
 	 * Retourne un tableau contenant les pages d'administration disponibles
 	 * 
-	 * @param $pageName array le nom des pages
-	 * @return array
+	 * @return array => array("value" => valeur de la page, "name" => nom de la page)
 	 */
-	public static function &listManagementPages(&$pageName) {
+	public static function &listManagementPages() {
 		$page = "";
 		$pageList = array();
 		$files = Core_CacheBuffer::listNames("modules/management");
@@ -124,13 +83,8 @@ class Module_Management_Index extends Module_Model {
 				$page = substr($fileName, 0, $pos);
 				// Vérification des droits de l'utilisateur
 				if (Core_Access::moderate("management/" . $page . ".setting")) {
-					$pageList[] = $page;
-					
-					if (defined("SETTING_TITLE_" . strtoupper($page))) {
-						$pageName[] = constant("SETTING_TITLE_" . strtoupper($page));
-					} else {
-						$pageName[] = ucfirst($page);
-					}
+					$name = defined("SETTING_TITLE_" . strtoupper($page)) ? constant("SETTING_TITLE_" . strtoupper($page)) : ucfirst($page);
+					$pageList[] = array("value" => $page, "name" => $name);
 				}
 			}
 		}
