@@ -61,7 +61,7 @@ class Core_ConfigsLoader {
 			if (!empty($config['cryptKey'])) $configuration['cryptKey'] = $config['cryptKey'];
 			
 			// Ajout a la configuration courante
-			Core_Main::addToConfig($configuration);
+			Core_Main::addToConfiguration($configuration);
 			
 			// Chargement de la configuration via la cache
 			$configuration = array();
@@ -84,7 +84,7 @@ class Core_ConfigsLoader {
 			}
 			
 			// Ajout a la configuration courante
-			Core_Main::addToConfig($configuration);
+			Core_Main::addToConfiguration($configuration);
 			
 		} else {
 			Core_Secure::getInstance()->debug("configPath", $configPath);

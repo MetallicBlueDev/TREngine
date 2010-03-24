@@ -51,7 +51,7 @@ class Core_Main {
 		
 		// Chargement de la configuration
 		Core_Loader::classLoader("Core_ConfigsLoader");
-		$coreConfigLoader = new Core_ConfigsLoader();
+		new Core_ConfigsLoader();
 		
 		// Chargement du gestionnaire d'accès url
 		Core_Loader::classLoader("Core_Request");
@@ -65,11 +65,11 @@ class Core_Main {
 	/**
 	 * Ajoute l'objet a la configuration
 	 * 
-	 * @param $config array
+	 * @param array
 	 */
-	public static function addToConfig($config = array()) {
-		if (is_array($config) && !empty($config)) {
-			foreach($config as $key => $value) {
+	public static function addToConfiguration($configuration = array()) {
+		if (is_array($configuration) && !empty($configuration)) {
+			foreach($configuration as $key => $value) {
 				self::$coreConfig[$key] = Exec_Entities::stripSlashes($value);
 			}
 		}
