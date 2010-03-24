@@ -43,27 +43,15 @@ class Core_Main {
 		// Charge le gestionnaire d'exception
 		Core_Loader::classLoader("Core_Exception");
 		
-		// Charge les constantes de table
-		Core_Loader::classLoader("Core_Table");
-		
 		// Chargement du gestionnaire de cache
 		Core_Loader::classLoader("Core_CacheBuffer");
-		
-		// Chargement de la configuration
-		Core_Loader::classLoader("Core_ConfigsLoader");
-		$coreConfigLoader = new Core_ConfigsLoader();
-		
-		// Connexion à la base de donnée
-		$this->setCoreSql($coreConfigLoader->getDatabase());
 		
 		// Chargement du convertiseur d'entities
 		Core_Loader::classLoader("Exec_Entities");
 		
-		// Récuperation de la configuration
-		$this->setCoreConfig($coreConfigLoader->getConfig());
-		
-		// Destruction du chargeur de configs
-		unset($coreConfigLoader);
+		// Chargement de la configuration
+		Core_Loader::classLoader("Core_ConfigsLoader");
+		$coreConfigLoader = new Core_ConfigsLoader();
 		
 		// Chargement du gestionnaire d'accès url
 		Core_Loader::classLoader("Core_Request");
@@ -75,68 +63,16 @@ class Core_Main {
 	}
 	
 	/**
-	 * Capture et instancie le gestionnaire Sql
-	 */
-	private function setCoreSql($db) {
-		Core_Loader::classLoader("Core_Sql");
-		Core_Sql::makeInstance($db);
-		Core_Table::setPrefix($db['prefix']);
-	}
-	
-	/**
-	 * Charge la configuration a partir de la base
-	 * 
-	 * @return array
-	 */
-	private function getConfigDb() {
-		$config = array();
-		Core_CacheBuffer::setSectionName("tmp");
-		$content = "";
-		
-		// Requête vers la base de donnée de configs
-		Core_Sql::select(Core_Table::$CONFIG_TABLE, array("name", "value"));
-		while ($row = Core_Sql::fetchArray()) {
-			$config[$row['name']] = stripslashes($row['value']);
-			$content .= "$" . Core_CacheBuffer::getSectionName() . "['" . $row['name'] . "'] = \"" . Exec_Entities::addSlashes($config[$row['name']]) . "\"; ";
-		}
-		// Mise en cache
-		Core_CacheBuffer::writingCache("configs.php", $content, true);
-		// Retourne le configuration pour l'ajout
-		return $config;
-	}
-	
-	/**
 	 * Ajoute l'objet a la configuration
 	 * 
 	 * @param $config array
 	 */
-	private function addToConfig($config) {
-		if (is_array($config)) {
+	public static function addToConfig($config = array()) {
+		if (is_array($config) && !empty($config)) {
 			foreach($config as $key => $value) {
 				self::$coreConfig[$key] = Exec_Entities::stripSlashes($value);
 			}
 		}
-	}
-	
-	/**
-	 * Recupere les variables de configuration
-	 * Utilisation du cache ou sinon de la base de donnée
-	 * 
-	 * @param $configIncFile
-	 */
-	private function setCoreConfig($configIncFile) {
-		// Ajout a la configuration courante
-		$this->addToConfig($configIncFile);
-		
-		Core_CacheBuffer::setSectionName("tmp");
-		$configDb = array();
-		if (Core_CacheBuffer::cached("configs.php")) { // Configuration via le fichier temporaire
-			$configDb = Core_CacheBuffer::getCache("configs.php");
-		} else { // Recherche de la configuration dans la base de donnée
-			$configDb = $this->getConfigDb();
-		}
-		// Ajout a la configuration courante
-		$this->addToConfig($configDb);
 	}
 	
 	/**

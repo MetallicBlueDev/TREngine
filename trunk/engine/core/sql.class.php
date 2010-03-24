@@ -17,32 +17,38 @@ class Core_Sql {
 	 * 
 	 * @var Base_xxxx
 	 */ 
-	protected static $base = null;
+	private static $base = null;
+	
+	/**
+	 * Donnée de la base
+	 * 
+	 * @var array
+	 */
+	private static $dataBase = array();
 	
 	/**
 	 * Démarre une instance de communication avec la base
-	 * 
-	 * @param $db array
-	 * @return Base_Type
 	 */
-	public static function &makeInstance($db = array()) {
-		if (self::$base == null && count($db) >= 5) {
+	public static function makeInstance() {
+		if (self::$base == null && !empty(self::$dataBase)) {
 			// Chargement des drivers pour la base
-			$BaseClass = "Base_" . ucfirst($db['type']);
+			$BaseClass = "Base_" . ucfirst(self::$dataBase['type']);
 			Core_Loader::classLoader($BaseClass);
 			
-			// Si la classe peu être utilisée
+			// Si la classe peut être utilisée
 			if (Core_Loader::isCallable($BaseClass)) {
 				try {
-					self::$base = new $BaseClass($db);
+					self::$base = new $BaseClass();
 				} catch (Exception $ie) {
 					Core_Secure::getInstance()->debug($ie);
 				}
 			} else {
 				Core_Secure::getInstance()->debug("sqlCode", $BaseClass);
 			}
+			
+			// Charge les constantes de table
+			Core_Loader::classLoader("Core_Table");
 		}
-		return self::$base;
 	}
 	
 	/**
@@ -165,7 +171,7 @@ class Core_Sql {
 		if (Core_Secure::isDebuggingMode()) Core_Exception::setSqlRequest($sql);
 		
 		// Création d'une exception si une réponse est négative (false)
-		if (self::getQueries() === false) throw new Exception("sqlReq", $sql);
+		if (self::getQueries() === false) throw new Exception("sqlReq");
 	}
 	
 	/**
@@ -302,6 +308,24 @@ class Core_Sql {
 	public static function getCollation() {
 		return self::$base->getCollation();
 	}
+	
+	/**
+	 * Récupération des données de la base
+	 * 
+	 * @return array
+	 */
+	public static function getDatabase() {
+		return self::$dataBase;
+	}
+	
+	/**
+	 * Injection des données de la base
+	 * 
+	 * @param array
+	 */
+	public static function setDatabase($database = array()) {
+		self::$dataBase = $database;
+	}
 }
 
 /**
@@ -313,39 +337,18 @@ class Core_Sql {
 abstract class Base_Model {
 	
 	/**
-	 * Nom d'host de la base
+	 * Configuration de la base de donnée
 	 * 
-	 * @var String
+	 * @var array
 	 */
-	protected $dbHost = "";
-	
-	/**
-	 * Nom d'utilisateur de la base
-	 * 
-	 * @var String
-	 */
-	protected $dbUser = "";
-	
-	/**
-	 * Mot de passe de la base
-	 * 
-	 * @var String
-	 */
-	protected $dbPass = "";
-	
-	/**
-	 * Nom de la base
-	 * 
-	 * @var String
-	 */
-	protected $dbName = "";
-	
-	/**
-	 * Type de base de donnée
-	 * 
-	 * @var String
-	 */
-	protected $dbType = "";
+	protected $database = array(
+		"host" => "",
+		"user" => "",
+		"pass" => "",
+		"name" => "",
+		"type" => "",
+		"prefix" => ""
+	);
 	
 	/**
 	 * ID de la connexion
@@ -401,12 +404,8 @@ abstract class Base_Model {
 	 * 
 	 * @param $db array
 	 */
-	public function __construct($db) {
-		$this->dbHost = $db['host'];
-		$this->dbUser = $db['user'];
-		$this->dbPass = $db['pass'];
-		$this->dbName = $db['name'];
-		$this->dbType = $db['type'];
+	public function __construct() {
+		$this->database = Core_Sql::getDatabase();
 		
 		if ($this->test()) {
 			// Connexion au serveur
@@ -458,12 +457,31 @@ abstract class Base_Model {
 	/**
 	 * Supprime des informations
 	 * 
-	 * @param $table Nom de la table
-	 * @param $where
-	 * @param $like
-	 * @param $limit
+	 * @param $table String Nom de la table
+	 * @param $where array
+	 * @param $like array
+	 * @param $limit String
 	 */
 	public function delete($table, $where = array(), $like = array(), $limit = false) {
+		// Nom complet de la table
+		$table = $this->getTableName($table);
+		
+		// Mise en place du WHERE
+		if (!is_array($where)) $where = array($where);
+		$where = (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
+		
+		// Mise en place du LIKE
+		$like = (!is_array($like)) ? array($like) : $like;
+		$like = (count($like) >= 1) ? " LIKE " . implode(" ", $like) : "";
+		
+		// Fonction ET entre WHERE et LIKE
+		if (!empty($where) && !empty($like)) {
+			$where .= "AND";
+		}
+
+		$limit = (!$limit) ? "" : " LIMIT " . $limit;
+		$sql = "DELETE FROM " . $table . $where . $like . $limit;
+		$this->sql = $sql;
 	}
 	
 	/**
@@ -485,13 +503,23 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Insere de valeurs dans une table
+	 * Insere une ou des valeurs dans une table
 	 * 
-	 * @param $table Nom de la table
-	 * @param $keys
-	 * @param $values
+	 * @param $table String Nom de la table
+	 * @param $keys array
+	 * @param $values array
 	 */
 	public function insert($table, $keys, $values) {
+		// Nom complet de la table
+		$table = $this->getTableName($table);
+		
+		if (!is_array($keys)) $keys = array($keys);
+		if (!is_array($values)) $values = array($values);
+		
+		$sql = "INSERT INTO " . $table . " ("
+		. implode(", ", $this->converKey($keys)) . ") VALUES ('"
+		. implode("', '", $this->converValue($values)) . "')";
+		$this->sql = $sql;
 	}
 	
 	/**
@@ -518,21 +546,59 @@ abstract class Base_Model {
 	 * @param $values array
 	 * @param $where array
 	 * @param $orderby array
-	 * @param $limit
+	 * @param $limit String
 	 */
 	public function select($table, $values, $where = array(), $orderby = array(), $limit = false) {
+		// Nom complet de la table
+		$table = $this->getTableName($table);
+		
+		// Mise en place des valeurs selectionnées
+		if (!is_array($values)) $values = array($values);
+		$values = implode(", ", $values);
+		
+		// Mise en place du where
+		if (!is_array($where)) $where = array($where);
+		$where = (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
+		// Mise en place de la limite
+		$limit = (!$limit) ? "" : " LIMIT " . $limit;
+		// Mise en place de l'ordre
+		$orderby = (count($orderby) >= 1)? " ORDER BY " . implode(", ", $orderby): "";
+		
+		// Mise en forme de la requête finale
+		$sql = "SELECT " . $values . " FROM " . $table . $where . $orderby . $limit;
+		$this->sql = $sql;
 	}
 	
 	/**
 	 * Mise à jour d'une table
 	 * 
 	 * @param $table Nom de la table
-	 * @param $values array() $value[$key]
+	 * @param $values array) Sous la forme array("keyName" => "newValue")
 	 * @param $where array
 	 * @param $orderby array
-	 * @param $limit
+	 * @param $limit String
 	 */
 	public function update($table, $values, $where, $orderby = array(), $limit = false) {
+		// Nom complet de la table
+		$table = $this->getTableName($table);
+		
+		// Affectation des clès a leurs valeurs
+		foreach($values as $key => $value) {
+			$valuesString[] = $this->converKey($key) ." = " . $this->converValue($value, $key);
+		}
+		
+		// Mise en place du where
+		if (!is_array($where)) $where = array($where);
+		// Mise en place de la limite
+		$limit = (!$limit) ? "" : " LIMIT " . $limit;
+		// Mise en place de l'ordre
+		$orderby = (count($orderby) >= 1)? " ORDER BY " . implode(", ", $orderby): "";
+		
+		// Mise en forme de la requête finale
+		$sql = "UPDATE " . $table . " SET " . implode(", ", $valuesString);
+		$sql .= (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
+		$sql .= $orderby . $limit;
+		$this->sql = $sql;
 	}
 	
 	/**
@@ -715,7 +781,7 @@ abstract class Base_Model {
 	protected function &converEscapeString($str) {
 		if (function_exists("mysql_real_escape_string") && is_resource($this->connId)) {
 			$str = mysql_real_escape_string($str, $this->connId);
-		} elseif (function_exists("mysql_escape_string")) {// WARNING: DEPRECATED
+		} else if (function_exists("mysql_escape_string")) {// WARNING: DEPRECATED
 			$str = mysql_escape_string($str);
 		} else {
 			$str = addslashes($str);
@@ -738,7 +804,18 @@ abstract class Base_Model {
 	 * @return String
 	 */
 	public function getCollation() {
-		return "";
+		$this->query("SHOW FULL COLUMNS FROM " . Core_Table::$CONFIG_TABLE);
+		$info = $this->fetchArray();
+		return !empty($info['Collation']) ? $info['Collation'] : "?";
+	}
+	
+	/**
+	 * Retourne le nom de la table avec le préfixage
+	 * 
+	 * @param String
+	 */
+	public function getTableName($table) {
+		return $this->database['prefix'] . "_" . $table;
 	}
 }
 ?>

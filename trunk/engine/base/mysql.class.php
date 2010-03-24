@@ -5,7 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Gestionnaire de la communication SQL
+ * Gestionnaire de base de donnée MySql
  * 
  * @author Sébastien Villemain
  * 
@@ -20,19 +20,11 @@ class Base_Mysql extends Base_Model {
 	 */
 	private $lastSqlCommand = "";
 	
-	public function __construct($db) {
-		parent::__construct($db);
-	}
-	
-	public function __destruct() {
-		parent::__destruct();
-	}
-	
 	/**
 	 * Etablie une connexion à la base de donnée
 	 */
 	public function dbConnect() {
-		$this->connId = @mysql_connect($this->dbHost, $this->dbUser, $this->dbPass);
+		$this->connId = @mysql_connect($this->database['host'], $this->database['user'], $this->database['pass']);
 	}
 	
 	/**
@@ -42,7 +34,7 @@ class Base_Mysql extends Base_Model {
 	 */
 	public function dbSelect() {
 		if ($this->connId) {
-			return @mysql_select_db($this->dbName, $this->connId);
+			return @mysql_select_db($this->database['name'], $this->connId);
 		}
 		return false;
 	}
@@ -141,114 +133,6 @@ class Base_Mysql extends Base_Model {
 	}
 	
 	/**
-	 * Mise à jour d'une table
-	 * 
-	 * @param $table Nom de la table
-	 * @param $values array) Sous la forme array("keyName" => "newValue")
-	 * @param $where array
-	 * @param $orderby array
-	 * @param $limit String
-	 */
-	public function update($table, $values, $where, $orderby = array(), $limit = false) {
-		$this->lastSqlCommand = "UPDATE";
-		
-		// Affectation des clès a leurs valeurs
-		foreach($values as $key => $value) {
-			$valuesString[] = $this->converKey($key) ." = " . $this->converValue($value, $key);
-		}
-		
-		// Mise en place du where
-		if (!is_array($where)) $where = array($where);
-		// Mise en place de la limite
-		$limit = (!$limit) ? "" : " LIMIT " . $limit;
-		// Mise en place de l'ordre
-		$orderby = (count($orderby) >= 1)? " ORDER BY " . implode(", ", $orderby): "";
-		
-		// Mise en forme de la requête finale
-		$sql = "UPDATE " . $table . " SET " . implode(", ", $valuesString);
-		$sql .= (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
-		$sql .= $orderby . $limit;
-		$this->sql = $sql;
-	}
-	
-	/**
-	 * Insere une ou des valeurs dans une table
-	 * 
-	 * @param $table String Nom de la table
-	 * @param $keys array
-	 * @param $values array
-	 */
-	public function insert($table, $keys, $values) {
-		$this->lastSqlCommand = "INSERT";
-		
-		if (!is_array($keys)) $keys = array($keys);
-		if (!is_array($values)) $values = array($values);
-		
-		$sql = "INSERT INTO " . $table . " ("
-		. implode(", ", $this->converKey($keys)) . ") VALUES ('"
-		. implode("', '", $this->converValue($values)) . "')";
-		$this->sql = $sql;
-	}
-	
-	/**
-	 * Supprime des informations
-	 * 
-	 * @param $table String Nom de la table
-	 * @param $where array
-	 * @param $like array
-	 * @param $limit String
-	 */
-	public function delete($table, $where = array(), $like = array(), $limit = false) {
-		$this->lastSqlCommand = "DELETE";
-		
-		// Mise en place du WHERE
-		if (!is_array($where)) $where = array($where);
-		$where = (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
-		
-		// Mise en place du LIKE
-		$like = (!is_array($like)) ? array($like) : $like;
-		$like = (count($like) >= 1) ? " LIKE " . implode(" ", $like) : "";
-		
-		// Fonction ET entre WHERE et LIKE
-		if (!empty($where) && !empty($like)) {
-			$where .= "AND";
-		}
-
-		$limit = (!$limit) ? "" : " LIMIT " . $limit;
-		$sql = "DELETE FROM " . $table . $where . $like . $limit;
-		$this->sql = $sql;
-	}
-	
-	/**
-	 * Selection d'information
-	 * 
-	 * @param $table String
-	 * @param $values array
-	 * @param $where array
-	 * @param $orderby array
-	 * @param $limit String
-	 */
-	public function select($table, $values, $where = array(), $orderby = array(), $limit = false) {
-		$this->lastSqlCommand = "SELECT";
-		
-		// Mise en place des valeurs selectionnées
-		if (!is_array($values)) $values = array($values);
-		$values = implode(", ", $values);
-		
-		// Mise en place du where
-		if (!is_array($where)) $where = array($where);
-		$where = (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
-		// Mise en place de la limite
-		$limit = (!$limit) ? "" : " LIMIT " . $limit;
-		// Mise en place de l'ordre
-		$orderby = (count($orderby) >= 1)? " ORDER BY " . implode(", ", $orderby): "";
-		
-		// Mise en forme de la requête finale
-		$sql = "SELECT " . $values . " FROM " . $table . $where . $orderby . $limit;
-		$this->sql = $sql;
-	}
-	
-	/**
 	 * Vérifie que le module mysql est chargé
 	 * 
 	 * @return boolean
@@ -279,15 +163,24 @@ class Base_Mysql extends Base_Model {
 		return $version;
 	}
 	
-	/**
-	 * Retourne le type d'encodage utilisé
-	 * 
-	 * @return String
-	 */
-	public function getCollation() {
-		$this->query("SHOW FULL COLUMNS FROM " . Core_Table::$CONFIG_TABLE);
-		$info = $this->fetchArray();
-		return !empty($info['Collation']) ? $info['Collation'] : "?";
+	public function update($table, $values, $where, $orderby = array(), $limit = false) {
+		$this->lastSqlCommand = "UPDATE";
+		parent::update($table, $values, $where, $orderby, $limit);
+	}
+	
+	public function select($table, $values, $where = array(), $orderby = array(), $limit = false) {
+		$this->lastSqlCommand = "SELECT";
+		parent::select($table, $values, $where, $orderby, $limit);
+	}
+	
+	public function insert($table, $keys, $values) {
+		$this->lastSqlCommand = "INSERT";
+		parent::insert($table, $keys, $values);
+	}
+	
+	public function delete($table, $where = array(), $like = array(), $limit = false) {
+		$this->lastSqlCommand = "DELETE";
+		parent::delete($table, $where, $like, $limit);
 	}
 }
 ?>
