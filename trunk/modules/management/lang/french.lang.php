@@ -63,6 +63,7 @@ $lang = array(
 "SETTING_SYSTEM_FTP_SETTING_USER" => "Nom d'utilisateur",
 "SETTING_SYSTEM_FTP_SETTING_PASSWORD" => "Mot de passe",
 "SETTING_SYSTEM_FTP_SETTING_ROOT" => "Chemin par défaut vers le site (root)",
+"SETTING_SYSTEM_FTP_SETTING_TYPE" => "Type de FTP actif",
 // Base de donnée
 "SETTING_SYSTEM_DATABASE_SETTING_TITLE" => "Configuration de la base de donnée",
 "SETTING_SYSTEM_DATABASE_SETTING_DESCRIPTION" => "Paramétrez l'accès à la base de donnée",

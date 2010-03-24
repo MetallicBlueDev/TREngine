@@ -17,8 +17,8 @@ $ftp['pass'] = "";
 // Chemin Root du FTP
 $ftp['root'] = "";
 //
-// Type de FTP (php / ftp / sftp)
-$ftp['type'] = "php";
+// Type de FTP (ftp / sftp)
+$ftp['type'] = "";
 //
 // -------------------------------------------------------------------------//
 

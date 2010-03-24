@@ -13,15 +13,6 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Libs_FileManager extends Cache_Model {
 	
 	/**
-	 * CHMOD à utiliser
-	 * Sous forme de 4 octets
-	 * Exemple : 0777
-	 * 
-	 * @var int
-	 */
-	private $chmod = 0777;
-	
-	/**
 	 * Ecriture du ficher cache
 	 * 
 	 * @param $pathFile String chemin vers le fichier cache
@@ -294,6 +285,15 @@ class Libs_FileManager extends Cache_Model {
 		sort($dirList);
 		reset($dirList);
 		return $dirList;
+	}
+	
+	/**
+	 * Etat du gestionnaire
+	 * 
+	 * @return boolean
+	 */
+	public function isReady() {
+		return true;
 	}
 }
 

@@ -406,6 +406,15 @@ class Core_CacheBuffer {
 	}
 	
 	/**
+	 * Récupération des données du FTP
+	 * 
+	 * @param array
+	 */
+	public static function getFtp() {
+		return self::$ftp;
+	}
+	
+	/**
 	 * Retourne le listing avec uniquement les fichiers et dossiers présent
 	 * Un filtre automatique est appliqué sur les elements tel que "..", "." ou encore "index.html"...
 	 * 
@@ -445,16 +454,19 @@ class Core_CacheBuffer {
 				// Démarrage du gestionnaire SFTP
 				Core_Loader::classLoader("Libs_SftpManager");
 				self::$protocol = new Libs_SftpManager();
-			} else if (self::$modeActived['php']) {
+			} else {
 				// Démarrage du gestionnaire de fichier
 				Core_Loader::classLoader("Libs_FileManager");
 				self::$protocol = new Libs_FileManager();
-			} else {
-				Core_Exception::setException("No protocol actived for cache.");
-				return null;
+			}
+			
+			// Si il y a un souci, on démarre par défaut le gestionnaire de fichier
+			if (!self::$protocol->isReady()) {
+				// Démarrage du gestionnaire de fichier
+				Core_Loader::classLoader("Libs_FileManager");
+				self::$protocol = new Libs_FileManager();
 			}
 		}
-		self::$protocol->setFtp(self::$ftp);
 		return self::$protocol;
 	}
 	
@@ -514,6 +526,28 @@ class Core_CacheBuffer {
 abstract class Cache_Model {
 	
 	/**
+	 * Droit d'écriture CHMOD
+	 * Sous forme de 4 octets
+	 * Exemple : 0777
+	 * 
+	 * @var int
+	 */
+	protected $chmod = 0777;
+	
+	/**
+	 * Configuration du FTP
+	 * 
+	 * @var array
+	 */
+	protected $ftp = array(
+		"host" => "",
+		"port" => "",
+		"user" => "",
+		"pass" => "",
+		"root" => ""
+	);
+	
+	/**
 	 * Ecriture du fichier cache
 	 * 
 	 * @param $path String
@@ -550,10 +584,12 @@ abstract class Cache_Model {
 	}
 	
 	/**
-	 * Ajout des informations du FTP
+	 * Retourne l'état du gestionnaire
 	 * 
-	 * @param $ftp array
+	 * @return boolean true ready
 	 */
-	public function setFtp($ftp = array()) {}
+	public function isReady() {
+		return false;
+	}
 }
 ?>

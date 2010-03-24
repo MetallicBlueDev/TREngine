@@ -34,24 +34,11 @@ class Libs_FtpManager extends Cache_Model {
 	private $CRLF = "";
 	
 	/**
-	 * Configuration du FTP
-	 * 
-	 * @var array
-	 */
-	private $ftp = array(
-		"host" => "",
-		"port" => "",
-		"user" => "",
-		"pass" => "",
-		"root" => ""
-	);
-	
-	/**
 	 * Le timeout de la connexion
 	 * 
 	 * @var int
 	 */
-	private $timeOut = 15;
+	private $timeOut = 10;
 	
 	/**
 	 * Derniere réponse du serveur
@@ -95,15 +82,6 @@ class Libs_FtpManager extends Cache_Model {
 	 */
 	private $passiveData = "";
 	
-	/**
-	 * Droit d'écriture CHMOD
-	 * Sous forme de 4 octets
-	 * Exemple : 0777
-	 * 
-	 * @var int
-	 */
-	private $chmod = 0777;
-	
 	// TODO il faut verifier entierement les paths de la classe
 	
 	/**
@@ -111,6 +89,23 @@ class Libs_FtpManager extends Cache_Model {
 	 * Paramatrage de la connexion
 	 */
 	public function __construct() {
+		// Ajout des informations du FTP
+		$ftp = Core_CacheBuffer::getFtp();
+		
+		// Pré-configuration
+		if (preg_match("/(ftp:\/\/)(.+)/", $ftp['host'], $matches)) $ftp['host'] = $matches[2];
+		if (preg_match("/(.+)(\/)/", $ftp['host'], $matches)) $ftp['host'] = $matches[1];
+		
+		// Réglage de configuration
+		$ftp['host'] = (empty($ftp['host'])) ? "127.0.0.1" : $ftp['host'];
+		$ftp['port'] = (is_numeric($ftp_port)) ? $ftp['port'] : 21;
+		$ftp['user'] = (empty($ftp['user'])) ? "root" : $ftp['user'];
+		$ftp['pass'] = (empty($ftp['pass'])) ? "" : $ftp['pass'];
+		// Le dossier root sera redéfinie après être logué
+		$ftp['root'] = (empty($ftp['root'])) ? "/" : $ftp['root'];
+		
+		$this->ftp = $ftp;
+		
 		// Recherche de l'extension FTP
 		if (extension_loaded("ftp") && function_exists('ftp_connect')) {
 			$this->nativeMode = true;
@@ -132,27 +127,6 @@ class Libs_FtpManager extends Cache_Model {
 	}
 	
 	/**
-	 * Ajout des informations du FTP
-	 * 
-	 * @param $ftp array
-	 */
-	public function setFtp($ftp = array()) {
-		// Pré-configuration
-		if (preg_match("/(ftp:\/\/)(.+)/", $ftp['host'], $matches)) $ftp['host'] = $matches[2];
-		if (preg_match("/(.+)(\/)/", $ftp['host'], $matches)) $ftp['host'] = $matches[1];
-		
-		// Réglage de configuration
-		$ftp['host'] = (empty($ftp['host'])) ? "127.0.0.1" : $ftp['host'];
-		$ftp['port'] = (is_numeric($ftp_port)) ? $ftp['port'] : 21;
-		$ftp['user'] = (empty($ftp['user'])) ? "root" : $ftp['user'];
-		$ftp['pass'] = (empty($ftp['pass'])) ? "" : $ftp['pass'];
-		// Le dossier root sera redéfinie après être logué
-		$ftp['root'] = (empty($ftp['root'])) ? "/" : $ftp['root'];
-		
-		$this->ftp = $ftp;
-	}
-	
-	/**
 	 * Connexion au serveur FTP
 	 *
 	 * @return boolean true si aucune erreur
@@ -161,12 +135,13 @@ class Libs_FtpManager extends Cache_Model {
 		// Si aucune connexion engagé
 		if (!$this->isConnected()) {
 			if ($this->nativeMode) {
-				$this->connId = @ftp_connect($this->$ftp['host'], $this->$ftp['port'], $this->timeOut);
-				// On définie le timeout, si possible
-				$this->setTimeOut();
+				$this->connId = @ftp_connect($this->ftp['host'], $this->ftp['port'], $this->timeOut);
 			} else {
-				$this->connId = @fsockopen($this->$ftp['host'], $this->$ftp['port'], $socket_error_number, $socket_error_message, $this->timeOut);
-				// On définie le timeout, si possible
+				$this->connId = @fsockopen($this->ftp['host'], $this->ftp['port'], $socket_error_number, $socket_error_message, $this->timeOut);
+			}
+			
+			// On définie le timeout, si possible
+			if ($this->isConnected()) {
 				$this->setTimeOut();
 			}
 		}
@@ -175,10 +150,9 @@ class Libs_FtpManager extends Cache_Model {
 		if (($this->nativeMode && $this->responseCode(220))
 			|| $this->isConnected()) {
 			return true;
-		} else {
-			Core_Exception::setException("could not connect to host " . $this->$ftp['host'] . " on port " . $this->$ftp['port']);
-			return false;
 		}
+		Core_Exception::setException("could not connect to host " . $this->ftp['host'] . " on port " . $this->ftp['port']);
+		return false;
 	}
 	
 	/**
@@ -527,16 +501,16 @@ class Libs_FtpManager extends Cache_Model {
 	private function logon() {
 		if ($this->isConnected()) {
 			if ($this->nativeMode) {
-				return @ftp_login($this->connId, $this->$ftp['user'], $this->$ftp['pass']);
+				return @ftp_login($this->connId, $this->ftp['user'], $this->ftp['pass']);
 			} else {
 				// Envoie de l'user
-				if ($this->setCommand("USER " . $this->$ftp['user'], array(331, 503))) {
+				if ($this->setCommand("USER " . $this->ftp['user'], array(331, 503))) {
 					if ($responseCode[0] == 503) {
 						// Désolé, déjà identifié 
 						return true;
 					} else {
 						// Envoie du mot de passe
-						return $this->setCommand("PASS " . $this->$ftp['pass'], 230);
+						return $this->setCommand("PASS " . $this->ftp['pass'], 230);
 					}
 				}
 			}
@@ -549,7 +523,7 @@ class Libs_FtpManager extends Cache_Model {
 	 */
 	private function rootConfig() {
 		// Si aucun root n'est précisé
-		if ($this->$ftp['root'] == "/") {
+		if ($this->ftp['root'] == "/") {
 			// On commence la recherche
 			$pathFound = "";
 			$listNames = $this->listNames();
@@ -583,8 +557,8 @@ class Libs_FtpManager extends Cache_Model {
 		
 		// Vérification du root path
 		if (@is_file("/" . $pathRebuild . "/" . $pathFound . "/engine/core/secure.class.php")) {
-			$this->$ftp['root'] = $pathFound;
-		} else if (empty($this->$ftp['root'])) {
+			$this->ftp['root'] = $pathFound;
+		} else if (empty($this->ftp['root'])) {
 			Core_Exception::setException("Unable to configure root path.");
 		}
 	}
@@ -741,6 +715,15 @@ class Libs_FtpManager extends Cache_Model {
 	
 	public function __destruct() {
 		$this->deconnect();
+	}
+	
+	/**
+	 * Etat de la connexion au ftp
+	 * 
+	 * @return boolean
+	 */
+	public function isReady() {
+		return $this->isConnected();
 	}
 }
 ?>

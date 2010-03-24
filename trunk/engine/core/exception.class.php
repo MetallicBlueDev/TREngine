@@ -231,7 +231,8 @@ class Core_Exception {
 			
 			if (self::exceptionDetected()) {
 				echo "<span style=\"color: red;\">"
-				. str_replace("\n", "<br />", self::linearize(self::$exception));
+				. str_replace("\n", "<br />", self::linearize(self::$exception))
+				. "</span>";
 			} else {
 				echo "<span style=\"color: green;\">No exception registred.</span>";
 			}

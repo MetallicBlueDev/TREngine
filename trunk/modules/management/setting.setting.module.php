@@ -245,14 +245,25 @@ class Module_Management_Setting extends Module_Model {
 		$form->addFieldset(SETTING_SYSTEM_SESSION_SETTING_TITLE, SETTING_SYSTEM_SESSION_SETTING_DESCRIPTION);
 		$form->addInputText("cookiePrefix", SETTING_SYSTEM_SESSION_SETTING_COOKIE_PREFIX, Core_Main::$coreConfig['cookiePrefix']);
 		$form->addSpace();
-		// TODO aller chercher les vrai valeur du ftp et de la base de donnée
+		
+		// Configuration FTP
+		$ftp = Core_CacheBuffer::getFtp();
 		$form->addFieldset(SETTING_SYSTEM_FTP_SETTING_TITLE, SETTING_SYSTEM_FTP_SETTING_DESCRIPTION);
-		$form->addInputText("ftpHost", SETTING_SYSTEM_FTP_SETTING_HOST, Core_Main::$coreConfig['ftpHost']);
-		$form->addInputText("ftpPort", SETTING_SYSTEM_FTP_SETTING_PORT, Core_Main::$coreConfig['ftpPort']);
-		$form->addInputText("ftpUser", SETTING_SYSTEM_FTP_SETTING_USER, Core_Main::$coreConfig['ftpPort']);
-		$form->addInputPassword("ftpPass", SETTING_SYSTEM_FTP_SETTING_PASSWORD, Core_Main::$coreConfig['ftpPort']);
-		$form->addInputText("ftpRoot", SETTING_SYSTEM_FTP_SETTING_ROOT, Core_Main::$coreConfig['ftpPort']);
+		
+		$form->addSelectOpenTag("ftpType", SETTING_SYSTEM_FTP_SETTING_TYPE);
+		$modeFtp = Core_CacheBuffer::getModeActived();
+		foreach ($modeFtp as $mode => $actived) {
+			$form->addSelectItemTag($mode, "", $actived);
+		}
+		$form->addSelectCloseTag();
+		
+		$form->addInputText("ftpHost", SETTING_SYSTEM_FTP_SETTING_HOST, $ftp['host']);
+		$form->addInputText("ftpPort", SETTING_SYSTEM_FTP_SETTING_PORT, $ftp['port']);
+		$form->addInputText("ftpUser", SETTING_SYSTEM_FTP_SETTING_USER, $ftp['user']);
+		$form->addInputPassword("ftpPass", SETTING_SYSTEM_FTP_SETTING_PASSWORD, $ftp['pass']);
+		$form->addInputText("ftpRoot", SETTING_SYSTEM_FTP_SETTING_ROOT, $ftp['root']);
 		$form->addSpace();
+		
 		
 		$form->addFieldset(SETTING_SYSTEM_DATABASE_SETTING_TITLE, SETTING_SYSTEM_DATABASE_SETTING_DESCRIPTION);
 		$form->addInputText("dbHost", SETTING_SYSTEM_DATABASE_SETTING_HOST, Core_Main::$coreConfig['ftpHost']);
