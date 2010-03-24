@@ -119,12 +119,13 @@ class Module_Management_Setting extends Module_Model {
 		$form->addInputRadio("urlRewriting1", "urlRewriting", SETTING_GENERAL_METADATA_URLREWRITING_ON, $rewriting, "1");
 		$form->addInputRadio("urlRewriting2", "urlRewriting", SETTING_GENERAL_METADATA_URLREWRITING_OFF, !$rewriting, "0");
 		$form->addSpace();
+		
 		$form->addInputHidden("mod", "management");
 		$form->addInputHidden("layout", "module");
 		$form->addInputHidden("manage", "setting");
 		$form->addInputHidden("localView", "sendGeneral");
 		$form->addInputSubmit("submit", VALID);
-		Core_Html::getInstance()->addJavascript("validSetting('#form-generalblock', '#form-generalblock-defaultSiteName-input', '#form-generalblock-defaultAdministratorMail-input');");
+		Core_Html::getInstance()->addJavascript("validGeneralSetting('#form-generalblock', '#form-generalblock-defaultSiteName-input', '#form-generalblock-defaultAdministratorMail-input');");
 		return $form->render();
 	}
 	
@@ -260,32 +261,150 @@ class Module_Management_Setting extends Module_Model {
 		$form->addInputText("ftpHost", SETTING_SYSTEM_FTP_SETTING_HOST, $ftp['host']);
 		$form->addInputText("ftpPort", SETTING_SYSTEM_FTP_SETTING_PORT, $ftp['port']);
 		$form->addInputText("ftpUser", SETTING_SYSTEM_FTP_SETTING_USER, $ftp['user']);
-		$form->addInputPassword("ftpPass", SETTING_SYSTEM_FTP_SETTING_PASSWORD, $ftp['pass']);
+		$form->addInputPassword("ftpPass", SETTING_SYSTEM_FTP_SETTING_PASSWORD);
 		$form->addInputText("ftpRoot", SETTING_SYSTEM_FTP_SETTING_ROOT, $ftp['root']);
 		$form->addSpace();
 		
-		
+		$database = Core_Sql::getDatabase();
 		$form->addFieldset(SETTING_SYSTEM_DATABASE_SETTING_TITLE, SETTING_SYSTEM_DATABASE_SETTING_DESCRIPTION);
-		$form->addInputText("dbHost", SETTING_SYSTEM_DATABASE_SETTING_HOST, Core_Main::$coreConfig['ftpHost']);
-		$form->addInputText("dbName", SETTING_SYSTEM_DATABASE_SETTING_NAME, Core_Main::$coreConfig['ftpHost']);
-		$form->addInputText("dbPrefix", SETTING_SYSTEM_DATABASE_SETTING_PREFIX, Core_Main::$coreConfig['ftpHost']);
-		$form->addInputText("dbUser", SETTING_SYSTEM_DATABASE_SETTING_USER, Core_Main::$coreConfig['ftpHost']);
-		$form->addInputText("dbPass", SETTING_SYSTEM_DATABASE_SETTING_PASSWORD, Core_Main::$coreConfig['ftpHost']);
-		$form->addInputText("dbType", SETTING_SYSTEM_DATABASE_SETTING_TYPE, Core_Main::$coreConfig['ftpHost']);
+		$form->addInputText("dbHost", SETTING_SYSTEM_DATABASE_SETTING_HOST, $database['host']);
+		$form->addInputText("dbName", SETTING_SYSTEM_DATABASE_SETTING_NAME, $database['name']);
+		$form->addInputText("dbPrefix", SETTING_SYSTEM_DATABASE_SETTING_PREFIX, $database['prefix']);
+		$form->addInputText("dbUser", SETTING_SYSTEM_DATABASE_SETTING_USER, $database['user']);
+		$form->addInputPassword("dbPass", SETTING_SYSTEM_DATABASE_SETTING_PASSWORD);
 		
 		$form->addSelectOpenTag("dbType", SETTING_SYSTEM_DATABASE_SETTING_TYPE);
 		$bases = Core_Sql::listBases();
 		foreach($bases as $base) {
-			$form->addSelectItemTag($base);
+			if ($base == $database['type']) $form->addSelectItemTag($base, "", true);
+			else $form->addSelectItemTag($base);
 		}
 		$form->addSelectCloseTag();
 		
 		$form->addSpace();
+		$form->addInputHidden("mod", "management");
+		$form->addInputHidden("layout", "module");
+		$form->addInputHidden("manage", "setting");
+		$form->addInputHidden("localView", "sendSystem");
+		$form->addInputSubmit("submit", VALID);
+		//Core_Html::getInstance()->addJavascript("validSystemSetting('#form-systemblock', '#form-generalblock-defaultSiteName-input', '#form-generalblock-defaultAdministratorMail-input');");
 		return $form->render();
 	}
 	
-	// TODO coder la reception des données sendSystem
 	private function sendSystem() {
+		$updateConfigFile = false;
+		
+		$cacheTimeLimit = Core_Request::getInt("cacheTimeLimit", 7, "POST");
+		if ($cacheTimeLimit != Core_Main::$coreConfig['cacheTimeLimit']) {
+			if ($cacheTimeLimit >= 1) $updateConfigFile = true;
+			else $cacheTimeLimit = Core_Main::$coreConfig['cacheTimeLimit'];
+		}
+		
+		$cryptKey = Core_Request::getString("cryptKey", Core_Main::$coreConfig['cryptKey'], "POST");
+		if ($cryptKey != Core_Main::$coreConfig['cryptKey']) {
+			if (!empty($cryptKey)) $updateConfigFile = true;
+			else $cryptKey = Core_Main::$coreConfig['cryptKey'];
+		}
+		
+		$cookiePrefix = Core_Request::getString("cookiePrefix", Core_Main::$coreConfig['cookiePrefix'], "POST");
+		if ($cookiePrefix != Core_Main::$coreConfig['cookiePrefix']) {
+			if (!empty($cookiePrefix)) $updateConfigFile = true;
+			else $cookiePrefix = Core_Main::$coreConfig['cookiePrefix'];
+		}
+		
+		if ($updateConfigFile) {
+			Core_Loader::classLoader("Exec_FileBuilder");
+			Exec_FileBuilder::buildConfigFile(Core_Main::$coreConfig['defaultAdministratorMail'], TR_ENGINE_STATUT, $cacheTimeLimit, $cookiePrefix, $cryptKey);
+		}
+		
+		$ftp = Core_CacheBuffer::getFtp();
+		$updateFtpFile = false;
+		
+		$ftpType = Core_Request::getWord("ftpType", $ftp['type'], "POST");
+		if ($ftpType != $ftp['type']) {
+			if (!empty($ftpType)) $updateFtpFile = true;
+			else $ftpType = $ftp['type'];
+		}
+		
+		$ftpHost = Core_Request::getString("ftpHost", $ftp['host'], "POST");
+		if ($ftpHost != $ftp['host']) {
+			if (!empty($ftpHost)) $updateFtpFile = true;
+			else $ftpHost = $ftp['host'];
+		}
+		
+		$ftpPort = Core_Request::getInt("ftpPort", 21, "POST");
+		if ($ftpPort != $ftp['port']) {
+			if (is_int($ftpPort)) $updateFtpFile = true;
+			else $ftpPort = $ftp['port'];
+		}
+		
+		$ftpUser = Core_Request::getString("ftpUser", $ftp['user'], "POST");
+		if ($ftpUser != $ftp['user']) {
+			if (!empty($ftpUser)) $updateFtpFile = true;
+			else $ftpUser = $ftp['user'];
+		}
+		
+		$ftpPass = Core_Request::getString("ftpPass", $ftp['pass'], "POST");
+		if ($ftpPass != $ftp['pass']) {
+			if (!empty($ftpPass)) $updateFtpFile = true;
+			else $ftpPass = $ftp['pass'];
+		}
+		
+		$ftpRoot = Core_Request::getString("ftpRoot", $ftp['root'], "POST");
+		if ($ftpRoot != $ftp['root']) {
+			if (!empty($ftpRoot)) $updateFtpFile = true;
+			else $ftpRoot = $ftp['root'];
+		}
+		
+		if ($updateFtpFile) {
+			Core_Loader::classLoader("Exec_FileBuilder");
+			Exec_FileBuilder::buildFtpFile($ftpHost, $ftpPort, $ftpUser, $ftpPass, $ftpRoot, $ftpType);
+		}
+		
+		$database = Core_Sql::getDatabase();
+		$updateDatabaseFile = false;
+		
+		$dbHost = Core_Request::getString("dbHost", $database['host'], "POST");
+		if ($dbHost != $database['host']) {
+			if (!empty($dbHost)) $updateDatabaseFile = true;
+			else $dbHost = $database['host'];
+		}
+		
+		$dbName = Core_Request::getString("dbName", $database['name'], "POST");
+		if ($dbName != $database['name']) {
+			if (!empty($dbName)) $updateDatabaseFile = true;
+			else $dbName = $database['name'];
+		}
+		
+		$dbPrefix = Core_Request::getString("dbPrefix", $database['prefix'], "POST");
+		if ($dbPrefix != $database['prefix']) {
+			if (!empty($dbPrefix)) $updateDatabaseFile = true;
+			else $dbPrefix = $database['prefix'];
+		}
+		
+		$dbUser = Core_Request::getString("dbUser", $database['user'], "POST");
+		if ($dbUser != $database['user']) {
+			if (!empty($dbUser)) $updateDatabaseFile = true;
+			else $dbUser = $database['user'];
+		}
+		
+		$dbPass = Core_Request::getString("dbPass", $database['pass'], "POST");
+		if ($dbPass != $database['pass']) {
+			if (!empty($dbPass)) $updateDatabaseFile = true;
+			else $dbPass = $database['pass'];
+		}
+		
+		$dbType = Core_Request::getWord("dbType", $database['type'], "POST");
+		if ($dbType != $database['type']) {
+			if (!empty($dbType)) $updateDatabaseFile = true;
+			else $dbType = $database['type'];
+		}
+		
+		if ($updateDatabaseFile) {
+			Core_Loader::classLoader("Exec_FileBuilder");
+			Exec_FileBuilder::buildDatabaseFile($dbHost, $dbUser, $dbPass, $dbName, $dbType, $dbPrefix);
+		}
+		
 		if (Core_Main::isFullScreen()) {
 			Core_Html::getInstance()->redirect("index.php?mod=management&manage=setting&selectedTab=settingtabidTab1", 1);
 		}

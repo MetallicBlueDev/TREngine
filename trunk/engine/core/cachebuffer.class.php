@@ -47,6 +47,7 @@ class Core_CacheBuffer {
 	 * @var array
 	 */
 	private static $sectionDir = array(
+		"configs" => "configs/",
 		"tmp" => "tmp",
 		"log" => "tmp/log",
 		"sessions" => "tmp/sessions",
