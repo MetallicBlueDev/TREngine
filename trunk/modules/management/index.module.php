@@ -55,7 +55,7 @@ class Module_Management_Index extends Module_Model {
 					$ModuleClass = new $moduleClassName();
 					
 					$content = "";
-					if (Core_Loader::isCallable($moduleClassName, "setting")) {
+					if (Core_Loader::isCallable($moduleClassPage, "setting")) {
 						$content = $ModuleClass->setting();
 					}
 					$libsMakeStyle->assign("content", $content);

@@ -126,6 +126,12 @@ class Core_Loader {
 				return false;
 			}
 			
+			// Pour les pages plus complexes comme le module management
+			$pos = 0;
+			if (($pos = strpos($className, ".")) !== false) { // exemple : Module_Management_Security.setting
+				$className = substr($className, 0, $pos);
+			}
+			
 			// Définie le comportement du callable
 			if ($static) return @is_callable("{$className}::{$methodName}");
 			else return @is_callable(array($className, $methodName));
