@@ -16,6 +16,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * 
  * @var String
  */
-$TR_ENGINE_VERSION = "0.1.0.0";
+$TR_ENGINE_VERSION = "0.0.0.0";
 
 ?>

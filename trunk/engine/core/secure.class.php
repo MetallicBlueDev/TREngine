@@ -121,7 +121,6 @@ class Core_Secure {
 	private function addSlashesForQuotes($key) {
 		if (is_array($key)) {
 			while (list($k, $v) = each($key)) {
-				// Ajout 
 				if (is_array($key[$k])) $this->addSlashesForQuotes($key[$k]);
 				else $key[$k] = addslashes($v);
 			}
@@ -136,9 +135,9 @@ class Core_Secure {
 	 * Cette fonction est activé si une erreur est détecté
 	 * 
 	 * @param $ie String or object L'exception interne levée
-	 * @param $argv array argument suplementaire d'information sur l'erreur
+	 * @param $argv String or array argument suplementaire d'information sur l'erreur
 	 */
-	public function debug($ie = "", $argv = array()) {
+	public function debug($ie = "", $argv = "") {
 		// Charge le loader si il faut
 		if (!class_exists("Core_Loader")) {
 			require(TR_ENGINE_DIR . "/engine/core/loader.class.php");
@@ -166,7 +165,8 @@ class Core_Secure {
 	/**
 	 * Analyse l'erreur et pepare l'affichage de l'erreur
 	 * 
-	 * @param $ie L'exception interne levée
+	 * @param $ie String or object L'exception interne levée
+	 * @param $argv array argument suplementaire d'information sur l'erreur
 	 * @return String $errorMessage
 	 */
 	private function getDebugMessage($ie, $argv) {
@@ -178,19 +178,17 @@ class Core_Secure {
 			$nbTrace = count($trace);
 			
 			for ($i = $nbTrace; $i > 0; $i--) {
-				// Erreur courante
 				$errorLine = "";
 				if (is_array($trace[$i])) {
 					foreach($trace[$i] as $key => $value) {
 						if ($key == "file") {
-							$value = preg_replace("/([a-zA-Z0-9.]+).php/", "<b>\\1</b>.php", $value);
+							$value = preg_replace("/([a-zA-Z0-9._]+).php/", "<b>\\1</b>.php", $value);
 							$errorLine .= " <b>" . $key . "</b> " . $value;
 						} else if ($key == "line" || $key == "class") {
 							$errorLine .= " in <b>" . $key . "</b> " . $value;
 						}					
 					}
 				}
-				// Remplissage dans avec les autres erreurs
 				if (!empty($errorLine)) {
 					$errorMessage[] = $errorLine;
 				}
@@ -203,8 +201,10 @@ class Core_Secure {
 				$errorMessage[] = $argv;
 			}
 		}
-		if (Core_Loader::isCallable("Core_Session") && Core_Loader::isCallable("Core_Sql") && Core_Session::$userRank > 1) {
-			$errorMessage = array_merge($errorMessage, (array) Core_Sql::getLastError());
+		if (Core_Loader::isCallable("Core_Session") && Core_Loader::isCallable("Core_Sql")) {
+			if (Core_Session::$userRank > 1) {
+				$errorMessage = array_merge($errorMessage, (array) Core_Sql::getLastError());
+			}
 		}
 		return $errorMessage;
 	}
@@ -217,6 +217,7 @@ class Core_Secure {
 	 */
 	private function getErrorMessageTitle($ie) {
 		// En fonction du type d'erreur
+		$cmd = "";
 		if (is_object($ie)) $cmd = $ie->getMessage();
 		else $cmd = $ie;
 		

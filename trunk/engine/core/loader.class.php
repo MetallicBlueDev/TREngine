@@ -6,7 +6,6 @@ if (!defined("TR_ENGINE_INDEX")) {
 
 /**
  * Chargeur de classe
- * Charge la classe si cela n'a pas déjà été fais
  * 
  * @author Sébastien Villemain
  *
@@ -28,7 +27,7 @@ class Core_Loader {
 		try {
 			return self::load($class);
 		} catch (Exception $ie) {
-			Core_Secure::getInstance()->debug($ie);
+			Core_Secure::getInstance()->debug($ie, $class);
 		}
 		return false;
 	}
@@ -43,7 +42,7 @@ class Core_Loader {
 		try {
 			return self::load($include, "inc");
 		} catch (Exception $ie) {
-			Core_Secure::getInstance()->debug($ie);
+			Core_Secure::getInstance()->debug($ie, $include);
 		}
 	}
 	
@@ -94,9 +93,8 @@ class Core_Loader {
 				}
 				return false;
 			}
-		} else {
-			return true;
 		}
+		return true;
 	}
 	
 	/**
@@ -112,7 +110,7 @@ class Core_Loader {
 	/**
 	 * Vérifie la disponibilité de la classe et de ca methode éventuellement
 	 * 
-	 * @param $className String or Object
+	 * @param $className String or Object une chaine de caractère est recommandée
 	 * @param $methodName String
 	 * @param $static boolean
 	 * @return boolean
@@ -123,20 +121,16 @@ class Core_Loader {
 		}
 		
 		if (!empty($methodName)) {
-			// Define Callable
-			if ($static) {
-				$callable = "{$className}::{$methodName}";
-			} else {
-				$callable = array($className, $methodName);
-			}
-			return @is_callable($callable);
-		} else {
 			// Utilisation du buffer si possible
-			if (self::isLoaded($className)) {
-				return true;
+			if (!self::isLoaded($className)) {
+				return false;
 			}
-			return class_exists($className);
+			
+			// Définie le comportement du callable
+			if ($static) return @is_callable("{$className}::{$methodName}");
+			else return @is_callable(array($className, $methodName));
 		}
+		return self::isLoaded($className);
 	}
 	
 	/**
