@@ -143,31 +143,37 @@ class Core_Exception {
 	 * @return String
 	 */
 	public static function &getMinorError() {
-		$display = "none";
 		$rslt = "";
-		$error = self::minorErrorDetected();
-		if ($error) {
-			$display = "block";
-			$rslt .= "<ul class=\"exception\">";
-			foreach(self::$alertError as $alertError) {
-				$rslt .= "<li class=\"alert\"><div>" . $alertError . "</div></li>";
-			}
-			foreach(self::$noteError as $noteError) {
-				$rslt .= "<li class=\"note\"><div>" . $noteError . "</div></li>";
-			}
-			foreach(self::$infoError as $infoError) {
-				$rslt .= "<li class=\"info\"><div>" . $infoError . "</div></li>";
-			}
-			$rslt .= "</ul>";
-		}
 		
-		// Réaction différente en fonction du type d'affichage demandée
-		if (Core_Main::isFullScreen()) {
-			$rslt = "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
-		} else if ($error) {
-			if (Core_Html::getInstance()->isJavascriptEnabled()) {
-				Core_Html::getInstance()->addJavascript("displayMessage('" . addslashes($rslt) . "');");
-				return null;
+		if (Core_Loader::isCallable("Core_Main")) {
+			$error = self::minorErrorDetected();
+			$display = "none";
+			
+			if ($error) {
+				$display = "block";
+				$rslt .= "<ul class=\"exception\">";
+				foreach(self::$alertError as $alertError) {
+					$rslt .= "<li class=\"alert\"><div>" . $alertError . "</div></li>";
+				}
+				foreach(self::$noteError as $noteError) {
+					$rslt .= "<li class=\"note\"><div>" . $noteError . "</div></li>";
+				}
+				foreach(self::$infoError as $infoError) {
+					$rslt .= "<li class=\"info\"><div>" . $infoError . "</div></li>";
+				}
+				$rslt .= "</ul>";
+			}
+			
+			// Réaction différente en fonction du type d'affichage demandée
+			if (Core_Main::isFullScreen()) {
+				$rslt = "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
+			} else if ($error) {
+				if (Core_Loader::isCallable("Core_Html")) {
+					if (Core_Html::getInstance()->isJavascriptEnabled()) {
+						Core_Html::getInstance()->addJavascript("displayMessage('" . addslashes($rslt) . "');");
+						$rslt = "";
+					}
+				}
 			}
 		}
 		return $rslt;
@@ -218,30 +224,32 @@ class Core_Exception {
 	 * Affichage des exceptions courante
 	 */
 	public static function displayException() {
-		if (Core_Main::isFullScreen()) {
-			echo "<div style=\"color: blue;\"><br />"
-			. "***********************SQL REQUESTS (" . count(self::$sqlRequest) . ") :<br />";
-			if (!empty(self::$sqlRequest)) {
-				echo str_replace("\n", "<br />", self::linearize(self::$sqlRequest));
-			} else {
-				echo "<span style=\"color: green;\">No sql request registred.</span>";
+		if (Core_Loader::isCallable("Core_Main") && Core_Loader::isCallable("Core_Session")) {
+			if (Core_Session::$userRank > 1) {
+				echo "<div style=\"color: blue;\"><br />"
+				. "***********************SQL REQUESTS (" . count(self::$sqlRequest) . ") :<br />";
+				if (!empty(self::$sqlRequest)) {
+					echo str_replace("\n", "<br />", self::linearize(self::$sqlRequest));
+				} else {
+					echo "<span style=\"color: green;\">No sql request registred.</span>";
+				}
+				
+				echo "<br /><br />***********************EXCEPTIONS (" . count(self::$exception) . ") :<br />";
+				
+				if (self::exceptionDetected()) {
+					echo "<span style=\"color: red;\">"
+					. str_replace("\n", "<br />", self::linearize(self::$exception))
+					. "</span>";
+				} else {
+					echo "<span style=\"color: green;\">No exception registred.</span>";
+				}
+				
+				echo "<br /><br />***********************BENCHMAKER :<br />"
+				. "Core : " . Exec_Marker::getTime("core") . " ms"
+				. "<br />Launcher : " . Exec_Marker::getTime("launcher") . " ms"
+				. "<br />All : " . Exec_Marker::getTime("all") . " ms"
+				. "</div>";
 			}
-			
-			echo "<br /><br />***********************EXCEPTIONS (" . count(self::$exception) . ") :<br />";
-			
-			if (self::exceptionDetected()) {
-				echo "<span style=\"color: red;\">"
-				. str_replace("\n", "<br />", self::linearize(self::$exception))
-				. "</span>";
-			} else {
-				echo "<span style=\"color: green;\">No exception registred.</span>";
-			}
-			
-			echo "<br /><br />***********************BENCHMAKER :<br />"
-			. "Core : " . Exec_Marker::getTime("core") . " ms"
-			. "<br />Launcher : " . Exec_Marker::getTime("launcher") . " ms"
-			. "<br />All : " . Exec_Marker::getTime("all") . " ms"
-			. "</div>";
 		}
 	}
 	
@@ -249,11 +257,13 @@ class Core_Exception {
 	 * Ecriture du rapport dans un fichier log
 	 */
 	public static function logException() {
-		if (self::$writeLog && self::exceptionDetected()) {			
-			// Positionne dans le cache
-			Core_CacheBuffer::setSectionName("log");
-			// Ecriture a la suite du cache
-			Core_CacheBuffer::writingCache("exception_" . date('Y-m-d') . ".log.php", self::linearize(self::$exception), false);
+		if (Core_Loader::isCallable("Core_CacheBuffer")) {
+			if (self::$writeLog && self::exceptionDetected()) {			
+				// Positionne dans le cache
+				Core_CacheBuffer::setSectionName("log");
+				// Ecriture a la suite du cache
+				Core_CacheBuffer::writingCache("exception_" . date('Y-m-d') . ".log.php", self::linearize(self::$exception), false);
+			}
 		}
 	}
 }

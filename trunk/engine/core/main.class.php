@@ -43,9 +43,6 @@ class Core_Main {
 		// Charge le gestionnaire d'exception
 		Core_Loader::classLoader("Core_Exception");
 		
-		// Chargement du gestionnaire de cache
-		Core_Loader::classLoader("Core_CacheBuffer");
-		
 		// Chargement du convertiseur d'entities
 		Core_Loader::classLoader("Exec_Entities");
 		

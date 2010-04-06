@@ -327,12 +327,12 @@ class Core_Translate {
 		$pathLang = self::getPath($pathLang);
 		
 		// On stop si le fichier a déjà été traduit
-		if (isset(self::$translated[$pathLang])) return null;
+		if (isset(self::$translated[$pathLang])) return "";
 		// Chemin vers le fichier langue source
 		$langOriginalPath = TR_ENGINE_DIR . "/" . $pathLang;
 		
 		// Vérification du fichier de langue
-		if (!is_file($langOriginalPath)) return null;
+		if (!is_file($langOriginalPath)) return "";
 		
 		// Préparation du Path et du contenu
 		$langCacheFileName = str_replace("/", "_", $pathLang);
@@ -373,6 +373,7 @@ class Core_Translate {
 			ob_end_clean();
 			return $langDefine;
 		}
+		return "";
 	}
 	
 	/**

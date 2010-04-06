@@ -16,16 +16,23 @@ class Core_ConfigsLoader {
 	 * Lance le chargeur de configs
 	 */
 	public function __construct() {
-		$this->loadConfigFile();
-		$this->loadDatabaseFile();
-		$this->loadFtpFile();
 		$this->loadVersion();
+		
+		if (Core_Loader::isCallable("Core_Main")) {
+			if ($this->loadCacheBuffer() && $this->loadSql()) {
+				$this->loadConfig();
+			} else {
+				Core_Secure::getInstance()->debug("Config error: Core_CacheBuffer and Core_Sql aren't loaded");
+			}
+		} else {
+			Core_Secure::getInstance()->debug("Config error: Core_Main isn't loaded");
+		}
 	}
 	
 	/**
 	 * Charge et vérifie la configuration
 	 */
-	private function loadConfigFile() {
+	private function loadConfig() {
 		// Chemin vers le fichier de configuration générale
 		$configPath = TR_ENGINE_DIR . "/configs/config.inc.php";
 		
@@ -75,8 +82,8 @@ class Core_ConfigsLoader {
 				// Requête vers la base de donnée de configs
 				Core_Sql::select(Core_Table::$CONFIG_TABLE, array("name", "value"));
 				while ($row = Core_Sql::fetchArray()) {
-					$configuration[$row['name']] = stripslashes($row['value']);
-					$content .= "$" . Core_CacheBuffer::getSectionName() . "['" . $row['name'] . "'] = \"" . Exec_Entities::addSlashes($config[$row['name']]) . "\"; ";
+					$configuration[$row['name']] = Exec_Entities::stripSlashes($row['value']);
+					$content .= "$" . Core_CacheBuffer::getSectionName() . "['" . $row['name'] . "'] = \"" . Exec_Entities::addSlashes($configuration[$row['name']]) . "\"; ";
 				}
 				
 				// Mise en cache
@@ -92,66 +99,86 @@ class Core_ConfigsLoader {
 	}
 	
 	/**
-	 * Charge et vérifie les informations de base de donnée
+	 * Charge le gestionnaire Sql
+	 * 
+	 * @return boolean true chargé
 	 */
-	private function loadDatabaseFile() {
-		// Chemin vers le fichier de configuration de la base de donnée
-		$databasePath = TR_ENGINE_DIR . "/configs/database.inc.php";
-		
-		if (is_file($databasePath)) {
-			require($databasePath);
+	private function loadSql() {
+		if (!Core_Loader::isCallable("Core_Sql")) {
+			// Chemin vers le fichier de configuration de la base de donnée
+			$databasePath = TR_ENGINE_DIR . "/configs/database.inc.php";
 			
-			// Vérification du type de base de donnée
-			if (!is_file(TR_ENGINE_DIR . "/engine/base/" . $db['type'] . ".class.php")) {
-				Core_Secure::getInstance()->debug("sqlType", $db['type']);
+			if (is_file($databasePath)) {
+				require($databasePath);
+				
+				// Vérification du type de base de donnée
+				if (!is_file(TR_ENGINE_DIR . "/engine/base/" . $db['type'] . ".class.php")) {
+					Core_Secure::getInstance()->debug("sqlType", $db['type']);
+				}
+				
+				// Démarrage de l'instance Core_Sql
+				Core_Loader::classLoader("Core_Sql");
+				Core_Sql::setDatabase($db);
+				Core_Sql::makeInstance();
+			} else {
+				Core_Secure::getInstance()->debug("sqlPath", $databasePath);
 			}
-			
-			// Démarrage de l'instance Core_Sql
-			Core_Loader::classLoader("Core_Sql");
-			Core_Sql::setDatabase($db);
-			Core_Sql::makeInstance();
-		} else {
-			Core_Secure::getInstance()->debug("sqlPath", $databasePath);
+			return Core_Loader::isCallable("Core_Sql");
 		}
+		return true;
 	}
 	
 	/**
-	 * Charge les données FTP
+	 * Charge le gestionnaire de cache et les données FTP
+	 * 
+	 * @return boolean true chargé
 	 */
-	private function loadFtpFile() {
-		// Mode natif PHP actif
-		$modes = array("php");
-		
-		// Chemin du fichier de configuration ftp
-		$ftpPath = TR_ENGINE_DIR . "/configs/ftp.inc.php";
-		
-		if (is_file($ftpPath)) {
-			require($ftpPath);
+	private function loadCacheBuffer() {
+		if (!Core_Loader::isCallable("Core_CacheBuffer")) {
+			// Chargement du gestionnaire de cache
+			Core_Loader::classLoader("Core_CacheBuffer");
 			
-			// Préparation de l'activation du mode
-			$mode = strtolower($ftp['type']);
-			if ($mode != "php") $modes[] = $mode;
+			// Mode natif PHP actif
+			$modes = array("php");
 			
-			// Ajout des données FTP
-			Core_CacheBuffer::setFtp($ftp);
-		}		
-		// Activation des modes
-		Core_CacheBuffer::setModeActived($modes);
+			// Chemin du fichier de configuration ftp
+			$ftpPath = TR_ENGINE_DIR . "/configs/ftp.inc.php";
+			
+			if (is_file($ftpPath)) {
+				require($ftpPath);
+				
+				// Préparation de l'activation du mode
+				$mode = strtolower($ftp['type']);
+				if ($mode != "php") $modes[] = $mode;
+				
+				// Ajout des données FTP
+				Core_CacheBuffer::setFtp($ftp);
+			}		
+			// Activation des modes
+			Core_CacheBuffer::setModeActived($modes);
+			return Core_Loader::isCallable("Core_CacheBuffer");
+		}
+		return true;
 	}
 	
 	/**
 	 * Charge le numéro de version du moteur
+	 * 
+	 * @return boolean true chargé
 	 */
 	private function loadVersion() {
-		// Chemin vers le fichier de version
-		$versionPath = TR_ENGINE_DIR . "/engine/version.inc.php";
-		
-		// Configuration du numéro de version
-		$TR_ENGINE_VERSION = "0.0.0.0";
-		if (is_file($versionPath)) {
-			require($versionPath);
+		if (!defined(TR_ENGINE_VERSION)) {
+			// Chemin vers le fichier de version
+			$versionPath = TR_ENGINE_DIR . "/engine/version.inc.php";
+			
+			// Configuration du numéro de version
+			$TR_ENGINE_VERSION = "0.0.0.0";
+			if (is_file($versionPath)) {
+				require($versionPath);
+			}
+			define("TR_ENGINE_VERSION", $TR_ENGINE_VERSION);
 		}
-		define("TR_ENGINE_VERSION", $TR_ENGINE_VERSION);
+		return true;
 	}
 }
 
