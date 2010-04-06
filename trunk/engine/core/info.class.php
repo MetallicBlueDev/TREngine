@@ -1,10 +1,14 @@
 <?php
+/*
+ * NOTE IMPORTANTE : tout ce fichier doit être compatible PHP 4
+ * Il ne doit pas provoquer d'erreur a son chargement mais Core_Info ne doit pas être executé sous PHP 4.
+ */
 if (preg_match("/info.class.php/ie", $_SERVER['PHP_SELF'])) {
 	exit();
 }
 
 /**
- * Version php sous forme 5.2.9.2
+ * Version php sous forme x.x.x.x (exemple : 5.2.9.2)
  */
 define("TR_ENGINE_PHP_VERSION", preg_replace("/[^0-9.]/", "", (preg_replace("/(_|-|[+])/", ".", phpversion()))));
 
@@ -20,7 +24,7 @@ new Core_Info();
 
 /**
  * Configurateur rapide
- * ATTENTION : cette classe doit être lu en PHP 4 sans erreur.
+ * NOTE IMPORTANTE : cette classe doit être compatible PHP 4
  * 
  * @author Sebastien Villemain
  *
@@ -45,16 +49,17 @@ class Core_Info {
 		/**
 		 * Le système d'exploitation qui execute TR ENGINE
 		 */
-		define("TR_ENGINE_PHP_OS", strtoupper(substr(PHP_OS, 0, 3)));
+		define("TR_ENGINE_PHP_OS", $this->getPhpOs());
 	}
 	
 	
 	/**
 	 * Retourne le chemin jusqu'a la racine
 	 * 
-	 * @return $baseDir String
+	 * @return String
 	 */
 	function getBaseDir() {
+		$baseDir = "";
 		// Recherche du chemin absolu depuis n'importe quel fichier
 		if (defined("TR_ENGINE_INDEX")) {
 			// Nous sommes dans l'index
@@ -89,7 +94,7 @@ class Core_Info {
 	/**
 	 * Retourne l'adresse URL complete jusqu'a TR ENGINE
 	 * 
-	 * @return $urlAddress String
+	 * @return String
 	 */
 	function getUrlAddress() {
 		// Recherche de l'URL courante
@@ -111,6 +116,15 @@ class Core_Info {
 			}
 		}		
 		return ((empty($urlFinal)) ? $_SERVER["SERVER_NAME"] : $_SERVER["SERVER_NAME"] . "/" . $urlFinal);
+	}
+	
+	/**
+	 * Retourne la plateforme sur lequel est PHP
+	 * 
+	 * @return String
+	 */
+	function getPhpOs() {
+		return strtoupper(substr(PHP_OS, 0, 3));
 	}
 }
 
