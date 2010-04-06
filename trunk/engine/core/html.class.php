@@ -430,21 +430,14 @@ class Core_Html {
 			if ($layout) {
 				// Configuration du layout
 				$layout = "&amp;layout=";
-				if (strpos($link, "block=") !== false) {
-					$layout .= "block";
-				} else if (strpos($link, "mod=") !== false) {
-					$layout .= "module";
-				} else {
-					$layout .= "default";
-				}
+				if (strpos($link, "block=") !== false) $layout .= "block";
+				else if (strpos($link, "mod=") !== false) $layout .= "module";
+				else $layout .= "default";
 				$link .= $layout;
 			}
-			if (strpos($link, "index.php?") === false) {
-				if ($link[0] == "?") {
-					$link = "index.php" . $link;
-				} else {
-					$link = "index.php?" . $link;
-				}
+			if (strpos($link, "index.php") === false) {
+				if ($link[0] == "?") $link = "index.php" . $link;
+				else $link = "index.php?" . $link;
 			}
 			if (Core_Main::doUrlRewriting()) {
 				$link = Core_UrlRewriting::rewriteLink($link);
