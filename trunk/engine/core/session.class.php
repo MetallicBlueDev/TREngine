@@ -213,11 +213,11 @@ class Core_Session {
 					
 					// Verification + mise à jour toute les 5 minutes
 					$updVerif = false;
-					if ($sessions['user_id'] == $userId && $sessions['sessionId'] == $sessionId) {
+					if ($sessions['userId'] == $userId && $sessions['sessionId'] == $sessionId) {
 						// Mise à jour toute les 5 min
 						if ((Core_CacheBuffer::cacheMTime($sessions['sessionId'] . ".php") + 5*60) < $this->timer) {
 							// Mise a jour du dernier accès
-							$updVerif = $this->updateLastConnect($sessions['user_id']);
+							$updVerif = $this->updateLastConnect($sessions['userId']);
 							Core_CacheBuffer::touchCache($sessions['sessionId'] . ".php");
 						} else {
 							$updVerif = true;
@@ -242,7 +242,7 @@ class Core_Session {
 	 * @param $refreshAll boolean
 	 */
 	private function setUser($info, $refreshAll = false) {	
-		self::$userId = $info['user_id'];
+		self::$userId = isset($info['userId']) ? $info['userId'] : $info['user_id'];
 		self::$userName = Exec_Entities::stripSlashes($info['name']);
 		self::$userMail = $info['mail'];
 		self::$userRank = (int) $info['rank'];
@@ -252,34 +252,40 @@ class Core_Session {
 		self::$userWebSite = Exec_Entities::stripSlashes($info['website']);
 		self::$sessionId = (!empty($info['sessionId'])) ? $info['sessionId'] : self::$sessionId;
 		self::$userIpBan = (!empty($info['userIpBan'])) ? $info['userIpBan'] : self::$userIpBan;
+		
+		// Force une mise à jour complète
 		if ($refreshAll) {
 			self::$userLanguage = $info['langue'];
 			self::$userTemplate = $info['template'];
 		} else {
+			// Mise à jour uniquement si aucune donnée
 			if (empty(self::$userLanguage)) self::$userLanguage = $info['langue'];
 			if (empty(self::$userTemplate)) self::$userTemplate = $info['template'];
 		}
 	}
 	
 	/**
-	 * Mise en chaine de caractères des infos du client
-	 * Préparation des informations pour le cache
+	 * Mise en chaine de caractères des informations du client
 	 * 
 	 * @return String
 	 */
 	private function &getUser() {
-		$rslt = "$" . Core_CacheBuffer::getSectionName() . "['user_id'] = \"" . self::$userId . "\"; ";
-		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['name'] = \"" . Exec_Entities::addSlashes(self::$userName) . "\"; ";
-		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['mail'] = \"" . self::$userMail . "\"; ";
-		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['rank'] = \"" . self::$userRank . "\"; ";
-		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['date'] = \"" . self::$userInscriptionDate . "\"; ";
-		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['avatar'] = \"" . self::$userAvatar . "\"; ";
-		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['signature'] = \"" . Exec_Entities::addSlashes(self::$userSignature) . "\"; ";
-		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['website'] = \"" . Exec_Entities::addSlashes(self::$userWebSite) . "\"; ";
-		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['langue'] = \"" . self::$userLanguage . "\"; ";
-		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['template'] = \"" . self::$userTemplate . "\"; ";
-		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['userIpBan'] = \"" . self::$userIpBan . "\"; ";
-		$rslt .= "$" . Core_CacheBuffer::getSectionName() . "['sessionId'] = \"" . self::$sessionId . "\"; ";
+		$rslt = "";
+		$data = array(
+			"userId" => self::$userId,
+			"name" => self::$userName,
+			"mail" => self::$userMail,
+			"rank" => self::$userRank,
+			"date" => self::$userInscriptionDate,
+			"avatar" => self::$userAvatar,
+			"signature" => self::$userSignature,
+			"website" => self::$userWebSite,
+			"langue" => self::$userLanguage,
+			"template" => self::$userTemplate,
+			"userIpBan" => self::$userIpBan,
+			"sessionId" => self::$sessionId
+		);
+		$rslt = Core_CacheBuffer::serializeData($data);
 		return $rslt;
 	}
 	

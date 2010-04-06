@@ -207,12 +207,12 @@ class Core_Exception {
 	}
 	
 	/**
-	 * Capture les exceptions et les retournes en chaine de caractère
+	 * Capture les exceptions en chaine de caractère
 	 * 
 	 * @param $var array
 	 * @return String
 	 */
-	private static function &linearize($var) {
+	private static function &serializeData($var) {
 		$content = "";
 		foreach ($var as $msg) {
 			$content .= $msg . "\n";
@@ -229,7 +229,7 @@ class Core_Exception {
 				echo "<div style=\"color: blue;\"><br />"
 				. "***********************SQL REQUESTS (" . count(self::$sqlRequest) . ") :<br />";
 				if (!empty(self::$sqlRequest)) {
-					echo str_replace("\n", "<br />", self::linearize(self::$sqlRequest));
+					echo str_replace("\n", "<br />", self::serializeData(self::$sqlRequest));
 				} else {
 					echo "<span style=\"color: green;\">No sql request registred.</span>";
 				}
@@ -238,7 +238,7 @@ class Core_Exception {
 				
 				if (self::exceptionDetected()) {
 					echo "<span style=\"color: red;\">"
-					. str_replace("\n", "<br />", self::linearize(self::$exception))
+					. str_replace("\n", "<br />", self::serializeData(self::$exception))
 					. "</span>";
 				} else {
 					echo "<span style=\"color: green;\">No exception registred.</span>";
@@ -262,7 +262,7 @@ class Core_Exception {
 				// Positionne dans le cache
 				Core_CacheBuffer::setSectionName("log");
 				// Ecriture a la suite du cache
-				Core_CacheBuffer::writingCache("exception_" . date('Y-m-d') . ".log.php", self::linearize(self::$exception), false);
+				Core_CacheBuffer::writingCache("exception_" . date('Y-m-d') . ".log.php", self::serializeData(self::$exception), false);
 			}
 		}
 	}

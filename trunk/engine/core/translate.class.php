@@ -384,7 +384,6 @@ class Core_Translate {
 	 * @return String
 	 */
 	private static function &entitiesTranslate($text) {
-		Core_Loader::classLoader("Exec_Entities");
 		$text = Exec_Entities::entitiesUtf8($text);
 		//$text = Exec_Entities::addSlashes($text);
 		return $text;

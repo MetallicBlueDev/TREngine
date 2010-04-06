@@ -140,8 +140,12 @@ class Core_Loader {
 	 * @return callback resultat
 	 */
 	public static function callback($callback) {
-		if (TR_ENGINE_PHP_VERSION < "5.2.3" && strpos($callback, "::") !== false) {
-			$callback = explode("::", $callback);
+		if (TR_ENGINE_PHP_VERSION < "5.2.3") {
+			if (is_string($callback)) {
+				if (strpos($callback, "::") !== false) {
+					$callback = explode("::", $callback);
+				}
+			}
 		}
 		$args = func_get_args();
 		$args = array_splice($args, 1, 1);

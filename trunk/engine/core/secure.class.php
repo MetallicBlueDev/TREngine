@@ -195,11 +195,8 @@ class Core_Secure {
 			}
 		}
 		if (!empty($argv)) { // Si des informations suplementaire sont disponibles
-			if (is_array($argv)) {
-				$errorMessage = array_merge($errorMessage, $argv);
-			} else {
-				$errorMessage[] = $argv;
-			}
+			if (is_array($argv)) $errorMessage = array_merge($errorMessage, $argv);
+			else $errorMessage[] = $argv;
 		}
 		if (Core_Loader::isCallable("Core_Session") && Core_Loader::isCallable("Core_Sql")) {
 			if (Core_Session::$userRank > 1) {

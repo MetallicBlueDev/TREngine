@@ -155,7 +155,7 @@ class Libs_Module {
 				$moduleInfo['configs'] = $configs;
 				
 				// Mise en cache
-				$content = Core_CacheBuffer::linearizeCache($moduleInfo);
+				$content = Core_CacheBuffer::serializeData($moduleInfo);
 				Core_CacheBuffer::writingCache($moduleName . ".php", $content);
 			}
 		} else {

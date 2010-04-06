@@ -279,8 +279,8 @@ class Core_Html {
 	 * @param $options String
 	 */
 	public function addCssTemplateFile($fileName, $options = "") {
-		if (Core_Loader::isCallable("Libs_Makestyle")) {
-			$this->addCssFile(Libs_Makestyle::getTemplatesDir() . "/" . Libs_Makestyle::getCurrentTemplate() . "/" . $fileName, $options);
+		if (Core_Loader::isCallable("Libs_MakeStyle")) {
+			$this->addCssFile(Libs_MakeStyle::getTemplatesDir() . "/" . Libs_MakeStyle::getCurrentTemplate() . "/" . $fileName, $options);
 		}
 	}
 	
@@ -315,8 +315,6 @@ class Core_Html {
 			if (empty($this->title)) $title = Core_Request::getString("SERVER_NAME", "", "SERVER");
 			else $title = Core_Request::getString("SERVER_NAME", "", "SERVER") . " - " . $this->title;
 		}
-		
-		Core_Loader::classLoader("Exec_Entities");
 		
 		return "<title>" . Exec_Entities::textDisplay($title) . "</title>\n"
 		. $this->getMetaKeywords()

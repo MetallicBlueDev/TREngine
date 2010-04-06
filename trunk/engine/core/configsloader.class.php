@@ -83,7 +83,7 @@ class Core_ConfigsLoader {
 				Core_Sql::select(Core_Table::$CONFIG_TABLE, array("name", "value"));
 				while ($row = Core_Sql::fetchArray()) {
 					$configuration[$row['name']] = Exec_Entities::stripSlashes($row['value']);
-					$content .= "$" . Core_CacheBuffer::getSectionName() . "['" . $row['name'] . "'] = \"" . Exec_Entities::addSlashes($configuration[$row['name']]) . "\"; ";
+					$content .= Core_CacheBuffer::serializeVariable($row['name'], $configuration[$row['name']]);;
 				}
 				
 				// Mise en cache

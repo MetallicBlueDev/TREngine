@@ -125,7 +125,7 @@ class Core_CacheBuffer {
 	 */
 	public static function writingCache($path, $content, $overWrite = true) {
 		if (is_array($content)) {
-			$content = self::linearizeCache($content);
+			$content = self::serializeData($content);
 		}
 		// Mise en forme de la cles
 		$key = self::encodePath(self::getSectionPath(). "/" . $path);
@@ -207,6 +207,42 @@ class Core_CacheBuffer {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Serialize la variable en chaine de caractères pour une mise en cache
+	 * 
+	 * @param String $data ($data = "data") or array $data ($data = array("name" => "data"))
+	 * @param String $lastKey clès supplementaire
+	 * @return String
+	 */
+	public static function &serializeData($data, $lastKey = "") {
+		$content = "";
+		if (is_array($data)) {
+			foreach($data as $key => $value) {
+				if (is_array($value)) {
+					$lastKey .= "['" . $key . "']";
+					$content .= self::serializeData($value, $lastKey);
+				} else {
+					$content .= self::serializeVariable($lastKey . "['" . $key . "']", $value);
+				}
+			}
+		} else {
+			$content .= self::serializeVariable($lastKey . "['" . $key . "']", $value);
+		}
+		return $content;
+	}
+	
+	/**
+	 * Serialize la variable en chaine de caractères pour une mise en cache
+	 * 
+	 * @param String $key
+	 * @param String $value
+	 * @return String
+	 */
+	private static function &serializeVariable($key, $value) {
+		$content .= "$" . self::getSectionName() . $key . " = \"" . Exec_Entities::addSlashes($value) . "\"; ";
+		return $content;
 	}
 	
 	/**
@@ -349,26 +385,6 @@ class Core_CacheBuffer {
 			. "// Generated on " . date('Y-m-d H:i:s') . "\n"
 			. $content
 			. "\n?>";
-		}
-		return $content;
-	}
-	
-	/**
-	 * Retourne une chaine de caratère l'integalité d'un tableau
-	 * 
-	 * @param $array array
-	 * @param $lastKey String
-	 * @return String
-	 */
-	public static function &linearizeCache($array, $lastKey = "") {
-		$content = "";
-		foreach($array as $key => $value) {
-			if (is_array($value)) {
-				$lastKey .= "['" . $key . "']";
-				$content .= self::linearizeCache($value, $lastKey);
-			} else {
-				$content .= "$" . self::getSectionName() . $lastKey . "['" . $key . "'] = \"" . $value . "\"; ";
-			}
 		}
 		return $content;
 	}

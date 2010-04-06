@@ -106,7 +106,7 @@ class Libs_Menu {
 			
 			Core_CacheBuffer::writingCache(
 				$this->identifier . ".php", 
-				"$" . Core_CacheBuffer::getSectionName() . " = \"" . Exec_Entities::addSlashes(serialize($this->items)) . "\""
+				Core_CacheBuffer::serializeData(serialize($this->items))
 			);
 		}
 	}

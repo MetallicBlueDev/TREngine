@@ -186,7 +186,7 @@ class Module_Management_Setting extends Module_Model {
 		// Template par défaut
 		$defaultTemplate = Core_Request::getString("defaultTemplate", "", "POST");
 		if (Core_Main::$coreConfig['defaultTemplate'] != $defaultTemplate) {
-			$templates = Libs_Makestyle::listTemplates();
+			$templates = Libs_MakeStyle::listTemplates();
 			if (!empty($defaultTemplate) && Exec_Utils::inArray($defaultTemplate, $templates)) {
 				$this->updateTable("defaultTemplate", $defaultTemplate);
 				$deleteCache = true;
