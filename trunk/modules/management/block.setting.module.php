@@ -139,7 +139,7 @@ class Module_Management_Block extends Module_Model {
 				$block = Core_Sql::fetchArray();
 				Core_Loader::classLoader("Libs_Form");
 				
-				$form = new Libs_Form("blockedit");
+				$form = new Libs_Form("management-block-blockedit");
 				$form->setTitle(BLOCK_EDIT_TITLE);
 				$form->setDescription(BLOCK_EDIT_DESCRIPTION);
 				$form->addSpace();

@@ -53,7 +53,7 @@ class Module_Management_Setting extends Module_Model {
 	}
 	
 	private function tabGeneral() {
-		$form = new Libs_Form("generalblock");
+		$form = new Libs_Form("management-setting-general");
 		$form->setTitle(SETTING_GENERAL_SITE_SETTING_TITLE);
 		$form->setDescription(SETTING_GENERAL_SITE_SETTING_DESCRIPTION);
 		$form->addSpace();
@@ -125,7 +125,7 @@ class Module_Management_Setting extends Module_Model {
 		$form->addInputHidden("manage", "setting");
 		$form->addInputHidden("localView", "sendGeneral");
 		$form->addInputSubmit("submit", VALID);
-		Core_Html::getInstance()->addJavascript("validGeneralSetting('#form-generalblock', '#form-generalblock-defaultSiteName-input', '#form-generalblock-defaultAdministratorMail-input');");
+		Core_Html::getInstance()->addJavascript("validGeneralSetting('#form-management-setting-general', '#form-management-setting-general-defaultSiteName-input', '#form-management-setting-general-defaultAdministratorMail-input');");
 		return $form->render();
 	}
 	
@@ -236,7 +236,7 @@ class Module_Management_Setting extends Module_Model {
 	}
 	
 	private function tabSystem() {
-		$form = new Libs_Form("systemblock");
+		$form = new Libs_Form("management-setting-system");
 		$form->setTitle(SETTING_SYSTEM_CACHE_SETTING_TITLE);
 		$form->setDescription(SETTING_SYSTEM_CACHE_SETTING_DESCRIPTION);
 		$form->addInputText("cacheTimeLimit", SETTING_SYSTEM_CACHE_SETTING_CACHE_LIMIT, Core_Main::$coreConfig['cacheTimeLimit']);
@@ -287,7 +287,7 @@ class Module_Management_Setting extends Module_Model {
 		$form->addInputHidden("manage", "setting");
 		$form->addInputHidden("localView", "sendSystem");
 		$form->addInputSubmit("submit", VALID);
-		//Core_Html::getInstance()->addJavascript("validSystemSetting('#form-systemblock', '#form-generalblock-defaultSiteName-input', '#form-generalblock-defaultAdministratorMail-input');");
+		//Core_Html::getInstance()->addJavascript("validSystemSetting('#form-management-setting-system', '#form-management-setting-system-defaultSiteName-input', '#form-management-setting-system-defaultAdministratorMail-input');");
 		return $form->render();
 	}
 	

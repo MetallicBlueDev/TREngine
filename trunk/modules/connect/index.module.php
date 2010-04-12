@@ -39,7 +39,7 @@ class Module_Connect_Index extends Module_Model {
 	}
 	
 	private function tabProfile() {
-		$form = new Libs_Form("profile");
+		$form = new Libs_Form("account-profile");
 		$form->setTitle(ACCOUNT_PROFILE_TITLE);
 		$form->setDescription(ACCOUNT_PROFILE_DESCRIPTION);
 		$form->addSpace();
@@ -83,7 +83,7 @@ class Module_Connect_Index extends Module_Model {
 	}
 	
 	private function tabAccount() {
-		$form = new Libs_Form("accountprivate");
+		$form = new Libs_Form("account-accountprivate");
 		$form->setTitle(ACCOUNT_PRIVATE_TITLE);
 		$form->setDescription(ACCOUNT_PRIVATE_DESCRIPTION);
 		$form->addSpace();
@@ -121,7 +121,7 @@ class Module_Connect_Index extends Module_Model {
 		$form->addInputHidden("view", "sendAccount");
 		$form->addInputHidden("layout", "module");
 		$form->addInputSubmit("submit", VALID);
-		Core_Html::getInstance()->addJavascript("validAccount('#form-accountprivate', '#form-accountprivate-name-input', '#form-accountprivate-pass-input', '#form-accountprivate-pass2-input', '#form-accountprivate-mail-input');");
+		Core_Html::getInstance()->addJavascript("validAccount('#form-account-accountprivate', '#form-account-accountprivate-name-input', '#form-account-accountprivate-pass-input', '#form-account-accountprivate-pass2-input', '#form-account-accountprivate-mail-input');");
 		return $form->render();
 	}
 	
@@ -191,7 +191,7 @@ class Module_Connect_Index extends Module_Model {
 	}
 	
 	private function tabAvatar() {
-		$form = new Libs_Form("avatar");
+		$form = new Libs_Form("account-avatar");
 		$form->setTitle(ACCOUNT_AVATAR_TITLE);
 		$form->setDescription(ACCOUNT_AVATAR_DESCRIPTION);
 		$form->addSpace();
@@ -203,7 +203,7 @@ class Module_Connect_Index extends Module_Model {
 	}
 	
 	private function tabAdmin() {
-		$form = new Libs_Form("admin");
+		$form = new Libs_Form("account-admin");
 		$form->setTitle(ACCOUNT_ADMIN_TITLE);
 		$form->setDescription(ACCOUNT_ADMIN_DESCRIPTION);
 		
@@ -287,7 +287,7 @@ class Module_Connect_Index extends Module_Model {
 			
 			if (Core_Main::isFullScreen() || (empty($login) && empty($password))) {
 				Core_Loader::classLoader("Libs_Form");
-				$form = new Libs_Form("logon");
+				$form = new Libs_Form("login-logon");
 				$form->setTitle(LOGIN_FORM_TITLE);
 				$form->setDescription(LOGIN_FORM_DESCRIPTION);
 				$form->addInputText("login", LOGIN, "", "maxlength=\"180\" value=\"" . $login . "\"");
@@ -299,7 +299,7 @@ class Module_Connect_Index extends Module_Model {
 				$form->addInputSubmit("submit", CONNECT);
 				$form->addHtmlInFieldset($moreLink);
 				echo $form->render();
-				Core_Html::getInstance()->addJavascript("validLogon('#form-logon', '#form-logon-login-input', '#form-logon-password-input');");
+				Core_Html::getInstance()->addJavascript("validLogon('#form-login-logon', '#form-login-logon-login-input', '#form-login-logon-password-input');");
 			}
 		} else {
 			$this->display();
@@ -357,7 +357,7 @@ class Module_Connect_Index extends Module_Model {
 			} else {
 				if (Core_Main::isFullScreen() || empty($mail)) {
 					Core_Loader::classLoader("Libs_Form");
-					$form = new Libs_Form("forgetlogin");
+					$form = new Libs_Form("login-forgetlogin");
 					$form->setTitle(FORGET_LOGIN_TITLE);
 					$form->setDescription(FORGET_LOGIN_DESCRIPTION);
 					$form->addInputText("mail", MAIL);
@@ -366,7 +366,7 @@ class Module_Connect_Index extends Module_Model {
 					$form->addInputHidden("layout", "module");
 					$form->addInputSubmit("submit", FORGET_LOGIN_SUBMIT);
 					echo $form->render();
-					Core_Html::getInstance()->addJavascript("validForgetLogin('#form-forgetlogin', '#form-forgetlogin-mail-input');");
+					Core_Html::getInstance()->addJavascript("validForgetLogin('#form-login-forgetlogin', '#form-login-forgetlogin-mail-input');");
 				}
 			}
 		} else {
@@ -409,7 +409,7 @@ class Module_Connect_Index extends Module_Model {
 			} else {
 				if (Core_Main::isFullScreen() || empty($login)) {
 					Core_Loader::classLoader("Libs_Form");
-					$form = new Libs_Form("forgetpass");
+					$form = new Libs_Form("login-forgetpass");
 					$form->setTitle(FORGET_PASSWORD_TITLE);
 					$form->setDescription(FORGET_PASSWORD_DESCRIPTION);
 					$form->addInputText("login", LOGIN);
@@ -418,7 +418,7 @@ class Module_Connect_Index extends Module_Model {
 					$form->addInputHidden("layout", "module");
 					$form->addInputSubmit("submit", FORGET_PASSWORD_SUBMIT);
 					echo $form->render();
-					Core_Html::getInstance()->addJavascript("validForgetPass('#form-forgetpass', '#form-forgetpass-login-input');");
+					Core_Html::getInstance()->addJavascript("validForgetPass('#form-login-forgetpass', '#form-login-forgetpass-login-input');");
 				}
 			}
 		} else {

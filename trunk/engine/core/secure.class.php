@@ -144,6 +144,7 @@ class Core_Secure {
 		}
 		
 		// Gestionnaires suivants obligatoires
+		Core_Loader::classLoader("Exec_Entities");
 		Core_Loader::classLoader("Core_Request");
 		Core_Loader::classLoader("Exec_Cookie");
 		Core_Loader::classLoader("Exec_Crypt");
@@ -173,7 +174,7 @@ class Core_Secure {
 		// Tableau avec les lignes d'erreurs
 		$errorMessage = array();
 		// Analyse de l'exception
-		if (is_object($ie)) { // Pour un exception levé de type object
+		if (is_object($ie)) { // Pour une exception levé de type object
 			$trace = $ie->getTrace();
 			$nbTrace = count($trace);
 			

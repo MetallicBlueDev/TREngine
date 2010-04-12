@@ -54,7 +54,8 @@ class Core_CacheBuffer {
 		"lang" => "tmp/lang",
 		"menus" => "tmp/menus",
 		"modules" => "tmp/modules",
-		"fileList" => "tmp/fileList"
+		"fileList" => "tmp/fileList",
+		"form" => "tmp/form"
 	);
 	
 	/**
@@ -228,7 +229,8 @@ class Core_CacheBuffer {
 				}
 			}
 		} else {
-			$content .= self::serializeVariable($lastKey . "['" . $key . "']", $value);
+			if (!empty($lastKey)) $lastKey = "['" . $lastKey . "']";
+			$content .= self::serializeVariable($lastKey, $data);
 		}
 		return $content;
 	}
@@ -304,9 +306,10 @@ class Core_CacheBuffer {
 	 * Capture le cache ciblé dans un tableau
 	 * 
 	 * @param $path Chemin du cache
+	 * @param $vars array tableau supplementaire contenant des variables pour résoudre les problèmes de visiblilité (par exemple)
 	 * @return String
 	 */
-	public static function &getCache($path) {
+	public static function &getCache($path, $vars = array()) {
 		// Réglage avant capture
 		$variableName = self::$sectionName;
 		// Rend la variable global a la fonction

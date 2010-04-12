@@ -82,13 +82,13 @@ class Block_Login extends Block_Model {
 		} else {
 			$moreLink = "<ul>";
 			if (Core_Main::isRegistrationAllowed()) {
-				$moreLink .= "<li><b>" . Core_Html::getLinkForBlock("mod=connect&view=registration", "block=" . $this->blockId . "&localView=registration", "#logonblock", GET_ACCOUNT) . "</b></li>";
+				$moreLink .= "<li><b>" . Core_Html::getLinkForBlock("mod=connect&view=registration", "block=" . $this->blockId . "&localView=registration", "#login-logonblock", GET_ACCOUNT) . "</b></li>";
 			}
-			$moreLink .= "<li>" . Core_Html::getLinkForBlock("mod=connect&view=logon", "block=" . $this->blockId . "&localView=logon", "#logonblock", GET_LOGON) . "</li>"
-			. "<li>" . Core_Html::getLinkForBlock("mod=connect&view=forgetlogin", "block=" . $this->blockId . "&localView=forgetlogin", "#logonblock", GET_FORGET_LOGIN) . "</li>"
-			. "<li>" . Core_Html::getLinkForBlock("mod=connect&view=forgetpass", "block=" . $this->blockId . "&localView=forgetpass", "#logonblock", GET_FORGET_PASS) . "</li></ul>";
+			$moreLink .= "<li>" . Core_Html::getLinkForBlock("mod=connect&view=logon", "block=" . $this->blockId . "&localView=logon", "#login-logonblock", GET_LOGON) . "</li>"
+			. "<li>" . Core_Html::getLinkForBlock("mod=connect&view=forgetlogin", "block=" . $this->blockId . "&localView=forgetlogin", "#login-logonblock", GET_FORGET_LOGIN) . "</li>"
+			. "<li>" . Core_Html::getLinkForBlock("mod=connect&view=forgetpass", "block=" . $this->blockId . "&localView=forgetpass", "#login-logonblock", GET_FORGET_PASS) . "</li></ul>";
 			
-			$content .= "<div id=\"logonblock\">";
+			$content .= "<div id=\"login-logonblock\">";
 			
 			Core_Loader::classLoader("Libs_Form");
 			switch($this->localView) {
@@ -120,7 +120,7 @@ class Block_Login extends Block_Model {
 	 * @return String
 	 */
 	private function &logon($moreLink) {
-		$form = new Libs_Form("logonblock");
+		$form = new Libs_Form("login-logonblock");
 		$form->addInputText("login", LOGIN, "", "maxlength=\"180\"");
 		$form->addInputPassword("password", PASSWORD, "maxlength=\"180\"");
 		$form->addInputHidden("referer", urlencode(base64_encode(Core_Request::getString("QUERY_STRING", "", "SERVER"))));
@@ -129,8 +129,8 @@ class Block_Login extends Block_Model {
 		$form->addInputHidden("layout", "module");
 		$form->addInputSubmit("submit", GET_LOGON);
 		$form->addHtmlInFieldset($moreLink);
-		Core_Html::getInstance()->addJavascript("validLogon('#form-logonblock', '#form-logonblock-login-input', '#form-logonblock-password-input');");
-		return $form->render("logonblock");
+		Core_Html::getInstance()->addJavascript("validLogon('#form-login-logonblock', '#form-login-logonblock-login-input', '#form-login-logonblock-password-input');");
+		return $form->render("login-logonblock");
 	}
 	
 	/**
@@ -140,15 +140,15 @@ class Block_Login extends Block_Model {
 	 * @return String
 	 */
 	private function &forgetlogin($moreLink) {
-		$form = new Libs_Form("forgetloginblock");
+		$form = new Libs_Form("login-forgetloginblock");
 		$form->addInputText("mail", MAIL . " ");
 		$form->addInputHidden("mod", "connect");
 		$form->addInputHidden("view", "forgetlogin");
 		$form->addInputHidden("layout", "module");
 		$form->addInputSubmit("submit", VALID);
 		$form->addHtmlInFieldset($moreLink);
-		Core_Html::getInstance()->addJavascript("validForgetLogin('#form-forgetloginblock', '#form-forgetloginblock-mail-input');");
-		return $form->render("forgetloginblock");
+		Core_Html::getInstance()->addJavascript("validForgetLogin('#form-login-forgetloginblock', '#form-login-forgetloginblock-mail-input');");
+		return $form->render("login-forgetloginblock");
 	}
 	
 	/**
@@ -158,27 +158,27 @@ class Block_Login extends Block_Model {
 	 * @return String
 	 */
 	private function &forgetpass($moreLink) {
-		$form = new Libs_Form("forgetpassblock");
+		$form = new Libs_Form("login-forgetpassblock");
 		$form->addInputText("login", LOGIN . " ");
 		$form->addInputHidden("mod", "connect");
 		$form->addInputHidden("view", "forgetpass");
 		$form->addInputHidden("layout", "module");
 		$form->addInputSubmit("submit", VALID);
 		$form->addHtmlInFieldset($moreLink);
-		Core_Html::getInstance()->addJavascript("validForgetPass('#form-forgetpassblock', '#form-forgetpassblock-login-input');");
-		return $form->render("forgetpassblock");
+		Core_Html::getInstance()->addJavascript("validForgetPass('#form-login-forgetpassblock', '#form-login-forgetpassblock-login-input');");
+		return $form->render("login-forgetpassblock");
 	}
 	
 	private function &registration($moreLink) { // TODO registration block a coder
-		$form = new Libs_Form("registrationblock");
+		$form = new Libs_Form("login-registrationblock");
 		$form->addInputText("login", LOGIN . " ");
 		$form->addInputHidden("mod", "connect");
 		$form->addInputHidden("view", "registration");
 		//$form->addInputHidden("layout", "module");
 		$form->addInputSubmit("submit", VALID);
 		$form->addHtmlInFieldset($moreLink);
-		//Core_Html::getInstance()->addJavascript("validForgetPass('#form-forgetpassblock', '#form-forgetpassblock-login-input');");
-		return $form->render("registrationblock");
+		//Core_Html::getInstance()->addJavascript("validForgetPass('#form-login-registrationblock', '#form-login-registrationblock-login-input');");
+		return $form->render("login-registrationblock");
 	}
 }
 

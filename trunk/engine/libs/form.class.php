@@ -6,6 +6,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 
 /**
  * Classe de mise en forme d'un formulaire
+ * Avec mise en cache automatique
  * 
  * @author Sebastien Villemain
  *
@@ -55,14 +56,38 @@ class Libs_Form {
 	private $doFieldset = true;
 	
 	/**
+	 * Formulaire présent dans le cache
+	 * 
+	 * @var boolean
+	 */
+	private $cached = false;
+	
+	/**
+	 * Variable mise en cache
+	 * 
+	 * @var array
+	 */
+	private $cacheVars = array();
+	
+	/**
+	 * Position dans le tableau des variables cache
+	 * 
+	 * @var int
+	 */
+	private $cacheVarsIndex = 0;
+	
+	/**
 	 * Nouveau formulaire
 	 * 
-	 * @param $name String
+	 * @param $name String identifiant du formlaire : attention a ne pas prendre un nom déjà utilisé !
 	 * @param $urlAction String
 	 */
 	public function __construct($name, $urlAction = "") {
 		$this->name = $name;
 		$this->urlAction = !empty($urlAction) ? $urlAction : "index.php";
+		
+		Core_CacheBuffer::setSectionName("form");
+		$this->cached = Core_CacheBuffer::cached($name . ".php");
 	}
 	
 	/**
@@ -84,19 +109,41 @@ class Libs_Form {
 	}
 	
 	/**
+	 * Ajout d'une valeur en cache
+	 * 
+	 * @param $value String
+	 */
+	private function addCacheVar($value) {
+		$this->cacheVars[$this->cacheVarsIndex++] = $value;
+	}
+	
+	/**
+	 * Retourne la dernière variable de cache
+	 * 
+	 * @return String
+	 */
+	private function getLastCacheVar() {
+		if ($this->cached) return "";
+		// Le nom de la "vars" est relatif a Core_CacheBuffer::getCache()
+		return "$" . "vars[" . ($this->cacheVarsIndex - 1) . "]";
+	}
+	
+	/**
 	 * Ajoute un fieldset
 	 * 
 	 * @param $class String
 	 */
 	public function addFieldset($title = "", $description = "") {
-		if (!$this->doFieldset) {
-			$this->doFieldset = true;
-		} else {
-			$this->inputData .= "</fieldset>";
+		$title = $this->getTitle($title);
+		$description = $this->getDescription($description);
+		
+		if (!$this->cached) {
+			if (!$this->doFieldset) $this->doFieldset = true;
+			else $this->inputData .= "</fieldset>";
+			
+			$this->inputData .= "<fieldset>" 
+			. $title . $description;
 		}
-		$this->inputData .= "<fieldset>"
-		. $this->getTitle($title)
-		. $this->getDescription($description);
 	}
 	
 	/**
@@ -148,9 +195,7 @@ class Libs_Form {
 	 */
 	public function addInputRadio($id, $name, $description = "", $checked = false, $defaultValue = "", $options = "", $class = "") {
 		if (empty($class)) $class = "radio";
-		if ($checked) {
-			$options = "checked=\"checked\"" . ((!empty($options)) ? " " . $options : "");
-		}
+		if ($checked) $options = "checked=\"checked\"" . ((!empty($options)) ? " " . $options : "");
 		$this->addInput($id, $name, $description, "radio", $defaultValue, $options, $class);		
 	}
 	
@@ -167,9 +212,7 @@ class Libs_Form {
 	 */
 	public function addInputCheckbox($id, $name, $description = "", $checked = false, $defaultValue = "", $options = "", $class = "") {
 		if (empty($class)) $class = "checkbox";
-		if ($checked) {
-			$options = "checked=\"checked\"" . ((!empty($options)) ? " " . $options : "");
-		}
+		if ($checked) $options = "checked=\"checked\"" . ((!empty($options)) ? " " . $options : "");
 		$this->addInput($id, $name, $description, "checkbox", $defaultValue, $options, $class);		
 	}
 	
@@ -198,13 +241,32 @@ class Libs_Form {
 	 */
 	private function addInput($id, $name, $description, $type, $defaultValue = "", $options = "", $class = "") {
 		if (empty($class)) $class = "input";
-		$data = ((!empty($description)) ? "<p id=\"" . $this->getId($name) . "\">" . $this->getLabel($id, $description) : "")
-		. " <input id=\"" . $this->getId($id, "input") . "\" name=\"" . $name . "\" type=\"" . $type . "\""
-		. ((!empty($class)) ? " class=\"" . $class . "\"" : "")
-		. " value=\"" . $defaultValue . "\""
-		. ((!empty($options)) ? " " . $options : "") . " />"
-		. ((!empty($description)) ? "</p>" : "");
-		$this->inputData .= $data;
+		
+		$idDescription = $this->getId($name);
+		$description = $this->getLabel($id, $description);
+		$id = $this->getId($id, "input");
+		
+		$this->addCacheVar($name);
+		$name = $this->getLastCacheVar();
+		
+		$this->addCacheVar($type);
+		$type = $this->getLastCacheVar();
+		
+		$this->addCacheVar($class);
+		$class = $this->getLastCacheVar();
+		
+		$this->addCacheVar($defaultValue);
+		$defaultValue = $this->getLastCacheVar();
+		
+		$this->addCacheVar($options);
+		$options = $this->getLastCacheVar();
+		
+		if (!$this->cached) {
+			$this->inputData .= "<p id=\"" . $idDescription . "\">" . $description
+			. " <input id=\"" . $id . "\" name=\"" . $name . "\" type=\"" . $type . "\""
+			. " class=\"" . $class . "\" value=\"" . $defaultValue . "\" " . $options . " />"
+			. "</p>";
+		}
 	}
 	
 	/**
@@ -218,14 +280,30 @@ class Libs_Form {
 	 */
 	public function addTextarea($name, $description, $defaultValue = "", $options = "", $class = "") {
 		if (empty($class)) $class = "textarea";
-		$data = "<p id=\"" . $this->getId($name) . "\">"
-		. $this->getLabel($name, $description)
-		. " <textarea id=\"" . $this->getId($name, "input") . "\" name=\"" . $name . "\""
-		. ((!empty($class)) ? " class=\"" . $class . "\"" : "")
-		. ((!empty($options)) ? " " . $options : "") . ">"
-		. ((!empty($defaultValue)) ? Exec_Entities::stripSlashes($defaultValue) : "")
-		. "</textarea></p>";
-		$this->inputData .= $data;
+		
+		$idDescription = $this->getId($name);
+		$description = $this->getLabel($name, $description);
+		$id = $this->getId($name, "input");
+		
+		$this->addCacheVar($name);
+		$name = $this->getLastCacheVar();
+		
+		$this->addCacheVar($class);
+		$class = $this->getLastCacheVar();
+		
+		$this->addCacheVar($options);
+		$options = $this->getLastCacheVar();
+		
+		$defaultValue = Exec_Entities::stripSlashes($defaultValue);
+		$this->addCacheVar($defaultValue);
+		$defaultValue = $this->getLastCacheVar();
+		
+		if (!$this->cached) {
+			$this->inputData .= "<p id=\"" . $idDescription . "\">" . $description
+			. " <textarea id=\"" . $id . "\" name=\"" . $name . "\""
+			. " class=\"" . $class . "\" " . $options . " >"
+			. $defaultValue . "</textarea></p>";
+		}
 	}
 	
 	/**
@@ -238,13 +316,25 @@ class Libs_Form {
 	 */
 	public function addSelectOpenTag($name, $description, $options = "", $class = "") {
 		if (empty($class)) $class = "select";
-		$data = "<p id=\"" . $this->getId($name) . "\">"
-		. $this->getLabel($name, $description)
-		. " <select id=\"" . $this->getId($name, "input") . "\" name=\"" . $name . "\""
-		. ((!empty($class)) ? " class=\"" . $class . "\"" : "")
-		. ((!empty($options)) ? " " . $options : "")
-		. ">";
-		$this->inputData .= $data;
+		
+		$idDescription = $this->getId($name);
+		$description = $this->getLabel($name, $description);
+		$id = $this->getId($name, "input");
+		
+		$this->addCacheVar($name);
+		$name = $this->getLastCacheVar();
+		
+		$this->addCacheVar($class);
+		$class = $this->getLastCacheVar();
+		
+		$this->addCacheVar($options);
+		$options = $this->getLastCacheVar();
+		
+		if (!$this->cached) {
+			$this->inputData .= "<p id=\"" . $idDescription . "\">" . $description
+			. " <select id=\"" . $id . "\" name=\"" . $name . "\""
+			. " class=\"" . $class . "\" " . $options . ">";
+		}
 	}
 	
 	/**
@@ -256,19 +346,30 @@ class Libs_Form {
 	 * @param $options String
 	 */
 	public function addSelectItemTag($value, $description = "", $selected = false, $options = "") {
-		$data .= " <option value=\"" . $value . "\""
-		. (($selected) ? " selected=\"selected\"" : "")
-		. ((!empty($options)) ? " " . $options : ""). ">"
-		. ((!empty($description)) ? Exec_Entities::textDisplay($description) : $value)
-		. "</option>";
-		$this->inputData .= $data;
+		if ($selected) $options = "selected=\"selected\"" . ((!empty($options)) ? " " . $options : "");
+		
+		$description = ((!empty($description)) ? Exec_Entities::textDisplay($description) : $value);
+		
+		$this->addCacheVar($value);
+		$value = $this->getLastCacheVar();
+		
+		$this->addCacheVar($options);
+		$options = $this->getLastCacheVar();
+		
+		$this->addCacheVar($description);
+		$description = $this->getLastCacheVar();
+		
+		if (!$this->cached) {
+			$this->inputData .= " <option value=\"" . $value . "\" " . $options . ">"
+			. $description . "</option>";
+		}
 	}
 	
 	/**
 	 * Fermeture de la liste déroulante
 	 */
 	public function addSelectCloseTag() {
-		$this->inputData .= "</select></p>";
+		if (!$this->cached) $this->inputData .= "</select></p>";
 	}
 	/**
 	 * Ajoute du code HTML en plus dans le fieldset courant
@@ -276,14 +377,16 @@ class Libs_Form {
 	 * @param $html String
 	 */
 	public function addHtmlInFieldset($html) {
-		$this->inputData .= "<p>" . $html . "</p>";
+		$this->addCacheVar($html);
+		
+		if (!$this->cached) $this->inputData .= "<p>" . $this->getLastCacheVar() . "</p>";
 	}
 	
 	/**
 	 * Ajoute un espace
 	 */
 	public function addSpace() {
-		$this->inputData .= "<p><br /></p>";
+		if (!$this->cached) $this->inputData .= "<p><br /></p>";
 	}
 	
 	/**
@@ -292,11 +395,15 @@ class Libs_Form {
 	 * @param $html String
 	 */
 	public function addHtmlOutFieldset($html) {
-		if ($this->doFieldset) {
-			$this->inputData .= "</fieldset>";
-			$this->doFieldset = false;
+		$this->addCacheVar($html);
+		
+		if (!$this->cached) {
+			if ($this->doFieldset) {
+				$this->inputData .= "</fieldset>";
+				$this->doFieldset = false;
+			}
+			$this->inputData .= "<p>" . $this->getLastCacheVar() . "</p>";
 		}
-		$this->inputData .= "<p>" . $html . "</p>";
 	}
 	
 	/**
@@ -307,7 +414,12 @@ class Libs_Form {
 	 * @return String
 	 */
 	private function getLabel($name, $description) {
-		return "<label for=\"" . $this->getId($name, "input") . "\">" . Exec_Entities::textDisplay($description) . "</label>";
+		$id = $this->getId($name, "input");
+		$description = Exec_Entities::textDisplay($description);
+		$this->addCacheVar($description);
+		
+		if ($this->cached) return "";
+		return "<label for=\"" . $id . "\">" . $this->getLastCacheVar() . "</label>";
 	}
 	
 	/**
@@ -316,8 +428,12 @@ class Libs_Form {
 	 * @param $title String
 	 * @return String
 	 */
-	private function getTitle($title = "") {
-		return ((!empty($title)) ? "<legend><b>" . Exec_Entities::textDisplay($title) . "</b></legend>" : "");
+	private function getTitle($title) {
+		$title = Exec_Entities::textDisplay($title);
+		$this->addCacheVar($title);
+		
+		if ($this->cached) return "";
+		return "<legend><b>" . $this->getLastCacheVar() . "</b></legend>";
 	}
 	
 	/**
@@ -326,19 +442,29 @@ class Libs_Form {
 	 * @param $description String
 	 * @return String
 	 */
-	private function getDescription($description = "") {
-		return ((!empty($description)) ? "<p class=\"" . $this->getId("description") . "\">" . Exec_Entities::textDisplay($description) . "</p>" : "");
+	private function getDescription($description) {
+		$id = $this->getId("description");
+		$description = Exec_Entities::textDisplay($description);
+		$this->addCacheVar($description);
+		
+		if ($this->cached) return "";
+		return "<p class=\"" . $id . "\">" . $this->getLastCacheVar() . "</p>";
 	}
 	
 	/**
-	 * Retourne l'id du champs
+	 * Retourne l'identifiant du champs
 	 * 
 	 * @param $name String
+	 * @param $options String
 	 * @return String
 	 */
 	private function getId($name, $options = "") {
 		if (!empty($options)) $options = "-" . $options;
-		return "form-" . $this->name . "-" . $name . $options;
+		$id = "form-" . $this->name . "-" . $name . $options;
+		$this->addCacheVar($id);
+		
+		if ($this->cached) return "";
+		return $this->getLastCacheVar();
 	}
 	
 	/**
@@ -348,14 +474,37 @@ class Libs_Form {
 	 * @return String
 	 */
 	public function &render($class = "") {
-		// Définition du form
-		$content = "<form action=\"" . $this->urlAction . "\" method=\"post\" id=\"form-" . $this->name . "\" name=\"" . $this->name . "\""
-		. " class=\"" . ((!empty($class)) ? $class : "form") . "\"><fieldset>"
-		. $this->getTitle($this->title)
-		. $this->getDescription($this->description)
-		. $this->inputData
-		. (($this->doFieldset) ? "</fieldset>" : "")
-		. "</form>";
+		if (empty($class)) $class = "form";
+		
+		$this->addCacheVar($this->urlAction);
+		$url = $this->getLastCacheVar();
+		
+		$this->addCacheVar($this->name);
+		$name = $this->getLastCacheVar();
+		
+		$this->addCacheVar($class);
+		$class = $this->getLastCacheVar();
+		
+		$title = $this->getTitle($this->title);
+		$description = $this->getDescription($this->description);
+		
+		$content = "";
+		Core_CacheBuffer::setSectionName("form");
+		if ($this->cached) { // Récupèration des données mise en cache
+			$content = Core_CacheBuffer::getCache($this->name . ".php", $this->cacheVars);
+		} else { // Préparation puis mise en cache
+			$data = "<form action=\"" . $url . "\" method=\"post\" id=\"form-" . $name . "\" name=\"" . $name . "\""
+			. " class=\"" . $class . "\"><fieldset>" . $title . $description . $this->inputData
+			. (($this->doFieldset) ? "</fieldset>" : "") . "</form>";
+			
+			// Enregistrement dans le cache
+			$data = Core_CacheBuffer::serializeData($data);
+			Core_CacheBuffer::writingCache($this->name . ".php", $data);
+			
+			// Lecture pour l'affichage
+			$vars = $this->cacheVars;
+			eval(" \$content = $data; "); // Ne pas ajouter de quote : les données sont déjà serializé
+		}
 		return $content;
 	}
 }
