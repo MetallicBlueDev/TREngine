@@ -82,8 +82,8 @@ class Core_ConfigsLoader {
 				// Requête vers la base de donnée de configs
 				Core_Sql::select(Core_Table::$CONFIG_TABLE, array("name", "value"));
 				while ($row = Core_Sql::fetchArray()) {
+					$content .= Core_CacheBuffer::serializeData(array($row['name'] => $row['value']));
 					$configuration[$row['name']] = Exec_Entities::stripSlashes($row['value']);
-					$content .= Core_CacheBuffer::serializeVariable($row['name'], $configuration[$row['name']]);;
 				}
 				
 				// Mise en cache
