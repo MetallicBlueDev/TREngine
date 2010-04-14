@@ -7,33 +7,29 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Module_Management_Block extends Module_Model {
 	public function setting() {
 		Core_Loader::classLoader("Libs_Block");
-		
-		// Traitement
 		$localView = Core_Request::getWord("localView");
-		switch($localView) {
-			case "moveup":
-				$this->sendMove("up");
-				break;
-			case "movedown":
-				$this->sendMove("down");
-				break;
-		}
 		
+		// Affichage et traitement
 		$content = "";
-		if (Core_Main::isFullScreen()) {
-			$content .= "<div id=\"block_main_setting\">";
-		}
-		// Affichage
 		switch($localView) {
-			case "edit":
+			case "sendMoveUp":
+				$this->sendMoveUp();
+				$content .= $this->tabHome();
+				break;
+			case "sendMoveDown":
+				$this->sendMoveDown();
+				$content .= $this->tabHome();
+				break;
+			case "tabEdit":
 				$content .= $this->tabEdit();
 				break;
 			default:
 				$content .= $this->tabHome();
-				break;
 		}
+		
 		if (Core_Main::isFullScreen()) {
-			$content .= "</div>";
+			return "<div id=\"block_main_setting\">"
+			. $content . "</div>";
 		}
 		return $content;
 	}
@@ -60,16 +56,16 @@ class Module_Management_Block extends Module_Model {
 			while ($row = Core_Sql::fetchArray()) {
 				// Parametre de la ligne
 				$type = $row['type'];
-				$title = "<a href=\"" . Core_Html::getLink("?mod=management&manage=block&localView=edit&blockId=" . $row['block_id']) . "\">" . $row['title'] . "</a>";
+				$title = "<a href=\"" . Core_Html::getLink("?mod=management&manage=block&localView=tabEdit&blockId=" . $row['block_id']) . "\">" . $row['title'] . "</a>";
 				$side = Libs_Block::getLitteralSide($row['side']);
-				$position = Core_Html::getLinkForBlock("?mod=management&manage=block&localView=moveup&blockId=" . $row['block_id'],
-					"?mod=management&manage=block&localView=moveup&blockId=" . $row['block_id'],
+				$position = Core_Html::getLinkForBlock("?mod=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'],
+					"?mod=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'],
 					"#block_main_setting",
 					"^"
 				);
 				$position .= $row['position'];
-				$position .= Core_Html::getLinkForBlock("?mod=management&manage=block&localView=movedown&blockId=" . $row['block_id'],
-					"?mod=management&manage=block&localView=movedown&blockId=" . $row['block_id'],
+				$position .= Core_Html::getLinkForBlock("?mod=management&manage=block&localView=sendMoveDown&blockId=" . $row['block_id'],
+					"?mod=management&manage=block&localView=sendMoveDown&blockId=" . $row['block_id'],
 					"#block_main_setting",
 					"v"
 				);
@@ -82,7 +78,7 @@ class Module_Management_Block extends Module_Model {
 		return $rack->render();
 	}
 	
-	private function sendMove($move) {
+	private function sendMoveUp() {
 		$blockId = Core_Request::getInt("blockId", -1);
 		
 		if ($blockId > -1) { // Si l'id semble valide
@@ -94,32 +90,81 @@ class Module_Management_Block extends Module_Model {
 			if (Core_Sql::affectedRows() > 0) { // Si le block existe
 				$blockMove = Core_Sql::fetchArray(); // Récuperation des informations sur le block
 				
-				if (($move != "up") || ($blockMove['position'] > 0 && $move == "up")) {
+				if ($blockMove['position'] > 0) {
 					// Requête de selection des autres blocks
-					$where = "position = '" . $blockMove['position'] . "' OR position = '"
-					. (($move == "up") ? ($blockMove['position'] - 1) : ($blockMove['position'] + 1)) . "'";
 					Core_Sql::select(
 						Core_Table::$BLOCKS_TABLE,
 						array("block_id", "position"),
-						array("side = '" . $blockMove['side'] . "' AND", $where)
+						array("side = '" . $blockMove['side'] . "' AND", 
+						"(position = '" . $blockMove['position'] . "' OR position = '"
+						. ($blockMove['position'] - 1) . "')")
 					);
 					if (Core_Sql::affectedRows() > 0) {
+						Core_Sql::addBuffer("blockMoveUp");
 						// Mise à jour de position
-						while ($row = Core_Sql::fetchArray()) {
-							if ($move == "up") {
-								$row['position'] = ($row['block_id'] == $blockId) ? $row['position'] - 1 : $row['position'] + 1;
-							} else {
-								$row['position'] = ($row['block_id'] == $blockId) ? $row['position'] + 1 : $row['position'] - 1;
-							}
-							// Vérification de la position la plus haute
-							$row['position'] = ($row['position'] >= 0) ? $row['position'] : 0;
+						while ($row = Core_Sql::fetchBuffer("blockMoveUp")) {
+							$row->position = ($row->block_id == $blockId) ? $row->position - 1 : $row->position + 1;
+							
 							Core_Sql::update(
 								Core_Table::$BLOCKS_TABLE,
-								array("position" => $row['position']),
-								array("block_id = '" . $row['block_id'] . "'")
+								array("position" => $row->position),
+								array("block_id = '" . $row->block_id . "'")
 							);
 						}
 						Core_Exception::addInfoError(DATA_SAVED);
+					}
+				}
+			}
+		}
+	}
+	
+	private function sendMoveDown() {
+		$blockId = Core_Request::getInt("blockId", -1);
+		
+		if ($blockId > -1) { // Si l'id semble valide
+			Core_Sql::select(
+				Core_Table::$BLOCKS_TABLE,
+				array("side", "position"),
+				array("block_id = '" . $blockId . "'")
+			);
+			if (Core_Sql::affectedRows() > 0) { // Si le block existe
+				$blockMove = Core_Sql::fetchArray(); // Récuperation des informations sur le block
+				
+				// Selection du block le plus bas
+				Core_Sql::select(
+					Core_Table::$BLOCKS_TABLE,
+					array("block_id", "position"),
+					array("side = '" . $blockMove['side'] . "'"),
+					array("position DESC"),
+					"1"
+				);
+				
+				if (Core_Sql::affectedRows() > 0) {
+					$blockDown = Core_Sql::fetchArray();
+					
+					if ($blockMove['position'] < $blockDown['position']) {
+						// Requête de selection des autres blocks
+						Core_Sql::select(
+							Core_Table::$BLOCKS_TABLE,
+							array("block_id", "position"),
+							array("side = '" . $blockMove['side'] . "' AND", 
+							"(position = '" . $blockMove['position'] . "' OR position = '"
+							. ($blockMove['position'] + 1) . "')")
+						);
+						if (Core_Sql::affectedRows() > 0) {
+							Core_Sql::addBuffer("blockMoveDown");
+							// Mise à jour de position
+							while ($row = Core_Sql::fetchBuffer("blockMoveDown")) {
+								$row->position = ($row->block_id == $blockId) ? $row->position + 1 : $row->position - 1;
+								
+								Core_Sql::update(
+									Core_Table::$BLOCKS_TABLE,
+									array("position" => $row->position),
+									array("block_id = '" . $row->block_id . "'")
+								);
+							}
+							Core_Exception::addInfoError(DATA_SAVED);
+						}
 					}
 				}
 			}

@@ -8,26 +8,27 @@ class Module_Management_Setting extends Module_Model {
 	public function setting() {
 		$localView = Core_Request::getWord("localView", "", "POST");
 		
-		if (!empty($localView)) {
-			switch($localView) {
-				case "sendGeneral":
-					$this->sendGeneral();
-					break;
-				case "sendSystem":
-					$this->sendSystem();
-					break;
-			}
-		} else {
-			Core_Loader::classLoader("Libs_Form");
-			Core_Loader::classLoader("Libs_Tabs");
-			
-			$accountTabs = new Libs_Tabs("settingtab");
-			$accountTabs->addTab(SETTING_GENERAL_TAB, $this->tabGeneral());
-			$accountTabs->addTab(SETTING_SYSTEM_TAB, $this->tabSystem());
-			
-			return $accountTabs->render();
+		switch($localView) {
+			case "sendGeneral":
+				$this->sendGeneral();
+				break;
+			case "sendSystem":
+				$this->sendSystem();
+				break;
+			default:
+				return $this->tabHome();
 		}
 		return "";
+	}
+	
+	private function tabHome() {
+		Core_Loader::classLoader("Libs_Form");
+		Core_Loader::classLoader("Libs_Tabs");
+		
+		$accountTabs = new Libs_Tabs("settingtab");
+		$accountTabs->addTab(SETTING_GENERAL_TAB, $this->tabGeneral());
+		$accountTabs->addTab(SETTING_SYSTEM_TAB, $this->tabSystem());
+		return $accountTabs->render();
 	}
 	
 	/**
@@ -235,7 +236,7 @@ class Module_Management_Setting extends Module_Model {
 		}
 	}
 	
-	private function tabSystem() {
+	private function tabSystem() {// TODO a finir de coder
 		$form = new Libs_Form("management-setting-system");
 		$form->setTitle(SETTING_SYSTEM_CACHE_SETTING_TITLE);
 		$form->setDescription(SETTING_SYSTEM_CACHE_SETTING_DESCRIPTION);
