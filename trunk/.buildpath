@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<buildpath>
-	<buildpathentry external="true" kind="lib" path="E:/Eclipse/plugins/org.eclipse.php.core_2.1.1.v20090921-1100/Resources/language/php5.3"/>
-	<buildpathentry kind="src" path=""/>
-</buildpath>
