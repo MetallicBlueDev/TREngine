@@ -8,131 +8,120 @@ class Module_Profilcv_Index extends Module_Model {
 	
 	public function display() {
 		?>
-<table cellSpacing="5" cellPadding="0" border="0">
-        <tbody>
-        <tr>
-          <td colSpan=2><br /><br /><br /><br />
-            <span style="font-size: 15px;">Curriculum Vitae</span>
-            <hr SIZE=1>
 
-
-          </td>
-        </tr>
-        <tr>
-	<td>
-		<b>S&eacute;bastien Villemain</b><br />
-		N&eacute; le 07/01/1989 - C&eacute;libataire<br />
-		R&eacute;gion: Bourgogne
-	</td>
-	<td valign="top">
-	</td>
-        </tr>
-        <tr><td colspan="2">
-<br /><br />
-<b><u>CONNAISSANCES  EN  INFORMATIQUE</u></b><br /><br />
-<b>Technologies Java</b><br />
-
-Java EE (J2EE) : JSP, Servlet, XML. Ant, JUnit.<br />
-Java SE (J2SE) : Application client et server, interface graphique.<br />
-Android (de Google) : Application client, interface graphique, network.<br />
-Outils : NetBeans, Eclipse, UML.
+<div class="title"><span>Curriculum Vitae</span></div>
+<br />
+<div class="description" style="width: 40%;">
+	<b>S&eacute;bastien Villemain</b><br />
+	N&eacute; le 07/01/1989 - C&eacute;libataire<br />
+	R&eacute;gion: Bourgogne
+</div>
 
 <br /><br />
+<div class="title"><span><b><u>CONNAISSANCES  EN  INFORMATIQUE</u></b></span></div><br /><br />
+<div class="description" style="width: 80%;">
+	<span><b>Technologies Java</b><br /></span>
 
-<b>Autres langages</b><br />
-C et C++, Scripts Shell.
+	Java EE (J2EE) : JSP, Servlet, XML. Ant, JUnit.<br />
+	Java SE (J2SE) : Application client et server, interface graphique.<br />
+	Android (de Google) : Application client, interface graphique...<br />
+	Outils : NetBeans, Eclipse, UML.
 
-<br /><br />
+	<br /><br />
 
-<b>Langages de programmation web</b><br />
-HTML/XHTML, CSS, JavaScript, Perl et PHP (Protocolaire et Orient&eacute; Objet).
+	<span><b>Autres langages</b></span><br />
+	C et C++, Scripts Shell.
 
-<br /><br />
+	<br /><br />
 
-<b>Serveurs</b><br />
-Apache, Tomcat.
+	<span><b>Langages de programmation web</b></span><br />
+	HTML/XHTML, CSS, JavaScript, Perl et PHP (Protocolaire et Orient&eacute; Objet).
 
-<br /><br />
+	<br /><br />
 
-<b>Bases de donn&eacute;es</b><br />
+	<span><b>Serveurs</b></span><br />
+	Apache, Tomcat.
 
-MySQL (installation/configuration), ORACLE. Langage SQL.
+	<br /><br />
 
-<br /><br />
+	<span><b>Bases de donn&eacute;es</b></span><br />
 
-<b>Syst&#232;me de gestion de version</b><br />
-SVN, GIT.
+	MySQL (installation/configuration), ORACLE. Langage SQL.
 
-<br /><br />
+	<br /><br />
 
-<b>Divers</b><br />
-Microsoft Office, Virtual Box, GIMP, Paint Shop Pro, MAO...
+	<span><b>Syst&#232;me de gestion de version</b></span><br />
+	SVN, GIT.
+
+	<br /><br />
+
+	<span><b>Divers</b></span><br />
+	Microsoft Office, Virtual Box, GIMP, Paint Shop Pro, MAO...
 
 
-<br /><br />
+	<br /><br />
 
-<b>Domaines fonctionnels</b><br />
-Applications Web, Applications pour t&eacute;l&eacute;phone portable, Applications Multiplateforme, R&eacute;seaux et T&eacute;l&eacute;com.
+	<span><b>Domaines fonctionnels</b></span><br />
+	Applications Web, Applications pour t&eacute;l&eacute;phone portable, Applications Multiplateforme, R&eacute;seaux et T&eacute;l&eacute;com.
+</div>
 
 <br />
 <br /><br />
 
+<div class="title"><span><b><u>FORMATION</u></b></span></div><br /><br />
+<div class="description" style="width: 80%;">
+	<span><b>2008 - 2010</b></span><br />
 
-<b><u>FORMATION</u></b><br /><br />
+	BTS IRIS (Informatique et R&eacute;seau Industriel pour les Services technique) au lyc&eacute;e Nic&eacute;phore Niepce &#224; Chalon-sur-Sa&#244;ne.<br />
+	(Moyenne de 14.5/20 avec 19/20 en projet informatique).<br /><br />
+	Programmation C et C++, Programmation Java et Sevlet, Programmation Web PHP.<br /><br />
 
-<b>2008 - 2010</b><br />
-BTS IRIS (Informatique et R&eacute;seau Industriel pour les Services technique) au lyc&eacute;e Nic&eacute;phore Niepce &#224; Chalon-sur-Sa&#244;ne. (Moyenne de 14.5/20 avec 19/20 en projet informatique).<br />
-Programmation C et C++, Programmation Java et Sevlet, Programmation Web PHP.<br />
-<br />
+	<span><b>2004-2008</b></span><br />
+	Baccalaur&eacute;at STI G&eacute;nie M&eacute;canique avec mention assez bien au lyc&eacute;e Clos Maire &#224; Beaune.<br /><br />
 
-<b>2004-2008</b><br />
-Baccalaur&eacute;at STI G&eacute;nie M&eacute;canique avec mention assez bien au lyc&eacute;e Clos Maire &#224; Beaune.<br />
+	Option ISI : Initiation aux sciences de l'ing&eacute;nieur.<br />
+	Option ISP : Informatique et syst&#232;mes de production.<br />
+</div>
 
-Option ISI : Initiation aux sciences de l'ing&eacute;nieur.<br />
-Option ISP : Informatique et syst&#232;mes de production.<br />
-
-
-<br /><br />
-<b><u>EXPERIENCE  PROFESSIONNELLE</u></b><br /><br />
-
-<b><u><i>Mai &#224; Juin 2009</i></u></b> - Soci&eacute;t&eacute; Daoditu - D&eacute;velopement de site web<br />
-
-<br />
-<i><b>Finalisation de sites Internet, cr&eacute;ation d'une maquette fonctionnelle et d'un site Internet.</b></i><br /><br />
-D&eacute;veloppement sous Eclipse.
-<br /><br />
-<i>Environnement  : PHP OO, MySql, HTML/XHTML, CSS, WAMP, Eclipse.</i>
 <br /><br /><br />
 
-<b><u><i>Depuis Septembre 2007</i></u></b> - Gendarme Ajoint de R&eacute;serve<br />
+<div class="title"><span><b><u>EXPERIENCE  PROFESSIONNELLE</u></b></span></div><br /><br />
+<div class="description" style="width: 80%;">
+	<span><b><u><i>Mai &#224; Juin 2009</i></u></b> - Soci&eacute;t&eacute; Daoditu - D&eacute;velopement de site web.</span><br />
 
-<br />
-<i><b>Employ&eacute; r&eacute;guli&#232;rement en qualit&eacute; de r&eacute;serviste &#224; la compagnie de gendarmerie d&eacute;partementale de Beaune.</b></i><br /><br />
-<br />
+	<br />
+	<i><b>Finalisation de sites Internet, cr&eacute;ation d'une maquette fonctionnelle et d'un site Internet.</b></i><br /><br />
+	D&eacute;veloppement sous Eclipse.
+	<br /><br />
+	<i>Environnement  : PHP OO, MySql, HTML/XHTML, CSS, WAMP, Eclipse.</i>
+	<br /><br /><br />
 
-<b><u><i>Juillet 2007</i></u></b> - Pr&eacute;paration militaire<br />
+	<span><b><u><i>Depuis Septembre 2007</i></u></b> - Gendarme Ajoint de R&eacute;serve.</span><br />
 
-<br />
-<i><b>Formation &#224; la pr&eacute;paration militaire de la gendarmerie.</b></i><br /><br />
-<br />
+	<br />
+	<i><b>Employ&eacute; r&eacute;guli&#232;rement en qualit&eacute; de r&eacute;serviste &#224; la compagnie de gendarmerie d&eacute;partementale de Beaune.</b></i><br /><br />
+	<br />
 
+	<span><b><u><i>Juillet 2007</i></u></b> - Pr&eacute;paration militaire.</span><br />
 
-<b><u>DIVERS</u></b><br /><br />
+	<br />
+	<i><b>Formation &#224; la pr&eacute;paration militaire de la gendarmerie.</b></i><br />
+</div>
 
-Langue : Anglais technique,<br />
-Permis de conduire cat&eacute;gorie B,<br />
-Compose de la musique assist&eacute;e par ordinateur (MAO).<br />
+<br /><br />
 
-<br />
+<div class="title"><span><b><u>DIVERS</u></b></span></div><br /><br />
+<div class="description" style="width: 80%;">
+	Langue : Anglais technique,<br />
+	Permis de conduire cat&eacute;gorie B,<br />
+	Compose de la musique assist&eacute;e par ordinateur (MAO).<br />
 
-<b>Site web</b><br />
-<a href="http://www.trancer-studio.net">Site officiel Trancer-Studio</a><br />
-<a href="http://www.jamendo.com/fr/artist/Trancer">Musiques publi&eacute;es sur Jamendo</a><br />
+	<br />
 
-			</td>
-		</tr>
-		</tbody>
-   </table>
+	<span><b>Site web</b></span><br />
+	<a href="http://www.trancer-studio.net">Site officiel Trancer-Studio</a><br />
+	<a href="http://www.jamendo.com/fr/artist/Trancer">Musiques publi&eacute;es sur Jamendo</a><br />
+</div>
 <?php
 	}
 	

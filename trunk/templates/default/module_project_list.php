@@ -1,3 +1,6 @@
+<div class="title"><span><?php echo $title; ?></span></div>
+<div class="description" style="width: 90%;"><span><?php echo $description; ?></span></div>
+
 <?php
 $progress = "";
 foreach($projects as $key => $projectItem) {
@@ -7,18 +10,18 @@ foreach($projects as $key => $projectItem) {
 	else $progress = "";
 ?>
 
+<a href="?mod=project&view=displayProject&projectId=<?php echo $projectItem->projectid; ?>">
 <div class="project_body<?php echo $progress; ?>">
 	<div>
-		<div class="project_img"><img src="<?php echo TR_ENGINE_DIR; ?>/templates/default/project/<?php echo strtolower($projectItem->language); ?>.png" /></div>
+		<div class="project_img"><img alt="" src="templates/default/project/<?php echo strtolower($projectItem->language); ?>.png" /></div>
 		<div class="project_text">
-			<b><?php echo $projectItem->name; ?></b> (<?php echo $projectItem->language; ?>) <i><?php echo $projectItem->progress; ?>%</i>
+			<b><?php echo $projectItem->name; ?></b> (<?php echo $projectItem->language; ?>)
+			<br /><i><?php echo PERCENT_COMPLETE . ": " . $projectItem->progress; ?>%</i>
 		</div>
 	</div>
 </div>
-
+</a>
 
 <?php
-
 }
-
 ?>

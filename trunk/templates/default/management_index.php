@@ -8,7 +8,7 @@ foreach($pageList as $page) {
 ?>
 <div class="management_index_block">
 <a href="<?php echo Core_Html::getLink('?mod=management&manage=' . $page['value']); ?>">
-<img src="templates/default/management/<?php echo $pictureName; ?>.png" style="border: 0;" />
+	<img alt=""  src="templates/default/management/<?php echo $pictureName; ?>.png" style="border: 0;" />
 <div><b><?php echo $page['name']; ?></b></div></a>
 </div>
 <?php 

@@ -226,3 +226,23 @@ form {
 .cleaner {
 	clear: both;
 }
+/* Titre classique */
+.title {
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+}
+.title span {
+	background: url(images/title.png) no-repeat 0 4px;
+	padding-left: 16px;
+}
+/* Texte de description classique */
+.description {
+	font-size: 15px;
+	margin: 0 auto;
+	text-align: justify;
+}
+.description span {
+	background: url(images/description.png) no-repeat 0 2px;
+	padding-left: 16px;
+}

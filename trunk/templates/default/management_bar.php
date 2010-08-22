@@ -3,10 +3,10 @@ if (Core_Main::isFullScreen()) {
 ?>
 <div id="management_bar">
 <div>
-<a href="<?php echo Core_Html::getLink('?mod=management'); ?>"><img src="templates/default/management/bar_home.png" /></a>
+	<a href="<?php echo Core_Html::getLink('?mod=management'); ?>"><img alt=""  src="templates/default/management/bar_home.png" /></a>
 </div>
 <div>
-<a href="<?php echo Core_Html::getLink('?mod=management&manage=update'); ?>"><img src="templates/default/management/bar_update.png" /></a>
+	<a href="<?php echo Core_Html::getLink('?mod=management&manage=update'); ?>"><img alt=""  src="templates/default/management/bar_update.png" /></a>
 </div>
 <div id="management_bar_setting_page">
 <select onchange="document.location='<?php echo Core_Html::getLink('?mod=management&manage='); ?>'+this.options[this.selectedIndex].value;">
