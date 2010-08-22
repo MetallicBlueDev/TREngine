@@ -127,7 +127,7 @@ Compose de la musique assist&eacute;e par ordinateur (MAO).<br />
 
 <b>Site web</b><br />
 <a href="http://www.trancer-studio.net">Site officiel Trancer-Studio</a><br />
-<a href="http://www.jamendo.com/fr/artist/Trancer">Musiques publiées sur Jamendo</a><br />
+<a href="http://www.jamendo.com/fr/artist/Trancer">Musiques publi&eacute;es sur Jamendo</a><br />
 
 			</td>
 		</tr>
