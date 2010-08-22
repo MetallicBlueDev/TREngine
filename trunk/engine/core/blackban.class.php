@@ -42,7 +42,7 @@ class Core_BlackBan {
 			$libsMakeStyle->assign("mail", $mail);
 			$libsMakeStyle->assign("reason", Exec_Entities::textDisplay($reason));
 			$libsMakeStyle->assign("ip", Core_Session::$userIpBan);
-			$libsMakeStyle->display("banishment.tpl");
+			$libsMakeStyle->display("banishment");
 		}
 		
 	}

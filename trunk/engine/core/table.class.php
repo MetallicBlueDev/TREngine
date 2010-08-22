@@ -25,5 +25,8 @@ class Core_Table {
 	public static $MODULES_TABLE = "modules";
 	public static $USERS_TABLE = "users";
 	public static $USERS_ADMIN_TABLE = "users_admin";
+
+	// Tables additionnelles pour les modules
+	public static $PROJECT_TABLE = "project";
 }
 ?>

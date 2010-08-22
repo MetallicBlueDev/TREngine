@@ -158,7 +158,7 @@ class Core_Secure {
 		$libsMakeStyle->assign("errorMessageTitle", $this->getErrorMessageTitle($ie));
 		$libsMakeStyle->assign("errorMessage", $this->getDebugMessage($ie, $argv));
 		// Affichage du template en debug si problème
-		$libsMakeStyle->displayDebug("debug.tpl");	
+		$libsMakeStyle->displayDebug("debug.php");
 		
 		exit(); // Arret du moteur
 	}

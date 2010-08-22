@@ -40,7 +40,7 @@
 	
 	<?php echo Libs_Block::getInstance()->getBlocks("top"); ?>
 	
-	<?php include(TR_ENGINE_DIR . "/templates/default/module.tpl"); ?>
+	<?php include(TR_ENGINE_DIR . "/templates/default/module.php"); ?>
 	
 	<?php echo Libs_Block::getInstance()->getBlocks("bottom"); ?>
 	

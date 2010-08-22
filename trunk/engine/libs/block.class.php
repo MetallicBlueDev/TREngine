@@ -153,7 +153,7 @@ class Libs_Block {
 					$BlockClass->blockId = $block->block_id;
 					$BlockClass->side = $block->side;
 					$BlockClass->sideName = self::getSideLetters($block->side);
-					$BlockClass->templateName = "block_" . $BlockClass->sideName . ".tpl";
+					$BlockClass->templateName = "block_" . $BlockClass->sideName;
 					$BlockClass->title = $block->title;
 					$BlockClass->content = $block->content;
 					$BlockClass->rank = $block->rank;

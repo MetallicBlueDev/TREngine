@@ -122,7 +122,7 @@ class Core_Main {
 					// Affichage des données de la page de maintenance (fermeture)
 					$libsMakeStyle = new Libs_MakeStyle();
 					$libsMakeStyle->assign("closeText", ERROR_DEBUG_CLOSE);
-					$libsMakeStyle->display("close.tpl");
+					$libsMakeStyle->display("close");
 				} else {
 					// Traduction du module
 					Core_Translate::translate("modules/" . Libs_Module::$module);
@@ -136,7 +136,7 @@ class Core_Main {
 					
 					Exec_Marker::stopTimer("main");
 					$libsMakeStyle = new Libs_MakeStyle();
-					$libsMakeStyle->display("index.tpl");
+					$libsMakeStyle->display("index");
 				}
 			} else {
 				// Affichage autonome des modules et blocks

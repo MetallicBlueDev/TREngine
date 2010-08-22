@@ -29,7 +29,7 @@ class Module_Management_Index extends Module_Model {
 		$libsMakeStyle->assign("moduleList", $moduleList);
 		
 		// Affichage de la page d'administration
-		$managementScreen = "management_index.tpl";
+		$managementScreen = "management_index";
 		$pageSelected = "";
 		if (!empty($managePage)) { // Affichage d'une page de configuration spécial
 			$settingPage = Exec_Utils::inMultiArray($managePage, $pageList);
@@ -38,7 +38,7 @@ class Module_Management_Index extends Module_Model {
 			// Si c'est une page valide
 			if ($settingPage || $moduleSettingPage) {
 				$pageSelected = $managePage; // Page selectionnée
-				$managementScreen = "management_setting.tpl"; // Nom du template
+				$managementScreen = "management_setting"; // Nom du template
 				
 				// Récuperation du module
 				$moduleClassPage = "";

@@ -157,7 +157,7 @@ class Libs_MakeStyle {
 	private function &getTemplatePath() {
 		// Si le mode debug est activé, on utilise le fichier par défaut
 		$path = "";
-		if ($this->debugMode) $path = TR_ENGINE_DIR . "/engine/libs/makestyle.debug.tpl";
+		if ($this->debugMode) $path = TR_ENGINE_DIR . "/engine/libs/makestyle.debug";
 		else $path = TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . self::$currentTemplate . "/" . $this->fileName;
 		return $path;
 	}

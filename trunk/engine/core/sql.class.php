@@ -114,7 +114,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Retourne un tableau qui contient le ligne demandée
+	 * Retourne un tableau qui contient la ligne demandée
 	 * 
 	 * @return array
 	 */
