@@ -63,7 +63,7 @@ class Exec_Image {
 				$width = self::$width[$key];
 				$height = self::$height[$key];
 			} else {
-				if (list($widthImg, $heightImg) = @getimagesize($url) !== false) {
+				if ((list($widthImg, $heightImg) = @getimagesize($url)) !== false) {
 					self::$width[$key] = $width;
 					self::$height[$key] = $height;
 					$width = $widthImg;
@@ -104,11 +104,11 @@ class Exec_Image {
 	public static function &isValid($url) {
 		if (is_file($url)) {
 			$type = self::getType($url);
-			if (in_array($type, self::$allowed)) {
+			if (isset(self::$allowed[$type])) {
 				$ext = strrchr($url, ".");
 				$ext = substr($ext, 1);
-				$ext = "IMAGETYPE_" . $ext;
-				if ($type == $ext) {
+				$ext = "IMAGETYPE_" . strtoupper($ext);
+				if (self::$allowed[$type] == $ext) {
 					return true;
 				}
 			}

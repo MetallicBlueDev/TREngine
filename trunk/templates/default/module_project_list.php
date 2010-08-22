@@ -10,7 +10,7 @@ foreach($projects as $key => $projectItem) {
 	else $progress = "";
 ?>
 
-<a href="?mod=project&view=displayProject&projectId=<?php echo $projectItem->projectid; ?>">
+<a href="<?php echo Core_Html::getLink('?mod=project&view=displayProject&projectId=' . $projectItem->projectid); ?>">
 <div class="project_body<?php echo $progress; ?>">
 	<div>
 		<div class="project_img"><img alt="" src="templates/default/project/<?php echo strtolower($projectItem->language); ?>.png" /></div>
@@ -25,3 +25,5 @@ foreach($projects as $key => $projectItem) {
 <?php
 }
 ?>
+
+<div style="text-align: center;"><?php echo $nbProjects; ?></div>

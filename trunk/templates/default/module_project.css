@@ -17,7 +17,6 @@
 .project_body_75 {
 	background-color: #629a91;
 }
-
 .project_img {
 	border: 0px;
 	padding: 1px;
@@ -25,8 +24,22 @@
 	height: 32px;
 	width: 32px;
 }
-
 .project_text {
 	margin: 5px;
 	float: left;
+}
+
+.project_description_header {
+    border: 1px solid black;
+	background-color: #628291;
+	padding: 5px;
+	margin: 15px;
+	height: 128px;
+}
+.project_description_img {
+	border: 0px;
+	padding: 1px;
+	float: left;
+	height: 128px;
+	width: 128px;
 }

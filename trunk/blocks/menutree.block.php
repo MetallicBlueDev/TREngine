@@ -39,10 +39,8 @@ class Block_Menutree extends Block_Menu {
 				$this->content = "";
 		}
 		
-		Core_Html::getInstance()->addCssInculdeFile("jquery.treeview.css");
-		Core_Html::getInstance()->addJavascriptFile("jquery.treeview.js");
-		Core_Html::getInstance()->addJavascriptJquery("$('#block" . $this->blockId . "').treeview({animated: 'fast', collapsed: true, unique: true, persist: 'location'});");
-		
+		Core_Loader::classLoader("Exec_JQuery");
+		Exec_JQuery::getTreeView("#block" . $this->blockId);
 	}
 }
 

@@ -16,7 +16,9 @@ Core_Loader::classLoader("Block_Menu");
 class Block_Menujd extends Block_Menu {
 	
 	public function display() {
-		$this->configure();
+		Core_Loader::classLoader("Exec_JQuery");
+		Exec_JQuery::getJdMenu();
+
 		$menus = $this->getMenu();
 		if (Core_Html::getInstance()->isJavascriptEnabled()) {
 			$menus->addAttributs("class", "jd_menu" . (($this->side == 1 || $this->side == 2) ? " jd_menu_vertical" : ""));
@@ -26,19 +28,6 @@ class Block_Menujd extends Block_Menu {
 		$libsMakeStyle->assign("blockTitle", $this->title);
 		$libsMakeStyle->assign("blockContent", $menus->render());
 		$libsMakeStyle->display($this->templateName);
-	}
-	
-	private function configure() {		
-		// Ajout du fichier de style
-		Core_Html::getInstance()->addCssInculdeFile("jquery.jdMenu.css");
-		// Ajout des fichier javascript
-		Core_Html::getInstance()->addJavascriptFile("jquery.dimensions.js");
-		Core_Html::getInstance()->addJavascriptFile("jquery.positionBy.js");
-		Core_Html::getInstance()->addJavascriptFile("jquery.bgiframe.js");
-		Core_Html::getInstance()->addJavascriptFile("jquery.jdMenu.js");
-		
-		// Ajout du code d'excution
-		Core_Html::getInstance()->addJavascriptJquery("$('ul.jd_menu').jdMenu();");
 	}
 }
 

@@ -18,7 +18,7 @@ class Module_Project_Index extends Module_Model {
 		);
 
 		Core_Html::getInstance()->addCssTemplateFile("module_project.css");
-		$libsMakeStyle = new Libs_MakeStyle("module_project");
+		$libsMakeStyle = new Libs_MakeStyle("module_project_list");
 		$libsMakeStyle->assign("title", PROJECTS_LIST_TITLE);
 		$libsMakeStyle->assign("description", PROJECTS_LIST_DESCRIPTION);
 
@@ -38,15 +38,20 @@ class Module_Project_Index extends Module_Model {
 		$projectId = Core_Request::getInt("projectId", -1);
 
 		if ($projectId >= 0) {
-			$values = array("name", "date", "language", "sourcelink", "binairelink", "description", "img", "progress");
+			$values = array("name", "date", "language", "sourcelink", "binairelink", "description", "img", "progress", "website");
 			Core_Sql::select(Core_Table::$PROJECT_TABLE, $values, array("projectid = '" . $projectId . "'"));
 
 			if (Core_Sql::affectedRows() == 1) {
-				Core_Html::getInstance()->addCssTemplateFile("module_project.css");
-				$libsMakeStyle = new Libs_MakeStyle("module_project");
-				$projectInfo = Core_Sql::fetchArray();
-				$libsMakeStyle->assign("project", $projects);
+				Core_Loader::classLoader("Exec_JQuery");
+				Exec_JQuery::getSlimbox();
 
+				Core_Html::getInstance()->addJavascriptJquery("$('.project_description_img a').slimbox();");
+				
+				Core_Html::getInstance()->addCssTemplateFile("module_project.css");
+				$libsMakeStyle = new Libs_MakeStyle("module_project_description");
+				$projectInfo = Core_Sql::fetchArray();
+				$libsMakeStyle->assign("projectInfo", $projectInfo);
+				$libsMakeStyle->display();
 			} else {
 				$this->displayProjectList();
 			}
