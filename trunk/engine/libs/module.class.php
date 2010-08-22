@@ -350,42 +350,42 @@ abstract class Module_Model {
 	 * 
 	 * @var array
 	 */
-	protected $configs = array();
+	private $configs = array();
 	
 	/**
 	 * Id du module
 	 * 
 	 * @var int
 	 */	
-	protected $modId = 0;
+	private $modId = 0;
 	
 	/**
 	 * Nom du module courant
 	 * 
 	 * @var String
 	 */
-	protected $module = "";
+	private $module = "";
 	
 	/**
 	 * Nom de la page courante
 	 * 
 	 * @var String
 	 */
-	protected $page = "";
+	private $page = "";
 	
 	/**
 	 * Rank du module
 	 * 
 	 * @var int
 	 */
-	protected $rank = "";
+	private $rank = "";
 	
 	/**
 	 * Nom du viewer courant
 	 * 
 	 * @var String
 	 */
-	protected $view = "";
+	private $view = "";
 	
 	/**
 	 * Fonction d'affichage par défaut

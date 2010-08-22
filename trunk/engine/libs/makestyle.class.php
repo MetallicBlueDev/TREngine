@@ -58,7 +58,7 @@ class Libs_MakeStyle {
 		
 		// Si le nom du template est précisé a la construction
 		if (!empty($fileName)) {
-			$this->fileName = $fileName;
+			$this->fileName = $fileName . ".php";
 		}
 		
 		if (empty(self::$templatesDir) || empty(self::$currentTemplate)) { // TODO si $templatesDir ou $currentTemplate est vide, le moteur plante !
@@ -73,7 +73,7 @@ class Libs_MakeStyle {
 	 * @param $fileName String
 	 */
 	private function checkTemplate($fileName = "") {
-		if (!empty($fileName)) $this->fileName = $fileName; // Nom du template
+		if (!empty($fileName)) $this->fileName = $fileName . ".php"; // Nom du template
 		
 		if (!$this->isTemplate()) { // Vérification du template
 			Core_Secure::getInstance()->debug("makeStyle", $this->getTemplatePath());
@@ -139,7 +139,7 @@ class Libs_MakeStyle {
 	 * @return String
 	 */
 	public function renderDebug($fileName = "") {
-		if (!empty($fileName)) $this->fileName = $fileName;
+		if (!empty($fileName)) $this->fileName = $fileName . ".php";
 		
 		// Si le template ne contient pas le fichier debug
 		if (!$this->isTemplate()) {
