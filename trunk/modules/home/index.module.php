@@ -7,11 +7,11 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Module_Home_Index extends Module_Model {
 	
 	public function display() {
-		echo "Contenu du module home, bienvenue !";
+		echo "Bonjour, bienvenue sur <a href=\"index.php\">Trancer-Studio.net</a>.<br />";
 	}
 	
 	public function setting() {
-		return "home setting!!";
+		return "Pas de setting...";
 	}
 }
 

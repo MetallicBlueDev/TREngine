@@ -12,7 +12,7 @@ $db['user'] = "root";
 $db['pass'] = "";
 //
 // Nom de la base
-$db['name'] = "tr_studio";
+$db['name'] = "trancers_db";
 //
 // Type de base
 $db['type'] = "mysql";
