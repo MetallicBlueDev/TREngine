@@ -21,16 +21,20 @@ a:hover {
 
 /* Style graphique pour mettre en valeur quelques elements dans un texte */
 /* Classe écritent en dur dans le code */
-.input, .textarea, select {
+.input, .textarea, .select, select {
 	background-color: #d0dfe6;
 	border-top: 2px solid #7194a4;
 	border-bottom: 2px solid #7194a4;
 	color: #05587b;
 }
+.input[disabled='disabled'] {
+	background-color: #80878f;
+	text-decoration: line-through;
+}
 .input:hover, .textarea:hover {
 	background-color: #fff;
 }
-input[type='text'], input[type='password'] {
+.input[type='text'], .input[type='password'], input[type='text'], input[type='password'] {
 	width: 130px;
 }
 

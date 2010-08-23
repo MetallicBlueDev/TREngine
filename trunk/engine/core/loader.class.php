@@ -5,7 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Chargeur de classe
+ * Chargeur de classe.
  * 
  * @author Sébastien Villemain
  *
@@ -13,15 +13,15 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Core_Loader {
 	
 	/**
-	 * Tableau des classes chargées
+	 * Tableau des classes chargées.
 	 */ 
 	private static $loaded = array();
 	
 	/**
-	 * Chargeur de classe
+	 * Chargeur de classe.
 	 * 
-	 * @param $class Nom de la classe
-	 * @return boolean true chargé
+	 * @param $class String Nom de la classe.
+	 * @return boolean true chargé.
 	 */
 	public static function classLoader($class) {
 		try {
@@ -33,10 +33,10 @@ class Core_Loader {
 	}
 	
 	/**
-	 * Chargeur de fichier include
+	 * Chargeur de fichier include.
 	 * 
-	 * @param $include Nom de l'include
-	 * @return boolean true chargé
+	 * @param $include String Nom de l'include.
+	 * @return boolean true chargé.
 	 */
 	public static function includeLoader($include) {
 		try {
@@ -47,11 +47,11 @@ class Core_Loader {
 	}
 	
 	/**
-	 * Chargeur de fichier
+	 * Chargeur de fichier.
 	 * 
-	 * @param $name Nom de la classe/ du fichier
-	 * @param $ext Extension
-	 * @return boolean true chargé
+	 * @param $name String Nom de la classe/ du fichier.
+	 * @param $ext String Extension.
+	 * @return boolean true chargé.
 	 */
 	private static function load($name, $ext = "") {
 		// Si ce n'est pas déjà chargé
@@ -98,19 +98,19 @@ class Core_Loader {
 	}
 	
 	/**
-	 * Vérifie si le fichier demandé a été chargé
+	 * Vérifie si le fichier demandé a été chargé.
 	 * 
-	 * @param $name fichier demandé
-	 * @return boolean true si c'est déjà chargé
+	 * @param $name String fichier demandé.
+	 * @return boolean true si c'est déjà chargé.
 	 */
 	private static function isLoaded($name) {
 		return isset(self::$loaded[$name]);
 	}
 	
 	/**
-	 * Vérifie la disponibilité de la classe et de ca methode éventuellement
+	 * Vérifie la disponibilité de la classe et de ca methode éventuellement.
 	 * 
-	 * @param $className String or Object une chaine de caractère est recommandée
+	 * @param $className String or Object une chaine de caractère est recommandée.
 	 * @param $methodName String
 	 * @param $static boolean
 	 * @return boolean
@@ -140,10 +140,10 @@ class Core_Loader {
 	}
 	
 	/**
-	 * Appel une methode ou un object ou une classe statique callback
+	 * Appel une methode ou un object ou une classe statique callback.
 	 * 
-	 * @param $callback String or array Nom de la callback
-	 * @return callback resultat
+	 * @param $callback String or array Nom de la callback.
+	 * @return callback resultat.
 	 */
 	public static function callback($callback) {
 		if (TR_ENGINE_PHP_VERSION < "5.2.3") {
