@@ -14,6 +14,7 @@ class Module_Home_Index extends Module_Model {
 <br /><br />
 <div class="description" style="width: 70%;">
 	<span>Le site est un peu vide, mais il va se remplir petit &#224; petit...</span>
+	<br /><br />A venir : des textes, de la documentation, des exemples, des images relatif &#224; mes projets.
 </div>
 
 <?php
