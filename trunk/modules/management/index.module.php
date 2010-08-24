@@ -5,16 +5,22 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Module d'interface entre le site et le client
+ * Module d'interface entre le site et le client.
  * 
  * @author Sebastien Villemain
- *
  */
 class Module_Management_Index extends Module_Model {
+
+	/**
+	 * Tableau contenant les boutons de la barre d'outil.
+	 *
+	 * @var array
+	 */
+	private static $toolbar = array();
 	
 	public function display() {
 		// Ajout du CSS du template et du fichier javascript par défaut
-		Core_HTML::getInstance()->addCssTemplateFile("style_management.css");
+		Core_HTML::getInstance()->addCssTemplateFile("module_management.css");
 		Core_HTML::getInstance()->addJavascriptFile("management.js");
 		
 		// Nom de la page administable
@@ -29,7 +35,7 @@ class Module_Management_Index extends Module_Model {
 		$libsMakeStyle->assign("moduleList", $moduleList);
 		
 		// Affichage de la page d'administration
-		$managementScreen = "management_index";
+		$managementScreen = "module_management_index";
 		$pageSelected = "";
 		if (!empty($managePage)) { // Affichage d'une page de configuration spécial
 			$settingPage = Exec_Utils::inMultiArray($managePage, $pageList);
@@ -38,7 +44,7 @@ class Module_Management_Index extends Module_Model {
 			// Si c'est une page valide
 			if ($settingPage || $moduleSettingPage) {
 				$pageSelected = $managePage; // Page selectionnée
-				$managementScreen = "management_setting"; // Nom du template
+				$managementScreen = "module_management_setting"; // Nom du template
 				
 				// Récuperation du module
 				$moduleClassPage = "";
@@ -52,24 +58,37 @@ class Module_Management_Index extends Module_Model {
 				
 				// Si aucune erreur, on lance le module
 				if (Core_Loader::classLoader($moduleClassPage)) {
+					// Nom de la page courane
+					$currentPageName = self::getManagementPageName($pageSelected);
+					$libsMakeStyle->assign("currentPageName", $currentPageName);
+
+					// Ajout du repere au fil d'ariane
+					if (Core_Main::isFullScreen()) {
+						Libs_Breadcrumb::getInstance()->addTrail(
+							$currentPageName,
+							Core_Html::getLink('?mod=management&manage=' . $pageSelected)
+						);
+					}
+
 					$ModuleClass = new $moduleClassName();
-					
 					$content = "";
 					if (Core_Loader::isCallable($moduleClassPage, "setting")) {
 						$content = $ModuleClass->setting();
 					}
+					
 					$libsMakeStyle->assign("content", $content);
 				}
 			}
 		}
+		$libsMakeStyle->assign("toolbar", self::$toolbar);
 		$libsMakeStyle->assign("pageSelected", $pageSelected);
 		$libsMakeStyle->display($managementScreen);
 	}
 	
 	/**
-	 * Retourne un tableau contenant les pages d'administration disponibles
+	 * Retourne un tableau contenant les pages d'administration disponibles.
 	 * 
-	 * @return array => array("value" => valeur de la page, "name" => nom de la page)
+	 * @return array => array("value" => valeur de la page, "name" => nom de la page).
 	 */
 	public static function &listManagementPages() {
 		$page = "";
@@ -83,12 +102,59 @@ class Module_Management_Index extends Module_Model {
 				$page = substr($fileName, 0, $pos);
 				// Vérification des droits de l'utilisateur
 				if (Core_Access::moderate("management/" . $page . ".setting")) {
-					$name = defined("SETTING_TITLE_" . strtoupper($page)) ? constant("SETTING_TITLE_" . strtoupper($page)) : ucfirst($page);
+					$name = self::getManagementPageName($page);
 					$pageList[] = array("value" => $page, "name" => $name);
 				}
 			}
 		}
 		return $pageList;
+	}
+
+	/**
+	 * Retourne le nom littérale de la page.
+	 * 
+	 * @param $page String
+	 * @return String
+	 */
+	private static function &getManagementPageName($page) {
+		$name = defined("SETTING_TITLE_" . strtoupper($page)) ? constant("SETTING_TITLE_" . strtoupper($page)) : ucfirst($page);
+		return $name;
+	}
+
+	/**
+	 * Ajout d'un bouton a la barre d'outil.
+	 * 
+	 * @param String $name
+	 * @param String $description
+	 * @param String $link
+	 */
+	private static function addButtonInToolbar($name, $description, $link) {
+		self::$toolbar[] = array(
+			"name" => $name,
+			"description" => $description,
+			"link" => $link
+		);
+	}
+
+	public function install() {
+		// Aucune installation n'est permise
+	}
+
+	public function uninstall() {
+		// Aucune désinstallation n'est permise
+	}
+
+	public static function addEditButtonInToolbar($description, $link) {
+		self::addButtonInToolbar("edit", $description, $link);
+	}
+	public static function addDeleteButtonInToolbar($description, $link) {
+		self::addButtonInToolbar("delete", $description, $link);
+	}
+	public static function addCopyButtonInToolbar($description, $link) {
+		self::addButtonInToolbar("copy", $description, $link);
+	}
+	public static function addAddButtonInToolbar($description, $link) {
+		self::addButtonInToolbar("add", $description, $link);
 	}
 }
 

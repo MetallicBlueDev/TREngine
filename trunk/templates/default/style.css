@@ -39,7 +39,7 @@ a:hover {
 }
 
 /* Style générale des formulaires */
-form {
+.form {
 	padding: 8px;
 	width: 90%;
 	position: relative;

@@ -5,71 +5,70 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Gestionnaire de module
+ * Gestionnaire de module.
  * 
  * @author Sebastien Villemain
- *
  */
 class Libs_Module {
 	
 	/**
-	 * Instance du gestionnaire de module
+	 * Instance du gestionnaire de module.
 	 * 
 	 * @var Libs_Module
 	 */
 	private static $libsModule = null;
 	
 	/**
-	 * Nom du module courant
+	 * Nom du module courant.
 	 * 
 	 * @var String
 	 */
 	public static $module = "";
 	
 	/**
-	 * Id du module
+	 * Id du module.
 	 * 
 	 * @var int
 	 */	
 	public static $modId = "";
 	
 	/**
-	 * Rank du module
+	 * Rank du module.
 	 * 
 	 * @var int
 	 */
 	public static $rank;
 	
 	/**
-	 * Configuration du module
+	 * Configuration du module.
 	 * 
 	 * @var array
 	 */
 	public static $configs = array();
 	
 	/**
-	 * Module compilé
+	 * Module compilé.
 	 * 
 	 * @var String
 	 */
 	private $moduleCompiled = "";
 	
 	/**
-	 * Nom de la page courante
+	 * Nom de la page courante.
 	 * 
 	 * @var String
 	 */
 	public static $page = "";
 	
 	/**
-	 * Nom du viewer courant
+	 * Nom du viewer courant.
 	 * 
 	 * @var String
 	 */
 	public static $view = "";
 	
 	/**
-	 * Tableau d'information sur les modules extrait
+	 * Tableau d'information sur les modules extrait.
 	 * 
 	 * @var array
 	 */
@@ -100,7 +99,7 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Création et récuperation de l'instance du module
+	 * Création et récuperation de l'instance du module.
 	 * 
 	 * @return Libs_Module
 	 */
@@ -117,10 +116,10 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Retourne les informations du module cible
+	 * Retourne les informations du module cible.
 	 * 
-	 * @param $module String le nom du module, par défaut le module courant
-	 * @return array informations sur le module
+	 * @param $module String le nom du module, par défaut le module courant.
+	 * @return array informations sur le module.
 	 */
 	public function &getInfoModule($moduleName = "") {
 		$moduleInfo = array();
@@ -181,7 +180,7 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Retourne le rank du module
+	 * Retourne le rank du module.
 	 * 
 	 * @param $mod String
 	 * @return int
@@ -194,17 +193,22 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Charge le module courant
+	 * Charge le module courant.
 	 */
 	public function launch() {
 		// Vérification du niveau d'acces 
 		if (($this->installed() && Core_Access::autorize(self::$module)) || (!$this->installed() && Core_Session::$userRank > 1)) {
-			if (empty($this->moduleCompiled) && $this->isModule()) {		
-				$this->get();
+			if (empty($this->moduleCompiled) && $this->isModule()) {
+				Core_Translate::translate("modules/" . self::$module);
 				if (Core_Loader::isCallable("Libs_Breadcrumb")) {
 					Libs_Breadcrumb::getInstance()->addTrail(self::$module, "?mod=" . self::$module);
-					Libs_Breadcrumb::getInstance()->addTrail(self::$view, "?mod=" . self::$module . "&view=" . Libs_Module::$view);
+
+					// Juste une petite exception pour le module management qui est different
+					if (self::$module != "management") {
+						Libs_Breadcrumb::getInstance()->addTrail(self::$view, "?mod=" . self::$module . "&view=" . Libs_Module::$view);
+					}
 				}
+				$this->get();
 			}
 		} else {
 			Core_Exception::addAlertError(ERROR_ACCES_ZONE . " " . Core_Access::getModuleAccesError(self::$module));
@@ -212,7 +216,7 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Retourne un view valide sinon une chaine vide
+	 * Retourne un view valide sinon une chaine vide.
 	 * 
 	 * @param $pageInfo array
 	 * @param $setAlternative boolean
@@ -238,7 +242,7 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Récupère le module
+	 * Récupère le module.
 	 * 
 	 * @param $viewPage String
 	 */
@@ -268,7 +272,7 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Vérifie que le module est installé
+	 * Vérifie que le module est installé.
 	 * 
 	 * @param $moduleName String
 	 * @return boolean
@@ -281,7 +285,7 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Mise à jour du compteur de visite du module courant
+	 * Mise à jour du compteur de visite du module courant.
 	 */
 	private function updateCount() {
 		Core_Sql::addQuoted("", "count + 1");
@@ -293,11 +297,11 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Vérifie si le module existe
+	 * Vérifie si le module existe.
 	 * 
 	 * @param $module String
 	 * @param $page String
-	 * @return boolean true le module existe
+	 * @return boolean true le module existe.
 	 */
 	public function isModule($module = "", $page = "") {
 		if (empty($module)) $module = self::$module;
@@ -306,7 +310,7 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Retourne le module compilé
+	 * Retourne le module compilé.
 	 * 
 	 * @return String
 	 */
@@ -321,9 +325,9 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Retourne un tableau contenant les modules disponibles
+	 * Retourne un tableau contenant les modules disponibles.
 	 * 
-	 * @return array => array("value" => valeur du module, "name" => nom du module)
+	 * @return array => array("value" => valeur du module, "name" => nom du module).
 	 */
 	public static function &listModules() {
 		$moduleList = array();
@@ -337,11 +341,10 @@ class Libs_Module {
 }
 
 /**
- * Module de base, hérité par tous les autres modules
- * Modèle pour le contenu d'un module
+ * Module de base, hérité par tous les autres modules.
+ * Modèle pour le contenu d'un module.
  * 
  * @author Sebastien Villemain
- *
  */
 abstract class Module_Model {
 	
@@ -388,14 +391,14 @@ abstract class Module_Model {
 	private $view = "";
 	
 	/**
-	 * Fonction d'affichage par défaut
+	 * Fonction d'affichage par défaut.
 	 */
 	public function display() {
 		Core_Exception::addAlertError(ERROR_MODULE_IMPLEMENT . ((!empty($this->module)) ? " (" . $this->module . ")" : ""));
 	}
 	
 	/**
-	 * Installation du module courant
+	 * Installation du module courant.
 	 */
 	public function install() {
 		Core_Sql::insert(
@@ -406,7 +409,7 @@ abstract class Module_Model {
 	}
 	
 	/**
-	 * Désinstallation du module courant
+	 * Désinstallation du module courant.
 	 */
 	public function uninstall() {
 		Core_Sql::delete(
@@ -415,10 +418,11 @@ abstract class Module_Model {
 		);
 		Core_CacheBuffer::setSectionName("modules");
 		Core_CacheBuffer::removeCache(Libs_Module::$module . ".php");
+		Core_Translate::removeCache("modules/" . self::$module);
 	}
 	
 	/**
-	 * Configuration du module courant
+	 * Configuration du module courant.
 	 */
 	public function setting() {
 		// TODO mettre un forumlaire basique pour changer quelque configuration

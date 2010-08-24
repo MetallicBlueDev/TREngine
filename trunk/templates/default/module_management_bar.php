@@ -37,5 +37,6 @@ if (Core_Main::isFullScreen()) {
 		</div>
 	</div>
 <?php
+include(TR_ENGINE_DIR . "/templates/default/module_management_title.php");
 }
 ?>

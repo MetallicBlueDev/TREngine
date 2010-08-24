@@ -42,6 +42,13 @@ class Block_Menutree extends Block_Menu {
 		Core_Loader::classLoader("Exec_JQuery");
 		Exec_JQuery::getTreeView("#block" . $this->blockId);
 	}
+
+	public function install() {
+	}
+
+	public function uninstall() {
+		parent::uninstall();
+	}
 }
 
 

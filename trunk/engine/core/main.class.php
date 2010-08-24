@@ -5,20 +5,19 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Classe principal du moteur
+ * Classe principal du moteur.
  * 
  * @author Sébastien Villemain
- *
  */
 class Core_Main {
 	
 	/**
-	 * Tableau d'information de configuration
+	 * Tableau d'information de configuration.
 	 */ 
 	public static $coreConfig;
 	
 	/**
-	 * Mode de mise en page courante
+	 * Mode de mise en page courante.
 	 * default : affichage normale et complet
 	 * module : affichage uniquement du module si javascript activé
 	 * block : affichage uniquement du block si javascript activé
@@ -30,9 +29,9 @@ class Core_Main {
 	public static $layout = "default";
 	
 	/**
-	 * Préparation TR ENGINE
-	 * Procédure de préparation du moteur
-	 * Une étape avant le démarrage réel
+	 * Préparation TR ENGINE.
+	 * Procédure de préparation du moteur.
+	 * Une étape avant le démarrage réel.
 	 */
 	public function __construct() {
 		if (Core_Secure::isDebuggingMode()) Exec_Marker::startTimer("core");
@@ -60,7 +59,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Ajoute l'objet a la configuration
+	 * Ajoute l'objet a la configuration.
 	 * 
 	 * @param array
 	 */
@@ -73,7 +72,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Démarrage TR ENGINE
+	 * Démarrage TR ENGINE.
 	 */
 	public function start() {
 		if (Core_Secure::isDebuggingMode()) Exec_Marker::startTimer("launcher");
@@ -124,15 +123,12 @@ class Core_Main {
 					$libsMakeStyle->assign("closeText", ERROR_DEBUG_CLOSE);
 					$libsMakeStyle->display("close");
 				} else {
-					// Traduction du module
-					Core_Translate::translate("modules/" . Libs_Module::$module);
-					
 					// Chargement et construction du fil d'ariane
 					Core_Loader::classLoader("Libs_Breadcrumb");
 					Libs_Breadcrumb::getInstance();
-					
-					Libs_Block::getInstance()->launchAllBlock();
+
 					Libs_Module::getInstance()->launch();
+					Libs_Block::getInstance()->launchAllBlock();
 					
 					Exec_Marker::stopTimer("main");
 					$libsMakeStyle = new Libs_MakeStyle();
@@ -141,7 +137,6 @@ class Core_Main {
 			} else {
 				// Affichage autonome des modules et blocks
 				if (self::isModuleScreen() && Core_Loader::isCallable("Libs_Module")) {
-					Core_Translate::translate("modules/" . Libs_Module::$module);
 					Libs_Module::getInstance()->launch();
 					echo Libs_Module::getInstance()->getModule();
 				} else if (self::isBlockScreen() && Core_Loader::isCallable("Libs_Block")) {
@@ -170,9 +165,9 @@ class Core_Main {
 	}
 	
 	/**
-	 * Recherche de nouveau composant
+	 * Recherche de nouveau composant.
 	 * 
-	 * @return boolean true nouveau composant détecté
+	 * @return boolean true nouveau composant détecté.
 	 */
 	public function newComponentDetected() {
 		// TODO détection de nouveau module a coder
@@ -180,7 +175,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Démarrage de l'installeur
+	 * Démarrage de l'installeur.
 	 */
 	public function install() {
 		// TODO installation a coder
@@ -191,7 +186,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Vérifie l'état de maintenance
+	 * Vérifie l'état de maintenance.
 	 * 
 	 * @return boolean
 	 */
@@ -200,8 +195,8 @@ class Core_Main {
 	}
 	
 	/**
-	 * Lance le tampon de sortie
-	 * Entête & tamporisation de sortie
+	 * Lance le tampon de sortie.
+	 * Entête & tamporisation de sortie.
 	 */
 	private function compressionOpen() {
 		header("Vary: Cookie, Accept-Encoding");
@@ -216,14 +211,14 @@ class Core_Main {
 	}
 	
 	/**
-	 * Relachement des tampons de sortie
+	 * Relachement des tampons de sortie.
 	 */
 	private function compressionClose() {
 		while (ob_end_flush());
 	}
 	
 	/**
-	 * Assignation et vérification de fonction layout
+	 * Assignation et vérification de fonction layout.
 	 */
 	private function loadLayout() {
 		// Assignation et vérification de fonction layout
@@ -238,7 +233,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Création de l'instance du module
+	 * Création de l'instance du module.
 	 */
 	private function loadModule() {
 		Core_Loader::classLoader("Libs_Module");	
@@ -250,7 +245,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Assignation et vérification du template
+	 * Assignation et vérification du template.
 	 */
 	private function loadMakeStyle() {		
 		$template = (!Core_Session::$userTemplate) ? self::$coreConfig['defaultTemplate'] : Core_Session::$userTemplate;
@@ -259,7 +254,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Charge les outils de session
+	 * Charge les outils de session.
 	 */
 	private function loadSession() {
 		// Gestionnaire des cookie
@@ -278,34 +273,34 @@ class Core_Main {
 	}
 		
 	/**
-	 * Vérifie si l'affichage se fait en écran complet
+	 * Vérifie si l'affichage se fait en écran complet.
 	 * 
-	 * @return boolean true c'est en plein écran
+	 * @return boolean true c'est en plein écran.
 	 */
 	public static function isFullScreen() {
 		return ((self::$layout == "default") ? true : false);
 	}
 	
 	/**
-	 * Vérifie si l'affichage se fait en écran minimal ciblé module
+	 * Vérifie si l'affichage se fait en écran minimal ciblé module.
 	 * 
-	 * @return boolean true c'est un affichage de module uniquement
+	 * @return boolean true c'est un affichage de module uniquement.
 	 */
 	public static function isModuleScreen() {
 		return ((self::$layout == "module" || self::$layout == "modulepage") ? true : false);
 	}
 	
 	/**
-	 * Vérifie si l'affichage se fait en écran minimal ciblé block
+	 * Vérifie si l'affichage se fait en écran minimal ciblé block.
 	 * 
-	 * @return boolean true c'est un affichage de block uniquement
+	 * @return boolean true c'est un affichage de block uniquement.
 	 */
 	public static function isBlockScreen() {
 		return ((self::$layout == "block" || self::$layout == "blockpage") ? true : false);
 	}
 	
 	/**
-	 * Vérifie si l'url rewriting est activé
+	 * Vérifie si l'url rewriting est activé.
 	 * 
 	 * @return boolean
 	 */
@@ -314,7 +309,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Etat des inscriptions au site
+	 * Etat des inscriptions au site.
 	 * 
 	 * @return boolean
 	 */
@@ -323,7 +318,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Vérifie si le site est fermé
+	 * Vérifie si le site est fermé.
 	 * 
 	 * @return boolean
 	 */

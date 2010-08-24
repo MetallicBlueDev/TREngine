@@ -14,12 +14,12 @@ class Block_Comment extends Block_Model {
 	
 	private $displayOnModule = array();
 	
-	public function configure() {
+	private function configure() {
 		list($displayOnModule) = explode('|', $this->content);
 		$this->displayOnModule = explode('>:>', $displayOnModule); // on récupère une chaine sous forme monModule>:>monModule2
 	}
 	
-	public function &render() {
+	private function &render() {
 		$content = "";
 		return $content;
 	}
@@ -33,6 +33,14 @@ class Block_Comment extends Block_Model {
 				echo $this->render();
 			}
 		}
+	}
+
+	public function install() {
+
+	}
+	
+	public function uninstall() {
+
 	}
 }
 

@@ -5,78 +5,77 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Utilitaire d'entête et de contenu HTML
+ * Utilitaire d'entête et de contenu HTML.
  * 
  * @author Sebastien Villemain
- *
  */
 class Core_Html {
 	
 	/**
-	 * Instance de la classe Core_Html
+	 * Instance de la classe Core_Html.
 	 * 
 	 * @var Core_Html
 	 */
 	private static $html = null;
 	
 	/**
-	 * Nom du cookie de test
+	 * Nom du cookie de test.
 	 * 
 	 * @var String
 	 */
 	private $cookieTestName = "test";
 	
 	/**
-	 * Etat du javaScript chez le client
+	 * Etat du javaScript chez le client.
 	 * 
 	 * @var boolean
 	 */
 	private $javaScriptEnabled = false;
 	
 	/**
-	 * Fonctions et codes javascript demandées
+	 * Fonctions et codes javascript demandées.
 	 * 
 	 * @var String
 	 */
 	private $javaScriptCode = "";
 	
 	/**
-	 * Codes javascript JQUERY demandées
+	 * Codes javascript JQUERY demandées.
 	 * 
 	 * @var String
 	 */
 	private $javaScriptJquery = "";
 	
 	/**
-	 * Fichiers de javascript demandées
+	 * Fichiers de javascript demandées.
 	 * 
 	 * @var array
 	 */
 	private $javaScriptFile = array();
 	
 	/**
-	 * Fichier de style CSS demandées
+	 * Fichier de style CSS demandées.
 	 * 
 	 * @var array
 	 */
 	private $cssFile = array();
 	
 	/**
-	 * Titre de la page courante
+	 * Titre de la page courante.
 	 * 
 	 * @var String
 	 */
 	private $title = "";
 	
 	/**
-	 * Mots clès de la page courante
+	 * Mots clès de la page courante.
 	 * 
 	 * @var array
 	 */
 	private $keywords = array();
 	
 	/**
-	 * Description de la page courante
+	 * Description de la page courante.
 	 * 
 	 * @var String
 	 */
@@ -97,7 +96,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Retourne et si besoin créé l'instance Core_Html
+	 * Retourne et si besoin créé l'instance Core_Html.
 	 * 
 	 * @return Core_Html
 	 */
@@ -109,7 +108,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Detection du javascript chez le client
+	 * Detection du javascript chez le client.
 	 */
 	private function checkJavascriptEnabled() {
 		// Récuperation du cookie en php
@@ -119,9 +118,9 @@ class Core_Html {
 	}
 	
 	/**
-	 * Retourne les scripts à inclure
+	 * Retourne les scripts à inclure.
 	 * 
-	 * @param $forceIncludes boolean Pour forcer l'inclusion des fichiers javascript
+	 * @param $forceIncludes boolean Pour forcer l'inclusion des fichiers javascript.
 	 * @return String
 	 */
 	private function &includeJavascript($forceIncludes = false) {
@@ -159,7 +158,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Retourne les fichiers de css à inclure
+	 * Retourne les fichiers de css à inclure.
 	 * 
 	 * @return String
 	 */
@@ -175,7 +174,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Execute les fonctions javascript demandées
+	 * Execute les fonctions javascript demandées.
 	 * 
 	 * @return String
 	 */
@@ -194,7 +193,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Ajoute un code javaScript JQUERY à executer
+	 * Ajoute un code javaScript JQUERY à executer.
 	 * 
 	 * @param $javaScript String
 	 */
@@ -204,7 +203,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Ajoute un code javaScript pur à executer
+	 * Ajoute un code javaScript pur à executer.
 	 * 
 	 * @param $javaScript String
 	 */
@@ -214,7 +213,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Ajoute un code javascript Jquery ou autre automatiquement à executer
+	 * Ajoute un code javascript Jquery ou autre automatiquement à executer.
 	 * 
 	 * @param $javaScript String
 	 */
@@ -227,7 +226,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Ajoute un fichier javascript a l'entête
+	 * Ajoute un fichier javascript a l'entête.
 	 * 
 	 * @param $fileName String
 	 * @param $options String
@@ -249,7 +248,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Ajoute un fichier de style CSS a l'entête
+	 * Ajoute un fichier de style CSS a l'entête.
 	 * 
 	 * @param $fileName String
 	 * @param $options String
@@ -263,7 +262,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Ajoute un fichier de style CSS venant du dossier includes/css a l'entête
+	 * Ajoute un fichier de style CSS venant du dossier includes/css a l'entête.
 	 * 
 	 * @param $fileName String
 	 * @param $options String
@@ -273,7 +272,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Ajoute un fichier de style CSS venant du dossier template a l'entête
+	 * Ajoute un fichier de style CSS venant du dossier template a l'entête.
 	 * 
 	 * @param $fileName String
 	 * @param $options String
@@ -285,7 +284,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Reset des codes et fichier inclus javascript
+	 * Reset des codes et fichier inclus javascript.
 	 */
 	private function resetJavascript() {
 		$this->javaScriptCode = "";
@@ -293,7 +292,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Retourne l'état du javascript du client
+	 * Retourne l'état du javascript du client.
 	 * 
 	 * @return boolean
 	 */
@@ -302,7 +301,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Retourne l'entête HTML
+	 * Retourne l'entête HTML.
 	 * 
 	 * @return String
 	 */
@@ -334,7 +333,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Retourne les mots clès et la description de la page
+	 * Retourne les mots clès et la description de la page.
 	 * 
 	 * @return String
 	 */
@@ -360,7 +359,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Affecte le titre a la page courante
+	 * Affecte le titre a la page courante.
 	 * 
 	 * @param $title String
 	 */
@@ -369,7 +368,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Affecte les mots clès de la page courante
+	 * Affecte les mots clès de la page courante.
 	 * 
 	 * @param $keywords array or String : un tableau de mots clès prets ou une phrase
 	 */
@@ -394,7 +393,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Affecte la description de la page courante
+	 * Affecte la description de la page courante.
 	 * 
 	 * @param $description String
 	 */
@@ -415,11 +414,11 @@ class Core_Html {
 	}
 	
 	/**
-	 * Réécriture d'une URL
+	 * Réécriture d'une URL.
 	 * 
-	 * @param $link String or array adresse URL a réécrire
-	 * @param $layout boolean true ajouter le layout
-	 * @return String or array
+	 * @param $link String or array adresse URL a réécrire.
+	 * @param $layout boolean true ajouter le layout.
+	 * @return String or array.
 	 */
 	public static function &getLink($link, $layout = false) {
 		if (is_array($link)) {
@@ -430,7 +429,7 @@ class Core_Html {
 			if ($layout) {
 				// Configuration du layout
 				$layout = "&amp;layout=";
-				if (strpos($link, "block=") !== false) $layout .= "block";
+				if (strpos($link, "blockId=") !== false) $layout .= "block";
 				else if (strpos($link, "mod=") !== false) $layout .= "module";
 				else $layout .= "default";
 				$link .= $layout;
@@ -447,12 +446,12 @@ class Core_Html {
 	}
 	
 	/**
-	 * Retourne un lien web utilisable avec et sans javascript
+	 * Retourne un lien web utilisable avec et sans javascript.
 	 * 
-	 * @param $fullLink String le lien vers une page (utilisé sans javascript)
-	 * @param $blockLink String le lien vers une page (utilisé avec javascript)
-	 * @param $divId String id du block
-	 * @param $title String Titre du lien
+	 * @param $fullLink String le lien vers une page (utilisé sans javascript).
+	 * @param $blockLink String le lien vers une page (utilisé avec javascript).
+	 * @param $divId String id du block.
+	 * @param $title String Titre du lien.
 	 * @return String
 	 */
 	public static function getLinkForBlock($fullLink, $blockLink, $divId, $title) {
@@ -461,11 +460,11 @@ class Core_Html {
 	}
 	
 	/**
-	 * Redirection ou chargement via javascript vers une page
+	 * Redirection ou chargement via javascript vers une page.
 	 * 
-	 * @param $url String page demandée a chargé
-	 * @param $tps int temps avant le chargement de la page
-	 * @param $method String block de destination si ce n'est pas toutes la page
+	 * @param $url String page demandée a chargé.
+	 * @param $tps int temps avant le chargement de la page.
+	 * @param $method String block de destination si ce n'est pas toutes la page.
 	 */
 	public function redirect($url = "", $tps = 0, $method = "window") {
 		// Configuration du temps
@@ -488,14 +487,14 @@ class Core_Html {
 	}
 	
 	/**
-	 * Inclus et execute le javascript de facon autonome
+	 * Inclus et execute le javascript de facon autonome.
 	 */
 	public function selfJavascript() {
 		echo $this->includeJavascript(true) . $this->executeJavascript();
 	}
 	
 	/**
-	 * Retourne le loader annimé
+	 * Retourne le loader annimé.
 	 * 
 	 * @return String
 	 */

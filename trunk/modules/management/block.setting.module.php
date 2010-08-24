@@ -20,6 +20,10 @@ class Module_Management_Block extends Module_Model {
 				$this->sendMoveDown();
 				$content .= $this->tabHome();
 				break;
+			case "sendDelete":
+				$this->sendDelete();
+				$content .= $this->tabHome();
+				break;
 			case "tabEdit":
 				$content .= $this->tabEdit();
 				break;
@@ -37,8 +41,8 @@ class Module_Management_Block extends Module_Model {
 	private function tabHome() {
 		Core_Loader::classLoader("Libs_Rack");
 		$firstLine = array(
-			array(20, BLOCK_TYPE),
 			array(35, BLOCK_TITLE),
+			array(20, BLOCK_TYPE),
 			array(10, BLOCK_SIDE),
 			array(5, BLOCK_POSITION),
 			array(10, BLOCK_ACCESS),
@@ -55,8 +59,8 @@ class Module_Management_Block extends Module_Model {
 		if (Core_Sql::affectedRows() > 0) {
 			while ($row = Core_Sql::fetchArray()) {
 				// Parametre de la ligne
-				$type = $row['type'];
 				$title = "<a href=\"" . Core_Html::getLink("?mod=management&manage=block&localView=tabEdit&blockId=" . $row['block_id']) . "\">" . $row['title'] . "</a>";
+				$type = $row['type'];
 				$side = Libs_Block::getLitteralSide($row['side']);
 				$position = Core_Html::getLinkForBlock("?mod=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'],
 					"?mod=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'],
@@ -72,9 +76,13 @@ class Module_Management_Block extends Module_Model {
 				$rank = Core_Access::getLitteralRank($row['rank']);
 				$mods = ($row['mods'] == "all") ? BLOCK_ALL_PAGE : BLOCK_VARIES_PAGE;
 				// Ajout de la ligne au tableau
-				$rack->addLine(array($type, $title, $side, $position, $rank, $mods));
+				$rack->addLine(array($title, $type, $side, $position, $rank, $mods));
 			}
 		}
+		Module_Management_Index::addEditButtonInToolbar("Editer", "test=1");
+		Module_Management_Index::addAddButtonInToolbar("Nouveau", "test=1");
+		Module_Management_Index::addCopyButtonInToolbar("Copier", "test=1");
+		Module_Management_Index::addDeleteButtonInToolbar("Supprimer", "test=1");
 		return $rack->render();
 	}
 	
@@ -238,10 +246,47 @@ class Module_Management_Block extends Module_Model {
 					"#block_main_setting",
 					"v"
 				);
+				Module_Management_Index::addDeleteButtonInToolbar("Supprimer", "localView=sendDelete&blockId=" . $blockId);
 				return $form->render();
 			}
 		}
 		return "";
+	}
+
+	private function sendDelete() {
+		$blockId = Core_Request::getInt("blockId", -1);
+
+		if ($blockId > -1) { // Si l'id semble valide
+			Core_Sql::select(
+				Core_Table::$BLOCKS_TABLE,
+				array("type"),
+				array("block_id = '" . $blockId . "'")
+			);
+			if (Core_Sql::affectedRows() > 0) { // Si le block existe
+				$block = Core_Sql::fetchArray();
+
+				$blockClassName = "Block_" . ucfirst($block['type']);
+				$loaded = Core_Loader::classLoader($blockClassName);
+
+				if ($loaded) {
+					if (Core_Loader::isCallable($blockClassName, "uninstall")) {
+						$BlockClass = new $blockClassName();
+						$BlockClass->uninstall();
+					}
+				}
+
+				Core_Sql::delete(
+					Core_Table::$BLOCKS_TABLE,
+					array("block_id = '" . $blockId . "'")
+				);
+				Core_Translate::removeCache("blocks/" . $block['type']);
+				Core_Exception::addInfoError(DATA_DELETED);
+			}
+		}
+	}
+
+	private function sendAdd() {
+		
 	}
 }
 

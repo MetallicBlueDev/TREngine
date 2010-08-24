@@ -28,7 +28,7 @@ class Block_Menu extends Block_Model {
 		$libsMakeStyle->display($this->templateName);
 	}
 	
-	public function getMenu() {		
+	protected function getMenu() {
 		Core_Loader::classLoader("Libs_Menu");
 		$menus = new Libs_Menu(
 			"block" . $this->blockId,
@@ -41,6 +41,14 @@ class Block_Menu extends Block_Model {
 			)
 		);
 		return $menus;
+	}
+
+	public function install() {
+	}
+
+	public function uninstall() {
+		Core_CacheBuffer::setSectionName("menus");
+		Core_CacheBuffer::removeCache("block" . $this->blockId . ".php");
 	}
 	
 	/**

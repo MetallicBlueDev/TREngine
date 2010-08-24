@@ -29,6 +29,13 @@ class Block_Menujd extends Block_Menu {
 		$libsMakeStyle->assign("blockContent", $menus->render());
 		$libsMakeStyle->display($this->templateName);
 	}
+
+	public function install() {
+	}
+
+	public function uninstall() {
+		parent::uninstall();
+	}
 }
 
 

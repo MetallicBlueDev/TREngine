@@ -53,7 +53,7 @@ class Module_Project_Index extends Module_Model {
 				// Création de la page
 				Core_Loader::classLoader("Libs_Form");
 				$form = new Libs_Form(
-					"module_project_description",
+					"project_description",
 					Core_Html::getLink("?mod=project&view=download&&projectId=" . $projectInfo['projectid'])
 				);
 				$form->setTitle($projectInfo['name']);

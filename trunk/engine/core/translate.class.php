@@ -5,36 +5,35 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Traducteur de langue
+ * Traducteur de langue.
  * 
  * @author Sebastien Villemain
- *
  */
 class Core_Translate {
 	
 	/**
-	 * Langue utilisé actuellement
+	 * Langue utilisé actuellement.
 	 * 
 	 * @var String
 	 */
 	private static $currentLanguage = "";
 	
 	/**
-	 * Extension de la langue utilisé
+	 * Extension de la langue utilisé.
 	 * 
 	 * @var String
 	 */
 	private static $currentLanguageExtension = "";
 	
 	/**
-	 * Memorise les fichiers déjà traduit
+	 * Memorise les fichiers déjà traduit.
 	 * 
 	 * @var array
 	 */
 	private static $translated = array();
 	
 	/**
-	 * Liste des differentes langues
+	 * Liste des differentes langues.
 	 * 
 	 * @var array
 	 */
@@ -200,7 +199,7 @@ class Core_Translate {
 	);
 	
 	/**
-	 * Configure et charge les 1ere données de traduction
+	 * Configure et charge les 1ere données de traduction.
 	 */
 	public static function makeInstance() {
 		if (empty(self::$currentLanguage)) {
@@ -210,9 +209,9 @@ class Core_Translate {
 	}
 	
 	/**
-	 * Sélection de la langue la plus appropriée
+	 * Sélection de la langue la plus appropriée.
 	 * 
-	 * @param string $user_langue : langue via cookie du client
+	 * @param string $user_langue : langue via cookie du client.
 	 */
 	public static function setLanguage() {
 		// Langue finale
@@ -267,7 +266,7 @@ class Core_Translate {
 	
 	/**
 	 * Recherche l'extension de la langue du client
-	 * a partir du client ou de l'extension du serveur
+	 * a partir du client ou de l'extension du serveur.
 	 */
 	private static function setCurrentLanguageExtension() {
 		// Recherche de la langue du client
@@ -293,17 +292,17 @@ class Core_Translate {
 	}
 	
 	/**
-	 * Vérifie si le langage en disponible
+	 * Vérifie si le langage en disponible.
 	 * 
 	 * @param $language
-	 * @return boolean true langue disponible
+	 * @return boolean true langue disponible.
 	 */
 	private static function isValid($language) {
 		return is_file(TR_ENGINE_DIR . "/lang/" . $language . ".lang.php");
 	}
 	
 	/**
-	 * Retourne le vrai chemin vers le fichier de langue
+	 * Retourne le vrai chemin vers le fichier de langue.
 	 * 
 	 * @param $pathLang
 	 * @return String
@@ -317,9 +316,9 @@ class Core_Translate {
 	}
 	
 	/**
-	 * Traduction de la page via le fichier
+	 * Traduction de la page via le fichier.
 	 * 
-	 * @param string $path_lang : chemin du fichier de traduction
+	 * @param string $path_lang : chemin du fichier de traduction.
 	 * @return String
 	 */
 	public static function translate($pathLang = "") {
@@ -377,8 +376,8 @@ class Core_Translate {
 	}
 	
 	/**
-	 * Conversion des caratères spéciaux en entitiées UTF-8
-	 * Ajout d'antislashes pour utilisation dans le cache
+	 * Conversion des caratères spéciaux en entitiées UTF-8.
+	 * Ajout d'antislashes pour utilisation dans le cache.
 	 * 
 	 * @param String
 	 * @return String
@@ -390,7 +389,7 @@ class Core_Translate {
 	}
 	
 	/**
-	 * Retourne la langue courante
+	 * Retourne la langue courante.
 	 * 
 	 * @return String
 	 */
@@ -399,7 +398,7 @@ class Core_Translate {
 	}
 	
 	/**
-	 * Retourne un tableau contenant les langues disponibles
+	 * Retourne un tableau contenant les langues disponibles.
 	 * 
 	 * @return array
 	 */
@@ -413,6 +412,24 @@ class Core_Translate {
 			}
 		}
 		return $langues;
+	}
+
+	/**
+	 * Suppression du cache de traduction.
+	 * 
+	 * @param $pathLang String
+	 */
+	public static function removeCache($pathLang = "") {
+		if (!empty($pathLang) && substr($pathLang, -1) != "/") {
+			$pathLang .= "/";
+		}
+		$pathLang = str_replace("/", "_", $pathLang . "lang/");
+		
+		Core_CacheBuffer::setSectionName("lang");
+		$langues = Core_Translate::listLanguages();
+		foreach ($langues as $langue) {
+			Core_CacheBuffer::removeCache($pathLang . $langue . ".lang.php");
+		}
 	}
 }
 ?>

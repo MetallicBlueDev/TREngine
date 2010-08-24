@@ -5,29 +5,28 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Gestionnaire de blocks
+ * Gestionnaire de blocks.
  * 
  * @author Sebastien Villemain
- *
  */
 class Libs_Block {
 	
 	/**
-	 * Gestionnnaire de blocks
+	 * Gestionnnaire de blocks.
 	 * 
 	 * @var Libs_Block
 	 */
 	private static $libsBlock = null;
 	
 	/**
-	 * Blocks chargés, tableau a deux dimensions
+	 * Blocks chargés, tableau a deux dimensions.
 	 * 
 	 * @var array
 	 */
 	public static $blocksConfig = array();
 	
 	/**
-	 * Blocks compilés, tableau a deux dimensions
+	 * Blocks compilés, tableau a deux dimensions.
 	 * 
 	 * @var array
 	 */
@@ -37,7 +36,7 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Instance du gestionnaire de block
+	 * Instance du gestionnaire de block.
 	 * 
 	 * @return Libs_Block
 	 */
@@ -49,7 +48,7 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Vérifie si le block est valide
+	 * Vérifie si le block est valide.
 	 * 
 	 * @param $blockType String
 	 * @return boolean true block valide
@@ -59,10 +58,10 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Vérifie si le block doit être activé
+	 * Vérifie si le block doit être activé.
 	 * 
 	 * @param $modules array
-	 * @return boolean true le block doit être actif
+	 * @return boolean true le block doit être actif.
 	 */
 	private function blockActiveMod($modules = array("all")) {
 		if (Core_Loader::isCallable("Libs_Module")) {
@@ -76,7 +75,7 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Charge les blocks
+	 * Charge les blocks.
 	 */
 	// TODO mettre en cache la requete
 	public function launchAllBlock() {
@@ -106,14 +105,14 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Charge un block
+	 * Charge un block.
 	 * 
-	 * @param $where array exemple array(block_id = '0')
+	 * @param $where array exemple array(block_id = '0').
 	 */
 	// TODO mettre en cache la requete
 	public function launchOneBlock($where = array()) {
 		if (empty($where)) { // Capture de la variable
-			$where = array("block_id = '" . Core_Request::getInt("block") . "'");
+			$where = array("block_id = '" . Core_Request::getInt("blockId") . "'");
 		}
 		
 		Core_Sql::select(
@@ -135,7 +134,7 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Récupère le block
+	 * Récupère le block.
 	 * 
 	 * @param $block array
 	 */
@@ -161,8 +160,8 @@ class Libs_Block {
 					// Capture des données d'affichage
 					ob_start();
 					$BlockClass->display();
-						$this->blocksCompiled[$block->side][] = ob_get_contents();
-						ob_end_clean();
+					$this->blocksCompiled[$block->side][] = ob_get_contents();
+					ob_end_clean();
 				} else {
 					Core_Exception::addAlertError(ERROR_BLOCK_CODE);
 				}
@@ -171,7 +170,7 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Retourne les blocks compilés voulu (right/left/top/bottom)
+	 * Retourne les blocks compilés voulu (right/left/top/bottom).
 	 * 
 	 * @param $side String
 	 * @return String
@@ -190,10 +189,10 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Retourne le type d'orientation/postion en lettres
+	 * Retourne le type d'orientation/postion en lettres.
 	 * 
 	 * @param $side int
-	 * @return String identifiant de la position (right, left...)
+	 * @return String identifiant de la position (right, left...).
 	 */
 	private static function &getSideLetters($side) {
 		$sideLetters = $side; // Assignation par défaut
@@ -214,10 +213,10 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Retourne le type d'orientation/position en chiffre
+	 * Retourne le type d'orientation/position en chiffre.
 	 * 
 	 * @param $side String
-	 * @return int identifiant de la position (1, 2..)
+	 * @return int identifiant de la position (1, 2..).
 	 */
 	private static function &getSideNumeric($side) {
 		$sideNumeric = $side; // Assignation par défaut
@@ -238,9 +237,9 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Liste des orientations possible
+	 * Liste des orientations possible.
 	 * 
-	 * @return array("numeric" => identifiant int, "letters" => nom de la position)
+	 * @return array("numeric" => identifiant int, "letters" => nom de la position).
 	 */
 	public static function &listSide() {
 		$sideList = array();
@@ -251,10 +250,10 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Retourne le type d'orientation avec la traduction
+	 * Retourne le type d'orientation avec la traduction.
 	 * 
-	 * @param $side int or String
-	 * @return String postion traduit (si possible)
+	 * @param $side int or String.
+	 * @return String postion traduit (si possible).
 	 */
 	public static function &getLitteralSide($side) {
 		$side = strtoupper(self::getSideLetters($side));
@@ -263,7 +262,7 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Réécriture du tampon de sortie si besoin
+	 * Réécriture du tampon de sortie si besoin.
 	 * 
 	 * @param $buffer String
 	 * @return $buffer String
@@ -276,18 +275,18 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
+	 * Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer.
 	 * 
-	 * @param $side int coté ou se trouve le block
-	 * @param $key int cles du block
-	 * @return boolean true il doit y avoir réécriture
+	 * @param $side int coté ou se trouve le block.
+	 * @param $key int cles du block.
+	 * @return boolean true il doit y avoir réécriture.
 	 */
 	private function doRewriteBuffer($side, $key) {
 		return (strpos(self::$blocksConfig[$side][$key]->content, "rewriteBuffer") !== false) ? true : false;
 	}
 	
 	/**
-	 * Retourne le block compilé
+	 * Retourne le block compilé.
 	 * 
 	 * @return String
 	 */
@@ -298,7 +297,7 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Retourne la liste des blocks disponibles
+	 * Retourne la liste des blocks disponibles.
 	 * 
 	 * @return array
 	 */
@@ -318,68 +317,79 @@ class Libs_Block {
 }
 
 /**
- * Block de base, hérité par tous les autres blocks
- * Modèle pour le contenu d'un block
+ * Block de base, hérité par tous les autres blocks.
+ * Modèle pour le contenu d'un block.
  * 
  * @author Sebastien Villemain
- *
  */
 abstract class Block_Model {
 	
 	/**
-	 * Identifiant du block
+	 * Identifiant du block.
 	 * 
 	 * @var int
 	 */
 	public $blockId = 0;
 	
 	/**
-	 * Position du block en chiffre
+	 * Position du block en chiffre.
 	 * 
 	 * @var int
 	 */
 	public $side = 0;
 	
 	/**
-	 * Position du block en lettre
+	 * Position du block en lettre.
 	 * 
 	 * @var String
 	 */
 	public $sideName = "";
 	
 	/**
-	 * Nom complet du template de block a utiliser
+	 * Nom complet du template de block a utiliser.
 	 * 
 	 * @var String
 	 */
 	public $templateName = "";
 	
 	/**
-	 * Titre du block
+	 * Titre du block.
 	 * 
 	 * @var String
 	 */
 	public $title = "";
 	
 	/**
-	 * Contenu du block
+	 * Contenu du block.
 	 * 
 	 * @var String
 	 */
 	public $content = "";
 	
 	/**
-	 * Rank pour acceder au block
+	 * Rank pour acceder au block.
 	 * 
 	 * @var int
 	 */
 	public $rank = "";
 	
 	/**
-	 * Affichage par défaut
+	 * Affichage par défaut.
 	 */
 	public function display() {
 		Core_Exception::addAlertError(ERROR_BLOCK_IMPLEMENT . ((!empty($this->title)) ? " (" . $this->title . ")" : ""));
+	}
+
+	/**
+	 * Procédure d'installation du block.
+	 */
+	public function install() {
+	}
+
+	/**
+	 * Procédure de désinstallation du block.
+	 */
+	public function uninstall() {
 	}
 }
 ?>

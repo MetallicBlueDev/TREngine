@@ -5,36 +5,35 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Block login, accès rapide a une connexion, a une déconnexion et a son compte
+ * Block login, accès rapide a une connexion, a une déconnexion et a son compte.
  * 
  * @author Sebastien Villemain
- *
  */
 class Block_Login extends Block_Model {
 	
 	/**
-	 * Affiche le texte de bienvenue
+	 * Affiche le texte de bienvenue.
 	 * 
 	 * @var boolean
 	 */
 	private $displayText = false;
 	
 	/**
-	 * Affiche l'avatar
+	 * Affiche l'avatar.
 	 * 
 	 * @var boolean
 	 */
 	private $displayAvatar = false;
 	
 	/**
-	 * Affiche les icons rapides
+	 * Affiche les icons rapides.
 	 * 
 	 * @var boolean
 	 */
 	private $displayIcons = false;
 	
 	/**
-	 * Type d'affichage demandé
+	 * Type d'affichage demandé.
 	 * 
 	 * @var String
 	 */
@@ -53,7 +52,7 @@ class Block_Login extends Block_Model {
 		}
 	}
 	
-	public function configure() {
+	private function configure() {
 		list($activeText, $activeAvatar, $activeIcons) = explode('|', $this->content);
 		$this->displayText = ($activeText == 1) ? true : false;
 		$this->displayAvatar = ($activeAvatar == 1) ? true : false;
@@ -64,7 +63,7 @@ class Block_Login extends Block_Model {
 		}
 	}
 	
-	public function &render() {
+	private function &render() {
 		$content = "";
 		if (Core_Session::getInstance()->isUser()) {
 			if ($this->displayText) {
@@ -82,11 +81,11 @@ class Block_Login extends Block_Model {
 		} else {
 			$moreLink = "<ul>";
 			if (Core_Main::isRegistrationAllowed()) {
-				$moreLink .= "<li><b>" . Core_Html::getLinkForBlock("mod=connect&view=registration", "block=" . $this->blockId . "&localView=registration", "#login-logonblock", GET_ACCOUNT) . "</b></li>";
+				$moreLink .= "<li><b>" . Core_Html::getLinkForBlock("mod=connect&view=registration", "blockId=" . $this->blockId . "&localView=registration", "#login-logonblock", GET_ACCOUNT) . "</b></li>";
 			}
-			$moreLink .= "<li>" . Core_Html::getLinkForBlock("mod=connect&view=logon", "block=" . $this->blockId . "&localView=logon", "#login-logonblock", GET_LOGON) . "</li>"
-			. "<li>" . Core_Html::getLinkForBlock("mod=connect&view=forgetlogin", "block=" . $this->blockId . "&localView=forgetlogin", "#login-logonblock", GET_FORGET_LOGIN) . "</li>"
-			. "<li>" . Core_Html::getLinkForBlock("mod=connect&view=forgetpass", "block=" . $this->blockId . "&localView=forgetpass", "#login-logonblock", GET_FORGET_PASS) . "</li></ul>";
+			$moreLink .= "<li>" . Core_Html::getLinkForBlock("mod=connect&view=logon", "blockId=" . $this->blockId . "&localView=logon", "#login-logonblock", GET_LOGON) . "</li>"
+			. "<li>" . Core_Html::getLinkForBlock("mod=connect&view=forgetlogin", "blockId=" . $this->blockId . "&localView=forgetlogin", "#login-logonblock", GET_FORGET_LOGIN) . "</li>"
+			. "<li>" . Core_Html::getLinkForBlock("mod=connect&view=forgetpass", "blockId=" . $this->blockId . "&localView=forgetpass", "#login-logonblock", GET_FORGET_PASS) . "</li></ul>";
 			
 			$content .= "<div id=\"login-logonblock\">";
 			
@@ -114,7 +113,7 @@ class Block_Login extends Block_Model {
 	}
 	
 	/**
-	 * Formulaire de connexion
+	 * Formulaire de connexion.
 	 * 
 	 * @param $moreLink String
 	 * @return String
@@ -134,7 +133,7 @@ class Block_Login extends Block_Model {
 	}
 	
 	/**
-	 * Formulaire de login oublié
+	 * Formulaire de login oublié.
 	 * 
 	 * @param $moreLink String
 	 * @return String
@@ -152,7 +151,7 @@ class Block_Login extends Block_Model {
 	}
 	
 	/**
-	 * Formulaire de mot de passe oublié
+	 * Formulaire de mot de passe oublié.
 	 * 
 	 * @param $moreLink String
 	 * @return String
@@ -179,6 +178,17 @@ class Block_Login extends Block_Model {
 		$form->addHtmlInFieldset($moreLink);
 		//Core_Html::getInstance()->addJavascript("validForgetPass('#form-login-registrationblock', '#form-login-registrationblock-login-input');");
 		return $form->render("login-registrationblock");
+	}
+
+	public function install() {
+	}
+
+	public function uninstall() {
+		Core_CacheBuffer::setSectionName("form");
+		Core_CacheBuffer::removeCache("login-logonblock.php");
+		Core_CacheBuffer::removeCache("login-forgetloginblock.php");
+		Core_CacheBuffer::removeCache("login-forgetpassblock.php");
+		Core_CacheBuffer::removeCache("login-registrationblock.php");
 	}
 }
 
