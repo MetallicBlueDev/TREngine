@@ -84,6 +84,14 @@ class Module_Management_Index extends Module_Model {
 		$libsMakeStyle->assign("pageSelected", $pageSelected);
 		$libsMakeStyle->display($managementScreen);
 	}
+
+	public function install() {
+		// Aucune installation n'est permise
+	}
+
+	public function uninstall() {
+		// Aucune désinstallation n'est permise
+	}
 	
 	/**
 	 * Retourne un tableau contenant les pages d'administration disponibles.
@@ -136,24 +144,20 @@ class Module_Management_Index extends Module_Model {
 		);
 	}
 
-	public function install() {
-		// Aucune installation n'est permise
-	}
-
-	public function uninstall() {
-		// Aucune désinstallation n'est permise
-	}
-
-	public static function addEditButtonInToolbar($description, $link) {
+	public static function addEditButtonInToolbar($link, $description = "") {
+		if (empty($description)) $description = EDIT;
 		self::addButtonInToolbar("edit", $description, $link);
 	}
-	public static function addDeleteButtonInToolbar($description, $link) {
+	public static function addDeleteButtonInToolbar($link, $description = "") {
+		if (empty($description)) $description = DELETE;
 		self::addButtonInToolbar("delete", $description, $link);
 	}
-	public static function addCopyButtonInToolbar($description, $link) {
+	public static function addCopyButtonInToolbar($link, $description = "") {
+		if (empty($description)) $description = COPY;
 		self::addButtonInToolbar("copy", $description, $link);
 	}
-	public static function addAddButtonInToolbar($description, $link) {
+	public static function addAddButtonInToolbar($link, $description = "") {
+		if (empty($description)) $description = ADD;
 		self::addButtonInToolbar("add", $description, $link);
 	}
 }

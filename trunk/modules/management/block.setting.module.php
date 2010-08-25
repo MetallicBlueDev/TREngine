@@ -24,8 +24,15 @@ class Module_Management_Block extends Module_Model {
 				$this->sendDelete();
 				$content .= $this->tabHome();
 				break;
+			case "sendCopy":
+				$this->sendCopy();
+				$content .= $this->tabEdit(Core_Sql::insertId());
+				break;
 			case "tabEdit":
 				$content .= $this->tabEdit();
+				break;
+			case "tabAdd":
+				$content .= $this->tabAdd();
 				break;
 			default:
 				$content .= $this->tabHome();
@@ -79,10 +86,8 @@ class Module_Management_Block extends Module_Model {
 				$rack->addLine(array($title, $type, $side, $position, $rank, $mods));
 			}
 		}
-		Module_Management_Index::addEditButtonInToolbar("Editer", "test=1");
-		Module_Management_Index::addAddButtonInToolbar("Nouveau", "test=1");
-		Module_Management_Index::addCopyButtonInToolbar("Copier", "test=1");
-		Module_Management_Index::addDeleteButtonInToolbar("Supprimer", "test=1");
+
+		Module_Management_Index::addAddButtonInToolbar("localView=tabAdd");
 		return $rack->render();
 	}
 	
@@ -122,7 +127,11 @@ class Module_Management_Block extends Module_Model {
 						Core_Exception::addInfoError(DATA_SAVED);
 					}
 				}
+			} else {
+				Core_Exception::addInfoError(DATA_INVALID);
 			}
+		} else {
+			Core_Exception::addInfoError(DATA_INVALID);
 		}
 	}
 	
@@ -175,12 +184,18 @@ class Module_Management_Block extends Module_Model {
 						}
 					}
 				}
+			} else {
+				Core_Exception::addInfoError(DATA_INVALID);
 			}
+		} else {
+			Core_Exception::addInfoError(DATA_INVALID);
 		}
 	}
 	
-	private function tabEdit() {
-		$blockId = Core_Request::getInt("blockId", -1);
+	private function tabEdit($blockId = -1) {
+		if ($blockId < 0) {
+			$blockId = Core_Request::getInt("blockId", -1);
+		}
 		
 		if ($blockId > -1) { // Si l'id semble valide
 			Core_Sql::select(
@@ -190,8 +205,9 @@ class Module_Management_Block extends Module_Model {
 			);
 			if (Core_Sql::affectedRows() > 0) { // Si le block existe
 				$block = Core_Sql::fetchArray();
+				Libs_Breadcrumb::getInstance()->addTrail($block['title'], "?mod=management&manage=block&localView=tabEdit&blockId=" . $blockId);
+
 				Core_Loader::classLoader("Libs_Form");
-				
 				$form = new Libs_Form("management-block-blockedit");
 				$form->setTitle(BLOCK_EDIT_TITLE);
 				$form->setDescription(BLOCK_EDIT_DESCRIPTION);
@@ -246,9 +262,16 @@ class Module_Management_Block extends Module_Model {
 					"#block_main_setting",
 					"v"
 				);
-				Module_Management_Index::addDeleteButtonInToolbar("Supprimer", "localView=sendDelete&blockId=" . $blockId);
+				Module_Management_Index::addDeleteButtonInToolbar("localView=sendDelete&blockId=" . $blockId);
+				Module_Management_Index::addCopyButtonInToolbar("localView=sendCopy&blockId=" . $blockId);
+				Module_Management_Index::addEditButtonInToolbar("localView=tabAdd", PREVIEW);
+				Module_Management_Index::addAddButtonInToolbar("localView=tabAdd");
 				return $form->render();
+			} else {
+				Core_Exception::addInfoError(DATA_INVALID);
 			}
+		} else {
+			Core_Exception::addInfoError(DATA_INVALID);
 		}
 		return "";
 	}
@@ -281,12 +304,47 @@ class Module_Management_Block extends Module_Model {
 				);
 				Core_Translate::removeCache("blocks/" . $block['type']);
 				Core_Exception::addInfoError(DATA_DELETED);
+			} else {
+				Core_Exception::addInfoError(DATA_INVALID);
 			}
+		} else {
+			Core_Exception::addInfoError(DATA_INVALID);
 		}
 	}
 
+	private function sendCopy() {
+		$blockId = Core_Request::getInt("blockId", -1);
+
+		if ($blockId > -1) { // Si l'id semble valide
+			$keys = array("side", "position", "title", "content", "type", "rank", "mods");
+			Core_Sql::select(
+				Core_Table::$BLOCKS_TABLE,
+				$keys,
+				array("block_id = '" . $blockId . "'")
+			);
+			if (Core_Sql::affectedRows() > 0) { // Si le block existe
+				$block = Core_Sql::fetchArray();
+				$block['title'] = $block['title'] . " Copy";
+				Core_Sql::insert(
+					Core_Table::$BLOCKS_TABLE,
+					$keys,
+					$block
+				);
+				Core_Exception::addInfoError(DATA_COPIED);
+			} else {
+				Core_Exception::addInfoError(DATA_INVALID);
+			}
+		} else {
+			Core_Exception::addInfoError(DATA_INVALID);
+		}
+	}
+
+	private function tabAdd() {
+		Libs_Breadcrumb::getInstance()->addTrail(ADD, "?mod=management&manage=block&localView=tabAdd");
+	}
+
 	private function sendAdd() {
-		
+
 	}
 }
 

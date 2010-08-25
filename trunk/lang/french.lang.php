@@ -89,12 +89,14 @@ $lang = array(
 
 // Divers
 "WELCOME" => "Bienvenue",
-"DATA_SAVED" => "Les informations ont été correctement sauvegardé",
-"DATA_DELETED" => "Les informations ont été correctement supprimé",
 "MAIL" => "Votre adresse email",
 "LOGIN" => "Votre identifiant",
 "PASSWORD" => "Votre mot de passe",
-"VALID" => "Valider"
+"VALID" => "Valider",
+
+"DATA_SAVED" => "Les informations ont été correctement sauvegardé.",
+"DATA_INVALID" => "Les informations comportent des éléments invalides.",
+"DATA_DELETED" => "Les informations ont été correctement supprimé."
 
 );
 

@@ -3,6 +3,16 @@ $lang = array(
 // Chemin
 "TRAIL_MANAGEMENT" => "Administration",
 
+// Action des boutons
+"DELETE" => "Supprimer",
+"EDIT" => "Editer",
+"COPY" => "Copier",
+"ADD" => "Nouveau",
+"PREVIEW" => "Prévisualiser",
+
+// Résultat des actions
+"DATA_COPIED" => "Le block a été dupliqué.",
+
 // Nom des pages administrables
 "SETTING_TITLE_SETTING" => "Configuration du site",
 "SETTING_TITLE_BLOCK" => "Gestion des blocks",

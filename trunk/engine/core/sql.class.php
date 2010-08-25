@@ -517,8 +517,8 @@ abstract class Base_Model {
 		if (!is_array($values)) $values = array($values);
 		
 		$sql = "INSERT INTO " . $table . " ("
-		. implode(", ", $this->converKey($keys)) . ") VALUES ('"
-		. implode("', '", $this->converValue($values)) . "')";
+		. implode(", ", $this->converKey($keys)) . ") VALUES ("
+		. implode(", ", $this->converValue($values)) . ")";
 		$this->sql = $sql;
 	}
 	
@@ -748,7 +748,9 @@ abstract class Base_Model {
 		} else if (is_string($value)) {
 			$value = $this->converEscapeString($value);
 		}
-		$value = $this->addQuote($value, true);
+		if (!is_array($value)) {
+			$value = $this->addQuote($value, true);
+		}
 		return $value;
 	}
 	

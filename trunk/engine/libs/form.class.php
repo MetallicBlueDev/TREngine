@@ -481,7 +481,8 @@ class Libs_Form {
 	}
 	
 	/**
-	 * Retourne le rendu du form complet.
+	 * Retourne le rendu du formulaire complet.
+	 * Attention, ceci procédera a une sauvegarde et une lecture du cache.
 	 * 
 	 * @param $class String
 	 * @return String
