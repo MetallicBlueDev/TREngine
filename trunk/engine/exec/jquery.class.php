@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Constructeur de fichier
  *
- * @author Sebastien Villemain
+ * @author Sébastien Villemain
  *
  */
 class Exec_JQuery {

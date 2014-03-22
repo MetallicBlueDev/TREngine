@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Chargeur de configuration
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Core_ConfigsLoader {
@@ -30,10 +30,10 @@ class Core_ConfigsLoader {
 	}
 	
 	/**
-	 * Charge et vérifie la configuration
+	 * Charge et vÃ©rifie la configuration
 	 */
 	private function loadConfig() {
-		// Chemin vers le fichier de configuration générale
+		// Chemin vers le fichier de configuration gÃ©nÃ©rale
 		$configPath = TR_ENGINE_DIR . "/configs/config.inc.php";
 		
 		if (is_file($configPath)) {
@@ -41,7 +41,7 @@ class Core_ConfigsLoader {
 			
 			$configuration = array();
 			
-			// Vérification de l'adresse email du webmaster
+			// VÃ©rification de l'adresse email du webmaster
 			Core_Loader::classLoader("Exec_Mailer");
 			if (Exec_Mailer::validMail($config["TR_ENGINE_MAIL"])) {
 				define("TR_ENGINE_MAIL", $config["TR_ENGINE_MAIL"]);
@@ -49,7 +49,7 @@ class Core_ConfigsLoader {
 				Core_Exception::setException("Default mail isn't valide");
 			}
 			
-			// Vérification du statut
+			// VÃ©rification du statut
 			$config["TR_ENGINE_STATUT"] = strtolower($config["TR_ENGINE_STATUT"]);
 			if ($config["TR_ENGINE_STATUT"] == "close") define("TR_ENGINE_STATUT", "close");
 			else define("TR_ENGINE_STATUT", "open");
@@ -79,7 +79,7 @@ class Core_ConfigsLoader {
 				$configuration = Core_CacheBuffer::getCache("configs.php");
 			} else {
 				$content = "";
-				// Requête vers la base de donnée de configs
+				// RequÃªte vers la base de donnÃ©e de configs
 				Core_Sql::select(Core_Table::$CONFIG_TABLE, array("name", "value"));
 				while ($row = Core_Sql::fetchArray()) {
 					$content .= Core_CacheBuffer::serializeData(array($row['name'] => $row['value']));
@@ -101,22 +101,22 @@ class Core_ConfigsLoader {
 	/**
 	 * Charge le gestionnaire Sql
 	 * 
-	 * @return boolean true chargé
+	 * @return boolean true chargÃ©
 	 */
 	private function loadSql() {
 		if (!Core_Loader::isCallable("Core_Sql")) {
-			// Chemin vers le fichier de configuration de la base de donnée
+			// Chemin vers le fichier de configuration de la base de donnÃ©e
 			$databasePath = TR_ENGINE_DIR . "/configs/database.inc.php";
 			
 			if (is_file($databasePath)) {
 				require($databasePath);
 				
-				// Vérification du type de base de donnée
+				// VÃ©rification du type de base de donnÃ©e
 				if (!is_file(TR_ENGINE_DIR . "/engine/base/" . $db['type'] . ".class.php")) {
 					Core_Secure::getInstance()->debug("sqlType", $db['type']);
 				}
 				
-				// Démarrage de l'instance Core_Sql
+				// DÃ©marrage de l'instance Core_Sql
 				Core_Loader::classLoader("Core_Sql");
 				Core_Sql::setDatabase($db);
 				Core_Sql::makeInstance();
@@ -129,9 +129,9 @@ class Core_ConfigsLoader {
 	}
 	
 	/**
-	 * Charge le gestionnaire de cache et les données FTP
+	 * Charge le gestionnaire de cache et les donnÃ©es FTP
 	 * 
-	 * @return boolean true chargé
+	 * @return boolean true chargÃ©
 	 */
 	private function loadCacheBuffer() {
 		if (!Core_Loader::isCallable("Core_CacheBuffer")) {
@@ -147,11 +147,11 @@ class Core_ConfigsLoader {
 			if (is_file($ftpPath)) {
 				require($ftpPath);
 				
-				// Préparation de l'activation du mode
+				// PrÃ©paration de l'activation du mode
 				$mode = strtolower($ftp['type']);
 				if ($mode != "php") $modes[] = $mode;
 				
-				// Ajout des données FTP
+				// Ajout des donnÃ©es FTP
 				Core_CacheBuffer::setFtp($ftp);
 			}		
 			// Activation des modes
@@ -162,16 +162,16 @@ class Core_ConfigsLoader {
 	}
 	
 	/**
-	 * Charge le numéro de version du moteur
+	 * Charge le numÃ©ro de version du moteur
 	 * 
-	 * @return boolean true chargé
+	 * @return boolean true chargÃ©
 	 */
 	private function loadVersion() {
 		if (!defined(TR_ENGINE_VERSION)) {
 			// Chemin vers le fichier de version
 			$versionPath = TR_ENGINE_DIR . "/engine/version.inc.php";
 			
-			// Configuration du numéro de version
+			// Configuration du numÃ©ro de version
 			$TR_ENGINE_VERSION = "0.0.0.0";
 			if (is_file($versionPath)) {
 				require($versionPath);

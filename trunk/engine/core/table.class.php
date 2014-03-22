@@ -5,10 +5,10 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Constantes pour les noms des tables de base de donnée
+ * Constantes pour les noms des tables de base de donnÃ©e
  * Utilisabe via Core_Table::MaTable
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  */
 class Core_Table {
 	

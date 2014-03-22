@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Module d'interface entre le site et le client.
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  */
 class Module_Management_Index extends Module_Model {
 
@@ -19,7 +19,7 @@ class Module_Management_Index extends Module_Model {
 	private static $toolbar = array();
 	
 	public function display() {
-		// Ajout du CSS du template et du fichier javascript par défaut
+		// Ajout du CSS du template et du fichier javascript par dÃ©faut
 		Core_HTML::getInstance()->addCssTemplateFile("module_management.css");
 		Core_HTML::getInstance()->addJavascriptFile("management.js");
 		
@@ -29,7 +29,7 @@ class Module_Management_Index extends Module_Model {
 		$pageList = self::listManagementPages(); // Liste de pages de configuration
 		$moduleList = Libs_Module::listModules(); // Liste des modules
 		
-		// Préparation de la mise en page
+		// PrÃ©paration de la mise en page
 		$libsMakeStyle = new Libs_MakeStyle();
 		$libsMakeStyle->assign("pageList", $pageList);
 		$libsMakeStyle->assign("moduleList", $moduleList);
@@ -37,16 +37,16 @@ class Module_Management_Index extends Module_Model {
 		// Affichage de la page d'administration
 		$managementScreen = "module_management_index";
 		$pageSelected = "";
-		if (!empty($managePage)) { // Affichage d'une page de configuration spécial
+		if (!empty($managePage)) { // Affichage d'une page de configuration spÃ©cial
 			$settingPage = Exec_Utils::inMultiArray($managePage, $pageList);
 			$moduleSettingPage = Exec_Utils::inMultiArray($managePage, $moduleList);
 			
 			// Si c'est une page valide
 			if ($settingPage || $moduleSettingPage) {
-				$pageSelected = $managePage; // Page selectionnée
+				$pageSelected = $managePage; // Page selectionnÃ©e
 				$managementScreen = "module_management_setting"; // Nom du template
 				
-				// Récuperation du module
+				// RÃ©cuperation du module
 				$moduleClassPage = "";
 				$moduleClassName = "";
 				if ($settingPage) {
@@ -90,7 +90,7 @@ class Module_Management_Index extends Module_Model {
 	}
 
 	public function uninstall() {
-		// Aucune désinstallation n'est permise
+		// Aucune dÃ©sinstallation n'est permise
 	}
 	
 	/**
@@ -108,7 +108,7 @@ class Module_Management_Index extends Module_Model {
 			// Si c'est une page administrable
 			if ($pos !== false && $pos > 0) {
 				$page = substr($fileName, 0, $pos);
-				// Vérification des droits de l'utilisateur
+				// VÃ©rification des droits de l'utilisateur
 				if (Core_Access::moderate("management/" . $page . ".setting")) {
 					$name = self::getManagementPageName($page);
 					$pageList[] = array("value" => $page, "name" => $name);
@@ -119,7 +119,7 @@ class Module_Management_Index extends Module_Model {
 	}
 
 	/**
-	 * Retourne le nom littérale de la page.
+	 * Retourne le nom littÃ©rale de la page.
 	 * 
 	 * @param $page String
 	 * @return String

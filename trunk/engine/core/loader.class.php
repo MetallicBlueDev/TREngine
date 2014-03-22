@@ -7,13 +7,13 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Chargeur de classe.
  * 
- * @author SÈbastien Villemain
+ * @author S√©bastien Villemain
  *
  */
 class Core_Loader {
 	
 	/**
-	 * Tableau des classes chargÈes.
+	 * Tableau des classes charg√©es.
 	 */ 
 	private static $loaded = array();
 	
@@ -21,7 +21,7 @@ class Core_Loader {
 	 * Chargeur de classe.
 	 * 
 	 * @param $class String Nom de la classe.
-	 * @return boolean true chargÈ.
+	 * @return boolean true charg√©.
 	 */
 	public static function classLoader($class) {
 		try {
@@ -36,7 +36,7 @@ class Core_Loader {
 	 * Chargeur de fichier include.
 	 * 
 	 * @param $include String Nom de l'include.
-	 * @return boolean true chargÈ.
+	 * @return boolean true charg√©.
 	 */
 	public static function includeLoader($include) {
 		try {
@@ -51,10 +51,10 @@ class Core_Loader {
 	 * 
 	 * @param $name String Nom de la classe/ du fichier.
 	 * @param $ext String Extension.
-	 * @return boolean true chargÈ.
+	 * @return boolean true charg√©.
 	 */
 	private static function load($name, $ext = "") {
-		// Si ce n'est pas dÈj‡ chargÈ
+		// Si ce n'est pas d√©j√† charg√©
 		if (!self::isLoaded($name)) {
 			$path = "";
 			// Retrouve l'extension
@@ -98,19 +98,19 @@ class Core_Loader {
 	}
 	
 	/**
-	 * VÈrifie si le fichier demandÈ a ÈtÈ chargÈ.
+	 * V√©rifie si le fichier demand√© a √©t√© charg√©.
 	 * 
-	 * @param $name String fichier demandÈ.
-	 * @return boolean true si c'est dÈj‡ chargÈ.
+	 * @param $name String fichier demand√©.
+	 * @return boolean true si c'est d√©j√† charg√©.
 	 */
 	private static function isLoaded($name) {
 		return isset(self::$loaded[$name]);
 	}
 	
 	/**
-	 * VÈrifie la disponibilitÈ de la classe et de ca methode Èventuellement.
+	 * V√©rifie la disponibilit√© de la classe et de ca methode √©ventuellement.
 	 * 
-	 * @param $className String or Object une chaine de caractËre est recommandÈe.
+	 * @param $className String or Object une chaine de caract√®re est recommand√©e.
 	 * @param $methodName String
 	 * @param $static boolean
 	 * @return boolean
@@ -132,7 +132,7 @@ class Core_Loader {
 				$className = substr($className, 0, $pos);
 			}
 			
-			// DÈfinie le comportement du callable
+			// D√©finie le comportement du callable
 			if ($static) return @is_callable("{$className}::{$methodName}");
 			else return @is_callable(array($className, $methodName));
 		}

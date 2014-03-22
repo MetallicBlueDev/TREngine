@@ -40,7 +40,7 @@ class Module_Management_Setting extends Module_Model {
 	}
 	
 	/**
-	 * Mise à jour des valeurs de la table de configuration
+	 * Mise Ã  jour des valeurs de la table de configuration
 	 * 
 	 * @param $values array
 	 * @param $where array
@@ -173,7 +173,7 @@ class Module_Management_Setting extends Module_Model {
 				Core_Exception::addAlertError(SETTING_GENERAL_DEFAULT_ADMIN_MAIL_INVALID);
 			}
 		}
-		// Langue par défaut
+		// Langue par dÃ©faut
 		$defaultLanguage = Core_Request::getString("defaultLanguage", "", "POST");
 		if (Core_Main::$coreConfig['defaultLanguage'] != $defaultLanguage) {
 			$langues = Core_Translate::listLanguages();
@@ -184,7 +184,7 @@ class Module_Management_Setting extends Module_Model {
 				Core_Exception::addAlertError(SETTING_GENERAL_DEFAULT_LANGUAGE_INVALID);
 			}
 		}
-		// Template par défaut
+		// Template par dÃ©faut
 		$defaultTemplate = Core_Request::getString("defaultTemplate", "", "POST");
 		if (Core_Main::$coreConfig['defaultTemplate'] != $defaultTemplate) {
 			$templates = Libs_MakeStyle::listTemplates();
@@ -195,7 +195,7 @@ class Module_Management_Setting extends Module_Model {
 				Core_Exception::addAlertError(SETTING_GENERAL_DEFAULT_TEMPLATE_INVALID);
 			}
 		}
-		// Module par défaut
+		// Module par dÃ©faut
 		$defaultMod = Core_Request::getString("defaultMod", "", "POST");
 		if (Core_Main::$coreConfig['defaultMod'] != $defaultMod) {
 			if (!empty($defaultMod)) {
@@ -211,13 +211,13 @@ class Module_Management_Setting extends Module_Model {
 			$this->updateTable("defaultDescription", $defaultDescription);
 			$deleteCache = true;
 		}
-		// Mot clès du site
+		// Mot clÃ¨s du site
 		$defaultKeyWords = Core_Request::getString("defaultKeyWords", "", "POST");
 		if (Core_Main::$coreConfig['defaultKeyWords'] != $defaultKeyWords) {
 			$this->updateTable("defaultKeyWords", $defaultKeyWords);
 			$deleteCache = true;
 		}
-		// Etat de la réécriture des URLs
+		// Etat de la rÃ©Ã©criture des URLs
 		$urlRewriting = Core_Request::getString("urlRewriting", "", "POST");
 		if (Core_Main::$coreConfig['urlRewriting'] != $urlRewriting) {
 			$urlRewriting = ($urlRewriting == 1) ? 1 : 0;

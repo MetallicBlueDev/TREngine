@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Gestionnaire de module.
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  */
 class Libs_Module {
 	
@@ -47,7 +47,7 @@ class Libs_Module {
 	public static $configs = array();
 	
 	/**
-	 * Module compilé.
+	 * Module compilÃ©.
 	 * 
 	 * @var String
 	 */
@@ -99,7 +99,7 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Création et récuperation de l'instance du module.
+	 * CrÃ©ation et rÃ©cuperation de l'instance du module.
 	 * 
 	 * @return Libs_Module
 	 */
@@ -118,7 +118,7 @@ class Libs_Module {
 	/**
 	 * Retourne les informations du module cible.
 	 * 
-	 * @param $module String le nom du module, par défaut le module courant.
+	 * @param $module String le nom du module, par dÃ©faut le module courant.
 	 * @return array informations sur le module.
 	 */
 	public function &getInfoModule($moduleName = "") {
@@ -149,7 +149,7 @@ class Libs_Module {
 				$configs = array();
 				foreach($moduleInfo['configs'] as $value) {
 					$value = explode("=", $value);
-					$configs[$value[0]] = urldecode($value[1]); // Chaine encodé en urlencode
+					$configs[$value[0]] = urldecode($value[1]); // Chaine encodÃ© en urlencode
 				}
 				$moduleInfo['configs'] = $configs;
 				
@@ -161,7 +161,7 @@ class Libs_Module {
 			$moduleInfo = Core_CacheBuffer::getCache($moduleName . ".php");
 		}
 		
-		// Vérification des informations
+		// VÃ©rification des informations
 		if (count($moduleInfo) >= 3) {
 			// Injection des informations du module
 			if (self::$module == $moduleName) {
@@ -173,7 +173,7 @@ class Libs_Module {
 			return $moduleInfo;
 		}
 		
-		// Insert la variable vide car aucune donnée
+		// Insert la variable vide car aucune donnÃ©e
 		$moduleInfo = array();
 		$this->modules[$moduleName] = $moduleInfo;
 		return $moduleInfo;
@@ -196,7 +196,7 @@ class Libs_Module {
 	 * Charge le module courant.
 	 */
 	public function launch() {
-		// Vérification du niveau d'acces 
+		// VÃ©rification du niveau d'acces 
 		if (($this->installed() && Core_Access::autorize(self::$module)) || (!$this->installed() && Core_Session::$userRank > 1)) {
 			if (empty($this->moduleCompiled) && $this->isModule()) {
 				Core_Translate::translate("modules/" . self::$module);
@@ -242,7 +242,7 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Récupère le module.
+	 * RÃ©cupÃ¨re le module.
 	 * 
 	 * @param $viewPage String
 	 */
@@ -260,7 +260,7 @@ class Libs_Module {
 				$ModuleClass = new $moduleClassName();
 				$ModuleClass->configs = self::$configs;
 				
-				// Capture des données d'affichage
+				// Capture des donnÃ©es d'affichage
 				ob_start();
 				echo $ModuleClass->{self::$view}();
 				$this->moduleCompiled = ob_get_contents();
@@ -272,7 +272,7 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Vérifie que le module est installé.
+	 * VÃ©rifie que le module est installÃ©.
 	 * 
 	 * @param $moduleName String
 	 * @return boolean
@@ -285,7 +285,7 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Mise à jour du compteur de visite du module courant.
+	 * Mise Ã  jour du compteur de visite du module courant.
 	 */
 	private function updateCount() {
 		Core_Sql::addQuoted("", "count + 1");
@@ -297,7 +297,7 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Vérifie si le module existe.
+	 * VÃ©rifie si le module existe.
 	 * 
 	 * @param $module String
 	 * @param $page String
@@ -310,7 +310,7 @@ class Libs_Module {
 	}
 	
 	/**
-	 * Retourne le module compilé.
+	 * Retourne le module compilÃ©.
 	 * 
 	 * @return String
 	 */
@@ -341,10 +341,10 @@ class Libs_Module {
 }
 
 /**
- * Module de base, hérité par tous les autres modules.
- * Modèle pour le contenu d'un module.
+ * Module de base, hÃ©ritÃ© par tous les autres modules.
+ * ModÃ¨le pour le contenu d'un module.
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  */
 abstract class Module_Model {
 	
@@ -391,7 +391,7 @@ abstract class Module_Model {
 	private $view = "";
 	
 	/**
-	 * Fonction d'affichage par défaut.
+	 * Fonction d'affichage par dÃ©faut.
 	 */
 	public function display() {
 		Core_Exception::addAlertError(ERROR_MODULE_IMPLEMENT . ((!empty($this->module)) ? " (" . $this->module . ")" : ""));
@@ -409,7 +409,7 @@ abstract class Module_Model {
 	}
 	
 	/**
-	 * Désinstallation du module courant.
+	 * DÃ©sinstallation du module courant.
 	 */
 	public function uninstall() {
 		Core_Sql::delete(

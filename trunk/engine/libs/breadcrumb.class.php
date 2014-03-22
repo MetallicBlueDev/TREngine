@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Editeur du fil d'Ariane
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Libs_Breadcrumb {
@@ -32,7 +32,7 @@ class Libs_Breadcrumb {
 	}
 	
 	/**
-	 * Retoune et/ou crée l'instance Libs_Breadcrumb
+	 * Retoune et/ou crÃ©e l'instance Libs_Breadcrumb
 	 * 
 	 * @return Libs_Breadcrumb
 	 */
@@ -44,7 +44,7 @@ class Libs_Breadcrumb {
 	}
 	
 	/**
-	 * Ajoute un tracé au fil d'Ariane
+	 * Ajoute un tracÃ© au fil d'Ariane
 	 * 
 	 * @param $trail String
 	 * @param $link String
@@ -63,7 +63,7 @@ class Libs_Breadcrumb {
 	/**
 	 * Retourne le fil d'Ariane complet
 	 * 
-	 * @param $separator String séparateur de tracé
+	 * @param $separator String sÃ©parateur de tracÃ©
 	 * @return String
 	 */
 	public function &getBreadcrumbTrail($separator = " >> ") {

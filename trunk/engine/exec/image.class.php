@@ -7,13 +7,13 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Outil de cryptage
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Exec_Image {
 	
 	/**
-	 * Type d'image autorisé
+	 * Type d'image autorisÃ©
 	 * 
 	 * @var array
 	 */
@@ -85,7 +85,7 @@ class Exec_Image {
 				}
 				$img = "<img src=\"" . $url . "\" width=\"" . $width . "\" height=\"" . $height . "\" alt=\"\" style=\"border: 0;\" />";
 			}
-			// Si aucune redimension réalisable
+			// Si aucune redimension rÃ©alisable
 			if (empty($img) && $heightDefault) {
 				$img = "<img src=\"" . $url . "\" width=\"" . $widthDefault . "\" height=\"" . $heightDefault . "\" alt=\"\" style=\"border: 0;\" />";
 			} else if (empty($img)) {
@@ -96,7 +96,7 @@ class Exec_Image {
 	}
 	
 	/**
-	 * Vérifie si l'image est valide
+	 * VÃ©rifie si l'image est valide
 	 * 
 	 * @param $url String
 	 * @return boolean true image valide
@@ -146,7 +146,7 @@ class Exec_Image {
 	}
 	
 	/**
-	 * Retourne la cles codé pour le buffer
+	 * Retourne la cles codÃ© pour le buffer
 	 * 
 	 * @param $url String
 	 * @return String

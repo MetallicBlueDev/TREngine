@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Gestionnaire de fichier
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Libs_FileManager extends Cache_Model {
@@ -17,17 +17,17 @@ class Libs_FileManager extends Cache_Model {
 	 * 
 	 * @param $pathFile String chemin vers le fichier cache
 	 * @param $content String contenu du fichier cache
-	 * @param $overWrite boolean écrasement du fichier
+	 * @param $overWrite boolean Ã©crasement du fichier
 	 */
 	public function writingCache($path, $content, $overWrite = true) {
 		if (is_file(TR_ENGINE_DIR . "/" . $path)) {
-			// Réécriture rapide sur un fichier
+			// RÃ©Ã©criture rapide sur un fichier
 			$this->writingFile($path, $content, $overWrite);
 		} else {
 			// Soit le fichier n'exite pas soit tout le dossier n'existe pas
-			// On commence par vérifier et si besoin écrire le dossier
+			// On commence par vÃ©rifier et si besoin Ã©crire le dossier
 			$this->writingDirectory($path);
-			// Puis nous écrivons notre fichier
+			// Puis nous Ã©crivons notre fichier
 			$this->writingFile($path, $content, $overWrite);
 		}		
 	}
@@ -37,19 +37,19 @@ class Libs_FileManager extends Cache_Model {
 	 * 
 	 * @param $pathFile String chemin vers le fichier cache
 	 * @param $content String contenu du fichier cache
-	 * @param $overWrite boolean écrasement du fichier
+	 * @param $overWrite boolean Ã©crasement du fichier
 	 */
 	private function writingFile($pathFile, $content, $overWrite = true) {
 		$content = ($overWrite) ? Core_CacheBuffer::getHeader($pathFile, $content) : $content;
 			
-		// Tentative d'écriture du fichier
-		// Des problèmes on été constaté avec l'utilisation du chemin absolu TR_ENGINE_DIR
+		// Tentative d'Ã©criture du fichier
+		// Des problÃ¨mes on Ã©tÃ© constatÃ© avec l'utilisation du chemin absolu TR_ENGINE_DIR
 		if ($fp = @fopen($pathFile, 'a')) {
 			 // Verrouiller le fichier destination
 			@flock($fp, LOCK_EX);
 			
 			if ($overWrite) {
-				// Tronque pour une réécriture complete
+				// Tronque pour une rÃ©Ã©criture complete
 				@ftruncate($fp, 0);
 			}
 			
@@ -57,7 +57,7 @@ class Libs_FileManager extends Cache_Model {
 			$nbBytesFile = strlen($content);
 			$nbBytesCmd = @fwrite($fp, $content, $nbBytesFile);
 			
-			// Vérification des bytes écris
+			// VÃ©rification des bytes Ã©cris
 			if ($nbBytesCmd != $nbBytesFile) {
 				@unlink(TR_ENGINE_DIR . "/" . $pathFile);
 				Core_Exception::setException("bad response for fwrite command. Path : " . $pathFile . ". "
@@ -72,9 +72,9 @@ class Libs_FileManager extends Cache_Model {
 			$strlen = strlen($pathFile);
 			$isHtaccessFile = (substr($pathFile, -9, $strlen) == ".htaccess");
 			
-			// Si c'est un htaccess, on essai de corriger le problème
+			// Si c'est un htaccess, on essai de corriger le problÃ¨me
 			if ($isHtaccessFile) {
-				// On créée le même fichier en HTML
+				// On crÃ©Ã©e le mÃªme fichier en HTML
 				$htaccessPath = substr($pathFile, 0, $strlen - 9);
 				$this->writingFile($htaccessPath . "index.html", $content, $overWrite);
 				
@@ -103,21 +103,21 @@ class Libs_FileManager extends Cache_Model {
 		if ($nbDir > 0) {
 			foreach ($dirs as $dir) {
 				$count++;
-				// Si le dernier élèment est un fichier ou simplement vide
+				// Si le dernier Ã©lÃ¨ment est un fichier ou simplement vide
 				if (($count == $nbDir && !$pathIsDir) || empty($dir)) {
 					// Il vaut mieux continuer, plutot que de faire un arret avec break
 					continue; // on passe a la suite...
 				}
 				
-				// Mise à jour du dossier courant
+				// Mise Ã  jour du dossier courant
 				$currentPath = ($count == 1) ? $dir : $currentPath . "/" . $dir;
 				
 				if (!is_dir($currentPath)) {
-					// Création du dossier
+					// CrÃ©ation du dossier
 					@mkdir($currentPath, $this->chmod);
 					@chmod($currentPath, $this->chmod);
 					
-					// Vérification de l'existence du fichier
+					// VÃ©rification de l'existence du fichier
 					if (!is_dir($currentPath)) {
 						Core_Exception::setException("bad response for mkdir|chmod command. Path : " . $currentPath);
 					}
@@ -157,14 +157,14 @@ class Libs_FileManager extends Cache_Model {
 	 * @param $timeLimit
 	 */
 	private function removeFile($path, $timeLimit) {
-		// Vérification de la date d'expiration
+		// VÃ©rification de la date d'expiration
 		$deleteFile = false;
 		
-		// Vérification de la date
+		// VÃ©rification de la date
 		if ($timeLimit > 0) {
-			// Vérification de la date d'expiration
+			// VÃ©rification de la date d'expiration
 			if ($timeLimit > filemtime(TR_ENGINE_DIR . "/" . $path)) {
-				// Fichier périmé, suppression
+				// Fichier pÃ©rimÃ©, suppression
 				$deleteFile = true;
 			}
 		} else {
@@ -204,10 +204,10 @@ class Libs_FileManager extends Cache_Model {
 			if ($file != ".." 
 					&& $file != "."
 					&& $file != ".svn") {
-				// Vérification avant suppression
+				// VÃ©rification avant suppression
 				if ($timeLimit > 0) {
 					if (is_file($dirPath . "/" . $file)) {
-						// Si le fichier n'est pas périmé, on passe au suivant
+						// Si le fichier n'est pas pÃ©rimÃ©, on passe au suivant
 						if ($timeLimit < filemtime(TR_ENGINE_DIR . "/" . $dirPath . "/" . $file)) continue;
 					} else {
 						// C'est un dossier, 
@@ -240,7 +240,7 @@ class Libs_FileManager extends Cache_Model {
 	}
 	
 	/**
-	 * Mise à jour de la date de dernière modification
+	 * Mise Ã  jour de la date de derniÃ¨re modification
 	 * 
 	 * @param $path chemin vers le fichier cache
 	 * @param $updateTime
@@ -253,13 +253,13 @@ class Libs_FileManager extends Cache_Model {
 	}
 	
 	/**
-	 * Retourne le listing avec uniquement les fichiers et dossiers présent
+	 * Retourne le listing avec uniquement les fichiers et dossiers prÃ©sent
 	 * 
 	 * @param $dirPath
 	 * @return array
 	 */
 	public function &listNames($dirPath = "") {
-		// Si le dossier est vide, on prend le dossier par défaut
+		// Si le dossier est vide, on prend le dossier par dÃ©faut
 		$dirPath = !empty($dirPath) ? TR_ENGINE_DIR . "/" . $dirPath : TR_ENGINE_DIR;
 		
 		$dirList = array();
@@ -281,7 +281,7 @@ class Libs_FileManager extends Cache_Model {
 		}
 		// Fermeture du dossier
 		@closedir($handle);
-		// Rangement et mise à zéro du tableau
+		// Rangement et mise Ã  zÃ©ro du tableau
 		sort($dirList);
 		reset($dirList);
 		return $dirList;

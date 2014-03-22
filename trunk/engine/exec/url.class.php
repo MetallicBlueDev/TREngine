@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Gestionnaire d'adresse URL
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Exec_Url {

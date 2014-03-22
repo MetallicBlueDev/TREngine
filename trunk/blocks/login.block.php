@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Block login, acc�s rapide a une connexion, a une d�connexion et a son compte.
  *
- * @author Sebastien Villemain
+ * @author Sébastien Villemain
  */
 class Block_Login extends Block_Model {
 

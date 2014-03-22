@@ -101,10 +101,10 @@ class Module_Management_Block extends Module_Model {
 				array("block_id = '" . $blockId . "'")
 			);
 			if (Core_Sql::affectedRows() > 0) { // Si le block existe
-				$blockMove = Core_Sql::fetchArray(); // Récuperation des informations sur le block
+				$blockMove = Core_Sql::fetchArray(); // RÃ©cuperation des informations sur le block
 				
 				if ($blockMove['position'] > 0) {
-					// Requête de selection des autres blocks
+					// RequÃªte de selection des autres blocks
 					Core_Sql::select(
 						Core_Table::$BLOCKS_TABLE,
 						array("block_id", "position"),
@@ -114,7 +114,7 @@ class Module_Management_Block extends Module_Model {
 					);
 					if (Core_Sql::affectedRows() > 0) {
 						Core_Sql::addBuffer("blockMoveUp");
-						// Mise à jour de position
+						// Mise Ã  jour de position
 						while ($row = Core_Sql::fetchBuffer("blockMoveUp")) {
 							$row->position = ($row->block_id == $blockId) ? $row->position - 1 : $row->position + 1;
 							
@@ -145,7 +145,7 @@ class Module_Management_Block extends Module_Model {
 				array("block_id = '" . $blockId . "'")
 			);
 			if (Core_Sql::affectedRows() > 0) { // Si le block existe
-				$blockMove = Core_Sql::fetchArray(); // Récuperation des informations sur le block
+				$blockMove = Core_Sql::fetchArray(); // RÃ©cuperation des informations sur le block
 				
 				// Selection du block le plus bas
 				Core_Sql::select(
@@ -160,7 +160,7 @@ class Module_Management_Block extends Module_Model {
 					$blockDown = Core_Sql::fetchArray();
 					
 					if ($blockMove['position'] < $blockDown['position']) {
-						// Requête de selection des autres blocks
+						// RequÃªte de selection des autres blocks
 						Core_Sql::select(
 							Core_Table::$BLOCKS_TABLE,
 							array("block_id", "position"),
@@ -170,7 +170,7 @@ class Module_Management_Block extends Module_Model {
 						);
 						if (Core_Sql::affectedRows() > 0) {
 							Core_Sql::addBuffer("blockMoveDown");
-							// Mise à jour de position
+							// Mise Ã  jour de position
 							while ($row = Core_Sql::fetchBuffer("blockMoveDown")) {
 								$row->position = ($row->block_id == $blockId) ? $row->position + 1 : $row->position - 1;
 								

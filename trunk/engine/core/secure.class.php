@@ -4,12 +4,12 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Système de sécurité
- * Analyse rapidement les données recues
+ * SystÃ¨me de sÃ©curitÃ©
+ * Analyse rapidement les donnÃ©es recues
  * Configure les erreurs
  * Capture la configuration
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Core_Secure {
@@ -29,7 +29,7 @@ class Core_Secure {
 	private static $debuggingMode = false;
 	
 	/**
-	 * Routine de sécurisation
+	 * Routine de sÃ©curisation
 	 */
 	public function __construct() {
 		$this->checkError();
@@ -37,7 +37,7 @@ class Core_Secure {
 		$this->checkRequestReferer();
 		$this->checkGPC();
 		
-		// Si nous ne sommes pas passé par l'index
+		// Si nous ne sommes pas passÃ© par l'index
 		if (!defined("TR_ENGINE_INDEX")) {
 			if (!class_exists("Core_Info")) require("info.class.php");
 			define("TR_ENGINE_INDEX", 1);
@@ -46,7 +46,7 @@ class Core_Secure {
 	}
 	
 	/**
-	 * Créé une instance de la classe si elle n'existe pas
+	 * CrÃ©Ã© une instance de la classe si elle n'existe pas
 	 * Retourne l'instance de la classe
 	 * 
 	 * @return Core_Secure
@@ -60,10 +60,10 @@ class Core_Secure {
 	}
 	
 	/**
-	 * Réglages des sorties d'erreurs
+	 * RÃ©glages des sorties d'erreurs
 	 */
 	private function checkError() {
-		// Réglages des sorties d'erreur
+		// RÃ©glages des sorties d'erreur
 		$errorReporting = E_ERROR | E_WARNING | E_PARSE;
 		
 		if (self::$debuggingMode) {
@@ -73,7 +73,7 @@ class Core_Secure {
 	}
 	
 	/**
-	 * Vérification des données recus (Query String)
+	 * VÃ©rification des donnÃ©es recus (Query String)
 	 */
 	private function checkQueryString() {
 		$queryString = strtolower(rawurldecode($_SERVER['QUERY_STRING']));
@@ -91,7 +91,7 @@ class Core_Secure {
 	}
 	
 	/**
-	 * Vérification des envoies POST
+	 * VÃ©rification des envoies POST
 	 */
 	private function checkRequestReferer() {
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -132,9 +132,9 @@ class Core_Secure {
 	
 	/**
 	 * La fonction debug affiche un message d'erreur
-	 * Cette fonction est activé si une erreur est détecté
+	 * Cette fonction est activÃ© si une erreur est dÃ©tectÃ©
 	 * 
-	 * @param $ie String or object L'exception interne levée
+	 * @param $ie String or object L'exception interne levÃ©e
 	 * @param $argv String or array argument suplementaire d'information sur l'erreur
 	 */
 	public function debug($ie = "", $argv = "") {
@@ -153,11 +153,11 @@ class Core_Secure {
 		Core_Loader::classLoader("Core_Html");
 		Core_Loader::classLoader("Libs_MakeStyle");
 		
-		// Préparation du template debug
+		// PrÃ©paration du template debug
 		$libsMakeStyle = new Libs_MakeStyle();
 		$libsMakeStyle->assign("errorMessageTitle", $this->getErrorMessageTitle($ie));
 		$libsMakeStyle->assign("errorMessage", $this->getDebugMessage($ie, $argv));
-		// Affichage du template en debug si problème
+		// Affichage du template en debug si problÃ¨me
 		$libsMakeStyle->displayDebug("debug.php");
 		
 		exit(); // Arret du moteur
@@ -166,7 +166,7 @@ class Core_Secure {
 	/**
 	 * Analyse l'erreur et pepare l'affichage de l'erreur
 	 * 
-	 * @param $ie String or object L'exception interne levée
+	 * @param $ie String or object L'exception interne levÃ©e
 	 * @param $argv array argument suplementaire d'information sur l'erreur
 	 * @return String $errorMessage
 	 */
@@ -174,7 +174,7 @@ class Core_Secure {
 		// Tableau avec les lignes d'erreurs
 		$errorMessage = array();
 		// Analyse de l'exception
-		if (is_object($ie)) { // Pour une exception levé de type object
+		if (is_object($ie)) { // Pour une exception levÃ© de type object
 			$trace = $ie->getTrace();
 			$nbTrace = count($trace);
 			
@@ -229,7 +229,7 @@ class Core_Secure {
 	}
 	
 	/**
-	 * Vérifie si le mode de statistique et de debug est actif
+	 * VÃ©rifie si le mode de statistique et de debug est actif
 	 * 
 	 * @return boolean
 	 */

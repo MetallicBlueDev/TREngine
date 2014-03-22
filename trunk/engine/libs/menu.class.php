@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Gestionnaire de menu
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Libs_Menu {
@@ -67,7 +67,7 @@ class Libs_Menu {
 	}
 	
 	/**
-	 * Vérifie la présence du cache
+	 * VÃ©rifie la prÃ©sence du cache
 	 * 
 	 * @return boolean
 	 */
@@ -90,13 +90,13 @@ class Libs_Menu {
 		);
 		
 		if (Core_Sql::affectedRows() > 0) {
-			// Création d'un buffer
+			// CrÃ©ation d'un buffer
 			Core_Sql::addBuffer($this->identifier, "menu_id");
 			$menus = Core_Sql::getBuffer($this->identifier);
 			
 			// Ajoute et monte tout les items
 			foreach($menus as $key => $item) {
-				// Création du chemin route
+				// CrÃ©ation du chemin route
 				if ($item->parent_id > 0) {
 					$item->route = $menus[$item->parent_id]->route;
 				}
@@ -122,7 +122,7 @@ class Libs_Menu {
 	}
 	
 	/**
-	 * Création d'un rendu complet du menu
+	 * CrÃ©ation d'un rendu complet du menu
 	 * 
 	 * @param $callback
 	 * @return String
@@ -134,13 +134,13 @@ class Libs_Menu {
 			$route = $this->items[$this->itemActive]->data->route;
 		}
 		
-		// Début de rendu
+		// DÃ©but de rendu
 		$out = "<ul id=\"" . $this->identifier . "\"" . $this->attribtus . ">";
 		foreach($this->items as $key => $item) {
 			if ($item->data->parent_id == 0 && Core_Access::autorize($this->identifier, $item->data->rank)) {
 				// Ajout du tableau route dans l'element principal
 				if ($key == $route[0]) $item->setRoute($route);
-				// Création du rendu
+				// CrÃ©ation du rendu
 				$out .= $this->items[$key]->toString($callback, $this->classParent, $this->classActive);
 			}
 		}
@@ -152,7 +152,7 @@ class Libs_Menu {
 /**
  * Membre d'un menu
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Libs_MenuElement {
@@ -203,7 +203,7 @@ class Libs_MenuElement {
 		$this->data = $item;
 		$this->addTags("li");
 		
-		// Enfant trouvé
+		// Enfant trouvÃ©
 		if ($item->parent_id > 0) {
 			// Ajout de l'enfant
 			$this->addAttributs("class", "item" . $item->menu_id);
@@ -229,7 +229,7 @@ class Libs_MenuElement {
 				$this->attributs[$name] = array();
 				$this->attributs[$name][] = $firstValue;
 			}
-			// Vérification des valeurs déjà enregistrées
+			// VÃ©rification des valeurs dÃ©jÃ  enregistrÃ©es
 			if (Exec_Utils::inArray($value, $this->attributs[$name]) == false) {
 				if ($value == "parent") {
 					array_unshift($this->attributs[$name], $value);
@@ -317,7 +317,7 @@ class Libs_MenuElement {
 	 * @param $items array - object
 	 */
 	public function &addChild(&$child, &$items = array()) {
-		// Création de l'enfant si besoin
+		// CrÃ©ation de l'enfant si besoin
 		if (!is_object($child)) {
 			$child = new Libs_MenuElement($child, $items);
 		}
@@ -354,7 +354,7 @@ class Libs_MenuElement {
 	}
 	
 	/**
-	 * Convertie la classe en chaine de caratère
+	 * Convertie la classe en chaine de caratÃ¨re
 	 * 
 	 * @param $callback
 	 */
@@ -371,13 +371,13 @@ class Libs_MenuElement {
 			Libs_Breadcrumb::getInstance()->addTrail($text);
 		}
 		
-		// Préparation des données
+		// PrÃ©paration des donnÃ©es
 		$out = "";
 		$end = "";
 		$attributs = $this->getAttributs();
 		$text = "<span>" . $text . "</span>";		
 		
-		// Extraction des balises de débuts et de fin et ajout du texte
+		// Extraction des balises de dÃ©buts et de fin et ajout du texte
 		foreach($this->tags as $tag) {
 			$out .= "<" . $tag . $attributs . ">" . $text;
 			$text = "";

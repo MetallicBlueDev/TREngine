@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Block login, accès rapide à une connexion, à une déconnexion et à son compte.
  *
- * @author Sebastien Villemain
+ * @author Sébastien Villemain
  */
 class Block_Comment extends Block_Model {
 

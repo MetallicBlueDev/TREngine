@@ -8,7 +8,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Classe de mise en forme d'un formulaire.
  * Avec mise en cache automatique.
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Libs_Form {
@@ -42,7 +42,7 @@ class Libs_Form {
 	private $description = "";
 	
 	/**
-	 * Donnée contenu dans le formulaire.
+	 * DonnÃ©e contenu dans le formulaire.
 	 * 
 	 * @var String
 	 */
@@ -56,7 +56,7 @@ class Libs_Form {
 	private $doFieldset = true;
 	
 	/**
-	 * Formulaire présent dans le cache.
+	 * Formulaire prÃ©sent dans le cache.
 	 * 
 	 * @var boolean
 	 */
@@ -79,7 +79,7 @@ class Libs_Form {
 	/**
 	 * Nouveau formulaire.
 	 * 
-	 * @param $name String identifiant du formlaire : attention a ne pas prendre un nom déjà utilisé !
+	 * @param $name String identifiant du formlaire : attention a ne pas prendre un nom dÃ©jÃ  utilisÃ© !
 	 * @param $urlAction String
 	 */
 	public function __construct($name, $urlAction = "") {
@@ -91,7 +91,7 @@ class Libs_Form {
 	}
 	
 	/**
-	 * Mettre un title au début du formulaire.
+	 * Mettre un title au dÃ©but du formulaire.
 	 * 
 	 * @param $title String
 	 */
@@ -100,7 +100,7 @@ class Libs_Form {
 	}
 	
 	/**
-	 * Mettre une description au début du formulaire.
+	 * Mettre une description au dÃ©but du formulaire.
 	 * 
 	 * @param $description String
 	 */
@@ -118,7 +118,7 @@ class Libs_Form {
 	}
 	
 	/**
-	 * Retourne la dernière variable de cache.
+	 * Retourne la derniÃ¨re variable de cache.
 	 * 
 	 * @return String
 	 */
@@ -160,7 +160,7 @@ class Libs_Form {
 	}
 	
 	/**
-	 * Ajouter un champs caché.
+	 * Ajouter un champs cachÃ©.
 	 * 
 	 * @param $name String
 	 * @param $defaultValue String
@@ -320,7 +320,7 @@ class Libs_Form {
 	}
 	
 	/**
-	 * Ajouter un liste déroulante (balise ouvrante seulement).
+	 * Ajouter un liste dÃ©roulante (balise ouvrante seulement).
 	 * 
 	 * @param $name String
 	 * @param $description String
@@ -351,7 +351,7 @@ class Libs_Form {
 	}
 	
 	/**
-	 * Ajouter un element dans la liste déroulante ouverte.
+	 * Ajouter un element dans la liste dÃ©roulante ouverte.
 	 * 
 	 * @param $value String
 	 * @param $description String
@@ -379,7 +379,7 @@ class Libs_Form {
 	}
 	
 	/**
-	 * Fermeture de la liste déroulante.
+	 * Fermeture de la liste dÃ©roulante.
 	 */
 	public function addSelectCloseTag() {
 		if (!$this->cached) $this->inputData .= "</select></p>";
@@ -403,7 +403,7 @@ class Libs_Form {
 	}
 	
 	/**
-	 * Ajoute du code HTML en plus après avoir fermé le fieldset courant.
+	 * Ajoute du code HTML en plus aprÃ¨s avoir fermÃ© le fieldset courant.
 	 * 
 	 * @param $html String
 	 */
@@ -482,7 +482,7 @@ class Libs_Form {
 	
 	/**
 	 * Retourne le rendu du formulaire complet.
-	 * Attention, ceci procédera a une sauvegarde et une lecture du cache.
+	 * Attention, ceci procÃ©dera a une sauvegarde et une lecture du cache.
 	 * 
 	 * @param $class String
 	 * @return String
@@ -504,9 +504,9 @@ class Libs_Form {
 		
 		$content = "";
 		Core_CacheBuffer::setSectionName("form");
-		if ($this->cached) { // Récupèration des données mise en cache
+		if ($this->cached) { // RÃ©cupÃ¨ration des donnÃ©es mise en cache
 			$content = Core_CacheBuffer::getCache($this->name . ".php", $this->cacheVars);
-		} else { // Préparation puis mise en cache
+		} else { // PrÃ©paration puis mise en cache
 			$data = "<form action=\"" . $url . "\" method=\"post\" id=\"form-" . $name . "\" name=\"" . $name . "\""
 			. " class=\"" . $class . "\"><fieldset>" . $title . $description . $this->inputData
 			. (($this->doFieldset) ? "</fieldset>" : "") . "</form>";
@@ -517,7 +517,7 @@ class Libs_Form {
 			
 			// Lecture pour l'affichage
 			$vars = $this->cacheVars;
-			eval(" \$content = $data; "); // Ne pas ajouter de quote : les données sont déjà serializé
+			eval(" \$content = $data; "); // Ne pas ajouter de quote : les donnÃ©es sont dÃ©jÃ  serializÃ©
 		}
 		return $content;
 	}

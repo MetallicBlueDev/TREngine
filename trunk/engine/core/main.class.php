@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Classe principal du moteur.
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  */
 class Core_Main {
 	
@@ -19,19 +19,19 @@ class Core_Main {
 	/**
 	 * Mode de mise en page courante.
 	 * default : affichage normale et complet
-	 * module : affichage uniquement du module si javascript activé
-	 * block : affichage uniquement du block si javascript activé
-	 * modulepage : affichage uniquement du module forcé 
-	 * blockpage : affichage uniquement du block forcé
+	 * module : affichage uniquement du module si javascript activÃ©
+	 * block : affichage uniquement du block si javascript activÃ©
+	 * modulepage : affichage uniquement du module forcÃ© 
+	 * blockpage : affichage uniquement du block forcÃ©
 	 * 
 	 * @var String
 	 */
 	public static $layout = "default";
 	
 	/**
-	 * Préparation TR ENGINE.
-	 * Procédure de préparation du moteur.
-	 * Une étape avant le démarrage réel.
+	 * PrÃ©paration TR ENGINE.
+	 * ProcÃ©dure de prÃ©paration du moteur.
+	 * Une Ã©tape avant le dÃ©marrage rÃ©el.
 	 */
 	public function __construct() {
 		if (Core_Secure::isDebuggingMode()) Exec_Marker::startTimer("core");
@@ -49,7 +49,7 @@ class Core_Main {
 		Core_Loader::classLoader("Core_ConfigsLoader");
 		new Core_ConfigsLoader();
 		
-		// Chargement du gestionnaire d'accès url
+		// Chargement du gestionnaire d'accÃ¨s url
 		Core_Loader::classLoader("Core_Request");
 		
 		// Charge la session
@@ -72,7 +72,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Démarrage TR ENGINE.
+	 * DÃ©marrage TR ENGINE.
 	 */
 	public function start() {
 		if (Core_Secure::isDebuggingMode()) Exec_Marker::startTimer("launcher");
@@ -84,7 +84,7 @@ class Core_Main {
 		// Chargement du traitement HTML
 		Core_Loader::classLoader("Core_TextEditor");
 		
-		// Vérification des bannissements
+		// VÃ©rification des bannissements
 		Core_Loader::classLoader("Core_BlackBan");
 		Core_BlackBan::checkBlackBan();
 		
@@ -92,7 +92,7 @@ class Core_Main {
 		Core_Loader::classLoader("Core_Html");
 		Core_Html::getInstance();
 		
-		// Configure les informations de page demandées
+		// Configure les informations de page demandÃ©es
 		$this->loadLayout();
 		$this->loadModule();
 		$this->loadMakeStyle();
@@ -107,18 +107,18 @@ class Core_Main {
 			// Chargement des blocks
 			Core_Loader::classLoader("Libs_Block");
 			
-			// Chargement de la réécriture d'URL
+			// Chargement de la rÃ©Ã©criture d'URL
 			if (self::doUrlRewriting()) {
 				Core_Loader::classLoader("Core_UrlRewriting");
 				Core_UrlRewriting::test();
 			}
 			
 			if (self::isFullScreen() && Core_Loader::isCallable("Libs_Block") && Core_Loader::isCallable("Libs_Module")) {
-				if ($this->inMaintenance()) { // Affichage site fermé
+				if ($this->inMaintenance()) { // Affichage site fermÃ©
 					// Charge le block login
 					Libs_Block::getInstance()->launchOneBlock(array("type = 'login'"));
 					
-					// Affichage des données de la page de maintenance (fermeture)
+					// Affichage des donnÃ©es de la page de maintenance (fermeture)
 					$libsMakeStyle = new Libs_MakeStyle();
 					$libsMakeStyle->assign("closeText", ERROR_DEBUG_CLOSE);
 					$libsMakeStyle->display("close");
@@ -143,7 +143,7 @@ class Core_Main {
 					Libs_Block::getInstance()->launchOneBlock();
 					echo Libs_Block::getInstance()->getBlock();
 				}
-				// Execute la commande de récupération d'erreur
+				// Execute la commande de rÃ©cupÃ©ration d'erreur
 				Core_Exception::getMinorError();
 				// Javascript autonome
 				Core_Html::getInstance()->selfJavascript();
@@ -167,15 +167,15 @@ class Core_Main {
 	/**
 	 * Recherche de nouveau composant.
 	 * 
-	 * @return boolean true nouveau composant détecté.
+	 * @return boolean true nouveau composant dÃ©tectÃ©.
 	 */
 	public function newComponentDetected() {
-		// TODO détection de nouveau module a coder
+		// TODO dÃ©tection de nouveau module a coder
 		return false;
 	}
 	
 	/**
-	 * Démarrage de l'installeur.
+	 * DÃ©marrage de l'installeur.
 	 */
 	public function install() {
 		// TODO installation a coder
@@ -186,7 +186,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Vérifie l'état de maintenance.
+	 * VÃ©rifie l'Ã©tat de maintenance.
 	 * 
 	 * @return boolean
 	 */
@@ -196,7 +196,7 @@ class Core_Main {
 	
 	/**
 	 * Lance le tampon de sortie.
-	 * Entête & tamporisation de sortie.
+	 * EntÃªte & tamporisation de sortie.
 	 */
 	private function compressionOpen() {
 		header("Vary: Cookie, Accept-Encoding");
@@ -218,10 +218,10 @@ class Core_Main {
 	}
 	
 	/**
-	 * Assignation et vérification de fonction layout.
+	 * Assignation et vÃ©rification de fonction layout.
 	 */
 	private function loadLayout() {
-		// Assignation et vérification de fonction layout
+		// Assignation et vÃ©rification de fonction layout
 		$layout = strtolower(Core_Request::getWord("layout"));
 		
 		// Configuration du layout
@@ -233,7 +233,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Création de l'instance du module.
+	 * CrÃ©ation de l'instance du module.
 	 */
 	private function loadModule() {
 		Core_Loader::classLoader("Libs_Module");	
@@ -245,7 +245,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Assignation et vérification du template.
+	 * Assignation et vÃ©rification du template.
 	 */
 	private function loadMakeStyle() {		
 		$template = (!Core_Session::$userTemplate) ? self::$coreConfig['defaultTemplate'] : Core_Session::$userTemplate;
@@ -273,16 +273,16 @@ class Core_Main {
 	}
 		
 	/**
-	 * Vérifie si l'affichage se fait en écran complet.
+	 * VÃ©rifie si l'affichage se fait en Ã©cran complet.
 	 * 
-	 * @return boolean true c'est en plein écran.
+	 * @return boolean true c'est en plein Ã©cran.
 	 */
 	public static function isFullScreen() {
 		return ((self::$layout == "default") ? true : false);
 	}
 	
 	/**
-	 * Vérifie si l'affichage se fait en écran minimal ciblé module.
+	 * VÃ©rifie si l'affichage se fait en Ã©cran minimal ciblÃ© module.
 	 * 
 	 * @return boolean true c'est un affichage de module uniquement.
 	 */
@@ -291,7 +291,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Vérifie si l'affichage se fait en écran minimal ciblé block.
+	 * VÃ©rifie si l'affichage se fait en Ã©cran minimal ciblÃ© block.
 	 * 
 	 * @return boolean true c'est un affichage de block uniquement.
 	 */
@@ -300,7 +300,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Vérifie si l'url rewriting est activé.
+	 * VÃ©rifie si l'url rewriting est activÃ©.
 	 * 
 	 * @return boolean
 	 */
@@ -318,7 +318,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Vérifie si le site est fermé.
+	 * VÃ©rifie si le site est fermÃ©.
 	 * 
 	 * @return boolean
 	 */

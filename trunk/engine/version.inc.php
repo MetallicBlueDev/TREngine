@@ -6,12 +6,12 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Numéro de version du moteur
+ * NumÃ©ro de version du moteur
  * 
- * Controle de révision
+ * Controle de rÃ©vision
  * xx -> version courante
- * xx -> fonctionnalitées ajoutées
- * xx -> bugs ou failles critiques corrigés
+ * xx -> fonctionnalitÃ©es ajoutÃ©es
+ * xx -> bugs ou failles critiques corrigÃ©s
  * xx -> bug mineur
  * 
  * @var String

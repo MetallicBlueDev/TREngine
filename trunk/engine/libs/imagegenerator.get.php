@@ -27,7 +27,7 @@ if (isset($_GET['mode']) && $_GET['mode'] == "code" && !empty($_GET['code']))
 }
 else if (isset($_GET['mode']) && $_GET['mode'] == "text" && !empty($_GET['text']))
 {	// Methode text & mail
-	// Décryptage
+	// DÃ©cryptage
 	$text = $_GET['text'];
 	$text = urldecode($text);
 	$text = base64_decode($text);

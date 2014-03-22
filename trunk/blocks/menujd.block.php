@@ -10,7 +10,7 @@ Core_Loader::classLoader("Block_Menu");
 /**
  * Block de menu style jdMenu by Jonathan Sharp
  *
- * @author Sebastien Villemain
+ * @author Sébastien Villemain
  *
  */
 class Block_Menujd extends Block_Menu {

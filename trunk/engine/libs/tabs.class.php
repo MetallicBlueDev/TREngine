@@ -7,13 +7,13 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Classe de mise en forme d'onglets
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Libs_Tabs {
 	
 	/**
-	 * Vérifie si c'est la 1ère instance
+	 * VÃ©rifie si c'est la 1Ã¨re instance
 	 * 
 	 * @var boolean
 	 */
@@ -40,7 +40,7 @@ class Libs_Tabs {
 	private $tabsContent = "";
 	
 	/**
-	 * Id de l'onglet selectionné
+	 * Id de l'onglet selectionnÃ©
 	 * 
 	 * @var String
 	 */
@@ -54,7 +54,7 @@ class Libs_Tabs {
 	private $tabCounter = 0;
 	
 	/**
-	 * Création d'un nouveau groupe d'onglet
+	 * CrÃ©ation d'un nouveau groupe d'onglet
 	 * 
 	 * @param $name String Nom du groupe d'onglet
 	 */
@@ -80,7 +80,7 @@ class Libs_Tabs {
 	public function addTab($title, $htmlContent) {
 		// Id de l'onget courant
 		$idTab = $this->name . "idTab" . $this->tabCounter++;
-		// Création de l'onget
+		// CrÃ©ation de l'onget
 		$this->tabs .= "<li><a href=\"";
 		if (Core_Html::getInstance()->isJavascriptEnabled()) {
 			// Une simple balise pour le javascript

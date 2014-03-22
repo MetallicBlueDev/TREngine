@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Gestionnaire des sessions
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Core_Session {
@@ -20,7 +20,7 @@ class Core_Session {
 	private static $session = null;
 	
 	/**
-	 * Timer générale
+	 * Timer gÃ©nÃ©rale
 	 * 
 	 * @var int
 	 */ 
@@ -48,7 +48,7 @@ class Core_Session {
 	public static $userName = "";
 	
 	/**
-	 * Type de compte lié au client
+	 * Type de compte liÃ© au client
 	 * 
 	 * @var int
 	 */
@@ -138,7 +138,7 @@ class Core_Session {
 	private $errorMessage = array();
 	
 	/**
-	 * Démarrage du système de session
+	 * DÃ©marrage du systÃ¨me de session
 	 */
 	public function __construct() {
 		// Reset du client 
@@ -147,10 +147,10 @@ class Core_Session {
 		// Marque le timer
 		$this->timer = time();
 		
-		// Durée de validité du cache en jours
+		// DurÃ©e de validitÃ© du cache en jours
 		$this->cacheTimeLimit = Core_Main::$coreConfig['cacheTimeLimit'] * 86400;
 		
-		// Complète le nom des cookies
+		// ComplÃ¨te le nom des cookies
 		foreach ($this->cookieName as $key => $name) {
 			$this->cookieName[$key] = Core_Main::$coreConfig['cookiePrefix'] . $name;
 		}
@@ -165,7 +165,7 @@ class Core_Session {
 	}
 	
 	/**
-	 * Creation et récupèration de l'instance de session
+	 * Creation et rÃ©cupÃ¨ration de l'instance de session
 	 * 
 	 * @return Core_Session
 	 */
@@ -177,9 +177,9 @@ class Core_Session {
 	}
 	
 	/**
-	 * Vérifie si une session est ouverte
+	 * VÃ©rifie si une session est ouverte
 	 * 
-	 * @return boolean true une session peut être recupere
+	 * @return boolean true une session peut Ãªtre recupere
 	 */
 	private function sessionFound() {
 		$cookieUser = $this->getCookie($this->cookieName['USER']);
@@ -208,15 +208,15 @@ class Core_Session {
 			
 		    if (!empty($userId) && !empty($sessionId)) {
 		    	if (Core_CacheBuffer::cached($sessionId . ".php")) {
-					// Si fichier cache trouvé, on l'utilise
+					// Si fichier cache trouvÃ©, on l'utilise
 					$sessions = Core_CacheBuffer::getCache($sessionId . ".php");
 					
-					// Verification + mise à jour toute les 5 minutes
+					// Verification + mise Ã  jour toute les 5 minutes
 					$updVerif = false;
 					if ($sessions['userId'] == $userId && $sessions['sessionId'] == $sessionId) {
-						// Mise à jour toute les 5 min
+						// Mise Ã  jour toute les 5 min
 						if ((Core_CacheBuffer::cacheMTime($sessions['sessionId'] . ".php") + 5*60) < $this->timer) {
-							// Mise a jour du dernier accès
+							// Mise a jour du dernier accÃ¨s
 							$updVerif = $this->updateLastConnect($sessions['userId']);
 							Core_CacheBuffer::touchCache($sessions['sessionId'] . ".php");
 						} else {
@@ -225,7 +225,7 @@ class Core_Session {
 					}
 					if ($updVerif === true) { // Injection des informations du client					
 						$this->setUser($sessions);
-					} else { // La mise à jour a échoué, on détruit la session
+					} else { // La mise Ã  jour a Ã©chouÃ©, on dÃ©truit la session
 						$this->sessionClose();
 					}
 		    	} else {
@@ -253,19 +253,19 @@ class Core_Session {
 		self::$sessionId = (!empty($info['sessionId'])) ? $info['sessionId'] : self::$sessionId;
 		self::$userIpBan = (!empty($info['userIpBan'])) ? $info['userIpBan'] : self::$userIpBan;
 		
-		// Force une mise à jour complète
+		// Force une mise Ã  jour complÃ¨te
 		if ($refreshAll) {
 			self::$userLanguage = $info['langue'];
 			self::$userTemplate = $info['template'];
 		} else {
-			// Mise à jour uniquement si aucune donnée
+			// Mise Ã  jour uniquement si aucune donnÃ©e
 			if (empty(self::$userLanguage)) self::$userLanguage = $info['langue'];
 			if (empty(self::$userTemplate)) self::$userTemplate = $info['template'];
 		}
 	}
 	
 	/**
-	 * Mise en chaine de caractères des informations du client
+	 * Mise en chaine de caractÃ¨res des informations du client
 	 * 
 	 * @return String
 	 */
@@ -290,7 +290,7 @@ class Core_Session {
 	}
 	
 	/**
-	 * Retourne les infos utilisateur via la base de donnée
+	 * Retourne les infos utilisateur via la base de donnÃ©e
 	 * 
 	 * @return array
 	 */
@@ -312,16 +312,16 @@ class Core_Session {
 	}
 	
 	/**
-	 * Mise à jour de la dernière connexion
+	 * Mise Ã  jour de la derniÃ¨re connexion
 	 * 
 	 * @param $userId String
-	 * @return boolean true succes de la mise à jour
+	 * @return boolean true succes de la mise Ã  jour
 	 */
 	private function &updateLastConnect($userId = "") {
-		// Récupere l'id du client
+		// RÃ©cupere l'id du client
 		if (empty($userId)) $userId = self::$userId;
 		Core_Sql::addQuoted("", "NOW()");
-		// Envoie la requête Sql de mise à jour
+		// Envoie la requÃªte Sql de mise Ã  jour
 		Core_Sql::update(Core_Table::$USERS_TABLE, 
 			array("last_connect" => "NOW()"), 
 			array("user_id = '" . $userId . "'")
@@ -330,7 +330,7 @@ class Core_Session {
 	}
 	
 	/**
-	 * Vérifie si c'est un client connu donc logé
+	 * VÃ©rifie si c'est un client connu donc logÃ©
 	 * 
 	 * @return boolean true c'est un client
 	 */
@@ -345,7 +345,7 @@ class Core_Session {
 	}
 	
 	/**
-	 * Remise à zéro des informations sur le client
+	 * Remise Ã  zÃ©ro des informations sur le client
 	 */
 	private function resetUser() {
 		self::$userId = "";
@@ -360,12 +360,12 @@ class Core_Session {
 	/**
 	 * Ouvre une nouvelle session
 	 * 
-	 * @return boolean ture succès
+	 * @return boolean ture succÃ¨s
 	 */
 	private function &sessionOpen() {
 		self::$sessionId = Exec_Crypt::createId(32);
 		
-		// Durée de connexion automatique via cookie
+		// DurÃ©e de connexion automatique via cookie
 		$cookieTimeLimit = $this->timer + $this->cacheTimeLimit;
 		// Creation des cookies
 		$cookieUser = Exec_Cookie::createCookie(
@@ -419,12 +419,12 @@ class Core_Session {
 			Core_CacheBuffer::removeCache(self::$sessionId . ".php");
 		}
 		
-		// Remise à zéro des infos client
+		// Remise Ã  zÃ©ro des infos client
 		$this->resetUser();
 		
-		// Destruction des éventuelles cookies
+		// Destruction des Ã©ventuelles cookies
 		foreach ($this->cookieName as $key => $value) {
-			// On évite de supprimer le cookie de bannissement
+			// On Ã©vite de supprimer le cookie de bannissement
 			if ($key == "BLACKBAN") continue;
 			Exec_Cookie::destroyCookie($this->getCookieName($this->cookieName[$key]));
 		}
@@ -435,10 +435,10 @@ class Core_Session {
 	 * 
 	 * @param $name String Nom du compte (identifiant)
 	 * @param $pass String Mot de passe du compte
-	 * @return boolean ture succès
+	 * @return boolean ture succÃ¨s
 	 */
 	public function &startConnection($userName, $userPass) {
-		// Arrête de la session courante si il y en a une
+		// ArrÃªte de la session courante si il y en a une
 		$this->stopConnection();
 		
 		if ($this->validLogin($userName) && $this->validPassword($userPass)) {
@@ -497,7 +497,7 @@ class Core_Session {
 	}
 	
 	/**
-	 * Retourne le contenu décrypté du cookie
+	 * Retourne le contenu dÃ©cryptÃ© du cookie
 	 * 
 	 * @param $cookieName String
 	 * @return String
@@ -510,7 +510,7 @@ class Core_Session {
 	}
 	
 	/**
-	 * Retourne le nom crypté du cookie
+	 * Retourne le nom cryptÃ© du cookie
 	 * 
 	 * @param $cookieName String
 	 * @return String
@@ -520,7 +520,7 @@ class Core_Session {
 	}
 	
 	/**
-	 * Vérification du login
+	 * VÃ©rification du login
 	 * 
 	 * @param $login
 	 * @return boolean true login valide
@@ -544,7 +544,7 @@ class Core_Session {
 	}
 	
 	/**
-	 * Vérification du password
+	 * VÃ©rification du password
 	 * 
 	 * @param $password
 	 * @return boolean true password valide

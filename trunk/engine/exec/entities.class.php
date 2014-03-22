@@ -5,33 +5,33 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Convertiseur de chaine de caractère en entities
+ * Convertiseur de chaine de caractÃ¨re en entities
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Exec_Entities {
 	
 	/**
-	 * Transforme une chaine non-encodée, et la convertit en entitiées unicode &#xxx;
-	 * pour que ça s'affiche correctement dans les navigateurs
+	 * Transforme une chaine non-encodÃ©e, et la convertit en entitiÃ©es unicode &#xxx;
+	 * pour que Ã§a s'affiche correctement dans les navigateurs
 	 * Thanks to ??? (sorry!) @ ???
 	 * http://
 	 * 
 	 * @param string $source : la chaine
-	 * @return string $encodedString : chaine et ses entitées
+	 * @return string $encodedString : chaine et ses entitÃ©es
 	 */
 	public static function &entitiesUtf8($source) {
-		// Remplace les entités numériques
+		// Remplace les entitÃ©s numÃ©riques
 		$source = preg_replace('~&#x([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', $source);
 		$source = preg_replace('~&#([0-9]+);~e', 'chr("\\1")', $source);
 		
-		// Remplace les entités litérales
+		// Remplace les entitÃ©s litÃ©rales
 		$trans_tbl = get_html_translation_table(HTML_ENTITIES);
 		$trans_tbl = array_flip($trans_tbl);
 		$source = strtr($source, $trans_tbl);
 		
-		// Entitées UTF-8
+		// EntitÃ©es UTF-8
 		$source = utf8_encode($source);
 		
 		// array used to figure what number to decrement from character order value 
@@ -108,7 +108,7 @@ class Exec_Entities {
 	}
 	
 	/**
-	 * Supprime les slashes ajouté par addSlashes
+	 * Supprime les slashes ajoutÃ© par addSlashes
 	 * 
 	 * @param $text
 	 * @return String
@@ -119,7 +119,7 @@ class Exec_Entities {
 	}
 	
 	/**
-	 * Prépare le texte pour un affichage
+	 * PrÃ©pare le texte pour un affichage
 	 * 
 	 * @param $text
 	 * @return String
@@ -136,7 +136,7 @@ class Exec_Entities {
 	}
 	
 	/**
-	 * Sécurise le texte
+	 * SÃ©curise le texte
 	 * 
 	 * @param $string
 	 * @return String

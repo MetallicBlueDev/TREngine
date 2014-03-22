@@ -7,13 +7,13 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Constructeur de fichier
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Exec_FileBuilder {
 	
 	/**
-	 * Génére un nouveau fichier de configuration générale
+	 * GÃ©nÃ©re un nouveau fichier de configuration gÃ©nÃ©rale
 	 * 
 	 * @param $TR_ENGINE_MAIL String
 	 * @param $TR_ENGINE_STATUT String
@@ -22,10 +22,10 @@ class Exec_FileBuilder {
 	 * @param $cryptKey String
 	 */
 	public static function buildConfigFile($TR_ENGINE_MAIL, $TR_ENGINE_STATUT, $cacheTimeLimit, $cookiePrefix, $cryptKey) {
-		// Vérification du mail
+		// VÃ©rification du mail
 		if (empty($TR_ENGINE_MAIL) && define(TR_ENGINE_MAIL)) $TR_ENGINE_MAIL = TR_ENGINE_MAIL;
 		
-		// Vérification de la durée du cache
+		// VÃ©rification de la durÃ©e du cache
 		if (!is_int($cacheTimeLimit) || $cacheTimeLimit < 0) $cacheTimeLimit = 7;
 		
 		$content = "<?php \n"
@@ -57,7 +57,7 @@ class Exec_FileBuilder {
 	}
 	
 	/**
-	 * Génére un nouveau fichier de configuration FTP 
+	 * GÃ©nÃ©re un nouveau fichier de configuration FTP 
 	 * 
 	 * @param $host String
 	 * @param $port int
@@ -67,10 +67,10 @@ class Exec_FileBuilder {
 	 * @param $type String
 	 */
 	public static function buildFtpFile($host, $port, $user, $pass, $root, $type) {
-		// Vérification du port
+		// VÃ©rification du port
 		if (!is_int($port)) $port = 21;
 		
-		// Vérification du mode de ftp
+		// VÃ©rification du mode de ftp
 		if (Core_Loader::isCallable("Core_CacheBuffer")) {
 			$mode = Core_CacheBuffer::getModeActived();
 			$type = (isset($mode[$type])) ? $type : "";
@@ -107,7 +107,7 @@ class Exec_FileBuilder {
 	}
 	
 	/**
-	 * Génére un nouveau fichier de configuration pour la base de donnée 
+	 * GÃ©nÃ©re un nouveau fichier de configuration pour la base de donnÃ©e 
 	 * 
 	 * @param $host String
 	 * @param $user String
@@ -117,7 +117,7 @@ class Exec_FileBuilder {
 	 * @param $prefix String
 	 */
 	public static function buildDatabaseFile($host, $user, $pass, $name, $type, $prefix) {
-		// Vérification du type de base de donnée
+		// VÃ©rification du type de base de donnÃ©e
 		if (Core_Loader::isCallable("Core_Sql")) {
 			$bases = Core_Sql::listBases();
 			$type = (isset($bases[$type])) ? $type : "mysql";

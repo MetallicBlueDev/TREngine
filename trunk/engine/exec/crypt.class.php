@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Outil de cryptage
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Exec_Crypt {
@@ -46,7 +46,7 @@ class Exec_Crypt {
 	}
 	
 	/**
-	 * Creation d'un ID unique avec des chiffres, lettres et sensible à la case
+	 * Creation d'un ID unique avec des chiffres, lettres et sensible Ã  la case
 	 * 
 	 * @param $taille int
 	 * @return String
@@ -79,7 +79,7 @@ class Exec_Crypt {
 	}
 	
 	/**
-	 * Creation d'un ID unique avec des lettres et sensible à la case
+	 * Creation d'un ID unique avec des lettres et sensible Ã  la case
 	 * 
 	 * @param $taille int
 	 * @return String
@@ -90,25 +90,25 @@ class Exec_Crypt {
 	}
 	
 	/**
-	 * Crypteur de donnée
+	 * Crypteur de donnÃ©e
 	 * 
-	 * @param $data String donnée
-	 * @param $salt String clès
-	 * @param $method String méthode de cryptage
+	 * @param $data String donnÃ©e
+	 * @param $salt String clÃ¨s
+	 * @param $method String mÃ©thode de cryptage
 	 * @return String
 	 */
 	public static function &cryptData($data, $salt = "", $method = "") {
-		// Réglage de la méthode utilisé
+		// RÃ©glage de la mÃ©thode utilisÃ©
 		if (empty($method)) $method= "smd5";
 		$method = strtolower($method);
 		$cryptData = "";
 		
-		// Préparation du salt
+		// PrÃ©paration du salt
 		if (empty($salt)) $salt = self::createId(16);
 		
 		switch($method) {
 			case 'smd5':
-				// Si le crypt md5 est activé
+				// Si le crypt md5 est activÃ©
 				if (defined("CRYPT_MD5") && CRYPT_MD5) {
 					$cryptData = crypt($data, "$1$" . substr($salt, 0, 8) . "$");
 					break;
@@ -177,7 +177,7 @@ class Exec_Crypt {
 	}
 	
 	/**
-	 * Décodeur de chaine
+	 * DÃ©codeur de chaine
 	 * Thanks Alexander Valyalkin @ 30-Jun-2004 08:41
 	 * http://fr2.php.net/manual/fr/function.md5.php
 	 * 

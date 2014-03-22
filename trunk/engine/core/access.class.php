@@ -5,22 +5,22 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Gestionnaire d'accès
+ * Gestionnaire d'accÃ¨s
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Core_Access  {
 	
 	/**
-	 * Vérifie si le client a les droits suffisant pour acceder au module
+	 * VÃ©rifie si le client a les droits suffisant pour acceder au module
 	 * 
 	 * @param $zoneIdentifiant String module ou page administrateur (module/page) ou id du block sous forme block + Id
-	 * @param $userIdAdmin String Id de l'administrateur a vérifier
-	 * @return boolean true le client visé a la droit
+	 * @param $userIdAdmin String Id de l'administrateur a vÃ©rifier
+	 * @return boolean true le client visÃ© a la droit
 	 */
 	public static function moderate($zoneIdentifiant, $userIdAdmin = "") {
-		// Rank 3 exigé !
+		// Rank 3 exigÃ© !
 		if (Core_Session::$userRank == 3) {
 			// Recherche des droits admin
 			$right = self::getAdminRight($userIdAdmin);
@@ -28,15 +28,15 @@ class Core_Access  {
 			$zone = "";
 			$identifiant = "";
 			
-			// Si les réponses retourné sont correcte
+			// Si les rÃ©ponses retournÃ© sont correcte
 			if ($nbRights > 0 && self::accessType($zoneIdentifiant, $zone, $identifiant)) {
-				// Vérification des droits
-				if ($right[0] == "all") { // Admin avec droit suprême
+				// VÃ©rification des droits
+				if ($right[0] == "all") { // Admin avec droit suprÃªme
 					return true;
 				} else {
 					// Analyse des droits, un par un
 					for ($i = 0; $i <= $nbRights; $i++) {
-						// Droit courant étudié
+						// Droit courant Ã©tudiÃ©
 						$currentRight = $right[$i];
 						
 						// Si c'est un droit de module
@@ -44,15 +44,15 @@ class Core_Access  {
 							if (is_numeric($currentRight) && $identifiant == $currentRight) {
 								return true;
 							}
-						} else { // Si c'est un droit spécial
+						} else { // Si c'est un droit spÃ©cial
 							// Affectation des variables pour le droit courant
 							$zoneIdentifiantRight = $currentRight;
 							$zoneRight = "";
 							$identifiantRight = "";
 							
-							// Vérification de la validité du droit
+							// VÃ©rification de la validitÃ© du droit
 							if (self::accessType($zoneIdentifiantRight, $zoneRight, $identifiantRight)) {
-								// Vérification suivant le type de droit
+								// VÃ©rification suivant le type de droit
 								if ($zone == "BLOCK") {
 									if ($zoneRight == "BLOCK" && is_numeric($identifiantRight)) {
 										if ($identifiant == $identifiantRight) {
@@ -76,7 +76,7 @@ class Core_Access  {
 	}
 	
 	/**
-	 * Retourne l'erreur d'acces liée au module
+	 * Retourne l'erreur d'acces liÃ©e au module
 	 * 
 	 * @param $mod
 	 * @return String
@@ -99,11 +99,11 @@ class Core_Access  {
 	}
 	
 	/**
-	 * Autorise ou refuse l'accès a la ressource cible
+	 * Autorise ou refuse l'accÃ¨s a la ressource cible
 	 * 
 	 * @param $zoneIdentifiant String block+Id ou module/page.php ou module
 	 * @param $zoneRank int
-	 * @return boolean true accès autorisé
+	 * @return boolean true accÃ¨s autorisÃ©
 	 */
 	public static function &autorize($zoneIdentifiant, $zoneRank = -2) {
 		$access = false;
@@ -121,14 +121,14 @@ class Core_Access  {
 			}
 		}
 		
-		if ($zoneRank == 0) $access = true; // Accès public
-		else if ($zoneRank > 0 && $zoneRank < 3 && Core_Session::$userRank >= $zoneRank) $access = true; // Accès membre ou admin
-		else if ($zoneRank == 3 && self::moderate($zoneIdentifiant)) $access = true; // Accès admin avec droits
+		if ($zoneRank == 0) $access = true; // AccÃ¨s public
+		else if ($zoneRank > 0 && $zoneRank < 3 && Core_Session::$userRank >= $zoneRank) $access = true; // AccÃ¨s membre ou admin
+		else if ($zoneRank == 3 && self::moderate($zoneIdentifiant)) $access = true; // AccÃ¨s admin avec droits
 		return $access;
 	}
 	
 	/**
-	 * Retourne les droits de l'admin ciblé
+	 * Retourne les droits de l'admin ciblÃ©
 	 * 
 	 * @param $userIdAdmin String userId
 	 * @return array liste des droits
@@ -139,7 +139,7 @@ class Core_Access  {
 		
 		$admin = array();
 		$admin = Core_Sql::getBuffer("getAdminRight");
-		if (empty($admin)) { // Si la requête n'est pas en cache
+		if (empty($admin)) { // Si la requÃªte n'est pas en cache
 			Core_Sql::select(
 				Core_Table::$USERS_ADMIN_TABLE,
 				array("rights"),
@@ -160,11 +160,11 @@ class Core_Access  {
 	}
 	
 	/**
-	 * Identifie le type d'acces lié a l'identifiant entré
+	 * Identifie le type d'acces liÃ© a l'identifiant entrÃ©
 	 * 
 	 * @param $zoneIdentifiant String module ou page administrateur (module/page) ou id du block sous forme block + Id 
-	 * @param $zone String la zone type trouvée (BLOCK/PAGE/MODULE)
-	 * @param $identifiant String l'identifiant lié au type trouvé
+	 * @param $zone String la zone type trouvÃ©e (BLOCK/PAGE/MODULE)
+	 * @param $identifiant String l'identifiant liÃ© au type trouvÃ©
 	 * @return boolean true identifiant valide
 	 */
 	public static function &accessType(&$zoneIdentifiant, &$zone, &$identifiant) {
@@ -202,7 +202,7 @@ class Core_Access  {
 	}
 	
 	/**
-	 * Retourne le type d'acces suivant le numéro
+	 * Retourne le type d'acces suivant le numÃ©ro
 	 * 
 	 * @param $rank String or int
 	 * @return String

@@ -5,15 +5,15 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Générateur de captcha, anti-robot, anti-spam
+ * GÃ©nÃ©rateur de captcha, anti-robot, anti-spam
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Libs_Captcha {
 	
 	/**
-	 * Vérifie l'état initialisation de la classe
+	 * VÃ©rifie l'Ã©tat initialisation de la classe
 	 * 
 	 * @var boolean
 	 */
@@ -27,14 +27,14 @@ class Libs_Captcha {
 	private $enabled = false;
 	
 	/**
-	 * Un object utilisé suivant le type
+	 * Un object utilisÃ© suivant le type
 	 * 
 	 * @var Object
 	 */
 	private $object = "";
 	
 	/**
-	 * Réponse correcte a donner
+	 * RÃ©ponse correcte a donner
 	 * 
 	 * @var String
 	 */
@@ -48,7 +48,7 @@ class Libs_Captcha {
 	private $inputRobotName = "";
 	
 	/**
-	 * Question posé lié a la réponse courante
+	 * Question posÃ© liÃ© a la rÃ©ponse courante
 	 * 
 	 * @var String
 	 */
@@ -75,7 +75,7 @@ class Libs_Captcha {
 	}
 	
 	/**
-	 * Initialise le compteur de donnée aléatoire
+	 * Initialise le compteur de donnÃ©e alÃ©atoire
 	 */
 	private function initRand() {
 		mt_srand((double)microtime()*1000000);
@@ -83,7 +83,7 @@ class Libs_Captcha {
 	}
 	
 	/**
-	 * Retourne un valeur aléatoire
+	 * Retourne un valeur alÃ©atoire
 	 * 
 	 * @param $mini int
 	 * @param $max int
@@ -97,23 +97,23 @@ class Libs_Captcha {
 	}
 	
 	/**
-	 * Créé un calcul simple
+	 * CrÃ©Ã© un calcul simple
 	 */
 	private function makeSimpleCalculation() {
-		// Nombre aléatoire
+		// Nombre alÃ©atoire
 		$numberOne = $this->randInt(0, 9);
 		$numberTwo = $this->randInt(1, 12);
 		
-		// Choix de l'operateur de façon aléatoire
+		// Choix de l'operateur de faÃ§on alÃ©atoire
 		$operateur = ($numberTwo >= $numberOne) ? array("+", "*") : array("-", "+", "*");
 		$operateur = $operateur[array_rand($operateur)];
 		
-		// Calcul de la réponse
+		// Calcul de la rÃ©ponse
 		eval('$this->response = strval(' . $numberOne . $operateur . $numberTwo . ');');
 		
-		// Affichage aléatoire de l'opérateur
+		// Affichage alÃ©atoire de l'opÃ©rateur
 		if ($this->randInt(0, 1) == 1) {
-			// Affichage de l'opérateur en lettre
+			// Affichage de l'opÃ©rateur en lettre
 			switch($operateur) {
 				case '*': $operateur = "fois"; break;
 				case '-': $operateur = "moins"; break;
@@ -121,7 +121,7 @@ class Libs_Captcha {
 				default: $operateur = "plus"; break;
 			}
 		} else {
-			// Affichage de l'opérateur en symbole
+			// Affichage de l'opÃ©rateur en symbole
 			$operateur = ($operateur == "*" && $this->randInt(0, 1) == 1) ? "x" : $operateur;
 		}
 		$this->question = CAPTCHA_MAKE_SIMPLE_CALCULATION . " " . $numberOne . " " . $operateur  . " " . $numberTwo . " ?";
@@ -131,7 +131,7 @@ class Libs_Captcha {
 	 * Ecrire un certain nombre de lettre de l'alphabet
 	 */
 	private function makeLetters() {
-		// Nombre aléatoire
+		// Nombre alÃ©atoire
 		$number = $this->randInt(1, 6);
 		$this->question = CAPTCHA_MAKE_LETTERS . " " . $number;
 		$this->response = substr("abcdef", 0, $number);
@@ -141,7 +141,7 @@ class Libs_Captcha {
 	 * Ecrire la lettre de l'alphabet correspondant au chiffre
 	 */
 	private function makeLetter() {
-		// Nombre aléatoire
+		// Nombre alÃ©atoire
 		$number = $this->randInt(1, 6);
 		$this->question = CAPTCHA_MAKE_LETTER . " " . $number;
 		$this->response = substr("abcdef", $number - 1, 1);
@@ -151,17 +151,17 @@ class Libs_Captcha {
 	 * Ecrire un certain nombre de chiffre
 	 */
 	private function makeNumbers() {
-		// Nombre aléatoire
+		// Nombre alÃ©atoire
 		$number = $this->randInt(1, 6);
 		$this->question = CAPTCHA_MAKE_NUMBERS . " " . $number;
 		$this->response = substr("012345", 0, $number + 1);
 	}
 	
 	/**
-	 * Convertir en lettre un mois demandé en chiffre et inversement
+	 * Convertir en lettre un mois demandÃ© en chiffre et inversement
 	 */
 	private function makeNumberMonth() {
-		// Nombre aléatoire
+		// Nombre alÃ©atoire
 		$number = $this->randInt(1, 12);
 		
 		// Recherche du mois par rapport au chiffre
@@ -182,29 +182,29 @@ class Libs_Captcha {
 		}
 		
 		if ($this->randInt(0, 1) == 0) {
-			// Ecrire en lettre un mois de l'année
+			// Ecrire en lettre un mois de l'annÃ©e
 			$this->question = CAPTCHA_MAKE_NUMBER_TO_MONTH . " " . $number . " ?";
 			$this->response = $month;
 		} else {
-			// Ecrire en chiffre un mois de l'année
+			// Ecrire en chiffre un mois de l'annÃ©e
 			$this->question = CAPTCHA_MAKE_MONTH_TO_NUMBER . " " . $month . " ?";
 			$this->response = $number;
 		}
 	}
 	
 	/**
-	 * Génére une image
+	 * GÃ©nÃ©re une image
 	 */
-	private function makePicture() {// TODO a vérifier
+	private function makePicture() {// TODO a vÃ©rifier
 		$this->response = Exec_Crypt::createId($this->randInt(3, 6));
 		$this->question = CAPTCHA_MAKE_PICTURE_CODE . ": " . "<img src=\"engine/libs/imagegenerator.php?mode=code&amp;code=" . $this->response . "\" alt=\"\" />\n";
 	}
 	
 	/**
 	 * Creation du captcha
-	 * Captcha créée dans l'objet valide sinon retourne en code HTML
+	 * Captcha crÃ©Ã©e dans l'objet valide sinon retourne en code HTML
 	 * 
-	 * @return String le code HTML a incruster dans la page ou une chaine vide si un objet valide est utilisé
+	 * @return String le code HTML a incruster dans la page ou une chaine vide si un objet valide est utilisÃ©
 	 */
 	public function &create() {
 		$rslt = "";
@@ -224,7 +224,7 @@ class Libs_Captcha {
 			}
 			
 			if ($this->object != null) {
-				if ($this->object instanceOf Libs_Form) { // A vérifier
+				if ($this->object instanceOf Libs_Form) { // A vÃ©rifier
 					$this->object->addInputText("cles", $this->question, "", "", "input captcha");
 					$this->object->addInputHidden($this->inputRobotName, "");
 				}
@@ -238,14 +238,14 @@ class Libs_Captcha {
 	}
 	
 	/**
-	 * Vérifie la validité du captcha courant
+	 * VÃ©rifie la validitÃ© du captcha courant
 	 * 
 	 * @return boolean
 	 */
 	public function verif() {
 		$code = Core_Request::getString("cles", "", "POST");
 		$inputRobot = Core_Request::getString($this->inputRobotName, "", "POST");
-		// Vérification du formulaire
+		// VÃ©rification du formulaire
 		if (empty($inputRobot) && $code == $this->response) {
 			return true;
 		}
@@ -254,7 +254,7 @@ class Libs_Captcha {
 	}
 	
 	/**
-	 * Vérifie la validité du captcha
+	 * VÃ©rifie la validitÃ© du captcha
 	 * 
 	 * @param $object Libs_Captcha
 	 * @return boolean

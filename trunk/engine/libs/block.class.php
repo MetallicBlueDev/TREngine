@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Gestionnaire de blocks.
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  */
 class Libs_Block {
 	
@@ -19,14 +19,14 @@ class Libs_Block {
 	private static $libsBlock = null;
 	
 	/**
-	 * Blocks chargés, tableau a deux dimensions.
+	 * Blocks chargÃ©s, tableau a deux dimensions.
 	 * 
 	 * @var array
 	 */
 	public static $blocksConfig = array();
 	
 	/**
-	 * Blocks compilés, tableau a deux dimensions.
+	 * Blocks compilÃ©s, tableau a deux dimensions.
 	 * 
 	 * @var array
 	 */
@@ -48,7 +48,7 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Vérifie si le block est valide.
+	 * VÃ©rifie si le block est valide.
 	 * 
 	 * @param $blockType String
 	 * @return boolean true block valide
@@ -58,10 +58,10 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Vérifie si le block doit être activé.
+	 * VÃ©rifie si le block doit Ãªtre activÃ©.
 	 * 
 	 * @param $modules array
-	 * @return boolean true le block doit être actif.
+	 * @return boolean true le block doit Ãªtre actif.
 	 */
 	private function blockActiveMod($modules = array("all")) {
 		if (Core_Loader::isCallable("Libs_Module")) {
@@ -87,14 +87,14 @@ class Libs_Block {
 		);
 		
 		if (Core_Sql::affectedRows() > 0) {
-			// Récuperation des données des blocks
+			// RÃ©cuperation des donnÃ©es des blocks
 			Core_Sql::addBuffer("block");
 			while ($block = Core_Sql::fetchBuffer("block")) {
 				$block->mods = explode("|", $block->mods);
 				
 				if ($this->isBlock($block->type) // Si le block existe
 						&& $this->blockActiveMod($block->mods) // Et qu'il est actif sur la page courante
-						&& Core_Session::$userRank >= $block->rank) { // Et que le client est assez gradé
+						&& Core_Session::$userRank >= $block->rank) { // Et que le client est assez gradÃ©
 					$block->title = Exec_Entities::textDisplay($block->title);
 					
 					self::$blocksConfig[$block->side][] = $block;
@@ -124,7 +124,7 @@ class Libs_Block {
 			$block = Core_Sql::fetchObject();
 			
 			if ($this->isBlock($block->type) // Si le block existe
-					&& Core_Session::$userRank >= $block->rank) { // Et que le client est assez gradé
+					&& Core_Session::$userRank >= $block->rank) { // Et que le client est assez gradÃ©
 				$block->title = Exec_Entities::textDisplay($block->title);
 				
 				self::$blocksConfig[$block->side][] = $block;
@@ -134,17 +134,17 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Récupère le block.
+	 * RÃ©cupÃ¨re le block.
 	 * 
 	 * @param $block array
 	 */
 	private function get($block) {
-		// Vérification de l'accès
+		// VÃ©rification de l'accÃ¨s
 		if (Core_Access::autorize("block" . $block->block_id, $block->rank)) {
 			$blockClassName = "Block_" . ucfirst($block->type);
 			$loaded = Core_Loader::classLoader($blockClassName);
 			
-			// Vérification du block
+			// VÃ©rification du block
 			if ($loaded) {
 				if (Core_Loader::isCallable($blockClassName, "display")) {
 					Core_Translate::translate("blocks/" . $block->type);
@@ -157,7 +157,7 @@ class Libs_Block {
 					$BlockClass->content = $block->content;
 					$BlockClass->rank = $block->rank;
 					
-					// Capture des données d'affichage
+					// Capture des donnÃ©es d'affichage
 					ob_start();
 					$BlockClass->display();
 					$this->blocksCompiled[$block->side][] = ob_get_contents();
@@ -170,13 +170,13 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Retourne les blocks compilés voulu (right/left/top/bottom).
+	 * Retourne les blocks compilÃ©s voulu (right/left/top/bottom).
 	 * 
 	 * @param $side String
 	 * @return String
 	 */
 	public function &getBlocks($side) {
-		// Conversion du side en identifiant numérique
+		// Conversion du side en identifiant numÃ©rique
 		$sidePosition = is_string($side) ? self::getSideNumeric($side) : $side;
 		
 		$blockSide = "";
@@ -195,7 +195,7 @@ class Libs_Block {
 	 * @return String identifiant de la position (right, left...).
 	 */
 	private static function &getSideLetters($side) {
-		$sideLetters = $side; // Assignation par défaut
+		$sideLetters = $side; // Assignation par dÃ©faut
 		
 		// Si on renseigne bien un entier
 		if (is_numeric($side)) { // On recherche la position
@@ -219,7 +219,7 @@ class Libs_Block {
 	 * @return int identifiant de la position (1, 2..).
 	 */
 	private static function &getSideNumeric($side) {
-		$sideNumeric = $side; // Assignation par défaut
+		$sideNumeric = $side; // Assignation par dÃ©faut
 		
 		// Si on renseigne bien un string
 		if (is_string($side)) { // On recherche la position
@@ -262,7 +262,7 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Réécriture du tampon de sortie si besoin.
+	 * RÃ©Ã©criture du tampon de sortie si besoin.
 	 * 
 	 * @param $buffer String
 	 * @return $buffer String
@@ -275,18 +275,18 @@ class Libs_Block {
 	}
 	
 	/**
-	 * Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer.
+	 * Recherche le parametre indiquant qu'il doit y avoir une rÃ©Ã©criture du buffer.
 	 * 
-	 * @param $side int coté ou se trouve le block.
+	 * @param $side int cotÃ© ou se trouve le block.
 	 * @param $key int cles du block.
-	 * @return boolean true il doit y avoir réécriture.
+	 * @return boolean true il doit y avoir rÃ©Ã©criture.
 	 */
 	private function doRewriteBuffer($side, $key) {
 		return (strpos(self::$blocksConfig[$side][$key]->content, "rewriteBuffer") !== false) ? true : false;
 	}
 	
 	/**
-	 * Retourne le block compilé.
+	 * Retourne le block compilÃ©.
 	 * 
 	 * @return String
 	 */
@@ -317,10 +317,10 @@ class Libs_Block {
 }
 
 /**
- * Block de base, hérité par tous les autres blocks.
- * Modèle pour le contenu d'un block.
+ * Block de base, hÃ©ritÃ© par tous les autres blocks.
+ * ModÃ¨le pour le contenu d'un block.
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  */
 abstract class Block_Model {
 	
@@ -374,20 +374,20 @@ abstract class Block_Model {
 	public $rank = "";
 	
 	/**
-	 * Affichage par défaut.
+	 * Affichage par dÃ©faut.
 	 */
 	public function display() {
 		Core_Exception::addAlertError(ERROR_BLOCK_IMPLEMENT . ((!empty($this->title)) ? " (" . $this->title . ")" : ""));
 	}
 
 	/**
-	 * Procédure d'installation du block.
+	 * ProcÃ©dure d'installation du block.
 	 */
 	public function install() {
 	}
 
 	/**
-	 * Procédure de désinstallation du block.
+	 * ProcÃ©dure de dÃ©sinstallation du block.
 	 */
 	public function uninstall() {
 	}

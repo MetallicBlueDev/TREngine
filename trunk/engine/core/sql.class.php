@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Gestionnaire de la communication SQL
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  * 
  */
 class Core_Sql {
@@ -20,14 +20,14 @@ class Core_Sql {
 	private static $base = null;
 	
 	/**
-	 * Donnée de la base
+	 * DonnÃ©e de la base
 	 * 
 	 * @var array
 	 */
 	private static $dataBase = array();
 	
 	/**
-	 * Démarre une instance de communication avec la base
+	 * DÃ©marre une instance de communication avec la base
 	 */
 	public static function makeInstance() {
 		if (self::$base == null && !empty(self::$dataBase)) {
@@ -35,7 +35,7 @@ class Core_Sql {
 			$BaseClass = "Base_" . ucfirst(self::$dataBase['type']);
 			Core_Loader::classLoader($BaseClass);
 			
-			// Si la classe peut être utilisée
+			// Si la classe peut Ãªtre utilisÃ©e
 			if (Core_Loader::isCallable($BaseClass)) {
 				try {
 					self::$base = new $BaseClass();
@@ -52,7 +52,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Retourne la liste des types de base supporté
+	 * Retourne la liste des types de base supportÃ©
 	 * 
 	 * @return array
 	 */
@@ -71,14 +71,14 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Etablie une connexion à la base de donnée
+	 * Etablie une connexion Ã  la base de donnÃ©e
 	 */
 	public static function dbConnect() {
 		self::$base->dbConnect();
 	}
 	
 	/**
-	 * Selectionne une base de donnée
+	 * Selectionne une base de donnÃ©e
 	 * 
 	 * @return boolean true succes
 	 */
@@ -114,7 +114,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Retourne un tableau qui contient la ligne demandée
+	 * Retourne un tableau qui contient la ligne demandÃ©e
 	 * 
 	 * @return array
 	 */
@@ -123,7 +123,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Retourne un objet qui contient le ligne demandée
+	 * Retourne un objet qui contient le ligne demandÃ©e
 	 * 
 	 * @return object
 	 */
@@ -149,7 +149,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Retourne l'id de la dernière ligne inserée
+	 * Retourne l'id de la derniÃ¨re ligne inserÃ©e
 	 * 
 	 * @return int
 	 */
@@ -158,7 +158,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Envoie une requête Sql
+	 * Envoie une requÃªte Sql
 	 * 
 	 * @param $Sql
 	 */
@@ -167,10 +167,10 @@ class Core_Sql {
 		self::$base->query($sql);
 		self::$base->resetQuoted();
 		
-		// Ajout la requête au log
+		// Ajout la requÃªte au log
 		if (Core_Secure::isDebuggingMode()) Core_Exception::setSqlRequest($sql);
 		
-		// Création d'une exception si une réponse est négative (false)
+		// CrÃ©ation d'une exception si une rÃ©ponse est nÃ©gative (false)
 		if (self::getQueries() === false) throw new Exception("sqlReq");
 	}
 	
@@ -194,7 +194,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Mise à jour d'une table
+	 * Mise Ã  jour d'une table
 	 * 
 	 * @param $table Nom de la table
 	 * @param $values array Sous la forme array("keyName" => "newValue")
@@ -213,7 +213,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Retourne dernier résultat de la dernière requête executée
+	 * Retourne dernier rÃ©sultat de la derniÃ¨re requÃªte executÃ©e
 	 *
 	 * @return Ressource ID
 	 */
@@ -222,7 +222,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Retourne la derniere requête sql
+	 * Retourne la derniere requÃªte sql
 	 * 
 	 * @return String
 	 */
@@ -242,7 +242,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Ajoute un bout de donnée dans le buffer
+	 * Ajoute un bout de donnÃ©e dans le buffer
 	 * 
 	 * @param $key String cles a utiliser
 	 * @param $name String
@@ -283,7 +283,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Marqué une cles comme déjà quoté
+	 * MarquÃ© une cles comme dÃ©jÃ  quotÃ©
 	 * 
 	 * @param $key String
 	 */
@@ -292,7 +292,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Retourne la version de la base de donnée
+	 * Retourne la version de la base de donnÃ©e
 	 * 
 	 * @return String
 	 */
@@ -301,7 +301,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Retourne le type d'encodage de la base de donnée
+	 * Retourne le type d'encodage de la base de donnÃ©e
 	 * 
 	 * @return String
 	 */
@@ -310,7 +310,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Récupération des données de la base
+	 * RÃ©cupÃ©ration des donnÃ©es de la base
 	 * 
 	 * @return array
 	 */
@@ -319,7 +319,7 @@ class Core_Sql {
 	}
 	
 	/**
-	 * Injection des données de la base
+	 * Injection des donnÃ©es de la base
 	 * 
 	 * @param array
 	 */
@@ -331,13 +331,13 @@ class Core_Sql {
 /**
  * Gestionnaire de la communication SQL
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  * 
  */
 abstract class Base_Model {
 	
 	/**
-	 * Configuration de la base de donnée
+	 * Configuration de la base de donnÃ©e
 	 * 
 	 * @var array
 	 */
@@ -358,14 +358,14 @@ abstract class Base_Model {
 	protected $connId = false;
 	
 	/**
-	 * Dernier resultat de la derniere requête SQL
+	 * Dernier resultat de la derniere requÃªte SQL
 	 * 
 	 * @var String ressources ID
 	 */
 	protected $queries = "";
 	
 	/**
-	 * Derniere requête SQL
+	 * Derniere requÃªte SQL
 	 * 
 	 * @var String
 	 */
@@ -393,7 +393,7 @@ abstract class Base_Model {
 	protected $quoteValue = "'";
 	
 	/**
-	 * Tableau contenant les cles déjà quoté
+	 * Tableau contenant les cles dÃ©jÃ  quotÃ©
 	 * 
 	 * @var array
 	 */
@@ -414,7 +414,7 @@ abstract class Base_Model {
 				throw new Exception("sqlConnect");
 			}
 			
-			// Selection d'une base de donnée
+			// Selection d'une base de donnÃ©e
 			if (!$this->dbSelect()) {
 				throw new Exception("sqlDbSelect");
 			}
@@ -431,13 +431,13 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Etablie une connexion à la base de donnée
+	 * Etablie une connexion Ã  la base de donnÃ©e
 	 */
 	public function dbConnect() {
 	}
 	
 	/**
-	 * Selectionne une base de donnée
+	 * Selectionne une base de donnÃ©e
 	 * 
 	 * @return boolean true succes
 	 */
@@ -485,7 +485,7 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Retourne un tableau qui contient les lignes demandées
+	 * Retourne un tableau qui contient les lignes demandÃ©es
 	 * 
 	 * @return array
 	 */
@@ -494,7 +494,7 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Retourne un objet qui contient les lignes demandées
+	 * Retourne un objet qui contient les lignes demandÃ©es
 	 * 
 	 * @return object
 	 */
@@ -523,7 +523,7 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Retourne l'id de la dernière ligne inserée
+	 * Retourne l'id de la derniÃ¨re ligne inserÃ©e
 	 * 
 	 * @return int
 	 */
@@ -532,7 +532,7 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Envoie une requête Sql
+	 * Envoie une requÃªte Sql
 	 * 
 	 * @param $Sql
 	 */
@@ -552,7 +552,7 @@ abstract class Base_Model {
 		// Nom complet de la table
 		$table = $this->getTableName($table);
 		
-		// Mise en place des valeurs selectionnées
+		// Mise en place des valeurs selectionnÃ©es
 		if (!is_array($values)) $values = array($values);
 		$values = implode(", ", $values);
 		
@@ -564,13 +564,13 @@ abstract class Base_Model {
 		// Mise en place de l'ordre
 		$orderby = (count($orderby) >= 1)? " ORDER BY " . implode(", ", $orderby): "";
 		
-		// Mise en forme de la requête finale
+		// Mise en forme de la requÃªte finale
 		$sql = "SELECT " . $values . " FROM " . $table . $where . $orderby . $limit;
 		$this->sql = $sql;
 	}
 	
 	/**
-	 * Mise à jour d'une table
+	 * Mise Ã  jour d'une table
 	 * 
 	 * @param $table Nom de la table
 	 * @param $values array) Sous la forme array("keyName" => "newValue")
@@ -582,7 +582,7 @@ abstract class Base_Model {
 		// Nom complet de la table
 		$table = $this->getTableName($table);
 		
-		// Affectation des clès a leurs valeurs
+		// Affectation des clÃ¨s a leurs valeurs
 		foreach($values as $key => $value) {
 			$valuesString[] = $this->converKey($key) ." = " . $this->converValue($value, $key);
 		}
@@ -594,7 +594,7 @@ abstract class Base_Model {
 		// Mise en place de l'ordre
 		$orderby = (count($orderby) >= 1)? " ORDER BY " . implode(", ", $orderby): "";
 		
-		// Mise en forme de la requête finale
+		// Mise en forme de la requÃªte finale
 		$sql = "UPDATE " . $table . " SET " . implode(", ", $valuesString);
 		$sql .= (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
 		$sql .= $orderby . $limit;
@@ -602,7 +602,7 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Retourne le dernier résultat de la dernière requête executée
+	 * Retourne le dernier rÃ©sultat de la derniÃ¨re requÃªte executÃ©e
 	 *
 	 * @return Ressource ID
 	 */
@@ -611,7 +611,7 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Retourne la derniere requête sql
+	 * Retourne la derniere requÃªte sql
 	 * 
 	 * @return String
 	 */
@@ -639,7 +639,7 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Ajoute le dernier résultat dans le buffer
+	 * Ajoute le dernier rÃ©sultat dans le buffer
 	 * 
 	 * @param $key String cles a utiliser
 	 * @param $name String
@@ -667,7 +667,7 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Retourne le buffer complet demandé
+	 * Retourne le buffer complet demandÃ©
 	 * 
 	 * @param $name String
 	 * @return array - object
@@ -677,7 +677,7 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Vérifie si la plateform est disponible
+	 * VÃ©rifie si la plateform est disponible
 	 * 
 	 * @return boolean
 	 */
@@ -712,7 +712,7 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Marqué une cles et/ou une valeur comme déjà quoté
+	 * MarquÃ© une cles et/ou une valeur comme dÃ©jÃ  quotÃ©
 	 * 
 	 * @param $key String
 	 */
@@ -722,7 +722,7 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Remise à zéro du tableau de cles déjà quoté
+	 * Remise Ã  zÃ©ro du tableau de cles dÃ©jÃ  quotÃ©
 	 */
 	public function resetQuoted() {
 		$this->quoted = array();
@@ -755,7 +755,7 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Conversion des clès
+	 * Conversion des clÃ¨s
 	 * 
 	 * @param $key Object
 	 * @return Object
@@ -801,7 +801,7 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Retourne le type d'encodage de la base de donnée
+	 * Retourne le type d'encodage de la base de donnÃ©e
 	 * 
 	 * @return String
 	 */
@@ -812,7 +812,7 @@ abstract class Base_Model {
 	}
 	
 	/**
-	 * Retourne le nom de la table avec le préfixage
+	 * Retourne le nom de la table avec le prÃ©fixage
 	 * 
 	 * @param String
 	 */

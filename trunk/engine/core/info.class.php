@@ -1,7 +1,7 @@
 <?php
 /*
- * NOTE IMPORTANTE : tout ce fichier doit être compatible PHP 4
- * Il ne doit pas provoquer d'erreur a son chargement mais Core_Info ne doit pas être executé sous PHP 4.
+ * NOTE IMPORTANTE : tout ce fichier doit Ãªtre compatible PHP 4
+ * Il ne doit pas provoquer d'erreur a son chargement mais Core_Info ne doit pas Ãªtre executÃ© sous PHP 4.
  */
 if (preg_match("/info.class.php/ie", $_SERVER['PHP_SELF'])) {
 	exit();
@@ -12,7 +12,7 @@ if (preg_match("/info.class.php/ie", $_SERVER['PHP_SELF'])) {
  */
 define("TR_ENGINE_PHP_VERSION", preg_replace("/[^0-9.]/", "", (preg_replace("/(_|-|[+])/", ".", phpversion()))));
 
-// Si une version PHP OO moderne n'est pas détecté
+// Si une version PHP OO moderne n'est pas dÃ©tectÃ©
 if (TR_ENGINE_PHP_VERSION < "5.0.0") {
 	echo"<b>Sorry, but the PHP version currently running is too old to understand TR ENGINE.</b>"
 	. "<br /><br />MINIMAL PHP VERSION : 5.0.0"
@@ -24,9 +24,9 @@ new Core_Info();
 
 /**
  * Configurateur rapide
- * NOTE IMPORTANTE : cette classe doit être compatible PHP 4
+ * NOTE IMPORTANTE : cette classe doit Ãªtre compatible PHP 4
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Core_Info {
@@ -47,7 +47,7 @@ class Core_Info {
 		define("TR_ENGINE_URL", $this->getUrlAddress());
 		
 		/**
-		 * Le système d'exploitation qui execute TR ENGINE
+		 * Le systÃ¨me d'exploitation qui execute TR ENGINE
 		 */
 		define("TR_ENGINE_PHP_OS", $this->getPhpOs());
 	}
@@ -74,7 +74,7 @@ class Core_Info {
 			$path = substr($path, 1); // Suppression du slash
 			
 			if (!empty($path)) { // Recherche du chemin complet
-				// Vérification en se reperant sur l'emplacement du fichier de configuration
+				// VÃ©rification en se reperant sur l'emplacement du fichier de configuration
 				while (!is_file($baseName . "/" . $path . "/configs/config.inc.php")) {
 					// On remonte d'un cran
 					$path = dirname($path);
@@ -83,7 +83,7 @@ class Core_Info {
 				}
 			}
 			
-			// Verification du résultat
+			// Verification du rÃ©sultat
 			if (!empty($path) && is_file($baseName . "/" . $path . "/configs/config.inc.php")) $baseDir = $baseName . "/" . $path;
 			else if (is_file($baseName . "/configs/config.inc.php")) $baseDir = $baseName;
 			else $baseDir = $baseName;

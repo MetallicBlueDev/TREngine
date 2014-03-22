@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Analyseur de protocole USER AGENT
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Exec_Agent {
@@ -177,7 +177,7 @@ class Exec_Agent {
 );
 	
 	/**
-	 * Execute une vérification sur l'host
+	 * Execute une vÃ©rification sur l'host
 	 * 
 	 * @return String
 	 */
@@ -237,7 +237,7 @@ class Exec_Agent {
 	}
 	
 	/**
-	 * Lance l'analyse et la récuperation d'information sur le client
+	 * Lance l'analyse et la rÃ©cuperation d'information sur le client
 	 */
 	public static function getVisitorsStats() {
 		// Adresse Ip du client

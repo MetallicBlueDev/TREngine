@@ -7,20 +7,20 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Gestionnaire de tableau automatique
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Libs_Rack {
 	
 	/**
-	 * Première ligne définissant les colonnes
+	 * PremiÃ¨re ligne dÃ©finissant les colonnes
 	 * 
 	 * @var array
 	 */
 	private $firstLine = array();
 	
 	/**
-	 * Lignes de données du tableau
+	 * Lignes de donnÃ©es du tableau
 	 * 
 	 * @var array
 	 */
@@ -63,12 +63,12 @@ class Libs_Rack {
 	public function &render($class = "") {
 		$content = "<table class=\"" . ((!empty($class)) ? $class : "table") . "\">"
 		. "<tbody><tr class=\"first\">";
-		// Création de la 1ère lignes
+		// CrÃ©ation de la 1Ã¨re lignes
 		foreach($this->firstLine as $column) {
 			$content .= "<td style=\"width: " . $column[0] . "%;\">" . $column[1] . "</td>";
 		}
 		$content .= "</tr>";
-		// Création de toutes les lignes
+		// CrÃ©ation de toutes les lignes
 		foreach($this->lines as $line) {
 			$content .= "<tr>";
 			foreach($line as $column) {

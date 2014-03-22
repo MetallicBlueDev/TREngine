@@ -1,31 +1,31 @@
 <?php
 $lang = array(
 
-// Chemin par dÈfaut
+// Chemin par d√©faut
 "TRAIL_DISPLAY" => "Accueil",
 
 // Administration
-"ADMIN_RIGHT_ALL" => "Tous droits et actions de modÈrations et d'administration du site, sans limitation.",
-"ADMIN_RIGHT_MODULE" => "Droit concernant la visualisation et/ou la modÈration du module",
-"ADMIN_RIGHT_BLOCK" => "Droit concernant la visualisation et/ou la modÈration du block",
-"ADMIN_RIGHT_PAGE" => "Droit concernant la visualisation et/ou la modÈration de la page",
+"ADMIN_RIGHT_ALL" => "Tous droits et actions de mod√©rations et d'administration du site, sans limitation.",
+"ADMIN_RIGHT_MODULE" => "Droit concernant la visualisation et/ou la mod√©ration du module",
+"ADMIN_RIGHT_BLOCK" => "Droit concernant la visualisation et/ou la mod√©ration du block",
+"ADMIN_RIGHT_PAGE" => "Droit concernant la visualisation et/ou la mod√©ration de la page",
 
 // Erreur d'acces, droits insuffisants
-"ERROR_ACCES_ZONE" => "DÈsolÈ, mais il n'y pas possible de continuer.",
-"ERROR_ACCES_OFF" => "L'accËs ‡ cette page a ÈtÈ desactivÈ.",
-"ERROR_ACCES_MEMBER" => "Pour consulter cette page, il est nÈcessaire d'Ítre un membre du site.",
+"ERROR_ACCES_ZONE" => "D√©sol√©, mais il n'y pas possible de continuer.",
+"ERROR_ACCES_OFF" => "L'acc√®s √† cette page a √©t√© desactiv√©.",
+"ERROR_ACCES_MEMBER" => "Pour consulter cette page, il est n√©cessaire d'√™tre un membre du site.",
 "ERROR_ACCES_ADMIN" => "Vous ne possedez pas les droits suffisants pour afficher cette page.",
 "ERROR_ACCES_FORBIDDEN" => "Vous n'avez pas l'autorisation d'afficher cette page.",
 
-// Erreur critique gÈnÈrÈ par Core_Secure::debug()
-"ERROR_DEBUG_CLOSE" => "Le site est actuellement fermÈ.",
-"ERROR_DEBUG_SQLCONNECT" => "Erreur de connexion ‡ la base de donnÈe.",
-"ERROR_DEBUG_SQLDBSELECT" => "Erreur lors de la sÈlection de la base de donnÈe.",
-"ERROR_DEBUG_SQLTEST" => "Le module nÈcessaire a la communication avec la base de donnÈe n'est pas prÈsent.",
-"ERROR_DEBUG_SQLREQ" => "Une erreur SQL est survenue lors d'une requÍte.",
-"ERROR_DEBUG_SQLTYPE" => "Le type de base selectionnÈ n'est pas encore supportÈ.",
-"ERROR_DEBUG_SQLPATH" => "Le fichier de configuration de la base de donnÈe est introuvable.",
-"ERROR_DEBUG_SQLCODE" => "Le code d'une base de donnÈe n'est pas utilisable.",
+// Erreur critique g√©n√©r√© par Core_Secure::debug()
+"ERROR_DEBUG_CLOSE" => "Le site est actuellement ferm√©.",
+"ERROR_DEBUG_SQLCONNECT" => "Erreur de connexion √† la base de donn√©e.",
+"ERROR_DEBUG_SQLDBSELECT" => "Erreur lors de la s√©lection de la base de donn√©e.",
+"ERROR_DEBUG_SQLTEST" => "Le module n√©cessaire a la communication avec la base de donn√©e n'est pas pr√©sent.",
+"ERROR_DEBUG_SQLREQ" => "Une erreur SQL est survenue lors d'une requ√™te.",
+"ERROR_DEBUG_SQLTYPE" => "Le type de base selectionn√© n'est pas encore support√©.",
+"ERROR_DEBUG_SQLPATH" => "Le fichier de configuration de la base de donn√©e est introuvable.",
+"ERROR_DEBUG_SQLCODE" => "Le code d'une base de donn√©e n'est pas utilisable.",
 "ERROR_DEBUG_BADURL" => "Merci d'utiliser l'index du site pour naviguer correctement.",
 "ERROR_DEBUG_LOADER" => "Une erreur lors du chargement d'un fichier est survenue.",
 "ERROR_DEBUG_CONFIGPATH" => "Le fichier de configuration du site est introuvable.",
@@ -34,28 +34,28 @@ $lang = array(
 "ERROR_DEBUG_BLOCKSIDE" => "Un block tente de s'afficher dans une position invalide.",
 
 // Erreur diverse
-"ERROR_404" => "Erreur 404, la page demandÈe est introuvable.",
+"ERROR_404" => "Erreur 404, la page demand√©e est introuvable.",
 "ERROR_BLOCK_CODE" => "Le code d'un block n'est pas utilisable.",
-"ERROR_BLOCK_IMPLEMENT" => "Le code d'un block n'est pas correctement implÈmentÈ.",
-"ERROR_BLOCK_NO_FILE" => "Le fichier d'un block n'a pas ÈtÈ trouvÈ.",
+"ERROR_BLOCK_IMPLEMENT" => "Le code d'un block n'est pas correctement impl√©ment√©.",
+"ERROR_BLOCK_NO_FILE" => "Le fichier d'un block n'a pas √©t√© trouv√©.",
 "ERROR_MODULE_CODE" => "Le code d'un module n'est pas utilisable.",
-"ERROR_MODULE_IMPLEMENT" => "Le code d'un module n'est pas correctement implÈmentÈ.",
-"ERROR_MODULE_NO_FILE" => "Le fichier d'un module n'a pas ÈtÈ trouvÈ.",
-"ERROR_SESSION_COOKIE" => "Impossible d'ouvrir une session, vÈrifiez vos paramËtre cookie.",
+"ERROR_MODULE_IMPLEMENT" => "Le code d'un module n'est pas correctement impl√©ment√©.",
+"ERROR_MODULE_NO_FILE" => "Le fichier d'un module n'a pas √©t√© trouv√©.",
+"ERROR_SESSION_COOKIE" => "Impossible d'ouvrir une session, v√©rifiez vos param√®tre cookie.",
 
 // Date
 "JANUARY" => "Janvier",
-"FEBRUARY" => "FÈvrier",
+"FEBRUARY" => "F√©vrier",
 "MARCH" => "Mars",
 "APRIL" => "Avril",
 "MAY" => "Mai",
 "JUNE" => "Juin",
 "JULY" => "Juillet",
-"AUGUST" => "Ao˚t",
+"AUGUST" => "Ao√ªt",
 "SEPTEMBER" => "Septembre",
 "OCTOBER" => "Octobre",
 "NOVEMBER" => "Novembre",
-"DECEMBER" => "DÈcembre",/*
+"DECEMBER" => "D√©cembre",/*
 "DATE" => "Date",
 "DAYS" => "jours",
 "HOURS" => "heures",
@@ -63,14 +63,14 @@ $lang = array(
 "SECONDS" => "secondes",*/
 
 // Captcha
-"CAPTCHA_MAKE_LETTER" => "…crivez la lettre de l'alphabet correspondant au chiffre",
-"CAPTCHA_MAKE_LETTERS" => "…crivez les premiËres lettres de l'alphabet jusqu'a",
-"CAPTCHA_MAKE_NUMBER_TO_MONTH" => "…crivez le mois correspondant chiffre",
-"CAPTCHA_MAKE_MONTH_TO_NUMBER" => "…crivez le chiffre correspondant au mois de",
-"CAPTCHA_MAKE_NUMBERS" => "En partant du chiffre 0, Ècrivez jusqu'au chiffre",
+"CAPTCHA_MAKE_LETTER" => "√âcrivez la lettre de l'alphabet correspondant au chiffre",
+"CAPTCHA_MAKE_LETTERS" => "√âcrivez les premi√®res lettres de l'alphabet jusqu'a",
+"CAPTCHA_MAKE_NUMBER_TO_MONTH" => "√âcrivez le mois correspondant chiffre",
+"CAPTCHA_MAKE_MONTH_TO_NUMBER" => "√âcrivez le chiffre correspondant au mois de",
+"CAPTCHA_MAKE_NUMBERS" => "En partant du chiffre 0, √©crivez jusqu'au chiffre",
 "CAPTCHA_MAKE_PICTURE_CODE" => "Recopiez le code de l'image",
-"CAPTCHA_MAKE_SIMPLE_CALCULATION" => "Calculez l'opÈration suivante",
-"CAPTCHA_INVALID" => "Le code de sÈcuritÈ que vous avez entrÈ n'est pas valide",
+"CAPTCHA_MAKE_SIMPLE_CALCULATION" => "Calculez l'op√©ration suivante",
+"CAPTCHA_INVALID" => "Le code de s√©curit√© que vous avez entr√© n'est pas valide",
 
 // Orientation
 "LEFT" => "Gauche",
@@ -80,8 +80,8 @@ $lang = array(
 "MODULETOP" => "En haut du module",
 "MODULEBOTTOM" => "En bas du module",
 
-// AccessibilitÈ
-"ACCESS_NONE" => "DÈsactivÈ",
+// Accessibilit√©
+"ACCESS_NONE" => "D√©sactiv√©",
 "ACCESS_PUBLIC" => "Public",
 "ACCESS_REGISTRED" => "Membre",
 "ACCESS_ADMIN" => "Administrateur",
@@ -94,9 +94,9 @@ $lang = array(
 "PASSWORD" => "Votre mot de passe",
 "VALID" => "Valider",
 
-"DATA_SAVED" => "Les informations ont ÈtÈ correctement sauvegardÈ.",
-"DATA_INVALID" => "Les informations comportent des ÈlÈments invalides.",
-"DATA_DELETED" => "Les informations ont ÈtÈ correctement supprimÈ."
+"DATA_SAVED" => "Les informations ont √©t√© correctement sauvegard√©.",
+"DATA_INVALID" => "Les informations comportent des √©l√©ments invalides.",
+"DATA_DELETED" => "Les informations ont √©t√© correctement supprim√©."
 
 );
 

@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Module d'interface et de traitement entre le site et le client
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Module_Connect_Index extends Module_Model {
@@ -220,7 +220,7 @@ class Module_Connect_Index extends Module_Model {
 		$form->addSpace();
 		$form->addHtmlInFieldset("<u>" . ACCOUNT_ADMIN_RIGHT . ":</u>");
 		
-		// Requête pour la liste des blocks
+		// RequÃªte pour la liste des blocks
 		$blocks = array();
 		
 		if ($rights[0] != "all") {
@@ -317,7 +317,7 @@ class Module_Connect_Index extends Module_Model {
 	}
 	
 	/**
-	 * Déconnexion du client
+	 * DÃ©connexion du client
 	 */
 	public function logout() {
 		Core_Session::getInstance()->stopConnection();
@@ -325,7 +325,7 @@ class Module_Connect_Index extends Module_Model {
 	}
 	
 	/**
-	 * Formulaire d'identifiant oublié
+	 * Formulaire d'identifiant oubliÃ©
 	 */
 	public function forgetlogin() {
 		if (!Core_Session::getInstance()->isUser()) {
@@ -375,7 +375,7 @@ class Module_Connect_Index extends Module_Model {
 	}
 
 	/**
-	 * Formulaire de mot de passe oublié
+	 * Formulaire de mot de passe oubliÃ©
 	 */
 	public function forgetpass() {
 		if (!Core_Session::getInstance()->isUser()) {
@@ -394,7 +394,7 @@ class Module_Connect_Index extends Module_Model {
 					if (Core_Sql::affectedRows() == 1) {
 						list($name, $mail) = Core_Sql::fetchArray();
 						if ($name == $login) {
-							// TODO Ajouter un générateur d'id
+							// TODO Ajouter un gÃ©nÃ©rateur d'id
 							$ok = Exec_Mailer::sendMail(); // TODO envoyer un mail
 						}
 					}

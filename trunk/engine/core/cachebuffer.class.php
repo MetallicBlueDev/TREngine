@@ -7,14 +7,14 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Core_CacheBuffer {
 	
 	/**
-	 * Instance d'un protocole déjà initialisé
+	 * Instance d'un protocole dÃ©jÃ  initialisÃ©
 	 * 
 	 * @var Cache_Model
 	 */
 	private static $protocol = null;
 	
 	/**
-	 * Réécriture du cache
+	 * RÃ©Ã©criture du cache
 	 * 
 	 * @var array
 	 */
@@ -35,7 +35,7 @@ class Core_CacheBuffer {
 	private static $removeCache = array();
 	
 	/**
-	 * Mise à jour de derniere modification du cache
+	 * Mise Ã  jour de derniere modification du cache
 	 * 
 	 * @var array
 	 */
@@ -77,7 +77,7 @@ class Core_CacheBuffer {
 	);
 	
 	/**
-	 * Donnée du ftp
+	 * DonnÃ©e du ftp
 	 * 
 	 * @var array
 	 */
@@ -102,7 +102,7 @@ class Core_CacheBuffer {
 	 * @return String
 	 */
 	private static function &getSectionPath() {
-		// Si pas de section, on met par défaut
+		// Si pas de section, on met par dÃ©faut
 		if (empty(self::$sectionName)) self::setSectionName();
 		// Chemin de la section courante
 		return self::$sectionDir[self::$sectionName];
@@ -121,8 +121,8 @@ class Core_CacheBuffer {
 	 * Ecriture du fichier cache
 	 * 
 	 * @param $path chemin complet
-	 * @param $content donnée a écrire
-	 * @param $overWrite boolean true réécriture complete, false écriture a la suite
+	 * @param $content donnÃ©e a Ã©crire
+	 * @param $overWrite boolean true rÃ©Ã©criture complete, false Ã©criture a la suite
 	 */
 	public static function writingCache($path, $content, $overWrite = true) {
 		if (is_array($content)) {
@@ -149,23 +149,23 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Parcours récursivement le dossier cache courant afin de supprimer les fichiers trop vieux
+	 * Parcours rÃ©cursivement le dossier cache courant afin de supprimer les fichiers trop vieux
 	 * Nettoie le dossier courant du cache
 	 * 
 	 * @param $timeLimit La limite de temps
 	 */
 	public static function cleanCache($timeLimit) {
-		// Vérification de la validité du checker
+		// VÃ©rification de la validitÃ© du checker
 		if (!self::checked($timeLimit)) {
-			// Mise à jour ou creation du fichier checker
+			// Mise Ã  jour ou creation du fichier checker
 			self::touchChecker();
-			// Suppression du cache périmé
+			// Suppression du cache pÃ©rimÃ©
 			self::removeCache("", $timeLimit);
 		}
 	}
 	
 	/**
-	 * Mise à jour de la date de dernière modification
+	 * Mise Ã  jour de la date de derniÃ¨re modification
 	 * 
 	 * @param $path chemin vers le fichier cache
 	 */
@@ -174,7 +174,7 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Vérifie si le fichier est en cache
+	 * VÃ©rifie si le fichier est en cache
 	 * 
 	 * @param $path chemin vers le fichier cache
 	 * @return boolean true le fichier est en cache
@@ -184,7 +184,7 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Date de dernière modification
+	 * Date de derniÃ¨re modification
 	 * 
 	 * @param $path chemin vers le fichier cache
 	 * @return int Unix timestamp ou false
@@ -194,13 +194,13 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Vérifie la présence du checker et sa validité
+	 * VÃ©rifie la prÃ©sence du checker et sa validitÃ©
 	 * 
 	 * @return boolean true le checker est valide
 	 */
 	public static function checked($timeLimit = 0) {
 		if (self::cached("checker.txt")) {
-			// Si on a demandé un comparaison de temps
+			// Si on a demandÃ© un comparaison de temps
 			if ($timeLimit > 0) {
 				if ($timeLimit < self::checkerMTime()) return true;
 			} else {
@@ -211,10 +211,10 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Serialize la variable en chaine de caractères pour une mise en cache
+	 * Serialize la variable en chaine de caractÃ¨res pour une mise en cache
 	 * 
 	 * @param String $data ($data = "data") or array $data ($data = array("name" => "data"))
-	 * @param String $lastKey clès supplementaire
+	 * @param String $lastKey clÃ¨s supplementaire
 	 * @return String
 	 */
 	public static function &serializeData($data, $lastKey = "") {
@@ -236,7 +236,7 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Serialize la variable en chaine de caractères pour une mise en cache
+	 * Serialize la variable en chaine de caractÃ¨res pour une mise en cache
 	 * 
 	 * @param String $key
 	 * @param String $value
@@ -255,7 +255,7 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Mise à jour du checker
+	 * Mise Ã  jour du checker
 	 */
 	public static function touchChecker() {
 		if (!self::cached("checker.txt")) self::writingChecker();
@@ -263,7 +263,7 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Date de dernière modification du checker
+	 * Date de derniÃ¨re modification du checker
 	 * 
 	 * @return int Unix timestamp ou false
 	 */
@@ -282,7 +282,7 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Décode un chemin
+	 * DÃ©code un chemin
 	 * 
 	 * @param String $encodePath
 	 * @return String
@@ -303,14 +303,14 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Capture le cache ciblé dans un tableau
+	 * Capture le cache ciblÃ© dans un tableau
 	 * 
 	 * @param $path Chemin du cache
-	 * @param $vars array tableau supplementaire contenant des variables pour résoudre les problèmes de visiblilité (par exemple)
+	 * @param $vars array tableau supplementaire contenant des variables pour rÃ©soudre les problÃ¨mes de visiblilitÃ© (par exemple)
 	 * @return String
 	 */
 	public static function &getCache($path, $vars = array()) {
-		// Réglage avant capture
+		// RÃ©glage avant capture
 		$variableName = self::$sectionName;
 		// Rend la variable global a la fonction
 		${$variableName} = "";
@@ -323,10 +323,10 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Recherche si le cache a besoin de génére une action
+	 * Recherche si le cache a besoin de gÃ©nÃ©re une action
 	 * 
 	 * @param array $required
-	 * @return boolean true action demandée
+	 * @return boolean true action demandÃ©e
 	 */
 	private static function cacheRequired($required) {
 		return (is_array($required) && count($required) > 0);
@@ -364,7 +364,7 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Ecriture des entêtes de fichier
+	 * Ecriture des entÃªtes de fichier
 	 * 
 	 * @param $pathFile
 	 * @param $content
@@ -372,14 +372,14 @@ class Core_CacheBuffer {
 	 */
 	public static function &getHeader($pathFile, $content) {
 		$ext = substr($pathFile, -3);
-		// Entête des fichier PHP
+		// EntÃªte des fichier PHP
 		if ($ext == "php") {
 			// Recherche du dossier parent
 			$dirBase = "";
 			$nbDir = count(explode("/", $pathFile));
 			for($i = 1; $i < $nbDir; $i++) { $dirBase .= "../"; }
 			
-			// Ecriture de l'entête
+			// Ecriture de l'entÃªte
 			$content = "<?php\n"
 			. "if (!defined(\"TR_ENGINE_INDEX\")){"
 			. "if(!class_exists(\"Core_Secure\")){"
@@ -408,7 +408,7 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Retourne les modes d'écriture actif
+	 * Retourne les modes d'Ã©criture actif
 	 * 
 	 * @return array sous la forme array('php' => true, 'ftp' => false)
 	 */
@@ -417,7 +417,7 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Injecter les données du FTP
+	 * Injecter les donnÃ©es du FTP
 	 * 
 	 * @param array
 	 */
@@ -426,7 +426,7 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Récupération des données du FTP
+	 * RÃ©cupÃ©ration des donnÃ©es du FTP
 	 * 
 	 * @param array
 	 */
@@ -435,8 +435,8 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Retourne le listing avec uniquement les fichiers et dossiers présent
-	 * Un filtre automatique est appliqué sur les elements tel que "..", "." ou encore "index.html"...
+	 * Retourne le listing avec uniquement les fichiers et dossiers prÃ©sent
+	 * Un filtre automatique est appliquÃ© sur les elements tel que "..", "." ou encore "index.html"...
 	 * 
 	 * @param $dirPath
 	 * @return array
@@ -460,29 +460,29 @@ class Core_CacheBuffer {
 	}
 	
 	/**
-	 * Démarre et retourne le protocole du cache
+	 * DÃ©marre et retourne le protocole du cache
 	 * 
 	 * @return Cache_Model
 	 */
 	private static function &getExecProtocol() {
 		if (self::$protocol == null) {
 			if (self::$modeActived['ftp']) {
-				// Démarrage du gestionnaire FTP
+				// DÃ©marrage du gestionnaire FTP
 				Core_Loader::classLoader("Libs_FtpManager");
 				self::$protocol = new Libs_FtpManager();
 			} else if (self::$modeActived['sftp']) {
-				// Démarrage du gestionnaire SFTP
+				// DÃ©marrage du gestionnaire SFTP
 				Core_Loader::classLoader("Libs_SftpManager");
 				self::$protocol = new Libs_SftpManager();
 			} else {
-				// Démarrage du gestionnaire de fichier
+				// DÃ©marrage du gestionnaire de fichier
 				Core_Loader::classLoader("Libs_FileManager");
 				self::$protocol = new Libs_FileManager();
 			}
 			
-			// Si il y a un souci, on démarre par défaut le gestionnaire de fichier
+			// Si il y a un souci, on dÃ©marre par dÃ©faut le gestionnaire de fichier
 			if (!self::$protocol->isReady()) {
-				// Démarrage du gestionnaire de fichier
+				// DÃ©marrage du gestionnaire de fichier
 				Core_Loader::classLoader("Libs_FileManager");
 				self::$protocol = new Libs_FileManager();
 			}
@@ -494,7 +494,7 @@ class Core_CacheBuffer {
 	 * Execute la routine du cache
 	 */
 	public static function valideCacheBuffer() {
-		// Si le cache a besoin de générer une action
+		// Si le cache a besoin de gÃ©nÃ©rer une action
 		if (self::cacheRequired(self::$removeCache)
 			|| self::cacheRequired(self::$writingCache)
 			|| self::cacheRequired(self::$addCache)
@@ -503,28 +503,28 @@ class Core_CacheBuffer {
 			$protocol = self::getExecProtocol();
 			
 			if ($protocol != null) {
-				// Suppression de cache demandée
+				// Suppression de cache demandÃ©e
 				if (self::cacheRequired(self::$removeCache)) {
 					foreach(self::$removeCache as $dir => $timeLimit) {
 						$protocol->removeCache($dir, $timeLimit);
 					}
 				}
 				
-				// Ecriture de cache demandée
+				// Ecriture de cache demandÃ©e
 				if (self::cacheRequired(self::$writingCache)) {
 					foreach(self::$writingCache as $path => $content) {
 						$protocol->writingCache($path, $content, true);
 					}
 				}
 				
-				// Ecriture à la suite de cache demandée
+				// Ecriture Ã  la suite de cache demandÃ©e
 				if (self::cacheRequired(self::$addCache)) {
 					foreach(self::$addCache as $path => $content) {
 						$protocol->writingCache($path, $content, false);
 					}
 				}
 				
-				// Mise à jour de cache demandée
+				// Mise Ã  jour de cache demandÃ©e
 				if (self::cacheRequired(self::$updateCache)) {
 					foreach(self::$updateCache as $path => $updateTime) {
 						$protocol->touchCache($path, $updateTime);
@@ -538,15 +538,15 @@ class Core_CacheBuffer {
 }
 
 /**
- * Modèle de classe pour un gestionnaire de fichier
+ * ModÃ¨le de classe pour un gestionnaire de fichier
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 abstract class Cache_Model {
 	
 	/**
-	 * Droit d'écriture CHMOD
+	 * Droit d'Ã©criture CHMOD
 	 * Sous forme de 4 octets
 	 * Exemple : 0777
 	 * 
@@ -577,7 +577,7 @@ abstract class Cache_Model {
 	public function writingCache($path, $content, $overWrite = true) {}
 	
 	/**
-	 * Mise à jour de la date de dernière modification
+	 * Mise Ã  jour de la date de derniÃ¨re modification
 	 * 
 	 * @param $path String
 	 * @param $updateTime int
@@ -593,7 +593,7 @@ abstract class Cache_Model {
 	public function removeCache($dir = "", $timeLimit = 0) {}
 	
 	/**
-	 * Retourne le listing avec uniquement les fichiers présent
+	 * Retourne le listing avec uniquement les fichiers prÃ©sent
 	 * 
 	 * @param $dirPath String
 	 * @return array
@@ -604,7 +604,7 @@ abstract class Cache_Model {
 	}
 	
 	/**
-	 * Retourne l'état du gestionnaire
+	 * Retourne l'Ã©tat du gestionnaire
 	 * 
 	 * @return boolean true ready
 	 */

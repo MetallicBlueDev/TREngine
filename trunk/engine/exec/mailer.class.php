@@ -7,15 +7,15 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Gestionnaire de email
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Exec_Mailer {
 	
 	/**
-	 * Vérifie la validité du mail
+	 * VÃ©rifie la validitÃ© du mail
 	 * 
-	 * @param $address adresse email a vérifier
+	 * @param $address adresse email a vÃ©rifier
 	 * @return boolean true l'adresse email est valide
 	 */
 	public static function validMail($address) {
@@ -23,7 +23,7 @@ class Exec_Mailer {
 	}
 	
 	/**
-	 * Retourne une chaine ou une image généré
+	 * Retourne une chaine ou une image gÃ©nÃ©rÃ©
 	 * 
 	 * @param $mail
 	 * @param $name

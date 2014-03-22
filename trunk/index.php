@@ -1,17 +1,17 @@
 <?php
-// On est passé dans l'index
+// On est passÃ© dans l'index
 define("TR_ENGINE_INDEX", 1);
 
-// Vérification de la version PHP
+// VÃ©rification de la version PHP
 // Classe compatible PHP 4
 require("engine/core/info.class.php");
 
 // Inclusion du chargeur
 require("engine/core/loader.class.php");
 
-// Chargement du système de sécurité
+// Chargement du systÃ¨me de sÃ©curitÃ©
 Core_Loader::classLoader("Core_Secure");
-Core_Secure::getInstance(true); // true = mode debug activé
+Core_Secure::getInstance(true); // true = mode debug activÃ©
 
 // Chargement du Marker
 Core_Loader::classLoader("Exec_Marker");
@@ -24,7 +24,7 @@ Exec_Marker::startTimer("main");
 // Chargement de la classe principal
 Core_Loader::classLoader("Core_Main");
 
-// Préparation du moteur
+// PrÃ©paration du moteur
 $TR_ENGINE = new Core_Main();
 
 // Recherche de nouveau composant

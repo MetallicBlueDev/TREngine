@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Gestionnaire des connexions vers le FTP
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Libs_FtpManager extends Cache_Model {
@@ -41,21 +41,21 @@ class Libs_FtpManager extends Cache_Model {
 	private $timeOut = 10;
 	
 	/**
-	 * Derniere réponse du serveur
+	 * Derniere rÃ©ponse du serveur
 	 * 
 	 * @var String
 	 */
 	private $response = "";
 	
 	/**
-	 * Code de réponse du serveur
+	 * Code de rÃ©ponse du serveur
 	 * 
 	 * @var int
 	 */
 	private $responseCode = "";
 	
 	/**
-	 * Message de réponse du serveur
+	 * Message de rÃ©ponse du serveur
 	 * 
 	 * @var String
 	 */
@@ -76,7 +76,7 @@ class Libs_FtpManager extends Cache_Model {
 	private $passivePort = "";
 	
 	/**
-	 * Donnée recu en mode passif
+	 * DonnÃ©e recu en mode passif
 	 * 
 	 * @var String
 	 */
@@ -92,16 +92,16 @@ class Libs_FtpManager extends Cache_Model {
 		// Ajout des informations du FTP
 		$ftp = Core_CacheBuffer::getFtp();
 		
-		// Pré-configuration
+		// PrÃ©-configuration
 		if (preg_match("/(ftp:\/\/)(.+)/", $ftp['host'], $matches)) $ftp['host'] = $matches[2];
 		if (preg_match("/(.+)(\/)/", $ftp['host'], $matches)) $ftp['host'] = $matches[1];
 		
-		// Réglage de configuration
+		// RÃ©glage de configuration
 		$ftp['host'] = (empty($ftp['host'])) ? "127.0.0.1" : $ftp['host'];
 		$ftp['port'] = (is_numeric($ftp_port)) ? $ftp['port'] : 21;
 		$ftp['user'] = (empty($ftp['user'])) ? "root" : $ftp['user'];
 		$ftp['pass'] = (empty($ftp['pass'])) ? "" : $ftp['pass'];
-		// Le dossier root sera redéfinie après être logué
+		// Le dossier root sera redÃ©finie aprÃ¨s Ãªtre loguÃ©
 		$ftp['root'] = (empty($ftp['root'])) ? "/" : $ftp['root'];
 		
 		$this->ftp = $ftp;
@@ -132,7 +132,7 @@ class Libs_FtpManager extends Cache_Model {
 	 * @return boolean true si aucune erreur
 	 */
 	private function connect() {
-		// Si aucune connexion engagé
+		// Si aucune connexion engagÃ©
 		if (!$this->isConnected()) {
 			if ($this->nativeMode) {
 				$this->connId = @ftp_connect($this->ftp['host'], $this->ftp['port'], $this->timeOut);
@@ -140,13 +140,13 @@ class Libs_FtpManager extends Cache_Model {
 				$this->connId = @fsockopen($this->ftp['host'], $this->ftp['port'], $socket_error_number, $socket_error_message, $this->timeOut);
 			}
 			
-			// On définie le timeout, si possible
+			// On dÃ©finie le timeout, si possible
 			if ($this->isConnected()) {
 				$this->setTimeOut();
 			}
 		}
 		
-		// Vérification de la connexion
+		// VÃ©rification de la connexion
 		if (($this->nativeMode && $this->responseCode(220))
 			|| $this->isConnected()) {
 			return true;
@@ -156,9 +156,9 @@ class Libs_FtpManager extends Cache_Model {
 	}
 	
 	/**
-	 * Vérifie si la connexion est établie
+	 * VÃ©rifie si la connexion est Ã©tablie
 	 * 
-	 * @return boolean true succès
+	 * @return boolean true succÃ¨s
 	 */
 	public function isConnected() {
 		return is_resource($this->connId);
@@ -178,15 +178,15 @@ class Libs_FtpManager extends Cache_Model {
 				return fclose($this->connId);
 			}
 		}
-		// C'est déjà déconnecté
+		// C'est dÃ©jÃ  dÃ©connectÃ©
 		return true;
 	}
 	
 	/**
 	 * Envoie une commande sur le FTP
 	 * 
-	 * @param string $cmd : la commande à executer
-	 * @param string $expectedResponse : code de réponse attendu
+	 * @param string $cmd : la commande Ã  executer
+	 * @param string $expectedResponse : code de rÃ©ponse attendu
 	 * @return boolean true si aucune erreur
 	 */
 	private function setCommand($cmd, $expectedResponse) {
@@ -201,26 +201,26 @@ class Libs_FtpManager extends Cache_Model {
 	}
 	
 	/**
-	 * Vérification du code de réponse reçu
+	 * VÃ©rification du code de rÃ©ponse reÃ§u
 	 * 
-	 * @param string $expected : code de réponse attendu
+	 * @param string $expected : code de rÃ©ponse attendu
 	 * @return boolean true si aucune erreur
 	 */
 	private function responseCode($expected) {
-		// Si une connexion est engagé
+		// Si une connexion est engagÃ©
 		if ($this->isConnected()) {
 			// Attente du serveur
 			$endTime = time() + $this->timeOut;
 			
-			// Réponse du serveur
+			// RÃ©ponse du serveur
 			$this->response = "";
 			do {
 				$this->response .= @fgets($this->connId, 4096);
 			} while (!preg_match("/^([0-9]{3})(-(.*" . $this->CRLF . ")+\\1)? [^" . $this->CRLF . "]+" . $this->CRLF . "$/", $this->response, $parts) && time() < $endTime);
 			
-			// Vérification du résultat
+			// VÃ©rification du rÃ©sultat
 			if (isset($parts[1])) {
-				// On sépare le code du message
+				// On sÃ©pare le code du message
 				$this->responseCode = $parts[1];
 				$this->responseMsg = $parts[0];
 				
@@ -238,7 +238,7 @@ class Libs_FtpManager extends Cache_Model {
 	}
 	
 	/**
-	 * Démarre le mode passif du serveur FTP
+	 * DÃ©marre le mode passif du serveur FTP
 	 * 
 	 * @return boolean true si aucune erreur
 	 */
@@ -251,14 +251,14 @@ class Libs_FtpManager extends Cache_Model {
 				if ($this->setCommand("PASV", 227)) {
 					// Recherche de l'adresse IP et du port...
 					if (preg_match('~\((\d+),\s*(\d+),\s*(\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))\)~', $this->responseCode, $matches)) {
-						// Fabuleux, c'est trouvé!
+						// Fabuleux, c'est trouvÃ©!
 						$this->passiveIp = $matches[1] . "." . $matches[2] . "." . $matches[3] . "." . $matches[4];
 						$this->passivePort = $matches[5] * 256 + $matches[6];
 						// Tentative de connexion
 						$this->passiveData = @fsockopen($this->passiveIp, $this->passivePort, $socket_error_number, $socket_error_message, $this->timeOut);
 						
 						if ($this->passiveData != false) {
-							// On définie le timeout, si possible
+							// On dÃ©finie le timeout, si possible
 							$this->setTimeOut();
 							return true;
 						} else {
@@ -275,7 +275,7 @@ class Libs_FtpManager extends Cache_Model {
 	/**
 	 * Engage le timeout sur le serveur
 	 * 
-	 * @return boolean true le timeout a été configuré sur le serveur
+	 * @return boolean true le timeout a Ã©tÃ© configurÃ© sur le serveur
 	 */
 	private function &setTimeOut() {
 		if ($this->nativeMode) {
@@ -303,18 +303,18 @@ class Libs_FtpManager extends Cache_Model {
 	/**
 	 * Suppression d'un fichier sur le serveur FTP
 	 * 
-	 * @param string $path : chemin valide à supprimer
+	 * @param string $path : chemin valide Ã  supprimer
 	 * @param $timeLimit int
 	 */
 	private function removeFile($path, $timeLimit) {
-		// Vérification de la date d'expiration
+		// VÃ©rification de la date d'expiration
 		$deleteFile = false;
 		
-		// Vérification de la date
+		// VÃ©rification de la date
 		if ($timeLimit > 0) {
-			// Vérification de la date d'expiration
+			// VÃ©rification de la date d'expiration
 			if ($timeLimit > $this->getMTime($path)) {
-				// Fichier périmé, suppression
+				// Fichier pÃ©rimÃ©, suppression
 				$deleteFile = true;
 			}
 		} else {
@@ -341,19 +341,19 @@ class Libs_FtpManager extends Cache_Model {
 	/**
 	 * Suppression d'un dossier sur le serveur FTP
 	 * 
-	 * @param string $path : chemin valide à supprimer
+	 * @param string $path : chemin valide Ã  supprimer
 	 * @param $timeLimit int
 	 */
 	private function removeDirectory($path, $timeLimit) {
-		// Récuperation des elements présents
+		// RÃ©cuperation des elements prÃ©sents
 		$dirList = $this->listNames($path);
 		
 		if (is_array($dirList) && count($dirList) > 0) {
 			foreach($dirList as $dirPath) {
-				// Vérification avant suppression
+				// VÃ©rification avant suppression
 				if ($timeLimit > 0) {
 					if (is_file($this->getRootPath($path . "/" . $dirPath))) {
-						// Si le fichier n'est pas périmé, on passe au suivant
+						// Si le fichier n'est pas pÃ©rimÃ©, on passe au suivant
 						if ($timeLimit < $this->getMTime($path . "/" . $dirPath)) continue;
 					} else {
 						// C'est un dossier, 
@@ -388,10 +388,10 @@ class Libs_FtpManager extends Cache_Model {
 	}
 	
 	/**
-	 * Récupération de la liste des dossiers et fichiers au chemin path 
+	 * RÃ©cupÃ©ration de la liste des dossiers et fichiers au chemin path 
 	 * 
-	 * @param string $path : chemin où doit être listé les dossiers
-	 * @return array string liste des dossiers trouvés
+	 * @param string $path : chemin oÃ¹ doit Ãªtre listÃ© les dossiers
+	 * @return array string liste des dossiers trouvÃ©s
 	 */
 	public function &listNames($path = "") {
 		$dirList = array();
@@ -406,14 +406,14 @@ class Libs_FtpManager extends Cache_Model {
 						$dirList = preg_replace('#^' . preg_quote($this->getRootPath($path), '#') . '[/\\\\]?#', '', $dirList);
 					}
 				} else {
-					// Si un chemin est précisé, on ajoute un espace pour la commande
+					// Si un chemin est prÃ©cisÃ©, on ajoute un espace pour la commande
 					$path = (!empty($path)) ? " " . $this->getRootPath($path) : "";
 					// Chaine contenant tous les dossiers
 					$dirListString = "";
 					
 					// Envoie de la requete				
 					if ($this->setCommand("NLST" . $path, array (150, 125))) {
-						// On évite la boucle infinie
+						// On Ã©vite la boucle infinie
 						if ($this->passiveData !== false) {
 							while (!feof($this->passiveData)) {
 								$dirListString .= fread($this->passiveData, 4096);
@@ -496,7 +496,7 @@ class Libs_FtpManager extends Cache_Model {
 	/**
 	 * Identification sur le FTP
 	 *
-	 * @return boolean : true si logé
+	 * @return boolean : true si logÃ©
 	 */
 	private function logon() {
 		if ($this->isConnected()) {
@@ -506,7 +506,7 @@ class Libs_FtpManager extends Cache_Model {
 				// Envoie de l'user
 				if ($this->setCommand("USER " . $this->ftp['user'], array(331, 503))) {
 					if ($responseCode[0] == 503) {
-						// Désolé, déjà identifié 
+						// DÃ©solÃ©, dÃ©jÃ  identifiÃ© 
 						return true;
 					} else {
 						// Envoie du mot de passe
@@ -522,14 +522,14 @@ class Libs_FtpManager extends Cache_Model {
 	 * Configuration du dossier root du FTP
 	 */
 	private function rootConfig() {
-		// Si aucun root n'est précisé
+		// Si aucun root n'est prÃ©cisÃ©
 		if ($this->ftp['root'] == "/") {
 			// On commence la recherche
 			$pathFound = "";
 			$listNames = $this->listNames();
 			
 			if (is_array($listNames)) {
-				// On décompose les dossiers
+				// On dÃ©compose les dossiers
 				$listNamesSearch = explode("/", TR_ENGINE_DIR);
 				
 				// On recherche des correspondances
@@ -543,7 +543,7 @@ class Libs_FtpManager extends Cache_Model {
 						}
 					}
 		
-					// On verifie si c'est bon et on arrete si c'est trouvé 
+					// On verifie si c'est bon et on arrete si c'est trouvÃ© 
 					if (!empty($pathFound) 
 						&& is_file("/" . $pathRebuild . "/" . $pathFound . "/engine/core/secure.class.php")) {
 						break;
@@ -555,7 +555,7 @@ class Libs_FtpManager extends Cache_Model {
 			}
 		}
 		
-		// Vérification du root path
+		// VÃ©rification du root path
 		if (@is_file("/" . $pathRebuild . "/" . $pathFound . "/engine/core/secure.class.php")) {
 			$this->ftp['root'] = $pathFound;
 		} else if (empty($this->ftp['root'])) {
@@ -567,7 +567,7 @@ class Libs_FtpManager extends Cache_Model {
 	 * Modification des droits CHMOD
 	 * 
 	 * @param string $path : chemin du dossier
-	 * @param octal $mode : droit à attribuer en OCTAL (en octal: 0777 -> 777)
+	 * @param octal $mode : droit Ã  attribuer en OCTAL (en octal: 0777 -> 777)
 	 */
 	private function chmod($path, $mode) {
 		if ($this->isConnected()) {
@@ -589,23 +589,23 @@ class Libs_FtpManager extends Cache_Model {
 	 * 
 	 * @param $pathFile String chemin vers le fichier cache
 	 * @param $content String contenu du fichier cache
-	 * @param $overWrite boolean écrasement du fichier
+	 * @param $overWrite boolean Ã©crasement du fichier
 	 */
 	public function writingCache($path, $content, $overWrite = true) {
 		if (is_file($this->getRootPath($path))) {
-			// Réécriture rapide sur un fichier
+			// RÃ©Ã©criture rapide sur un fichier
 			$this->writingFile($path, $content, $overWrite);
 		} else {
 			// Soit le fichier n'exite pas soit tout le dossier n'existe pas
-			// On commence par vérifier et si besoin écrire le dossier
+			// On commence par vÃ©rifier et si besoin Ã©crire le dossier
 			$this->writingDirectory($path);
-			// Puis nous écrivons notre fichier
+			// Puis nous Ã©crivons notre fichier
 			$this->writingFile($path, $content, $overWrite);
 		}
 	}
 	
 	/**
-	 * Création d'un fichier sur le serveur FTP
+	 * CrÃ©ation d'un fichier sur le serveur FTP
 	 * 
 	 * @param array string $path : local => chemin valide local jusqu'au fichier, remote => chemin valide FTP (avec le root donc) jusqu'au fichier
 	 */
@@ -616,7 +616,7 @@ class Libs_FtpManager extends Cache_Model {
 			// Demarrage du mode passif
 			if ($this->setPassiveMode()) {
 				if ($this->nativeMode) {
-					// Tentative de création du fichier
+					// Tentative de crÃ©ation du fichier
 					$buffer = @fopen($this->getRootPath($path), "a");// TODO il faut mettre un path local ici !
 					@fwrite($buffer, $content);
 					@rewind($buffer);
@@ -630,7 +630,7 @@ class Libs_FtpManager extends Cache_Model {
 					// Envoie de la commande
 					if ($overWrite) {
 						$this->setCommand("STOR " . $this->getRootPath($path), array (150, 125));
-					} else {// TODO verifier le code réponse du serveur (150 et 125)
+					} else {// TODO verifier le code rÃ©ponse du serveur (150 et 125)
 						$this->setCommand("APPE " . $this->getRootPath($path), array (150, 125));
 					}
 					
@@ -639,7 +639,7 @@ class Libs_FtpManager extends Cache_Model {
 						// Ecriture ligne a ligne
 						$responseSource = @fwrite($this->passiveData, $content);
 						
-						// Il n'y a plus rien a écrire
+						// Il n'y a plus rien a Ã©crire
 						if ($responseSource === false) break;
 						
 						// Ligne suivante
@@ -657,9 +657,9 @@ class Libs_FtpManager extends Cache_Model {
 	}
 
 	/**
-	 * Création d'un dossier sur le serveur FTP
+	 * CrÃ©ation d'un dossier sur le serveur FTP
 	 * 
-	 * @param string $path : chemin valide à créer
+	 * @param string $path : chemin valide Ã  crÃ©er
 	 */
 	private function writingDirectory($path) {
 		// Savoir si le path est un dossier ou un fichier
@@ -674,16 +674,16 @@ class Libs_FtpManager extends Cache_Model {
 		if ($nbDir > 0) {
 			foreach($dirs as $dir) {
 				$count++;
-				// Si le dernier élèment est un fichier ou simplement vide
+				// Si le dernier Ã©lÃ¨ment est un fichier ou simplement vide
 				if (($count == $nbDir && !$pathIsDir) || empty($dir)) {
 					break; // on passe a la suite...
 				}
 				
-				// Mise à jour du dossier courant
+				// Mise Ã  jour du dossier courant
 				$currentPath = ($count == 1) ? $currentPath = $dir : $currentPath . "/" . $dir;
 				
 				if (!is_dir($currentPath)) {
-					// Création du dossier
+					// CrÃ©ation du dossier
 					if ($this->isConnected()) {	
 						if ($this->nativeMode) {
 							if (!@ftp_mkdir($this->connId, $path)) {

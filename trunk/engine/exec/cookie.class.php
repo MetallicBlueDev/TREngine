@@ -5,20 +5,20 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Outil destinée au cookie
+ * Outil destinÃ©e au cookie
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Exec_Cookie {
 	
 	/**
-	 * Création d'un cookie
+	 * CrÃ©ation d'un cookie
 	 * 
 	 * @param $cookieName
 	 * @param $cookieContent
 	 * @param $cookieTimeLimit
-	 * @return boolean true succès
+	 * @return boolean true succÃ¨s
 	 */
 	public static function &createCookie($cookieName, $cookieContent, $cookieTimeLimit = "") {
 		$cookieName = urlencode($cookieName);
@@ -33,7 +33,7 @@ class Exec_Cookie {
 	 * Destruction d'un cookie
 	 * 
 	 * @param $cookieName
-	 * @return boolean true succès
+	 * @return boolean true succÃ¨s
 	 */
 	public static function &destroyCookie($cookieName) {
 		return self::createCookie($cookieName, "", "-1");

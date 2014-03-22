@@ -7,59 +7,59 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Gestionnaire des exceptions
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Core_Exception {
 	
 	/**
-	 * Tableau contenant toutes les exceptions internes rencontrées
-	 * Destiné au developpeur
+	 * Tableau contenant toutes les exceptions internes rencontrÃ©es
+	 * DestinÃ© au developpeur
 	 * 
 	 * @var array
 	 */
 	private static $exception = array();
 	
 	/**
-	 * Tableau contenant toutes les erreurs mineurs de type warning / alerte rencontrées
-	 * Destiné au client
+	 * Tableau contenant toutes les erreurs mineurs de type warning / alerte rencontrÃ©es
+	 * DestinÃ© au client
 	 * 
 	 * @var array
 	 */
 	private static $alertError = array();
 	
 	/**
-	 * Tableau contenant toutes les erreurs mineurs de type informative rencontrées
-	 * Destiné au client
+	 * Tableau contenant toutes les erreurs mineurs de type informative rencontrÃ©es
+	 * DestinÃ© au client
 	 * 
 	 * @var array
 	 */
 	private static $noteError = array();
 	
 	/**
-	 * Tableau contenant toutes les erreurs de type informative rencontrées
-	 * Destiné au client
+	 * Tableau contenant toutes les erreurs de type informative rencontrÃ©es
+	 * DestinÃ© au client
 	 * 
 	 * @var array
 	 */
 	private static $infoError = array();
 	
 	/**
-	 * Activer l'écrire dans une fichier log
+	 * Activer l'Ã©crire dans une fichier log
 	 * 
 	 * @var boolean
 	 */
 	private static $writeLog = true;
 	
 	/**
-	 * Tableau contenant toutes les lignes sql envoyées
+	 * Tableau contenant toutes les lignes sql envoyÃ©es
 	 * 
 	 * @var array
 	 */
 	private static $sqlRequest = array();
 	
 	/**
-	 * Activer ou désactiver le rapport d'erreur dans un log
+	 * Activer ou dÃ©sactiver le rapport d'erreur dans un log
 	 * 
 	 * @param boolean $active
 	 */
@@ -79,7 +79,7 @@ class Core_Exception {
 	}
 	
 	/**
-	 * Ajoute une requête sql
+	 * Ajoute une requÃªte sql
 	 * 
 	 * @param $sql String
 	 */
@@ -164,7 +164,7 @@ class Core_Exception {
 				$rslt .= "</ul>";
 			}
 			
-			// Réaction différente en fonction du type d'affichage demandée
+			// RÃ©action diffÃ©rente en fonction du type d'affichage demandÃ©e
 			if (Core_Main::isFullScreen()) {
 				$rslt = "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
 			} else if ($error) {
@@ -189,7 +189,7 @@ class Core_Exception {
 	}
 	
 	/**
-	 * Vérifie si une exception est détecté
+	 * VÃ©rifie si une exception est dÃ©tectÃ©
 	 * 
 	 * @return boolean
 	 */
@@ -198,7 +198,7 @@ class Core_Exception {
 	}
 	
 	/**
-	 * Vérifie si une erreur mineur est détecté
+	 * VÃ©rifie si une erreur mineur est dÃ©tectÃ©
 	 * 
 	 * @return boolean
 	 */
@@ -207,7 +207,7 @@ class Core_Exception {
 	}
 	
 	/**
-	 * Capture les exceptions en chaine de caractère
+	 * Capture les exceptions en chaine de caractÃ¨re
 	 * 
 	 * @param $var array
 	 * @return String

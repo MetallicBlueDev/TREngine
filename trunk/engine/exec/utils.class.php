@@ -5,15 +5,15 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Fonction optimisé et utilitaire
+ * Fonction optimisÃ© et utilitaire
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Exec_Utils {
 	
 	/**
-	 * Indique si une valeur appartient à un tableau
+	 * Indique si une valeur appartient Ã  un tableau
 	 * in_array optimized function
 	 * 
 	 * @author robin at robinnixon dot com
@@ -21,7 +21,7 @@ class Exec_Utils {
 	 * 
 	 * @param $needle mixed
 	 * @param $haystack array
-	 * @return boolean si needle est trouvé
+	 * @return boolean si needle est trouvÃ©
 	 */
 	public static function inArray($needle, $haystack) {
 		$top = sizeof($haystack) -1;
@@ -37,13 +37,13 @@ class Exec_Utils {
 	}
 	
 	/**
-	 * Indique si une valeur appartient à un tableau (tableau multiple)
+	 * Indique si une valeur appartient Ã  un tableau (tableau multiple)
 	 * Tableau a dimension multiple
 	 * in_array multi array function
 	 * 
 	 * @param $needle mixed
 	 * @param $haystack array
-	 * @return boolean si needle est trouvé
+	 * @return boolean si needle est trouvÃ©
 	 */
 	public static function inMultiArray($needle, $haystack) {
 		foreach ($haystack as $value) {

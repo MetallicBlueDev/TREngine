@@ -7,15 +7,15 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Gestionnaire URL REWRITING
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Core_UrlRewriting {
 	
 	/**
-	 * Vérifie si l'url rewriting a été activé
+	 * VÃ©rifie si l'url rewriting a Ã©tÃ© activÃ©
 	 * 
-	 * @return boolean true c'est activé
+	 * @return boolean true c'est activÃ©
 	 */
 	private static function &isActived() {
 		if (Core_Main::doUrlRewriting() && self::testPassed()) {
@@ -25,7 +25,7 @@ class Core_UrlRewriting {
 	}
 	
 	/**
-	 * Vérifie si la classe peut être activé
+	 * VÃ©rifie si la classe peut Ãªtre activÃ©
 	 * Alias de isActived()
 	 * 
 	 * @return boolean
@@ -35,15 +35,15 @@ class Core_UrlRewriting {
 	}
 	
 	/**
-	 * Vérifie si les tests ont été passés avec succès
+	 * VÃ©rifie si les tests ont Ã©tÃ© passÃ©s avec succÃ¨s
 	 * 
 	 * @return boolean
 	 */
 	private static function &testPassed() {
-		// TODO vérifie si fichier tmp de test est OK
-		// si pas OK et pas de fichier tmp pour signaler la désactivation
-		// on tente de mettre urlRewriting a 0 puis on créé le fichier tmp de désactivation
-		// si déjà fichier tmp de décastivation ajouter erreur dans Core_Exception
+		// TODO vÃ©rifie si fichier tmp de test est OK
+		// si pas OK et pas de fichier tmp pour signaler la dÃ©sactivation
+		// on tente de mettre urlRewriting a 0 puis on crÃ©Ã© le fichier tmp de dÃ©sactivation
+		// si dÃ©jÃ  fichier tmp de dÃ©castivation ajouter erreur dans Core_Exception
 		return false;
 	}
 	

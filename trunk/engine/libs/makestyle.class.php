@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Make Style, moteur de template PHP
  * RAPIDE, SIMPLE ET EFFICACE !
  * 
- * @author Sébastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Libs_MakeStyle {
@@ -20,7 +20,7 @@ class Libs_MakeStyle {
 	private static $templatesDir = "templates";
 	
 	/**
-	 * Nom du dossier du template utilisé
+	 * Nom du dossier du template utilisÃ©
 	 * 
 	 * @var String
 	 */ 
@@ -34,7 +34,7 @@ class Libs_MakeStyle {
 	private $fileName = "";
 	
 	/**
-	 * Variables assignées
+	 * Variables assignÃ©es
 	 * 
 	 * @var array
 	 */ 
@@ -56,7 +56,7 @@ class Libs_MakeStyle {
 		// Mode normale
 		$this->debugMode = false;
 		
-		// Si le nom du template est précisé a la construction
+		// Si le nom du template est prÃ©cisÃ© a la construction
 		if (!empty($fileName)) {
 			$this->fileName = $fileName . ".php";
 		}
@@ -67,15 +67,15 @@ class Libs_MakeStyle {
 	}
 	
 	/**
-	 * Assigne le nom du template et vérifie ca validité
-	 * Affiche une erreur si détecté
+	 * Assigne le nom du template et vÃ©rifie ca validitÃ©
+	 * Affiche une erreur si dÃ©tectÃ©
 	 * 
 	 * @param $fileName String
 	 */
 	private function checkTemplate($fileName = "") {
 		if (!empty($fileName)) $this->fileName = $fileName . ".php"; // Nom du template
 		
-		if (!$this->isTemplate()) { // Vérification du template
+		if (!$this->isTemplate()) { // VÃ©rification du template
 			Core_Secure::getInstance()->debug("makeStyle", $this->getTemplatePath());
 		}		
 	}
@@ -103,7 +103,7 @@ class Libs_MakeStyle {
 	
 	/**
 	 * Execute et affiche le template en mode debug
-	 * Si le fichier de template debug n'est pas trouvé, le fichier debug par défaut est utilisé
+	 * Si le fichier de template debug n'est pas trouvÃ©, le fichier debug par dÃ©faut est utilisÃ©
 	 * 
 	 * @param $fileName String
 	 */
@@ -118,7 +118,7 @@ class Libs_MakeStyle {
 	 * @return String
 	 */
 	public function &render($fileName = "") {
-		// Vérifie le template
+		// VÃ©rifie le template
 		$this->checkTemplate($fileName);
 		
 		// Extrait les variables en local
@@ -155,7 +155,7 @@ class Libs_MakeStyle {
 	 * @return path String
 	 */
 	private function &getTemplatePath() {
-		// Si le mode debug est activé, on utilise le fichier par défaut
+		// Si le mode debug est activÃ©, on utilise le fichier par dÃ©faut
 		$path = "";
 		if ($this->debugMode) $path = TR_ENGINE_DIR . "/engine/libs/makestyle.debug";
 		else $path = TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . self::$currentTemplate . "/" . $this->fileName;
@@ -163,7 +163,7 @@ class Libs_MakeStyle {
 	}
 	
 	/**
-	 * Vérifie la validité du template
+	 * VÃ©rifie la validitÃ© du template
 	 * 
 	 * @return boolean true si le chemin du template est valide
 	 */
@@ -183,7 +183,7 @@ class Libs_MakeStyle {
 	}
 	
 	/**
-	 * Configure le dossier du template courament utilisé
+	 * Configure le dossier du template courament utilisÃ©
 	 * 
 	 * @param $currentTemplate String
 	 */
@@ -203,7 +203,7 @@ class Libs_MakeStyle {
 	}
 	
 	/**
-	 * Retourne le dossier du template utilisé
+	 * Retourne le dossier du template utilisÃ©
 	 * 
 	 * @return String
 	 */
@@ -218,7 +218,7 @@ class Libs_MakeStyle {
 	 */
 	public static function &listTemplates() {
 		$templates = array();
-		if (is_dir(TR_ENGINE_DIR . "/" . self::$templatesDir)) { // Vérification du dossier template
+		if (is_dir(TR_ENGINE_DIR . "/" . self::$templatesDir)) { // VÃ©rification du dossier template
 			$dirs = Core_CacheBuffer::listNames(self::$templatesDir);
 		}
 		return $dirs;

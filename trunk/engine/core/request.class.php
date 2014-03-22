@@ -1,26 +1,26 @@
 <?php
 
 /**
- * Gestionnaire de requêtes URL
+ * Gestionnaire de requÃªtes URL
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Core_Request {
 	
 	/**
-	 * Tableau buffer des requêtes
+	 * Tableau buffer des requÃªtes
 	 * 
 	 * @var array
 	 */
 	private static $buffer = array();
 	
 	/**
-	 * Récupère, analyse et vérifie une variable URL
+	 * RÃ©cupÃ¨re, analyse et vÃ©rifie une variable URL
 	 * 
 	 * @param $name String Nom de la variable
-	 * @param $type String Type de donnée
-	 * @param $default Object Donnée par défaut
+	 * @param $type String Type de donnÃ©e
+	 * @param $default Object DonnÃ©e par dÃ©faut
 	 * @param $hash String Provenance de la variable
 	 * @return Object
 	 */
@@ -29,7 +29,7 @@ class Core_Request {
 		if (isset(self::$buffer[$var])) {
 			return self::$buffer[$var];
 		} else {
-			// Recherche de la méthode courante
+			// Recherche de la mÃ©thode courante
 			$input = self::getRequest($hash);
 			
 			if (isset($input[$name]) && $input[$name] !== null) {
@@ -42,10 +42,10 @@ class Core_Request {
 	}
 	
 	/**
-	 * Retourne la variable demandée de type int
+	 * Retourne la variable demandÃ©e de type int
 	 * 
 	 * @param $name String Nom de la variable
-	 * @param $default int Donnée par défaut
+	 * @param $default int DonnÃ©e par dÃ©faut
 	 * @param $hash String Provenance de la variable
 	 * @return int
 	 */
@@ -54,10 +54,10 @@ class Core_Request {
 	}
 	
 	/**
-	 * Retourne la variable demandée de type float
+	 * Retourne la variable demandÃ©e de type float
 	 * 
 	 * @param $name String Nom de la variable
-	 * @param $default float Donnée par défaut
+	 * @param $default float DonnÃ©e par dÃ©faut
 	 * @param $hash String Provenance de la variable
 	 * @return float
 	 */
@@ -66,10 +66,10 @@ class Core_Request {
 	}
 	
 	/**
-	 * Retourne la variable demandée de type double
+	 * Retourne la variable demandÃ©e de type double
 	 * 
 	 * @param $name String Nom de la variable
-	 * @param $default double Donnée par défaut
+	 * @param $default double DonnÃ©e par dÃ©faut
 	 * @param $hash String Provenance de la variable
 	 * @return double
 	 */
@@ -78,10 +78,10 @@ class Core_Request {
 	}
 	
 	/**
-	 * Retourne la variable demandée de type String valide base64
+	 * Retourne la variable demandÃ©e de type String valide base64
 	 * 
 	 * @param $name String Nom de la variable
-	 * @param $default String Donnée par défaut
+	 * @param $default String DonnÃ©e par dÃ©faut
 	 * @param $hash String Provenance de la variable
 	 * @return String
 	 */
@@ -90,10 +90,10 @@ class Core_Request {
 	}
 	
 	/**
-	 * Retourne la variable demandée de type String
+	 * Retourne la variable demandÃ©e de type String
 	 * 
 	 * @param $name String Nom de la variable
-	 * @param $default String Donnée par défaut
+	 * @param $default String DonnÃ©e par dÃ©faut
 	 * @param $hash String Provenance de la variable
 	 * @return String
 	 */
@@ -102,10 +102,10 @@ class Core_Request {
 	}
 	
 	/**
-	 * Retourne la variable demandée de type String
+	 * Retourne la variable demandÃ©e de type String
 	 * 
 	 * @param $name String Nom de la variable
-	 * @param $default String Donnée par défaut
+	 * @param $default String DonnÃ©e par dÃ©faut
 	 * @param $hash String Provenance de la variable
 	 * @return String
 	 */
@@ -114,7 +114,7 @@ class Core_Request {
 	}
 	
 	/**
-	 * Retourne le contenu de la requête demandée
+	 * Retourne le contenu de la requÃªte demandÃ©e
 	 * 
 	 * @param $hash String
 	 * @return array
@@ -135,7 +135,7 @@ class Core_Request {
 	}
 	
 	/**
-	 * Vérifie le contenu des données importées
+	 * VÃ©rifie le contenu des donnÃ©es importÃ©es
 	 * 
 	 * @param $content Object
 	 * @param $type String

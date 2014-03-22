@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Gestionnaire de bannissement du moteur
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  *
  */
 class Core_BlackBan {
@@ -60,13 +60,13 @@ class Core_BlackBan {
 	}
 	
 	/**
-	 * Nettoyage des adresses IP périmées de la base de donnée
+	 * Nettoyage des adresses IP pÃ©rimÃ©es de la base de donnÃ©e
 	 */
 	private static function checkOldBlackBan() {
 		$deleteOldBlackBan = false;
 		
 		Core_CacheBuffer::setSectionName("tmp");		
-		// Vérification du fichier cache
+		// VÃ©rification du fichier cache
 		if (!Core_CacheBuffer::cached("deleteOldBlackBan.txt")) {
 			$deleteOldBlackBan = true;
 			Core_CacheBuffer::writingCache("deleteOldBlackBan.txt", "1");
@@ -89,7 +89,7 @@ class Core_BlackBan {
 	}
 	
 	/**
-	 * Vérification des bannissements
+	 * VÃ©rification des bannissements
 	 */
 	private static function checkBan() {	
 		$userIp = Exec_Agent::$userIp;
@@ -98,19 +98,19 @@ class Core_BlackBan {
 			// Si l'ip n'est plus du tout valide
 			if (Core_Session::$userIpBan != $userIp 
 					&& !preg_match("/" . Core_Session::$userIpBan . "/", $userIp)) {
-				// On verifie qu'il est bien dans la base (au cas ou il y aurait un débannissement)
+				// On verifie qu'il est bien dans la base (au cas ou il y aurait un dÃ©bannissement)
 				Core_Sql::select(
 					Core_Table::$BANNED_TABLE,
 					array("ban_id"),
 					array("ip = '" . Core_Session::$userIpBan . "'")
 				);
 				
-				// Il est fiché, on s'occupe bien de lui
+				// Il est fichÃ©, on s'occupe bien de lui
 				if (Core_Sql::affectedRows() > 0) {
 					// Extrait l'id du bannissement
 					list($banId) = Core_Sql::fetchArray();
 					
-					// Mise à jour de l'ip
+					// Mise Ã  jour de l'ip
 					Core_Sql::update(
 						Core_Table::$BANNED_TABLE,
 						array("ip" => $userIp),
@@ -133,7 +133,7 @@ class Core_BlackBan {
 			while (list($blackBanIp, $blackBanName) = Core_Sql::fetchArray()) {
 				$banIp = explode(".", $blackBanIp);
 				
-				// Filtre pour la vérification
+				// Filtre pour la vÃ©rification
 				if (isset($banIp[3]) && !empty($banIp[3])) {
 					$banList = $blackBanIp;
 					$searchIp = $userIp;
@@ -143,7 +143,7 @@ class Core_BlackBan {
 					$searchIp = $uIp[0] . $uIp[1] . $uIp[2];
 				}
 				
-				// Vérification du client
+				// VÃ©rification du client
 				if ($searchIp == $banList) {
 					// IP bannis !
 					Core_Session::$userIpBan = $blackBanIp;
@@ -154,7 +154,7 @@ class Core_BlackBan {
 					Core_Session::$userIpBan = "";
 				} 
 				
-				// La vérification a déjà aboutie, on arrête
+				// La vÃ©rification a dÃ©jÃ  aboutie, on arrÃªte
 				if (!empty(Core_Session::$userIpBan)) break;
 			}
 		}

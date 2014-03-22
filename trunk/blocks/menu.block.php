@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Block de menu.
  *
- * @author Sebastien Villemain
+ * @author Sébastien Villemain
  */
 class Block_Menu extends Block_Model {
 

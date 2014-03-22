@@ -7,26 +7,26 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Traducteur de langue.
  * 
- * @author Sebastien Villemain
+ * @author S√©bastien Villemain
  */
 class Core_Translate {
 	
 	/**
-	 * Langue utilisÈ actuellement.
+	 * Langue utilis√© actuellement.
 	 * 
 	 * @var String
 	 */
 	private static $currentLanguage = "";
 	
 	/**
-	 * Extension de la langue utilisÈ.
+	 * Extension de la langue utilis√©.
 	 * 
 	 * @var String
 	 */
 	private static $currentLanguageExtension = "";
 	
 	/**
-	 * Memorise les fichiers dÈj‡ traduit.
+	 * Memorise les fichiers d√©j√† traduit.
 	 * 
 	 * @var array
 	 */
@@ -199,7 +199,7 @@ class Core_Translate {
 	);
 	
 	/**
-	 * Configure et charge les 1ere donnÈes de traduction.
+	 * Configure et charge les 1ere donn√©es de traduction.
 	 */
 	public static function makeInstance() {
 		if (empty(self::$currentLanguage)) {
@@ -209,7 +209,7 @@ class Core_Translate {
 	}
 	
 	/**
-	 * SÈlection de la langue la plus appropriÈe.
+	 * S√©lection de la langue la plus appropri√©e.
 	 * 
 	 * @param string $user_langue : langue via cookie du client.
 	 */
@@ -227,16 +227,16 @@ class Core_Translate {
 			// Recherche de l'extension de la langue
 			self::setCurrentLanguageExtension();
 			
-			// Langue trouvÈe via la recherche
+			// Langue trouv√©e via la recherche
 			$language = strtolower(trim(self::$languageList[self::$currentLanguageExtension]));
 			
-			// Si la langue trouvÈ en invalide
+			// Si la langue trouv√© en invalide
 			if (!self::isValid($language)) {
-				// Utilisation de la langue par dÈfaut du site
+				// Utilisation de la langue par d√©faut du site
 				if (Core_Loader::isCallable("Core_Main")) $language = Core_Main::$coreConfig['defaultLanguage'];
 				else $language = "";
 				
-				// Malheureusement la langue par dÈfaut est aussi invalide
+				// Malheureusement la langue par d√©faut est aussi invalide
 				if (!self::isValid($language)) {
 					$language = "english";
 				}
@@ -255,9 +255,9 @@ class Core_Translate {
 		} else {
 			// Tentative de formatage via le nom de la langue
 			if (!setlocale(LC_TIME, self::$currentLanguage)) {
-				// Si la recherche n'a pas ÈtÈ faite, on la lance maintenant
+				// Si la recherche n'a pas √©t√© faite, on la lance maintenant
 				if (empty(self::$currentLanguageExtension)) self::setCurrentLanguageExtension();
-				// DernËre tentative de formatage sous forme "fr_FR"
+				// Dern√®re tentative de formatage sous forme "fr_FR"
 				setlocale(LC_TIME, strtolower(self::$currentLanguageExtension) . "_" . strtoupper(self::$currentLanguageExtension));
 			}
 		}
@@ -292,7 +292,7 @@ class Core_Translate {
 	}
 	
 	/**
-	 * VÈrifie si le langage en disponible.
+	 * V√©rifie si le langage en disponible.
 	 * 
 	 * @param $language
 	 * @return boolean true langue disponible.
@@ -325,15 +325,15 @@ class Core_Translate {
 		// Capture du chemin vers le fichier
 		$pathLang = self::getPath($pathLang);
 		
-		// On stop si le fichier a dÈj‡ ÈtÈ traduit
+		// On stop si le fichier a d√©j√† √©t√© traduit
 		if (isset(self::$translated[$pathLang])) return "";
 		// Chemin vers le fichier langue source
 		$langOriginalPath = TR_ENGINE_DIR . "/" . $pathLang;
 		
-		// VÈrification du fichier de langue
+		// V√©rification du fichier de langue
 		if (!is_file($langOriginalPath)) return "";
 		
-		// PrÈparation du Path et du contenu
+		// Pr√©paration du Path et du contenu
 		$langCacheFileName = str_replace("/", "_", $pathLang);
 		$content = "";
 		
@@ -356,7 +356,7 @@ class Core_Translate {
 			}
 		}
 		
-		// DonnÈe de traduction
+		// Donn√©e de traduction
 		if (Core_Loader::isCallable("Core_CacheBuffer") && Core_CacheBuffer::cached($langCacheFileName)) $data = "require(TR_ENGINE_DIR . '/tmp/lang/" . $langCacheFileName . "');";
 		else if (!empty($content)) $data = $content;
 		else $data = "";
@@ -376,7 +376,7 @@ class Core_Translate {
 	}
 	
 	/**
-	 * Conversion des caratËres spÈciaux en entitiÈes UTF-8.
+	 * Conversion des carat√®res sp√©ciaux en entiti√©es UTF-8.
 	 * Ajout d'antislashes pour utilisation dans le cache.
 	 * 
 	 * @param String

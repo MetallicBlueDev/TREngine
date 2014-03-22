@@ -44,13 +44,13 @@ class Module_Project_Index extends Module_Model {
 			if (Core_Sql::affectedRows() == 1) {
 				$projectInfo = Core_Sql::fetchArray();
 
-				// Préparation de l'entête
+				// PrÃ©paration de l'entÃªte
 				Core_Loader::classLoader("Exec_JQuery");
 				Exec_JQuery::getSlimbox();
 				Core_Html::getInstance()->addJavascriptJquery("$('.project_description_img a').slimbox();");
 				Core_Html::getInstance()->addCssTemplateFile("module_project.css");
 
-				// Création de la page
+				// CrÃ©ation de la page
 				Core_Loader::classLoader("Libs_Form");
 				$form = new Libs_Form(
 					"project_description",

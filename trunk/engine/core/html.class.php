@@ -5,9 +5,9 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Utilitaire d'entête et de contenu HTML.
+ * Utilitaire d'entÃªte et de contenu HTML.
  * 
- * @author Sebastien Villemain
+ * @author SÃ©bastien Villemain
  */
 class Core_Html {
 	
@@ -33,28 +33,28 @@ class Core_Html {
 	private $javaScriptEnabled = false;
 	
 	/**
-	 * Fonctions et codes javascript demandées.
+	 * Fonctions et codes javascript demandÃ©es.
 	 * 
 	 * @var String
 	 */
 	private $javaScriptCode = "";
 	
 	/**
-	 * Codes javascript JQUERY demandées.
+	 * Codes javascript JQUERY demandÃ©es.
 	 * 
 	 * @var String
 	 */
 	private $javaScriptJquery = "";
 	
 	/**
-	 * Fichiers de javascript demandées.
+	 * Fichiers de javascript demandÃ©es.
 	 * 
 	 * @var array
 	 */
 	private $javaScriptFile = array();
 	
 	/**
-	 * Fichier de style CSS demandées.
+	 * Fichier de style CSS demandÃ©es.
 	 * 
 	 * @var array
 	 */
@@ -68,7 +68,7 @@ class Core_Html {
 	private $title = "";
 	
 	/**
-	 * Mots clès de la page courante.
+	 * Mots clÃ¨s de la page courante.
 	 * 
 	 * @var array
 	 */
@@ -82,7 +82,7 @@ class Core_Html {
 	private $description = "";
 	
 	public function __construct() {
-		// Configuration du préfixe accessible
+		// Configuration du prÃ©fixe accessible
 		if (Core_Loader::isCallable("Core_Main")) $prefix = Core_Main::$coreConfig['cookiePrefix'];
 		else $prefix = "tr";
 		
@@ -91,12 +91,12 @@ class Core_Html {
 			$prefix . "_" . $this->cookieTestName, 
 			$this->getSalt(), "md5+"
 		);
-		// Vérification du javascript du client
+		// VÃ©rification du javascript du client
 		$this->checkJavascriptEnabled();
 	}
 	
 	/**
-	 * Retourne et si besoin créé l'instance Core_Html.
+	 * Retourne et si besoin crÃ©Ã© l'instance Core_Html.
 	 * 
 	 * @return Core_Html
 	 */
@@ -111,14 +111,14 @@ class Core_Html {
 	 * Detection du javascript chez le client.
 	 */
 	private function checkJavascriptEnabled() {
-		// Récuperation du cookie en php
+		// RÃ©cuperation du cookie en php
 		$cookieTest = Exec_Cookie::getCookie($this->cookieTestName);
-		// Vérification de l'existance du cookie
+		// VÃ©rification de l'existance du cookie
 		$this->javaScriptEnabled = ($cookieTest == 1) ? true : false;
 	}
 	
 	/**
-	 * Retourne les scripts à inclure.
+	 * Retourne les scripts Ã  inclure.
 	 * 
 	 * @param $forceIncludes boolean Pour forcer l'inclusion des fichiers javascript.
 	 * @return String
@@ -149,7 +149,7 @@ class Core_Html {
 			$this->resetJavascript();
 		}
 		
-		// Conception de l'entête
+		// Conception de l'entÃªte
 		$script = "";
 		foreach($this->javaScriptFile as $file => $options) {
 			$script .= "<script" . ((!empty($options)) ? " " . $options : "") . " type=\"text/javascript\" src=\"includes/js/" . $file . "\"></script>\n";
@@ -158,13 +158,13 @@ class Core_Html {
 	}
 	
 	/**
-	 * Retourne les fichiers de css à inclure.
+	 * Retourne les fichiers de css Ã  inclure.
 	 * 
 	 * @return String
 	 */
 	private function &includeCss() {
 		$this->addCssInculdeFile("default.css");
-		// Conception de l'entête
+		// Conception de l'entÃªte
 		$script = "";
 		foreach($this->cssFile as $file => $options) {
 			if (!empty($options)) $options = " " . $options;
@@ -174,7 +174,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Execute les fonctions javascript demandées.
+	 * Execute les fonctions javascript demandÃ©es.
 	 * 
 	 * @return String
 	 */
@@ -193,7 +193,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Ajoute un code javaScript JQUERY à executer.
+	 * Ajoute un code javaScript JQUERY Ã  executer.
 	 * 
 	 * @param $javaScript String
 	 */
@@ -203,7 +203,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Ajoute un code javaScript pur à executer.
+	 * Ajoute un code javaScript pur Ã  executer.
 	 * 
 	 * @param $javaScript String
 	 */
@@ -213,7 +213,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Ajoute un code javascript Jquery ou autre automatiquement à executer.
+	 * Ajoute un code javascript Jquery ou autre automatiquement Ã  executer.
 	 * 
 	 * @param $javaScript String
 	 */
@@ -226,7 +226,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Ajoute un fichier javascript a l'entête.
+	 * Ajoute un fichier javascript a l'entÃªte.
 	 * 
 	 * @param $fileName String
 	 * @param $options String
@@ -248,7 +248,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Ajoute un fichier de style CSS a l'entête.
+	 * Ajoute un fichier de style CSS a l'entÃªte.
 	 * 
 	 * @param $fileName String
 	 * @param $options String
@@ -262,7 +262,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Ajoute un fichier de style CSS venant du dossier includes/css a l'entête.
+	 * Ajoute un fichier de style CSS venant du dossier includes/css a l'entÃªte.
 	 * 
 	 * @param $fileName String
 	 * @param $options String
@@ -272,7 +272,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Ajoute un fichier de style CSS venant du dossier template a l'entête.
+	 * Ajoute un fichier de style CSS venant du dossier template a l'entÃªte.
 	 * 
 	 * @param $fileName String
 	 * @param $options String
@@ -292,7 +292,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Retourne l'état du javascript du client.
+	 * Retourne l'Ã©tat du javascript du client.
 	 * 
 	 * @return boolean
 	 */
@@ -301,7 +301,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Retourne l'entête HTML.
+	 * Retourne l'entÃªte HTML.
 	 * 
 	 * @return String
 	 */
@@ -333,7 +333,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Retourne les mots clès et la description de la page.
+	 * Retourne les mots clÃ¨s et la description de la page.
 	 * 
 	 * @return String
 	 */
@@ -344,7 +344,7 @@ class Core_Html {
 		}
 		
 		$keywords = strip_tags($keywords);
-		// 500 caractères maximum
+		// 500 caractÃ¨res maximum
 		$keywords = (strlen($keywords) > 500) ? substr($keywords, 0, 500) : $keywords;
 		
 		if (Core_Loader::isCallable("Core_Main")) {
@@ -368,24 +368,24 @@ class Core_Html {
 	}
 	
 	/**
-	 * Affecte les mots clès de la page courante.
+	 * Affecte les mots clÃ¨s de la page courante.
 	 * 
-	 * @param $keywords array or String : un tableau de mots clès prets ou une phrase
+	 * @param $keywords array or String : un tableau de mots clÃ¨s prets ou une phrase
 	 */
 	public function setKeywords($keywords) {
 		if (is_array($keywords)) {
-			// Les mots cles sont déjà tous prets
+			// Les mots cles sont dÃ©jÃ  tous prets
 			if (count($this->keywords) > 0) {
 				array_push($this->keywords, $keywords);
 			} else {
 				$this->keywords = $keywords;
 			}
 		} else {
-			// Une chaine de caratères (phrase ou simple mots clès)
+			// Une chaine de caratÃ¨res (phrase ou simple mots clÃ¨s)
 			$keywords = str_replace(",", " ", $keywords);
 			$keywords = explode(" ", $keywords);
 			foreach($keywords as $keyword) {
-				if (!empty($keyword)) { // Filtre les entrées vides
+				if (!empty($keyword)) { // Filtre les entrÃ©es vides
 					$this->keywords[] = trim($keyword);
 				}
 			}
@@ -407,16 +407,16 @@ class Core_Html {
 	 * @return String
 	 */
 	private function getSalt() {
-		// Configuration de la clès accessible
+		// Configuration de la clÃ¨s accessible
 		if (Core_Loader::isCallable("Core_Main")) $key = Core_Main::$coreConfig['cryptKey'];
 		else $key = "A4bT9D4V";
 		return $key;
 	}
 	
 	/**
-	 * Réécriture d'une URL.
+	 * RÃ©Ã©criture d'une URL.
 	 * 
-	 * @param $link String or array adresse URL a réécrire.
+	 * @param $link String or array adresse URL a rÃ©Ã©crire.
 	 * @param $layout boolean true ajouter le layout.
 	 * @return String or array.
 	 */
@@ -448,8 +448,8 @@ class Core_Html {
 	/**
 	 * Retourne un lien web utilisable avec et sans javascript.
 	 * 
-	 * @param $fullLink String le lien vers une page (utilisé sans javascript).
-	 * @param $blockLink String le lien vers une page (utilisé avec javascript).
+	 * @param $fullLink String le lien vers une page (utilisÃ© sans javascript).
+	 * @param $blockLink String le lien vers une page (utilisÃ© avec javascript).
 	 * @param $divId String id du block.
 	 * @param $title String Titre du lien.
 	 * @return String
@@ -462,7 +462,7 @@ class Core_Html {
 	/**
 	 * Redirection ou chargement via javascript vers une page.
 	 * 
-	 * @param $url String page demandée a chargé.
+	 * @param $url String page demandÃ©e a chargÃ©.
 	 * @param $tps int temps avant le chargement de la page.
 	 * @param $method String block de destination si ce n'est pas toutes la page.
 	 */
@@ -477,7 +477,7 @@ class Core_Html {
 				// Commande ajax pour la redirection
 				$this->addJavascriptCode("setTimeout(function(){ $('" . $method . "').load('" . $url . "'); }, $tps);");
 			} else {
-				// Commande par défaut
+				// Commande par dÃ©faut
 				$this->addJavascriptCode("setTimeout('window.location = \"" . $url . "\"','" . $tps . "');");
 			}
 		} else {
@@ -494,7 +494,7 @@ class Core_Html {
 	}
 	
 	/**
-	 * Retourne le loader annimé.
+	 * Retourne le loader annimÃ©.
 	 * 
 	 * @return String
 	 */
