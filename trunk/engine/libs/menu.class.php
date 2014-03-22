@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Gestionnaire de menu
  * 
  * @author Sébastien Villemain
- *
  */
 class Libs_Menu {
 	
@@ -153,7 +152,6 @@ class Libs_Menu {
  * Membre d'un menu
  * 
  * @author Sébastien Villemain
- *
  */
 class Libs_MenuElement {
 	

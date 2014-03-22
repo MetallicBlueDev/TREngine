@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Gestionnaire de fichier
  * 
  * @author Sébastien Villemain
- *
  */
 class Libs_FileManager extends Cache_Model {
 	

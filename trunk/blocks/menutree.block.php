@@ -11,7 +11,6 @@ Core_Loader::classLoader("Block_Menu");
  * Block de menu style Menu treeview by
  *
  * @author Sébastien Villemain
- *
  */
 class Block_Menutree extends Block_Menu {
 

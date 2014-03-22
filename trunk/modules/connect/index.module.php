@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Module d'interface et de traitement entre le site et le client
  * 
  * @author Sébastien Villemain
- *
  */
 class Module_Connect_Index extends Module_Model {
 	

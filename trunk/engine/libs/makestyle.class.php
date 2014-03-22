@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * RAPIDE, SIMPLE ET EFFICACE !
  * 
  * @author Sébastien Villemain
- *
  */
 class Libs_MakeStyle {
 	

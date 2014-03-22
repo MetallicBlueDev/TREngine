@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Convertiseur de chaine de caractère en entities
  * 
  * @author Sébastien Villemain
- *
  */
 class Exec_Entities {
 	

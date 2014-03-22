@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Constructeur de fichier
  * 
  * @author Sébastien Villemain
- *
  */
 class Exec_FileBuilder {
 	

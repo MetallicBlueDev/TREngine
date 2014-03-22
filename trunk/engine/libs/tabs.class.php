@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Classe de mise en forme d'onglets
  * 
  * @author Sébastien Villemain
- *
  */
 class Libs_Tabs {
 	

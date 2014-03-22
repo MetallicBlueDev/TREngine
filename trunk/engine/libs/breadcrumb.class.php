@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Editeur du fil d'Ariane
  * 
  * @author Sébastien Villemain
- *
  */
 class Libs_Breadcrumb {
 	

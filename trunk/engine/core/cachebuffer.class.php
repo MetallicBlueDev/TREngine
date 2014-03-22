@@ -541,7 +541,6 @@ class Core_CacheBuffer {
  * Modèle de classe pour un gestionnaire de fichier
  * 
  * @author Sébastien Villemain
- *
  */
 abstract class Cache_Model {
 	

@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Gestionnaire URL REWRITING
  * 
  * @author Sébastien Villemain
- *
  */
 class Core_UrlRewriting {
 	

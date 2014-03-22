@@ -9,7 +9,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Avec mise en cache automatique.
  * 
  * @author Sébastien Villemain
- *
  */
 class Libs_Form {
 	

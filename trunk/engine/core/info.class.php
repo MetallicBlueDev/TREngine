@@ -27,7 +27,6 @@ new Core_Info();
  * NOTE IMPORTANTE : cette classe doit être compatible PHP 4
  * 
  * @author Sébastien Villemain
- *
  */
 class Core_Info {
 	

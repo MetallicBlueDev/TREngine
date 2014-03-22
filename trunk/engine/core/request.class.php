@@ -4,7 +4,6 @@
  * Gestionnaire de requêtes URL
  * 
  * @author Sébastien Villemain
- *
  */
 class Core_Request {
 	

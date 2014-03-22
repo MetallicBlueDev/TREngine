@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Chargeur de configuration
  * 
  * @author Sébastien Villemain
- *
  */
 class Core_ConfigsLoader {
 	

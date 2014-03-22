@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Gestionnaire d'accès
  * 
  * @author Sébastien Villemain
- *
  */
 class Core_Access  {
 	

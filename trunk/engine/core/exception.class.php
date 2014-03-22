@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Gestionnaire des exceptions
  * 
  * @author Sébastien Villemain
- *
  */
 class Core_Exception {
 	

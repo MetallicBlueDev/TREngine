@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Block pour contenu HTML
  *
  * @author Sébastien Villemain
- *
  */
 class Block_Html extends Block_Model {
 

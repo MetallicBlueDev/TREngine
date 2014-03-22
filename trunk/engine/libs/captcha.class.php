@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Générateur de captcha, anti-robot, anti-spam
  * 
  * @author Sébastien Villemain
- *
  */
 class Libs_Captcha {
 	

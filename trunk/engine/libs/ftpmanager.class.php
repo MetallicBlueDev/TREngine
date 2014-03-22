@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Gestionnaire des connexions vers le FTP
  * 
  * @author Sébastien Villemain
- *
  */
 class Libs_FtpManager extends Cache_Model {
 	

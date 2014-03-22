@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Outil destinée au cookie
  * 
  * @author Sébastien Villemain
- *
  */
 class Exec_Cookie {
 	

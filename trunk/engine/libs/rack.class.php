@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Gestionnaire de tableau automatique
  * 
  * @author Sébastien Villemain
- *
  */
 class Libs_Rack {
 	

@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Outil de cryptage
  * 
  * @author Sébastien Villemain
- *
  */
 class Exec_Image {
 	

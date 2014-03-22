@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Gestionnaire de bannissement du moteur
  * 
  * @author Sébastien Villemain
- *
  */
 class Core_BlackBan {
 	

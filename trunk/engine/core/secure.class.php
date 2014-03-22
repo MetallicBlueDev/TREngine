@@ -10,7 +10,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Capture la configuration
  * 
  * @author Sébastien Villemain
- *
  */
 class Core_Secure {
 	

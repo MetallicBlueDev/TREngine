@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Analyseur de protocole USER AGENT
  * 
  * @author Sébastien Villemain
- *
  */
 class Exec_Agent {
 	

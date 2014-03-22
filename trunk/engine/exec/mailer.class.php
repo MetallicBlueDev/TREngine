@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Gestionnaire de email
  * 
  * @author Sébastien Villemain
- *
  */
 class Exec_Mailer {
 	

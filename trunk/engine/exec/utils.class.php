@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Fonction optimisé et utilitaire
  * 
  * @author Sébastien Villemain
- *
  */
 class Exec_Utils {
 	

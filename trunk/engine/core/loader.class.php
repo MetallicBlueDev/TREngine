@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Chargeur de classe.
  * 
  * @author Sébastien Villemain
- *
  */
 class Core_Loader {
 	

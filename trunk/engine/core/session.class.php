@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Gestionnaire des sessions
  * 
  * @author Sébastien Villemain
- *
  */
 class Core_Session {
 	

@@ -5,7 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Gestionnaire de base de donn�e MySql
+ * Gestionnaire de base de donnée MySql.
  *
  * @author Sébastien Villemain
  */
