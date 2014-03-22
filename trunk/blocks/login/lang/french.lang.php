@@ -1,17 +1,13 @@
 <?php
 $lang = array(
-
 // Divers
-"MY_ACCOUNT" => "Mon compte",
-"MY_RECEIPTBOX" => "Mes messages",
-"GET_FORGET_PASS" => "Mot de passe oublié",
-"GET_FORGET_LOGIN" => "Identifiant oublié",
-"GET_LOGON" => "Se connecter",
-"GET_ACCOUNT" => "Créer un compte",
-"LOGOUT" => "Déconnexion",
-"REMEMBER_ME" => "Se souvenir de moi"
-
+    "MY_ACCOUNT" => "Mon compte",
+    "MY_RECEIPTBOX" => "Mes messages",
+    "GET_FORGET_PASS" => "Mot de passe oubliÃ©",
+    "GET_FORGET_LOGIN" => "Identifiant oubliÃ©",
+    "GET_LOGON" => "Se connecter",
+    "GET_ACCOUNT" => "CrÃ©er un compte",
+    "LOGOUT" => "DÃ©connexion",
+    "REMEMBER_ME" => "Se souvenir de moi"
 );
-
-
 ?>
