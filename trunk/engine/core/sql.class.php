@@ -8,7 +8,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * Gestionnaire de la communication SQL
  * 
  * @author Sébastien Villemain
- * 
  */
 class Core_Sql {
 	
@@ -332,7 +331,6 @@ class Core_Sql {
  * Gestionnaire de la communication SQL
  * 
  * @author Sébastien Villemain
- * 
  */
 abstract class Base_Model {
 	
