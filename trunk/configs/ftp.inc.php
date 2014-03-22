@@ -3,9 +3,9 @@
 // Informations sur le FTP
 //
 // Adresse de host du FTP
-$ftp['host'] = "localhost";
+$ftp['host'] = "127.0.0.1";
 //
-// Numéro de port de l'host
+// NumÃ©ro de port de l'host
 $ftp['port'] = "21";
 //
 // Nom d'utilisateur du FTP
@@ -21,6 +21,4 @@ $ftp['root'] = "";
 $ftp['type'] = "";
 //
 // -------------------------------------------------------------------------//
-
-
 ?>

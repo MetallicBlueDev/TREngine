@@ -1,9 +1,9 @@
 <?php
 // -------------------------------------------------------------------------//
-// Informations sur la base de donnée
+// Informations sur la base de donnÃ©e
 //
 // Adresse de l'host de la base
-$db['host'] = "localhost";
+$db['host'] = "127.0.0.1";
 //
 // Nom d'utilisateur de la base
 $db['user'] = "root";
@@ -17,7 +17,7 @@ $db['name'] = "trancers_db";
 // Type de base
 $db['type'] = "mysql";
 //
-// Préfixe des tables
+// PrÃ©fixe des tables
 $db['prefix'] = "tr";
 // -------------------------------------------------------------------------//
 ?>

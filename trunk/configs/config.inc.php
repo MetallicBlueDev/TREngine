@@ -1,42 +1,29 @@
 <?php
 // ----------------------------------------------------------------------- //
-// -- TR ENGINE = PUISSANCE + SIMPLICITÉ + ÉVOLUTIVITÉ					-- //
+// -- TR ENGINE = PUISSANCE + SIMPLICITE + EVOLUTIVITE					-- //
 // -- Puissance par un codage efficace									-- //
-// -- Simplicité par une interface intuitive							-- //
-// -- Évolutivité par une grande souplesse d'adaptation du moteur		-- //
-// ----------------------------------------------------------------------- //
-// -- Une création de Trancer-Studio.net [www.trancer-studio.net]		-- //
-// ----------------------------------------------------------------------- //
-// Donnée : par require_once()
+// -- SimplicitÃ© par une interface intuitive							-- //
+// -- EvolutivitÃ© par une grande souplesse d'adaptation du moteur		-- //
 // ----------------------------------------------------------------------- //
 // ----------------------------------------------------------------------- //
-// -- Fichier de configuration du site
-// -- http://www.trancer-studio.net
-// ----------------------------------------------------------------------- //
-
-// ----------------------------------------------------------------------- //
-// Informations générales
+// Informations gÃ©nÃ©rales
 //
-// Adresse email du webmaster (principal)
+// Adresse email du webmaster
 $config["TR_ENGINE_MAIL"] = "villemain.sebastien@trancer-studio.net";
 //
-// Statut du site ("open" = ouvert | "close" = fermé)
+// Statut du site ("open" = ouvert | "close" = fermÃ©)
 $config["TR_ENGINE_STATUT"] = "open";
 // ----------------------------------------------------------------------- //
-
-
 // -------------------------------------------------------------------------//
-// Données des sessions
+// DonnÃ©es des sessions
 //
-// Durée en jours de validité des fichiers de sessions mise en cache
+// DurÃ©e en jours de validitÃ© des fichiers de sessions mise en cache
 $config['cacheTimeLimit'] = 7;
 //
-// Préfixe des noms des cookies
+// PrÃ©fixe des noms des cookies
 $config['cookiePrefix'] = "tr";
 //
-// Cles de décriptage UNIQUE (généré aleatoirement a l'installation)
+// ClÃ© de dÃ©criptage UNIQUE (gÃ©nÃ©rÃ© aleatoirement Ã  l'installation)
 $config['cryptKey'] = "A4bT9D4V";
 // -------------------------------------------------------------------------//
-
-
 ?>
