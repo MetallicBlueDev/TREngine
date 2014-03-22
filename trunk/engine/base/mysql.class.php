@@ -12,34 +12,36 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Base_Mysql extends Base_Model {
 
     /**
-     * Le type de la derni�re commande
-     * SELECT, DELETE, UPDATE, INSERT, REPLACE
+     * Le type de la dernière commande.
+     * SELECT, DELETE, UPDATE, INSERT, REPLACE.
      *
      * @var String
      */
     private $lastSqlCommand = "";
 
     /**
-     * Etablie une connexion � la base de donn�e
+     * Etablie une connexion à la base de données.
      */
     public function dbConnect() {
         $this->connId = @mysql_connect($this->database['host'], $this->database['user'], $this->database['pass']);
     }
 
     /**
-     * Selectionne une base de donn�e
+     * Selectionne une base de données.
      *
      * @return boolean true succes
      */
     public function dbSelect() {
+        $rslt = false;
+
         if ($this->connId) {
-            return @mysql_select_db($this->database['name'], $this->connId);
+            $rslt = @mysql_select_db($this->database['name'], $this->connId);
         }
-        return false;
+        return $rslt;
     }
 
     /**
-     * D�connexion � la base de donn�e
+     * Déconnexion à la base de données.
      */
     public function dbDeconnect() {
         if ($this->connId) {
@@ -49,7 +51,7 @@ class Base_Mysql extends Base_Model {
     }
 
     /**
-     * Envoie une requ�te Sql
+     * Envoi une requête Sql.
      *
      * @param $Sql
      */
@@ -58,7 +60,7 @@ class Base_Mysql extends Base_Model {
     }
 
     /**
-     * Retourne un tableau qui contient la ligne demand�e
+     * Retourne un tableau qui contient la ligne demandée.
      *
      * @return array
      */
@@ -70,7 +72,7 @@ class Base_Mysql extends Base_Model {
     }
 
     /**
-     * Retourne un objet qui contient les ligne demand�e
+     * Retourne un objet qui contient les ligne demandée.
      *
      * @return object
      */
@@ -132,7 +134,7 @@ class Base_Mysql extends Base_Model {
     }
 
     /**
-     * V�rifie que le module mysql est charg�
+     * Vérifie que le module mysql est chargé.
      *
      * @return boolean
      */
