@@ -39,10 +39,10 @@ class Core_Sql {
 				try {
 					self::$base = new $BaseClass();
 				} catch (Exception $ie) {
-					Core_Secure::getInstance()->submitError($ie);
+					Core_Secure::getInstance()->throwException($ie);
 				}
 			} else {
-				Core_Secure::getInstance()->submitError("sqlCode", $BaseClass);
+				Core_Secure::getInstance()->throwException("sqlCode", $BaseClass);
 			}
 			
 			// Charge les constantes de table
@@ -108,7 +108,7 @@ class Core_Sql {
 		try {
 			self::query();
 		} catch (Exception $ie) {
-			Core_Secure::getInstance()->submitError($ie);
+			Core_Secure::getInstance()->throwException($ie);
 		}
 	}
 	
@@ -143,7 +143,7 @@ class Core_Sql {
 		try {
 			self::query();
 		} catch (Exception $ie) {
-			Core_Secure::getInstance()->submitError($ie);
+			Core_Secure::getInstance()->throwException($ie);
 		}
 	}
 	
@@ -188,7 +188,7 @@ class Core_Sql {
 		try {
 			self::query();
 		} catch (Exception $ie) {
-			Core_Secure::getInstance()->submitError($ie);
+			Core_Secure::getInstance()->throwException($ie);
 		}
 	}
 	
@@ -207,7 +207,7 @@ class Core_Sql {
 		try {
 			self::query();
 		} catch (Exception $ie) {
-			Core_Secure::getInstance()->submitError($ie);
+			Core_Secure::getInstance()->throwException($ie);
 		}
 	}
 	

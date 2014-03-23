@@ -28,7 +28,7 @@ class Core_Loader {
         try {
             $classLoaded = self::load($class);
         } catch (Exception $ie) {
-            Core_Secure::getInstance()->submitError($ie, $class);
+            Core_Secure::getInstance()->throwException($ie, $class);
         }
         return $classLoaded;
     }
@@ -43,7 +43,7 @@ class Core_Loader {
         try {
             return self::load($include, "inc");
         } catch (Exception $ie) {
-            Core_Secure::getInstance()->submitError($ie, $include);
+            Core_Secure::getInstance()->throwException($ie, $include);
         }
     }
 

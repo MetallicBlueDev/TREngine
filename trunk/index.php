@@ -16,6 +16,7 @@ Core_Secure::getInstance(true); // true = mode debug activé
 //
 // Chargement du Marker
 Core_Loader::classLoader("Exec_Marker");
+Core_Secure::getInstance()->throwException("TEST");
 
 if (Core_Secure::isDebuggingMode()) {
     Exec_Marker::startTimer("all");

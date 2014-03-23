@@ -45,7 +45,7 @@ class Core_Secure {
             }
 
             define("TR_ENGINE_INDEX", true);
-            $this->submitError("badUrl");
+            $this->throwException("badUrl");
         }
 
         // A exécuter uniquement après avoir vérifié l'index et le numéro de version
@@ -110,7 +110,7 @@ class Core_Secure {
 
         foreach ($badString as $stringValue) {
             if (strpos($queryString, $stringValue)) {
-                $this->submitError();
+                $this->throwException();
             }
         }
     }
@@ -122,7 +122,7 @@ class Core_Secure {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!empty($_SERVER['HTTP_REFERER'])) {
                 if (!preg_match("/" . $_SERVER['HTTP_HOST'] . "/", $_SERVER['HTTP_REFERER'])) {
-                    $this->submitError();
+                    $this->throwException();
                 }
             }
         }
@@ -167,7 +167,7 @@ class Core_Secure {
      * @param $ie String or object L'exception interne levée.
      * @param $argv String or array argument suplementaire d'information sur l'erreur.
      */
-    public function submitError($ie = "", $argv = "") {
+    public function throwException($ie = "", $argv = "") {
         // Charge le loader si il faut
         if (!class_exists("Core_Loader")) {
             require(TR_ENGINE_DIR . "/engine/core/loader.class.php");
@@ -259,7 +259,7 @@ class Core_Secure {
         $errorMessageTitle = "ERROR_DEBUG_" . strtoupper($cmd);
 
         if (defined($errorMessageTitle)) {
-            return constant($errorMessageTitle);
+            return Exec_Entities::entitiesUtf8(constant($errorMessageTitle));
         }
         return "Stop loading (Fatal error unknown).";
     }
