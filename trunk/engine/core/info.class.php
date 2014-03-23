@@ -1,14 +1,13 @@
 <?php
 /*
- * NOTE IMPORTANTE : tout ce fichier doit être compatible PHP 4
- * Il ne doit pas provoquer d'erreur a son chargement mais Core_Info ne doit pas être executé sous PHP 4.
+ * NOTE IMPORTANTE : tout ce fichier doit être compatible PHP 4.
  */
 if (preg_match("/info.class.php/ie", $_SERVER['PHP_SELF'])) {
     exit();
 }
 
 /**
- * Version php sous forme x.x.x.x (exemple : 5.2.9.2)
+ * Version php sous forme x.x.x.x (exemple : 5.2.9.2).
  */
 define("TR_ENGINE_PHP_VERSION", preg_replace("/[^0-9.]/", "", (preg_replace("/(_|-|[+])/", ".", phpversion()))));
 
@@ -23,41 +22,42 @@ if (TR_ENGINE_PHP_VERSION < "5.0.0") {
 new Core_Info();
 
 /**
- * Configurateur rapide
- * NOTE IMPORTANTE : cette classe doit être compatible PHP 4
+ * Recherche d'information rapide.
+ * NOTE IMPORTANTE : cette classe doit être compatible PHP 4.
  *
  * @author Sébastien Villemain
  */
 class Core_Info {
 
     /**
-     * Capture de la configuration courante
+     * Capture de la configuration courante.
      */
     function __construct() {
 
         /**
-         * Chemin jusqu'a la racine
+         * Chemin jusqu'à la racine.
          */
         define("TR_ENGINE_DIR", $this->getBaseDir());
 
         /**
-         * Adresse URL complete jusqu'a TR ENGINE
+         * Adresse URL complete jusqu'a TR ENGINE.
          */
         define("TR_ENGINE_URL", $this->getUrlAddress());
 
         /**
-         * Le système d'exploitation qui execute TR ENGINE
+         * Le système d'exploitation qui execute TR ENGINE.
          */
         define("TR_ENGINE_PHP_OS", $this->getPhpOs());
     }
 
     /**
-     * Retourne le chemin jusqu'a la racine
+     * Retourne le chemin jusqu'à la racine.
      *
      * @return String
      */
-    function getBaseDir() {
+    private function getBaseDir() {
         $baseDir = "";
+
         // Recherche du chemin absolu depuis n'importe quel fichier
         if (defined("TR_ENGINE_INDEX")) {
             // Nous sommes dans l'index
@@ -65,10 +65,15 @@ class Core_Info {
         } else {
             // Chemin de base
             $baseName = str_replace($_SERVER['SCRIPT_NAME'], "", $_SERVER['SCRIPT_FILENAME']);
-            // Chemin jusqu'au fichier
-            $currentPath = str_replace('\\', '/', getcwd());
-            // On isole le chemin en plus jusqu'au fichier
-            $path = str_replace($baseName, "", $currentPath);
+            $workingDirectory = getcwd();
+
+            if (!empty($workingDirectory)) {
+                // Chemin jusqu'au fichier
+                $currentPath = str_replace('\\', '/', $workingDirectory);
+                // On isole le chemin en plus jusqu'au fichier
+                $path = str_replace($baseName, "", $currentPath);
+            }
+
             $path = substr($path, 1); // Suppression du slash
 
             if (!empty($path)) { // Recherche du chemin complet
@@ -77,59 +82,75 @@ class Core_Info {
                     // On remonte d'un cran
                     $path = dirname($path);
                     // La recherche n'aboutira pas
-                    if ($path == ".")
+                    if ($path == ".") {
                         break;
+                    }
                 }
             }
 
             // Verification du résultat
-            if (!empty($path) && is_file($baseName . "/" . $path . "/configs/config.inc.php"))
+            if (!empty($path) && is_file($baseName . "/" . $path . "/configs/config.inc.php")) {
                 $baseDir = $baseName . "/" . $path;
-            else if (is_file($baseName . "/configs/config.inc.php"))
+            } else if (is_file($baseName . "/configs/config.inc.php")) {
                 $baseDir = $baseName;
-            else
+            } else {
                 $baseDir = $baseName;
+            }
         }
         return $baseDir;
     }
 
     /**
-     * Retourne l'adresse URL complete jusqu'a TR ENGINE
+     * Retourne l'adresse URL complète jusqu'à TR ENGINE.
      *
      * @return String
      */
-    function getUrlAddress() {
+    private function getUrlAddress() {
         // Recherche de l'URL courante
-        $urlTmp = @$_SERVER["REQUEST_URI"][1];
-        if (substr($urlTmp, -1) == "/")
+        $urlTmp = $_SERVER["REQUEST_URI"];
+
+        if (substr($urlTmp, -1) == "/") {
             $urlTmp = substr($urlTmp, 0, strlen($urlTmp) - 1);
-        if ($urlTmp[0] == "/")
+        }
+
+        if ($urlTmp[0] == "/") {
             $urlTmp = substr($urlTmp, 1);
+        }
+
         $urlTmp = explode("/", $urlTmp);
 
         // Recherche du dossier courant
         $urlBase = explode("/", TR_ENGINE_DIR);
-        $urlBase = $urlBase[count($urlBase) - 1];
 
         // Construction du lien
         $urlFinal = "";
         for ($i = count($urlTmp) - 1; $i >= 0; $i--) {
-            if ($urlTmp[$i] == $urlBase) {
-                if (empty($urlFinal))
+            for ($j = count($urlBase) - 1; $j >= 0; $j--) {
+                if (empty($urlBase[$j])) {
+                    continue;
+                }
+
+                if ($urlTmp[$i] != $urlBase[$j]) {
+                    break;
+                }
+
+                if (empty($urlFinal)) {
                     $urlFinal = $urlTmp[$i];
-                else
+                } else {
                     $urlFinal = $urlTmp[$i] . "/" . $urlFinal;
+                }
+                $urlBase[$j] = "";
             }
         }
         return ((empty($urlFinal)) ? @$_SERVER["SERVER_NAME"] : @$_SERVER["SERVER_NAME"] . "/" . $urlFinal);
     }
 
     /**
-     * Retourne la plateforme sur lequel est PHP
+     * Retourne la plateforme sur lequel est PHP.
      *
      * @return String
      */
-    function getPhpOs() {
+    private function getPhpOs() {
         return strtoupper(substr(PHP_OS, 0, 3));
     }
 
