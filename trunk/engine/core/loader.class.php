@@ -146,7 +146,7 @@ class Core_Loader {
                 }
             }
         } else {
-            $rslt = elf::isLoaded($className);
+            $rslt = self::isLoaded($className);
         }
         return $rslt;
     }
