@@ -56,7 +56,7 @@ class Libs_MakeStyle {
         $this->setFileName($fileName);
 
         if (empty(self::$templatesDir) || empty(self::$currentTemplate)) { // TODO si $templatesDir ou $currentTemplate est vide, le moteur plante !
-            Core_Secure::getInstance()->debug("makeStyleConfig", array(
+            Core_Secure::getInstance()->submitError("makeStyleConfig", array(
                 "templatesDir = " . self::$templatesDir,
                 "currentTemplate = " . self::$currentTemplate));
         }
@@ -87,7 +87,7 @@ class Libs_MakeStyle {
         $this->setFileName($fileName);
 
         if (!$this->isTemplate()) { // Vérification du template
-            Core_Secure::getInstance()->debug("makeStyle", $this->getTemplatePath());
+            Core_Secure::getInstance()->submitError("makeStyle", $this->getTemplatePath());
         }
     }
 

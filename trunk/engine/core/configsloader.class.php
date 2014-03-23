@@ -21,10 +21,10 @@ class Core_ConfigsLoader {
 			if ($this->loadCacheBuffer() && $this->loadSql()) {
 				$this->loadConfig();
 			} else {
-				Core_Secure::getInstance()->debug("Config error: Core_CacheBuffer and Core_Sql aren't loaded");
+				Core_Secure::getInstance()->submitError("Config error: Core_CacheBuffer and Core_Sql aren't loaded");
 			}
 		} else {
-			Core_Secure::getInstance()->debug("Config error: Core_Main isn't loaded");
+			Core_Secure::getInstance()->submitError("Config error: Core_Main isn't loaded");
 		}
 	}
 	
@@ -55,7 +55,7 @@ class Core_ConfigsLoader {
 			
 			// Recherche du statut du site
 			if (TR_ENGINE_STATUT == "close") {
-				Core_Secure::getInstance()->debug("close");
+				Core_Secure::getInstance()->submitError("close");
 			}
 			
 			if (is_int($config['cacheTimeLimit']) && $config['cacheTimeLimit'] >= 1) $configuration['cacheTimeLimit'] = $config['cacheTimeLimit'];
@@ -93,7 +93,7 @@ class Core_ConfigsLoader {
 			Core_Main::addToConfiguration($configuration);
 			
 		} else {
-			Core_Secure::getInstance()->debug("configPath", $configPath);
+			Core_Secure::getInstance()->submitError("configPath", $configPath);
 		}
 	}
 	
@@ -112,7 +112,7 @@ class Core_ConfigsLoader {
 				
 				// Vérification du type de base de donnée
 				if (!is_file(TR_ENGINE_DIR . "/engine/base/" . $db['type'] . ".class.php")) {
-					Core_Secure::getInstance()->debug("sqlType", $db['type']);
+					Core_Secure::getInstance()->submitError("sqlType", $db['type']);
 				}
 				
 				// Démarrage de l'instance Core_Sql
@@ -120,7 +120,7 @@ class Core_ConfigsLoader {
 				Core_Sql::setDatabase($db);
 				Core_Sql::makeInstance();
 			} else {
-				Core_Secure::getInstance()->debug("sqlPath", $databasePath);
+				Core_Secure::getInstance()->submitError("sqlPath", $databasePath);
 			}
 			return Core_Loader::isCallable("Core_Sql");
 		}

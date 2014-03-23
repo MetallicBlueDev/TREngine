@@ -206,7 +206,7 @@ class Libs_Block {
 				case 4: $sideLetters = "bottom"; break;
 				case 5: $sideLetters = "moduletop"; break;
 				case 6: $sideLetters = "modulebottom"; break;
-				default : Core_Secure::getInstance()->debug("blockSide", "Numeric side:" . $side);
+				default : Core_Secure::getInstance()->submitError("blockSide", "Numeric side:" . $side);
 			}
 		}
 		return $sideLetters;
@@ -230,7 +230,7 @@ class Libs_Block {
 				case 'bottom': $sideNumeric = 4; break;
 				case 'moduletop': $sideNumeric = 5; break;
 				case 'modulebottom': $sideNumeric = 6; break;
-				default : Core_Secure::getInstance()->debug("blockSide", "Letters side:" . $side);
+				default : Core_Secure::getInstance()->submitError("blockSide", "Letters side:" . $side);
 			}
 		}
 		return $sideNumeric;
