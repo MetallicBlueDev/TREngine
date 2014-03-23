@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Gestionnaire de requêtes URL
+ * Gestionnaire de requêtes URL.
  *
  * @author Sébastien Villemain
  */
 class Core_Request {
 
     /**
-     * Tableau buffer des requêtes
+     * Tableau buffer des requêtes.
      *
      * @var array
      */
     private static $buffer = array();
 
     /**
-     * Récupère, analyse et vérifie une variable URL
+     * Récupère, analyse et vérifie une variable URL.
      *
      * @param $name String Nom de la variable
      * @param $type String Type de donnée
@@ -23,21 +23,23 @@ class Core_Request {
      * @param $hash String Provenance de la variable
      * @return Object
      */
-    public static function &getVars($name, $type, $default = "", $hash = "default") {
-        $var = $name;
-        if (isset(self::$buffer[$var])) {
-            return self::$buffer[$var];
+    private static function &getVars($name, $type, $default = "", $hash = "default") {
+        $rslt = null;
+
+        if (isset(self::$buffer[$name])) {
+            $rslt = self::$buffer[$name];
         } else {
             // Recherche de la méthode courante
             $input = self::getRequest($hash);
 
             if (isset($input[$name]) && $input[$name] !== null) {
                 $rslt = self::protect($input[$name], $type);
-                self::$buffer[$var] = $rslt;
-                return $rslt;
+                self::$buffer[$name] = $rslt;
+            } else {
+                $rslt = $default;
             }
-            return $default;
         }
+        return $rslt;
     }
 
     /**
@@ -113,12 +115,21 @@ class Core_Request {
     }
 
     /**
-     * Retourne le contenu de la requête demandée
+     * Retourne le type de méthode utlisé pour la requête.
+     *
+     * @return type
+     */
+    public static function getRequestMethod() {
+        return self::getRequest();
+    }
+
+    /**
+     * Retourne le contenu de la requête demandée.
      *
      * @param $hash String
      * @return array
      */
-    public static function &getRequest($hash = "default") {
+    private static function &getRequest($hash = "default") {
         $hash = strtoupper($hash);
         $input = "";
 
@@ -152,24 +163,26 @@ class Core_Request {
     }
 
     /**
-     * Vérifie le contenu des données importées
+     * Vérifie le contenu des données importées.
      *
      * @param $content Object
      * @param $type String
      * @return Object
      */
-    public static function &protect($content, $type) {
+    private static function &protect($content, $type) {
         $type = strtoupper($type);
 
         switch ($type) {
             case 'INT':
             case 'INTEGER':
+                $matches = array();
                 preg_match('/-?[0-9]+/', (string) $content, $matches);
                 $content = @(int) $matches[0];
                 break;
 
             case 'FLOAT':
             case 'DOUBLE':
+                $matches = array();
                 preg_match('/-?[0-9]+(\.[0-9]+)?/', (string) $content, $matches);
                 $content = @(float) $matches[0];
                 break;

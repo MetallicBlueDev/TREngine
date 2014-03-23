@@ -200,6 +200,7 @@ class Core_Logger {
      */
     private static function &serializeData($var) {
         $content = "";
+
         foreach ($var as $msg) {
             $content .= $msg . "\n";
         }

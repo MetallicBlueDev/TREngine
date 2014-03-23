@@ -33,7 +33,7 @@ class Core_Secure {
     /**
      * Routine de sécurisation.
      */
-    public function __construct() {
+    private function __construct() {
         $this->checkError();
         $this->checkQueryString();
         $this->checkRequestReferer();
@@ -203,6 +203,7 @@ class Core_Secure {
     private function getDebugMessage($ie, $argv) {
         // Tableau avec les lignes d'erreurs
         $errorMessage = array();
+
         // Analyse de l'exception
         if (is_object($ie)) { // Pour une exception levé de type object
             $trace = $ie->getTrace();
@@ -226,10 +227,11 @@ class Core_Secure {
             }
         }
         if (!empty($argv)) { // Si des informations suplementaire sont disponibles
-            if (is_array($argv))
+            if (is_array($argv)) {
                 $errorMessage = array_merge($errorMessage, $argv);
-            else
+            } else {
                 $errorMessage[] = $argv;
+            }
         }
         if (Core_Loader::isCallable("Core_Session") && Core_Loader::isCallable("Core_Sql")) {
             if (Core_Session::$userRank > 1) {
