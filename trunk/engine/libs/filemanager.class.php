@@ -59,7 +59,7 @@ class Libs_FileManager extends Cache_Model {
 			// Vérification des bytes écris
 			if ($nbBytesCmd != $nbBytesFile) {
 				@unlink(TR_ENGINE_DIR . "/" . $pathFile);
-				Core_Exception::setException("bad response for fwrite command. Path : " . $pathFile . ". "
+				Core_Logger::addException("bad response for fwrite command. Path : " . $pathFile . ". "
 				. "Server response : " . $nbBytesCmd . " bytes writed, " . $nbBytesFile . " bytes readed");
 			}
 			
@@ -80,7 +80,7 @@ class Libs_FileManager extends Cache_Model {
 				// Puis on renomme
 				@rename($htaccessPath . "index.html", $htaccessPath . ".htaccess");
 			}
-			Core_Exception::setException("bad response for fopen command. Path : " . $pathFile);
+			Core_Logger::addException("bad response for fopen command. Path : " . $pathFile);
 		}
 	}
 	
@@ -118,7 +118,7 @@ class Libs_FileManager extends Cache_Model {
 					
 					// Vérification de l'existence du fichier
 					if (!is_dir($currentPath)) {
-						Core_Exception::setException("bad response for mkdir|chmod command. Path : " . $currentPath);
+						Core_Logger::addException("bad response for mkdir|chmod command. Path : " . $currentPath);
 					}
 					
 					// Des petites fichiers bonus...
@@ -183,7 +183,7 @@ class Libs_FileManager extends Cache_Model {
 			}
 			
 			if (is_file(TR_ENGINE_DIR . "/" . $path)) {
-				Core_Exception::setException("bad response for fopen|unlink command. Path : " . $path);
+				Core_Logger::addException("bad response for fopen|unlink command. Path : " . $path);
 			}
 		}
 	}
@@ -233,7 +233,7 @@ class Libs_FileManager extends Cache_Model {
 			@rmdir(TR_ENGINE_DIR . "/" . $dirPath);
 			
 			if (is_dir(TR_ENGINE_DIR . "/" . $dirPath)) {
-				Core_Exception::setException("bad response for rmdir command. Path : " . $dirPath);
+				Core_Logger::addException("bad response for rmdir command. Path : " . $dirPath);
 			}
 		}
 	}
@@ -247,7 +247,7 @@ class Libs_FileManager extends Cache_Model {
 	public function touchCache($path, $updateTime = 0) {
 		if ($updateTime < 1) $updateTime = time();
 		if (!@touch(TR_ENGINE_DIR . "/" . $path, $updateTime)) {
-			Core_Exception::setException("touch error on " . $path);
+			Core_Logger::addException("touch error on " . $path);
 		}
 	}
 	

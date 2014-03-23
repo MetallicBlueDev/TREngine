@@ -45,7 +45,7 @@ class Core_ConfigsLoader {
 			if (Exec_Mailer::validMail($config["TR_ENGINE_MAIL"])) {
 				define("TR_ENGINE_MAIL", $config["TR_ENGINE_MAIL"]);
 			} else {
-				Core_Exception::setException("Default mail isn't valide");
+				Core_Logger::addException("Default mail isn't valide");
 			}
 			
 			// Vérification du statut

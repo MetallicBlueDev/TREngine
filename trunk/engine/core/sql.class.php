@@ -167,7 +167,7 @@ class Core_Sql {
 		self::$base->resetQuoted();
 		
 		// Ajout la requête au log
-		if (Core_Secure::isDebuggingMode()) Core_Exception::setSqlRequest($sql);
+		if (Core_Secure::isDebuggingMode()) Core_Logger::addSqlRequest($sql);
 		
 		// Création d'une exception si une réponse est négative (false)
 		if (self::getQueries() === false) throw new Exception("sqlReq");

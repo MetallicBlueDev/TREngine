@@ -42,7 +42,7 @@ class Core_UrlRewriting {
 		// TODO vérifie si fichier tmp de test est OK
 		// si pas OK et pas de fichier tmp pour signaler la désactivation
 		// on tente de mettre urlRewriting a 0 puis on créé le fichier tmp de désactivation
-		// si déjà fichier tmp de décastivation ajouter erreur dans Core_Exception
+		// si déjà fichier tmp de décastivation ajouter erreur dans Core_Logger
 		return false;
 	}
 	

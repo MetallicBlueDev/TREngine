@@ -36,7 +36,7 @@
 
                 <div class="cleaner"></div>
 
-                <?php echo Core_Exception::getMinorError(); ?>
+                <?php echo Core_Logger::getMessages(); ?>
 
                 <?php echo Libs_Block::getInstance()->getBlocks("top"); ?>
 

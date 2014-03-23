@@ -248,7 +248,7 @@ class Libs_Captcha {
 		if (empty($inputRobot) && $code == $this->response) {
 			return true;
 		}
-		Core_Exception::addNoteError(CAPTCHA_INVALID);
+		Core_Logger::addWarningMessage(CAPTCHA_INVALID);
 		return false;
 	}
 	
@@ -265,7 +265,7 @@ class Libs_Captcha {
 		if (is_object($object)) {
 			return $object->verif();
 		}
-		Core_Exception::addNoteError(CAPTCHA_INVALID);
+		Core_Logger::addWarningMessage(CAPTCHA_INVALID);
 		return false;
 	}
 }

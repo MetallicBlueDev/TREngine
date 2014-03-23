@@ -73,7 +73,7 @@ class Module_Connect_Index extends Module_Model {
 			
 			if (Core_Sql::affectedRows() > 0) {
 				Core_Session::getInstance()->refreshConnection();
-				Core_Exception::addInfoError(DATA_SAVED);
+				Core_Logger::addInformationMessage(DATA_SAVED);
 			}
 		}
 		if (Core_Main::isFullScreen()) {
@@ -144,7 +144,7 @@ class Module_Connect_Index extends Module_Model {
 					);
 					if (Core_Sql::affectedRows() > 0) {
 						$validName = false;
-						Core_Exception::addNoteError(ACCOUNT_PRIVATE_LOGIN_IS_ALLOWED);
+						Core_Logger::addWarningMessage(ACCOUNT_PRIVATE_LOGIN_IS_ALLOWED);
 					}
 				}
 				if ($validName) {
@@ -159,7 +159,7 @@ class Module_Connect_Index extends Module_Model {
 									$this->errorBox();
 								}
 							} else {
-								Core_Exception::addNoteError(ACCOUNT_PRIVATE_PASSWORD_INVALID_CONFIRME);
+								Core_Logger::addWarningMessage(ACCOUNT_PRIVATE_PASSWORD_INVALID_CONFIRME);
 							}
 						}
 						$values['name'] = $name;
@@ -174,10 +174,10 @@ class Module_Connect_Index extends Module_Model {
 						
 						if (Core_Sql::affectedRows() > 0) {
 							Core_Session::getInstance()->refreshConnection();
-							Core_Exception::addInfoError(DATA_SAVED);
+							Core_Logger::addInformationMessage(DATA_SAVED);
 						}
 					} else {
-						Core_Exception::addNoteError(INVALID_MAIL);
+						Core_Logger::addWarningMessage(INVALID_MAIL);
 					}
 				}
 			} else {
@@ -311,7 +311,7 @@ class Module_Connect_Index extends Module_Model {
 	private function errorBox() {
 		$errorMessages = Core_Session::getInstance()->getErrorMessage();
 		foreach($errorMessages as $errorMessage) {
-			Core_Exception::addNoteError($errorMessage);
+			Core_Logger::addWarningMessage($errorMessage);
 		}
 	}
 	
@@ -345,14 +345,14 @@ class Module_Connect_Index extends Module_Model {
 						list($login) = Core_Sql::fetchArray();
 						$ok = Exec_Mailer::sendMail(); // TODO envoyer un mail
 					}
-					if (!$ok) Core_Exception::addNoteError(FORGET_LOGIN_INVALID_MAIL_ACCOUNT);
+					if (!$ok) Core_Logger::addWarningMessage(FORGET_LOGIN_INVALID_MAIL_ACCOUNT);
 				} else {
-					Core_Exception::addNoteError(INVALID_MAIL);
+					Core_Logger::addWarningMessage(INVALID_MAIL);
 				}
 			}
 			
 			if ($ok) {
-				Core_Exception::addInfoError(FORGET_LOGIN_IS_SUBMIT_TO . " " . $mail);
+				Core_Logger::addInformationMessage(FORGET_LOGIN_IS_SUBMIT_TO . " " . $mail);
 			} else {
 				if (Core_Main::isFullScreen() || empty($mail)) {
 					Core_Loader::classLoader("Libs_Form");
@@ -397,14 +397,14 @@ class Module_Connect_Index extends Module_Model {
 							$ok = Exec_Mailer::sendMail(); // TODO envoyer un mail
 						}
 					}
-					if (!$ok) Core_Exception::addNoteError(FORGET_PASSWORD_INVALID_LOGIN_ACCOUNT);
+					if (!$ok) Core_Logger::addWarningMessage(FORGET_PASSWORD_INVALID_LOGIN_ACCOUNT);
 				} else {
 					$this->errorBox();
 				}
 			}
 			
 			if ($ok) {
-				Core_Exception::addInfoError(FORGET_PASSWORD_IS_SUBMIT_TO . " " . $mail);
+				Core_Logger::addInformationMessage(FORGET_PASSWORD_IS_SUBMIT_TO . " " . $mail);
 			} else {
 				if (Core_Main::isFullScreen() || empty($login)) {
 					Core_Loader::classLoader("Libs_Form");

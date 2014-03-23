@@ -40,7 +40,7 @@ class Core_Main {
 		Core_Loader::classLoader("Exec_Utils");
 		
 		// Charge le gestionnaire d'exception
-		Core_Loader::classLoader("Core_Exception");
+		Core_Loader::classLoader("Core_Logger");
 		
 		// Chargement du convertiseur d'entities
 		Core_Loader::classLoader("Exec_Entities");
@@ -144,7 +144,7 @@ class Core_Main {
 					echo Libs_Block::getInstance()->getBlock();
 				}
 				// Execute la commande de récupération d'erreur
-				Core_Exception::getMinorError();
+				Core_Logger::getMessages();
 				// Javascript autonome
 				Core_Html::getInstance()->selfJavascript();
 			}
@@ -152,7 +152,7 @@ class Core_Main {
 			// Validation du cache / Routine du cache
 			Core_CacheBuffer::valideCacheBuffer();
 			// Assemble tous les messages d'erreurs dans un fichier log
-			Core_Exception::logException();
+			Core_Logger::logException();
 		} else {
 			Core_BlackBan::displayBlackPage();
 		}

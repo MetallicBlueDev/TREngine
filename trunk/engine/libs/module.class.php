@@ -87,7 +87,7 @@ class Libs_Module {
 		if (!$this->isModule()) {
 			if (!empty(self::$module) || !empty(self::$page)) {
 				// Afficher une erreur 404
-				Core_Exception::addInfoError(ERROR_404);
+				Core_Logger::addInformationMessage(ERROR_404);
 			}
 			self::$module = $defaultModule;
 			self::$page = $defaultPage;
@@ -211,7 +211,7 @@ class Libs_Module {
 				$this->get();
 			}
 		} else {
-			Core_Exception::addAlertError(ERROR_ACCES_ZONE . " " . Core_Access::getModuleAccesError(self::$module));
+			Core_Logger::addErrorMessage(ERROR_ACCES_ZONE . " " . Core_Access::getModuleAccesError(self::$module));
 		}
 	}
 	
@@ -266,7 +266,7 @@ class Libs_Module {
 				$this->moduleCompiled = ob_get_contents();
 				ob_end_clean();
 			} else {
-				Core_Exception::addAlertError(ERROR_MODULE_CODE . " (" . self::$module . ")");
+				Core_Logger::addErrorMessage(ERROR_MODULE_CODE . " (" . self::$module . ")");
 			}
 		}
 	}
@@ -394,7 +394,7 @@ abstract class Module_Model {
 	 * Fonction d'affichage par défaut.
 	 */
 	public function display() {
-		Core_Exception::addAlertError(ERROR_MODULE_IMPLEMENT . ((!empty($this->module)) ? " (" . $this->module . ")" : ""));
+		Core_Logger::addErrorMessage(ERROR_MODULE_IMPLEMENT . ((!empty($this->module)) ? " (" . $this->module . ")" : ""));
 	}
 	
 	/**

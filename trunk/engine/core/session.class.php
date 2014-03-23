@@ -390,7 +390,7 @@ class Core_Session {
 			Core_CacheBuffer::writingCache(self::$sessionId . ".php", $this->getUser());
 			return true;
 		} else {
-			Core_Exception::addNoteError(ERROR_SESSION_COOKIE);
+			Core_Logger::addWarningMessage(ERROR_SESSION_COOKIE);
 			return false;
 		}
 	}

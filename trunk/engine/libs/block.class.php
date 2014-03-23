@@ -163,7 +163,7 @@ class Libs_Block {
 					$this->blocksCompiled[$block->side][] = ob_get_contents();
 					ob_end_clean();
 				} else {
-					Core_Exception::addAlertError(ERROR_BLOCK_CODE);
+					Core_Logger::addErrorMessage(ERROR_BLOCK_CODE);
 				}
 			}
 		}
@@ -377,7 +377,7 @@ abstract class Block_Model {
 	 * Affichage par défaut.
 	 */
 	public function display() {
-		Core_Exception::addAlertError(ERROR_BLOCK_IMPLEMENT . ((!empty($this->title)) ? " (" . $this->title . ")" : ""));
+		Core_Logger::addErrorMessage(ERROR_BLOCK_IMPLEMENT . ((!empty($this->title)) ? " (" . $this->title . ")" : ""));
 	}
 
 	/**

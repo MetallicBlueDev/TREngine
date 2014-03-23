@@ -153,7 +153,7 @@ class Module_Management_Setting extends Module_Model {
 				$this->updateTable("defaultSiteName", $defaultSiteName);
 				$deleteCache = true;
 			} else {
-				Core_Exception::addAlertError(SETTING_GENERAL_DEFAULT_SITE_NAME_INVALID);
+				Core_Logger::addErrorMessage(SETTING_GENERAL_DEFAULT_SITE_NAME_INVALID);
 			}
 		}
 		// Slogan du site
@@ -170,7 +170,7 @@ class Module_Management_Setting extends Module_Model {
 				$this->updateTable("defaultAdministratorMail", $defaultAdministratorMail);
 				$deleteCache = true;
 			} else {
-				Core_Exception::addAlertError(SETTING_GENERAL_DEFAULT_ADMIN_MAIL_INVALID);
+				Core_Logger::addErrorMessage(SETTING_GENERAL_DEFAULT_ADMIN_MAIL_INVALID);
 			}
 		}
 		// Langue par défaut
@@ -181,7 +181,7 @@ class Module_Management_Setting extends Module_Model {
 				$this->updateTable("defaultLanguage", $defaultLanguage);
 				$deleteCache = true;
 			} else {
-				Core_Exception::addAlertError(SETTING_GENERAL_DEFAULT_LANGUAGE_INVALID);
+				Core_Logger::addErrorMessage(SETTING_GENERAL_DEFAULT_LANGUAGE_INVALID);
 			}
 		}
 		// Template par défaut
@@ -192,7 +192,7 @@ class Module_Management_Setting extends Module_Model {
 				$this->updateTable("defaultTemplate", $defaultTemplate);
 				$deleteCache = true;
 			} else {
-				Core_Exception::addAlertError(SETTING_GENERAL_DEFAULT_TEMPLATE_INVALID);
+				Core_Logger::addErrorMessage(SETTING_GENERAL_DEFAULT_TEMPLATE_INVALID);
 			}
 		}
 		// Module par défaut
@@ -202,7 +202,7 @@ class Module_Management_Setting extends Module_Model {
 				$this->updateTable("defaultMod", $defaultMod);
 				$deleteCache = true;
 			} else {
-				Core_Exception::addAlertError(SETTING_GENERAL_DEFAULT_MODULE_INVALID);
+				Core_Logger::addErrorMessage(SETTING_GENERAL_DEFAULT_MODULE_INVALID);
 			}
 		}
 		// Description du site
@@ -228,7 +228,7 @@ class Module_Management_Setting extends Module_Model {
 		// Suppression du cache
 		if ($deleteCache) {
 			$this->deleteCache();
-			Core_Exception::addInfoError(DATA_SAVED);
+			Core_Logger::addInformationMessage(DATA_SAVED);
 		}
 		
 		if (Core_Main::isFullScreen()) {

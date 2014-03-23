@@ -38,6 +38,6 @@ if ($TR_ENGINE->newComponentDetected()) {
 
 if (Core_Secure::isDebuggingMode()) {
     Exec_Marker::stopTimer("all");
-    Core_Exception::displayException();
+    Core_Logger::displayDebugInformations();
 }
 ?>

@@ -150,7 +150,7 @@ class Libs_FtpManager extends Cache_Model {
 			|| $this->isConnected()) {
 			return true;
 		}
-		Core_Exception::setException("could not connect to host " . $this->ftp['host'] . " on port " . $this->ftp['port']);
+		Core_Logger::addException("could not connect to host " . $this->ftp['host'] . " on port " . $this->ftp['port']);
 		return false;
 	}
 	
@@ -192,7 +192,7 @@ class Libs_FtpManager extends Cache_Model {
 		if ($this->isConnected()) {
 			// Envoie de la commande au serveur
 			if (!@fwrite($this->connId, $cmd . $this->CRLF)) {
-				Core_Exception::setException("unable to send command: " . $cmd);
+				Core_Logger::addException("unable to send command: " . $cmd);
 			}
 			return $this->responseCode($expectedResponse);
 		}
@@ -230,7 +230,7 @@ class Libs_FtpManager extends Cache_Model {
 					if ($this->responseCode == $expected) return true;
 				}
 			} else {
-				Core_Exception::setException("timeout or unrecognized response while waiting for a response from the server. Full response : " . $this->response);
+				Core_Logger::addException("timeout or unrecognized response while waiting for a response from the server. Full response : " . $this->response);
 			}
 		}
 		return false;
@@ -261,7 +261,7 @@ class Libs_FtpManager extends Cache_Model {
 							$this->setTimeOut();
 							return true;
 						} else {
-							Core_Exception::setException("could not connect to host " . $this->passiveIp . " on port " . $this->passivePort
+							Core_Logger::addException("could not connect to host " . $this->passiveIp . " on port " . $this->passivePort
 							. ". Socket error number " . $$socket_error_number . " and error message: " . $socket_error_message);
 						}
 					}
@@ -326,12 +326,12 @@ class Libs_FtpManager extends Cache_Model {
 			if ($this->nativeMode) {
 				// On efface le fichier, si c'est un fichier
 				if (!@ftp_delete($this->connId, $this->getRootPath($path))) {
-					Core_Exception::setException("bad response for ftp_delete command. Path : " . $path);
+					Core_Logger::addException("bad response for ftp_delete command. Path : " . $path);
 				}
 			} else {				
 				// Envoie de la commande de suppression du fichier
 				if (!$this->setCommand("DELE " . $this->getRootPath($path), 250)) {
-					Core_Exception::setException("bad response for DELE command. Path : " . $path);
+					Core_Logger::addException("bad response for DELE command. Path : " . $path);
 				}
 			}
 		}
@@ -375,12 +375,12 @@ class Libs_FtpManager extends Cache_Model {
 		if ($timeLimit == 0 && $this->isConnected()) {
 			if ($this->nativeMode) {
 				if (!@ftp_rmdir($this->connId, $this->getRootPath($path))) {
-					Core_Exception::setException("bad response for ftp_rmdir command. Path : " . $path);
+					Core_Logger::addException("bad response for ftp_rmdir command. Path : " . $path);
 				}
 			} else {
 				// Envoie de la commande de suppression du fichier
 				if ($this->setCommand("RMD " . $this->getRootPath($path), 250)) {
-					Core_Exception::setException("bad response for RMD command. Path : " . $path);
+					Core_Logger::addException("bad response for RMD command. Path : " . $path);
 				}
 			}
 		}
@@ -465,7 +465,7 @@ class Libs_FtpManager extends Cache_Model {
 				
 				if ($rslt == -1) { // Une erreur est survenue
 					$this->nativeMode = false;
-					Core_Exception::setException("bad response for ftp_mdtm command. Path : " . $path
+					Core_Logger::addException("bad response for ftp_mdtm command. Path : " . $path
 					. " Turn off the native command.");
 					$mTime = $this->getMTime($path);
 				} else {
@@ -473,7 +473,7 @@ class Libs_FtpManager extends Cache_Model {
 				}
 			} else {
 				if (!$this->setCommand("MDTM " . $this->getRootPath($path), 250)) {
-					Core_Exception::setException("bad response for MDTM command. Path : " . $path);
+					Core_Logger::addException("bad response for MDTM command. Path : " . $path);
 				}
 				$mTime = $this->responseMsg;
 			}
@@ -558,7 +558,7 @@ class Libs_FtpManager extends Cache_Model {
 		if (@is_file("/" . $pathRebuild . "/" . $pathFound . "/engine/core/secure.class.php")) {
 			$this->ftp['root'] = $pathFound;
 		} else if (empty($this->ftp['root'])) {
-			Core_Exception::setException("Unable to configure root path.");
+			Core_Logger::addException("Unable to configure root path.");
 		}
 	}
 	
@@ -572,12 +572,12 @@ class Libs_FtpManager extends Cache_Model {
 		if ($this->isConnected()) {
 			if ($this->nativeMode) {
 				if (ftp_site($this->connId, "CHMOD " . $mode . " " . $this->getRootPath($path))) {
-					Core_Exception::setException("bad response for ftp_site CHMOD command. Path : " . $path);
+					Core_Logger::addException("bad response for ftp_site CHMOD command. Path : " . $path);
 				}
 			} else {			
 				// Envoie de la commande CHMOD
 				if ($this->setCommand("SITE CHMOD " . $mode . " " . $path, array(200, 250))) {
-					Core_Exception::setException("bad response for SITE CHMOD command. Path : " . $path);
+					Core_Logger::addException("bad response for SITE CHMOD command. Path : " . $path);
 				}
 			}
 		}
@@ -622,7 +622,7 @@ class Libs_FtpManager extends Cache_Model {
 					
 					// Ecriture du fichier
 					if (!@ftp_fget($this->connId, $buffer, $this->getRootPath($path), FTP_ASCII)) {// TODO il faut mettre une path remote ici !
-						Core_Exception::setException("bad response for ftp_fget command. Path : " .$path);
+						Core_Logger::addException("bad response for ftp_fget command. Path : " .$path);
 					}
 					@fclose($buffer);
 				} else {
@@ -648,7 +648,7 @@ class Libs_FtpManager extends Cache_Model {
 					
 					// Verification
 					if (!$this->responseCode(226)) {
-						Core_Exception::setException("bad response for STOR|APPE|fwrite command. Path : " . $path);
+						Core_Logger::addException("bad response for STOR|APPE|fwrite command. Path : " . $path);
 					}
 				}
 			}
@@ -686,11 +686,11 @@ class Libs_FtpManager extends Cache_Model {
 					if ($this->isConnected()) {	
 						if ($this->nativeMode) {
 							if (!@ftp_mkdir($this->connId, $path)) {
-								Core_Exception::setException("bad response for ftp_mkdir command. Path : " . $path);
+								Core_Logger::addException("bad response for ftp_mkdir command. Path : " . $path);
 							}
 						} else {
 							if (!$this->setCommand("MKD " . $path, 257)) {
-								Core_Exception::setException("bad response for MKD command. Path : " . $path);
+								Core_Logger::addException("bad response for MKD command. Path : " . $path);
 							}
 						}
 						// Ajuste les droits CHMOD

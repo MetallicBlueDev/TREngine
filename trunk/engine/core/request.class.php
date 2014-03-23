@@ -197,7 +197,7 @@ class Core_Request {
                 }
                 break;
             default:
-                Core_Exception::setException("Core_Request : data type unknown");
+                Core_Logger::addException("Core_Request : data type unknown");
                 $content = self::protect($content, "STRING");
                 break;
         }

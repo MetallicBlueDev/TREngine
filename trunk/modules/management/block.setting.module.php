@@ -124,14 +124,14 @@ class Module_Management_Block extends Module_Model {
 								array("block_id = '" . $row->block_id . "'")
 							);
 						}
-						Core_Exception::addInfoError(DATA_SAVED);
+						Core_Logger::addInformationMessage(DATA_SAVED);
 					}
 				}
 			} else {
-				Core_Exception::addInfoError(DATA_INVALID);
+				Core_Logger::addInformationMessage(DATA_INVALID);
 			}
 		} else {
-			Core_Exception::addInfoError(DATA_INVALID);
+			Core_Logger::addInformationMessage(DATA_INVALID);
 		}
 	}
 	
@@ -180,15 +180,15 @@ class Module_Management_Block extends Module_Model {
 									array("block_id = '" . $row->block_id . "'")
 								);
 							}
-							Core_Exception::addInfoError(DATA_SAVED);
+							Core_Logger::addInformationMessage(DATA_SAVED);
 						}
 					}
 				}
 			} else {
-				Core_Exception::addInfoError(DATA_INVALID);
+				Core_Logger::addInformationMessage(DATA_INVALID);
 			}
 		} else {
-			Core_Exception::addInfoError(DATA_INVALID);
+			Core_Logger::addInformationMessage(DATA_INVALID);
 		}
 	}
 	
@@ -268,10 +268,10 @@ class Module_Management_Block extends Module_Model {
 				Module_Management_Index::addAddButtonInToolbar("localView=tabAdd");
 				return $form->render();
 			} else {
-				Core_Exception::addInfoError(DATA_INVALID);
+				Core_Logger::addInformationMessage(DATA_INVALID);
 			}
 		} else {
-			Core_Exception::addInfoError(DATA_INVALID);
+			Core_Logger::addInformationMessage(DATA_INVALID);
 		}
 		return "";
 	}
@@ -303,12 +303,12 @@ class Module_Management_Block extends Module_Model {
 					array("block_id = '" . $blockId . "'")
 				);
 				Core_Translate::removeCache("blocks/" . $block['type']);
-				Core_Exception::addInfoError(DATA_DELETED);
+				Core_Logger::addInformationMessage(DATA_DELETED);
 			} else {
-				Core_Exception::addInfoError(DATA_INVALID);
+				Core_Logger::addInformationMessage(DATA_INVALID);
 			}
 		} else {
-			Core_Exception::addInfoError(DATA_INVALID);
+			Core_Logger::addInformationMessage(DATA_INVALID);
 		}
 	}
 
@@ -330,12 +330,12 @@ class Module_Management_Block extends Module_Model {
 					$keys,
 					$block
 				);
-				Core_Exception::addInfoError(DATA_COPIED);
+				Core_Logger::addInformationMessage(DATA_COPIED);
 			} else {
-				Core_Exception::addInfoError(DATA_INVALID);
+				Core_Logger::addInformationMessage(DATA_INVALID);
 			}
 		} else {
-			Core_Exception::addInfoError(DATA_INVALID);
+			Core_Logger::addInformationMessage(DATA_INVALID);
 		}
 	}
 
