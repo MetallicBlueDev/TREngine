@@ -1,9 +1,4 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
  * Module de base, hérité par tous les autres modules.
@@ -18,42 +13,42 @@ abstract class Libs_ModuleModel {
      *
      * @var array
      */
-    private $configs = array();
+    protected $configs = array();
 
     /**
      * Id du module
      *
      * @var int
      */
-    private $modId = 0;
+    protected $modId = 0;
 
     /**
      * Nom du module courant
      *
      * @var String
      */
-    private $module = "";
+    protected $module = "";
 
     /**
      * Nom de la page courante
      *
      * @var String
      */
-    private $page = "";
+    protected $page = "";
 
     /**
      * Rank du module
      *
      * @var int
      */
-    private $rank = "";
+    protected $rank = "";
 
     /**
-     * Nom du viewer courant
+     * Nom du viewer courant.
      *
      * @var String
      */
-    private $view = "";
+    protected $view = "";
 
     /**
      * Fonction d'affichage par défaut.
