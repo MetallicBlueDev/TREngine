@@ -106,7 +106,7 @@ class Exec_FileBuilder {
 	}
 	
 	/**
-	 * Génére un nouveau fichier de configuration pour la base de donnée 
+	 * Génére un nouveau fichier de configuration pour la base de données 
 	 * 
 	 * @param $host String
 	 * @param $user String
@@ -116,7 +116,7 @@ class Exec_FileBuilder {
 	 * @param $prefix String
 	 */
 	public static function buildDatabaseFile($host, $user, $pass, $name, $type, $prefix) {
-		// Vérification du type de base de donnée
+		// Vérification du type de base de données
 		if (Core_Loader::isCallable("Core_Sql")) {
 			$bases = Core_Sql::listBases();
 			$type = (isset($bases[$type])) ? $type : "mysql";

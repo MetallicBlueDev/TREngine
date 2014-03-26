@@ -4,8 +4,11 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
+// Chargement du parent
+Core_Loader::classLoader("Base_Model");
+
 /**
- * Gestionnaire de base de donnée MySql.
+ * Gestionnaire de base de données MySql.
  *
  * @author Sébastien Villemain
  */
@@ -27,7 +30,7 @@ class Base_Mysql extends Base_Model {
     }
 
     /**
-     * Selectionne une base de données.
+     * Sélectionne une base de données.
      *
      * @return boolean true succes
      */
@@ -81,7 +84,7 @@ class Base_Mysql extends Base_Model {
     }
 
     /**
-     * Libere la memoire du resultat
+     * Libere la mémoire du resultat
      *
      * @param $querie Resource Id
      * @return boolean
@@ -143,7 +146,7 @@ class Base_Mysql extends Base_Model {
     }
 
     /**
-     * Retourne les dernieres erreurs
+     * Retourne les dernières erreurs
      *
      * @return array
      */

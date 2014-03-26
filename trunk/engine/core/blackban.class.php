@@ -59,7 +59,7 @@ class Core_BlackBan {
 	}
 	
 	/**
-	 * Nettoyage des adresses IP périmées de la base de donnée
+	 * Nettoyage des adresses IP périmées de la base de données
 	 */
 	private static function checkOldBlackBan() {
 		$deleteOldBlackBan = false;

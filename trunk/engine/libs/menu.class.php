@@ -77,7 +77,7 @@ class Libs_Menu {
 	/**
 	 * Chargement du menu depuis la base
 	 * 
-	 * @param $sql array parametre de selection
+	 * @param $sql array parametre de Sélection
 	 */
 	private function loadFromDb($sql) {
 		Core_Sql::select(
@@ -268,7 +268,7 @@ class Libs_MenuElement {
 	 * @param $attributs array
 	 * @return String
 	 */
-	public function &getAttributs($attributs = "") {
+	public function &gétattributs($attributs = "") {
 		if (empty($attributs)) {
 			$attributs = $this->attributs;
 		}
@@ -278,7 +278,7 @@ class Libs_MenuElement {
 				$rslt .= " " . $attributsName . "=\"";
 			}
 			if (is_array($value)) {
-				$rslt .= $this->getAttributs($value);
+				$rslt .= $this->gétattributs($value);
 			} else {
 				if (!empty($rslt) && is_int($attributsName)) $rslt .= " ";
 				$rslt .= htmlspecialchars($value);			
@@ -372,7 +372,7 @@ class Libs_MenuElement {
 		// Préparation des données
 		$out = "";
 		$end = "";
-		$attributs = $this->getAttributs();
+		$attributs = $this->gétattributs();
 		$text = "<span>" . $text . "</span>";		
 		
 		// Extraction des balises de débuts et de fin et ajout du texte

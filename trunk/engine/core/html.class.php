@@ -26,7 +26,7 @@ class Core_Html {
     private $cookieTestName = "test";
 
     /**
-     * Etat du javaScript chez le client.
+     * état du javaScript chez le client.
      *
      * @var boolean
      */

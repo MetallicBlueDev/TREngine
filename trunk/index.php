@@ -41,4 +41,3 @@ if (Core_Secure::isDebuggingMode()) {
     Exec_Marker::stopTimer("all");
     Core_Logger::displayDebugInformations();
 }
-?>

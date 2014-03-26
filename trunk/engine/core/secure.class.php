@@ -17,7 +17,7 @@ if (preg_match("/secure.class.php/ie", $_SERVER['PHP_SELF'])) {
 class Core_Secure {
 
     /**
-     * Instance de cette classe..
+     * Instance de cette classe.
      *
      * @var Core_Secure
      */

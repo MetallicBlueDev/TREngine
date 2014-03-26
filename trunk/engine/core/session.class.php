@@ -291,7 +291,7 @@ class Core_Session {
     }
 
     /**
-     * Retourne les infos utilisateur via la base de donnée
+     * Retourne les infos utilisateur via la base de données
      *
      * @return array
      */

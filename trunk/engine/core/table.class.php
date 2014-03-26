@@ -5,7 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Constantes pour les noms des tables de base de donnée
+ * Constantes pour les noms des tables de base de données
  * Utilisabe via Core_Table::MaTable
  * 
  * @author Sébastien Villemain

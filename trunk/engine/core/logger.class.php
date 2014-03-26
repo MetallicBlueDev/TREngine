@@ -12,54 +12,66 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Core_Logger {
 
     /**
+     * Instance de cette classe.
+     *
+     * @var Core_Secure
+     */
+    private static $logger = null;
+
+    /**
      * Exceptions destinées au développeur.
      *
      * @var array
      */
-    private static $exceptions = array();
+    private $exceptions = array();
 
     /**
      * Erreurs destinées au client.
      *
      * @var array
      */
-    private static $Errors = array();
+    private $Errors = array();
 
     /**
      * Avertissement destinées au client.
      *
      * @var array
      */
-    private static $warnings = array();
+    private $warnings = array();
 
     /**
      * Informations destinées au client.
      *
      * @var array
      */
-    private static $informations = array();
+    private $informations = array();
 
     /**
      * Activer l'"criture dans un fichier log.
      *
      * @var boolean
      */
-    private static $writeLog = true;
+    private $writeLog = true;
 
     /**
      * Tableau contenant toutes les lignes sql envoyées.
      *
      * @var array
      */
-    private static $sqlRequest = array();
+    private $sqlRequest = array();
 
     /**
-     * Activer ou désactiver le rapport d'erreur dans un log.
-     *
-     * @param boolean $active
+     * Créé une instance de la classe si elle n'existe pas.
+     * Retourne l'instance de la classe.
+     * 
+     * @param type $canWriteLog Activer ou désactiver le rapport d'erreur dans un log.
      */
-    public static function setWriteLog($active) {
-        self::$writeLog = ($active) ? true : false;
+    public static function &getInstance($canWriteLog = false) {
+        if (self::$logger == null) {
+            self::$writeLog = $canWriteLog;
+            self::$logger = new self();
+        }
+        return self::$logger;
     }
 
     /**

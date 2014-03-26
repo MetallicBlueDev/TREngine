@@ -29,7 +29,7 @@ $lang = array(
 // Configuration du site
 "SETTING_GENERAL_SITE_SETTING_TITLE" => "Configuration du site",
 "SETTING_GENERAL_SITE_SETTING_DESCRIPTION" => "Paramétrez le site suivant les options ci-dessous",
-"SETTING_GENERAL_SITE_SETTING_SITE_STATUT" => "Etat du site",
+"SETTING_GENERAL_SITE_SETTING_SITE_STATUT" => "état du site",
 "SETTING_GENERAL_SITE_SETTING_SITE_ON" => "Site en ligne",
 "SETTING_GENERAL_SITE_SETTING_SITE_OFF" => "Site hors ligne",
 "SETTING_GENERAL_SITE_SETTING_SITE_OFF_REASON" => "Message hors ligne",
@@ -49,7 +49,7 @@ $lang = array(
 "SETTING_GENERAL_METADATA_DESCRIPTION" => "Paramétrez au mieux votre référencement",
 "SETTING_GENERAL_METADATA_DEFAULT_DESCRIPTION" => "Description du site",
 "SETTING_GENERAL_METADATA_DEFAULT_KEYWORDS" => "Mot clès par défaut du site",
-"SETTING_GENERAL_METADATA_URLREWRITING" => "Etat de la réécriture des URLs",
+"SETTING_GENERAL_METADATA_URLREWRITING" => "état de la réécriture des URLs",
 "SETTING_GENERAL_METADATA_URLREWRITING_ON" => "Réécrire les URLs",
 "SETTING_GENERAL_METADATA_URLREWRITING_OFF" => "Ne pas réécrire les URLs",
 
@@ -74,14 +74,14 @@ $lang = array(
 "SETTING_SYSTEM_FTP_SETTING_PASSWORD" => "Mot de passe",
 "SETTING_SYSTEM_FTP_SETTING_ROOT" => "Chemin par défaut vers le site (root)",
 "SETTING_SYSTEM_FTP_SETTING_TYPE" => "Type de FTP actif",
-// Base de donnée
-"SETTING_SYSTEM_DATABASE_SETTING_TITLE" => "Configuration de la base de donnée",
-"SETTING_SYSTEM_DATABASE_SETTING_DESCRIPTION" => "Paramétrez l'accès à la base de donnée",
+// base de données
+"SETTING_SYSTEM_DATABASE_SETTING_TITLE" => "Configuration de la base de données",
+"SETTING_SYSTEM_DATABASE_SETTING_DESCRIPTION" => "Paramétrez l'accès à la base de données",
 "SETTING_SYSTEM_DATABASE_SETTING_HOST" => "Adresse du la base (Host)",
 "SETTING_SYSTEM_DATABASE_SETTING_USER" => "Nom d'utilisateur",
 "SETTING_SYSTEM_DATABASE_SETTING_PASSWORD" => "Mot de passe",
-"SETTING_SYSTEM_DATABASE_SETTING_NAME" => "Nom de la base de donnée",
-"SETTING_SYSTEM_DATABASE_SETTING_TYPE" => "Type de base de donnée",
+"SETTING_SYSTEM_DATABASE_SETTING_NAME" => "Nom de la base de données",
+"SETTING_SYSTEM_DATABASE_SETTING_TYPE" => "Type de base de données",
 "SETTING_SYSTEM_DATABASE_SETTING_PREFIX" => "Préfix des tables",
 
 /** Information système **/

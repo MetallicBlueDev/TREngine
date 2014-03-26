@@ -4,7 +4,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 	new Core_Secure();
 }
 
-class Module_Management_Block extends Module_Model {
+class Module_Management_Block extends Libs_ModuleModel {
 	public function setting() {
 		Core_Loader::classLoader("Libs_Block");
 		$localView = Core_Request::getWord("localView");
@@ -104,7 +104,7 @@ class Module_Management_Block extends Module_Model {
 				$blockMove = Core_Sql::fetchArray(); // Récuperation des informations sur le block
 				
 				if ($blockMove['position'] > 0) {
-					// Requête de selection des autres blocks
+					// Requête de Sélection des autres blocks
 					Core_Sql::select(
 						Core_Table::$BLOCKS_TABLE,
 						array("block_id", "position"),
@@ -147,7 +147,7 @@ class Module_Management_Block extends Module_Model {
 			if (Core_Sql::affectedRows() > 0) { // Si le block existe
 				$blockMove = Core_Sql::fetchArray(); // Récuperation des informations sur le block
 				
-				// Selection du block le plus bas
+				// Sélection du block le plus bas
 				Core_Sql::select(
 					Core_Table::$BLOCKS_TABLE,
 					array("block_id", "position"),
@@ -160,7 +160,7 @@ class Module_Management_Block extends Module_Model {
 					$blockDown = Core_Sql::fetchArray();
 					
 					if ($blockMove['position'] < $blockDown['position']) {
-						// Requête de selection des autres blocks
+						// Requête de Sélection des autres blocks
 						Core_Sql::select(
 							Core_Table::$BLOCKS_TABLE,
 							array("block_id", "position"),

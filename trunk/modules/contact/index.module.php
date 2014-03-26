@@ -4,7 +4,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 	new Core_Secure();
 }
 
-class Module_Contact_Index extends Module_Model {
+class Module_Contact_Index extends Libs_ModuleModel {
 
 	public function display() {
 		echo "Si vous souhaitez me contacter, le plus simple est de m'envoyer un e-mail (<a href=\"mailto:villemain.s_AT_gmail.com\">gmail.com</a>)"

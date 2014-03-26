@@ -4,7 +4,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 	new Core_Secure();
 }
 
-class Module_Management_Systeminfo extends Module_Model {
+class Module_Management_Systeminfo extends Libs_ModuleModel {
 	public function setting() {
 		Core_Loader::classLoader("Libs_Tabs");
 		

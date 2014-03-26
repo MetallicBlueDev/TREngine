@@ -309,7 +309,7 @@ class Core_Main {
 	}
 	
 	/**
-	 * Etat des inscriptions au site.
+	 * état des inscriptions au site.
 	 * 
 	 * @return boolean
 	 */

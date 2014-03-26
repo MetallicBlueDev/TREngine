@@ -78,7 +78,7 @@ class Core_ConfigsLoader {
 				$configuration = Core_CacheBuffer::getCache("configs.php");
 			} else {
 				$content = "";
-				// Requête vers la base de donnée de configs
+				// Requête vers la base de données de configs
 				Core_Sql::select(Core_Table::$CONFIG_TABLE, array("name", "value"));
 				while ($row = Core_Sql::fetchArray()) {
 					$content .= Core_CacheBuffer::serializeData(array($row['name'] => $row['value']));
@@ -104,13 +104,13 @@ class Core_ConfigsLoader {
 	 */
 	private function loadSql() {
 		if (!Core_Loader::isCallable("Core_Sql")) {
-			// Chemin vers le fichier de configuration de la base de donnée
+			// Chemin vers le fichier de configuration de la base de données
 			$databasePath = TR_ENGINE_DIR . "/configs/database.inc.php";
 			
 			if (is_file($databasePath)) {
 				require($databasePath);
 				
-				// Vérification du type de base de donnée
+				// Vérification du type de base de données
 				if (!is_file(TR_ENGINE_DIR . "/engine/base/" . $db['type'] . ".class.php")) {
 					Core_Secure::getInstance()->throwException("sqlType", $db['type']);
 				}

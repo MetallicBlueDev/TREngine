@@ -9,7 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  * 
  * @author Sébastien Villemain
  */
-class Module_Management_Index extends Module_Model {
+class Module_Management_Index extends Libs_ModuleModel {
 
 	/**
 	 * Tableau contenant les boutons de la barre d'outil.
@@ -43,7 +43,7 @@ class Module_Management_Index extends Module_Model {
 			
 			// Si c'est une page valide
 			if ($settingPage || $moduleSettingPage) {
-				$pageSelected = $managePage; // Page selectionnée
+				$pageSelected = $managePage; // Page Sélectionnée
 				$managementScreen = "module_management_setting"; // Nom du template
 				
 				// Récuperation du module

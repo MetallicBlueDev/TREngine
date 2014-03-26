@@ -4,7 +4,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 	new Core_Secure();
 }
 
-class Module_Management_Setting extends Module_Model {
+class Module_Management_Setting extends Libs_ModuleModel {
 	public function setting() {
 		$localView = Core_Request::getWord("localView", "", "POST");
 		
@@ -133,7 +133,7 @@ class Module_Management_Setting extends Module_Model {
 	private function sendGeneral() {
 		$deleteCache = false;
 		
-		// Etat du site
+		// état du site
 		$defaultSiteStatut = Core_Request::getWord("defaultSiteStatut", "", "POST");
 		if (Core_Main::$coreConfig['defaultSiteStatut'] != $defaultSiteStatut) {
 			$defaultSiteStatut = ($defaultSiteStatut == "close") ? "close" : "open";
@@ -217,7 +217,7 @@ class Module_Management_Setting extends Module_Model {
 			$this->updateTable("defaultKeyWords", $defaultKeyWords);
 			$deleteCache = true;
 		}
-		// Etat de la réécriture des URLs
+		// état de la réécriture des URLs
 		$urlRewriting = Core_Request::getString("urlRewriting", "", "POST");
 		if (Core_Main::$coreConfig['urlRewriting'] != $urlRewriting) {
 			$urlRewriting = ($urlRewriting == 1) ? 1 : 0;
