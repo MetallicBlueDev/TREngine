@@ -484,8 +484,8 @@ class Core_CacheBuffer {
                 self::$protocol = new Libs_FtpManager();
             } else if (self::$modeActived['sftp']) {
                 // Démarrage du gestionnaire SFTP
-                Core_Loader::classLoader("Libs_SftpManager");
-                self::$protocol = new Libs_SftpManager();
+                Core_Loader::classLoader("Libs_CacheSftp");
+                self::$protocol = new Libs_CacheSftp();
             } else {
                 // Démarrage du gestionnaire de fichier
                 Core_Loader::classLoader("Libs_FileManager");

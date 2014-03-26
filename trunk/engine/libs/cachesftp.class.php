@@ -7,6 +7,6 @@ if (!defined("TR_ENGINE_INDEX")) {
 // Chargement du parent
 Core_Loader::classLoader("Libs_CacheModel");
 
-class Libs_SftpManager extends Libs_CacheModel {
+class Libs_CacheSftp extends Libs_CacheModel {
     // TODO classe a coder...
 }
