@@ -5,6 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 Core_Loader::classLoader("Libs_ModuleData");
+Core_Loader::classLoader("Libs_ModuleModel");
 
 /**
  * Gestionnaire de module.

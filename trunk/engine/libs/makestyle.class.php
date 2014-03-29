@@ -55,7 +55,8 @@ class Libs_MakeStyle {
         $this->debugMode = false;
         $this->setFileName($fileName);
 
-        if (empty(self::$templatesDir) || empty(self::$currentTemplate)) { // TODO si $templatesDir ou $currentTemplate est vide, le moteur plante !
+        // TODO si $templatesDir ou $currentTemplate est vide, le moteur plante !
+        if (empty(self::$templatesDir) || empty(self::$currentTemplate)) {
             Core_Secure::getInstance()->throwException("makeStyleConfig", array(
                 "templatesDir = " . self::$templatesDir,
                 "currentTemplate = " . self::$currentTemplate));
@@ -63,45 +64,49 @@ class Libs_MakeStyle {
     }
 
     /**
-     * Assigne une valeur au template
+     * Assigne une valeur au template.
      *
-     * @param $key Nome de la variable
-     * @param $value Valeur de la variable
-     * @return Libs_MakeStyle
+     * @param String $key Nome de la variable
+     * @param String or Libs_MakeStyle $value Valeur de la variable
      */
     public function assign($key, $value) {
         $this->fileVars[$key] = is_object($value) ? $value->display() : $value;
     }
 
     /**
-     * Execute et affiche le template
+     * Exécute et affiche le template.
      *
-     * @param $fileName String
+     * @param String $fileName
+     * @param boolean $debugMode Si le fichier de template debug n'est pas trouvé, le fichier debug par défaut est utilisé.
      * @return $output L'affichage finale du template
      */
-    public function display($fileName = "") {
+    public function display($fileName = "", $debugMode = false) {
+        if ($debugMode) {
+            $this->setFileName($fileName);
+
+            // Si le template ne contient pas le fichier debug
+            if (!$this->isTemplate()) {
+                // Activation du mode debug
+                $this->debugMode = true;
+            }
+        }
+
         echo $this->render($fileName);
     }
 
     /**
-     * Execute et affiche le template en mode debug
-     * Si le fichier de template debug n'est pas trouvé, le fichier debug par défaut est utilisé
+     * Retourne le rendu du template.
      *
-     * @param $fileName String
-     */
-    public function displayDebug($fileName = "") {
-        echo $this->renderDebug($fileName);
-    }
-
-    /**
-     * Retourne le rendu du template
-     *
-     * @param $fileName String
+     * @param String $fileName
      * @return String
      */
     public function &render($fileName = "") {
-        // Vérifie le template
-        $this->checkTemplate($fileName);
+        $this->setFileName($fileName);
+
+        // Vérification du template
+        if (!$this->isTemplate()) {
+            Core_Secure::getInstance()->throwException("makeStyle", $this->getTemplatePath());
+        }
 
         // Extrait les variables en local
         extract($this->fileVars);
@@ -115,26 +120,9 @@ class Libs_MakeStyle {
     }
 
     /**
-     * Active le mode debug si besoin et retourne le rendu du template
+     * Configure le dossier contenant les templates.
      *
-     * @param $fileName String
-     * @return String
-     */
-    public function renderDebug($fileName = "") {
-        $this->setFileName($fileName);
-
-        // Si le template ne contient pas le fichier debug
-        if (!$this->isTemplate()) {
-            // Activation du mode debug
-            $this->debugMode = true;
-        }
-        return $this->render($fileName);
-    }
-
-    /**
-     * Configure le dossier contenant les templates
-     *
-     * @param $templatesDir String
+     * @param String $templatesDir
      */
     public static function setTemplatesDir($templatesDir) {
         if (is_dir(TR_ENGINE_DIR . "/" . $templatesDir)) {
@@ -143,9 +131,9 @@ class Libs_MakeStyle {
     }
 
     /**
-     * Configure le dossier du template courament utilisé
+     * Configure le dossier du template courament utilisé.
      *
-     * @param $currentTemplate String
+     * @param String $currentTemplate
      */
     public static function setCurrentTemplate($currentTemplate) {
         if (is_dir(TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . $currentTemplate)) {
@@ -154,7 +142,7 @@ class Libs_MakeStyle {
     }
 
     /**
-     * Retourne le dossier vers les templates
+     * Retourne le dossier vers les templates.
      *
      * @return String
      */
@@ -163,7 +151,7 @@ class Libs_MakeStyle {
     }
 
     /**
-     * Retourne le dossier du template utilisé
+     * Retourne le dossier du template utilisé.
      *
      * @return String
      */
@@ -172,22 +160,24 @@ class Libs_MakeStyle {
     }
 
     /**
-     * Retourne la liste de templates disponibles
+     * Retourne la liste de templates disponibles.
      *
      * @return array
      */
     public static function &listTemplates() {
         $templates = array();
-        if (is_dir(TR_ENGINE_DIR . "/" . self::$templatesDir)) { // Vérification du dossier template
-            $dirs = Core_CacheBuffer::listNames(self::$templatesDir);
+
+        // Vérification du dossier template
+        if (is_dir(TR_ENGINE_DIR . "/" . self::$templatesDir)) {
+            $templates = Core_CacheBuffer::listNames(self::$templatesDir);
         }
-        return $dirs;
+        return $templates;
     }
 
     /**
      * Affecte le nom du fichier représentant le template.
      *
-     * @param $fileName String  Nom du fichier
+     * @param String $fileName Nom du fichier
      */
     private function setFileName($fileName) {
         if (!empty($fileName) && $this->fileName != $fileName) {
@@ -200,27 +190,14 @@ class Libs_MakeStyle {
     }
 
     /**
-     * Assigne le nom du template et vérifie ca validité
-     * Affiche une erreur si détecté
-     *
-     * @param $fileName String
-     */
-    private function checkTemplate($fileName) {
-        $this->setFileName($fileName);
-
-        if (!$this->isTemplate()) { // Vérification du template
-            Core_Secure::getInstance()->throwException("makeStyle", $this->getTemplatePath());
-        }
-    }
-
-    /**
      * Retourne le chemin jusqu'au template
      *
-     * @return path String
+     * @return String path
      */
     private function &getTemplatePath() {
         // Si le mode debug est activé, on utilise le fichier par défaut
         $path = "";
+
         if ($this->debugMode) {
             $path = TR_ENGINE_DIR . "/engine/libs/makestyle.debug";
         } else {
@@ -239,5 +216,3 @@ class Libs_MakeStyle {
     }
 
 }
-
-?>

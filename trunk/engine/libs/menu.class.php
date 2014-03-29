@@ -151,5 +151,3 @@ class Libs_Menu {
     }
 
 }
-
-?>
