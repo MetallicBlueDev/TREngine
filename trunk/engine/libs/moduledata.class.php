@@ -25,6 +25,12 @@ class Libs_ModuleData {
      */
     private $data = array();
 
+    /**
+     * Nouvelle information de module.
+     * 
+     * @param String $moduleName
+     * @param array $data
+     */
     public function __construct($moduleName, array $data) {
         $this->moduleName = $moduleName;
 

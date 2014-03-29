@@ -56,7 +56,7 @@ class Libs_Tabs {
     /**
      * Création d'un nouveau groupe d'onglet.
      *
-     * @param $name String Nom du groupe d'onglet
+     * @param String $name Nom du groupe d'onglet
      */
     public function __construct($name) {
         $this->name = $name;
@@ -76,8 +76,8 @@ class Libs_Tabs {
     /**
      * Ajouter un onglet et son contenu.
      *
-     * @param $title String titre de l'onglet
-     * @param $htmlContent String contenu de l'onglet
+     * @param String $title titre de l'onglet
+     * @param String $htmlContent contenu de l'onglet
      */
     public function addTab($title, $htmlContent) {
         // Id de l'onget courant
@@ -109,7 +109,7 @@ class Libs_Tabs {
     /**
      * Retourne le rendu du form complet.
      *
-     * @param $class String
+     * @param String $class
      * @return String
      */
     public function &render($class = "") {

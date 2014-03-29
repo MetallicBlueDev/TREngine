@@ -132,7 +132,7 @@ class Libs_Module {
     /**
      * Retourne les informations du module cible.
      *
-     * @param $moduleName String le nom du module, par défaut le module courant.
+     * @param String $moduleName  le nom du module, par défaut le module courant.
      * @return Libs_ModuleData informations sur le module.
      */
     public function &getInfoModule($moduleName = "") {
@@ -213,8 +213,8 @@ class Libs_Module {
     /**
      * Vérifie si le module existe.
      *
-     * @param $moduleName String
-     * @param $page String
+     * @param String $moduleName
+     * @param String $page
      * @return boolean true le module existe.
      */
     public function isModule($moduleName = "", $page = "") {
@@ -246,8 +246,8 @@ class Libs_Module {
     /**
      * Retourne un view valide sinon une chaine vide.
      *
-     * @param $pageInfo array
-     * @param $setAlternative boolean
+     * @param array $pageInfo
+     * @param boolean $setAlternative
      * @return String
      */
     private function &viewPage(array $pageInfo, $setAlternative = true) {
@@ -281,7 +281,7 @@ class Libs_Module {
     /**
      * Récupère le module.
      *
-     * @param $viewPage String
+     * @param String $viewPage
      */
     private function get() {
         $moduleClassName = "Module_" . ucfirst($this->module) . "_" . ucfirst($this->page);
@@ -313,7 +313,7 @@ class Libs_Module {
     /**
      * Vérifie que le module est installé.
      *
-     * @param $moduleName String
+     * @param String $moduleName
      * @return boolean
      */
     private function installed($moduleName = "") {

@@ -4,7 +4,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Make Style, moteur de template PHP
+ * Make Style, moteur de template PHP.
  * RAPIDE, SIMPLE ET EFFICACE !
  *
  * @author Sébastien Villemain
@@ -12,44 +12,44 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Libs_MakeStyle {
 
     /**
-     * Dossier contenant les templates
+     * Dossier contenant les templates.
      *
      * @var String
      */
     private static $templatesDir = "templates";
 
     /**
-     * Nom du dossier du template utilisé
+     * Nom du dossier du template utilisé.
      *
      * @var String
      */
     private static $currentTemplate = "default";
 
     /**
-     * Nom du fichier template
+     * Nom du fichier template.
      *
      * @var String
      */
     private $fileName = "";
 
     /**
-     * Variables assignées
+     * Variables assignées.
      *
      * @var array
      */
     private $fileVars = array();
 
     /**
-     * Indique si l'instance courante est en mode debug
+     * Indique si l'instance courante est en mode debug.
      *
      * @var boolean
      */
     private $debugMode = false;
 
     /**
-     * Nouveau template
+     * Nouveau template.
      *
-     * @param $fileName nom du template
+     * @param $fileName String nom du template
      */
     public function __construct($fileName = "") {
         $this->debugMode = false;
@@ -59,35 +59,6 @@ class Libs_MakeStyle {
             Core_Secure::getInstance()->throwException("makeStyleConfig", array(
                 "templatesDir = " . self::$templatesDir,
                 "currentTemplate = " . self::$currentTemplate));
-        }
-    }
-
-    /**
-     * Affecte le nom du fichier représentant le template.
-     *
-     * @param string $fileName Nom du fichier
-     */
-    private function setFileName($fileName = "") {
-        if (!empty($fileName) && $this->fileName != $fileName) {
-            if (substr($fileName, -4) != ".php") {
-                $fileName &= ".php";
-            }
-
-            $this->fileName = $fileName;
-        }
-    }
-
-    /**
-     * Assigne le nom du template et vérifie ca validité
-     * Affiche une erreur si détecté
-     *
-     * @param $fileName String
-     */
-    private function checkTemplate($fileName = "") {
-        $this->setFileName($fileName);
-
-        if (!$this->isTemplate()) { // Vérification du template
-            Core_Secure::getInstance()->throwException("makeStyle", $this->getTemplatePath());
         }
     }
 
@@ -161,31 +132,6 @@ class Libs_MakeStyle {
     }
 
     /**
-     * Retourne le chemin jusqu'au template
-     *
-     * @return path String
-     */
-    private function &getTemplatePath() {
-        // Si le mode debug est activé, on utilise le fichier par défaut
-        $path = "";
-        if ($this->debugMode) {
-            $path = TR_ENGINE_DIR . "/engine/libs/makestyle.debug";
-        } else {
-            $path = TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . self::$currentTemplate . "/" . $this->fileName;
-        }
-        return $path;
-    }
-
-    /**
-     * Vérifie la validité du template
-     *
-     * @return boolean true si le chemin du template est valide
-     */
-    private function isTemplate() {
-        return is_file($this->getTemplatePath());
-    }
-
-    /**
      * Configure le dossier contenant les templates
      *
      * @param $templatesDir String
@@ -236,6 +182,60 @@ class Libs_MakeStyle {
             $dirs = Core_CacheBuffer::listNames(self::$templatesDir);
         }
         return $dirs;
+    }
+
+    /**
+     * Affecte le nom du fichier représentant le template.
+     *
+     * @param $fileName String  Nom du fichier
+     */
+    private function setFileName($fileName) {
+        if (!empty($fileName) && $this->fileName != $fileName) {
+            if (substr($fileName, -4) != ".php") {
+                $fileName &= ".php";
+            }
+
+            $this->fileName = $fileName;
+        }
+    }
+
+    /**
+     * Assigne le nom du template et vérifie ca validité
+     * Affiche une erreur si détecté
+     *
+     * @param $fileName String
+     */
+    private function checkTemplate($fileName) {
+        $this->setFileName($fileName);
+
+        if (!$this->isTemplate()) { // Vérification du template
+            Core_Secure::getInstance()->throwException("makeStyle", $this->getTemplatePath());
+        }
+    }
+
+    /**
+     * Retourne le chemin jusqu'au template
+     *
+     * @return path String
+     */
+    private function &getTemplatePath() {
+        // Si le mode debug est activé, on utilise le fichier par défaut
+        $path = "";
+        if ($this->debugMode) {
+            $path = TR_ENGINE_DIR . "/engine/libs/makestyle.debug";
+        } else {
+            $path = TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . self::$currentTemplate . "/" . $this->fileName;
+        }
+        return $path;
+    }
+
+    /**
+     * Vérifie la validité du template
+     *
+     * @return boolean true si le chemin du template est valide
+     */
+    private function isTemplate() {
+        return is_file($this->getTemplatePath());
     }
 
 }

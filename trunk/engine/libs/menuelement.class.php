@@ -49,8 +49,8 @@ class Libs_MenuElement {
     /**
      * Construction de l'élément du menu
      *
-     * @param $item array - object
-     * @param $items array - object
+     * @param array - object $item 
+     * @param array - object $items
      */
     public function __construct($item, &$items) {
         // Ajout des infos de l'item
@@ -70,8 +70,8 @@ class Libs_MenuElement {
     /**
      * Ajoute un attribut à la liste.
      *
-     * @param $name String nom de l'attribut
-     * @param $value String valeur de l'attribut
+     * @param String $name nom de l'attribut
+     * @param String $value valeur de l'attribut
      */
     public function addAttributs($name, $value) {
         if (!isset($this->attributs[$name])) {
@@ -107,7 +107,7 @@ class Libs_MenuElement {
     /**
      * Supprime un attributs.
      *
-     * @param $name String nom de l'attribut
+     * @param String $name nom de l'attribut
      */
     public function removeAttributs($name = "") {
         if (!empty($name)) {
@@ -122,7 +122,7 @@ class Libs_MenuElement {
     /**
      * Mise en forme des attributs.
      *
-     * @param $attributs array
+     * @param array $attributs
      * @return String
      */
     public function &getAttributs(array $attributs = array()) {
@@ -154,7 +154,7 @@ class Libs_MenuElement {
     /**
      * Ajout de balise tag pour l'élément.
      *
-     * @param $tag String
+     * @param String $tag
      */
     public function addTags($tag) {
         $this->tags[] = $tag;
@@ -163,7 +163,7 @@ class Libs_MenuElement {
     /**
      * Mise en place du tableau route.
      *
-     * @param $route array
+     * @param array $route
      */
     public function setRoute(array $route) {
         $this->route = $route;
@@ -172,7 +172,7 @@ class Libs_MenuElement {
     /**
      * Ajoute un enfant à l'item courant.
      *
-     * @param $child Libs_MenuElement or array - object
+     * @param Libs_MenuElement or array - object $child
      * @param $items array - object
      */
     public function &addChild(&$child, &$items = array()) {
@@ -200,7 +200,7 @@ class Libs_MenuElement {
     /**
      * Supprime un enfant.
      *
-     * @param $child Libs_MenuElement or array - object
+     * @param Libs_MenuElement or array - object $child
      * @param $items array - object
      */
     public function removeChild(&$child = null, &$items = array()) {
@@ -218,9 +218,9 @@ class Libs_MenuElement {
     }
 
     /**
-     * Converti la classe en chaine de caractères.
+     * Retourne une représentation de la classe en chaine de caractères.
      *
-     * @param $callback String
+     * @param String $callback
      */
     public function &toString($callback = "") {
         $text = $this->data->content;

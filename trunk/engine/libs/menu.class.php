@@ -44,8 +44,8 @@ class Libs_Menu {
     /**
      * Construction du menu.
      *
-     * @param $identifier String Identifiant du menu par exemple "block22"
-     * @param $sql array
+     * @param String $identifier Identifiant du menu par exemple "block22"
+     * @param array $sql
      */
     public function __construct($identifier, array $sql = array()) {
         $this->identifier = $identifier;
@@ -61,59 +61,10 @@ class Libs_Menu {
     }
 
     /**
-     * Chargement du menu via le cache.
-     */
-    private function loadFromCache() {
-        $data = Core_CacheBuffer::getCache($this->identifier . ".php");
-        $this->items = unserialize(Exec_Entities::stripSlashes($data));
-    }
-
-    /**
-     * Vérifie la présence du cache.
-     *
-     * @return boolean
-     */
-    private function isCached() {
-        return (Core_CacheBuffer::cached($this->identifier . ".php"));
-    }
-
-    /**
-     * Chargement du menu depuis la base.
-     *
-     * @param $sql array parametre de Sélection
-     */
-    private function loadFromDb(array $sql) {
-        Core_Sql::select(
-        $sql['table'], $sql['select'], $sql['where'], $sql['orderby'], $sql['limit']
-        );
-
-        if (Core_Sql::affectedRows() > 0) {
-            // Création d'un buffer
-            Core_Sql::addBuffer($this->identifier, "menu_id");
-            $menus = Core_Sql::getBuffer($this->identifier);
-
-            // Ajoute et monte tout les items
-            foreach ($menus as $key => $item) {
-                // Création du chemin route
-                if ($item->parent_id > 0) {
-                    $item->route = $menus[$item->parent_id]->route;
-                }
-
-                $item->route[] = $key;
-                $this->items[$key] = new Libs_MenuElement($item, $this->items);
-            }
-
-            Core_CacheBuffer::writingCache(
-            $this->identifier . ".php", Core_CacheBuffer::serializeData(serialize($this->items))
-            );
-        }
-    }
-
-    /**
      * Ajoute un attribut à l'élément UL principal.
      *
-     * @param $name String
-     * @param $value String
+     * @param String $name
+     * @param String $value
      */
     public function addAttributs($name, $value) {
         $this->attribtus .= " " . $name . "=\"" . $value . "\"";
@@ -148,6 +99,55 @@ class Libs_Menu {
         }
         $out .= "</ul>";
         return $out;
+    }
+
+    /**
+     * Chargement du menu via le cache.
+     */
+    private function loadFromCache() {
+        $data = Core_CacheBuffer::getCache($this->identifier . ".php");
+        $this->items = unserialize(Exec_Entities::stripSlashes($data));
+    }
+
+    /**
+     * Vérifie la présence du cache.
+     *
+     * @return boolean
+     */
+    private function isCached() {
+        return (Core_CacheBuffer::cached($this->identifier . ".php"));
+    }
+
+    /**
+     * Chargement du menu depuis la base.
+     *
+     * @param array $sql parametre de Sélection
+     */
+    private function loadFromDb(array $sql) {
+        Core_Sql::select(
+        $sql['table'], $sql['select'], $sql['where'], $sql['orderby'], $sql['limit']
+        );
+
+        if (Core_Sql::affectedRows() > 0) {
+            // Création d'un buffer
+            Core_Sql::addBuffer($this->identifier, "menu_id");
+            $menus = Core_Sql::getBuffer($this->identifier);
+
+            // Ajoute et monte tout les items
+            foreach ($menus as $key => $item) {
+                // Création du chemin route
+                if ($item->parent_id > 0) {
+                    $item->route = $menus[$item->parent_id]->route;
+                }
+
+                $item->route[] = $key;
+                $this->items[$key] = new Libs_MenuElement($item, $this->items);
+            }
+
+            Core_CacheBuffer::writingCache(
+            $this->identifier . ".php", Core_CacheBuffer::serializeData(serialize($this->items))
+            );
+        }
     }
 
 }

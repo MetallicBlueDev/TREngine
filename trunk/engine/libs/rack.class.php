@@ -28,7 +28,7 @@ class Libs_Rack {
     /**
      * Nouveau tableau.
      *
-     * @param $startLine array('size in %', 'my title')
+     * @param array $startLine array('size in %', 'my title')
      */
     public function __construct(array $startLine = array()) {
         $this->firstLine = &$startLine;
@@ -37,8 +37,8 @@ class Libs_Rack {
     /**
      * Ajoute une colonne.
      *
-     * @param $size int taille en pourcentage.
-     * @param $title String titre de la colonne.
+     * @param int $size taille en pourcentage.
+     * @param String $title titre de la colonne.
      */
     public function addColumn($size, $title = "") {
         $this->firstLine[] = array(
@@ -49,7 +49,7 @@ class Libs_Rack {
     /**
      * Ajoute une ligne au tableau.
      *
-     * @param $line array tableau contenant dans l'ordre toutes les colonnes de la ligne.
+     * @param array $line tableau contenant dans l'ordre toutes les colonnes de la ligne.
      */
     public function addLine(array $line) {
         $this->lines[] = $line;
@@ -58,7 +58,7 @@ class Libs_Rack {
     /**
      * Retourne le rendu du rack complet.
      *
-     * @param $class String
+     * @param String $class
      * @return String
      */
     public function &render($class = "") {
