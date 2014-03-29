@@ -36,18 +36,37 @@ class Core_Info {
 
         /**
          * Chemin jusqu'à la racine.
+         *
+         * @var String
          */
         define("TR_ENGINE_DIR", $this->getBaseDir());
 
         /**
-         * Adresse URL complete jusqu'a TR ENGINE.
+         * Adresse URL complète jusqu'à TR ENGINE.
+         *
+         * @var String
          */
         define("TR_ENGINE_URL", $this->getUrlAddress());
 
         /**
-         * Le système d'exploitation qui execute TR ENGINE.
+         * Le système d'exploitation qui exécute TR ENGINE.
+         *
+         * @var String
          */
         define("TR_ENGINE_PHP_OS", $this->getPhpOs());
+
+        /**
+         * Numéro de version du moteur.
+         *
+         * Controle de révision
+         * xx -> version courante
+         * xx -> fonctionnalitées ajoutées
+         * xx -> bugs ou failles critiques corrigés
+         * xx -> bug mineur
+         *
+         * @var String
+         */
+        define("TR_ENGINE_VERSION", "0.5.0.0");
     }
 
     /**

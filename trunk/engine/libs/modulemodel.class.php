@@ -9,52 +9,17 @@
 abstract class Libs_ModuleModel {
 
     /**
-     * Configuration du module
+     * Informations sur le module.
      *
-     * @var array
+     * @var Libs_ModuleData
      */
-    protected $configs = array();
-
-    /**
-     * Id du module
-     *
-     * @var int
-     */
-    protected $modId = 0;
-
-    /**
-     * Nom du module courant
-     *
-     * @var String
-     */
-    protected $module = "";
-
-    /**
-     * Nom de la page courante
-     *
-     * @var String
-     */
-    protected $page = "";
-
-    /**
-     * Rank du module
-     *
-     * @var int
-     */
-    protected $rank = "";
-
-    /**
-     * Nom du viewer courant.
-     *
-     * @var String
-     */
-    protected $view = "";
+    public $data = null;
 
     /**
      * Fonction d'affichage par défaut.
      */
     public function display() {
-        Core_Logger::addErrorMessage(ERROR_MODULE_IMPLEMENT . ((!empty($this->module)) ? " (" . $this->module . ")" : ""));
+        Core_Logger::addErrorMessage(ERROR_MODULE_IMPLEMENT . ((!empty($this->data->getName())) ? " (" . $this->data->getName() . ")" : ""));
     }
 
     /**
@@ -66,7 +31,7 @@ abstract class Libs_ModuleModel {
             "name",
             "rank",
             "configs"), array(
-            Libs_Module::$module,
+            $this->data->getName(),
             0,
             "")
         );
@@ -78,11 +43,11 @@ abstract class Libs_ModuleModel {
     public function uninstall() {
         Core_Sql::delete(
         Core_Table::$MODULES_TABLE, array(
-            "mod_id = '" . $this->modId . "'")
+            "mod_id = '" . $this->data->getId() . "'")
         );
         Core_CacheBuffer::setSectionName("modules");
-        Core_CacheBuffer::removeCache(Libs_Module::$module . ".php");
-        Core_Translate::removeCache("modules/" . self::$module);
+        Core_CacheBuffer::removeCache($this->data->getName() . ".php");
+        Core_Translate::removeCache("modules/" . $this->data->getName());
     }
 
     /**

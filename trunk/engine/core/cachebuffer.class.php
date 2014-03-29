@@ -234,8 +234,9 @@ class Core_CacheBuffer {
                 }
             }
         } else {
-            if (!empty($lastKey))
+            if (!empty($lastKey)) {
                 $lastKey = "['" . $lastKey . "']";
+            }
             $content .= self::serializeVariable($lastKey, $data);
         }
         return $content;

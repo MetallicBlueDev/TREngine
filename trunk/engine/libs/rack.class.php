@@ -30,7 +30,7 @@ class Libs_Rack {
      *
      * @param $startLine array('size in %', 'my title')
      */
-    public function __construct($startLine = array()) {
+    public function __construct(array $startLine = array()) {
         $this->firstLine = &$startLine;
     }
 
@@ -51,7 +51,7 @@ class Libs_Rack {
      *
      * @param $line array tableau contenant dans l'ordre toutes les colonnes de la ligne.
      */
-    public function addLine($line) {
+    public function addLine(array $line) {
         $this->lines[] = $line;
     }
 

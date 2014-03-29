@@ -23,28 +23,21 @@ class Libs_Module {
      *
      * @var String
      */
-    public static $module = "";
+    private $module = "";
 
     /**
-     * Id du module.
+     * Nom de la page courante.
      *
-     * @var int
+     * @var String
      */
-    public static $modId = "";
+    private $page = "";
 
     /**
-     * Rank du module.
+     * Nom du viewer courant.
      *
-     * @var int
+     * @var String
      */
-    public static $rank;
-
-    /**
-     * Configuration du module.
-     *
-     * @var array
-     */
-    public static $configs = array();
+    private $view = "";
 
     /**
      * Module compilé.
@@ -54,49 +47,39 @@ class Libs_Module {
     private $moduleCompiled = "";
 
     /**
-     * Nom de la page courante.
-     *
-     * @var String
-     */
-    public static $page = "";
-
-    /**
-     * Nom du viewer courant.
-     *
-     * @var String
-     */
-    public static $view = "";
-
-    /**
-     * Tableau d'information sur les modules extrait.
+     * Tableau d'information sur les modules.
      *
      * @var array
      */
     private $modules = array();
 
-    private function __construct() {
+    private function __construct($module, $page, $view) {
+        $this->module = $module;
+        $this->page = $page;
+        $this->view = $view;
+
         $defaultModule = Core_Main::$coreConfig['defaultMod'];
         $defaultPage = "index";
         $defaultView = "display";
 
-        if (!empty(self::$module) && empty(self::$page)) {
-            self::$page = $defaultPage;
+        if (!empty($this->module) && empty($this->page)) {
+            $this->page = $defaultPage;
         }
 
         // Erreur dans la configuration
         if (!$this->isModule()) {
-            if (!empty(self::$module) || !empty(self::$page)) {
+            if (!empty($this->module) || !empty($this->page)) {
                 // Afficher une erreur 404
                 Core_Logger::addInformationMessage(ERROR_404);
             }
 
-            self::$module = $defaultModule;
-            self::$page = $defaultPage;
-            self::$view = $defaultView;
+            $this->module = $defaultModule;
+            $this->page = $defaultPage;
+            $this->view = $defaultView;
         }
 
-        if (empty(self::$view)) {
-            self::$view = $defaultView;
+        if (empty($this->view)) {
+            $this->view = $defaultView;
         }
     }
 
@@ -107,33 +90,61 @@ class Libs_Module {
      */
     public static function &getInstance($module = "", $page = "", $view = "") {
         if (self::$libsModule == null) {
-            // Injection des informations
-            self::$module = $module;
-            self::$page = $page;
-            self::$view = $view;
-            self::$libsModule = new self();
+            self::$libsModule = new self($module, $page, $view);
         }
         return self::$libsModule;
+    }
+
+    /**
+     * Retourne un tableau contenant les modules disponibles.
+     *
+     * @return array => array("value" => valeur du module, "name" => nom du module).
+     */
+    public static function &listModules() {
+        $moduleList = array();
+        $modules = Core_CacheBuffer::listNames("modules");
+
+        foreach ($modules as $module) {
+            $moduleList[] = array(
+                "value" => $module,
+                "name" => "Module " . $module);
+        }
+        return $moduleList;
+    }
+
+    /**
+     * Détermine si le module est en cours d'utilisation.
+     *
+     * @param String $moduleName
+     * @return boolean true le module est actuellement sélectionné
+     */
+    public static function isSelected($moduleName) {
+        $selected = false;
+
+        if (self::$libsModule != null) {
+            $selected = self::$libsModule->module == $moduleName;
+        }
+        return $selected;
     }
 
     /**
      * Retourne les informations du module cible.
      *
      * @param $moduleName String le nom du module, par défaut le module courant.
-     * @return array informations sur le module.
+     * @return Libs_ModuleData informations sur le module.
      */
     public function &getInfoModule($moduleName = "") {
-        $moduleInfo = array();
+        $moduleInfo = null;
 
         // Nom du module cible
-        $moduleName = empty($moduleName) ? self::$module : $moduleName;
+        $moduleName = empty($moduleName) ? $this->module : $moduleName;
 
         // Retourne le buffer
         if (isset($this->modules[$moduleName])) {
-            if (is_array($this->modules[$moduleName])) {
-                $moduleInfo = $this->modules[$moduleName];
-            }
+            $moduleInfo = $this->modules[$moduleName];
         } else {
+            $moduleData = array();
+
             // Recherche dans le cache
             Core_CacheBuffer::setSectionName("modules");
 
@@ -147,55 +158,29 @@ class Libs_Module {
                 );
 
                 if (Core_Sql::affectedRows() > 0) {
-                    $moduleInfo = Core_Sql::fetchArray();
-                    $moduleInfo['configs'] = explode("|", $moduleInfo['configs']);
-                    $configs = array();
+                    $moduleData = Core_Sql::fetchArray();
+                    $configs = explode("|", $moduleData['configs']);
 
-                    foreach ($moduleInfo['configs'] as $value) {
+                    foreach ($configs as $value) {
                         $value = explode("=", $value);
                         $configs[$value[0]] = urldecode($value[1]); // Chaine encodé en urlencode
                     }
 
-                    $moduleInfo['configs'] = $configs;
+                    $moduleData['configs'] = $configs;
 
                     // Mise en cache
-                    $content = Core_CacheBuffer::serializeData($moduleInfo);
+                    $content = Core_CacheBuffer::serializeData($moduleData);
                     Core_CacheBuffer::writingCache($moduleName . ".php", $content);
                 }
             } else {
-                $moduleInfo = Core_CacheBuffer::getCache($moduleName . ".php");
+                $moduleData = Core_CacheBuffer::getCache($moduleName . ".php");
             }
 
-            // Vérification des informations
-            if (count($moduleInfo) >= 3) {
-                // Injection des informations du module
-                if (self::$module == $moduleName) {
-                    self::$modId = $moduleInfo['mod_id'];
-                    self::$rank = $moduleInfo['rank'];
-                    self::$configs = $moduleInfo['configs'];
-                }
-                $this->modules[$moduleName] = &$moduleInfo;
-            } else {
-                // Insert la variable vide car aucune donnée
-                $moduleInfo = array();
-                $this->modules[$moduleName] = $moduleInfo;
-            }
+            // Injection des informations du module
+            $moduleInfo = new Libs_ModuleData($moduleName, &$moduleData);
+            $this->modules[$moduleName] = $moduleInfo;
         }
         return $moduleInfo;
-    }
-
-    /**
-     * Retourne le rank du module.
-     *
-     * @param $moduleName String
-     * @return int
-     */
-    public function getRank($moduleName = "") {
-        $moduleName = (empty($moduleName)) ? self::$module : $moduleName;
-
-        // Recherche des infos du module
-        $moduleInfo = $this->getInfoModule($moduleName);
-        return $moduleInfo['rank'];
     }
 
     /**
@@ -203,22 +188,57 @@ class Libs_Module {
      */
     public function launch() {
         // Vérification du niveau d'acces
-        if (($this->installed() && Core_Access::autorize(self::$module)) || (!$this->installed() && Core_Session::$userRank > 1)) {
+        if (($this->installed() && Core_Access::autorize($this->module)) || (!$this->installed() && Core_Session::$userRank > 1)) {
             if (empty($this->moduleCompiled) && $this->isModule()) {
-                Core_Translate::translate("modules/" . self::$module);
-                if (Core_Loader::isCallable("Libs_Breadcrumb")) {
-                    Libs_Breadcrumb::getInstance()->addTrail(self::$module, "?mod=" . self::$module);
+                Core_Translate::translate("modules/" . $this->module);
 
+                if (Core_Loader::isCallable("Libs_Breadcrumb")) {
+                    Libs_Breadcrumb::getInstance()->addTrail($this->module, "?mod=" . $this->module);
+
+                    // TODO A MODIFIER
                     // Juste une petite exception pour le module management qui est different
-                    if (self::$module != "management") {
-                        Libs_Breadcrumb::getInstance()->addTrail(self::$view, "?mod=" . self::$module . "&view=" . Libs_Module::$view);
+                    if ($this->module != "management") {
+                        Libs_Breadcrumb::getInstance()->addTrail($this->view, "?mod=" . $this->module . "&view=" . $this->view);
                     }
                 }
                 $this->get();
             }
         } else {
-            Core_Logger::addErrorMessage(ERROR_ACCES_ZONE . " " . Core_Access::getModuleAccesError(self::$module));
+            Core_Logger::addErrorMessage(ERROR_ACCES_ZONE . " " . Core_Access::getModuleAccesError($this->module));
         }
+    }
+
+    /**
+     * Vérifie si le module existe.
+     *
+     * @param $moduleName String
+     * @param $page String
+     * @return boolean true le module existe.
+     */
+    public function isModule($moduleName = "", $page = "") {
+        // Nom du module cible
+        $moduleName = empty($moduleName) ? $this->module : $moduleName;
+
+        // Nom de la page cible
+        $page = empty($page) ? $this->page : $page;
+
+        return is_file(TR_ENGINE_DIR . "/modules/" . $moduleName . "/" . $page . ".module.php");
+    }
+
+    /**
+     * Retourne le module compilé.
+     *
+     * @return String
+     */
+    public function &getModule($rewriteBuffer = false) {
+        $buffer = $this->moduleCompiled;
+
+        // Tamporisation de sortie
+        if (Core_Main::doUrlRewriting() && ($rewriteBuffer || Exec_Utils::inArray("rewriteBuffer", $this->getInfoModule()->getConfigs()))) {
+            $buffer = Core_UrlRewriting::rewriteBuffer($buffer);
+        }
+        // Relachement des tampon
+        return $buffer;
     }
 
     /**
@@ -228,7 +248,7 @@ class Libs_Module {
      * @param $setAlternative boolean
      * @return String
      */
-    private function viewPage($pageInfo, $setAlternative = true) {
+    private function &viewPage(array $pageInfo, $setAlternative = true) {
         $rslt = "";
         $default = "display";
 
@@ -237,11 +257,11 @@ class Libs_Module {
                 $rslt = $this->viewPage(array(
                     $pageInfo[0],
                     $default), false);
-            } else if ($pageInfo[1] == "uninstall" && (!$this->installed() || !Core_Access::moderate(self::$module))) {
+            } else if ($pageInfo[1] == "uninstall" && (!$this->installed() || !Core_Access::moderate($this->module))) {
                 $rslt = $this->viewPage(array(
                     $pageInfo[0],
                     $default), false);
-            } else if ($pageInfo[1] == "setting" && (!$this->installed() || !Core_Access::moderate(self::$module))) {
+            } else if ($pageInfo[1] == "setting" && (!$this->installed() || !Core_Access::moderate($this->module))) {
                 $rslt = $this->viewPage(array(
                     $pageInfo[0],
                     $default), false);
@@ -262,28 +282,28 @@ class Libs_Module {
      * @param $viewPage String
      */
     private function get() {
-        $moduleClassName = "Module_" . ucfirst(self::$module) . "_" . ucfirst(self::$page);
+        $moduleClassName = "Module_" . ucfirst($this->module) . "_" . ucfirst($this->page);
         $loaded = Core_Loader::classLoader($moduleClassName);
 
         if ($loaded) {
             // Retourne un view valide sinon une chaine vide
-            self::$view = $this->viewPage(array(
+            $this->view = $this->viewPage(array(
                 $moduleClassName,
-                ($this->installed()) ? self::$view : "install"), false);
+                ($this->installed()) ? $this->view : "install"), false);
 
             // Affichage du module si possible
-            if (!empty(self::$view)) {
+            if (!empty($this->view)) {
                 $this->updateCount();
                 $ModuleClass = new $moduleClassName();
-                $ModuleClass->configs = self::$configs;
+                $ModuleClass->data = $this->getInfoModule();
 
                 // Capture des données d'affichage
                 ob_start();
-                echo $ModuleClass->{self::$view}();
+                echo $ModuleClass->{$this->view}();
                 $this->moduleCompiled = ob_get_contents();
                 ob_end_clean();
             } else {
-                Core_Logger::addErrorMessage(ERROR_MODULE_CODE . " (" . self::$module . ")");
+                Core_Logger::addErrorMessage(ERROR_MODULE_CODE . " (" . $this->module . ")");
             }
         }
     }
@@ -295,10 +315,7 @@ class Libs_Module {
      * @return boolean
      */
     private function installed($moduleName = "") {
-        $moduleName = (empty($moduleName)) ? self::$module : $moduleName;
-        // Recherche des infos du module
-        $moduleInfo = $this->getInfoModule($moduleName);
-        return (isset($moduleInfo['mod_id']));
+        return (isset($this->getInfoModule($moduleName)['mod_id']));
     }
 
     /**
@@ -309,55 +326,8 @@ class Libs_Module {
         Core_Sql::update(
         Core_Table::$MODULES_TABLE, array(
             "count" => "count + 1"), array(
-            "mod_id = '" . self::$modId . "'")
+            "mod_id = '" . $this->getInfoModule()->getId() . "'")
         );
-    }
-
-    /**
-     * Vérifie si le module existe.
-     *
-     * @param $module String
-     * @param $page String
-     * @return boolean true le module existe.
-     */
-    public function isModule($module = "", $page = "") {
-        if (empty($module))
-            $module = self::$module;
-        if (empty($page))
-            $page = self::$page;
-        return is_file(TR_ENGINE_DIR . "/modules/" . $module . "/" . $page . ".module.php");
-    }
-
-    /**
-     * Retourne le module compilé.
-     *
-     * @return String
-     */
-    public function &getModule($rewriteBuffer = false) {
-        $buffer = $this->moduleCompiled;
-        // Tamporisation de sortie
-        if (Core_Main::doUrlRewriting() && ($rewriteBuffer || Exec_Utils::inArray("rewriteBuffer", self::$configs))) {
-            $buffer = Core_UrlRewriting::rewriteBuffer($buffer);
-        }
-        // Relachement des tampon
-        return $buffer;
-    }
-
-    /**
-     * Retourne un tableau contenant les modules disponibles.
-     *
-     * @return array => array("value" => valeur du module, "name" => nom du module).
-     */
-    public static function &listModules() {
-        $moduleList = array();
-        $modules = Core_CacheBuffer::listNames("modules");
-
-        foreach ($modules as $module) {
-            $moduleList[] = array(
-                "value" => $module,
-                "name" => "Module " . $module);
-        }
-        return $moduleList;
     }
 
 }

@@ -7,6 +7,10 @@ if (!defined("TR_ENGINE_INDEX")) {
 // Chargement du parent
 Core_Loader::classLoader("Libs_CacheModel");
 
+/**
+ *
+ * @author Sébastien Villemain
+ */
 class Libs_CacheSftp extends Libs_CacheModel {
     // TODO classe a coder...
 }
