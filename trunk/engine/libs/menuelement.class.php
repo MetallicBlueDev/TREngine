@@ -1,48 +1,53 @@
 <?php
+if (!defined("TR_ENGINE_INDEX")) {
+    require("../core/secure.class.php");
+    new Core_Secure();
+}
+
 /**
- * Membre d'un menu
+ * Membre d'un menu.
  *
  * @author Sébastien Villemain
  */
 class Libs_MenuElement {
 
     /**
-     * Item info du menu
+     * Item info du menu.
      *
      * @var array - object
      */
     public $data = array();
 
     /**
-     * Attributs de l'element
+     * Attributs de l'élément.
      *
      * @var array
      */
     private $attributs = array();
 
     /**
-     * Enfant de l'element
+     * Enfant de l'élément.
      *
      * @var array
      */
     private $child = array();
 
     /**
-     * Balise relative a l'element
+     * Balise relative à l'élément.
      *
      * @var array
      */
     private $tags = array();
 
     /**
-     * Tableau route
+     * Tableau route.
      *
      * @var array
      */
     private $route = array();
 
     /**
-     * Construction de l'element du menu
+     * Construction de l'élément du menu
      *
      * @param $item array - object
      * @param $items array - object
@@ -63,7 +68,7 @@ class Libs_MenuElement {
     }
 
     /**
-     * Ajoute un attribut a la liste
+     * Ajoute un attribut à la liste.
      *
      * @param $name String nom de l'attribut
      * @param $value String valeur de l'attribut
@@ -78,6 +83,7 @@ class Libs_MenuElement {
                 $this->attributs[$name] = array();
                 $this->attributs[$name][] = $firstValue;
             }
+
             // Vérification des valeurs déjà enregistrées
             if (Exec_Utils::inArray($value, $this->attributs[$name]) == false) {
                 if ($value == "parent") {
@@ -99,7 +105,7 @@ class Libs_MenuElement {
     }
 
     /**
-     * Supprime un attributs
+     * Supprime un attributs.
      *
      * @param $name String nom de l'attribut
      */
@@ -114,27 +120,30 @@ class Libs_MenuElement {
     }
 
     /**
-     * Mise en forme des attributs
+     * Mise en forme des attributs.
      *
      * @param $attributs array
      * @return String
      */
-    public function &gétattributs($attributs = "") {
-        if (empty($attributs)) {
-            $attributs = $this->attributs;
-        }
+    public function &getAttributs(array $attributs = array()) {
         $rslt = "";
+        $attributs = empty($attributs) ? $this->attributs : $attributs;
+
         foreach ($attributs as $attributsName => $value) {
             if (!is_int($attributsName)) {
                 $rslt .= " " . $attributsName . "=\"";
             }
+
             if (is_array($value)) {
-                $rslt .= $this->gétattributs($value);
+                $rslt .= $this->getAttributs($value);
             } else {
-                if (!empty($rslt) && is_int($attributsName))
+                if (!empty($rslt) && is_int($attributsName)) {
                     $rslt .= " ";
+                }
+
                 $rslt .= htmlspecialchars($value);
             }
+
             if (!is_int($attributsName)) {
                 $rslt .= "\"";
             }
@@ -143,7 +152,7 @@ class Libs_MenuElement {
     }
 
     /**
-     * Ajout de balise tag pour l'element
+     * Ajout de balise tag pour l'élément.
      *
      * @param $tag String
      */
@@ -152,16 +161,16 @@ class Libs_MenuElement {
     }
 
     /**
-     * Mise en place du tableau route
+     * Mise en place du tableau route.
      *
      * @param $route array
      */
-    public function setRoute($route) {
+    public function setRoute(array $route) {
         $this->route = $route;
     }
 
     /**
-     * Ajoute un enfant a l'item courant
+     * Ajoute un enfant à l'item courant.
      *
      * @param $child Libs_MenuElement or array - object
      * @param $items array - object
@@ -171,31 +180,36 @@ class Libs_MenuElement {
         if (!is_object($child)) {
             $child = new Libs_MenuElement($child, $items);
         }
+
         // Ajout du tag UL si c'est un nouveau parent
         if (empty($this->child)) {
             $this->addTags("ul");
         }
+
         // Ajoute la classe parent
         $this->addAttributs("class", "parent");
-        // Ajoute la classe element
+
+        // Ajoute la classe élément
         if ($this->data->parent_id > 0) {
             $this->addAttributs("class", "item" . $this->data->menu_id);
         }
+
         $this->child[$child->data->menu_id] = &$child;
     }
 
     /**
-     * Supprime un enfant
+     * Supprime un enfant.
      *
      * @param $child Libs_MenuElement or array - object
      * @param $items array - object
      */
-    public function removeChild(&$child = "", &$items = array()) {
-        if (empty($child)) {
+    public function removeChild(&$child = null, &$items = array()) {
+        if ($child === null) {
             foreach ($this->child as $key => $child) {
                 unset($this->child[$key]);
             }
         } else {
+            // TODO A REVOIR - transtypage dégoutant
             if (!is_object($child)) {
                 $child = &$items[$child->menu_id];
             }
@@ -204,13 +218,14 @@ class Libs_MenuElement {
     }
 
     /**
-     * Convertie la classe en chaine de caratère
+     * Converti la classe en chaine de caractères.
      *
-     * @param $callback
+     * @param $callback String
      */
     public function &toString($callback = "") {
-        // Mise en forme du texte via la callback
         $text = $this->data->content;
+
+        // Mise en forme du texte via la callback
         if (!empty($callback) && !empty($text)) {
             $text = Core_Loader::callback($callback, $text);
         }
@@ -224,7 +239,7 @@ class Libs_MenuElement {
         // Préparation des données
         $out = "";
         $end = "";
-        $attributs = $this->gétattributs();
+        $attributs = $this->getAttributs();
         $text = "<span>" . $text . "</span>";
 
         // Extraction des balises de débuts et de fin et ajout du texte
@@ -248,7 +263,7 @@ class Libs_MenuElement {
     }
 
     /**
-     * Destructeur propre
+     * Nettoyage à la destruction.
      */
     public function __destruct() {
         $this->item = array();

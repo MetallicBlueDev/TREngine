@@ -1,4 +1,8 @@
 <?php
+if (!defined("TR_ENGINE_INDEX")) {
+    require("../core/secure.class.php");
+    new Core_Secure();
+}
 
 /**
  * Module de base, hérité par tous les autres modules.

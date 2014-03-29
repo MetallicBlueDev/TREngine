@@ -4,6 +4,8 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
+Core_Loader::classLoader("Libs_MenuElement");
+
 /**
  * Gestionnaire de menu.
  *
@@ -12,44 +14,45 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Libs_Menu {
 
     /**
-     * Identifiant du menu
+     * Identifiant du menu.
      *
      * @var String
      */
     private $identifier = "";
 
     /**
-     * Menu complet et son arborescence
+     * Menu complet et son arborescence.
      *
      * @var array
      */
     private $items = array();
 
     /**
-     * Cles de l'element actuellement actif
+     * Clès de l'élément actuellement actif.
      *
      * @var int
      */
     private $itemActive = 0;
 
     /**
-     * Attributs de l'element principal
+     * Attributs de l'élément principal.
      *
      * @var String
      */
     private $attribtus = "";
 
     /**
-     * Construction du menu
+     * Construction du menu.
      *
-     * @param $identifier Identifiant du menu par exemple "block22"
+     * @param $identifier String Identifiant du menu par exemple "block22"
      * @param $sql array
      */
-    public function __construct($identifier, $sql = array()) {
+    public function __construct($identifier, array $sql = array()) {
         $this->identifier = $identifier;
         $this->itemActive = Core_Request::getInt("item", 0);
 
         Core_CacheBuffer::setSectionName("menus");
+
         if ($this->isCached()) {
             $this->loadFromCache();
         } else if (count($sql) >= 3) {
@@ -58,7 +61,7 @@ class Libs_Menu {
     }
 
     /**
-     * Chargement du menu via le cache
+     * Chargement du menu via le cache.
      */
     private function loadFromCache() {
         $data = Core_CacheBuffer::getCache($this->identifier . ".php");
@@ -66,7 +69,7 @@ class Libs_Menu {
     }
 
     /**
-     * Vérifie la présence du cache
+     * Vérifie la présence du cache.
      *
      * @return boolean
      */
@@ -75,11 +78,11 @@ class Libs_Menu {
     }
 
     /**
-     * Chargement du menu depuis la base
+     * Chargement du menu depuis la base.
      *
      * @param $sql array parametre de Sélection
      */
-    private function loadFromDb($sql) {
+    private function loadFromDb(array $sql) {
         Core_Sql::select(
         $sql['table'], $sql['select'], $sql['where'], $sql['orderby'], $sql['limit']
         );
@@ -95,6 +98,7 @@ class Libs_Menu {
                 if ($item->parent_id > 0) {
                     $item->route = $menus[$item->parent_id]->route;
                 }
+
                 $item->route[] = $key;
                 $this->items[$key] = new Libs_MenuElement($item, $this->items);
             }
@@ -106,7 +110,7 @@ class Libs_Menu {
     }
 
     /**
-     * Ajoute un attribut a l'element UL principal
+     * Ajoute un attribut à l'élément UL principal.
      *
      * @param $name String
      * @param $value String
@@ -116,14 +120,15 @@ class Libs_Menu {
     }
 
     /**
-     * Création d'un rendu complet du menu
+     * Création d'un rendu complet du menu.
      *
-     * @param $callback
+     * @param $callback String
      * @return String
      */
     public function &render($callback = "Block_Menu::getLine") {
-        // Creation du tableau route
         $route = array();
+
+        // Creation du tableau route
         if (is_object($this->items[$this->itemActive])) {
             $route = $this->items[$this->itemActive]->data->route;
         }
@@ -132,9 +137,11 @@ class Libs_Menu {
         $out = "<ul id=\"" . $this->identifier . "\"" . $this->attribtus . ">";
         foreach ($this->items as $key => $item) {
             if ($item->data->parent_id == 0 && Core_Access::autorize($this->identifier, $item->data->rank)) {
-                // Ajout du tableau route dans l'element principal
-                if ($key == $route[0])
+                // Ajout du tableau route dans l'élément principal
+                if ($key == $route[0]) {
                     $item->setRoute($route);
+                }
+
                 // Création du rendu
                 $out .= $this->items[$key]->toString($callback, $this->classParent, $this->classActive);
             }

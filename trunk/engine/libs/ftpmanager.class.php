@@ -354,7 +354,7 @@ class Libs_FtpManager extends Libs_CacheModel {
      * @param $timeLimit int
      */
     private function removeDirectory($path, $timeLimit) {
-        // Récuperation des elements présents
+        // Récuperation des éléments présents
         $dirList = $this->listNames($path);
 
         if (is_array($dirList) && count($dirList) > 0) {

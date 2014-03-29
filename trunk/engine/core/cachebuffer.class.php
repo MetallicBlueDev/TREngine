@@ -449,7 +449,7 @@ class Core_CacheBuffer {
 
     /**
      * Retourne le listing avec uniquement les fichiers et dossiers présent
-     * Un filtre automatique est appliqué sur les elements tel que "..", "." ou encore "index.html"...
+     * Un filtre automatique est appliqué sur les éléments tel que "..", "." ou encore "index.html"...
      *
      * @param $dirPath
      * @return array

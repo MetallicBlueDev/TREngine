@@ -350,7 +350,7 @@ class Libs_Form {
 	}
 	
 	/**
-	 * Ajouter un element dans la liste déroulante ouverte.
+	 * Ajouter un élément dans la liste déroulante ouverte.
 	 * 
 	 * @param $value String
 	 * @param $description String
