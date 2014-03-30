@@ -36,9 +36,9 @@ abstract class Libs_CacheModel {
     /**
      * Ecriture du fichier cache.
      *
-     * @param $path string
-     * @param $content string
-     * @param $overWrite boolean
+     * @param string $path
+     * @param string $content
+     * @param boolean $overWrite
      */
     public function writingCache($path, $content, $overWrite = true) {
 
@@ -47,8 +47,8 @@ abstract class Libs_CacheModel {
     /**
      * Mise à jour de la date de dernière modification.
      *
-     * @param $path string
-     * @param $updateTime int
+     * @param string $path
+     * @param int $updateTime
      */
     public function touchCache($path, $updateTime = 0) {
 
@@ -57,8 +57,8 @@ abstract class Libs_CacheModel {
     /**
      * Supprime un fichier ou supprime tout fichier trop vieux.
      *
-     * @param $dir string
-     * @param $timeLimit int
+     * @param string $dir
+     * @param int $timeLimit
      */
     public function removeCache($dir = "", $timeLimit = 0) {
 
@@ -67,7 +67,7 @@ abstract class Libs_CacheModel {
     /**
      * Retourne le listing avec uniquement les fichiers présent.
      *
-     * @param $dirPath string
+     * @param string $dirPath
      * @return array
      */
     public function &listNames($dirPath = "") {
