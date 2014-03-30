@@ -114,7 +114,7 @@ class Core_Loader {
     /**
      * Vérifie la disponibilité de la classe et de ca methode éventuellement.
      *
-     * @param $className string or Object une chaine de caractère est recommandée.
+     * @param $className string or object une chaine de caractère est recommandée.
      * @param $methodName string
      * @param $static boolean
      * @return boolean

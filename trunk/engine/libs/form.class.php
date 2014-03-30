@@ -108,31 +108,6 @@ class Libs_Form {
     }
 
     /**
-     * Ajoute d'une valeur en cache.
-     *
-     * @param string $value
-     */
-    private function addCacheVar($value) {
-        $this->cacheVars[$this->cacheVarsIndex++] = $value;
-    }
-
-    /**
-     * Retourne la dernière variable de cache.
-     *
-     * @see Core_CacheBuffer::getCache()
-     * @return string
-     */
-    private function getLastCacheVar() {
-        $rslt = "";
-
-        if (!$this->cached) {
-            // Le nom de la "vars" est relatif a Core_CacheBuffer::getCache()
-            $rslt = "$" . "vars[" . ($this->cacheVarsIndex - 1) . "]";
-        }
-        return $rslt;
-    }
-
-    /**
      * Ajoute un fieldset.
      *
      * @param string $title
@@ -259,49 +234,6 @@ class Libs_Form {
      */
     public function addInputPassword($name, $description = "", $options = "", $class = "") {
         $this->addInput($name, $name, $description, "password", "", $options, $class);
-    }
-
-    /**
-     * Ajoute un champs.
-     *
-     * @param string $id
-     * @param string $name
-     * @param string $description
-     * @param string $type
-     * @param string $defaultValue
-     * @param string $options
-     * @param string $class
-     */
-    private function addInput($id, $name, $description, $type, $defaultValue = "", $options = "", $class = "") {
-        if (empty($class)) {
-            $class = "input";
-        }
-
-        $idDescription = $this->getId($name);
-        $description = $this->getLabel($id, $description);
-        $id = $this->getId($id, "input");
-
-        $this->addCacheVar($name);
-        $name = $this->getLastCacheVar();
-
-        $this->addCacheVar($type);
-        $type = $this->getLastCacheVar();
-
-        $this->addCacheVar($class);
-        $class = $this->getLastCacheVar();
-
-        $this->addCacheVar($defaultValue);
-        $defaultValue = $this->getLastCacheVar();
-
-        $this->addCacheVar($options);
-        $options = $this->getLastCacheVar();
-
-        if (!$this->cached) {
-            $this->inputData .= "<p id=\"" . $idDescription . "\">" . $description
-            . " <input id=\"" . $id . "\" name=\"" . $name . "\" type=\"" . $type . "\""
-            . " class=\"" . $class . "\" value=\"" . $defaultValue . "\" " . $options . " />"
-            . "</p>";
-        }
     }
 
     /**
@@ -456,6 +388,50 @@ class Libs_Form {
     }
 
     /**
+     * Retourne le rendu du formulaire complet.
+     * Attention, ceci procédera a une sauvegarde et une lecture du cache.
+     *
+     * @param string $class
+     * @return string
+     */
+    public function &render($class = "") {
+        if (empty($class)) {
+            $class = "form";
+        }
+
+        $this->addCacheVar($this->urlAction);
+        $url = $this->getLastCacheVar();
+
+        $this->addCacheVar($this->name);
+        $name = $this->getLastCacheVar();
+
+        $this->addCacheVar($class);
+        $class = $this->getLastCacheVar();
+
+        $title = $this->getTitle($this->title);
+        $description = $this->getDescription($this->description);
+
+        Core_CacheBuffer::setSectionName("form");
+        $content = "";
+
+        if ($this->cached) { // Récupèration des données mise en cache
+            $content = Core_CacheBuffer::getCache($this->name . ".php", $this->cacheVars);
+        } else { // Préparation puis mise en cache
+            $data = "<form action=\"" . $url . "\" method=\"post\" id=\"form-" . $name . "\" name=\"" . $name . "\""
+            . " class=\"" . $class . "\"><fieldset>" . $title . $description . $this->inputData
+            . (($this->doFieldset) ? "</fieldset>" : "") . "</form>";
+
+            // Enregistrement dans le cache
+            $data = Core_CacheBuffer::serializeData($data);
+            Core_CacheBuffer::writingCache($this->name . ".php", $data);
+
+            // Lecture pour l'affichage
+            eval(" \$content = $data; "); // Ne pas ajouter de quote : les données sont déjà serialisées
+        }
+        return $content;
+    }
+
+    /**
      * Retourne le code HTML pour le label.
      *
      * @param string $name
@@ -536,47 +512,71 @@ class Libs_Form {
     }
 
     /**
-     * Retourne le rendu du formulaire complet.
-     * Attention, ceci procédera a une sauvegarde et une lecture du cache.
+     * Ajoute un champs.
      *
+     * @param string $id
+     * @param string $name
+     * @param string $description
+     * @param string $type
+     * @param string $defaultValue
+     * @param string $options
      * @param string $class
-     * @return string
      */
-    public function &render($class = "") {
+    private function addInput($id, $name, $description, $type, $defaultValue = "", $options = "", $class = "") {
         if (empty($class)) {
-            $class = "form";
+            $class = "input";
         }
 
-        $this->addCacheVar($this->urlAction);
-        $url = $this->getLastCacheVar();
+        $idDescription = $this->getId($name);
+        $description = $this->getLabel($id, $description);
+        $id = $this->getId($id, "input");
 
-        $this->addCacheVar($this->name);
+        $this->addCacheVar($name);
         $name = $this->getLastCacheVar();
+
+        $this->addCacheVar($type);
+        $type = $this->getLastCacheVar();
 
         $this->addCacheVar($class);
         $class = $this->getLastCacheVar();
 
-        $title = $this->getTitle($this->title);
-        $description = $this->getDescription($this->description);
+        $this->addCacheVar($defaultValue);
+        $defaultValue = $this->getLastCacheVar();
 
-        Core_CacheBuffer::setSectionName("form");
-        $content = "";
+        $this->addCacheVar($options);
+        $options = $this->getLastCacheVar();
 
-        if ($this->cached) { // Récupèration des données mise en cache
-            $content = Core_CacheBuffer::getCache($this->name . ".php", $this->cacheVars);
-        } else { // Préparation puis mise en cache
-            $data = "<form action=\"" . $url . "\" method=\"post\" id=\"form-" . $name . "\" name=\"" . $name . "\""
-            . " class=\"" . $class . "\"><fieldset>" . $title . $description . $this->inputData
-            . (($this->doFieldset) ? "</fieldset>" : "") . "</form>";
-
-            // Enregistrement dans le cache
-            $data = Core_CacheBuffer::serializeData($data);
-            Core_CacheBuffer::writingCache($this->name . ".php", $data);
-
-            // Lecture pour l'affichage
-            eval(" \$content = $data; "); // Ne pas ajouter de quote : les données sont déjà serialisées
+        if (!$this->cached) {
+            $this->inputData .= "<p id=\"" . $idDescription . "\">" . $description
+            . " <input id=\"" . $id . "\" name=\"" . $name . "\" type=\"" . $type . "\""
+            . " class=\"" . $class . "\" value=\"" . $defaultValue . "\" " . $options . " />"
+            . "</p>";
         }
-        return $content;
+    }
+
+    /**
+     * Ajoute d'une valeur en cache.
+     *
+     * @param string $value
+     */
+    private function addCacheVar($value) {
+        $this->cacheVars[$this->cacheVarsIndex++] = $value;
+    }
+
+    /**
+     * Retourne la dernière variable de cache.
+     *
+     * @see Core_CacheBuffer::getCache()
+     * @return string
+     */
+    private function getLastCacheVar() {
+        $rslt = "";
+
+        if (!$this->cached) {
+            // Le nom de la "vars" est relatif a Core_CacheBuffer::getCache()
+            $rslt = "$" . "vars[" . ($this->cacheVarsIndex - 1) . "]";
+        }
+        return $rslt;
     }
 
 }

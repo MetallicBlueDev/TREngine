@@ -437,8 +437,8 @@ abstract class Base_Model {
     /**
      * Conversion des valeurs dite PHP en valeurs semblable SQL
      *
-     * @param $value Object
-     * @return Object
+     * @param $value object
+     * @return object
      */
     protected function &converValue($value) {
         if (is_array($value)) {
@@ -463,8 +463,8 @@ abstract class Base_Model {
     /**
      * Conversion des clès.
      *
-     * @param $key Object
-     * @return Object
+     * @param $key object
+     * @return object
      */
     protected function &converKey($key) {
         if (is_array($key)) {

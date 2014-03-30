@@ -19,9 +19,9 @@ class Core_Request {
      *
      * @param $name string Nom de la variable
      * @param $type string Type de donnée
-     * @param $default Object Donnée par défaut
+     * @param $default object Donnée par défaut
      * @param $hash string Provenance de la variable
-     * @return Object
+     * @return object
      */
     private static function &getVars($name, $type, $default = "", $hash = "default") {
         $rslt = null;
@@ -165,9 +165,9 @@ class Core_Request {
     /**
      * Vérifie le contenu des données importées.
      *
-     * @param $content Object
+     * @param $content object
      * @param $type string
-     * @return Object
+     * @return object
      */
     private static function &protect($content, $type) {
         $type = strtoupper($type);

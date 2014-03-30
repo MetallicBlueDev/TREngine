@@ -27,7 +27,7 @@ class Libs_ModuleData {
 
     /**
      * Nouvelle information de module.
-     * 
+     *
      * @param string $moduleName
      * @param array $data
      */
@@ -92,6 +92,7 @@ class Libs_ModuleData {
                 $value = $this->data['configs'][$key];
             }
         }
+
         if ($value === null || empty($value)) {
             $value = $defaultValue;
         }
