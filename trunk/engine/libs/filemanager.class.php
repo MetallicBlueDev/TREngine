@@ -11,7 +11,7 @@ Core_Loader::classLoader("Libs_CacheModel");
  *
  * @author Sébastien Villemain
  */
-class Libs_FileManager extends Libs_CacheModel {
+class Libs_CacheFile extends Libs_CacheModel {
 
     /**
      * Ecriture du ficher cache

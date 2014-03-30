@@ -489,15 +489,15 @@ class Core_CacheBuffer {
                 self::$protocol = new Libs_CacheSftp();
             } else {
                 // Démarrage du gestionnaire de fichier
-                Core_Loader::classLoader("Libs_FileManager");
-                self::$protocol = new Libs_FileManager();
+                Core_Loader::classLoader("Libs_CacheFile");
+                self::$protocol = new Libs_CacheFile();
             }
 
             // Si il y a un souci, on démarre par défaut le gestionnaire de fichier
             if (!self::$protocol->isReady()) {
                 // Démarrage du gestionnaire de fichier
-                Core_Loader::classLoader("Libs_FileManager");
-                self::$protocol = new Libs_FileManager();
+                Core_Loader::classLoader("Libs_CacheFile");
+                self::$protocol = new Libs_CacheFile();
             }
         }
         return self::$protocol;
