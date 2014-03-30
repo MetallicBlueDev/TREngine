@@ -14,11 +14,11 @@ class Exec_FileBuilder {
 	/**
 	 * Génére un nouveau fichier de configuration générale
 	 * 
-	 * @param $TR_ENGINE_MAIL String
-	 * @param $TR_ENGINE_STATUT String
+	 * @param $TR_ENGINE_MAIL string
+	 * @param $TR_ENGINE_STATUT string
 	 * @param $cacheTimeLimit int
-	 * @param $cookiePrefix String
-	 * @param $cryptKey String
+	 * @param $cookiePrefix string
+	 * @param $cryptKey string
 	 */
 	public static function buildConfigFile($TR_ENGINE_MAIL, $TR_ENGINE_STATUT, $cacheTimeLimit, $cookiePrefix, $cryptKey) {
 		// Vérification du mail
@@ -58,12 +58,12 @@ class Exec_FileBuilder {
 	/**
 	 * Génére un nouveau fichier de configuration FTP 
 	 * 
-	 * @param $host String
+	 * @param $host string
 	 * @param $port int
-	 * @param $user String
-	 * @param $pass String
-	 * @param $root String
-	 * @param $type String
+	 * @param $user string
+	 * @param $pass string
+	 * @param $root string
+	 * @param $type string
 	 */
 	public static function buildFtpFile($host, $port, $user, $pass, $root, $type) {
 		// Vérification du port
@@ -108,12 +108,12 @@ class Exec_FileBuilder {
 	/**
 	 * Génére un nouveau fichier de configuration pour la base de données 
 	 * 
-	 * @param $host String
-	 * @param $user String
-	 * @param $pass String
-	 * @param $name String
-	 * @param $type String
-	 * @param $prefix String
+	 * @param $host string
+	 * @param $user string
+	 * @param $pass string
+	 * @param $name string
+	 * @param $type string
+	 * @param $prefix string
 	 */
 	public static function buildDatabaseFile($host, $user, $pass, $name, $type, $prefix) {
 		// Vérification du type de base de données

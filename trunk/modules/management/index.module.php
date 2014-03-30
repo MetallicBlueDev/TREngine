@@ -121,8 +121,8 @@ class Module_Management_Index extends Libs_ModuleModel {
 	/**
 	 * Retourne le nom littérale de la page.
 	 * 
-	 * @param $page String
-	 * @return String
+	 * @param $page string
+	 * @return string
 	 */
 	private static function &getManagementPageName($page) {
 		$name = defined("SETTING_TITLE_" . strtoupper($page)) ? constant("SETTING_TITLE_" . strtoupper($page)) : ucfirst($page);
@@ -132,9 +132,9 @@ class Module_Management_Index extends Libs_ModuleModel {
 	/**
 	 * Ajout d'un bouton a la barre d'outil.
 	 * 
-	 * @param String $name
-	 * @param String $description
-	 * @param String $link
+	 * @param string $name
+	 * @param string $description
+	 * @param string $link
 	 */
 	private static function addButtonInToolbar($name, $description, $link) {
 		self::$toolbar[] = array(

@@ -14,7 +14,7 @@ class Block_Menu extends Block_Model {
     /**
      * TAG pour les options
      *
-     * @var String
+     * @var string
      */
     private static $optionsTag = "__OPTIONS__";
 
@@ -56,8 +56,8 @@ class Block_Menu extends Block_Model {
      * Exemple :
      * Link example__OPTIONS__B.I.U.A.?mod=home__OPTIONS__
      *
-     * @param $line String
-     * @return String
+     * @param $line string
+     * @return string
      */
     public static function getLine($line) {
         $outPut = "";
@@ -126,9 +126,9 @@ class Block_Menu extends Block_Model {
     /**
      * Retourne une ligne avec les TAGS
      *
-     * @param $text String Texte du menu
+     * @param $text string Texte du menu
      * @param $options array Options choisis
-     * @return String
+     * @return string
      */
     public static function setLine($text, $options = array()) {
         $optionsString = "";

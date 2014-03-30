@@ -14,21 +14,21 @@ class Libs_MakeStyle {
     /**
      * Dossier contenant les templates.
      *
-     * @var String
+     * @var string
      */
     private static $templatesDir = "templates";
 
     /**
      * Nom du dossier du template utilisé.
      *
-     * @var String
+     * @var string
      */
     private static $currentTemplate = "default";
 
     /**
      * Nom du fichier template.
      *
-     * @var String
+     * @var string
      */
     private $fileName = "";
 
@@ -49,7 +49,7 @@ class Libs_MakeStyle {
     /**
      * Nouveau template.
      *
-     * @param $fileName String nom du template
+     * @param $fileName string nom du template
      */
     public function __construct($fileName = "") {
         $this->debugMode = false;
@@ -66,8 +66,8 @@ class Libs_MakeStyle {
     /**
      * Assigne une valeur au template.
      *
-     * @param String $key Nome de la variable
-     * @param String or Libs_MakeStyle $value Valeur de la variable
+     * @param string $key Nome de la variable
+     * @param string or Libs_MakeStyle $value Valeur de la variable
      */
     public function assign($key, $value) {
         $this->fileVars[$key] = is_object($value) ? $value->display() : $value;
@@ -76,7 +76,7 @@ class Libs_MakeStyle {
     /**
      * Exécute et affiche le template.
      *
-     * @param String $fileName
+     * @param string $fileName
      * @param boolean $debugMode Si le fichier de template debug n'est pas trouvé, le fichier debug par défaut est utilisé.
      * @return $output L'affichage finale du template
      */
@@ -97,8 +97,8 @@ class Libs_MakeStyle {
     /**
      * Retourne le rendu du template.
      *
-     * @param String $fileName
-     * @return String
+     * @param string $fileName
+     * @return string
      */
     public function &render($fileName = "") {
         $this->setFileName($fileName);
@@ -122,7 +122,7 @@ class Libs_MakeStyle {
     /**
      * Configure le dossier contenant les templates.
      *
-     * @param String $templatesDir
+     * @param string $templatesDir
      */
     public static function setTemplatesDir($templatesDir) {
         if (is_dir(TR_ENGINE_DIR . "/" . $templatesDir)) {
@@ -133,7 +133,7 @@ class Libs_MakeStyle {
     /**
      * Configure le dossier du template courament utilisé.
      *
-     * @param String $currentTemplate
+     * @param string $currentTemplate
      */
     public static function setCurrentTemplate($currentTemplate) {
         if (is_dir(TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . $currentTemplate)) {
@@ -144,7 +144,7 @@ class Libs_MakeStyle {
     /**
      * Retourne le dossier vers les templates.
      *
-     * @return String
+     * @return string
      */
     public static function &getTemplatesDir() {
         return self::$templatesDir;
@@ -153,7 +153,7 @@ class Libs_MakeStyle {
     /**
      * Retourne le dossier du template utilisé.
      *
-     * @return String
+     * @return string
      */
     public static function &getCurrentTemplate() {
         return self::$currentTemplate;
@@ -177,7 +177,7 @@ class Libs_MakeStyle {
     /**
      * Affecte le nom du fichier représentant le template.
      *
-     * @param String $fileName Nom du fichier
+     * @param string $fileName Nom du fichier
      */
     private function setFileName($fileName) {
         if (!empty($fileName) && $this->fileName != $fileName) {
@@ -192,7 +192,7 @@ class Libs_MakeStyle {
     /**
      * Retourne le chemin jusqu'au template
      *
-     * @return String path
+     * @return string path
      */
     private function &getTemplatePath() {
         // Si le mode debug est activé, on utilise le fichier par défaut

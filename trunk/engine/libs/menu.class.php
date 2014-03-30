@@ -16,7 +16,7 @@ class Libs_Menu {
     /**
      * Identifiant du menu.
      *
-     * @var String
+     * @var string
      */
     private $identifier = "";
 
@@ -37,14 +37,14 @@ class Libs_Menu {
     /**
      * Attributs de l'élément principal.
      *
-     * @var String
+     * @var string
      */
     private $attribtus = "";
 
     /**
      * Construction du menu.
      *
-     * @param String $identifier Identifiant du menu par exemple "block22"
+     * @param string $identifier Identifiant du menu par exemple "block22"
      * @param array $sql
      */
     public function __construct($identifier, array $sql = array()) {
@@ -63,8 +63,8 @@ class Libs_Menu {
     /**
      * Ajoute un attribut à l'élément UL principal.
      *
-     * @param String $name
-     * @param String $value
+     * @param string $name
+     * @param string $value
      */
     public function addAttributs($name, $value) {
         $this->attribtus .= " " . $name . "=\"" . $value . "\"";
@@ -73,8 +73,8 @@ class Libs_Menu {
     /**
      * Création d'un rendu complet du menu.
      *
-     * @param $callback String
-     * @return String
+     * @param $callback string
+     * @return string
      */
     public function &render($callback = "Block_Menu::getLine") {
         $route = array();

@@ -88,7 +88,7 @@ class Core_Logger {
     /**
      * Ajoute une requête sql.
      *
-     * @param $sql String
+     * @param $sql string
      */
     public static function addSqlRequest($sql) {
         self::$sqlRequest[] = $sql;
@@ -97,7 +97,7 @@ class Core_Logger {
     /**
      * Ajoute une alerte.
      *
-     * @param $msg String
+     * @param $msg string
      */
     public static function addErrorMessage($msg) {
         self::addMessage($msg, "alert");
@@ -106,7 +106,7 @@ class Core_Logger {
     /**
      * Ajoute un avertissement.
      *
-     * @param $msg String
+     * @param $msg string
      */
     public static function addWarningMessage($msg) {
         self::addMessage($msg, "note");
@@ -115,7 +115,7 @@ class Core_Logger {
     /**
      * Ajoute une information.
      *
-     * @param $msg String
+     * @param $msg string
      */
     public static function addInformationMessage($msg) {
         self::addMessage($msg, "info");
@@ -124,8 +124,8 @@ class Core_Logger {
     /**
      * Ajoute un nouveau message.
      *
-     * @param $msg String
-     * @param $type String le type d'erreur (alert / note / info)
+     * @param $msg string
+     * @param $type string le type d'erreur (alert / note / info)
      */
     private static function addMessage($msg, $type = "alert") {
         switch ($type) {
@@ -147,7 +147,7 @@ class Core_Logger {
     /**
      * Retourne les messages pré-formatées.
      *
-     * @return String
+     * @return string
      */
     public static function &getMessages() {
         $rslt = "";
@@ -208,7 +208,7 @@ class Core_Logger {
      * Capture les exceptions en chaine de caractères.
      *
      * @param $var array
-     * @return String
+     * @return string
      */
     private static function &serializeData($var) {
         $content = "";

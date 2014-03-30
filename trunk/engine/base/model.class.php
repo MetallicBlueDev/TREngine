@@ -28,21 +28,21 @@ abstract class Base_Model {
     /**
      * ID de la connexion.
      *
-     * @var String
+     * @var string
      */
     protected $connId = false;
 
     /**
      * Dernier resultat de la dernière requête SQL.
      *
-     * @var String ressources ID.
+     * @var string ressources ID.
      */
     protected $queries = "";
 
     /**
      * Dernière requête SQL.
      *
-     * @var String
+     * @var string
      */
     protected $sql = "";
 
@@ -56,14 +56,14 @@ abstract class Base_Model {
     /**
      * Quote pour les objects, champs...
      *
-     * @var String
+     * @var string
      */
     protected $quoteKey = "`";
 
     /**
      * Quote pour les valeurs uniquement.
      *
-     * @var String
+     * @var string
      */
     protected $quoteValue = "'";
 
@@ -133,10 +133,10 @@ abstract class Base_Model {
     /**
      * Supprime des informations.
      *
-     * @param $table String Nom de la table
+     * @param $table string Nom de la table
      * @param $where array
      * @param $like array
-     * @param $limit String
+     * @param $limit string
      */
     public function delete($table, $where = array(), $like = array(), $limit = false) {
         // Nom complet de la table
@@ -185,7 +185,7 @@ abstract class Base_Model {
     /**
      * Insère une ou des valeurs dans une table.
      *
-     * @param $table String Nom de la table
+     * @param $table string Nom de la table
      * @param $keys array
      * @param $values array
      */
@@ -229,11 +229,11 @@ abstract class Base_Model {
     /**
      * Sélection d'information.
      *
-     * @param $table String
+     * @param $table string
      * @param $values array
      * @param $where array
      * @param $orderby array
-     * @param $limit String
+     * @param $limit string
      */
     public function select($table, $values, $where = array(), $orderby = array(), $limit = false) {
         // Nom complet de la table
@@ -269,7 +269,7 @@ abstract class Base_Model {
      * @param $values array) Sous la forme array("keyName" => "newValue")
      * @param $where array
      * @param $orderby array
-     * @param $limit String
+     * @param $limit string
      */
     public function update($table, $values, $where, $orderby = array(), $limit = false) {
         // Nom complet de la table
@@ -309,7 +309,7 @@ abstract class Base_Model {
     /**
      * Retourne la dernière requête sql.
      *
-     * @return String
+     * @return string
      */
     public function getSql() {
         return $this->sql;
@@ -337,8 +337,8 @@ abstract class Base_Model {
     /**
      * Ajoute le dernier résultat dans le buffer.
      *
-     * @param $name String
-     * @param $key String clé à utiliser
+     * @param $name string
+     * @param $key string clé à utiliser
      */
     public function addBuffer($name, $key) {
         if (!isset($this->buffer[$name])) {
@@ -356,7 +356,7 @@ abstract class Base_Model {
     /**
      * Retourne le buffer courant puis l'incrémente.
      *
-     * @param $name String
+     * @param $name string
      * @return array - object
      */
     public function &fetchBuffer($name) {
@@ -368,7 +368,7 @@ abstract class Base_Model {
     /**
      * Retourne le buffer complet demandé.
      *
-     * @param $name String
+     * @param $name string
      * @return array - object
      */
     public function getBuffer($name) {
@@ -398,8 +398,8 @@ abstract class Base_Model {
     /**
      * Quote les identifiants et les valeurs.
      *
-     * @param $s String
-     * @return String
+     * @param $s string
+     * @return string
      */
     protected function &addQuote($s, $isValue = false) {
         // Ne pas quoter les champs avec la notation avec les point
@@ -417,7 +417,7 @@ abstract class Base_Model {
     /**
      * Marqué une cles et/ou une valeur comme déjà quoté.
      *
-     * @param $key String
+     * @param $key string
      */
     public function addQuoted($key, $value = 1) {
         if (!empty($key)) {
@@ -483,8 +483,8 @@ abstract class Base_Model {
     /**
      * Retourne le bon espacement dans une string.
      *
-     * @param $str String
-     * @return String
+     * @param $str string
+     * @return string
      */
     protected function &converEscapeString($str) {
         if (function_exists("mysql_real_escape_string") && is_resource($this->connId)) {
@@ -500,7 +500,7 @@ abstract class Base_Model {
     /**
      * Retourne la version de la base.
      *
-     * @return String
+     * @return string
      */
     public function getVersion() {
         return "?";
@@ -509,7 +509,7 @@ abstract class Base_Model {
     /**
      * Retourne le type d'encodage de la base de données.
      *
-     * @return String
+     * @return string
      */
     public function getCollation() {
         $this->query("SHOW FULL COLUMNS FROM " . $this->getTableName(Core_Table::$CONFIG_TABLE));
@@ -520,7 +520,7 @@ abstract class Base_Model {
     /**
      * Retourne le nom de la table avec le préfixage.
      *
-     * @param String
+     * @param string
      */
     public function getTableName($table) {
         return $this->database['prefix'] . "_" . $table;

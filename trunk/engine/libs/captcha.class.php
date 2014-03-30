@@ -35,21 +35,21 @@ class Libs_Captcha {
 	/**
 	 * Réponse correcte a donner
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	private $response = "";
 	
 	/**
 	 * Nom du champs input anti robot
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	private $inputRobotName = "";
 	
 	/**
 	 * Question posé lié a la réponse courante
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	private $question = "";
 	
@@ -203,7 +203,7 @@ class Libs_Captcha {
 	 * Creation du captcha
 	 * Captcha créée dans l'objet valide sinon retourne en code HTML
 	 * 
-	 * @return String le code HTML a incruster dans la page ou une chaine vide si un objet valide est utilisé
+	 * @return string le code HTML a incruster dans la page ou une chaine vide si un objet valide est utilisé
 	 */
 	public function &create() {
 		$rslt = "";

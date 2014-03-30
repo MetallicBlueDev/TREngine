@@ -61,7 +61,7 @@ class Core_CacheBuffer {
     /**
      * Nom de la section courante
      *
-     * @var String
+     * @var string
      */
     private static $sectionName = "";
 
@@ -99,7 +99,7 @@ class Core_CacheBuffer {
     /**
      * Retourne le chemin de la section courante
      *
-     * @return String
+     * @return string
      */
     private static function &getSectionPath() {
         // Si pas de section, on met par défaut
@@ -112,7 +112,7 @@ class Core_CacheBuffer {
     /**
      * Nom de la section courante
      *
-     * @return String Section courante
+     * @return string Section courante
      */
     public static function &getSectionName() {
         return self::$sectionName;
@@ -218,9 +218,9 @@ class Core_CacheBuffer {
     /**
      * Serialize la variable en chaine de caractères pour une mise en cache
      *
-     * @param String $data ($data = "data") or array $data ($data = array("name" => "data"))
-     * @param String $lastKey clès supplementaire
-     * @return String
+     * @param string $data ($data = "data") or array $data ($data = array("name" => "data"))
+     * @param string $lastKey clès supplementaire
+     * @return string
      */
     public static function &serializeData($data, $lastKey = "") {
         $content = "";
@@ -245,9 +245,9 @@ class Core_CacheBuffer {
     /**
      * Serialize la variable en chaine de caractères pour une mise en cache
      *
-     * @param String $key
-     * @param String $value
-     * @return String
+     * @param string $key
+     * @param string $value
+     * @return string
      */
     private static function &serializeVariable($key, $value) {
         $content .= "$" . self::getSectionName() . $key . " = \"" . Exec_Entities::addSlashes($value) . "\"; ";
@@ -283,8 +283,8 @@ class Core_CacheBuffer {
     /**
      * Encode un chemin
      *
-     * @param String $path
-     * @return String
+     * @param string $path
+     * @return string
      */
     private static function &encodePath($path) {
         return $path;
@@ -293,8 +293,8 @@ class Core_CacheBuffer {
     /**
      * Décode un chemin
      *
-     * @param String $encodePath
-     * @return String
+     * @param string $encodePath
+     * @return string
      */
     private static function &decodePath($encodePath) {
         return $encodePath;
@@ -304,7 +304,7 @@ class Core_CacheBuffer {
      * Retourne le chemin complet vers le fichier cache
      *
      * @param $path chemin du fichier
-     * @return String chemin complet
+     * @return string chemin complet
      */
     public static function &getPath($path) {
         $path = TR_ENGINE_DIR . "/" . self::getSectionPath() . "/" . $path;
@@ -316,7 +316,7 @@ class Core_CacheBuffer {
      *
      * @param $path Chemin du cache
      * @param $vars array tableau supplementaire contenant des variables pour résoudre les problèmes de visiblilité (par exemple)
-     * @return String
+     * @return string
      */
     public static function &getCache($path, $vars = array()) {
         // Réglage avant capture
@@ -377,7 +377,7 @@ class Core_CacheBuffer {
      *
      * @param $pathFile
      * @param $content
-     * @return String $content
+     * @return string $content
      */
     public static function &getHeader($pathFile, $content) {
         $ext = substr($pathFile, -3);

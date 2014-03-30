@@ -4,7 +4,6 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
-// Chargement du parent
 Core_Loader::classLoader("Libs_CacheModel");
 
 /**
@@ -17,8 +16,8 @@ class Libs_FileManager extends Libs_CacheModel {
     /**
      * Ecriture du ficher cache
      *
-     * @param $pathFile String chemin vers le fichier cache
-     * @param $content String contenu du fichier cache
+     * @param $pathFile string chemin vers le fichier cache
+     * @param $content string contenu du fichier cache
      * @param $overWrite boolean écrasement du fichier
      */
     public function writingCache($path, $content, $overWrite = true) {
@@ -37,8 +36,8 @@ class Libs_FileManager extends Libs_CacheModel {
     /**
      * Ecriture du fichier cache
      *
-     * @param $pathFile String chemin vers le fichier cache
-     * @param $content String contenu du fichier cache
+     * @param $pathFile string chemin vers le fichier cache
+     * @param $content string contenu du fichier cache
      * @param $overWrite boolean écrasement du fichier
      */
     private function writingFile($pathFile, $content, $overWrite = true) {

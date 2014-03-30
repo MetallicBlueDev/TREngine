@@ -38,7 +38,7 @@ class Libs_Rack {
      * Ajoute une colonne.
      *
      * @param int $size taille en pourcentage.
-     * @param String $title titre de la colonne.
+     * @param string $title titre de la colonne.
      */
     public function addColumn($size, $title = "") {
         $this->firstLine[] = array(
@@ -58,8 +58,8 @@ class Libs_Rack {
     /**
      * Retourne le rendu du rack complet.
      *
-     * @param String $class
-     * @return String
+     * @param string $class
+     * @return string
      */
     public function &render($class = "") {
         $content = "<table class=\"" . ((!empty($class)) ? $class : "table") . "\">"

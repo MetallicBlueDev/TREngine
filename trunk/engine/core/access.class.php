@@ -14,8 +14,8 @@ class Core_Access {
     /**
      * Vérifie si le client a les droits suffisant pour acceder au module
      *
-     * @param $zoneIdentifiant String module ou page administrateur (module/page) ou id du block sous forme block + Id
-     * @param $userIdAdmin String Id de l'administrateur a vérifier
+     * @param $zoneIdentifiant string module ou page administrateur (module/page) ou id du block sous forme block + Id
+     * @param $userIdAdmin string Id de l'administrateur a vérifier
      * @return boolean true le client visé a la droit
      */
     public static function moderate($zoneIdentifiant, $userIdAdmin = "") {
@@ -78,7 +78,7 @@ class Core_Access {
      * Retourne l'erreur d'acces liée au module
      *
      * @param $mod
-     * @return String
+     * @return string
      */
     public static function &getModuleAccesError($mod) {
         // Recherche des infos du module
@@ -103,7 +103,7 @@ class Core_Access {
     /**
      * Autorise ou refuse l'accès a la ressource cible
      *
-     * @param $zoneIdentifiant String block+Id ou module/page.php ou module
+     * @param $zoneIdentifiant string block+Id ou module/page.php ou module
      * @param $zoneRank int
      * @return boolean true accès autorisé
      */
@@ -135,7 +135,7 @@ class Core_Access {
     /**
      * Retourne les droits de l'admin ciblé
      *
-     * @param $userIdAdmin String userId
+     * @param $userIdAdmin string userId
      * @return array liste des droits
      */
     public static function &getAdminRight($userIdAdmin = "") {
@@ -169,9 +169,9 @@ class Core_Access {
     /**
      * Identifie le type d'acces lié a l'identifiant entré
      *
-     * @param $zoneIdentifiant String module ou page administrateur (module/page) ou id du block sous forme block + Id
-     * @param $zone String la zone type trouvée (BLOCK/PAGE/MODULE)
-     * @param $identifiant String l'identifiant lié au type trouvé
+     * @param $zoneIdentifiant string module ou page administrateur (module/page) ou id du block sous forme block + Id
+     * @param $zone string la zone type trouvée (BLOCK/PAGE/MODULE)
+     * @param $identifiant string l'identifiant lié au type trouvé
      * @return boolean true identifiant valide
      */
     public static function &accessType(&$zoneIdentifiant, &$zone, &$identifiant) {
@@ -211,8 +211,8 @@ class Core_Access {
     /**
      * Retourne le type d'acces suivant le numéro
      *
-     * @param $rank String or int
-     * @return String
+     * @param $rank string or int
+     * @return string
      */
     public static function &getLitteralRank($rank) {
         if (is_numeric($rank)) {

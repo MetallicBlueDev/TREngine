@@ -37,21 +37,21 @@ class Core_Info {
         /**
          * Chemin jusqu'à la racine.
          *
-         * @var String
+         * @var string
          */
         define("TR_ENGINE_DIR", $this->getBaseDir());
 
         /**
          * Adresse URL complète jusqu'à TR ENGINE.
          *
-         * @var String
+         * @var string
          */
         define("TR_ENGINE_URL", $this->getUrlAddress());
 
         /**
          * Le système d'exploitation qui exécute TR ENGINE.
          *
-         * @var String
+         * @var string
          */
         define("TR_ENGINE_PHP_OS", $this->getPhpOs());
 
@@ -64,7 +64,7 @@ class Core_Info {
          * xx -> bugs ou failles critiques corrigés
          * xx -> bug mineur
          *
-         * @var String
+         * @var string
          */
         define("TR_ENGINE_VERSION", "0.5.0.0");
     }
@@ -72,7 +72,7 @@ class Core_Info {
     /**
      * Retourne le chemin jusqu'à la racine.
      *
-     * @return String
+     * @return string
      */
     private function getBaseDir() {
         $baseDir = "";
@@ -122,7 +122,7 @@ class Core_Info {
     /**
      * Retourne l'adresse URL complète jusqu'à TR ENGINE.
      *
-     * @return String
+     * @return string
      */
     private function getUrlAddress() {
         // Recherche de l'URL courante
@@ -167,7 +167,7 @@ class Core_Info {
     /**
      * Retourne la plateforme sur lequel est PHP.
      *
-     * @return String
+     * @return string
      */
     private function getPhpOs() {
         return strtoupper(substr(PHP_OS, 0, 3));

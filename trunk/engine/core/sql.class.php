@@ -98,10 +98,10 @@ class Core_Sql {
     /**
      * Supprime des informations
      *
-     * @param $table String Nom de la table
+     * @param $table string Nom de la table
      * @param $where array
      * @param $like array
-     * @param $limit String
+     * @param $limit string
      */
     public static function delete($table, $where = array(), $like = array(), $limit = false) {
         self::$base->delete($table, $where, $like, $limit);
@@ -134,7 +134,7 @@ class Core_Sql {
     /**
      * Insere une ou des valeurs dans une table
      *
-     * @param $table String Nom de la table
+     * @param $table string Nom de la table
      * @param $keys array
      * @param $values array
      */
@@ -179,11 +179,11 @@ class Core_Sql {
     /**
      * Sélection d'information
      *
-     * @param $table String
+     * @param $table string
      * @param $values array
      * @param $where array
      * @param $orderby array
-     * @param $limit String
+     * @param $limit string
      */
     public static function select($table, $values, $where = array(), $orderby = array(), $limit = false) {
         self::$base->select($table, $values, $where, $orderby, $limit);
@@ -202,7 +202,7 @@ class Core_Sql {
      * @param $values array Sous la forme array("keyName" => "newValue")
      * @param $where array
      * @param $orderby array
-     * @param $limit String
+     * @param $limit string
      */
     public static function update($table, $values, $where, $orderby = array(), $limit = false) {
         self::$base->update($table, $values, $where, $orderby, $limit);
@@ -226,7 +226,7 @@ class Core_Sql {
     /**
      * Retourne la dernière requête sql
      *
-     * @return String
+     * @return string
      */
     public static function getSql() {
         return self::$base->getSql();
@@ -246,8 +246,8 @@ class Core_Sql {
     /**
      * Ajoute un bout de donnée dans le buffer
      *
-     * @param $key String cles a utiliser
-     * @param $name String
+     * @param $key string cles a utiliser
+     * @param $name string
      */
     public static function addBuffer($name, $key = "") {
         self::$base->addBuffer($name, $key);
@@ -257,7 +257,7 @@ class Core_Sql {
     /**
      * Retourne le buffer courant puis l'incremente
      *
-     * @param $name String
+     * @param $name string
      * @return array - object
      */
     public static function fetchBuffer($name) {
@@ -268,7 +268,7 @@ class Core_Sql {
      * Retourne le buffer complet choisi
      * Retourne un tableau Sdt object
      *
-     * @param $name String
+     * @param $name string
      * @return array - object
      */
     public static function getBuffer($name) {
@@ -287,7 +287,7 @@ class Core_Sql {
     /**
      * Marqué une cles comme déjà quoté
      *
-     * @param $key String
+     * @param $key string
      */
     public static function addQuoted($key, $value = 1) {
         self::$base->addQuoted($key, $value);
@@ -296,7 +296,7 @@ class Core_Sql {
     /**
      * Retourne la version de la base de données
      *
-     * @return String
+     * @return string
      */
     public static function getVersion() {
         return self::$base->getVersion();
@@ -305,7 +305,7 @@ class Core_Sql {
     /**
      * Retourne le type d'encodage de la base de données
      *
-     * @return String
+     * @return string
      */
     public static function getCollation() {
         return self::$base->getCollation();

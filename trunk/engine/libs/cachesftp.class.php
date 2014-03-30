@@ -4,7 +4,6 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
-// Chargement du parent
 Core_Loader::classLoader("Libs_CacheModel");
 
 /**

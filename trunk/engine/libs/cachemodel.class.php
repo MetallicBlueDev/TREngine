@@ -5,7 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Modèle de classe pour un gestionnaire de fichier
+ * Modèle de classe pour un gestionnaire de fichier.
  *
  * @author Sébastien Villemain
  */
@@ -36,8 +36,8 @@ abstract class Libs_CacheModel {
     /**
      * Ecriture du fichier cache.
      *
-     * @param $path String
-     * @param $content String
+     * @param $path string
+     * @param $content string
      * @param $overWrite boolean
      */
     public function writingCache($path, $content, $overWrite = true) {
@@ -47,7 +47,7 @@ abstract class Libs_CacheModel {
     /**
      * Mise à jour de la date de dernière modification.
      *
-     * @param $path String
+     * @param $path string
      * @param $updateTime int
      */
     public function touchCache($path, $updateTime = 0) {
@@ -57,7 +57,7 @@ abstract class Libs_CacheModel {
     /**
      * Supprime un fichier ou supprime tout fichier trop vieux.
      *
-     * @param $dir String
+     * @param $dir string
      * @param $timeLimit int
      */
     public function removeCache($dir = "", $timeLimit = 0) {
@@ -67,7 +67,7 @@ abstract class Libs_CacheModel {
     /**
      * Retourne le listing avec uniquement les fichiers présent.
      *
-     * @param $dirPath String
+     * @param $dirPath string
      * @return array
      */
     public function &listNames($dirPath = "") {

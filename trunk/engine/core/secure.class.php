@@ -80,7 +80,7 @@ class Core_Secure {
     }
 
     /**
-     * Vérification des données reçues (Query String).
+     * Vérification des données reçues (Query string).
      */
     private function checkQueryString() {
         $queryString = strtolower(rawurldecode($_SERVER['QUERY_STRING']));
@@ -164,8 +164,8 @@ class Core_Secure {
      * Affiche un message d'erreur au client.
      * Cette fonction est activé si une erreur est détectée.
      *
-     * @param $ie String or object L'exception interne levée.
-     * @param $argv String or array argument suplementaire d'information sur l'erreur.
+     * @param $ie string or object L'exception interne levée.
+     * @param $argv string or array argument suplementaire d'information sur l'erreur.
      */
     public function throwException($ie = "", $argv = "") {
         // Charge le loader si il faut
@@ -196,9 +196,9 @@ class Core_Secure {
     /**
      * Analyse l'erreur et prépare l'affichage de l'erreur.
      *
-     * @param $ie String or object L'exception interne levée.
+     * @param $ie string or object L'exception interne levée.
      * @param $argv array argument suplementaire d'information sur l'erreur.
-     * @return String $errorMessage
+     * @return string $errorMessage
      */
     private function getDebugMessage($ie, $argv) {
         // Tableau avec les lignes d'erreurs
@@ -245,7 +245,7 @@ class Core_Secure {
      * Retourne le type d'erreur courant sous forme de message.
      *
      * @param $cmd
-     * @return String $errorMessageTitle
+     * @return string $errorMessageTitle
      */
     private function getErrorMessageTitle($ie) {
         // En fonction du type d'erreur

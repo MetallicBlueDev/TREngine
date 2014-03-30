@@ -15,35 +15,35 @@ class Libs_Form {
 	/**
 	 * Nom du formulaire.
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	private $name = "";
 	
 	/**
 	 * Url pour le tag d'action.
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	private $urlAction = "";
 	
 	/**
 	 * Titre du formulaire.
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	private $title = "";
 	
 	/**
 	 * Description du formulaire.
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	private $description = "";
 	
 	/**
 	 * Donnée contenu dans le formulaire.
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	private $inputData = "";
 	
@@ -78,8 +78,8 @@ class Libs_Form {
 	/**
 	 * Nouveau formulaire.
 	 * 
-	 * @param $name String identifiant du formlaire : attention a ne pas prendre un nom déjà utilisé !
-	 * @param $urlAction String
+	 * @param $name string identifiant du formlaire : attention a ne pas prendre un nom déjà utilisé !
+	 * @param $urlAction string
 	 */
 	public function __construct($name, $urlAction = "") {
 		$this->name = $name;
@@ -92,7 +92,7 @@ class Libs_Form {
 	/**
 	 * Mettre un title au début du formulaire.
 	 * 
-	 * @param $title String
+	 * @param $title string
 	 */
 	public function setTitle($title) {
 		$this->title = $title;
@@ -101,7 +101,7 @@ class Libs_Form {
 	/**
 	 * Mettre une description au début du formulaire.
 	 * 
-	 * @param $description String
+	 * @param $description string
 	 */
 	public function setDescription($description) {
 		$this->description = $description;
@@ -110,7 +110,7 @@ class Libs_Form {
 	/**
 	 * Ajout d'une valeur en cache.
 	 * 
-	 * @param $value String
+	 * @param $value string
 	 */
 	private function addCacheVar($value) {
 		$this->cacheVars[$this->cacheVarsIndex++] = $value;
@@ -119,7 +119,7 @@ class Libs_Form {
 	/**
 	 * Retourne la dernière variable de cache.
 	 * 
-	 * @return String
+	 * @return string
 	 */
 	private function getLastCacheVar() {
 		if ($this->cached) return "";
@@ -130,7 +130,7 @@ class Libs_Form {
 	/**
 	 * Ajoute un fieldset.
 	 * 
-	 * @param $class String
+	 * @param $class string
 	 */
 	public function addFieldset($title = "", $description = "") {
 		$title = $this->getTitle($title);
@@ -148,11 +148,11 @@ class Libs_Form {
 	/**
 	 * Ajouter un champs de type texte.
 	 * 
-	 * @param $name String
-	 * @param $description String
-	 * @param $defaultValue String
-	 * @param $options String
-	 * @param $class String
+	 * @param $name string
+	 * @param $description string
+	 * @param $defaultValue string
+	 * @param $options string
+	 * @param $class string
 	 */
 	public function addInputText($name, $description = "", $defaultValue = "", $options = "", $class = "") {
 		$this->addInput($name, $name, $description, "text", $defaultValue, $options, $class);		
@@ -161,9 +161,9 @@ class Libs_Form {
 	/**
 	 * Ajouter un champs caché.
 	 * 
-	 * @param $name String
-	 * @param $defaultValue String
-	 * @param $options String
+	 * @param $name string
+	 * @param $defaultValue string
+	 * @param $options string
 	 */
 	public function addInputHidden($name, $defaultValue, $options = "") {
 		$this->addInput($name, $name, "", "hidden", $defaultValue, $options, "");		
@@ -172,10 +172,10 @@ class Libs_Form {
 	/**
 	 * Ajouter un bouton d'envoie
 	 * 
-	 * @param $name String
-	 * @param $defaultValue String
-	 * @param $options String
-	 * @param $class String
+	 * @param $name string
+	 * @param $defaultValue string
+	 * @param $options string
+	 * @param $class string
 	 */
 	public function addInputSubmit($name, $defaultValue, $options = "", $class = "") {
 		$this->addInput($name, $name, "", "submit", $defaultValue, $options, $class);		
@@ -184,13 +184,13 @@ class Libs_Form {
 	/**
 	 * Ajouter un champs de type bouton radio.
 	 * 
-	 * @param $name String
-	 * @param $id String
-	 * @param $description String
+	 * @param $name string
+	 * @param $id string
+	 * @param $description string
 	 * @param $checked boolean
-	 * @param $defaultValue String
-	 * @param $options String
-	 * @param $class String
+	 * @param $defaultValue string
+	 * @param $options string
+	 * @param $class string
 	 */
 	public function addInputRadio($id, $name, $description = "", $checked = false, $defaultValue = "", $options = "", $class = "") {
 		if (empty($class)) $class = "radio";
@@ -201,13 +201,13 @@ class Libs_Form {
 	/**
 	 * Ajouter un champs de type bouton a cocher.
 	 *
-	 * @param $name String
-	 * @param $id String
-	 * @param $description String
+	 * @param $name string
+	 * @param $id string
+	 * @param $description string
 	 * @param $checked boolean
-	 * @param $defaultValue String
-	 * @param $options String
-	 * @param $class String
+	 * @param $defaultValue string
+	 * @param $options string
+	 * @param $class string
 	 */
 	public function addInputCheckbox($id, $name, $description = "", $checked = false, $defaultValue = "", $options = "", $class = "") {
 		if (empty($class)) $class = "checkbox";
@@ -218,11 +218,11 @@ class Libs_Form {
 	/**
 	 * Ajouter un bouton.
 	 *
-	 * @param $name String
-	 * @param $description String
-	 * @param $defaultValue String
-	 * @param $options String
-	 * @param $class String
+	 * @param $name string
+	 * @param $description string
+	 * @param $defaultValue string
+	 * @param $options string
+	 * @param $class string
 	 */
 	public function addInputButton($name, $description = "", $defaultValue = "", $options = "", $class = "") {
 		$this->addInput($name, $name, $description, "button", $defaultValue, $options, $class);
@@ -231,10 +231,10 @@ class Libs_Form {
 	/**
 	 * Ajouter un champs de type mot de passe.
 	 * 
-	 * @param $name String
-	 * @param $description String
-	 * @param $options String
-	 * @param $class String
+	 * @param $name string
+	 * @param $description string
+	 * @param $options string
+	 * @param $class string
 	 */
 	public function addInputPassword($name, $description = "", $options = "", $class = "") {
 		$this->addInput($name, $name, $description, "password", "", $options, $class);		
@@ -243,13 +243,13 @@ class Libs_Form {
 	/**
 	 * Ajouter un champs.
 	 * 
-	 * @param $id String
-	 * @param $name String
-	 * @param $description String
-	 * @param $type String
-	 * @param $defaultValue String
-	 * @param $options String
-	 * @param $class String
+	 * @param $id string
+	 * @param $name string
+	 * @param $description string
+	 * @param $type string
+	 * @param $defaultValue string
+	 * @param $options string
+	 * @param $class string
 	 */
 	private function addInput($id, $name, $description, $type, $defaultValue = "", $options = "", $class = "") {
 		if (empty($class)) $class = "input";
@@ -284,11 +284,11 @@ class Libs_Form {
 	/**
 	 * Ajouter un textarea.
 	 * 
-	 * @param $name String
-	 * @param $description String
-	 * @param $defaultValue String
-	 * @param $options String
-	 * @param $class String
+	 * @param $name string
+	 * @param $description string
+	 * @param $defaultValue string
+	 * @param $options string
+	 * @param $class string
 	 */
 	public function addTextarea($name, $description, $defaultValue = "", $options = "", $class = "") {
 		if (empty($class)) $class = "textarea";
@@ -321,10 +321,10 @@ class Libs_Form {
 	/**
 	 * Ajouter un liste déroulante (balise ouvrante seulement).
 	 * 
-	 * @param $name String
-	 * @param $description String
-	 * @param $options String
-	 * @param $class String
+	 * @param $name string
+	 * @param $description string
+	 * @param $options string
+	 * @param $class string
 	 */
 	public function addSelectOpenTag($name, $description, $options = "", $class = "") {
 		if (empty($class)) $class = "select";
@@ -352,10 +352,10 @@ class Libs_Form {
 	/**
 	 * Ajouter un élément dans la liste déroulante ouverte.
 	 * 
-	 * @param $value String
-	 * @param $description String
+	 * @param $value string
+	 * @param $description string
 	 * @param $selected boolean
-	 * @param $options String
+	 * @param $options string
 	 */
 	public function addSelectItemTag($value, $description = "", $selected = false, $options = "") {
 		if ($selected) $options = "selected=\"selected\"" . ((!empty($options)) ? " " . $options : "");
@@ -386,7 +386,7 @@ class Libs_Form {
 	/**
 	 * Ajoute du code HTML en plus dans le fieldset courant.
 	 * 
-	 * @param $html String
+	 * @param $html string
 	 */
 	public function addHtmlInFieldset($html) {
 		$this->addCacheVar($html);
@@ -404,7 +404,7 @@ class Libs_Form {
 	/**
 	 * Ajoute du code HTML en plus après avoir fermé le fieldset courant.
 	 * 
-	 * @param $html String
+	 * @param $html string
 	 */
 	public function addHtmlOutFieldset($html) {
 		$this->addCacheVar($html);
@@ -421,9 +421,9 @@ class Libs_Form {
 	/**
 	 * Retourne le code HTML pour le label.
 	 * 
-	 * @param $name String
-	 * @param $description String
-	 * @return String
+	 * @param $name string
+	 * @param $description string
+	 * @return string
 	 */
 	private function getLabel($name, $description) {
 		$id = $this->getId($name, "input");
@@ -437,8 +437,8 @@ class Libs_Form {
 	/**
 	 * Retourne le code HTML pour le titre.
 	 * 
-	 * @param $title String
-	 * @return String
+	 * @param $title string
+	 * @return string
 	 */
 	private function getTitle($title) {
 		$title = Exec_Entities::textDisplay($title);
@@ -451,8 +451,8 @@ class Libs_Form {
 	/**
 	 * Retourne le code HTML pour la description.
 	 * 
-	 * @param $description String
-	 * @return String
+	 * @param $description string
+	 * @return string
 	 */
 	private function getDescription($description) {
 		$id = $this->getId("description");
@@ -466,9 +466,9 @@ class Libs_Form {
 	/**
 	 * Retourne l'identifiant du champs.
 	 * 
-	 * @param $name String
-	 * @param $options String
-	 * @return String
+	 * @param $name string
+	 * @param $options string
+	 * @return string
 	 */
 	private function getId($name, $options = "") {
 		if (!empty($options)) $options = "-" . $options;
@@ -483,8 +483,8 @@ class Libs_Form {
 	 * Retourne le rendu du formulaire complet.
 	 * Attention, ceci procédera a une sauvegarde et une lecture du cache.
 	 * 
-	 * @param $class String
-	 * @return String
+	 * @param $class string
+	 * @return string
 	 */
 	public function &render($class = "") {
 		if (empty($class)) $class = "form";

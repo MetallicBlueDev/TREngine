@@ -24,28 +24,28 @@ class Libs_Module {
     /**
      * Nom du module courant.
      *
-     * @var String
+     * @var string
      */
     private $module = "";
 
     /**
      * Nom de la page courante.
      *
-     * @var String
+     * @var string
      */
     private $page = "";
 
     /**
      * Nom du viewer courant.
      *
-     * @var String
+     * @var string
      */
     private $view = "";
 
     /**
      * Module compilé.
      *
-     * @var String
+     * @var string
      */
     private $moduleCompiled = "";
 
@@ -118,7 +118,7 @@ class Libs_Module {
     /**
      * Détermine si le module est en cours d'utilisation.
      *
-     * @param String $moduleName
+     * @param string $moduleName
      * @return boolean true le module est actuellement sélectionné
      */
     public static function isSelected($moduleName) {
@@ -133,7 +133,7 @@ class Libs_Module {
     /**
      * Retourne les informations du module cible.
      *
-     * @param String $moduleName  le nom du module, par défaut le module courant.
+     * @param string $moduleName  le nom du module, par défaut le module courant.
      * @return Libs_ModuleData informations sur le module.
      */
     public function &getInfoModule($moduleName = "") {
@@ -214,8 +214,8 @@ class Libs_Module {
     /**
      * Vérifie si le module existe.
      *
-     * @param String $moduleName
-     * @param String $page
+     * @param string $moduleName
+     * @param string $page
      * @return boolean true le module existe.
      */
     public function isModule($moduleName = "", $page = "") {
@@ -231,7 +231,7 @@ class Libs_Module {
     /**
      * Retourne le module compilé.
      *
-     * @return String
+     * @return string
      */
     public function &getModule($rewriteBuffer = false) {
         $buffer = $this->moduleCompiled;
@@ -249,7 +249,7 @@ class Libs_Module {
      *
      * @param array $pageInfo
      * @param boolean $setAlternative
-     * @return String
+     * @return string
      */
     private function &viewPage(array $pageInfo, $setAlternative = true) {
         $rslt = "";
@@ -282,7 +282,7 @@ class Libs_Module {
     /**
      * Récupère le module.
      *
-     * @param String $viewPage
+     * @param string $viewPage
      */
     private function get() {
         $moduleClassName = "Module_" . ucfirst($this->module) . "_" . ucfirst($this->page);
@@ -314,7 +314,7 @@ class Libs_Module {
     /**
      * Vérifie que le module est installé.
      *
-     * @param String $moduleName
+     * @param string $moduleName
      * @return boolean
      */
     private function installed($moduleName = "") {

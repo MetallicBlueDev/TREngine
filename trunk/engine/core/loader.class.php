@@ -19,7 +19,7 @@ class Core_Loader {
     /**
      * Chargeur de classe.
      *
-     * @param $class String Nom de la classe.
+     * @param $class string Nom de la classe.
      * @return boolean true chargé.
      */
     public static function classLoader($class) {
@@ -36,7 +36,7 @@ class Core_Loader {
     /**
      * Chargeur de fichier include.
      *
-     * @param $include String Nom de l'include.
+     * @param $include string Nom de l'include.
      * @return boolean true chargé.
      */
     public static function includeLoader($include) {
@@ -50,8 +50,8 @@ class Core_Loader {
     /**
      * Chargeur de fichier.
      *
-     * @param $name String Nom de la classe ou du fichier.
-     * @param $ext String Extension.
+     * @param $name string Nom de la classe ou du fichier.
+     * @param $ext string Extension.
      * @return boolean true chargé.
      */
     private static function load($name, $ext = "") {
@@ -104,7 +104,7 @@ class Core_Loader {
     /**
      * Vérifie si le fichier demandé a été chargé.
      *
-     * @param $name String fichier demandé.
+     * @param $name string fichier demandé.
      * @return boolean true si c'est déjà chargé.
      */
     private static function isLoaded($name) {
@@ -114,8 +114,8 @@ class Core_Loader {
     /**
      * Vérifie la disponibilité de la classe et de ca methode éventuellement.
      *
-     * @param $className String or Object une chaine de caractère est recommandée.
-     * @param $methodName String
+     * @param $className string or Object une chaine de caractère est recommandée.
+     * @param $methodName string
      * @param $static boolean
      * @return boolean
      */
@@ -154,7 +154,7 @@ class Core_Loader {
     /**
      * Appel une methode ou un object ou une classe statique callback.
      *
-     * @param $callback String or array Nom de la callback.
+     * @param $callback string or array Nom de la callback.
      * @return callback resultat.
      */
     public static function callback($callback) {

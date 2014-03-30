@@ -13,6 +13,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  * xx -> bugs ou failles critiques corrigés
  * xx -> bug mineur
  *
- * @var String
+ * @var string
  */
 $TR_ENGINE_VERSION = "1.1.0.0";

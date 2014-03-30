@@ -4,7 +4,6 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
-// Chargement du parent
 Core_Loader::classLoader("Base_Model");
 
 /**
@@ -18,7 +17,7 @@ class Base_Mysql extends Base_Model {
      * Le type de la dernière commande.
      * SELECT, DELETE, UPDATE, INSERT, REPLACE.
      *
-     * @var String
+     * @var string
      */
     private $lastSqlCommand = "";
 
@@ -159,7 +158,7 @@ class Base_Mysql extends Base_Model {
     /**
      * Retourne la version de mysql
      *
-     * @return String
+     * @return string
      */
     public function getVersion() {
         $version = @mysql_get_server_info($this->connId);

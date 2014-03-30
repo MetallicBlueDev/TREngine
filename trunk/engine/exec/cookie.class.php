@@ -41,8 +41,8 @@ class Exec_Cookie {
 	/**
 	 * Retourne le contenu du cookie
 	 * 
-	 * @param $cookieName String
-	 * @return String
+	 * @param $cookieName string
+	 * @return string
 	 */
 	public static function &getCookie($cookieName) {
 		$cookieName = urlencode($cookieName);

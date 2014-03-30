@@ -14,7 +14,7 @@ class Libs_ModuleData {
     /**
      * Nom du module courant.
      *
-     * @var String
+     * @var string
      */
     private $moduleName = "";
 
@@ -28,7 +28,7 @@ class Libs_ModuleData {
     /**
      * Nouvelle information de module.
      * 
-     * @param String $moduleName
+     * @param string $moduleName
      * @param array $data
      */
     public function __construct($moduleName, array $data) {
@@ -44,7 +44,7 @@ class Libs_ModuleData {
     /**
      * Retourne le nom du module.
      *
-     * @return String Le nom du module.
+     * @return string Le nom du module.
      */
     public function &getName() {
         return $this->moduleName;
@@ -80,9 +80,9 @@ class Libs_ModuleData {
     /**
      * Retourne la valeur de la clé de configuration du module.
      *
-     * @param String $key
-     * @param String $defaultValue
-     * @return String
+     * @param string $key
+     * @param string $defaultValue
+     * @return string
      */
     public function &getConfigValue($key, $defaultValue = "") {
         $value = null;

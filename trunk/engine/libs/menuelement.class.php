@@ -70,8 +70,8 @@ class Libs_MenuElement {
     /**
      * Ajoute un attribut à la liste.
      *
-     * @param String $name nom de l'attribut
-     * @param String $value valeur de l'attribut
+     * @param string $name nom de l'attribut
+     * @param string $value valeur de l'attribut
      */
     public function addAttributs($name, $value) {
         if (!isset($this->attributs[$name])) {
@@ -107,7 +107,7 @@ class Libs_MenuElement {
     /**
      * Supprime un attributs.
      *
-     * @param String $name nom de l'attribut
+     * @param string $name nom de l'attribut
      */
     public function removeAttributs($name = "") {
         if (!empty($name)) {
@@ -123,7 +123,7 @@ class Libs_MenuElement {
      * Mise en forme des attributs.
      *
      * @param array $attributs
-     * @return String
+     * @return string
      */
     public function &getAttributs(array $attributs = array()) {
         $rslt = "";
@@ -154,7 +154,7 @@ class Libs_MenuElement {
     /**
      * Ajout de balise tag pour l'élément.
      *
-     * @param String $tag
+     * @param string $tag
      */
     public function addTags($tag) {
         $this->tags[] = $tag;
@@ -220,7 +220,7 @@ class Libs_MenuElement {
     /**
      * Retourne une représentation de la classe en chaine de caractères.
      *
-     * @param String $callback
+     * @param string $callback
      */
     public function &toString($callback = "") {
         $text = $this->data->content;

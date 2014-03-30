@@ -24,7 +24,7 @@ class Core_Main {
 	 * modulepage : affichage uniquement du module forcé 
 	 * blockpage : affichage uniquement du block forcé
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	public static $layout = "default";
 	

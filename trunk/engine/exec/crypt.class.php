@@ -15,7 +15,7 @@ class Exec_Crypt {
 	 * Creation d'un ID unique
 	 * 
 	 * @param $taille int
-	 * @return String
+	 * @return string
 	 */
 	public static function &createKey($taille = 32, $letter = true, $number = true, $caseSensitive = true) {
 		$randKey = "";
@@ -48,7 +48,7 @@ class Exec_Crypt {
 	 * Creation d'un ID unique avec des chiffres, lettres et sensible à la case
 	 * 
 	 * @param $taille int
-	 * @return String
+	 * @return string
 	 */
 	public static function &createId($taille = 32) {
 		$key = self::createKey($taille, true, true, true);
@@ -59,7 +59,7 @@ class Exec_Crypt {
 	 * Creation d'un ID unique avec des chiffres
 	 * 
 	 * @param $taille int
-	 * @return String
+	 * @return string
 	 */
 	public static function &createIdNumbers($taille = 32) {
 		$key = self::createKey($taille, false, true, false);
@@ -70,7 +70,7 @@ class Exec_Crypt {
 	 * Creation d'un ID unique avec des lettres
 	 * 
 	 * @param $taille int
-	 * @return String
+	 * @return string
 	 */
 	public static function &createIdLettres($taille = 32) {
 		$key = self::createKey($taille, true, false, false);
@@ -81,7 +81,7 @@ class Exec_Crypt {
 	 * Creation d'un ID unique avec des lettres et sensible à la case
 	 * 
 	 * @param $taille int
-	 * @return String
+	 * @return string
 	 */
 	public static function &createIdLettresCaseSensitive($taille = 32) {
 		$key = self::createKey($taille, true, false, true);
@@ -91,10 +91,10 @@ class Exec_Crypt {
 	/**
 	 * Crypteur de donnée
 	 * 
-	 * @param $data String donnée
-	 * @param $salt String clès
-	 * @param $method String méthode de cryptage
-	 * @return String
+	 * @param $data string donnée
+	 * @param $salt string clès
+	 * @param $method string méthode de cryptage
+	 * @return string
 	 */
 	public static function &cryptData($data, $salt = "", $method = "") {
 		// Réglage de la méthode utilisé
@@ -155,7 +155,7 @@ class Exec_Crypt {
 	 * @param $plain_text
 	 * @param $password
 	 * @param $iv_len
-	 * @return String
+	 * @return string
 	 */
 	public static function &md5Encrypt($plain_text, $password, $iv_len = 16) {
 		$plain_text .= "\x13";
@@ -183,7 +183,7 @@ class Exec_Crypt {
 	 * @param $enc_text
 	 * @param $password
 	 * @param $iv_len
-	 * @return String
+	 * @return string
 	 */
 	public static function &md5Decrypt($enc_text, $password, $iv_len = 16) {
 		$enc_text = base64_decode($enc_text);
@@ -208,7 +208,7 @@ class Exec_Crypt {
 	 * http://fr2.php.net/manual/fr/function.md5.php
 	 * 
 	 * @param $iv_len
-	 * @return String
+	 * @return string
 	 */
 	private static function &getRandIv($iv_len) {
 		$iv = "";

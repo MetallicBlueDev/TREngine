@@ -26,7 +26,7 @@ class Exec_Mailer {
 	 * 
 	 * @param $mail
 	 * @param $name
-	 * @return String or String with HTML TAG
+	 * @return string or string with HTML TAG
 	 */
 	public static function &protectedDisplay($mail, $name = "mail") {
 		$mail = str_replace("@", "_AT_", $mail);

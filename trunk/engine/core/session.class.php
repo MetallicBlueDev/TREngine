@@ -35,14 +35,14 @@ class Core_Session {
     /**
      * Id du client
      *
-     * @var String
+     * @var string
      */
     public static $userId = "";
 
     /**
      * Nom du client
      *
-     * @var String
+     * @var string
      */
     public static $userName = "";
 
@@ -56,63 +56,63 @@ class Core_Session {
     /**
      * Id de la session courante du client
      *
-     * @var String
+     * @var string
      */
     public static $sessionId = "";
 
     /**
      * Langue du client
      *
-     * @var String
+     * @var string
      */
     public static $userLanguage = "";
 
     /**
      * Template du client
      *
-     * @var String
+     * @var string
      */
     public static $userTemplate = "";
 
     /**
      * Adresse Ip du client bannis
      *
-     * @var String
+     * @var string
      */
     public static $userIpBan = "";
 
     /**
      * URL de l'avatar de l'utilisateur
      *
-     * @var String
+     * @var string
      */
     public static $userAvatar = "includes/avatars/nopic.png";
 
     /**
      * Adresse email du client
      *
-     * @var String
+     * @var string
      */
     public static $userMail = "";
 
     /**
      * Date d'inscription du client
      *
-     * @var String
+     * @var string
      */
     public static $userInscriptionDate = "";
 
     /**
      * Signature du client
      *
-     * @var String
+     * @var string
      */
     public static $userSignature = "";
 
     /**
      * Site Internet du client
      *
-     * @var String
+     * @var string
      */
     public static $userWebSite = "";
 
@@ -268,7 +268,7 @@ class Core_Session {
     /**
      * Mise en chaine de caractères des informations du client
      *
-     * @return String
+     * @return string
      */
     private function &getUser() {
         $rslt = "";
@@ -323,7 +323,7 @@ class Core_Session {
     /**
      * Mise à jour de la dernière connexion
      *
-     * @param $userId String
+     * @param $userId string
      * @return boolean true succes de la mise à jour
      */
     private function &updateLastConnect($userId = "") {
@@ -436,8 +436,8 @@ class Core_Session {
     /**
      * Tentative de creation d'un nouvelle session
      *
-     * @param $name String Nom du compte (identifiant)
-     * @param $pass String Mot de passe du compte
+     * @param $name string Nom du compte (identifiant)
+     * @param $pass string Mot de passe du compte
      * @return boolean ture succès
      */
     public function &startConnection($userName, $userPass) {
@@ -484,7 +484,7 @@ class Core_Session {
     /**
      * Retourne la combinaison de cles pour le salt
      *
-     * @return String
+     * @return string
      */
     private function &getSalt() {
         $salt = Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowserName;
@@ -494,8 +494,8 @@ class Core_Session {
     /**
      * Crypte un mot de passe pour un compte client
      *
-     * @param $pass String
-     * @return String
+     * @param $pass string
+     * @return string
      */
     public function &cryptPass($pass) {
         return Exec_Crypt::cryptData($pass, $pass, "md5+");
@@ -504,8 +504,8 @@ class Core_Session {
     /**
      * Retourne le contenu décrypté du cookie
      *
-     * @param $cookieName String
-     * @return String
+     * @param $cookieName string
+     * @return string
      */
     private function &getCookie($cookieName) {
         $cookieName = $this->getCookieName($cookieName);
@@ -517,8 +517,8 @@ class Core_Session {
     /**
      * Retourne le nom crypté du cookie
      *
-     * @param $cookieName String
-     * @return String
+     * @param $cookieName string
+     * @return string
      */
     private function &getCookieName($cookieName) {
         return Exec_Crypt::cryptData($cookieName, $this->getSalt(), "md5+");
@@ -571,7 +571,7 @@ class Core_Session {
      * Retourne un message d'erreur
      *
      * @param $key
-     * @return String or array
+     * @return string or array
      */
     public function getErrorMessage($key = "") {
         if (!empty($key))

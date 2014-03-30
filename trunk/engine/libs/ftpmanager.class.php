@@ -4,7 +4,6 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
-// Chargement du parent
 Core_Loader::classLoader("Libs_CacheModel");
 
 /**
@@ -31,7 +30,7 @@ class Libs_FtpManager extends Libs_CacheModel {
     /**
      * Le retour chariot de chaque OS
      *
-     * @var String
+     * @var string
      */
     private $CRLF = "";
 
@@ -45,7 +44,7 @@ class Libs_FtpManager extends Libs_CacheModel {
     /**
      * dernière réponse du serveur
      *
-     * @var String
+     * @var string
      */
     private $response = "";
 
@@ -59,28 +58,28 @@ class Libs_FtpManager extends Libs_CacheModel {
     /**
      * Message de réponse du serveur
      *
-     * @var String
+     * @var string
      */
     private $responseMsg = "";
 
     /**
      * Adresse IP recu en mode passif
      *
-     * @var String
+     * @var string
      */
     private $passiveIp = "";
 
     /**
      * Port recu en mode passif
      *
-     * @var String
+     * @var string
      */
     private $passivePort = "";
 
     /**
      * Donnée recu en mode passif
      *
-     * @var String
+     * @var string
      */
     private $passiveData = "";
 
@@ -491,7 +490,7 @@ class Libs_FtpManager extends Libs_CacheModel {
      * Retourne le path complet FTP
      *
      * @param $path chemin local
-     * @return String
+     * @return string
      */
     private function getRootPath($path) {
         // TODO mettre en place le root path !!
@@ -595,8 +594,8 @@ class Libs_FtpManager extends Libs_CacheModel {
     /**
      * Ecriture du ficher cache
      *
-     * @param $pathFile String chemin vers le fichier cache
-     * @param $content String contenu du fichier cache
+     * @param $pathFile string chemin vers le fichier cache
+     * @param $content string contenu du fichier cache
      * @param $overWrite boolean écrasement du fichier
      */
     public function writingCache($path, $content, $overWrite = true) {

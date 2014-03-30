@@ -14,14 +14,14 @@ class Core_Translate {
 	/**
 	 * Langue utilisé actuellement.
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	private static $currentLanguage = "";
 	
 	/**
 	 * Extension de la langue utilisé.
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	private static $currentLanguageExtension = "";
 	
@@ -305,7 +305,7 @@ class Core_Translate {
 	 * Retourne le vrai chemin vers le fichier de langue.
 	 * 
 	 * @param $pathLang
-	 * @return String
+	 * @return string
 	 */
 	private static function &getPath($pathLang = "") {
 		if (!empty($pathLang) && substr($pathLang, -1) != "/") {
@@ -319,7 +319,7 @@ class Core_Translate {
 	 * Traduction de la page via le fichier.
 	 * 
 	 * @param string $path_lang : chemin du fichier de traduction.
-	 * @return String
+	 * @return string
 	 */
 	public static function translate($pathLang = "") {
 		// Capture du chemin vers le fichier
@@ -379,8 +379,8 @@ class Core_Translate {
 	 * Conversion des caratères spéciaux en entitiées UTF-8.
 	 * Ajout d'antislashes pour utilisation dans le cache.
 	 * 
-	 * @param String
-	 * @return String
+	 * @param string
+	 * @return string
 	 */
 	private static function &entitiesTranslate($text) {
 		$text = Exec_Entities::entitiesUtf8($text);
@@ -391,7 +391,7 @@ class Core_Translate {
 	/**
 	 * Retourne la langue courante.
 	 * 
-	 * @return String
+	 * @return string
 	 */
 	public static function &getCurrentLanguage() {
 		return self::$currentLanguage;
@@ -417,7 +417,7 @@ class Core_Translate {
 	/**
 	 * Suppression du cache de traduction.
 	 * 
-	 * @param $pathLang String
+	 * @param $pathLang string
 	 */
 	public static function removeCache($pathLang = "") {
 		if (!empty($pathLang) && substr($pathLang, -1) != "/") {

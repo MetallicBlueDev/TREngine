@@ -35,7 +35,7 @@ class Block_Login extends Block_Model {
     /**
      * Type d'affichage demand�.
      *
-     * @var String
+     * @var string
      */
     private $localView = "";
 
@@ -115,8 +115,8 @@ class Block_Login extends Block_Model {
     /**
      * Formulaire de connexion.
      *
-     * @param $moreLink String
-     * @return String
+     * @param $moreLink string
+     * @return string
      */
     private function &logon($moreLink) {
         $form = new Libs_Form("login-logonblock");
@@ -135,8 +135,8 @@ class Block_Login extends Block_Model {
     /**
      * Formulaire de login oubli�.
      *
-     * @param $moreLink String
-     * @return String
+     * @param $moreLink string
+     * @return string
      */
     private function &forgetlogin($moreLink) {
         $form = new Libs_Form("login-forgetloginblock");
@@ -153,8 +153,8 @@ class Block_Login extends Block_Model {
     /**
      * Formulaire de mot de passe oubli�.
      *
-     * @param $moreLink String
-     * @return String
+     * @param $moreLink string
+     * @return string
      */
     private function &forgetpass($moreLink) {
         $form = new Libs_Form("login-forgetpassblock");

@@ -14,8 +14,8 @@ class Exec_Url {
 	/**
 	 * Nettoie l'adresse web (URL) du protocole
 	 * 
-	 * @param String $url
-	 * @return String
+	 * @param string $url
+	 * @return string
 	 */
 	public static function &cleanUrl($url) {
 		if (substr($url, 0, 7) == "http://") {

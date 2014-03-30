@@ -14,49 +14,49 @@ class Exec_Agent {
 	/**
 	 * Adresse IP du client
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	public static $userIp;
 	
 	/**
 	 * Host du client
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	public static $userHost;
 	
 	/**
 	 * OS du client
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	public static $userOs;
 	
 	/**
 	 * Navigateur du client
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	public static $userBrowserName;
 	
 	/**
 	 * Version du navigateur du client
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	public static $userBrowserVersion;
 	
 	/**
 	 * Referer du client
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	public static $userReferer;
 	
 	/**
 	 * User agent complet du client
 	 * 
-	 * @var String
+	 * @var string
 	 */
 	public static $userAgent;
 	
@@ -178,7 +178,7 @@ class Exec_Agent {
 	/**
 	 * Execute une vérification sur l'host
 	 * 
-	 * @return String
+	 * @return string
 	 */
 	private static function checkUserHost() {
 		if (self::$userHost == self::$userIp) {
@@ -202,7 +202,7 @@ class Exec_Agent {
 	/**
 	 * Retourne le nom du browser ou du bot
 	 * 
-	 * @return String
+	 * @return string
 	 */
 	private static function &checkUserBrower() {
 		// Boucle sur tout les Browsers et Bot connus
@@ -221,7 +221,7 @@ class Exec_Agent {
 	/**
 	 * Retourne le nom de l'Os
 	 * 
-	 * @return String
+	 * @return string
 	 */
 	private static function &checkUserOs() {
 		// Boucle sur tout les systemes d'exploitations
@@ -256,7 +256,7 @@ class Exec_Agent {
 	/**
 	 * Renseigne l'adresse IP (v4) correcte du client
 	 * 
-	 * @return $userIp String
+	 * @return $userIp string
 	 */
 	private static function &checkUserIp() {
 		// Recherche de l'IP

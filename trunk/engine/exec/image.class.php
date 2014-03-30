@@ -44,10 +44,10 @@ class Exec_Image {
 	/**
 	 * Redimension une image
 	 * 
-	 * @param $url String 
+	 * @param $url string 
 	 * @param $widthDefault int
 	 * @param $heightDefault int
-	 * @return String balise img complete
+	 * @return string balise img complete
 	 */
 	public static function &resize($url, $widthDefault = 350, $heightDefault = "") {
 		$img = "";
@@ -97,7 +97,7 @@ class Exec_Image {
 	/**
 	 * Vérifie si l'image est valide
 	 * 
-	 * @param $url String
+	 * @param $url string
 	 * @return boolean true image valide
 	 */
 	public static function &isValid($url) {
@@ -118,7 +118,7 @@ class Exec_Image {
 	/**
 	 * Retourne le type de l'image
 	 * 
-	 * @param $url String
+	 * @param $url string
 	 * @return Constante IMAGETYPE_xxx
 	 */
 	public static function &getType($url) {
@@ -147,8 +147,8 @@ class Exec_Image {
 	/**
 	 * Retourne la cles codé pour le buffer
 	 * 
-	 * @param $url String
-	 * @return String
+	 * @param $url string
+	 * @return string
 	 */
 	public static function &getKey($url) {
 		return urlencode($url);

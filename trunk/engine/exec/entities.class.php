@@ -113,8 +113,8 @@ class Exec_Entities {
     /**
      * Ajout de slashes dans le texte
      *
-     * @param $text String
-     * @return String
+     * @param $text string
+     * @return string
      */
     public static function &addSlashes($text) {
         $text = addslashes($text);
@@ -125,7 +125,7 @@ class Exec_Entities {
      * Supprime les slashes ajouté par addSlashes
      *
      * @param $text
-     * @return String
+     * @return string
      */
     public static function &stripSlashes($text) {
         $text = stripslashes($text);
@@ -136,7 +136,7 @@ class Exec_Entities {
      * Prépare le texte pour un affichage
      *
      * @param $text
-     * @return String
+     * @return string
      */
     public static function &textDisplay($text) {
         $text = self::entitiesUtf8($text);
@@ -153,7 +153,7 @@ class Exec_Entities {
      * Sécurise le texte
      *
      * @param $string
-     * @return String
+     * @return string
      */
     public static function &secureText($string) {
         $secure = array(

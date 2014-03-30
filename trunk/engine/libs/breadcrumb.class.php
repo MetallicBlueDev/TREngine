@@ -45,8 +45,8 @@ class Libs_Breadcrumb {
 	/**
 	 * Ajoute un tracé au fil d'Ariane
 	 * 
-	 * @param $trail String
-	 * @param $link String
+	 * @param $trail string
+	 * @param $link string
 	 */
 	public function addTrail($trail, $link = "") {
 		if (!empty($trail)) {
@@ -62,8 +62,8 @@ class Libs_Breadcrumb {
 	/**
 	 * Retourne le fil d'Ariane complet
 	 * 
-	 * @param $separator String séparateur de tracé
-	 * @return String
+	 * @param $separator string séparateur de tracé
+	 * @return string
 	 */
 	public function &getBreadcrumbTrail($separator = " >> ") {
 		$rslt = "";

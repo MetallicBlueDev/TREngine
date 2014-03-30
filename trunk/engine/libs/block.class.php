@@ -51,7 +51,7 @@ class Libs_Block {
     /**
      * Vérifie si le block est valide.
      *
-     * @param $blockType String
+     * @param $blockType string
      * @return boolean true block valide
      */
     private function isBlock($blockType) {
@@ -190,8 +190,8 @@ class Libs_Block {
     /**
      * Retourne les blocks compilés voulu (right/left/top/bottom).
      *
-     * @param $side String
-     * @return String
+     * @param $side string
+     * @return string
      */
     public function &getBlocks($side) {
         // Conversion du side en identifiant numérique
@@ -210,7 +210,7 @@ class Libs_Block {
      * Retourne le type d'orientation/postion en lettres.
      *
      * @param $side int
-     * @return String identifiant de la position (right, left...).
+     * @return string identifiant de la position (right, left...).
      */
     private static function &getSideLetters($side) {
         $sideLetters = $side; // Assignation par défaut
@@ -238,7 +238,7 @@ class Libs_Block {
     /**
      * Retourne le type d'orientation/position en chiffre.
      *
-     * @param $side String
+     * @param $side string
      * @return int identifiant de la position (1, 2..).
      */
     private static function &getSideNumeric($side) {
@@ -282,8 +282,8 @@ class Libs_Block {
     /**
      * Retourne le type d'orientation avec la traduction.
      *
-     * @param $side int or String.
-     * @return String postion traduit (si possible).
+     * @param $side int or string.
+     * @return string postion traduit (si possible).
      */
     public static function &getLitteralSide($side) {
         $side = strtoupper(self::getSideLetters($side));
@@ -294,8 +294,8 @@ class Libs_Block {
     /**
      * Réécriture du tampon de sortie si besoin.
      *
-     * @param $buffer String
-     * @return $buffer String
+     * @param $buffer string
+     * @return $buffer string
      */
     private function &outPut(&$buffer, $rewriteBuffer = false) {
         if (Core_Main::doUrlRewriting() && $rewriteBuffer) {
@@ -318,7 +318,7 @@ class Libs_Block {
     /**
      * Retourne le block compilé.
      *
-     * @return String
+     * @return string
      */
     public function getBlock() {
         foreach ($this->blocksCompiled as $side => $compiled) {
@@ -372,28 +372,28 @@ abstract class Block_Model {
     /**
      * Position du block en lettre.
      *
-     * @var String
+     * @var string
      */
     public $sideName = "";
 
     /**
      * Nom complet du template de block a utiliser.
      *
-     * @var String
+     * @var string
      */
     public $templateName = "";
 
     /**
      * Titre du block.
      *
-     * @var String
+     * @var string
      */
     public $title = "";
 
     /**
      * Contenu du block.
      *
-     * @var String
+     * @var string
      */
     public $content = "";
 

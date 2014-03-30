@@ -17,10 +17,10 @@ class Core_Request {
     /**
      * Récupère, analyse et vérifie une variable URL.
      *
-     * @param $name String Nom de la variable
-     * @param $type String Type de donnée
+     * @param $name string Nom de la variable
+     * @param $type string Type de donnée
      * @param $default Object Donnée par défaut
-     * @param $hash String Provenance de la variable
+     * @param $hash string Provenance de la variable
      * @return Object
      */
     private static function &getVars($name, $type, $default = "", $hash = "default") {
@@ -45,9 +45,9 @@ class Core_Request {
     /**
      * Retourne la variable demandée de type int
      *
-     * @param $name String Nom de la variable
+     * @param $name string Nom de la variable
      * @param $default int Donnée par défaut
-     * @param $hash String Provenance de la variable
+     * @param $hash string Provenance de la variable
      * @return int
      */
     public static function &getInt($name, $default = 0, $hash = "default") {
@@ -57,9 +57,9 @@ class Core_Request {
     /**
      * Retourne la variable demandée de type float
      *
-     * @param $name String Nom de la variable
+     * @param $name string Nom de la variable
      * @param $default float Donnée par défaut
-     * @param $hash String Provenance de la variable
+     * @param $hash string Provenance de la variable
      * @return float
      */
     public static function &getFloat($name, $default = 0.0, $hash = "default") {
@@ -69,9 +69,9 @@ class Core_Request {
     /**
      * Retourne la variable demandée de type double
      *
-     * @param $name String Nom de la variable
+     * @param $name string Nom de la variable
      * @param $default double Donnée par défaut
-     * @param $hash String Provenance de la variable
+     * @param $hash string Provenance de la variable
      * @return double
      */
     public static function &getDouble($name, $default = 0.0, $hash = "default") {
@@ -79,36 +79,36 @@ class Core_Request {
     }
 
     /**
-     * Retourne la variable demandée de type String valide base64
+     * Retourne la variable demandée de type string valide base64
      *
-     * @param $name String Nom de la variable
-     * @param $default String Donnée par défaut
-     * @param $hash String Provenance de la variable
-     * @return String
+     * @param $name string Nom de la variable
+     * @param $default string Donnée par défaut
+     * @param $hash string Provenance de la variable
+     * @return string
      */
     public static function &getBase64($name, $default = "", $hash = "default") {
         return self::getVars($name, "BASE64", $default, $hash);
     }
 
     /**
-     * Retourne la variable demandée de type String
+     * Retourne la variable demandée de type string
      *
-     * @param $name String Nom de la variable
-     * @param $default String Donnée par défaut
-     * @param $hash String Provenance de la variable
-     * @return String
+     * @param $name string Nom de la variable
+     * @param $default string Donnée par défaut
+     * @param $hash string Provenance de la variable
+     * @return string
      */
     public static function &getWord($name, $default = "", $hash = "default") {
         return self::getVars($name, "WORD", $default, $hash);
     }
 
     /**
-     * Retourne la variable demandée de type String
+     * Retourne la variable demandée de type string
      *
-     * @param $name String Nom de la variable
-     * @param $default String Donnée par défaut
-     * @param $hash String Provenance de la variable
-     * @return String
+     * @param $name string Nom de la variable
+     * @param $default string Donnée par défaut
+     * @param $hash string Provenance de la variable
+     * @return string
      */
     public static function &getString($name, $default = "", $hash = "default") {
         return self::getVars($name, "STRING", $default, $hash);
@@ -126,7 +126,7 @@ class Core_Request {
     /**
      * Retourne le contenu de la requête demandée.
      *
-     * @param $hash String
+     * @param $hash string
      * @return array
      */
     private static function &getRequest($hash = "default") {
@@ -166,7 +166,7 @@ class Core_Request {
      * Vérifie le contenu des données importées.
      *
      * @param $content Object
-     * @param $type String
+     * @param $type string
      * @return Object
      */
     private static function &protect($content, $type) {

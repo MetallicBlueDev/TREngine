@@ -21,7 +21,7 @@ class Core_Html {
     /**
      * Nom du cookie de test.
      *
-     * @var String
+     * @var string
      */
     private $cookieTestName = "test";
 
@@ -35,14 +35,14 @@ class Core_Html {
     /**
      * Fonctions et codes javascript demandées.
      *
-     * @var String
+     * @var string
      */
     private $javaScriptCode = "";
 
     /**
      * Codes javascript JQUERY demandées.
      *
-     * @var String
+     * @var string
      */
     private $javaScriptJquery = "";
 
@@ -63,7 +63,7 @@ class Core_Html {
     /**
      * Titre de la page courante.
      *
-     * @var String
+     * @var string
      */
     private $title = "";
 
@@ -77,7 +77,7 @@ class Core_Html {
     /**
      * Description de la page courante.
      *
-     * @var String
+     * @var string
      */
     private $description = "";
 
@@ -123,7 +123,7 @@ class Core_Html {
      * Retourne les scripts à inclure.
      *
      * @param $forceIncludes boolean Pour forcer l'inclusion des fichiers javascript.
-     * @return String
+     * @return string
      */
     private function &includeJavascript($forceIncludes = false) {
         if (Core_Request::getRequestMethod() != "POST" || $forceIncludes) {
@@ -165,7 +165,7 @@ class Core_Html {
     /**
      * Retourne les fichiers de css à inclure.
      *
-     * @return String
+     * @return string
      */
     private function &includeCss() {
         $this->addCssInculdeFile("default.css");
@@ -182,7 +182,7 @@ class Core_Html {
     /**
      * Execute les fonctions javascript demandées.
      *
-     * @return String
+     * @return string
      */
     private function &executeJavascript() {
         $script = "<script type=\"text/javascript\">\n";
@@ -201,7 +201,7 @@ class Core_Html {
     /**
      * Ajoute un code javaScript JQUERY à executer.
      *
-     * @param $javaScript String
+     * @param $javaScript string
      */
     public function addJavascriptJquery($javaScript) {
         if (!empty($this->javaScriptJquery))
@@ -212,7 +212,7 @@ class Core_Html {
     /**
      * Ajoute un code javaScript pur à executer.
      *
-     * @param $javaScript String
+     * @param $javaScript string
      */
     public function addJavascriptCode($javaScript) {
         if (!empty($this->javaScriptCode))
@@ -223,7 +223,7 @@ class Core_Html {
     /**
      * Ajoute un code javascript Jquery ou autre automatiquement à executer.
      *
-     * @param $javaScript String
+     * @param $javaScript string
      */
     public function addJavascript($javaScript) {
         if ($this->isJavascriptEnabled() && Core_Main::isFullScreen()) {
@@ -236,8 +236,8 @@ class Core_Html {
     /**
      * Ajoute un fichier javascript a l'entête.
      *
-     * @param $fileName String
-     * @param $options String
+     * @param $fileName string
+     * @param $options string
      */
     public function addJavascriptFile($fileName, $options = "") {
         if (!array_key_exists($fileName, $this->javaScriptFile)) {
@@ -262,8 +262,8 @@ class Core_Html {
     /**
      * Ajoute un fichier de style CSS a l'entête.
      *
-     * @param $fileName String
-     * @param $options String
+     * @param $fileName string
+     * @param $options string
      */
     private function addCssFile($fileName, $options = "") {
         if (is_file(TR_ENGINE_DIR . "/" . $fileName)) {
@@ -276,8 +276,8 @@ class Core_Html {
     /**
      * Ajoute un fichier de style CSS venant du dossier includes/css a l'entête.
      *
-     * @param $fileName String
-     * @param $options String
+     * @param $fileName string
+     * @param $options string
      */
     public function addCssInculdeFile($fileName, $options = "") {
         $this->addCssFile("includes/css/" . $fileName, $options);
@@ -286,8 +286,8 @@ class Core_Html {
     /**
      * Ajoute un fichier de style CSS venant du dossier template a l'entête.
      *
-     * @param $fileName String
-     * @param $options String
+     * @param $fileName string
+     * @param $options string
      */
     public function addCssTemplateFile($fileName, $options = "") {
         if (Core_Loader::isCallable("Libs_MakeStyle")) {
@@ -315,7 +315,7 @@ class Core_Html {
     /**
      * Retourne l'entête HTML.
      *
-     * @return String
+     * @return string
      */
     public function getMetaHeaders() {
         $title = "";
@@ -352,7 +352,7 @@ class Core_Html {
     /**
      * Retourne les mots clès et la description de la page.
      *
-     * @return String
+     * @return string
      */
     private function getMetaKeywords() {
         $keywords = "";
@@ -380,7 +380,7 @@ class Core_Html {
     /**
      * Affecte le titre a la page courante.
      *
-     * @param $title String
+     * @param $title string
      */
     public function setTitle($title) {
         $this->title = strip_tags($title);
@@ -389,7 +389,7 @@ class Core_Html {
     /**
      * Affecte les mots clès de la page courante.
      *
-     * @param $keywords array or String : un tableau de mots clès prets ou une phrase
+     * @param $keywords array or string : un tableau de mots clès prets ou une phrase
      */
     public function setKeywords($keywords) {
         if (is_array($keywords)) {
@@ -414,7 +414,7 @@ class Core_Html {
     /**
      * Affecte la description de la page courante.
      *
-     * @param $description String
+     * @param $description string
      */
     public function setDescription($description) {
         $this->description = strip_tags($description);
@@ -423,7 +423,7 @@ class Core_Html {
     /**
      * Retourne la combinaison de cles pour le salt
      *
-     * @return String
+     * @return string
      */
     private function getSalt() {
         // Configuration de la clès accessible
@@ -437,9 +437,9 @@ class Core_Html {
     /**
      * Réécriture d'une URL.
      *
-     * @param $link String or array adresse URL a réécrire.
+     * @param $link string or array adresse URL a réécrire.
      * @param $layout boolean true ajouter le layout.
-     * @return String or array.
+     * @return string or array.
      */
     public static function &getLink($link, $layout = false) {
         if (is_array($link)) {
@@ -474,11 +474,11 @@ class Core_Html {
     /**
      * Retourne un lien web utilisable avec et sans javascript.
      *
-     * @param $fullLink String le lien vers une page (utilisé sans javascript).
-     * @param $blockLink String le lien vers une page (utilisé avec javascript).
-     * @param $divId String id du block.
-     * @param $title String Titre du lien.
-     * @return String
+     * @param $fullLink string le lien vers une page (utilisé sans javascript).
+     * @param $blockLink string le lien vers une page (utilisé avec javascript).
+     * @param $divId string id du block.
+     * @param $title string Titre du lien.
+     * @return string
      */
     public static function getLinkForBlock($fullLink, $blockLink, $divId, $title) {
         self::getInstance()->addJavascriptFile("jquery.js");
@@ -488,9 +488,9 @@ class Core_Html {
     /**
      * Redirection ou chargement via javascript vers une page.
      *
-     * @param $url String page demandée a chargé.
+     * @param $url string page demandée a chargé.
      * @param $tps int temps avant le chargement de la page.
-     * @param $method String block de destination si ce n'est pas toutes la page.
+     * @param $method string block de destination si ce n'est pas toutes la page.
      */
     public function redirect($url = "", $tps = 0, $method = "window") {
         // Configuration du temps
@@ -523,7 +523,7 @@ class Core_Html {
     /**
      * Retourne le loader annimé.
      *
-     * @return String
+     * @return string
      */
     public function getLoader() {
         if ($this->isJavascriptEnabled()) {
