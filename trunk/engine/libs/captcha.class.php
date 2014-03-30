@@ -341,5 +341,3 @@ class Libs_Captcha {
     }
 
 }
-
-?>

@@ -63,7 +63,7 @@ class Core_Logger {
     /**
      * Créé une instance de la classe si elle n'existe pas.
      * Retourne l'instance de la classe.
-     * 
+     *
      * @param type $canWriteLog Activer ou désactiver le rapport d'erreur dans un log.
      */
     public static function &getInstance($canWriteLog = false) {
@@ -97,7 +97,7 @@ class Core_Logger {
     /**
      * Ajoute une alerte.
      *
-     * @param $msg string
+     * @param string $msg
      */
     public static function addErrorMessage($msg) {
         self::addMessage($msg, "alert");
@@ -106,7 +106,7 @@ class Core_Logger {
     /**
      * Ajoute un avertissement.
      *
-     * @param $msg string
+     * @param string $msg
      */
     public static function addWarningMessage($msg) {
         self::addMessage($msg, "note");
@@ -115,7 +115,7 @@ class Core_Logger {
     /**
      * Ajoute une information.
      *
-     * @param $msg string
+     * @param string $msg
      */
     public static function addInformationMessage($msg) {
         self::addMessage($msg, "info");
