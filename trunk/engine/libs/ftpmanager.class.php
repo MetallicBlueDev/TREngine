@@ -11,7 +11,7 @@ Core_Loader::classLoader("Libs_CacheModel");
  *
  * @author Sébastien Villemain
  */
-class Libs_FtpManager extends Libs_CacheModel {
+class Libs_CacheFtp extends Libs_CacheModel {
 
     /**
      * Utilisation du mode natif avec extension
