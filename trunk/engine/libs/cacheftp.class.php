@@ -254,17 +254,14 @@ class Libs_CacheFtp extends Libs_CacheModel {
      * @param boolean $overWrite écrasement du fichier
      */
     public function writingCache($path, $content, $overWrite = true) {
-        if (is_file($this->getRootPath($path))) {
-            // Réécriture rapide sur un fichier
-            $this->writingFile($path, $content, $overWrite);
-        } else {
-            // Soit le fichier n'exite pas soit tout le dossier n'existe pas
+        if (!is_file($this->getRootPath($path))) {
+            // Soit le fichier n'exite pas, soit tout le dossier n'existe pas
             // On commence par vérifier et si besoin écrire le dossier
             $this->writingDirectory($path);
-
-            // Puis nous écrivons notre fichier
-            $this->writingFile($path, $content, $overWrite);
         }
+
+        // Réécriture rapide sur un fichier
+        $this->writingFile($path, $content, $overWrite);
     }
 
     /**
@@ -419,7 +416,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
      */
     private function writingFile($path, $content, $overWrite = true) {
         $content = ($overWrite) ? Core_CacheBuffer::getHeader($path, $content) : $content;
-
+//$path : local => chemin valide local jusqu'au fichier, remote => chemin valide FTP (avec le root donc) jusqu'au fichier
         if ($this->connected()) {
             // Demarrage du mode passif
             if ($this->setPassiveMode()) {

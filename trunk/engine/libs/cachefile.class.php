@@ -7,67 +7,146 @@ if (!defined("TR_ENGINE_INDEX")) {
 Core_Loader::classLoader("Libs_CacheModel");
 
 /**
- * Gestionnaire de fichier
+ * Gestionnaire de fichier.
  *
  * @author Sébastien Villemain
  */
 class Libs_CacheFile extends Libs_CacheModel {
 
     /**
-     * Ecriture du ficher cache
+     * Ecriture du ficher cache.
      *
-     * @param $pathFile string chemin vers le fichier cache
-     * @param $content string contenu du fichier cache
-     * @param $overWrite boolean écrasement du fichier
+     * @param string $path chemin vers le fichier cache
+     * @param string $content contenu du fichier cache
+     * @param boolean $overWrite écrasement du fichier
      */
     public function writingCache($path, $content, $overWrite = true) {
-        if (is_file(TR_ENGINE_DIR . "/" . $path)) {
-            // Réécriture rapide sur un fichier
-            $this->writingFile($path, $content, $overWrite);
-        } else {
+        if (!is_file(TR_ENGINE_DIR . "/" . $path)) {
             // Soit le fichier n'exite pas soit tout le dossier n'existe pas
             // On commence par vérifier et si besoin écrire le dossier
             $this->writingDirectory($path);
-            // Puis nous écrivons notre fichier
-            $this->writingFile($path, $content, $overWrite);
+        }
+
+        // Réécriture rapide sur un fichier
+        $this->writingFile($path, $content, $overWrite);
+    }
+
+    /**
+     * Supprime un fichier ou supprime tout fichier trop vieux.
+     * Suprime aussi un dossier.
+     *
+     * @param string $dir chemin vers le fichier ou le dossier
+     * @param int $timeLimit limite de temps
+     */
+    public function removeCache($dir = "", $timeLimit = 0) {
+        if (!empty($dir) && is_file(TR_ENGINE_DIR . "/" . $dir)) {
+            // C'est un fichier a supprimer
+            $this->removeFile($dir, $timeLimit);
+        } else if (is_dir(TR_ENGINE_DIR . "/" . $dir)) {
+            // C'est un dossier a nettoyer
+            $this->removeDirectory($dir, $timeLimit);
         }
     }
 
     /**
-     * Ecriture du fichier cache
+     * Mise à jour de la date de dernière modification.
      *
-     * @param $pathFile string chemin vers le fichier cache
-     * @param $content string contenu du fichier cache
-     * @param $overWrite boolean écrasement du fichier
+     * @param string $path chemin vers le fichier cache
+     * @param int $updateTime
+     */
+    public function touchCache($path, $updateTime = 0) {
+        if ($updateTime < 1) {
+            $updateTime = time();
+        }
+
+        if (!touch(TR_ENGINE_DIR . "/" . $path, $updateTime)) {
+            Core_Logger::addException("touch error on " . $path);
+        }
+    }
+
+    /**
+     * Retourne le listing avec uniquement les fichiers et dossiers présent.
+     *
+     * @param string $dirPath
+     * @return array
+     */
+    public function &listNames($dirPath = "") {
+        $dirList = array();
+
+        // Si le dossier est vide, on prend le dossier par défaut
+        $dirPath = !empty($dirPath) ? TR_ENGINE_DIR . "/" . $dirPath : TR_ENGINE_DIR;
+
+        // Ouverture du dossier
+        $handle = opendir($dirPath);
+
+        // Boucle sur les fichiers
+        do {
+            $file = readdir($handle);
+
+            if (!empty($file)) {
+                // Si c'est un fichier valide
+                if ($file != ".." && $file != "." && $file != "index.html" && $file != "index.htm" && $file != "index.php" && $file != ".htaccess" && $file != ".svn" && $file != "checker.txt") {
+                    $dirList[] = $file;
+                }
+            }
+        } while (false !== $file);
+
+        // Fermeture du dossier
+        closedir($handle);
+
+        // Rangement et mise à zéro du tableau
+        sort($dirList);
+        reset($dirList);
+        return $dirList;
+    }
+
+    /**
+     * Etat du gestionnaire.
+     *
+     * @return boolean
+     */
+    public function isReady() {
+        return true;
+    }
+
+    /**
+     * Ecriture du fichier cache.
+     *
+     * @param string $pathFile chemin vers le fichier cache
+     * @param string $content contenu du fichier cache
+     * @param boolean $overWrite écrasement du fichier
      */
     private function writingFile($pathFile, $content, $overWrite = true) {
         $content = ($overWrite) ? Core_CacheBuffer::getHeader($pathFile, $content) : $content;
 
         // Tentative d'écriture du fichier
         // Des problèmes on été constaté avec l'utilisation du chemin absolu TR_ENGINE_DIR
-        if ($fp = @fopen($pathFile, 'a')) {
+        $fp = fopen($pathFile, 'a');
+
+        if ($fp) {
             // Verrouiller le fichier destination
-            @flock($fp, LOCK_EX);
+            flock($fp, LOCK_EX);
 
             if ($overWrite) {
                 // Tronque pour une réécriture complete
-                @ftruncate($fp, 0);
+                ftruncate($fp, 0);
             }
 
             // Ecriture du fichier cache
             $nbBytesFile = strlen($content);
-            $nbBytesCmd = @fwrite($fp, $content, $nbBytesFile);
+            $nbBytesCmd = fwrite($fp, $content, $nbBytesFile);
 
             // Vérification des bytes écris
             if ($nbBytesCmd != $nbBytesFile) {
                 @unlink(TR_ENGINE_DIR . "/" . $pathFile);
+
                 Core_Logger::addException("bad response for fwrite command. Path : " . $pathFile . ". "
                 . "Server response : " . $nbBytesCmd . " bytes writed, " . $nbBytesFile . " bytes readed");
             }
 
             // Libere le verrou
-            @flock($fp, LOCK_UN);
-            @fclose($fp);
+            flock($fp, LOCK_UN);
+            fclose($fp);
         } else {
             // Recherche d'un fichier htaccess
             $strlen = strlen($pathFile);
@@ -80,16 +159,17 @@ class Libs_CacheFile extends Libs_CacheModel {
                 $this->writingFile($htaccessPath . "index.html", $content, $overWrite);
 
                 // Puis on renomme
-                @rename($htaccessPath . "index.html", $htaccessPath . ".htaccess");
+                rename($htaccessPath . "index.html", $htaccessPath . ".htaccess");
             }
+
             Core_Logger::addException("bad response for fopen command. Path : " . $pathFile);
         }
     }
 
     /**
-     * Ecriture des dossiers, reconstitution des dossiers
+     * Ecriture des dossiers, reconstitution des dossiers.
      *
-     * @param $path chemin voulu
+     * @param string $path chemin voulu
      */
     private function writingDirectory($path) {
         // Savoir si le path est un dossier ou un fichier
@@ -104,6 +184,7 @@ class Libs_CacheFile extends Libs_CacheModel {
         if ($nbDir > 0) {
             foreach ($dirs as $dir) {
                 $count++;
+
                 // Si le dernier élèment est un fichier ou simplement vide
                 if (($count == $nbDir && !$pathIsDir) || empty($dir)) {
                     // Il vaut mieux continuer, plutot que de faire un arret avec break
@@ -115,8 +196,8 @@ class Libs_CacheFile extends Libs_CacheModel {
 
                 if (!is_dir($currentPath)) {
                     // Création du dossier
-                    @mkdir($currentPath, $this->chmod);
-                    @chmod($currentPath, $this->chmod);
+                    mkdir($currentPath, $this->chmod);
+                    chmod($currentPath, $this->chmod);
 
                     // Vérification de l'existence du fichier
                     if (!is_dir($currentPath)) {
@@ -135,27 +216,10 @@ class Libs_CacheFile extends Libs_CacheModel {
     }
 
     /**
-     * Supprime un fichier ou supprime tout fichier trop vieux
-     * Suprime aussi un dossier
+     * Supprime le fichier cache.
      *
-     * @param $dir chemin vers le fichier ou le dossier
-     * @param $timeLimit limite de temps
-     */
-    public function removeCache($dir = "", $timeLimit = 0) {
-        if (!empty($dir) && is_file(TR_ENGINE_DIR . "/" . $dir)) {
-            // C'est un fichier a supprimer
-            $this->removeFile($dir, $timeLimit);
-        } else if (is_dir(TR_ENGINE_DIR . "/" . $dir)) {
-            // C'est un dossier a nettoyer
-            $this->removeDirectory($dir, $timeLimit);
-        }
-    }
-
-    /**
-     * Supprime le fichier cache
-     *
-     * @param $path
-     * @param $timeLimit
+     * @param string $path
+     * @param int $timeLimit
      */
     private function removeFile($path, $timeLimit) {
         // Vérification de la date d'expiration
@@ -174,14 +238,18 @@ class Libs_CacheFile extends Libs_CacheModel {
         }
 
         if ($deleteFile) {
-            if ($fp = @fopen(TR_ENGINE_DIR . "/" . $path, 'a')) {
+            $fp = @fopen(TR_ENGINE_DIR . "/" . $path, 'a');
+
+            if ($fp) {
                 // Verrouiller le fichier destination
-                @flock($fp, LOCK_EX);
+                flock($fp, LOCK_EX);
+
                 // Libere le verrou
-                @flock($fp, LOCK_UN);
-                @fclose($fp);
+                flock($fp, LOCK_UN);
+                fclose($fp);
+
                 // Suppression
-                @unlink(TR_ENGINE_DIR . "/" . $path);
+                unlink(TR_ENGINE_DIR . "/" . $path);
             }
 
             if (is_file(TR_ENGINE_DIR . "/" . $path)) {
@@ -191,47 +259,54 @@ class Libs_CacheFile extends Libs_CacheModel {
     }
 
     /**
-     * Supprime le dossier
+     * Supprime le dossier.
      *
-     * @param $dirPath
-     * @param $timeLimit
+     * @param string $dirPath
+     * @param int $timeLimit
      */
     private function removeDirectory($dirPath, $timeLimit) {
         // Ouverture du dossier
-        $handle = @opendir(TR_ENGINE_DIR . "/" . $dirPath);
+        $handle = opendir(TR_ENGINE_DIR . "/" . $dirPath);
+
         // Boucle sur les fichiers
-        while (false !== ($file = @readdir($handle))) {
-            // Si c'est un fichier valide
-            if ($file != ".." && $file != "." && $file != ".svn") {
-                // Vérification avant suppression
-                if ($timeLimit > 0) {
-                    if (is_file($dirPath . "/" . $file)) {
-                        // Si le fichier n'est pas périmé, on passe au suivant
-                        if ($timeLimit < filemtime(TR_ENGINE_DIR . "/" . $dirPath . "/" . $file))
+        do {
+            $file = readdir($handle);
+
+            if (!empty($file)) {
+                // Si c'est un fichier valide
+                if ($file != ".." && $file != "." && $file != ".svn") {
+                    // Vérification avant suppression
+                    if ($timeLimit > 0) {
+                        if (is_file($dirPath . "/" . $file)) {
+                            // Si le fichier n'est pas périmé, on passe au suivant
+                            if ($timeLimit < filemtime(TR_ENGINE_DIR . "/" . $dirPath . "/" . $file)) {
+                                continue;
+                            }
+                        } else {
+                            // C'est un dossier,
+                            // on ne souhaite pas le supprimer dans ce mode de fonctionnement
                             continue;
+                        }
+                    }
+
+                    // Suppression
+                    if (is_file(TR_ENGINE_DIR . "/" . $dirPath . "/" . $file)) {
+                        // Suppression du fichier
+                        $this->removeFile($dirPath . "/" . $file, $timeLimit);
                     } else {
-                        // C'est un dossier,
-                        // on ne souhaite pas le supprimer dans ce mode de fonctionnement
-                        continue;
+                        // Suppression du dossier
+                        $this->removeDirectory($dirPath . "/" . $file, 0);
                     }
                 }
-
-                // Suppression
-                if (is_file(TR_ENGINE_DIR . "/" . $dirPath . "/" . $file)) {
-                    // Suppression du fichier
-                    $this->removeFile($dirPath . "/" . $file, $timeLimit);
-                } else {
-                    // Suppression du dossier
-                    $this->removeDirectory($dirPath . "/" . $file, 0);
-                }
             }
-        }
+        } while ($file !== false);
+
         // Fermeture du dossier
-        @closedir($handle);
+        closedir($handle);
 
         // Suppression du dernière dossier
         if ($timeLimit == 0) {
-            @rmdir(TR_ENGINE_DIR . "/" . $dirPath);
+            rmdir(TR_ENGINE_DIR . "/" . $dirPath);
 
             if (is_dir(TR_ENGINE_DIR . "/" . $dirPath)) {
                 Core_Logger::addException("bad response for rmdir command. Path : " . $dirPath);
@@ -239,57 +314,4 @@ class Libs_CacheFile extends Libs_CacheModel {
         }
     }
 
-    /**
-     * Mise à jour de la date de dernière modification
-     *
-     * @param $path chemin vers le fichier cache
-     * @param $updateTime
-     */
-    public function touchCache($path, $updateTime = 0) {
-        if ($updateTime < 1)
-            $updateTime = time();
-        if (!@touch(TR_ENGINE_DIR . "/" . $path, $updateTime)) {
-            Core_Logger::addException("touch error on " . $path);
-        }
-    }
-
-    /**
-     * Retourne le listing avec uniquement les fichiers et dossiers présent
-     *
-     * @param $dirPath
-     * @return array
-     */
-    public function &listNames($dirPath = "") {
-        // Si le dossier est vide, on prend le dossier par défaut
-        $dirPath = !empty($dirPath) ? TR_ENGINE_DIR . "/" . $dirPath : TR_ENGINE_DIR;
-
-        $dirList = array();
-        // Ouverture du dossier
-        $handle = @opendir($dirPath);
-        // Boucle sur les fichiers
-        while (false !== ($file = @readdir($handle))) {
-            // Si c'est un fichier valide
-            if ($file != ".." && $file != "." && $file != "index.html" && $file != "index.htm" && $file != "index.php" && $file != ".htaccess" && $file != ".svn" && $file != "checker.txt") {
-                $dirList[] = $file;
-            }
-        }
-        // Fermeture du dossier
-        @closedir($handle);
-        // Rangement et mise à zéro du tableau
-        sort($dirList);
-        reset($dirList);
-        return $dirList;
-    }
-
-    /**
-     * état du gestionnaire
-     *
-     * @return boolean
-     */
-    public function isReady() {
-        return true;
-    }
-
 }
-
-?>
