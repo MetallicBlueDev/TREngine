@@ -93,10 +93,10 @@ class Libs_Block {
     /**
      * Charge un block.
      *
-     * @param $where array exemple array(block_id = '0').
+     * @param array $where exemple array(block_id = '0').
      */
     // TODO mettre en cache la requete
-    public function launchOneBlock($where = array()) {
+    public function launchOneBlock(array $where = array()) {
         if (empty($where)) { // Capture de la variable
             $where = array(
                 "block_id = '" . Core_Request::getInt("blockId") . "'");
@@ -129,7 +129,7 @@ class Libs_Block {
     /**
      * Retourne les blocks compilés voulu (right/left/top/bottom).
      *
-     * @param $side string
+     * @param string $side
      * @return string
      */
     public function &getBlocks($side) {
@@ -139,7 +139,7 @@ class Libs_Block {
         $blockSide = "";
         if (isset($this->blocksCompiled[$sidePosition])) {
             foreach ($this->blocksCompiled[$sidePosition] as $key => $block) {
-                $blockSide .= $this->output($block, $sidePosition, $key);
+                $blockSide .= $this->getBlockBuffer($block, $sidePosition, $key);
             }
         }
         return $blockSide;
@@ -148,10 +148,11 @@ class Libs_Block {
     /**
      * Liste des orientations possible.
      *
-     * @return array("numeric" => identifiant int, "letters" => nom de la position).
+     * @return array array("numeric" => identifiant int, "letters" => nom de la position).
      */
     public static function &listSide() {
         $sideList = array();
+
         for ($i = 1; $i < 7; $i++) {
             $sideList[] = array(
                 "numeric" => $i,
@@ -163,7 +164,7 @@ class Libs_Block {
     /**
      * Retourne le type d'orientation avec la traduction.
      *
-     * @param $side int or string.
+     * @param string $side
      * @return string postion traduit (si possible).
      */
     public static function &getLitteralSide($side) {
@@ -177,10 +178,14 @@ class Libs_Block {
      *
      * @return string
      */
-    public function getBlock() {
+    public function &getBlock() {
+        $buffer = "";
+
         foreach ($this->blocksCompiled as $side => $compiled) {
-            return $this->output($this->blocksCompiled[$side][0], $side, 0);
+            $buffer = $this->getBlockBuffer($this->blocksCompiled[$side][0], $side, 0);
+            break;
         }
+        return $buffer;
     }
 
     /**
@@ -190,10 +195,13 @@ class Libs_Block {
      */
     public static function &listBlocks() {
         $blockList = array();
+
         $files = Core_CacheBuffer::listNames("blocks");
+
         foreach ($files as $key => $fileName) {
             // Nettoyage du nom de la page
             $pos = strpos($fileName, ".block");
+
             // Si c'est un block
             if ($pos !== false && $pos > 0) {
                 $blockList[] = substr($fileName, 0, $pos);
@@ -205,7 +213,7 @@ class Libs_Block {
     /**
      * Vérifie si le block est valide.
      *
-     * @param $blockType string
+     * @param string $blockType
      * @return boolean true block valide
      */
     private function isBlock($blockType) {
@@ -215,10 +223,10 @@ class Libs_Block {
     /**
      * Vérifie si le block doit être activé.
      *
-     * @param $modules array
+     * @param array $modules
      * @return boolean true le block doit être actif.
      */
-    private function blockActiveMod($modules = array(
+    private function &blockActiveMod(array $modules = array(
         "all")) {
         $rslt = false;
 
@@ -236,7 +244,7 @@ class Libs_Block {
     /**
      * Récupère le block.
      *
-     * @param array $block
+     * @param array - object $block
      */
     private function get($block) {
         // Vérification de l'accès
@@ -350,7 +358,8 @@ class Libs_Block {
      * @param int $key
      * @return string
      */
-    private function &output(&$buffer, $side, $key) {
+    private function &getBlockBuffer(&$buffer, $side, $key) {
+        // Tamporisation de sortie
         if (Core_Main::doUrlRewriting()) {
             // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
             if (strpos(self::$blocksConfig[$side][$key]->content, "rewriteBuffer") !== false) {

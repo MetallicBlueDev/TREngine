@@ -58,7 +58,7 @@ class Libs_Module {
 
     /**
      * Création du gestionnaire.
-     * 
+     *
      * @param string $module
      * @param string $page
      * @param string $view
@@ -248,10 +248,11 @@ class Libs_Module {
         $buffer = $this->moduleCompiled;
 
         // Tamporisation de sortie
-        if (Core_Main::doUrlRewriting() && ($rewriteBuffer || Exec_Utils::inArray("rewriteBuffer", $this->getInfoModule()->getConfigs()))) {
-            $buffer = Core_UrlRewriting::rewriteBuffer($buffer);
+        if (Core_Main::doUrlRewriting()) {
+            if ($rewriteBuffer || Exec_Utils::inArray("rewriteBuffer", $this->getInfoModule()->getConfigs())) {
+                $buffer = Core_UrlRewriting::rewriteBuffer($buffer);
+            }
         }
-        // Relachement des tampon
         return $buffer;
     }
 
