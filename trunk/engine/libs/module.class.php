@@ -56,6 +56,13 @@ class Libs_Module {
      */
     private $modules = array();
 
+    /**
+     * Création du gestionnaire.
+     * 
+     * @param string $module
+     * @param string $page
+     * @param string $view
+     */
     private function __construct($module, $page, $view) {
         $this->module = $module;
         $this->page = $page;
@@ -89,6 +96,9 @@ class Libs_Module {
     /**
      * Création et récuperation de l'instance du module.
      *
+     * @param string $module
+     * @param string $page
+     * @param string $view
      * @return Libs_Module
      */
     public static function &getInstance($module = "", $page = "", $view = "") {
@@ -231,6 +241,7 @@ class Libs_Module {
     /**
      * Retourne le module compilé.
      *
+     * @param string $rewriteBuffer
      * @return string
      */
     public function &getModule($rewriteBuffer = false) {

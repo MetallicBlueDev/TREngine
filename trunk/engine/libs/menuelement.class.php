@@ -49,7 +49,7 @@ class Libs_MenuElement {
     /**
      * Construction de l'élément du menu
      *
-     * @param array - object $item 
+     * @param array - object $item
      * @param array - object $items
      */
     public function __construct($item, &$items) {
@@ -173,7 +173,7 @@ class Libs_MenuElement {
      * Ajoute un enfant à l'item courant.
      *
      * @param Libs_MenuElement or array - object $child
-     * @param $items array - object
+     * @param array - object $items
      */
     public function &addChild(&$child, &$items = array()) {
         // Création de l'enfant si besoin
@@ -201,7 +201,7 @@ class Libs_MenuElement {
      * Supprime un enfant.
      *
      * @param Libs_MenuElement or array - object $child
-     * @param $items array - object
+     * @param array - object $items
      */
     public function removeChild(&$child = null, &$items = array()) {
         if ($child === null) {

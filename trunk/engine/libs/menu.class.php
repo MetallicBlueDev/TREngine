@@ -73,7 +73,7 @@ class Libs_Menu {
     /**
      * Création d'un rendu complet du menu.
      *
-     * @param $callback string
+     * @param string $callback
      * @return string
      */
     public function &render($callback = "Block_Menu::getLine") {

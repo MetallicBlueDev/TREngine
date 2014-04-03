@@ -49,7 +49,7 @@ class Libs_MakeStyle {
     /**
      * Nouveau template.
      *
-     * @param $fileName string nom du template
+     * @param string $fileName nom du template
      */
     public function __construct($fileName = "") {
         $this->debugMode = false;
