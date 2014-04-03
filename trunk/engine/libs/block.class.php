@@ -139,7 +139,7 @@ class Libs_Block {
         $blockSide = "";
         if (isset($this->blocksCompiled[$sidePosition])) {
             foreach ($this->blocksCompiled[$sidePosition] as $key => $block) {
-                $blockSide .= $this->outPut($block, $this->doRewriteBuffer($sidePosition, $key));
+                $blockSide .= $this->output($block, $sidePosition, $key);
             }
         }
         return $blockSide;
@@ -179,7 +179,7 @@ class Libs_Block {
      */
     public function getBlock() {
         foreach ($this->blocksCompiled as $side => $compiled) {
-            return $this->outPut($this->blocksCompiled[$side][0], $this->doRewriteBuffer($side, 0));
+            return $this->output($this->blocksCompiled[$side][0], $side, 0);
         }
     }
 
@@ -220,20 +220,23 @@ class Libs_Block {
      */
     private function blockActiveMod($modules = array(
         "all")) {
+        $rslt = false;
+
         if (Core_Loader::isCallable("Libs_Module")) {
             foreach ($modules as $modSelected) {
                 if ($modSelected == "all" || Libs_Module::isSelected($modSelected)) {
-                    return true;
+                    $rslt = true;
+                    break;
                 }
             }
         }
-        return false;
+        return $rslt;
     }
 
     /**
      * Récupère le block.
      *
-     * @param $block array
+     * @param array $block
      */
     private function get($block) {
         // Vérification de l'accès
@@ -245,6 +248,7 @@ class Libs_Block {
             if ($loaded) {
                 if (Core_Loader::isCallable($blockClassName, "display")) {
                     Core_Translate::translate("blocks/" . $block->type);
+
                     $BlockClass = new $blockClassName();
                     $BlockClass->blockId = $block->block_id;
                     $BlockClass->side = $block->side;
@@ -269,7 +273,7 @@ class Libs_Block {
     /**
      * Retourne le type d'orientation/postion en lettres.
      *
-     * @param $side int
+     * @param int $side
      * @return string identifiant de la position (right, left...).
      */
     private static function &getSideLetters($side) {
@@ -277,19 +281,26 @@ class Libs_Block {
         // Si on renseigne bien un entier
         if (is_numeric($side)) { // On recherche la position
             switch ($side) {
-                case 1: $sideLetters = "right";
+                case 1:
+                    $sideLetters = "right";
                     break;
-                case 2: $sideLetters = "left";
+                case 2:
+                    $sideLetters = "left";
                     break;
-                case 3: $sideLetters = "top";
+                case 3:
+                    $sideLetters = "top";
                     break;
-                case 4: $sideLetters = "bottom";
+                case 4:
+                    $sideLetters = "bottom";
                     break;
-                case 5: $sideLetters = "moduletop";
+                case 5:
+                    $sideLetters = "moduletop";
                     break;
-                case 6: $sideLetters = "modulebottom";
+                case 6:
+                    $sideLetters = "modulebottom";
                     break;
-                default : Core_Secure::getInstance()->throwException("blockSide", "Numeric side:" . $side);
+                default :
+                    Core_Secure::getInstance()->throwException("blockSide", "Numeric side:" . $side);
             }
         }
         return $sideLetters;
@@ -298,7 +309,7 @@ class Libs_Block {
     /**
      * Retourne le type d'orientation/position en chiffre.
      *
-     * @param $side string
+     * @param string $side
      * @return int identifiant de la position (1, 2..).
      */
     private static function &getSideNumeric($side) {
@@ -306,19 +317,26 @@ class Libs_Block {
         // Si on renseigne bien un string
         if (is_string($side)) { // On recherche la position
             switch ($side) {
-                case 'right': $sideNumeric = 1;
+                case 'right':
+                    $sideNumeric = 1;
                     break;
-                case 'left': $sideNumeric = 2;
+                case 'left':
+                    $sideNumeric = 2;
                     break;
-                case 'top': $sideNumeric = 3;
+                case 'top':
+                    $sideNumeric = 3;
                     break;
-                case 'bottom': $sideNumeric = 4;
+                case 'bottom':
+                    $sideNumeric = 4;
                     break;
-                case 'moduletop': $sideNumeric = 5;
+                case 'moduletop':
+                    $sideNumeric = 5;
                     break;
-                case 'modulebottom': $sideNumeric = 6;
+                case 'modulebottom':
+                    $sideNumeric = 6;
                     break;
-                default : Core_Secure::getInstance()->throwException("blockSide", "Letters side:" . $side);
+                default :
+                    Core_Secure::getInstance()->throwException("blockSide", "Letters side:" . $side);
             }
         }
         return $sideNumeric;
@@ -327,25 +345,19 @@ class Libs_Block {
     /**
      * Réécriture du tampon de sortie si besoin.
      *
-     * @param $buffer string
-     * @return $buffer string
+     * @param string $buffer
+     * @param int $side
+     * @param int $key
+     * @return string
      */
-    private function &outPut(&$buffer, $rewriteBuffer = false) {
-        if (Core_Main::doUrlRewriting() && $rewriteBuffer) {
-            $buffer = Core_UrlRewriting::rewriteBuffer($buffer);
+    private function &output(&$buffer, $side, $key) {
+        if (Core_Main::doUrlRewriting()) {
+            // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
+            if (strpos(self::$blocksConfig[$side][$key]->content, "rewriteBuffer") !== false) {
+                $buffer = Core_UrlRewriting::rewriteBuffer($buffer);
+            }
         }
         return $buffer;
-    }
-
-    /**
-     * Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer.
-     *
-     * @param $side int coté ou se trouve le block.
-     * @param $key int cles du block.
-     * @return boolean true il doit y avoir réécriture.
-     */
-    private function doRewriteBuffer($side, $key) {
-        return (strpos(self::$blocksConfig[$side][$key]->content, "rewriteBuffer") !== false) ? true : false;
     }
 
 }
