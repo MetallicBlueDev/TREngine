@@ -494,7 +494,7 @@ class Core_CacheBuffer {
             }
 
             // Si il y a un souci, on démarre par défaut le gestionnaire de fichier
-            if (!self::$protocol->isReady()) {
+            if (!self::$protocol->canUse()) {
                 // Démarrage du gestionnaire de fichier
                 Core_Loader::classLoader("Libs_CacheFile");
                 self::$protocol = new Libs_CacheFile();

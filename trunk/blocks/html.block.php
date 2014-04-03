@@ -9,7 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-class Block_Html extends Block_Model {
+class Block_Html extends Libs_BlockModel {
 
 }
 

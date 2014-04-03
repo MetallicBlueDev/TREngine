@@ -4,6 +4,8 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
+Core_Loader::classLoader("Libs_BlockModel");
+
 /**
  * Gestionnaire de blocks.
  *
@@ -19,14 +21,14 @@ class Libs_Block {
     private static $libsBlock = null;
 
     /**
-     * Blocks chargés, tableau a deux dimensions.
+     * Blocks chargés, tableau à deux dimensions.
      *
      * @var array
      */
     public static $blocksConfig = array();
 
     /**
-     * Blocks compilés, tableau a deux dimensions.
+     * Blocks compilés, tableau à deux dimensions.
      *
      * @var array
      */
@@ -46,34 +48,6 @@ class Libs_Block {
             self::$libsBlock = new self();
         }
         return self::$libsBlock;
-    }
-
-    /**
-     * Vérifie si le block est valide.
-     *
-     * @param $blockType string
-     * @return boolean true block valide
-     */
-    private function isBlock($blockType) {
-        return is_file(TR_ENGINE_DIR . "/blocks/" . $blockType . ".block.php");
-    }
-
-    /**
-     * Vérifie si le block doit être activé.
-     *
-     * @param $modules array
-     * @return boolean true le block doit être actif.
-     */
-    private function blockActiveMod($modules = array(
-        "all")) {
-        if (Core_Loader::isCallable("Libs_Module")) {
-            foreach ($modules as $modSelected) {
-                if ($modSelected == "all" || Libs_Module::isSelected($modSelected)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**
@@ -100,6 +74,7 @@ class Libs_Block {
         if (Core_Sql::affectedRows() > 0) {
             // Récuperation des données des blocks
             Core_Sql::addBuffer("block");
+
             while ($block = Core_Sql::fetchBuffer("block")) {
                 $block->mods = explode("|", $block->mods);
 
@@ -152,6 +127,110 @@ class Libs_Block {
     }
 
     /**
+     * Retourne les blocks compilés voulu (right/left/top/bottom).
+     *
+     * @param $side string
+     * @return string
+     */
+    public function &getBlocks($side) {
+        // Conversion du side en identifiant numérique
+        $sidePosition = is_string($side) ? self::getSideNumeric($side) : $side;
+
+        $blockSide = "";
+        if (isset($this->blocksCompiled[$sidePosition])) {
+            foreach ($this->blocksCompiled[$sidePosition] as $key => $block) {
+                $blockSide .= $this->outPut($block, $this->doRewriteBuffer($sidePosition, $key));
+            }
+        }
+        return $blockSide;
+    }
+
+    /**
+     * Liste des orientations possible.
+     *
+     * @return array("numeric" => identifiant int, "letters" => nom de la position).
+     */
+    public static function &listSide() {
+        $sideList = array();
+        for ($i = 1; $i < 7; $i++) {
+            $sideList[] = array(
+                "numeric" => $i,
+                "letters" => self::getLitteralSide($i));
+        }
+        return $sideList;
+    }
+
+    /**
+     * Retourne le type d'orientation avec la traduction.
+     *
+     * @param $side int or string.
+     * @return string postion traduit (si possible).
+     */
+    public static function &getLitteralSide($side) {
+        $side = strtoupper(self::getSideLetters($side));
+        $side = defined($side) ? constant($side) : $side;
+        return $side;
+    }
+
+    /**
+     * Retourne le block compilé.
+     *
+     * @return string
+     */
+    public function getBlock() {
+        foreach ($this->blocksCompiled as $side => $compiled) {
+            return $this->outPut($this->blocksCompiled[$side][0], $this->doRewriteBuffer($side, 0));
+        }
+    }
+
+    /**
+     * Retourne la liste des blocks disponibles.
+     *
+     * @return array
+     */
+    public static function &listBlocks() {
+        $blockList = array();
+        $files = Core_CacheBuffer::listNames("blocks");
+        foreach ($files as $key => $fileName) {
+            // Nettoyage du nom de la page
+            $pos = strpos($fileName, ".block");
+            // Si c'est un block
+            if ($pos !== false && $pos > 0) {
+                $blockList[] = substr($fileName, 0, $pos);
+            }
+        }
+        return $blockList;
+    }
+
+    /**
+     * Vérifie si le block est valide.
+     *
+     * @param $blockType string
+     * @return boolean true block valide
+     */
+    private function isBlock($blockType) {
+        return is_file(TR_ENGINE_DIR . "/blocks/" . $blockType . ".block.php");
+    }
+
+    /**
+     * Vérifie si le block doit être activé.
+     *
+     * @param $modules array
+     * @return boolean true le block doit être actif.
+     */
+    private function blockActiveMod($modules = array(
+        "all")) {
+        if (Core_Loader::isCallable("Libs_Module")) {
+            foreach ($modules as $modSelected) {
+                if ($modSelected == "all" || Libs_Module::isSelected($modSelected)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Récupère le block.
      *
      * @param $block array
@@ -185,25 +264,6 @@ class Libs_Block {
                 }
             }
         }
-    }
-
-    /**
-     * Retourne les blocks compilés voulu (right/left/top/bottom).
-     *
-     * @param $side string
-     * @return string
-     */
-    public function &getBlocks($side) {
-        // Conversion du side en identifiant numérique
-        $sidePosition = is_string($side) ? self::getSideNumeric($side) : $side;
-
-        $blockSide = "";
-        if (isset($this->blocksCompiled[$sidePosition])) {
-            foreach ($this->blocksCompiled[$sidePosition] as $key => $block) {
-                $blockSide .= $this->outPut($block, $this->doRewriteBuffer($sidePosition, $key));
-            }
-        }
-        return $blockSide;
     }
 
     /**
@@ -265,33 +325,6 @@ class Libs_Block {
     }
 
     /**
-     * Liste des orientations possible.
-     *
-     * @return array("numeric" => identifiant int, "letters" => nom de la position).
-     */
-    public static function &listSide() {
-        $sideList = array();
-        for ($i = 1; $i < 7; $i++) {
-            $sideList[] = array(
-                "numeric" => $i,
-                "letters" => self::getLitteralSide($i));
-        }
-        return $sideList;
-    }
-
-    /**
-     * Retourne le type d'orientation avec la traduction.
-     *
-     * @param $side int or string.
-     * @return string postion traduit (si possible).
-     */
-    public static function &getLitteralSide($side) {
-        $side = strtoupper(self::getSideLetters($side));
-        $side = defined($side) ? constant($side) : $side;
-        return $side;
-    }
-
-    /**
      * Réécriture du tampon de sortie si besoin.
      *
      * @param $buffer string
@@ -315,116 +348,4 @@ class Libs_Block {
         return (strpos(self::$blocksConfig[$side][$key]->content, "rewriteBuffer") !== false) ? true : false;
     }
 
-    /**
-     * Retourne le block compilé.
-     *
-     * @return string
-     */
-    public function getBlock() {
-        foreach ($this->blocksCompiled as $side => $compiled) {
-            return $this->outPut($this->blocksCompiled[$side][0], $this->doRewriteBuffer($side, 0));
-        }
-    }
-
-    /**
-     * Retourne la liste des blocks disponibles.
-     *
-     * @return array
-     */
-    public static function &listBlocks() {
-        $blockList = array();
-        $files = Core_CacheBuffer::listNames("blocks");
-        foreach ($files as $key => $fileName) {
-            // Nettoyage du nom de la page
-            $pos = strpos($fileName, ".block");
-            // Si c'est un block
-            if ($pos !== false && $pos > 0) {
-                $blockList[] = substr($fileName, 0, $pos);
-            }
-        }
-        return $blockList;
-    }
-
 }
-
-/**
- * Block de base, hérité par tous les autres blocks.
- * Modèle pour le contenu d'un block.
- *
- * @author Sébastien Villemain
- */
-abstract class Block_Model {
-
-    /**
-     * Identifiant du block.
-     *
-     * @var int
-     */
-    public $blockId = 0;
-
-    /**
-     * Position du block en chiffre.
-     *
-     * @var int
-     */
-    public $side = 0;
-
-    /**
-     * Position du block en lettre.
-     *
-     * @var string
-     */
-    public $sideName = "";
-
-    /**
-     * Nom complet du template de block a utiliser.
-     *
-     * @var string
-     */
-    public $templateName = "";
-
-    /**
-     * Titre du block.
-     *
-     * @var string
-     */
-    public $title = "";
-
-    /**
-     * Contenu du block.
-     *
-     * @var string
-     */
-    public $content = "";
-
-    /**
-     * Rank pour acceder au block.
-     *
-     * @var int
-     */
-    public $rank = "";
-
-    /**
-     * Affichage par défaut.
-     */
-    public function display() {
-        Core_Logger::addErrorMessage(ERROR_BLOCK_IMPLEMENT . ((!empty($this->title)) ? " (" . $this->title . ")" : ""));
-    }
-
-    /**
-     * Procédure d'installation du block.
-     */
-    public function install() {
-
-    }
-
-    /**
-     * Procédure de désinstallation du block.
-     */
-    public function uninstall() {
-
-    }
-
-}
-
-?>

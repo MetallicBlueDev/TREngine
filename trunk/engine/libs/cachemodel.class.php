@@ -75,11 +75,11 @@ abstract class Libs_CacheModel {
     }
 
     /**
-     * Retourne l'état du gestionnaire.
+     * Détermine si le gestion est utilisable.
      *
      * @return boolean true ready
      */
-    public function isReady() {
+    public function canUse() {
         return false;
     }
 

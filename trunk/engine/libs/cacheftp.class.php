@@ -146,11 +146,11 @@ class Libs_CacheFtp extends Libs_CacheModel {
     }
 
     /**
-     * état de la connexion au ftp
-     *
+     * Etat de la connexion FTP.
+     * 
      * @return boolean
      */
-    public function isReady() {
+    public function canUse() {
         return $this->connected();
     }
 
