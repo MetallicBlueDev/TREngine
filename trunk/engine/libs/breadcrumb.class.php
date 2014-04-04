@@ -25,7 +25,7 @@ class Libs_Breadcrumb {
      */
     private $breadcrumbTrail = array();
 
-    public function __construct() {
+    private function __construct() {
         // Ajoute la page principal
         $this->addTrail(Core_Main::$coreConfig['defaultSiteName'], "index.php");
     }

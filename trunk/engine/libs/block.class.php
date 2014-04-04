@@ -34,7 +34,7 @@ class Libs_Block {
      */
     private $blocksCompiled = array();
 
-    public function __construct() {
+    private function __construct() {
 
     }
 
