@@ -464,9 +464,7 @@ class Core_Html {
                 else
                     $link = "index.php?" . $link;
             }
-            if (Core_Main::doUrlRewriting()) {
-                $link = Core_UrlRewriting::rewriteLink($link);
-            }
+            $link = Core_UrlRewriting::getInstance()->rewriteLink($link);
         }
         return $link;
     }

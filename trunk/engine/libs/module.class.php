@@ -247,11 +247,9 @@ class Libs_Module {
     public function &getModule($rewriteBuffer = false) {
         $buffer = $this->moduleCompiled;
 
-        // Tamporisation de sortie
-        if (Core_Main::doUrlRewriting()) {
-            if ($rewriteBuffer || Exec_Utils::inArray("rewriteBuffer", $this->getInfoModule()->getConfigs())) {
-                $buffer = Core_UrlRewriting::rewriteBuffer($buffer);
-            }
+        // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
+        if ($rewriteBuffer || Exec_Utils::inArray("rewriteBuffer", $this->getInfoModule()->getConfigs())) {
+            $buffer = Core_UrlRewriting::getInstance()->rewriteBuffer($buffer);
         }
         return $buffer;
     }

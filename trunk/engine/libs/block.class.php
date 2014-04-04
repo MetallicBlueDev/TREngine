@@ -359,12 +359,9 @@ class Libs_Block {
      * @return string
      */
     private function &getBlockBuffer(&$buffer, $side, $key) {
-        // Tamporisation de sortie
-        if (Core_Main::doUrlRewriting()) {
-            // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
-            if (strpos(self::$blocksConfig[$side][$key]->content, "rewriteBuffer") !== false) {
-                $buffer = Core_UrlRewriting::rewriteBuffer($buffer);
-            }
+        // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
+        if (strpos(self::$blocksConfig[$side][$key]->content, "rewriteBuffer") !== false) {
+            $buffer = Core_UrlRewriting::getInstance()->rewriteBuffer($buffer);
         }
         return $buffer;
     }
