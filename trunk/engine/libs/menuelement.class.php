@@ -113,7 +113,7 @@ class Libs_MenuElement {
         if (!empty($name)) {
             unset($this->attributs[$name]);
         } else {
-            foreach ($this->attributs as $key => $attributs) {
+            foreach (array_keys($this->attributs) as $key) {
                 unset($this->attributs[$key]);
             }
         }

@@ -182,7 +182,7 @@ class Libs_Block {
         $buffer = "";
 
         foreach ($this->blocksCompiled as $side => $compiled) {
-            $buffer = $this->getBlockBuffer($this->blocksCompiled[$side][0], $side, 0);
+            $buffer = $this->getBlockBuffer($compiled[0], $side, 0);
             break;
         }
         return $buffer;
@@ -198,7 +198,7 @@ class Libs_Block {
 
         $files = Core_CacheBuffer::listNames("blocks");
 
-        foreach ($files as $key => $fileName) {
+        foreach ($files as $fileName) {
             // Nettoyage du nom de la page
             $pos = strpos($fileName, ".block");
 
