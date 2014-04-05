@@ -16,7 +16,7 @@ class Core_UrlRewriting {
      *
      * @var Core_UrlRewriting
      */
-    private static $coreUrl = null;
+    private static $coreUrlRewriting = null;
 
     /**
      * Vérifie si l'url rewriting a été activée.
@@ -40,10 +40,10 @@ class Core_UrlRewriting {
      * @return Core_UrlRewriting
      */
     public static function &getInstance() {
-        if (self::$coreUrl == null) {
-            self::$coreUrl = new self();
+        if (self::$coreUrlRewriting == null) {
+            self::$coreUrlRewriting = new self();
         }
-        return self::$coreUrl;
+        return self::$coreUrlRewriting;
     }
 
     public function &rewriteLink($link) {
