@@ -255,7 +255,7 @@ class Libs_Block {
             // Vérification du block
             if ($loaded) {
                 if (Core_Loader::isCallable($blockClassName, "display")) {
-                    Core_Translate::translate("blocks/" . $block->type);
+                    Core_Translate::getInstance()->translate("blocks/" . $block->type);
 
                     $BlockClass = new $blockClassName();
                     $BlockClass->blockId = $block->block_id;

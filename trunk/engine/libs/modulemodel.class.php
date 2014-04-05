@@ -51,7 +51,7 @@ abstract class Libs_ModuleModel {
         );
         Core_CacheBuffer::setSectionName("modules");
         Core_CacheBuffer::removeCache($this->data->getName() . ".php");
-        Core_Translate::removeCache("modules/" . $this->data->getName());
+        Core_Translate::getInstance()->removeCache("modules/" . $this->data->getName());
     }
 
     /**

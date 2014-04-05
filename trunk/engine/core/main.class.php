@@ -82,7 +82,6 @@ class Core_Main {
 
         // Chargement du moteur de traduction
         Core_Loader::classLoader("Core_Translate");
-        Core_Translate::makeInstance();
 
         // Chargement du traitement HTML
         Core_Loader::classLoader("Core_TextEditor");
@@ -113,7 +112,6 @@ class Core_Main {
 
             // Chargement de la réécriture d'URL
             Core_Loader::classLoader("Core_UrlRewriting");
-            Core_UrlRewriting::getInstance();
 
             if (self::isFullScreen() && Core_Loader::isCallable("Libs_Block") && Core_Loader::isCallable("Libs_Module")) {
                 if ($this->inMaintenance()) { // Affichage site fermé

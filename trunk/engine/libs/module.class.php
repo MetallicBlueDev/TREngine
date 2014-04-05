@@ -203,7 +203,7 @@ class Libs_Module {
         // Vérification du niveau d'acces
         if (($this->installed() && Core_Access::autorize($this->module)) || (!$this->installed() && Core_Session::$userRank > 1)) {
             if (empty($this->moduleCompiled) && $this->isModule()) {
-                Core_Translate::translate("modules/" . $this->module);
+                Core_Translate::getInstance()->translate("modules/" . $this->module);
 
                 if (Core_Loader::isCallable("Libs_Breadcrumb")) {
                     Libs_Breadcrumb::getInstance()->addTrail($this->module, "?mod=" . $this->module);

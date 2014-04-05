@@ -179,7 +179,6 @@ class Core_Secure {
         Core_Loader::classLoader("Exec_Cookie");
         Core_Loader::classLoader("Exec_Crypt");
         Core_Loader::classLoader("Core_Translate");
-        Core_Translate::makeInstance();
         Core_Loader::classLoader("Core_Html");
         Core_Loader::classLoader("Libs_MakeStyle");
 
