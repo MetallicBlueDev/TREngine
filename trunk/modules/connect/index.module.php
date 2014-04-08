@@ -93,7 +93,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
         // Liste des langages disponibles
         $form->addSpace();
         $form->addSelectOpenTag("langue", ACCOUNT_PRIVATE_LANGUE);
-        $langues = Core_Translate::getInstance()->listLanguages();
+        $langues = Core_Translate::listLanguages();
         $currentLanguage = Core_Translate::getInstance()->getCurrentLanguage();
         $form->addSelectItemTag($currentLanguage, "", true);
         foreach ($langues as $langue) {

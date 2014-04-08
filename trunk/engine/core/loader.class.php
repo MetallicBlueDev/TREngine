@@ -13,13 +13,15 @@ class Core_Loader {
 
     /**
      * Tableau des classes chargées.
+     *
+     * @var array array("name" => "path")
      */
     private static $loaded = array();
 
     /**
      * Chargeur de classe.
      *
-     * @param $class string Nom de la classe.
+     * @param string $class Nom de la classe.
      * @return boolean true chargé.
      */
     public static function classLoader($class) {
@@ -34,9 +36,23 @@ class Core_Loader {
     }
 
     /**
+     * Chargeur de fichier de traduction.
+     *
+     * @param string $plugin Module de traduction.
+     * @return boolean true chargé.
+     */
+    public static function langLoader($plugin) {
+        try {
+            return self::load($plugin, "lang");
+        } catch (Exception $ie) {
+            Core_Secure::getInstance()->throwException($ie, $plugin);
+        }
+    }
+
+    /**
      * Chargeur de fichier include.
      *
-     * @param $include string Nom de l'include.
+     * @param string $include Nom de l'include.
      * @return boolean true chargé.
      */
     public static function includeLoader($include) {
@@ -48,10 +64,86 @@ class Core_Loader {
     }
 
     /**
+     * Vérifie la disponibilité de la classe et de ca methode éventuellement.
+     *
+     * @param string $className une chaine de caractère est recommandée.
+     * @param string $methodName
+     * @param boolean $static
+     * @return boolean
+     */
+    public static function isCallable($className, $methodName = "", $static = false) {
+        $rslt = false;
+
+        if (!empty($methodName)) {
+            // Utilisation du buffer si possible
+            if (self::isLoaded($className)) {
+                // Pour les pages plus complexes comme le module management
+                $pos = strpos($className, ".");
+
+                if ($pos !== false) { // exemple : Module_Management_Security.setting
+                    $className = substr($className, 0, $pos);
+                }
+
+                // Défini le comportement de l'appel
+                if ($static) {
+                    $rslt = is_callable("{$className}::{$methodName}");
+                } else {
+                    $rslt = is_callable(array(
+                        $className,
+                        $methodName));
+                }
+            }
+        } else {
+            $rslt = self::isLoaded($className);
+        }
+        return $rslt;
+    }
+
+    /**
+     * Appel une methode ou un object ou une classe statique callback.
+     *
+     * @param string $callback Nom de la callback.
+     * @return callback resultat.
+     */
+    public static function callback($callback) {
+        if (TR_ENGINE_PHP_VERSION < "5.2.3") {
+            if (is_string($callback)) {
+                if (strpos($callback, "::") !== false) {
+                    $callback = explode("::", $callback);
+                }
+            }
+        }
+
+        $args = func_get_args();
+        $args = array_splice($args, 1, 1);
+        return call_user_func_array($callback, $args);
+    }
+
+    /**
+     * Retourne le chemin absolu.
+     *
+     * @param string $name Fichier demandé.
+     * @return string chemin absolu ou nulle.
+     */
+    public static function getAbsolutePath($name) {
+        return (isLoaded($name) ? self::$loaded[$name] : null);
+    }
+
+    /**
+     * Vérifie si le fichier demandé a été chargé.
+     *
+     * @param string $name Fichier demandé.
+     * @return boolean true si c'est déjà chargé.
+     */
+    public static function isLoaded($name) {
+        return isset(self::$loaded[$name]);
+    }
+
+    /**
      * Chargeur de fichier.
      *
-     * @param $name string Nom de la classe ou du fichier.
-     * @param $ext string Extension.
+     * @param string $name Nom de la classe ou du fichier.
+     * @param string $ext Extension.
      * @return boolean true chargé.
      */
     private static function load($name, $ext = "") {
@@ -74,7 +166,16 @@ class Core_Loader {
                     $path = "engine_" . $name;
                 }
             } else {
-                $path = "engine_" . $name;
+                switch ($ext) {
+                    case 'lang':
+                        if (self::isCallable("Core_Translate")) {
+                            $path = $name . "_lang_" . Core_Translate::getInstance()->getCurrentLanguage();
+                        }
+                        break;
+                    default:
+                        $path = "engine_" . $name;
+                        break;
+                }
             }
 
             $path = str_replace("_", "/", $path);
@@ -82,8 +183,14 @@ class Core_Loader {
 
             if (is_file($path)) {
                 require($path);
-                self::$loaded[$name] = true;
+                self::$loaded[$name] = $path;
                 $loaded = true;
+
+                if ($ext === "lang") {
+                    if (!empty($lang) && is_array($lang)) {
+                        Core_Translate::getInstance()->affectCache($lang);
+                    }
+                }
             } else {
                 switch ($ext) {
                     case 'block':
@@ -95,81 +202,11 @@ class Core_Loader {
                     default:
                         throw new Exception("Loader");
                 }
+
                 $loaded = false;
             }
         }
         return $loaded;
     }
 
-    /**
-     * Vérifie si le fichier demandé a été chargé.
-     *
-     * @param $name string fichier demandé.
-     * @return boolean true si c'est déjà chargé.
-     */
-    private static function isLoaded($name) {
-        return isset(self::$loaded[$name]);
-    }
-
-    /**
-     * Vérifie la disponibilité de la classe et de ca methode éventuellement.
-     *
-     * @param $className string or object une chaine de caractère est recommandée.
-     * @param $methodName string
-     * @param $static boolean
-     * @return boolean
-     */
-    public static function isCallable($className, $methodName = "", $static = false) {
-        $rslt = false;
-
-        if (is_object($className)) {
-            $className = get_class($className);
-        }
-
-        if (!empty($methodName)) {
-            // Utilisation du buffer si possible
-            if (self::isLoaded($className)) {
-                // Pour les pages plus complexes comme le module management
-                $pos = 0;
-
-                if (($pos = strpos($className, ".")) !== false) { // exemple : Module_Management_Security.setting
-                    $className = substr($className, 0, $pos);
-                }
-
-                // Défini le comportement de l'appel
-                if ($static) {
-                    $rslt = @is_callable("{$className}::{$methodName}");
-                } else {
-                    $rslt = @is_callable(array(
-                        $className,
-                        $methodName));
-                }
-            }
-        } else {
-            $rslt = self::isLoaded($className);
-        }
-        return $rslt;
-    }
-
-    /**
-     * Appel une methode ou un object ou une classe statique callback.
-     *
-     * @param $callback string or array Nom de la callback.
-     * @return callback resultat.
-     */
-    public static function callback($callback) {
-        if (TR_ENGINE_PHP_VERSION < "5.2.3") {
-            if (is_string($callback)) {
-                if (strpos($callback, "::") !== false) {
-                    $callback = explode("::", $callback);
-                }
-            }
-        }
-        $args = func_get_args();
-        $args = array_splice($args, 1, 1);
-        return call_user_func_array($callback, $args);
-    }
-
 }
-
-?>

@@ -74,7 +74,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
         $form->addSpace();
 
         $form->addSelectOpenTag("defaultLanguage", SETTING_GENERAL_DEFAULT_LANGUAGE);
-        $langues = Core_Translate::getInstance()->listLanguages();
+        $langues = Core_Translate::listLanguages();
         $currentLanguage = Core_Main::$coreConfig['defaultLanguage'];
         $form->addSelectItemTag($currentLanguage, "", true);
         foreach ($langues as $langue) {
@@ -179,7 +179,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
         // Langue par défaut
         $defaultLanguage = Core_Request::getString("defaultLanguage", "", "POST");
         if (Core_Main::$coreConfig['defaultLanguage'] != $defaultLanguage) {
-            $langues = Core_Translate::getInstance()->listLanguages();
+            $langues = Core_Translate::listLanguages();
             if (!empty($defaultLanguage) && Exec_Utils::inArray($defaultLanguage, $langues)) {
                 $this->updateTable("defaultLanguage", $defaultLanguage);
                 $deleteCache = true;

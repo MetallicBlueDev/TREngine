@@ -328,7 +328,7 @@ class Module_Management_Block extends Libs_ModuleModel {
                 Core_Table::$BLOCKS_TABLE, array(
                     "block_id = '" . $blockId . "'")
                 );
-                Core_Translate::getInstance()->removeCache("blocks/" . $block['type']);
+                Core_Translate::removeCache("blocks/" . $block['type']);
                 Core_Logger::addInformationMessage(DATA_DELETED);
             } else {
                 Core_Logger::addInformationMessage(DATA_INVALID);
