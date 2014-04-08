@@ -28,7 +28,7 @@ class Module_Project_Index extends Libs_ModuleModel {
         $libsMakeStyle->assign("title", PROJECTS_LIST_TITLE);
         $libsMakeStyle->assign("description", PROJECTS_LIST_DESCRIPTION);
 
-        if (Core_Sql::affectedRows() > 0) {
+        if (Core_Sql::getInstance()->affectedRows() > 0) {
             Core_Sql::addBuffer("projectList");
             $projects = Core_Sql::getBuffer("projectList");
             $libsMakeStyle->assign("projects", $projects);
@@ -58,8 +58,8 @@ class Module_Project_Index extends Libs_ModuleModel {
             Core_Sql::select(self::$PROJECT_TABLE, $values, array(
                 "projectid = '" . $projectId . "'"));
 
-            if (Core_Sql::affectedRows() == 1) {
-                $projectInfo = Core_Sql::fetchArray();
+            if (Core_Sql::getInstance()->affectedRows() == 1) {
+                $projectInfo = Core_Sql::getInstance()->fetchArray();
 
                 // Préparation de l'entête
                 Core_Loader::classLoader("Exec_JQuery");

@@ -309,7 +309,7 @@ class Core_Session {
             "template",
             "langue"), $where
         );
-        return (Core_Sql::affectedRows() == 1) ? Core_Sql::fetchArray() : array();
+        return (Core_Sql::getInstance()->affectedRows() == 1) ? Core_Sql::getInstance()->fetchArray() : array();
     }
 
     /**
@@ -336,7 +336,7 @@ class Core_Session {
             "last_connect" => "NOW()"), array(
             "user_id = '" . $userId . "'")
         );
-        return (Core_Sql::affectedRows() == 1) ? true : false;
+        return (Core_Sql::getInstance()->affectedRows() == 1) ? true : false;
     }
 
     /**

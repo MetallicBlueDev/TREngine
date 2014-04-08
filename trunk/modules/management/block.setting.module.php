@@ -27,7 +27,7 @@ class Module_Management_Block extends Libs_ModuleModel {
                 break;
             case "sendCopy":
                 $this->sendCopy();
-                $content .= $this->tabEdit(Core_Sql::insertId());
+                $content .= $this->tabEdit(Core_Sql::getInstance()->insertId());
                 break;
             case "tabEdit":
                 $content .= $this->tabEdit();
@@ -82,8 +82,8 @@ class Module_Management_Block extends Libs_ModuleModel {
             "mods"), array(), array(
             "position")
         );
-        if (Core_Sql::affectedRows() > 0) {
-            while ($row = Core_Sql::fetchArray()) {
+        if (Core_Sql::getInstance()->affectedRows() > 0) {
+            while ($row = Core_Sql::getInstance()->fetchArray()) {
                 // Parametre de la ligne
                 $title = "<a href=\"" . Core_Html::getLink("?mod=management&manage=block&localView=tabEdit&blockId=" . $row['block_id']) . "\">" . $row['title'] . "</a>";
                 $type = $row['type'];
@@ -120,8 +120,8 @@ class Module_Management_Block extends Libs_ModuleModel {
                 "position"), array(
                 "block_id = '" . $blockId . "'")
             );
-            if (Core_Sql::affectedRows() > 0) { // Si le block existe
-                $blockMove = Core_Sql::fetchArray(); // Récuperation des informations sur le block
+            if (Core_Sql::getInstance()->affectedRows() > 0) { // Si le block existe
+                $blockMove = Core_Sql::getInstance()->fetchArray(); // Récuperation des informations sur le block
 
                 if ($blockMove['position'] > 0) {
                     // Requête de Sélection des autres blocks
@@ -133,7 +133,7 @@ class Module_Management_Block extends Libs_ModuleModel {
                         "(position = '" . $blockMove['position'] . "' OR position = '"
                         . ($blockMove['position'] - 1) . "')")
                     );
-                    if (Core_Sql::affectedRows() > 0) {
+                    if (Core_Sql::getInstance()->affectedRows() > 0) {
                         Core_Sql::addBuffer("blockMoveUp");
                         // Mise à jour de position
                         while ($row = Core_Sql::fetchBuffer("blockMoveUp")) {
@@ -166,8 +166,8 @@ class Module_Management_Block extends Libs_ModuleModel {
                 "position"), array(
                 "block_id = '" . $blockId . "'")
             );
-            if (Core_Sql::affectedRows() > 0) { // Si le block existe
-                $blockMove = Core_Sql::fetchArray(); // Récuperation des informations sur le block
+            if (Core_Sql::getInstance()->affectedRows() > 0) { // Si le block existe
+                $blockMove = Core_Sql::getInstance()->fetchArray(); // Récuperation des informations sur le block
                 // Sélection du block le plus bas
                 Core_Sql::select(
                 Core_Table::$BLOCKS_TABLE, array(
@@ -177,8 +177,8 @@ class Module_Management_Block extends Libs_ModuleModel {
                     "position DESC"), "1"
                 );
 
-                if (Core_Sql::affectedRows() > 0) {
-                    $blockDown = Core_Sql::fetchArray();
+                if (Core_Sql::getInstance()->affectedRows() > 0) {
+                    $blockDown = Core_Sql::getInstance()->fetchArray();
 
                     if ($blockMove['position'] < $blockDown['position']) {
                         // Requête de Sélection des autres blocks
@@ -190,7 +190,7 @@ class Module_Management_Block extends Libs_ModuleModel {
                             "(position = '" . $blockMove['position'] . "' OR position = '"
                             . ($blockMove['position'] + 1) . "')")
                         );
-                        if (Core_Sql::affectedRows() > 0) {
+                        if (Core_Sql::getInstance()->affectedRows() > 0) {
                             Core_Sql::addBuffer("blockMoveDown");
                             // Mise à jour de position
                             while ($row = Core_Sql::fetchBuffer("blockMoveDown")) {
@@ -231,8 +231,8 @@ class Module_Management_Block extends Libs_ModuleModel {
                 "mods"), array(
                 "block_id = '" . $blockId . "'")
             );
-            if (Core_Sql::affectedRows() > 0) { // Si le block existe
-                $block = Core_Sql::fetchArray();
+            if (Core_Sql::getInstance()->affectedRows() > 0) { // Si le block existe
+                $block = Core_Sql::getInstance()->fetchArray();
                 Libs_Breadcrumb::getInstance()->addTrail($block['title'], "?mod=management&manage=block&localView=tabEdit&blockId=" . $blockId);
 
                 Core_Loader::classLoader("Libs_Form");
@@ -311,8 +311,8 @@ class Module_Management_Block extends Libs_ModuleModel {
                 "type"), array(
                 "block_id = '" . $blockId . "'")
             );
-            if (Core_Sql::affectedRows() > 0) { // Si le block existe
-                $block = Core_Sql::fetchArray();
+            if (Core_Sql::getInstance()->affectedRows() > 0) { // Si le block existe
+                $block = Core_Sql::getInstance()->fetchArray();
 
                 $blockClassName = "Block_" . ucfirst($block['type']);
                 $loaded = Core_Loader::classLoader($blockClassName);
@@ -324,7 +324,7 @@ class Module_Management_Block extends Libs_ModuleModel {
                     }
                 }
 
-                Core_Sql::delete(
+                Core_Sql::getInstance()->delete(
                 Core_Table::$BLOCKS_TABLE, array(
                     "block_id = '" . $blockId . "'")
                 );
@@ -354,10 +354,10 @@ class Module_Management_Block extends Libs_ModuleModel {
             Core_Table::$BLOCKS_TABLE, $keys, array(
                 "block_id = '" . $blockId . "'")
             );
-            if (Core_Sql::affectedRows() > 0) { // Si le block existe
-                $block = Core_Sql::fetchArray();
+            if (Core_Sql::getInstance()->affectedRows() > 0) { // Si le block existe
+                $block = Core_Sql::getInstance()->fetchArray();
                 $block['title'] = $block['title'] . " Copy";
-                Core_Sql::insert(
+                Core_Sql::getInstance()->insert(
                 Core_Table::$BLOCKS_TABLE, $keys, $block
                 );
                 Core_Logger::addInformationMessage(DATA_COPIED);

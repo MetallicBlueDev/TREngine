@@ -70,7 +70,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
                 "user_id = '" . Core_Session::$userId . "'")
             );
 
-            if (Core_Sql::affectedRows() > 0) {
+            if (Core_Sql::getInstance()->affectedRows() > 0) {
                 Core_Session::getInstance()->refreshConnection();
                 Core_Logger::addInformationMessage(DATA_SAVED);
             }
@@ -143,7 +143,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
                         "user_id"), array(
                         "name = '" . $name . "'")
                     );
-                    if (Core_Sql::affectedRows() > 0) {
+                    if (Core_Sql::getInstance()->affectedRows() > 0) {
                         $validName = false;
                         Core_Logger::addWarningMessage(ACCOUNT_PRIVATE_LOGIN_IS_ALLOWED);
                     }
@@ -172,7 +172,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
                             "user_id = '" . Core_Session::$userId . "'")
                         );
 
-                        if (Core_Sql::affectedRows() > 0) {
+                        if (Core_Sql::getInstance()->affectedRows() > 0) {
                             Core_Session::getInstance()->refreshConnection();
                             Core_Logger::addInformationMessage(DATA_SAVED);
                         }
@@ -231,7 +231,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
                 "block_id",
                 "title")
             );
-            if (Core_Sql::affectedRows() > 0) {
+            if (Core_Sql::getInstance()->affectedRows() > 0) {
                 Core_Sql::addBuffer("blocks");
                 $blocks = Core_Sql::getBuffer("blocks");
             }
@@ -345,8 +345,8 @@ class Module_Connect_Index extends Libs_ModuleModel {
                         "mail = '" . $mail . "'")
                     );
 
-                    if (Core_Sql::affectedRows() == 1) {
-                        list($login) = Core_Sql::fetchArray();
+                    if (Core_Sql::getInstance()->affectedRows() == 1) {
+                        list($login) = Core_Sql::getInstance()->fetchArray();
                         $ok = Exec_Mailer::sendMail(); // TODO envoyer un mail
                     }
                     if (!$ok)
@@ -395,8 +395,8 @@ class Module_Connect_Index extends Libs_ModuleModel {
                         "name = '" . $login . "'")
                     );
 
-                    if (Core_Sql::affectedRows() == 1) {
-                        list($name, $mail) = Core_Sql::fetchArray();
+                    if (Core_Sql::getInstance()->affectedRows() == 1) {
+                        list($name, $mail) = Core_Sql::getInstance()->fetchArray();
                         if ($name == $login) {
                             // TODO Ajouter un générateur d'id
                             $ok = Exec_Mailer::sendMail(); // TODO envoyer un mail

@@ -4,50 +4,72 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
+Core_Loader::classLoader("Base_Model");
+Core_Loader::classLoader("Core_Table");
+
 /**
- * Gestionnaire de la communication SQL
+ * Gestionnaire de la communication SQL.
  *
  * @author Sébastien Villemain
  */
-class Core_Sql {
+class Core_Sql extends Base_Model {
 
     /**
-     * Instance de la base
+     * Gestionnnaire SQL.
      *
-     * @var Base_xxxx
+     * @var Core_Sql
      */
-    private static $base = null;
+    private static $coreSql = null;
 
     /**
-     * Donnée de la base
+     * Modèle de base sélectionné.
      *
-     * @var array
+     * @var Base_Model
      */
-    private static $dataBase = array();
+    private $selectedBase = null;
 
     /**
-     * Démarre une instance de communication avec la base
+     * Nouveau gestionnaire.
+     *
+     * @param array $database Injection des données de la base
      */
-    public static function makeInstance() {
-        if (self::$base == null && !empty(self::$dataBase)) {
+    private function __construct(array $database) {
+        $baseClassName = "";
+
+        if (!empty($database) && isset($dataBase['type'])) {
             // Chargement des drivers pour la base
-            $BaseClass = "Base_" . ucfirst(self::$dataBase['type']);
-            Core_Loader::classLoader($BaseClass);
-
-            // Si la classe peut être utilisée
-            if (Core_Loader::isCallable($BaseClass)) {
-                try {
-                    self::$base = new $BaseClass();
-                } catch (Exception $ie) {
-                    Core_Secure::getInstance()->throwException($ie);
-                }
-            } else {
-                Core_Secure::getInstance()->throwException("sqlCode", $BaseClass);
-            }
-
-            // Charge les constantes de table
-            Core_Loader::classLoader("Core_Table");
+            $baseClassName = "Base_" . ucfirst($dataBase['type']);
+            Core_Loader::classLoader($baseClassName);
         }
+
+        // Si la classe peut être utilisée
+        if (Core_Loader::isCallable($baseClassName)) {
+            try {
+                $this->selectedBase = new $baseClassName();
+                $this->selectedBase->initializeBase($database);
+            } catch (Exception $ie) {
+                Core_Secure::getInstance()->throwException($ie);
+            }
+        } else {
+            Core_Secure::getInstance()->throwException("sqlCode", $baseClassName);
+        }
+    }
+
+    public function __destruct() {
+
+    }
+
+    /**
+     * Instance du gestionnaire SQL.
+     *
+     * @param array $database
+     * @return Core_Sql
+     */
+    public static function &getInstance(array $database = array()) {
+        if (self::$coreSql == null) {
+            self::$coreSql = new self($database);
+        }
+        return self::$coreSql;
     }
 
     /**
@@ -57,10 +79,13 @@ class Core_Sql {
      */
     public static function &listBases() {
         $baseList = array();
+
         $files = Core_CacheBuffer::listNames("engine/base");
+
         foreach ($files as $key => $fileName) {
             // Nettoyage du nom de la page
             $pos = strpos($fileName, ".class");
+
             // Si c'est une page administrable
             if ($pos !== false && $pos > 0) {
                 $baseList[] = substr($fileName, 0, $pos);
@@ -70,110 +95,113 @@ class Core_Sql {
     }
 
     /**
-     * Etablie une connexion à la base de données
+     * Etablie une connexion à la base de données.
      */
-    public static function dbConnect() {
-        self::$base->dbConnect();
+    public function dbConnect() {
+        $this->selectedBase->dbConnect();
     }
 
     /**
-     * Sélectionne une base de données
+     * Sélectionne la base de données.
      *
-     * @return boolean true succes
+     * @return boolean
      */
-    public static function dbSelect() {
-        return self::$base->dbSelect();
-        ;
+    public function dbSelect() {
+        return $this->selectedBase->dbSelect();
     }
 
     /**
-     * Get number of LAST affected rows (for all : SELECT, SHOW, DELETE, INSERT, REPLACE and UPDATE)
+     * Retourne le nombre de ligne affectées par la dernière commande.
+     * (SELECT, SHOW, DELETE, INSERT, REPLACE and UPDATE).
      *
      * @return int
      */
-    public static function affectedRows() {
-        return self::$base->affectedRows();
+    public function affectedRows() {
+        return $this->selectedBase->affectedRows();
     }
 
     /**
-     * Supprime des informations
+     * Supprime des informations.
      *
-     * @param $table string Nom de la table
-     * @param $where array
-     * @param $like array
-     * @param $limit string
+     * @param string $table Nom de la table
+     * @param array $where
+     * @param array $like
+     * @param string $limit
      */
-    public static function delete($table, $where = array(), $like = array(), $limit = false) {
-        self::$base->delete($table, $where, $like, $limit);
+    public function delete($table, array $where = array(), array $like = array(), $limit = false) {
+        $this->selectedBase->delete($table, $where, $like, $limit);
 
         try {
-            self::query();
+            $this->query();
         } catch (Exception $ie) {
             Core_Secure::getInstance()->throwException($ie);
         }
     }
 
     /**
-     * Retourne un tableau qui contient la ligne demandée
+     * Retourne un tableau qui contient la ligne demandée.
      *
      * @return array
      */
-    public static function fetchArray() {
-        return self::$base->fetchArray();
+    public function fetchArray() {
+        return $this->selectedBase->fetchArray();
     }
 
     /**
-     * Retourne un objet qui contient le ligne demandée
+     * Retourne un objet qui contient la ligne demandée.
      *
      * @return object
      */
-    public static function fetchObject() {
-        return self::$base->fetchObject();
+    public function fetchObject() {
+        return $this->selectedBase->fetchObject();
     }
 
     /**
-     * Insere une ou des valeurs dans une table
+     * Insère une ou des valeurs dans une table.
      *
-     * @param $table string Nom de la table
-     * @param $keys array
-     * @param $values array
+     * @param string $table Nom de la table
+     * @param array $keys
+     * @param array $values
      */
-    public static function insert($table, $keys, $values) {
-        self::$base->insert($table, $keys, $values);
+    public function insert($table, array $keys, array $values) {
+        $this->selectedBase->insert($table, $keys, $values);
 
         try {
-            self::query();
+            $this->query();
         } catch (Exception $ie) {
             Core_Secure::getInstance()->throwException($ie);
         }
     }
 
     /**
-     * Retourne l'id de la dernière ligne inserée
+     * Retourne l'id de la dernière ligne inserée.
      *
      * @return int
      */
-    public static function insertId() {
-        return self::$base->insertId();
+    public function insertId() {
+        return $this->selectedBase->insertId();
     }
 
     /**
-     * Envoie une requête Sql
+     * Envoi une requête Sql.
      *
-     * @param $Sql
+     * @param string $sql
+     * @throws Exception
      */
-    public static function query($sql = "") {
+    public function query($sql = "") {
         $sql = (!empty($sql)) ? $sql : self::getSql();
-        self::$base->query($sql);
-        self::$base->resetQuoted();
+        $this->selectedBase->query($sql);
+        $this->selectedBase->resetQuoted();
 
         // Ajout la requête au log
-        if (Core_Secure::isDebuggingMode())
+        if (Core_Secure::isDebuggingMode()) {
             Core_Logger::addSqlRequest($sql);
+        }
 
         // Création d'une exception si une réponse est négative (false)
-        if (self::getQueries() === false)
+        if (self::getQueries() === false) {
             throw new Exception("sqlReq");
+        }
     }
 
     /**
@@ -186,10 +214,10 @@ class Core_Sql {
      * @param $limit string
      */
     public static function select($table, $values, $where = array(), $orderby = array(), $limit = false) {
-        self::$base->select($table, $values, $where, $orderby, $limit);
+        $this->selectedBase->select($table, $values, $where, $orderby, $limit);
 
         try {
-            self::query();
+            $this->query();
         } catch (Exception $ie) {
             Core_Secure::getInstance()->throwException($ie);
         }
@@ -205,10 +233,10 @@ class Core_Sql {
      * @param $limit string
      */
     public static function update($table, $values, $where, $orderby = array(), $limit = false) {
-        self::$base->update($table, $values, $where, $orderby, $limit);
+        $this->selectedBase->update($table, $values, $where, $orderby, $limit);
 
         try {
-            self::query();
+            $this->query();
         } catch (Exception $ie) {
             Core_Secure::getInstance()->throwException($ie);
         }
@@ -220,7 +248,7 @@ class Core_Sql {
      * @return Ressource ID
      */
     public static function getQueries() {
-        return self::$base->getQueries();
+        return $this->selectedBase->getQueries();
     }
 
     /**
@@ -229,7 +257,7 @@ class Core_Sql {
      * @return string
      */
     public static function getSql() {
-        return self::$base->getSql();
+        return $this->selectedBase->getSql();
     }
 
     /**
@@ -240,7 +268,7 @@ class Core_Sql {
      */
     public static function freeResult($querie = "") {
         $querie = (!empty($querie)) ? $querie : self::getQueries();
-        return self::$base->freeResult($querie);
+        return $this->selectedBase->freeResult($querie);
     }
 
     /**
@@ -250,7 +278,7 @@ class Core_Sql {
      * @param $name string
      */
     public static function addBuffer($name, $key = "") {
-        self::$base->addBuffer($name, $key);
+        $this->selectedBase->addBuffer($name, $key);
         self::freeResult();
     }
 
@@ -261,7 +289,7 @@ class Core_Sql {
      * @return array - object
      */
     public static function fetchBuffer($name) {
-        return self::$base->fetchBuffer($name);
+        return $this->selectedBase->fetchBuffer($name);
     }
 
     /**
@@ -272,7 +300,7 @@ class Core_Sql {
      * @return array - object
      */
     public static function getBuffer($name) {
-        return self::$base->getBuffer($name);
+        return $this->selectedBase->getBuffer($name);
     }
 
     /**
@@ -281,7 +309,7 @@ class Core_Sql {
      * @return array
      */
     public static function getLastError() {
-        return self::$base->getLastError();
+        return $this->selectedBase->getLastError();
     }
 
     /**
@@ -290,7 +318,7 @@ class Core_Sql {
      * @param $key string
      */
     public static function addQuoted($key, $value = 1) {
-        self::$base->addQuoted($key, $value);
+        $this->selectedBase->addQuoted($key, $value);
     }
 
     /**
@@ -299,7 +327,7 @@ class Core_Sql {
      * @return string
      */
     public static function getVersion() {
-        return self::$base->getVersion();
+        return $this->selectedBase->getVersion();
     }
 
     /**
@@ -308,7 +336,7 @@ class Core_Sql {
      * @return string
      */
     public static function getCollation() {
-        return self::$base->getCollation();
+        return $this->selectedBase->getCollation();
     }
 
     /**
@@ -320,15 +348,4 @@ class Core_Sql {
         return self::$dataBase;
     }
 
-    /**
-     * Injection des données de la base
-     *
-     * @param array
-     */
-    public static function setDatabase($database = array()) {
-        self::$dataBase = $database;
-    }
-
 }
-
-?>

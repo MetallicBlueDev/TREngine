@@ -153,7 +153,7 @@ class Core_Access {
                 "user_id = '" . $userIdAdmin . "'")
             );
 
-            if (Core_Sql::affectedRows() > 0) {
+            if (Core_Sql::getInstance()->affectedRows() > 0) {
                 Core_Sql::addBuffer("getAdminRight");
                 $admin = Core_Sql::getBuffer("getAdminRight");
             }

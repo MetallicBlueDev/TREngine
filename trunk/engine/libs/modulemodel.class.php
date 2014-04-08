@@ -30,7 +30,7 @@ abstract class Libs_ModuleModel {
      * Installation du module courant.
      */
     public function install() {
-        Core_Sql::insert(
+        Core_Sql::getInstance()->insert(
         Core_Table::$MODULES_TABLE, array(
             "name",
             "rank",
@@ -45,7 +45,7 @@ abstract class Libs_ModuleModel {
      * Désinstallation du module courant.
      */
     public function uninstall() {
-        Core_Sql::delete(
+        Core_Sql::getInstance()->delete(
         Core_Table::$MODULES_TABLE, array(
             "mod_id = '" . $this->data->getId() . "'")
         );

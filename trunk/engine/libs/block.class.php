@@ -71,7 +71,7 @@ class Libs_Block {
             "position")
         );
 
-        if (Core_Sql::affectedRows() > 0) {
+        if (Core_Sql::getInstance()->affectedRows() > 0) {
             // Récuperation des données des blocks
             Core_Sql::addBuffer("block");
 
@@ -113,8 +113,8 @@ class Libs_Block {
             "rank",
             "mods"), $where
         );
-        if (Core_Sql::affectedRows() > 0) {
-            $block = Core_Sql::fetchObject();
+        if (Core_Sql::getInstance()->affectedRows() > 0) {
+            $block = Core_Sql::getInstance()->fetchObject();
 
             if ($this->isBlock($block->type) // Si le block existe
             && Core_Session::$userRank >= $block->rank) { // Et que le client est assez gradé

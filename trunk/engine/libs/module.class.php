@@ -170,8 +170,8 @@ class Libs_Module {
                     "name =  '" . $moduleName . "'")
                 );
 
-                if (Core_Sql::affectedRows() > 0) {
-                    $moduleData = Core_Sql::fetchArray();
+                if (Core_Sql::getInstance()->affectedRows() > 0) {
+                    $moduleData = Core_Sql::getInstance()->fetchArray();
                     $configs = explode("|", $moduleData['configs']);
 
                     foreach ($configs as $value) {

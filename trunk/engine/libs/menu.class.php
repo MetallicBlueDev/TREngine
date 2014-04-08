@@ -128,7 +128,7 @@ class Libs_Menu {
         $sql['table'], $sql['select'], $sql['where'], $sql['orderby'], $sql['limit']
         );
 
-        if (Core_Sql::affectedRows() > 0) {
+        if (Core_Sql::getInstance()->affectedRows() > 0) {
             // Création d'un buffer
             Core_Sql::addBuffer($this->identifier, "menu_id");
             $menus = Core_Sql::getBuffer($this->identifier);

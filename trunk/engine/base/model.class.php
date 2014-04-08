@@ -5,7 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Gestionnaire de la communication SQL.
+ * Modèle de base de la communication SQL.
  *
  * @author Sébastien Villemain
  */
@@ -75,26 +75,36 @@ abstract class Base_Model {
     protected $quoted = array();
 
     /**
-     * Paramètre la connexion, test la connexion puis engage une connexion.
-     *
-     * @param $db array
+     * Nouveau modèle de base.
      */
     public function __construct() {
-        $this->database = Core_Sql::getDatabase();
+        $this->database = null;
+    }
 
-        if ($this->test()) {
-            // Connexion au serveur
-            $this->dbConnect();
-            if (!$this->isConnected()) {
-                throw new Exception("sqlConnect");
-            }
+    /**
+     * Paramètre la connexion, test la connexion puis engage une connexion.
+     *
+     * @param array $database
+     * @throws Exception
+     */
+    public function initializeBase(array $database) {
+        if ($this->database === null) {
+            $this->database = $database;
 
-            // Sélection d'une base de données
-            if (!$this->dbSelect()) {
-                throw new Exception("sqlDbSelect");
+            if ($this->test()) {
+                // Connexion au serveur
+                $this->dbConnect();
+                if (!$this->isConnected()) {
+                    throw new Exception("sqlConnect");
+                }
+
+                // Sélection d'une base de données
+                if (!$this->dbSelect()) {
+                    throw new Exception("sqlDbSelect");
+                }
+            } else {
+                throw new Exception("sqlTest");
             }
-        } else {
-            throw new Exception("sqlTest");
         }
     }
 
@@ -133,39 +143,33 @@ abstract class Base_Model {
     /**
      * Supprime des informations.
      *
-     * @param $table string Nom de la table
-     * @param $where array
-     * @param $like array
-     * @param $limit string
+     * @param string $table Nom de la table
+     * @param array $where
+     * @param array $like
+     * @param string $limit
      */
-    public function delete($table, $where = array(), $like = array(), $limit = false) {
+    public function delete($table, array $where = array(), array $like = array(), $limit = false) {
         // Nom complet de la table
         $table = $this->getTableName($table);
 
         // Mise en place du WHERE
-        if (!is_array($where)) {
-            $where = array(
-                $where);
-        }
-        $where = (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
+        $whereValue = (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
 
         // Mise en place du LIKE
-        $like = (!is_array($like)) ? array(
-            $like) : $like;
-        $like = (count($like) >= 1) ? " LIKE " . implode(" ", $like) : "";
+        $likeValue = (count($like) >= 1) ? " LIKE " . implode(" ", $like) : "";
 
         // Fonction ET entre WHERE et LIKE
-        if (!empty($where) && !empty($like)) {
-            $where .= "AND";
+        if (!empty($whereValue) && !empty($likeValue)) {
+            $whereValue .= "AND";
         }
 
-        $limit = (!$limit) ? "" : " LIMIT " . $limit;
-        $sql = "DELETE FROM " . $table . $where . $like . $limit;
+        $limitValue = (!$limit) ? "" : " LIMIT " . $limit;
+        $sql = "DELETE FROM " . $table . $whereValue . $likeValue . $limitValue;
         $this->sql = $sql;
     }
 
     /**
-     * Retourne un tableau qui contient les lignes demandées.
+     * Retourne un tableau qui contient la ligne demandée.
      *
      * @return array
      */
@@ -174,7 +178,7 @@ abstract class Base_Model {
     }
 
     /**
-     * Retourne un objet qui contient les lignes demandées.
+     * Retourne un objet qui contient la ligne demandée.
      *
      * @return object
      */
@@ -185,22 +189,13 @@ abstract class Base_Model {
     /**
      * Insère une ou des valeurs dans une table.
      *
-     * @param $table string Nom de la table
-     * @param $keys array
-     * @param $values array
+     * @param string $table Nom de la table
+     * @param array $keys
+     * @param array $values
      */
-    public function insert($table, $keys, $values) {
+    public function insert($table, array $keys, array $values) {
         // Nom complet de la table
         $table = $this->getTableName($table);
-
-        if (!is_array($keys)) {
-            $keys = array(
-                $keys);
-        }
-        if (!is_array($values)) {
-            $values = array(
-                $values);
-        }
 
         $sql = "INSERT INTO " . $table . " ("
         . implode(", ", $this->converKey($keys)) . ") VALUES ("
@@ -218,7 +213,7 @@ abstract class Base_Model {
     }
 
     /**
-     * Envoie une requête Sql.
+     * Envoi une requête Sql.
      *
      * @param $sql
      */

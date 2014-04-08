@@ -4,8 +4,6 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
-Core_Loader::classLoader("Base_Mysql");
-
 /**
  * Gestionnaire de la communication SQL
  *
