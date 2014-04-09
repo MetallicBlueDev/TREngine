@@ -481,14 +481,7 @@ abstract class Base_Model {
      * @return string
      */
     protected function &converEscapeString($str) {
-        if (function_exists("mysql_real_escape_string") && is_resource($this->connId)) {
-            $str = mysql_real_escape_string($str, $this->connId);
-        } else if (function_exists("mysql_escape_string")) {// WARNING: DEPRECATED
-            $str = mysql_escape_string($str);
-        } else {
-            $str = addslashes($str);
-        }
-        return $str;
+        return addslashes($str);
     }
 
     /**
