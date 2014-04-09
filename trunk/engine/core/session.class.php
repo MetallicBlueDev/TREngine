@@ -330,7 +330,7 @@ class Core_Session {
         // Récupere l'id du client
         if (empty($userId))
             $userId = self::$userId;
-        Core_Sql::addQuoted("", "NOW()");
+        Core_Sql::getInstance()->addQuoted("", "NOW()");
         // Envoie la requête Sql de mise à jour
         Core_Sql::getInstance()->update(Core_Table::$USERS_TABLE, array(
             "last_connect" => "NOW()"), array(
@@ -482,7 +482,7 @@ class Core_Session {
     }
 
     /**
-     * Retourne la combinaison de cles pour le salt
+     * Retourne la combinaison de clés pour le salt
      *
      * @return string
      */

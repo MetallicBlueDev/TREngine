@@ -230,7 +230,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
             }
         }
 
-        // On supprime les mauvaises cles
+        // On supprime les mauvaises clés
         $dirListKeys = array_merge(
         array_keys($dirList, ".."), array_keys($dirList, "."), array_keys($dirList, "index.html"), array_keys($dirList, "index.htm"), array_keys($dirList, "index.php"), array_keys($dirList, ".htaccess"), array_keys($dirList, ".svn"), array_keys($dirList, "checker.txt")
         );

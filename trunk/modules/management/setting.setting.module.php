@@ -269,7 +269,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
         $form->addInputText("ftpRoot", SETTING_SYSTEM_FTP_SETTING_ROOT, $ftp['root']);
         $form->addSpace();
 
-        $database = Core_Sql::getDatabase();
+        $database = Core_Sql::getInstance()->getDatabase();
         $form->addFieldset(SETTING_SYSTEM_DATABASE_SETTING_TITLE, SETTING_SYSTEM_DATABASE_SETTING_DESCRIPTION);
         $form->addInputText("dbHost", SETTING_SYSTEM_DATABASE_SETTING_HOST, $database['host']);
         $form->addInputText("dbName", SETTING_SYSTEM_DATABASE_SETTING_NAME, $database['name']);
@@ -385,7 +385,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
             Exec_FileBuilder::buildFtpFile($ftpHost, $ftpPort, $ftpUser, $ftpPass, $ftpRoot, $ftpType);
         }
 
-        $database = Core_Sql::getDatabase();
+        $database = Core_Sql::getInstance()->getDatabase();
         $updateDatabaseFile = false;
 
         $dbHost = Core_Request::getString("dbHost", $database['host'], "POST");

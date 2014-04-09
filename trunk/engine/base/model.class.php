@@ -68,7 +68,7 @@ abstract class Base_Model {
     protected $quoteValue = "'";
 
     /**
-     * Tableau contenant les cles déjà quotées.
+     * Tableau contenant les clés déjà quotées.
      *
      * @var array
      */
@@ -181,7 +181,7 @@ abstract class Base_Model {
      *
      * @return array
      */
-    public function fetchArray() {
+    public function &fetchArray() {
         return array();
     }
 
@@ -190,7 +190,7 @@ abstract class Base_Model {
      *
      * @return object
      */
-    public function fetchObject() {
+    public function &fetchObject() {
         return array();
     }
 
@@ -216,7 +216,7 @@ abstract class Base_Model {
      *
      * @return int
      */
-    public function insertId() {
+    public function &insertId() {
         return 0;
     }
 
@@ -296,7 +296,7 @@ abstract class Base_Model {
      *
      * @return resource
      */
-    public function getQueries() {
+    public function &getQueries() {
         return $this->queries;
     }
 
@@ -305,7 +305,7 @@ abstract class Base_Model {
      *
      * @return string
      */
-    public function getSql() {
+    public function &getSql() {
         return $this->sql;
     }
 
@@ -314,7 +314,7 @@ abstract class Base_Model {
      *
      * @return boolean
      */
-    public function connected() {
+    public function &connected() {
         return ($this->connId != false) ? true : false;
     }
 
@@ -324,7 +324,7 @@ abstract class Base_Model {
      * @param $querie Resource Id
      * @return boolean
      */
-    public function freeResult($querie) {
+    public function &freeResult($querie) {
         return false;
     }
 
@@ -365,7 +365,7 @@ abstract class Base_Model {
      * @param $name string
      * @return array - object
      */
-    public function getBuffer($name) {
+    public function &getBuffer($name) {
         return $this->buffer[$name];
     }
 
@@ -374,7 +374,7 @@ abstract class Base_Model {
      *
      * @return boolean
      */
-    public function test() {
+    public function &test() {
         return false;
     }
 
@@ -409,11 +409,12 @@ abstract class Base_Model {
     }
 
     /**
-     * Marqué une cles et/ou une valeur comme déjà quoté.
+     * Marqué une clé et/ou une valeur comme déjà quoté.
      *
      * @param $key string
+     * @param boolean $value
      */
-    public function addQuoted($key, $value = 1) {
+    public function addQuoted($key, $value = true) {
         if (!empty($key)) {
             $this->quoted[$key] = $value;
         } else {
@@ -422,7 +423,7 @@ abstract class Base_Model {
     }
 
     /**
-     * Remise à zéro du tableau de cles déjà quoté.
+     * Remise à zéro du tableau de clés déjà quoté.
      */
     public function resetQuoted() {
         $this->quoted = array();
@@ -496,7 +497,7 @@ abstract class Base_Model {
      *
      * @return string
      */
-    public function getVersion() {
+    public function &getVersion() {
         return "?";
     }
 
@@ -505,7 +506,7 @@ abstract class Base_Model {
      *
      * @return string
      */
-    public function getCollation() {
+    public function &getCollation() {
         $this->query("SHOW FULL COLUMNS FROM " . $this->getTableName(Core_Table::$CONFIG_TABLE));
         $info = $this->fetchArray();
         return !empty($info['Collation']) ? $info['Collation'] : "?";
@@ -516,7 +517,7 @@ abstract class Base_Model {
      *
      * @param string
      */
-    protected function getTableName($table) {
+    protected function &getTableName($table) {
         return $this->database['prefix'] . "_" . $table;
     }
 

@@ -335,7 +335,7 @@ class Libs_Module {
      * Mise à jour du compteur de visite du module courant.
      */
     private function updateCount() {
-        Core_Sql::addQuoted("", "count + 1");
+        Core_Sql::getInstance()->addQuoted("", "count + 1");
         Core_Sql::getInstance()->update(
         Core_Table::$MODULES_TABLE, array(
             "count" => "count + 1"), array(

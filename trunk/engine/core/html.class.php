@@ -393,7 +393,7 @@ class Core_Html {
      */
     public function setKeywords($keywords) {
         if (is_array($keywords)) {
-            // Les mots cles sont déjà tous prets
+            // Les mots clés sont déjà tous prets
             if (count($this->keywords) > 0) {
                 array_push($this->keywords, $keywords);
             } else {
@@ -421,7 +421,7 @@ class Core_Html {
     }
 
     /**
-     * Retourne la combinaison de cles pour le salt
+     * Retourne la combinaison de clés pour le salt
      *
      * @return string
      */

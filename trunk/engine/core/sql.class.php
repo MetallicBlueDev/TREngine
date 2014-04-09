@@ -202,7 +202,8 @@ class Core_Sql extends Base_Model {
      * @throws Exception
      */
     public function query($sql = "") {
-        $sql = (!empty($sql)) ? $sql : self::getSql();
+        $sql = (!empty($sql)) ? $sql : $this->getSql();
+
         $this->selectedBase->query($sql);
         $this->selectedBase->resetQuoted();
 
@@ -212,7 +213,7 @@ class Core_Sql extends Base_Model {
         }
 
         // Création d'une exception si une réponse est négative (false)
-        if (self::getQueries() === false) {
+        if ($this->getQueries() === false) {
             throw new Exception("sqlReq");
         }
     }
@@ -260,7 +261,7 @@ class Core_Sql extends Base_Model {
      *
      * @return resource
      */
-    public static function &getQueries() {
+    public function &getQueries() {
         return $this->selectedBase->getQueries();
     }
 
@@ -269,7 +270,7 @@ class Core_Sql extends Base_Model {
      *
      * @return string
      */
-    public static function &getSql() {
+    public function &getSql() {
         return $this->selectedBase->getSql();
     }
 
@@ -283,31 +284,31 @@ class Core_Sql extends Base_Model {
     }
 
     /**
-     * Libere la mémoire du resultat
+     * Libère la mémoire du résultat.
      *
-     * @param $querie Resource Id
+     * @param resource $querie
      * @return boolean
      */
-    public static function &freeResult($querie = "") {
-        $querie = (!empty($querie)) ? $querie : self::getQueries();
+    public function &freeResult($querie = null) {
+        $querie = (!empty($querie)) ? $querie : $this->getQueries();
         return $this->selectedBase->freeResult($querie);
     }
 
     /**
-     * Ajoute un bout de donnée dans le buffer
+     * Ajoute un bout de donnée dans le buffer.
      *
-     * @param $key string cles a utiliser
-     * @param $name string
+     * @param string $name
+     * @param string $key clé à utiliser
      */
     public static function addBuffer($name, $key = "") {
         $this->selectedBase->addBuffer($name, $key);
-        self::freeResult();
+        $this->freeResult();
     }
 
     /**
-     * Retourne le buffer courant puis l'incremente
+     * Retourne le buffer courant puis l'incremente.
      *
-     * @param $name string
+     * @param string $name
      * @return array - object
      */
     public static function &fetchBuffer($name) {
@@ -315,76 +316,69 @@ class Core_Sql extends Base_Model {
     }
 
     /**
-     * Retourne le buffer complet choisi
-     * Retourne un tableau Sdt object
+     * Retourne le buffer complet choisi.
      *
-     * @param $name string
+     * @param string $name
      * @return array - object
      */
     public static function &getBuffer($name) {
         return $this->selectedBase->getBuffer($name);
     }
 
-    /**
-     * Vérifie si la plateform est disponible.
-     *
-     * @return boolean
-     */
     public function &test() {
         // NE RIEN FAIRE
         return false;
     }
 
     /**
-     * Retourne les dernières erreurs
+     * Retourne les dernières erreurs.
      *
      * @return array
      */
-    public static function &getLastError() {
+    public function &getLastError() {
         return $this->selectedBase->getLastError();
     }
 
     /**
-     * Marqué une cles comme déjà quoté
+     * Marquer une clé comme déjà quotée.
      *
-     * @param $key string
+     * @param string $key
+     * @param boolean $value
      */
-    public static function addQuoted($key, $value = 1) {
+    public function addQuoted($key, $value = true) {
         $this->selectedBase->addQuoted($key, $value);
     }
 
-    /**
-     * Remise à zéro du tableau de cles déjà quoté.
-     */
     public function resetQuoted() {
         // NE RIEN FAIRE
     }
 
     /**
-     * Retourne la version de la base de données
+     * Retourne la version de la base de données.
      *
      * @return string
      */
-    public static function &getVersion() {
+    public function &getVersion() {
         return $this->selectedBase->getVersion();
     }
 
     /**
-     * Retourne le type d'encodage de la base de données
+     * Retourne le type d'encodage de la base de données.
      *
      * @return string
      */
-    public static function &getCollation() {
+    public function &getCollation() {
         return $this->selectedBase->getCollation();
     }
 
     /**
-     * Récupération des données de la base
+     * Récupération des données de la base.
      *
      * @return array
      */
-    public static function &getDatabase() {
-        return self::$dataBase;
+    public function &getDatabase() {
+        // TODO SVN NE PAS FAIRE CECI
+        return $this->database;
     }
 
 }

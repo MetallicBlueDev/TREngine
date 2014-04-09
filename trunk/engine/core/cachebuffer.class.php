@@ -129,7 +129,7 @@ class Core_CacheBuffer {
         if (is_array($content)) {
             $content = self::serializeData($content);
         }
-        // Mise en forme de la cles
+        // Mise en forme de la clé
         $key = self::encodePath(self::getSectionPath() . "/" . $path);
         // Ajout dans le cache
         if ($overWrite)
