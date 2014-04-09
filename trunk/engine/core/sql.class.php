@@ -57,6 +57,7 @@ class Core_Sql extends Base_Model {
     }
 
     public function initializeBase(array $database) {
+        // NE RIEN FAIRE
         unset($database);
     }
 
@@ -277,8 +278,8 @@ class Core_Sql extends Base_Model {
      *
      * @return boolean
      */
-    public function &isConnected() {
-        return $this->selectedBase->isConnected();
+    public function &connected() {
+        return $this->selectedBase->connected();
     }
 
     /**
@@ -330,6 +331,7 @@ class Core_Sql extends Base_Model {
      * @return boolean
      */
     public function &test() {
+        // NE RIEN FAIRE
         return false;
     }
 
@@ -355,7 +357,7 @@ class Core_Sql extends Base_Model {
      * Remise à zéro du tableau de cles déjà quoté.
      */
     public function resetQuoted() {
-        $this->selectedBase->resetQuoted();
+        // NE RIEN FAIRE
     }
 
     /**

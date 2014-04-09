@@ -94,7 +94,7 @@ abstract class Base_Model {
             if ($this->test()) {
                 // Connexion au serveur
                 $this->dbConnect();
-                if (!$this->isConnected()) {
+                if (!$this->connected()) {
                     throw new Exception("sqlConnect");
                 }
 
@@ -314,7 +314,7 @@ abstract class Base_Model {
      *
      * @return boolean
      */
-    public function isConnected() {
+    public function connected() {
         return ($this->connId != false) ? true : false;
     }
 
