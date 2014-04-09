@@ -94,6 +94,7 @@ abstract class Base_Model {
             if ($this->test()) {
                 // Connexion au serveur
                 $this->dbConnect();
+
                 if (!$this->connected()) {
                     throw new Exception("sqlConnect");
                 }
@@ -132,7 +133,7 @@ abstract class Base_Model {
     /**
      * Sélectionne une base de données.
      *
-     * @return boolean true succes
+     * @return boolean true succès
      */
     public function &dbSelect() {
         return false;
@@ -172,8 +173,7 @@ abstract class Base_Model {
 
         $limit = empty($limit) ? "" : " LIMIT " . $limit;
 
-        $sql = "DELETE FROM " . $table . $whereValue . $likeValue . $limitValue;
-        $this->sql = $sql;
+        $this->sql = "DELETE FROM " . $table . $whereValue . $likeValue . $limit;
     }
 
     /**
@@ -205,10 +205,9 @@ abstract class Base_Model {
         // Nom complet de la table
         $table = $this->getTableName($table);
 
-        $sql = "INSERT INTO " . $table . " ("
+        $this->sql = "INSERT INTO " . $table . " ("
         . implode(", ", $this->converKey($keys)) . ") VALUES ("
         . implode(", ", $this->converValue($values)) . ")";
-        $this->sql = $sql;
     }
 
     /**
@@ -226,7 +225,7 @@ abstract class Base_Model {
      * @param $sql
      */
     public function query($sql) {
-
+        unset($sql);
     }
 
     /**
@@ -255,8 +254,7 @@ abstract class Base_Model {
         $orderbyValue = (count($orderby) >= 1) ? " ORDER BY " . implode(", ", $orderby) : "";
 
         // Mise en forme de la requête finale
-        $sql = "SELECT " . $valuesValue . " FROM " . $table . $whereValue . $orderbyValue . $limit;
-        $this->sql = $sql;
+        $this->sql = "SELECT " . $valuesValue . " FROM " . $table . $whereValue . $orderbyValue . $limit;
     }
 
     /**
@@ -287,8 +285,7 @@ abstract class Base_Model {
         $orderbyValue = (count($orderby) >= 1) ? " ORDER BY " . implode(", ", $orderby) : "";
 
         // Mise en forme de la requête finale
-        $sql = "UPDATE " . $table . " SET " . implode(", ", $valuesString) . $whereValue . $orderbyValue . $limit;
-        $this->sql = $sql;
+        $this->sql = "UPDATE " . $table . " SET " . implode(", ", $valuesString) . $whereValue . $orderbyValue . $limit;
     }
 
     /**
@@ -321,18 +318,19 @@ abstract class Base_Model {
     /**
      * Libère la mémoire du resultat.
      *
-     * @param $querie Resource Id
+     * @param resource $querie
      * @return boolean
      */
     public function &freeResult($querie) {
+        unset($querie);
         return false;
     }
 
     /**
      * Ajoute le dernier résultat dans le buffer.
      *
-     * @param $name string
-     * @param $key string clé à utiliser
+     * @param string $name
+     * @param string $key clé à utiliser
      */
     public function addBuffer($name, $key) {
         if (!isset($this->buffer[$name])) {
@@ -343,14 +341,15 @@ abstract class Base_Model {
                     $this->buffer[$name][] = $row;
                 }
             }
-            $reset = $this->buffer[$name][0];
+
+            reset($this->buffer[$name]);
         }
     }
 
     /**
      * Retourne le buffer courant puis l'incrémente.
      *
-     * @param $name string
+     * @param string $name
      * @return array - object
      */
     public function &fetchBuffer($name) {
@@ -362,7 +361,7 @@ abstract class Base_Model {
     /**
      * Retourne le buffer complet demandé.
      *
-     * @param $name string
+     * @param string $name
      * @return array - object
      */
     public function &getBuffer($name) {
@@ -370,7 +369,7 @@ abstract class Base_Model {
     }
 
     /**
-     * Vérifie si la plateform est disponible.
+     * Vérifie si la plateforme est disponible.
      *
      * @return boolean
      */
@@ -384,15 +383,14 @@ abstract class Base_Model {
      * @return array
      */
     public function &getLastError() {
-        $error = array(
+        return array(
             "<b>Last Sql query</b> : " . $this->getSql());
-        return $error;
     }
 
     /**
      * Quote les identifiants et les valeurs.
      *
-     * @param $s string
+     * @param string $s
      * @return string
      */
     protected function &addQuote($s, $isValue = false) {
@@ -403,15 +401,16 @@ abstract class Base_Model {
             } else {
                 $q = $this->quoteKey;
             }
+
             $s = $q . $s . $q;
         }
         return $s;
     }
 
     /**
-     * Marqué une clé et/ou une valeur comme déjà quoté.
+     * Marquer une clé et/ou une valeur comme déjà quoté.
      *
-     * @param $key string
+     * @param string $key
      * @param boolean $value
      */
     public function addQuoted($key, $value = true) {
@@ -430,9 +429,9 @@ abstract class Base_Model {
     }
 
     /**
-     * Conversion des valeurs dite PHP en valeurs semblable SQL
+     * Conversion des valeurs dite PHP en valeurs semblable SQL.
      *
-     * @param $value object
+     * @param object $value
      * @return object
      */
     protected function &converValue($value) {
@@ -458,7 +457,7 @@ abstract class Base_Model {
     /**
      * Conversion des clès.
      *
-     * @param $key object
+     * @param object $key
      * @return object
      */
     protected function &converKey($key) {
@@ -478,7 +477,7 @@ abstract class Base_Model {
     /**
      * Retourne le bon espacement dans une string.
      *
-     * @param $str string
+     * @param string $str
      * @return string
      */
     protected function &converEscapeString($str) {

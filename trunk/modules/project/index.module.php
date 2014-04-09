@@ -29,8 +29,8 @@ class Module_Project_Index extends Libs_ModuleModel {
         $libsMakeStyle->assign("description", PROJECTS_LIST_DESCRIPTION);
 
         if (Core_Sql::getInstance()->affectedRows() > 0) {
-            Core_Sql::addBuffer("projectList");
-            $projects = Core_Sql::getBuffer("projectList");
+            Core_Sql::getInstance()->addBuffer("projectList");
+            $projects = Core_Sql::getInstance()->getBuffer("projectList");
             $libsMakeStyle->assign("projects", $projects);
             $libsMakeStyle->assign("nbProjects", count($projects) . " " . NB_PROJECT);
         } else {

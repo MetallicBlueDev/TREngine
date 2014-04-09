@@ -130,8 +130,8 @@ class Libs_Menu {
 
         if (Core_Sql::getInstance()->affectedRows() > 0) {
             // Création d'un buffer
-            Core_Sql::addBuffer($this->identifier, "menu_id");
-            $menus = Core_Sql::getBuffer($this->identifier);
+            Core_Sql::getInstance()->addBuffer($this->identifier, "menu_id");
+            $menus = Core_Sql::getInstance()->getBuffer($this->identifier);
 
             // Ajoute et monte tout les items
             foreach ($menus as $key => $item) {

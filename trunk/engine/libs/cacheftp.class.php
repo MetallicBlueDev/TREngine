@@ -143,11 +143,12 @@ class Libs_CacheFtp extends Libs_CacheModel {
 
     public function touchCache($path, $updateTime = 0) {
         // TODO mise a jour de la date de modif a coder
+        parent::touchCache($path, $updateTime);
     }
 
     /**
      * Etat de la connexion FTP.
-     * 
+     *
      * @return boolean
      */
     public function canUse() {

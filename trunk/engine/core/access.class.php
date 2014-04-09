@@ -145,7 +145,7 @@ class Core_Access {
             $userIdAdmin = Core_Session::$userId;
 
         $admin = array();
-        $admin = Core_Sql::getBuffer("getAdminRight");
+        $admin = Core_Sql::getInstance()->getBuffer("getAdminRight");
         if (empty($admin)) { // Si la requête n'est pas en cache
             Core_Sql::getInstance()->select(
             Core_Table::$USERS_ADMIN_TABLE, array(
@@ -154,8 +154,8 @@ class Core_Access {
             );
 
             if (Core_Sql::getInstance()->affectedRows() > 0) {
-                Core_Sql::addBuffer("getAdminRight");
-                $admin = Core_Sql::getBuffer("getAdminRight");
+                Core_Sql::getInstance()->addBuffer("getAdminRight");
+                $admin = Core_Sql::getInstance()->getBuffer("getAdminRight");
             }
         }
 

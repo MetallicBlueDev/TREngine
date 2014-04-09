@@ -41,7 +41,9 @@ abstract class Libs_CacheModel {
      * @param boolean $overWrite
      */
     public function writingCache($path, $content, $overWrite = true) {
-
+        unset($path);
+        unset($content);
+        unset($overWrite);
     }
 
     /**
@@ -51,7 +53,8 @@ abstract class Libs_CacheModel {
      * @param int $updateTime
      */
     public function touchCache($path, $updateTime = 0) {
-
+        unset($path);
+        unset($updateTime);
     }
 
     /**
@@ -61,7 +64,8 @@ abstract class Libs_CacheModel {
      * @param int $timeLimit
      */
     public function removeCache($dir = "", $timeLimit = 0) {
-
+        unset($dir);
+        unset($timeLimit);
     }
 
     /**
@@ -71,6 +75,7 @@ abstract class Libs_CacheModel {
      * @return array
      */
     public function &listNames($dirPath = "") {
+        unset($dirPath);
         return array();
     }
 

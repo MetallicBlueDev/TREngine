@@ -300,7 +300,7 @@ class Core_Sql extends Base_Model {
      * @param string $name
      * @param string $key clé à utiliser
      */
-    public static function addBuffer($name, $key = "") {
+    public function addBuffer($name, $key = "") {
         $this->selectedBase->addBuffer($name, $key);
         $this->freeResult();
     }
@@ -311,7 +311,7 @@ class Core_Sql extends Base_Model {
      * @param string $name
      * @return array - object
      */
-    public static function &fetchBuffer($name) {
+    public function &fetchBuffer($name) {
         return $this->selectedBase->fetchBuffer($name);
     }
 
@@ -321,7 +321,7 @@ class Core_Sql extends Base_Model {
      * @param string $name
      * @return array - object
      */
-    public static function &getBuffer($name) {
+    public function &getBuffer($name) {
         return $this->selectedBase->getBuffer($name);
     }
 

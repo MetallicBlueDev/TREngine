@@ -134,9 +134,9 @@ class Module_Management_Block extends Libs_ModuleModel {
                         . ($blockMove['position'] - 1) . "')")
                     );
                     if (Core_Sql::getInstance()->affectedRows() > 0) {
-                        Core_Sql::addBuffer("blockMoveUp");
+                        Core_Sql::getInstance()->addBuffer("blockMoveUp");
                         // Mise à jour de position
-                        while ($row = Core_Sql::fetchBuffer("blockMoveUp")) {
+                        while ($row = Core_Sql::getInstance()->fetchBuffer("blockMoveUp")) {
                             $row->position = ($row->block_id == $blockId) ? $row->position - 1 : $row->position + 1;
 
                             Core_Sql::getInstance()->update(
@@ -191,9 +191,9 @@ class Module_Management_Block extends Libs_ModuleModel {
                             . ($blockMove['position'] + 1) . "')")
                         );
                         if (Core_Sql::getInstance()->affectedRows() > 0) {
-                            Core_Sql::addBuffer("blockMoveDown");
+                            Core_Sql::getInstance()->addBuffer("blockMoveDown");
                             // Mise à jour de position
-                            while ($row = Core_Sql::fetchBuffer("blockMoveDown")) {
+                            while ($row = Core_Sql::getInstance()->fetchBuffer("blockMoveDown")) {
                                 $row->position = ($row->block_id == $blockId) ? $row->position + 1 : $row->position - 1;
 
                                 Core_Sql::getInstance()->update(

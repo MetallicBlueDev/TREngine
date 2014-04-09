@@ -232,8 +232,8 @@ class Module_Connect_Index extends Libs_ModuleModel {
                 "title")
             );
             if (Core_Sql::getInstance()->affectedRows() > 0) {
-                Core_Sql::addBuffer("blocks");
-                $blocks = Core_Sql::getBuffer("blocks");
+                Core_Sql::getInstance()->addBuffer("blocks");
+                $blocks = Core_Sql::getInstance()->getBuffer("blocks");
             }
         }
 
