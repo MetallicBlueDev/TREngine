@@ -24,7 +24,7 @@ class Core_BlackBan {
      * Affichage de l'isoloire BLACKBAN
      */
     public static function displayBlackPage() {
-        Core_Sql::select(
+        Core_Sql::getInstance()->select(
         Core_Table::$BANNED_TABLE, array(
             "reason"), array(
             "ip = '" . Core_Session::$userIpBan . "'")
@@ -96,7 +96,7 @@ class Core_BlackBan {
             // Si l'ip n'est plus du tout valide
             if (Core_Session::$userIpBan != $userIp && !preg_match("/" . Core_Session::$userIpBan . "/", $userIp)) {
                 // On verifie qu'il est bien dans la base (au cas ou il y aurait un débannissement)
-                Core_Sql::select(
+                Core_Sql::getInstance()->select(
                 Core_Table::$BANNED_TABLE, array(
                     "ban_id"), array(
                     "ip = '" . Core_Session::$userIpBan . "'")
@@ -108,7 +108,7 @@ class Core_BlackBan {
                     list($banId) = Core_Sql::getInstance()->fetchArray();
 
                     // Mise à jour de l'ip
-                    Core_Sql::update(
+                    Core_Sql::getInstance()->update(
                     Core_Table::$BANNED_TABLE, array(
                         "ip" => $userIp), array(
                         "ban_id = '" . $banId . "'")
@@ -120,7 +120,7 @@ class Core_BlackBan {
             }
         } else {
             // Sinon on recherche dans la base les bannis; leurs ip et leurs pseudo
-            Core_Sql::select(
+            Core_Sql::getInstance()->select(
             Core_Table::$BANNED_TABLE, array(
                 "ip",
                 "name"), array(), array(

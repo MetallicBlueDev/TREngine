@@ -147,7 +147,7 @@ class Core_Access {
         $admin = array();
         $admin = Core_Sql::getBuffer("getAdminRight");
         if (empty($admin)) { // Si la requête n'est pas en cache
-            Core_Sql::select(
+            Core_Sql::getInstance()->select(
             Core_Table::$USERS_ADMIN_TABLE, array(
                 "rights"), array(
                 "user_id = '" . $userIdAdmin . "'")

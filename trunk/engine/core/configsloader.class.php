@@ -86,7 +86,7 @@ class Core_ConfigsLoader {
             } else {
                 $content = "";
                 // Requête vers la base de données de configs
-                Core_Sql::select(Core_Table::$CONFIG_TABLE, array(
+                Core_Sql::getInstance()->select(Core_Table::$CONFIG_TABLE, array(
                     "name",
                     "value"));
                 while ($row = Core_Sql::getInstance()->fetchArray()) {

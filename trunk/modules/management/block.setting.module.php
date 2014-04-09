@@ -70,7 +70,7 @@ class Module_Management_Block extends Libs_ModuleModel {
         );
         $rack = new Libs_Rack($firstLine);
 
-        Core_Sql::select(
+        Core_Sql::getInstance()->select(
         Core_Table::$BLOCKS_TABLE, array(
             "block_id",
             "side",
@@ -114,7 +114,7 @@ class Module_Management_Block extends Libs_ModuleModel {
         $blockId = Core_Request::getInt("blockId", -1);
 
         if ($blockId > -1) { // Si l'id semble valide
-            Core_Sql::select(
+            Core_Sql::getInstance()->select(
             Core_Table::$BLOCKS_TABLE, array(
                 "side",
                 "position"), array(
@@ -125,7 +125,7 @@ class Module_Management_Block extends Libs_ModuleModel {
 
                 if ($blockMove['position'] > 0) {
                     // Requête de Sélection des autres blocks
-                    Core_Sql::select(
+                    Core_Sql::getInstance()->select(
                     Core_Table::$BLOCKS_TABLE, array(
                         "block_id",
                         "position"), array(
@@ -139,7 +139,7 @@ class Module_Management_Block extends Libs_ModuleModel {
                         while ($row = Core_Sql::fetchBuffer("blockMoveUp")) {
                             $row->position = ($row->block_id == $blockId) ? $row->position - 1 : $row->position + 1;
 
-                            Core_Sql::update(
+                            Core_Sql::getInstance()->update(
                             Core_Table::$BLOCKS_TABLE, array(
                                 "position" => $row->position), array(
                                 "block_id = '" . $row->block_id . "'")
@@ -160,7 +160,7 @@ class Module_Management_Block extends Libs_ModuleModel {
         $blockId = Core_Request::getInt("blockId", -1);
 
         if ($blockId > -1) { // Si l'id semble valide
-            Core_Sql::select(
+            Core_Sql::getInstance()->select(
             Core_Table::$BLOCKS_TABLE, array(
                 "side",
                 "position"), array(
@@ -169,7 +169,7 @@ class Module_Management_Block extends Libs_ModuleModel {
             if (Core_Sql::getInstance()->affectedRows() > 0) { // Si le block existe
                 $blockMove = Core_Sql::getInstance()->fetchArray(); // Récuperation des informations sur le block
                 // Sélection du block le plus bas
-                Core_Sql::select(
+                Core_Sql::getInstance()->select(
                 Core_Table::$BLOCKS_TABLE, array(
                     "block_id",
                     "position"), array(
@@ -182,7 +182,7 @@ class Module_Management_Block extends Libs_ModuleModel {
 
                     if ($blockMove['position'] < $blockDown['position']) {
                         // Requête de Sélection des autres blocks
-                        Core_Sql::select(
+                        Core_Sql::getInstance()->select(
                         Core_Table::$BLOCKS_TABLE, array(
                             "block_id",
                             "position"), array(
@@ -196,7 +196,7 @@ class Module_Management_Block extends Libs_ModuleModel {
                             while ($row = Core_Sql::fetchBuffer("blockMoveDown")) {
                                 $row->position = ($row->block_id == $blockId) ? $row->position + 1 : $row->position - 1;
 
-                                Core_Sql::update(
+                                Core_Sql::getInstance()->update(
                                 Core_Table::$BLOCKS_TABLE, array(
                                     "position" => $row->position), array(
                                     "block_id = '" . $row->block_id . "'")
@@ -220,7 +220,7 @@ class Module_Management_Block extends Libs_ModuleModel {
         }
 
         if ($blockId > -1) { // Si l'id semble valide
-            Core_Sql::select(
+            Core_Sql::getInstance()->select(
             Core_Table::$BLOCKS_TABLE, array(
                 "side",
                 "position",
@@ -306,7 +306,7 @@ class Module_Management_Block extends Libs_ModuleModel {
         $blockId = Core_Request::getInt("blockId", -1);
 
         if ($blockId > -1) { // Si l'id semble valide
-            Core_Sql::select(
+            Core_Sql::getInstance()->select(
             Core_Table::$BLOCKS_TABLE, array(
                 "type"), array(
                 "block_id = '" . $blockId . "'")
@@ -350,7 +350,7 @@ class Module_Management_Block extends Libs_ModuleModel {
                 "type",
                 "rank",
                 "mods");
-            Core_Sql::select(
+            Core_Sql::getInstance()->select(
             Core_Table::$BLOCKS_TABLE, $keys, array(
                 "block_id = '" . $blockId . "'")
             );

@@ -31,14 +31,15 @@ class Core_Sql extends Base_Model {
     /**
      * Nouveau gestionnaire.
      *
-     * @param array $database Injection des données de la base
+     * @param array $databaseConfig Injection des données de la base
      */
-    private function __construct(array $database) {
+    private function __construct(array $databaseConfig) {
+        parent::__construct();
         $baseClassName = "";
 
-        if (!empty($database) && isset($dataBase['type'])) {
+        if (!empty($databaseConfig) && isset($databaseConfig['type'])) {
             // Chargement des drivers pour la base
-            $baseClassName = "Base_" . ucfirst($dataBase['type']);
+            $baseClassName = "Base_" . ucfirst($databaseConfig['type']);
             Core_Loader::classLoader($baseClassName);
         }
 
@@ -46,7 +47,7 @@ class Core_Sql extends Base_Model {
         if (Core_Loader::isCallable($baseClassName)) {
             try {
                 $this->selectedBase = new $baseClassName();
-                $this->selectedBase->initializeBase($database);
+                $this->selectedBase->initializeBase($databaseConfig);
             } catch (Exception $ie) {
                 Core_Secure::getInstance()->throwException($ie);
             }
@@ -55,14 +56,18 @@ class Core_Sql extends Base_Model {
         }
     }
 
-    public function __destruct() {
+    public function initializeBase(array $database) {
+        unset($database);
+    }
 
+    public function __destruct() {
+        parent::__destruct();
     }
 
     /**
      * Instance du gestionnaire SQL.
      *
-     * @param array $database
+     * @param array $database Injection des données de la base
      * @return Core_Sql
      */
     public static function &getInstance(array $database = array()) {
@@ -82,7 +87,7 @@ class Core_Sql extends Base_Model {
 
         $files = Core_CacheBuffer::listNames("engine/base");
 
-        foreach ($files as $key => $fileName) {
+        foreach ($files as $fileName) {
             // Nettoyage du nom de la page
             $pos = strpos($fileName, ".class");
 
@@ -102,11 +107,18 @@ class Core_Sql extends Base_Model {
     }
 
     /**
+     * Déconnexion de la base de données.
+     */
+    public function dbDeconnect() {
+        $this->selectedBase->dbDeconnect();
+    }
+
+    /**
      * Sélectionne la base de données.
      *
      * @return boolean
      */
-    public function dbSelect() {
+    public function &dbSelect() {
         return $this->selectedBase->dbSelect();
     }
 
@@ -116,7 +128,7 @@ class Core_Sql extends Base_Model {
      *
      * @return int
      */
-    public function affectedRows() {
+    public function &affectedRows() {
         return $this->selectedBase->affectedRows();
     }
 
@@ -128,7 +140,7 @@ class Core_Sql extends Base_Model {
      * @param array $like
      * @param string $limit
      */
-    public function delete($table, array $where = array(), array $like = array(), $limit = false) {
+    public function delete($table, array $where = array(), array $like = array(), $limit = "") {
         $this->selectedBase->delete($table, $where, $like, $limit);
 
         try {
@@ -143,7 +155,7 @@ class Core_Sql extends Base_Model {
      *
      * @return array
      */
-    public function fetchArray() {
+    public function &fetchArray() {
         return $this->selectedBase->fetchArray();
     }
 
@@ -152,7 +164,7 @@ class Core_Sql extends Base_Model {
      *
      * @return object
      */
-    public function fetchObject() {
+    public function &fetchObject() {
         return $this->selectedBase->fetchObject();
     }
 
@@ -178,7 +190,7 @@ class Core_Sql extends Base_Model {
      *
      * @return int
      */
-    public function insertId() {
+    public function &insertId() {
         return $this->selectedBase->insertId();
     }
 
@@ -205,15 +217,15 @@ class Core_Sql extends Base_Model {
     }
 
     /**
-     * Sélection d'information
+     * Sélection des informations d'une table.
      *
-     * @param $table string
-     * @param $values array
-     * @param $where array
-     * @param $orderby array
-     * @param $limit string
+     * @param string $table
+     * @param array $values
+     * @param array $where
+     * @param array $orderby
+     * @param string $limit
      */
-    public static function select($table, $values, $where = array(), $orderby = array(), $limit = false) {
+    public function select($table, array $values, array $where = array(), array $orderby = array(), $limit = "") {
         $this->selectedBase->select($table, $values, $where, $orderby, $limit);
 
         try {
@@ -224,15 +236,15 @@ class Core_Sql extends Base_Model {
     }
 
     /**
-     * Mise à jour d'une table
+     * Mise à jour des données d'une table.
      *
-     * @param $table Nom de la table
-     * @param $values array Sous la forme array("keyName" => "newValue")
-     * @param $where array
-     * @param $orderby array
-     * @param $limit string
+     * @param string $table Nom de la table
+     * @param array $values Sous la forme array("keyName" => "newValue")
+     * @param array $where
+     * @param array $orderby
+     * @param string $limit
      */
-    public static function update($table, $values, $where, $orderby = array(), $limit = false) {
+    public function update($table, array $values, array $where, array $orderby = array(), $limit = "") {
         $this->selectedBase->update($table, $values, $where, $orderby, $limit);
 
         try {
@@ -243,21 +255,30 @@ class Core_Sql extends Base_Model {
     }
 
     /**
-     * Retourne dernier résultat de la dernière requête executée
+     * Retourne le dernier résultat de la dernière requête executée.
      *
-     * @return Ressource ID
+     * @return resource
      */
-    public static function getQueries() {
+    public static function &getQueries() {
         return $this->selectedBase->getQueries();
     }
 
     /**
-     * Retourne la dernière requête sql
+     * Retourne la dernière requête sql.
      *
      * @return string
      */
-    public static function getSql() {
+    public static function &getSql() {
         return $this->selectedBase->getSql();
+    }
+
+    /**
+     * Retourne l'état de la connexion.
+     *
+     * @return boolean
+     */
+    public function &isConnected() {
+        return $this->selectedBase->isConnected();
     }
 
     /**
@@ -266,7 +287,7 @@ class Core_Sql extends Base_Model {
      * @param $querie Resource Id
      * @return boolean
      */
-    public static function freeResult($querie = "") {
+    public static function &freeResult($querie = "") {
         $querie = (!empty($querie)) ? $querie : self::getQueries();
         return $this->selectedBase->freeResult($querie);
     }
@@ -288,7 +309,7 @@ class Core_Sql extends Base_Model {
      * @param $name string
      * @return array - object
      */
-    public static function fetchBuffer($name) {
+    public static function &fetchBuffer($name) {
         return $this->selectedBase->fetchBuffer($name);
     }
 
@@ -299,8 +320,17 @@ class Core_Sql extends Base_Model {
      * @param $name string
      * @return array - object
      */
-    public static function getBuffer($name) {
+    public static function &getBuffer($name) {
         return $this->selectedBase->getBuffer($name);
+    }
+
+    /**
+     * Vérifie si la plateform est disponible.
+     *
+     * @return boolean
+     */
+    public function &test() {
+        return false;
     }
 
     /**
@@ -308,7 +338,7 @@ class Core_Sql extends Base_Model {
      *
      * @return array
      */
-    public static function getLastError() {
+    public static function &getLastError() {
         return $this->selectedBase->getLastError();
     }
 
@@ -322,11 +352,18 @@ class Core_Sql extends Base_Model {
     }
 
     /**
+     * Remise à zéro du tableau de cles déjà quoté.
+     */
+    public function resetQuoted() {
+        $this->selectedBase->resetQuoted();
+    }
+
+    /**
      * Retourne la version de la base de données
      *
      * @return string
      */
-    public static function getVersion() {
+    public static function &getVersion() {
         return $this->selectedBase->getVersion();
     }
 
@@ -335,7 +372,7 @@ class Core_Sql extends Base_Model {
      *
      * @return string
      */
-    public static function getCollation() {
+    public static function &getCollation() {
         return $this->selectedBase->getCollation();
     }
 
@@ -344,7 +381,7 @@ class Core_Sql extends Base_Model {
      *
      * @return array
      */
-    public static function getDatabase() {
+    public static function &getDatabase() {
         return self::$dataBase;
     }
 

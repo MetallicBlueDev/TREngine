@@ -124,7 +124,7 @@ class Libs_Menu {
      * @param array $sql parametre de Sélection
      */
     private function loadFromDb(array $sql) {
-        Core_Sql::select(
+        Core_Sql::getInstance()->select(
         $sql['table'], $sql['select'], $sql['where'], $sql['orderby'], $sql['limit']
         );
 

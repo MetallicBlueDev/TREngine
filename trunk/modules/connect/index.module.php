@@ -65,7 +65,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
         }
 
         if (!empty($values)) {
-            Core_Sql::update(
+            Core_Sql::getInstance()->update(
             Core_Table::$USERS_TABLE, $values, array(
                 "user_id = '" . Core_Session::$userId . "'")
             );
@@ -138,7 +138,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
                 $validName = true;
                 if (Core_Session::$userName != $name) {
                     $name = Exec_Entities::secureText($name);
-                    Core_Sql::select(
+                    Core_Sql::getInstance()->select(
                     Core_Table::$USERS_TABLE, array(
                         "user_id"), array(
                         "name = '" . $name . "'")
@@ -167,7 +167,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
                         $values['mail'] = $mail;
                         $values['langue'] = $langue;
                         $values['template'] = $template;
-                        Core_Sql::update(
+                        Core_Sql::getInstance()->update(
                         Core_Table::$USERS_TABLE, $values, array(
                             "user_id = '" . Core_Session::$userId . "'")
                         );
@@ -226,7 +226,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
         $blocks = array();
 
         if ($rights[0] != "all") {
-            Core_Sql::select(
+            Core_Sql::getInstance()->select(
             Core_Table::$BLOCKS_TABLE, array(
                 "block_id",
                 "title")
@@ -339,7 +339,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
             if (!empty($mail)) {
                 Core_Loader::classLoader("Exec_Mailer");
                 if (Exec_Mailer::validMail($mail)) {
-                    Core_Sql::select(
+                    Core_Sql::getInstance()->select(
                     Core_Table::$USERS_TABLE, array(
                         "name"), array(
                         "mail = '" . $mail . "'")
@@ -389,7 +389,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
 
             if (!empty($login)) {
                 if (Core_Session::getInstance()->validLogin($login)) {
-                    Core_Sql::select(
+                    Core_Sql::getInstance()->select(
                     Core_Table::$USERS_TABLE, array(
                         "name, mail"), array(
                         "name = '" . $login . "'")

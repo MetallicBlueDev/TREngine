@@ -162,7 +162,7 @@ class Libs_Module {
             Core_CacheBuffer::setSectionName("modules");
 
             if (!Core_CacheBuffer::cached($moduleName . ".php")) {
-                Core_Sql::select(
+                Core_Sql::getInstance()->select(
                 Core_Table::$MODULES_TABLE, array(
                     "mod_id",
                     "rank",
@@ -336,7 +336,7 @@ class Libs_Module {
      */
     private function updateCount() {
         Core_Sql::addQuoted("", "count + 1");
-        Core_Sql::update(
+        Core_Sql::getInstance()->update(
         Core_Table::$MODULES_TABLE, array(
             "count" => "count + 1"), array(
             "mod_id = '" . $this->getInfoModule()->getId() . "'")

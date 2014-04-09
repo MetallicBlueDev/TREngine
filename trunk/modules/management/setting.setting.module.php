@@ -47,7 +47,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
      * @param $where array
      */
     private function updateTable($key, $value) {
-        Core_Sql::update(
+        Core_Sql::getInstance()->update(
         Core_Table::$CONFIG_TABLE, array(
             "value" => $value), array(
             "name = '" . $key . "'")

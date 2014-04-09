@@ -55,7 +55,7 @@ class Libs_Block {
      */
     // TODO mettre en cache la requete
     public function launchAllBlock() {
-        Core_Sql::select(
+        Core_Sql::getInstance()->select(
         Core_Table::$BLOCKS_TABLE, array(
             "block_id",
             "side",
@@ -102,7 +102,7 @@ class Libs_Block {
                 "block_id = '" . Core_Request::getInt("blockId") . "'");
         }
 
-        Core_Sql::select(
+        Core_Sql::getInstance()->select(
         Core_Table::$BLOCKS_TABLE, array(
             "block_id",
             "side",

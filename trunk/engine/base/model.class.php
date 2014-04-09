@@ -35,7 +35,7 @@ abstract class Base_Model {
     /**
      * Dernier resultat de la dernière requête SQL.
      *
-     * @var string ressources ID.
+     * @var resource
      */
     protected $queries = "";
 
@@ -123,11 +123,18 @@ abstract class Base_Model {
     }
 
     /**
+     * Déconnexion de la base de données.
+     */
+    public function dbDeconnect() {
+
+    }
+
+    /**
      * Sélectionne une base de données.
      *
      * @return boolean true succes
      */
-    public function dbSelect() {
+    public function &dbSelect() {
         return false;
     }
 
@@ -136,7 +143,7 @@ abstract class Base_Model {
      *
      * @return int
      */
-    public function affectedRows() {
+    public function &affectedRows() {
         return 0;
     }
 
@@ -148,7 +155,7 @@ abstract class Base_Model {
      * @param array $like
      * @param string $limit
      */
-    public function delete($table, array $where = array(), array $like = array(), $limit = false) {
+    public function delete($table, array $where = array(), array $like = array(), $limit = "") {
         // Nom complet de la table
         $table = $this->getTableName($table);
 
@@ -163,7 +170,8 @@ abstract class Base_Model {
             $whereValue .= "AND";
         }
 
-        $limitValue = (!$limit) ? "" : " LIMIT " . $limit;
+        $limit = empty($limit) ? "" : " LIMIT " . $limit;
+
         $sql = "DELETE FROM " . $table . $whereValue . $likeValue . $limitValue;
         $this->sql = $sql;
     }
@@ -224,78 +232,69 @@ abstract class Base_Model {
     /**
      * Sélection d'information.
      *
-     * @param $table string
-     * @param $values array
-     * @param $where array
-     * @param $orderby array
-     * @param $limit string
+     * @param string $table
+     * @param array $values
+     * @param array $where
+     * @param array $orderby
+     * @param string $limit
      */
-    public function select($table, $values, $where = array(), $orderby = array(), $limit = false) {
+    public function select($table, array $values, array $where = array(), array $orderby = array(), $limit = "") {
         // Nom complet de la table
         $table = $this->getTableName($table);
 
         // Mise en place des valeurs sélectionnées
-        if (!is_array($values)) {
-            $values = array(
-                $values);
-        }
-        $values = implode(", ", $values);
+        $valuesValue = implode(", ", $values);
 
         // Mise en place du where
-        if (!is_array($where)) {
-            $where = array(
-                $where);
-        }
-        $where = (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
+        $whereValue = (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
+
         // Mise en place de la limite
-        $limit = (!$limit) ? "" : " LIMIT " . $limit;
+        $limit = empty($limit) ? "" : " LIMIT " . $limit;
+
         // Mise en place de l'ordre
-        $orderby = (count($orderby) >= 1) ? " ORDER BY " . implode(", ", $orderby) : "";
+        $orderbyValue = (count($orderby) >= 1) ? " ORDER BY " . implode(", ", $orderby) : "";
 
         // Mise en forme de la requête finale
-        $sql = "SELECT " . $values . " FROM " . $table . $where . $orderby . $limit;
+        $sql = "SELECT " . $valuesValue . " FROM " . $table . $whereValue . $orderbyValue . $limit;
         $this->sql = $sql;
     }
 
     /**
      * Mise à jour d'une table.
      *
-     * @param $table Nom de la table
-     * @param $values array) Sous la forme array("keyName" => "newValue")
-     * @param $where array
-     * @param $orderby array
-     * @param $limit string
+     * @param string $table Nom de la table
+     * @param array $values Sous la forme array("keyName" => "newValue")
+     * @param array $where
+     * @param array $orderby
+     * @param string $limit
      */
-    public function update($table, $values, $where, $orderby = array(), $limit = false) {
+    public function update($table, array $values, array $where, array $orderby = array(), $limit = "") {
         // Nom complet de la table
         $table = $this->getTableName($table);
 
         // Affectation des clès à leurs valeurs
+        $valuesString = array();
         foreach ($values as $key => $value) {
             $valuesString[] = $this->converKey($key) . " = " . $this->converValue($value, $key);
         }
 
-        // Mise en place du where
-        if (!is_array($where)) {
-            $where = array(
-                $where);
-        }
+        $whereValue = (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
+
         // Mise en place de la limite
-        $limit = (!$limit) ? "" : " LIMIT " . $limit;
+        $limit = empty($limit) ? "" : " LIMIT " . $limit;
+
         // Mise en place de l'ordre
-        $orderby = (count($orderby) >= 1) ? " ORDER BY " . implode(", ", $orderby) : "";
+        $orderbyValue = (count($orderby) >= 1) ? " ORDER BY " . implode(", ", $orderby) : "";
 
         // Mise en forme de la requête finale
-        $sql = "UPDATE " . $table . " SET " . implode(", ", $valuesString);
-        $sql .= (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
-        $sql .= $orderby . $limit;
+        $sql = "UPDATE " . $table . " SET " . implode(", ", $valuesString) . $whereValue . $orderbyValue . $limit;
         $this->sql = $sql;
     }
 
     /**
      * Retourne le dernier résultat de la dernière requête executée.
      *
-     * @return Ressource ID
+     * @return resource
      */
     public function getQueries() {
         return $this->queries;
@@ -517,7 +516,7 @@ abstract class Base_Model {
      *
      * @param string
      */
-    public function getTableName($table) {
+    protected function getTableName($table) {
         return $this->database['prefix'] . "_" . $table;
     }
 

@@ -295,8 +295,8 @@ class Core_Session {
      *
      * @return array
      */
-    private function getUserInfo($where) {
-        Core_Sql::select(
+    private function getUserInfo(array $where) {
+        Core_Sql::getInstance()->select(
         Core_Table::$USERS_TABLE, array(
             "user_id",
             "name",
@@ -332,7 +332,7 @@ class Core_Session {
             $userId = self::$userId;
         Core_Sql::addQuoted("", "NOW()");
         // Envoie la requête Sql de mise à jour
-        Core_Sql::update(Core_Table::$USERS_TABLE, array(
+        Core_Sql::getInstance()->update(Core_Table::$USERS_TABLE, array(
             "last_connect" => "NOW()"), array(
             "user_id = '" . $userId . "'")
         );
