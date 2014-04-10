@@ -147,6 +147,10 @@ class Core_Loader {
      * @return boolean true chargé.
      */
     private static function load($name, $ext = "") {
+        if (empty($name)) {
+            throw new Exception("loader");
+        }
+
         $loaded = self::isLoaded($name);
 
         // Si ce n'est pas déjà chargé
@@ -200,7 +204,7 @@ class Core_Loader {
                         Core_Logger::addErrorMessage(ERROR_MODULE_NO_FILE);
                         break;
                     default:
-                        throw new Exception("Loader");
+                        throw new Exception("loader");
                 }
 
                 $loaded = false;

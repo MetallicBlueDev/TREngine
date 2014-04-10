@@ -4,8 +4,8 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
-Core_Loader::classLoader("Base_Model");
 Core_Loader::classLoader("Core_Table");
+Core_Loader::classLoader("Base_Model");
 
 /**
  * Gestionnaire de la communication SQL.
@@ -43,16 +43,15 @@ class Core_Sql extends Base_Model {
             Core_Loader::classLoader($baseClassName);
         }
 
-        // Si la classe peut être utilisée
-        if (Core_Loader::isCallable($baseClassName)) {
-            try {
-                $this->selectedBase = new $baseClassName();
-                $this->selectedBase->initializeBase($databaseConfig);
-            } catch (Exception $ie) {
-                Core_Secure::getInstance()->throwException($ie);
-            }
-        } else {
+        if (!Core_Loader::isCallable($baseClassName)) {
             Core_Secure::getInstance()->throwException("sqlCode", $baseClassName);
+        }
+
+        try {
+            $this->selectedBase = new $baseClassName();
+            $this->selectedBase->initializeBase($databaseConfig);
+        } catch (Exception $ie) {
+            Core_Secure::getInstance()->throwException($ie);
         }
     }
 
