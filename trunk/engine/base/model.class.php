@@ -334,7 +334,7 @@ abstract class Base_Model {
      */
     public function addBuffer($name, $key) {
         if (!isset($this->buffer[$name])) {
-            while ($row = $this->fetchObject()) {
+            foreach ($this->fetchObject() as $row) {
                 if (!empty($key)) {
                     $this->buffer[$name][$row->$key] = $row;
                 } else {
@@ -388,26 +388,6 @@ abstract class Base_Model {
     }
 
     /**
-     * Quote les identifiants et les valeurs.
-     *
-     * @param string $s
-     * @return string
-     */
-    protected function &addQuote($s, $isValue = false) {
-        // Ne pas quoter les champs avec la notation avec les point
-        if (($isValue && !Exec_Utils::inArray($s, $this->quoted)) || (!$isValue && strpos($s, ".") === false && !isset($this->quoted[$s]))) {
-            if ($isValue) {
-                $q = $this->quoteValue;
-            } else {
-                $q = $this->quoteKey;
-            }
-
-            $s = $q . $s . $q;
-        }
-        return $s;
-    }
-
-    /**
      * Marquer une clé et/ou une valeur comme déjà quoté.
      *
      * @param string $key
@@ -426,6 +406,46 @@ abstract class Base_Model {
      */
     public function resetQuoted() {
         $this->quoted = array();
+    }
+
+    /**
+     * Retourne la version de la base.
+     *
+     * @return string
+     */
+    public function &getVersion() {
+        return "?";
+    }
+
+    /**
+     * Retourne le type d'encodage de la base de données.
+     *
+     * @return string
+     */
+    public function &getCollation() {
+        $this->query("SHOW FULL COLUMNS FROM " . $this->getTableName(Core_Table::$CONFIG_TABLE));
+        $info = $this->fetchArray();
+        return !empty($info['Collation']) ? $info['Collation'] : "?";
+    }
+
+    /**
+     * Quote les identifiants et les valeurs.
+     *
+     * @param string $s
+     * @return string
+     */
+    protected function &addQuote($s, $isValue = false) {
+        // Ne pas quoter les champs avec la notation avec les point
+        if (($isValue && !Exec_Utils::inArray($s, $this->quoted)) || (!$isValue && strpos($s, ".") === false && !isset($this->quoted[$s]))) {
+            if ($isValue) {
+                $q = $this->quoteValue;
+            } else {
+                $q = $this->quoteKey;
+            }
+
+            $s = $q . $s . $q;
+        }
+        return $s;
     }
 
     /**
@@ -482,26 +502,6 @@ abstract class Base_Model {
      */
     protected function &converEscapeString($str) {
         return addslashes($str);
-    }
-
-    /**
-     * Retourne la version de la base.
-     *
-     * @return string
-     */
-    public function &getVersion() {
-        return "?";
-    }
-
-    /**
-     * Retourne le type d'encodage de la base de données.
-     *
-     * @return string
-     */
-    public function &getCollation() {
-        $this->query("SHOW FULL COLUMNS FROM " . $this->getTableName(Core_Table::$CONFIG_TABLE));
-        $info = $this->fetchArray();
-        return !empty($info['Collation']) ? $info['Collation'] : "?";
     }
 
     /**
