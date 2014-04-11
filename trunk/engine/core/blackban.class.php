@@ -17,7 +17,7 @@ class Core_BlackBan {
      * @return boolean true le client est bannis
      */
     public static function isBlackUser() {
-        return ((!empty(Core_Session::$userIpBan)) ? true : false);
+        return ((!empty(Core_Session::getInstance()->userIpBan)) ? true : false);
     }
 
     /**
@@ -27,7 +27,7 @@ class Core_BlackBan {
         Core_Sql::getInstance()->select(
         Core_Table::$BANNED_TABLE, array(
             "reason"), array(
-            "ip = '" . Core_Session::$userIpBan . "'")
+            "ip = '" . Core_Session::getInstance()->userIpBan . "'")
         );
 
         if (Core_Sql::getInstance()->affectedRows() > 0) {
@@ -40,7 +40,7 @@ class Core_BlackBan {
             $libsMakeStyle = new Libs_MakeStyle();
             $libsMakeStyle->assign("mail", $mail);
             $libsMakeStyle->assign("reason", Exec_Entities::textDisplay($reason));
-            $libsMakeStyle->assign("ip", Core_Session::$userIpBan);
+            $libsMakeStyle->assign("ip", Core_Session::getInstance()->userIpBan);
             $libsMakeStyle->display("banishment");
         }
     }
@@ -92,14 +92,14 @@ class Core_BlackBan {
     private static function checkBan() {
         $userIp = Exec_Agent::$userIp;
         // Recherche de bannissement de session
-        if (!empty(Core_Session::$userIpBan)) {
+        if (!empty(Core_Session::getInstance()->userIpBan)) {
             // Si l'ip n'est plus du tout valide
-            if (Core_Session::$userIpBan != $userIp && !preg_match("/" . Core_Session::$userIpBan . "/", $userIp)) {
+            if (Core_Session::getInstance()->userIpBan != $userIp && !preg_match("/" . Core_Session::getInstance()->userIpBan . "/", $userIp)) {
                 // On verifie qu'il est bien dans la base (au cas ou il y aurait un débannissement)
                 Core_Sql::getInstance()->select(
                 Core_Table::$BANNED_TABLE, array(
                     "ban_id"), array(
-                    "ip = '" . Core_Session::$userIpBan . "'")
+                    "ip = '" . Core_Session::getInstance()->userIpBan . "'")
                 );
 
                 // Il est fiché, on s'occupe bien de lui
@@ -113,7 +113,7 @@ class Core_BlackBan {
                         "ip" => $userIp), array(
                         "ban_id = '" . $banId . "'")
                     );
-                    Core_Session::$userIpBan = $userIp;
+                    Core_Session::getInstance()->userIpBan = $userIp;
                 } else {
                     self::deleteBlackIp();
                 }
@@ -143,16 +143,16 @@ class Core_BlackBan {
                 // Vérification du client
                 if ($searchIp == $banList) {
                     // IP bannis !
-                    Core_Session::$userIpBan = $blackBanIp;
-                } else if (!empty(Core_Session::$userName) && Core_Session::$userName = $blackBanName) {
+                    Core_Session::getInstance()->userIpBan = $blackBanIp;
+                } else if (!empty(Core_Session::getInstance()->userName) && Core_Session::getInstance()->userName = $blackBanName) {
                     // Pseudo bannis !
-                    Core_Session::$userIpBan = $blackBanIp;
+                    Core_Session::getInstance()->userIpBan = $blackBanIp;
                 } else {
-                    Core_Session::$userIpBan = "";
+                    Core_Session::getInstance()->userIpBan = "";
                 }
 
                 // La vérification a déjà aboutie, on arrête
-                if (!empty(Core_Session::$userIpBan))
+                if (!empty(Core_Session::getInstance()->userIpBan))
                     break;
             }
         }

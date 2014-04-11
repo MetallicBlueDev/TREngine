@@ -5,119 +5,126 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Gestionnaire des sessions
+ * Gestionnaire des sessions.
  *
  * @author Sébastien Villemain
  */
 class Core_Session {
 
     /**
-     * Instance de la session
+     * Instance de la session.
      *
      * @var Core_Session
      */
-    private static $session = null;
+    private static $coreSession = null;
 
     /**
-     * Timer générale
+     * Message d'erreur de connexion.
+     *
+     * @var array
+     */
+    private static $errorMessage = array();
+
+    /**
+     * Timer générale.
      *
      * @var int
      */
     private $timer = 0;
 
     /**
-     * Limite de temps pour le cache
+     * Limite de temps pour le cache.
      *
      * @var int
      */
     private $cacheTimeLimit = 0;
 
     /**
-     * Id du client
+     * Id du client.
      *
      * @var string
      */
-    public static $userId = "";
+    public $userId = "";
 
     /**
-     * Nom du client
+     * Nom du client.
      *
      * @var string
      */
-    public static $userName = "";
+    public $userName = "";
 
     /**
-     * Type de compte lié au client
+     * Type de compte lié au client.
      *
      * @var int
      */
-    public static $userRank = 0;
+    public $userRank = 0;
 
     /**
-     * Id de la session courante du client
+     * Id de la session courante du client.
      *
      * @var string
      */
-    public static $sessionId = "";
+    private $sessionId = "";
 
     /**
-     * Langue du client
+     * Langue du client.
      *
      * @var string
      */
-    public static $userLanguage = "";
+    public $userLanguage = "";
 
     /**
-     * Template du client
+     * Template du client.
      *
      * @var string
      */
-    public static $userTemplate = "";
+    public $userTemplate = "";
 
     /**
-     * Adresse Ip du client bannis
+     * Adresse Ip du client bannis.
      *
      * @var string
      */
-    public static $userIpBan = "";
+    public $userIpBan = "";
 
     /**
-     * URL de l'avatar de l'utilisateur
+     * URL de l'avatar de l'utilisateur.
      *
      * @var string
      */
-    public static $userAvatar = "includes/avatars/nopic.png";
+    public $userAvatar = "includes/avatars/nopic.png";
 
     /**
-     * Adresse email du client
+     * Adresse email du client.
      *
      * @var string
      */
-    public static $userMail = "";
+    public $userMail = "";
 
     /**
-     * Date d'inscription du client
+     * Date d'inscription du client.
      *
      * @var string
      */
-    public static $userInscriptionDate = "";
+    private $userInscriptionDate = "";
 
     /**
-     * Signature du client
+     * Signature du client.
      *
      * @var string
      */
-    public static $userSignature = "";
+    public $userSignature = "";
 
     /**
-     * Site Internet du client
+     * Site Internet du client.
      *
      * @var string
      */
-    public static $userWebSite = "";
+    private $userWebSite = "";
 
     /**
-     * Nom des cookies
+     * Nom des cookies.
      *
      * @var array
      */
@@ -130,19 +137,11 @@ class Core_Session {
     );
 
     /**
-     * Message d'erreur de connexion
+     * Démarrage du système de session.
      *
-     * @var array
+     * @param boolean $autoSearch
      */
-    private $errorMessage = array();
-
-    /**
-     * Démarrage du système de session
-     */
-    private function __construct() {
-        // Reset du client
-        $this->resetUser();
-
+    private function __construct($autoSearch = true) {
         // Marque le timer
         $this->timer = time();
 
@@ -156,146 +155,428 @@ class Core_Session {
 
         // Configuration du gestionnaire de cache
         Core_CacheBuffer::setSectionName("sessions");
+
         // Nettoyage du cache
         Core_CacheBuffer::cleanCache($this->timer - $this->cacheTimeLimit);
 
         // Lanceur de session
-        $this->sessionSelect();
+        if ($autoSearch) {
+            $this->searchSession();
+        }
     }
 
     /**
-     * Creation et récupèration de l'instance de session
+     * Instance du gestionnaire des sessions.
      *
+     * @param boolean $autoSearch
      * @return Core_Session
      */
-    public static function &getInstance() {
-        if (self::$session == null) {
-            self::$session = new self();
+    public static function &getInstance($autoSearch = true) {
+        if (self::$coreSession === null) {
+            self::$coreSession = new self($autoSearch);
         }
-        return self::$session;
+        return self::$coreSession;
     }
 
     /**
-     * Vérifie si une session est ouverte
+     * Tentative de création d'un nouvelle session.
      *
-     * @return boolean true une session peut être recupere
+     * @param string $userName Nom du compte (identifiant)
+     * @param string $userPass Mot de passe du compte
+     * @return boolean true succès
      */
-    private function sessionFound() {
-        $cookieUser = $this->getCookie($this->cookieName['USER']);
-        $cookieSession = $this->getCookie($this->cookieName['SESSION']);
-        return (!empty($cookieUser) && !empty($cookieSession));
+    public static function &startConnection($userName, $userPass) {
+        $rslt = false;
+
+        // Arrête de la session courante si besoin
+        self::stopConnection();
+
+        if (self::validLogin($userName) && self::validPassword($userPass)) {
+            $userPass = self::cryptPass($userPass);
+            $userInfos = self::getUserInfo(array(
+                "name = '" . $userName . "'",
+                "&& pass = '" . $userPass . "'"));
+
+            if (count($userInfos) > 1) {
+                $newSession = self::getInstance(false);
+
+                // Injection des informations du client
+                $newSession->setUser($userInfos);
+
+                // Tentative d'ouverture de session
+                $rslt = $newSession->openSession();
+
+                if (!$rslt) {
+                    self::stopConnection();
+                }
+            } else {
+                self::$errorMessage['login'] = ERROR_LOGIN_OR_PASSWORD_INVALID;
+            }
+        }
+        return $rslt;
     }
 
     /**
-     * Recuperation d'une session ouverte
+     * Détermine si une session existe.
+     *
+     * @return boolean
      */
-    private function sessionSelect() {
-        if ($this->sessionFound()) {
-            // Cookie de l'id du client
-            $userId = $this->getCookie($this->cookieName['USER']);
-            // Cookie de session
-            $sessionId = $this->getCookie($this->cookieName['SESSION']);
-            // Cookie de langue
-            $userLanguage = $this->getCookie($this->cookieName['LANGUE']);
-            self::$userLanguage = $userLanguage;
-            // Cookie de template
-            $userTemplate = $this->getCookie($this->cookieName['TEMPLATE']);
-            self::$userTemplate = $userTemplate;
-            // Cookie de l'IP BAN voir Core_BlackBan
-            $userIpBan = $this->getCookie($this->cookieName['BLACKBAN']);
-            self::$userIpBan = $userIpBan;
+    public static function hasConnection() {
+        return (self::$coreSession !== null && self::$coreSession->userLogged());
+    }
 
-            if (!empty($userId) && !empty($sessionId)) {
+    /**
+     * Coupe proprement une session ouverte.
+     */
+    public static function stopConnection() {
+        if (self::hasConnection()) {
+            self::$coreSession->closeSession();
+        }
+
+        if (self::$coreSession !== null) {
+            self::$coreSession = null;
+        }
+    }
+
+    /**
+     * Vérification du nom du compte.
+     *
+     * @param string $login
+     * @return boolean true login valide
+     */
+    public static function &validLogin($login) {
+        $rslt = false;
+
+        if (!empty($login)) {
+            $len = strlen($login);
+
+            if ($len >= 3 && $len <= 16) {
+                if (preg_match("/^[A-Za-z0-9_-]{3,16}$/ie", $login)) {
+                    $rslt = true;
+                } else {
+                    self::$errorMessage['login'] = ERROR_LOGIN_CARACTERE;
+                }
+            } else {
+                self::$errorMessage['login'] = ERROR_LOGIN_NUMBER_CARACTERE;
+            }
+        } else {
+            self::$errorMessage['login'] = ERROR_LOGIN_EMPTY;
+        }
+        return $rslt;
+    }
+
+    /**
+     * Vérification du mot de passe.
+     *
+     * @param string $password
+     * @return boolean true password valide
+     */
+    public static function &validPassword($password) {
+        $rslt = false;
+
+        if (!empty($password)) {
+            if (strlen($password) >= 5) {
+                $rslt = true;
+            } else {
+                self::$errorMessage['password'] = ERROR_PASSWORD_NUMBER_CARACTERE;
+            }
+        } else {
+            self::$errorMessage['password'] = ERROR_PASSWORD_EMPTY;
+        }
+        return $rslt;
+    }
+
+    /**
+     * Crypte un mot de passe pour un compte client.
+     *
+     * @param string $pass
+     * @return string
+     */
+    public static function &cryptPass($pass) {
+        return Exec_Crypt::cryptData($pass, $pass, "md5+");
+    }
+
+    /**
+     * Retourne les messages d'erreurs en attentes.
+     *
+     * @param string $key
+     * @return array
+     */
+    public static function &getErrorMessage($key = "") {
+        $rslt = array();
+
+        if (!empty($key)) {
+            $rslt = array(
+                $self::$errorMessage[$key]
+            );
+        } else {
+            $rslt = self::$errorMessage;
+        }
+        return $rslt;
+    }
+
+    /**
+     * Suppression de l'Ip bannie.
+     */
+    public function deleteUserIpBan() {
+        $this->userIpBan = "";
+        Exec_Cookie::destroyCookie(self::getCookieName($this->cookieName['BLACKBAN']));
+    }
+
+    /**
+     * Actualise la session courante.
+     */
+    public function refreshSession() {
+        if ($this->userLogged()) {
+            // Rafraichir le cache de session
+            $user = self::getUserInfo(array(
+                "user_id = '" . $this->userId . "'"));
+
+            if (count($user) > 1) {
+                $this->setUser($user, true);
+                Core_CacheBuffer::setSectionName("sessions");
+                Core_CacheBuffer::writingCache($this->sessionId . ".php", $this->getUserInfosSerialized(), true);
+            }
+        }
+    }
+
+    /**
+     * Récupèration d'une session ouverte.
+     */
+    public function searchSession() {
+        if (!$this->userLogged()) {
+            // Cookie de l'id du client
+            $userId = self::getCookie($this->cookieName['USER']);
+
+            // Cookie de session
+            $sessionId = self::getCookie($this->cookieName['SESSION']);
+
+            // Vérifie si une session est ouverte
+            if ((!empty($userId) && !empty($sessionId))) {
+                // Cookie de langue
+                $this->userLanguage = self::getCookie($this->cookieName['LANGUE']);
+
+                // Cookie de template
+                $this->userTemplate = self::getCookie($this->cookieName['TEMPLATE']);
+
+                // Cookie de l'IP BAN voir Core_BlackBan
+                $this->userIpBan = self::getCookie($this->cookieName['BLACKBAN']);
+
+                $isValidSession = false;
+
                 if (Core_CacheBuffer::cached($sessionId . ".php")) {
                     // Si fichier cache trouvé, on l'utilise
                     $sessions = Core_CacheBuffer::getCache($sessionId . ".php");
 
-                    // Verification + mise à jour toute les 5 minutes
-                    $updVerif = false;
                     if ($sessions['userId'] == $userId && $sessions['sessionId'] == $sessionId) {
-                        // Mise à jour toute les 5 min
-                        if ((Core_CacheBuffer::cacheMTime($sessions['sessionId'] . ".php") + 5 * 60) < $this->timer) {
-                            // Mise a jour du dernier accès
-                            $updVerif = $this->updateLastConnect($sessions['userId']);
-                            Core_CacheBuffer::touchCache($sessions['sessionId'] . ".php");
+                        // Mise a jour du dernier accès toute les 5 min
+                        if ((Core_CacheBuffer::cacheMTime($sessionId . ".php") + 5 * 60) < $this->timer) {
+                            // En base
+                            $isValidSession = $this->updateLastConnect($userId);
+
+                            // En cache
+                            Core_CacheBuffer::touchCache($sessionId . ".php");
                         } else {
-                            $updVerif = true;
+                            $isValidSession = true;
                         }
                     }
-                    if ($updVerif === true) { // Injection des informations du client
+
+                    if ($isValidSession) {
+                        // Injection des informations du client
                         $this->setUser($sessions);
-                    } else { // La mise à jour a échoué, on détruit la session
-                        $this->sessionClose();
                     }
-                } else {
-                    $this->sessionClose();
+                }
+
+                if (!$isValidSession) {
+                    $this->closeSession();
                 }
             }
         }
     }
 
     /**
-     * Injection des informations du client
-     *
-     * @param $info array
-     * @param $refreshAll boolean
+     * Ferme une session ouverte.
      */
-    private function setUser($info, $refreshAll = false) {
-        self::$userId = isset($info['userId']) ? $info['userId'] : $info['user_id'];
-        self::$userName = Exec_Entities::stripSlashes($info['name']);
-        self::$userMail = $info['mail'];
-        self::$userRank = (int) $info['rank'];
-        self::$userInscriptionDate = $info['date'];
-        self::$userAvatar = $info['avatar'];
-        self::$userSignature = Exec_Entities::stripSlashes($info['signature']);
-        self::$userWebSite = Exec_Entities::stripSlashes($info['website']);
-        self::$sessionId = (!empty($info['sessionId'])) ? $info['sessionId'] : self::$sessionId;
-        self::$userIpBan = (!empty($info['userIpBan'])) ? $info['userIpBan'] : self::$userIpBan;
+    private function closeSession() {
+        // Destruction du fichier de session
+        Core_CacheBuffer::setSectionName("sessions");
 
-        // Force une mise à jour complète
-        if ($refreshAll) {
-            self::$userLanguage = $info['langue'];
-            self::$userTemplate = $info['template'];
-        } else {
-            // Mise à jour uniquement si aucune donnée
-            if (empty(self::$userLanguage))
-                self::$userLanguage = $info['langue'];
-            if (empty(self::$userTemplate))
-                self::$userTemplate = $info['template'];
+        if (Core_CacheBuffer::cached($this->sessionId . ".php")) {
+            Core_CacheBuffer::removeCache($this->sessionId . ".php");
+        }
+
+        // Destruction des éventuelles cookies
+        foreach ($this->cookieName as $key => $value) {
+            // On évite de supprimer le cookie de bannissement
+            if ($key == "BLACKBAN") {
+                continue;
+            }
+
+            Exec_Cookie::destroyCookie(self::getCookieName($value));
         }
     }
 
     /**
-     * Mise en chaine de caractères des informations du client
+     * Ouvre une nouvelle session.
      *
-     * @return string
+     * @return boolean ture succès
      */
-    private function &getUser() {
-        $rslt = "";
-        $data = array(
-            "userId" => self::$userId,
-            "name" => self::$userName,
-            "mail" => self::$userMail,
-            "rank" => self::$userRank,
-            "date" => self::$userInscriptionDate,
-            "avatar" => self::$userAvatar,
-            "signature" => self::$userSignature,
-            "website" => self::$userWebSite,
-            "langue" => self::$userLanguage,
-            "template" => self::$userTemplate,
-            "userIpBan" => self::$userIpBan,
-            "sessionId" => self::$sessionId
+    private function &openSession() {
+        $rslt = false;
+        $this->sessionId = Exec_Crypt::createId(32);
+
+        // Durée de connexion automatique via cookie
+        $cookieTimeLimit = $this->timer + $this->cacheTimeLimit;
+
+        // Creation des cookies
+        $cookieUser = Exec_Cookie::createCookie(
+        self::getCookieName($this->cookieName['USER']), Exec_Crypt::md5Encrypt(
+        $this->userId, self::getSalt()
+        ), $cookieTimeLimit
         );
-        $rslt = Core_CacheBuffer::serializeData($data);
+
+        $cookieSession = Exec_Cookie::createCookie(
+        self::getCookieName($this->cookieName['SESSION']), Exec_Crypt::md5Encrypt(
+        $this->sessionId, self::getSalt()
+        ), $cookieTimeLimit
+        );
+
+        if ($cookieUser && $cookieSession) {
+            // Ecriture du cache
+            Core_CacheBuffer::setSectionName("sessions");
+            Core_CacheBuffer::writingCache($this->sessionId . ".php", $this->getUserInfosSerialized());
+            $rslt = true;
+        } else {
+            Core_Logger::addWarningMessage(ERROR_SESSION_COOKIE);
+        }
         return $rslt;
     }
 
     /**
-     * Retourne les infos utilisateur via la base de données
+     * Mise en chaine de caractères des informations du client.
+     *
+     * @return string
+     */
+    private function &getUserInfosSerialized() {
+        $data = array(
+            "userId" => $this->userId,
+            "name" => $this->userName,
+            "mail" => $this->userMail,
+            "rank" => $this->userRank,
+            "date" => $this->userInscriptionDate,
+            "avatar" => $this->userAvatar,
+            "signature" => $this->userSignature,
+            "website" => $this->userWebSite,
+            "langue" => $this->userLanguage,
+            "template" => $this->userTemplate,
+            "userIpBan" => $this->userIpBan,
+            "sessionId" => $this->sessionId
+        );
+        return Core_CacheBuffer::serializeData($data);
+    }
+
+    /**
+     * Détermine si l'utilisateur est identifié.
+     *
+     * @return boolean true c'est un client valide
+     */
+    private function &userLogged() {
+        return (!empty($this->userId) && !empty($this->userName) && !empty($this->sessionId) && $this->userRank > 0);
+    }
+
+    /**
+     * Injection des informations du client.
+     *
+     * @param array $info
+     * @param boolean $refreshAll
+     */
+    private function setUser($info, $refreshAll = false) {
+        $this->userId = isset($info['userId']) ? $info['userId'] : $info['user_id'];
+        $this->userName = Exec_Entities::stripSlashes($info['name']);
+        $this->userMail = $info['mail'];
+        $this->userRank = (int) $info['rank'];
+        $this->userInscriptionDate = $info['date'];
+        $this->userAvatar = $info['avatar'];
+        $this->userSignature = Exec_Entities::stripSlashes($info['signature']);
+        $this->userWebSite = Exec_Entities::stripSlashes($info['website']);
+
+        if (!empty($info['sessionId'])) {
+            $this->sessionId = $info['sessionId'];
+        }
+
+        if (!empty($info['userIpBan'])) {
+            $this->userIpBan = $info['userIpBan'];
+        }
+
+        if (empty($this->userLanguage) || $refreshAll) {
+            $this->userLanguage = $info['langue'];
+        }
+
+        if (empty($this->userTemplate) || $refreshAll) {
+            $this->userTemplate = $info['template'];
+        }
+    }
+
+    /**
+     * Mise à jour de la dernière connexion.
+     *
+     * @param string $userId
+     * @return boolean true succès de la mise à jour
+     */
+    private function &updateLastConnect($userId = "") {
+        // Récupere l'id du client
+        if (empty($userId)) {
+            $userId = $this->userId;
+        }
+
+        Core_Sql::getInstance()->addQuoted("", "NOW()");
+
+        // Envoi la requête Sql de mise à jour
+        Core_Sql::getInstance()->update(Core_Table::$USERS_TABLE, array(
+            "last_connect" => "NOW()"), array(
+            "user_id = '" . $userId . "'")
+        );
+        return (Core_Sql::getInstance()->affectedRows() == 1) ? true : false;
+    }
+
+    /**
+     * Retourne le contenu décrypté du cookie.
+     *
+     * @param string $cookieName
+     * @return string
+     */
+    private static function &getCookie($cookieName) {
+        $cookieName = self::getCookieName($cookieName);
+        $cookieContent = Exec_Cookie::getCookie($cookieName);
+        $cookieContent = Exec_Crypt::md5Decrypt($cookieContent, self::getSalt());
+        return $cookieContent;
+    }
+
+    /**
+     * Retourne le nom crypté du cookie.
+     *
+     * @param string $cookieName
+     * @return string
+     */
+    private static function &getCookieName($cookieName) {
+        return Exec_Crypt::cryptData($cookieName, self::getSalt(), "md5+");
+    }
+
+    /**
+     * Retourne la combinaison de clés pour le salt.
+     *
+     * @return string
+     */
+    private static function &getSalt() {
+        return Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowserName;
+    }
+
+    /**
+     * Retourne les informations utilisateur via la base de données.
      *
      * @return array
      */
-    private function getUserInfo(array $where) {
+    private static function getUserInfo(array $where) {
         Core_Sql::getInstance()->select(
         Core_Table::$USERS_TABLE, array(
             "user_id",
@@ -312,273 +593,4 @@ class Core_Session {
         return (Core_Sql::getInstance()->affectedRows() == 1) ? Core_Sql::getInstance()->fetchArray() : array();
     }
 
-    /**
-     * Suppression de l'Ip bannie
-     */
-    public function deleteUserIpBan() {
-        self::$userIpBan = "";
-        Exec_Cookie::destroyCookie($this->getCookieName($this->cookieName['BLACKBAN']));
-    }
-
-    /**
-     * Mise à jour de la dernière connexion
-     *
-     * @param $userId string
-     * @return boolean true succes de la mise à jour
-     */
-    private function &updateLastConnect($userId = "") {
-        // Récupere l'id du client
-        if (empty($userId))
-            $userId = self::$userId;
-        Core_Sql::getInstance()->addQuoted("", "NOW()");
-        // Envoie la requête Sql de mise à jour
-        Core_Sql::getInstance()->update(Core_Table::$USERS_TABLE, array(
-            "last_connect" => "NOW()"), array(
-            "user_id = '" . $userId . "'")
-        );
-        return (Core_Sql::getInstance()->affectedRows() == 1) ? true : false;
-    }
-
-    /**
-     * Vérifie si c'est un client connu donc logé
-     *
-     * @return boolean true c'est un client
-     */
-    public function &isUser() {
-        if (!empty(self::$userId) && !empty(self::$userName) && !empty(self::$sessionId) && self::$userRank > 0) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Remise à zéro des informations sur le client
-     */
-    private function resetUser() {
-        self::$userId = "";
-        self::$userName = "";
-        self::$userRank = 0;
-        self::$sessionId = "";
-        self::$userLanguage = "";
-        self::$userTemplate = "";
-        self::$userIpBan = "";
-    }
-
-    /**
-     * Ouvre une nouvelle session
-     *
-     * @return boolean ture succès
-     */
-    private function &sessionOpen() {
-        self::$sessionId = Exec_Crypt::createId(32);
-
-        // Durée de connexion automatique via cookie
-        $cookieTimeLimit = $this->timer + $this->cacheTimeLimit;
-        // Creation des cookies
-        $cookieUser = Exec_Cookie::createCookie(
-        $this->getCookieName($this->cookieName['USER']), Exec_Crypt::md5Encrypt(
-        self::$userId, $this->getSalt()
-        ), $cookieTimeLimit
-        );
-        $cookieSession = Exec_Cookie::createCookie(
-        $this->getCookieName($this->cookieName['SESSION']), Exec_Crypt::md5Encrypt(
-        self::$sessionId, $this->getSalt()
-        ), $cookieTimeLimit
-        );
-
-        if ($cookieUser && $cookieSession) {
-            // Ecriture du cache
-            Core_CacheBuffer::setSectionName("sessions");
-            Core_CacheBuffer::writingCache(self::$sessionId . ".php", $this->getUser());
-            return true;
-        } else {
-            Core_Logger::addWarningMessage(ERROR_SESSION_COOKIE);
-            return false;
-        }
-    }
-
-    /**
-     * Rafraichir le cache de session
-     */
-    private function sessionRefresh() {
-        $user = $this->getUserInfo(array(
-            "user_id = '" . self::$userId . "'"));
-
-        if (count($user) > 1) {
-            $this->setUser($user, true);
-            Core_CacheBuffer::setSectionName("sessions");
-            Core_CacheBuffer::writingCache(self::$sessionId . ".php", $this->getUser(), true);
-        }
-    }
-
-    /**
-     * Ferme une session ouverte
-     */
-    private function sessionClose() {
-        // Destruction du fichier de session
-        Core_CacheBuffer::setSectionName("sessions");
-        if (Core_CacheBuffer::cached(self::$sessionId . ".php")) {
-            Core_CacheBuffer::removeCache(self::$sessionId . ".php");
-        }
-
-        // Remise à zéro des infos client
-        $this->resetUser();
-
-        // Destruction des éventuelles cookies
-        foreach ($this->cookieName as $key => $value) {
-            // On évite de supprimer le cookie de bannissement
-            if ($key == "BLACKBAN")
-                continue;
-            Exec_Cookie::destroyCookie($this->getCookieName($this->cookieName[$key]));
-        }
-    }
-
-    /**
-     * Tentative de creation d'un nouvelle session
-     *
-     * @param $name string Nom du compte (identifiant)
-     * @param $pass string Mot de passe du compte
-     * @return boolean ture succès
-     */
-    public function &startConnection($userName, $userPass) {
-        // Arrête de la session courante si il y en a une
-        $this->stopConnection();
-
-        if ($this->validLogin($userName) && $this->validPassword($userPass)) {
-            $userPass = $this->cryptPass($userPass);
-            $user = $this->getUserInfo(array(
-                "name = '" . $userName . "'",
-                "&& pass = '" . $userPass . "'"));
-
-            if (count($user) > 1) {
-                // Injection des informations du client
-                $this->setUser($user);
-
-                // Tentative d'ouverture de session
-                return $this->sessionOpen();
-            } else {
-                $this->errorMessage['login'] = ERROR_LOGIN_OR_PASSWORD_INVALID;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Coupe proprement une session ouverte
-     */
-    public function stopConnection() {
-        if ($this->isUser()) {
-            $this->sessionClose();
-        }
-    }
-
-    /**
-     * Rafraichis la connexion courante avec le client
-     */
-    public function refreshConnection() {
-        if ($this->isUser()) {
-            $this->sessionRefresh();
-        }
-    }
-
-    /**
-     * Retourne la combinaison de clés pour le salt
-     *
-     * @return string
-     */
-    private function &getSalt() {
-        $salt = Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowserName;
-        return $salt;
-    }
-
-    /**
-     * Crypte un mot de passe pour un compte client
-     *
-     * @param $pass string
-     * @return string
-     */
-    public function &cryptPass($pass) {
-        return Exec_Crypt::cryptData($pass, $pass, "md5+");
-    }
-
-    /**
-     * Retourne le contenu décrypté du cookie
-     *
-     * @param $cookieName string
-     * @return string
-     */
-    private function &getCookie($cookieName) {
-        $cookieName = $this->getCookieName($cookieName);
-        $cookieContent = Exec_Cookie::getCookie($cookieName);
-        $cookieContent = Exec_Crypt::md5Decrypt($cookieContent, $this->getSalt());
-        return $cookieContent;
-    }
-
-    /**
-     * Retourne le nom crypté du cookie
-     *
-     * @param $cookieName string
-     * @return string
-     */
-    private function &getCookieName($cookieName) {
-        return Exec_Crypt::cryptData($cookieName, $this->getSalt(), "md5+");
-    }
-
-    /**
-     * Vérification du login
-     *
-     * @param $login
-     * @return boolean true login valide
-     */
-    public function &validLogin($login) {
-        if (!empty($login)) {
-            $len = strlen($login);
-            if ($len >= 3 && $len <= 16) {
-                if (preg_match("/^[A-Za-z0-9_-]{3,16}$/ie", $login)) {
-                    return true;
-                } else {
-                    $this->errorMessage['login'] = ERROR_LOGIN_CARACTERE;
-                }
-            } else {
-                $this->errorMessage['login'] = ERROR_LOGIN_NUMBER_CARACTERE;
-            }
-        } else {
-            $this->errorMessage['login'] = ERROR_LOGIN_EMPTY;
-        }
-        return false;
-    }
-
-    /**
-     * Vérification du password
-     *
-     * @param $password
-     * @return boolean true password valide
-     */
-    public function &validPassword($password) {
-        if (!empty($password)) {
-            if (strlen($password) >= 5) {
-                return true;
-            } else {
-                $this->errorMessage['password'] = ERROR_PASSWORD_NUMBER_CARACTERE;
-            }
-        } else {
-            $this->errorMessage['password'] = ERROR_PASSWORD_EMPTY;
-        }
-        return false;
-    }
-
-    /**
-     * Retourne un message d'erreur
-     *
-     * @param $key
-     * @return string or array
-     */
-    public function getErrorMessage($key = "") {
-        if (!empty($key))
-            return $this->errorMessage[$key];
-        return $this->errorMessage;
-    }
-
 }
-
-?>

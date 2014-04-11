@@ -233,7 +233,7 @@ class Core_Secure {
             }
         }
         if (Core_Loader::isCallable("Core_Session") && Core_Loader::isCallable("Core_Sql")) {
-            if (Core_Session::$userRank > 1) {
+            if (Core_Session::getInstance()->userRank > 1) {
                 $errorMessage = array_merge($errorMessage, (array) Core_Sql::getInstance()->getLastError());
             }
         }

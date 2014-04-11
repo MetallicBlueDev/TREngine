@@ -80,7 +80,7 @@ class Libs_Block {
 
                 if ($this->isBlock($block->type) // Si le block existe
                 && $this->blockActiveMod($block->mods) // Et qu'il est actif sur la page courante
-                && Core_Session::$userRank >= $block->rank) { // Et que le client est assez gradé
+                && Core_Session::getInstance()->userRank >= $block->rank) { // Et que le client est assez gradé
                     $block->title = Exec_Entities::textDisplay($block->title);
 
                     self::$blocksConfig[$block->side][] = $block;
@@ -117,7 +117,7 @@ class Libs_Block {
             $block = Core_Sql::getInstance()->fetchObject();
 
             if ($this->isBlock($block->type) // Si le block existe
-            && Core_Session::$userRank >= $block->rank) { // Et que le client est assez gradé
+            && Core_Session::getInstance()->userRank >= $block->rank) { // Et que le client est assez gradé
                 $block->title = Exec_Entities::textDisplay($block->title);
 
                 self::$blocksConfig[$block->side][] = $block;

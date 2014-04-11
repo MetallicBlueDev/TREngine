@@ -224,7 +224,7 @@ class Core_Logger {
      */
     public static function displayDebugInformations() {
         if (Core_Loader::isCallable("Core_Main") && Core_Loader::isCallable("Core_Session")) {
-            if (Core_Session::$userRank > 1) {
+            if (Core_Session::getInstance()->userRank > 1) {
                 echo "<div style=\"color: blue;\"><br />"
                 . "***********************SQL REQUESTS (" . count(self::$sqlRequest) . ") :<br />";
                 if (!empty(self::$sqlRequest)) {

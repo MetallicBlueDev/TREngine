@@ -201,7 +201,7 @@ class Libs_Module {
      */
     public function launch() {
         // Vérification du niveau d'acces
-        if (($this->installed() && Core_Access::autorize($this->module)) || (!$this->installed() && Core_Session::$userRank > 1)) {
+        if (($this->installed() && Core_Access::autorize($this->module)) || (!$this->installed() && Core_Session::getInstance()->userRank > 1)) {
             if (empty($this->moduleCompiled) && $this->isModule()) {
                 Core_Translate::getInstance()->translate("modules/" . $this->module);
 
@@ -266,7 +266,7 @@ class Libs_Module {
         $default = "display";
 
         if (Core_Loader::isCallable($pageInfo[0], $pageInfo[1])) {
-            if ($pageInfo[1] == "install" && ($this->installed() || Core_Session::$userRank < 2)) {
+            if ($pageInfo[1] == "install" && ($this->installed() || Core_Session::getInstance()->userRank < 2)) {
                 $rslt = $this->viewPage(array(
                     $pageInfo[0],
                     $default), false);

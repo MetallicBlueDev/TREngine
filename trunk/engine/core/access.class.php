@@ -20,7 +20,7 @@ class Core_Access {
      */
     public static function moderate($zoneIdentifiant, $userIdAdmin = "") {
         // Rank 3 exigé !
-        if (Core_Session::$userRank == 3) {
+        if (Core_Session::getInstance()->userRank == 3) {
             // Recherche des droits admin
             $right = self::getAdminRight($userIdAdmin);
             $nbRights = count($right);
@@ -92,9 +92,9 @@ class Core_Access {
         if ($moduleRank > -2) {
             if ($moduleRank == -1)
                 $error = ERROR_ACCES_OFF;
-            else if ($moduleRank == 1 && Core_Session::$userRank == 0)
+            else if ($moduleRank == 1 && Core_Session::getInstance()->userRank == 0)
                 $error = ERROR_ACCES_MEMBER;
-            else if ($moduleRank > 1 && Core_Session::$userRank < $rank)
+            else if ($moduleRank > 1 && Core_Session::getInstance()->userRank < $rank)
                 $error = ERROR_ACCES_ADMIN;
         }
         return $error;
@@ -125,7 +125,7 @@ class Core_Access {
 
         if ($zoneRank == 0)
             $access = true; // Accès public
-        else if ($zoneRank > 0 && $zoneRank < 3 && Core_Session::$userRank >= $zoneRank)
+        else if ($zoneRank > 0 && $zoneRank < 3 && Core_Session::getInstance()->userRank >= $zoneRank)
             $access = true; // Accès membre ou admin
         else if ($zoneRank == 3 && self::moderate($zoneIdentifiant))
             $access = true; // Accès admin avec droits
@@ -142,7 +142,7 @@ class Core_Access {
         if (!empty($userIdAdmin))
             $userIdAdmin = Exec_Entities::secureText($userIdAdmin);
         else
-            $userIdAdmin = Core_Session::$userId;
+            $userIdAdmin = Core_Session::getInstance()->userId;
 
         $admin = array();
         $admin = Core_Sql::getInstance()->getBuffer("getAdminRight");

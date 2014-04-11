@@ -66,9 +66,9 @@ class Libs_Captcha {
         // Decide de l'activation
         if ($captchaMode == "off") {
             $this->enabled = false;
-        } else if ($captchaMode == "auto" && Core_Session::$userRank > 0) {
+        } else if ($captchaMode == "auto" && Core_Session::getInstance()->userRank > 0) {
             $this->enabled = false;
-        } else if ($captchaMode == "manu" && Core_Session::$userRank > 1) {
+        } else if ($captchaMode == "manu" && Core_Session::getInstance()->userRank > 1) {
             $this->enabled = false;
         } else {
             $this->enabled = true;

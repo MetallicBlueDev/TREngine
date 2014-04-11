@@ -12,7 +12,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Module_Connect_Index extends Libs_ModuleModel {
 
     public function display() {
-        if (Core_Session::getInstance()->isUser()) {
+        if (Core_Session::hasConnection()) {
             $this->account();
         } else {
             $this->logon();
@@ -20,7 +20,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
     }
 
     public function account() {
-        if (Core_Session::getInstance()->isUser()) {
+        if (Core_Session::hasConnection()) {
             Core_Loader::classLoader("Libs_Form");
             Core_Loader::classLoader("Libs_Tabs");
             // Ajout des formulaires dans les onglets
@@ -28,7 +28,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
             $accountTabs->addTab(ACCOUNT_PROFILE, $this->tabProfile());
             $accountTabs->addTab(ACCOUNT_PRIVATE, $this->tabAccount());
             $accountTabs->addTab(ACCOUNT_AVATAR, $this->tabAvatar());
-            if (Core_Session::$userRank > 1) {
+            if (Core_Session::getInstance()->userRank > 1) {
                 $accountTabs->addTab(ACCOUNT_ADMIN, $this->tabAdmin());
             }
             echo $accountTabs->render();
@@ -43,7 +43,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
         $form->setDescription(ACCOUNT_PROFILE_DESCRIPTION);
         $form->addSpace();
         $form->addInputText("website", ACCOUNT_PROFILE_WEBSITE);
-        $form->addTextarea("signature", ACCOUNT_PROFILE_SIGNATURE, Core_Session::$userSignature, "style=\"display: block;\" rows=\"5\" cols=\"50\"");
+        $form->addTextarea("signature", ACCOUNT_PROFILE_SIGNATURE, Core_Session::getInstance()->userSignature, "style=\"display: block;\" rows=\"5\" cols=\"50\"");
         $form->addInputHidden("mod", "connect");
         $form->addInputHidden("view", "sendProfile");
         $form->addInputHidden("layout", "module");
@@ -67,11 +67,11 @@ class Module_Connect_Index extends Libs_ModuleModel {
         if (!empty($values)) {
             Core_Sql::getInstance()->update(
             Core_Table::$USERS_TABLE, $values, array(
-                "user_id = '" . Core_Session::$userId . "'")
+                "user_id = '" . Core_Session::getInstance()->userId . "'")
             );
 
             if (Core_Sql::getInstance()->affectedRows() > 0) {
-                Core_Session::getInstance()->refreshConnection();
+                Core_Session::getInstance()->refreshSession();
                 Core_Logger::addInformationMessage(DATA_SAVED);
             }
         }
@@ -85,10 +85,10 @@ class Module_Connect_Index extends Libs_ModuleModel {
         $form->setTitle(ACCOUNT_PRIVATE_TITLE);
         $form->setDescription(ACCOUNT_PRIVATE_DESCRIPTION);
         $form->addSpace();
-        $form->addInputText("name", LOGIN, Core_Session::$userName);
+        $form->addInputText("name", LOGIN, Core_Session::getInstance()->userName);
         $form->addInputPassword("pass", PASSWORD);
         $form->addInputPassword("pass2", ACCOUNT_PRIVATE_PASSWORD_CONFIRME);
-        $form->addInputText("mail", MAIL, Core_Session::$userMail);
+        $form->addInputText("mail", MAIL, Core_Session::getInstance()->userMail);
 
         // Liste des langages disponibles
         $form->addSpace();
@@ -133,10 +133,10 @@ class Module_Connect_Index extends Libs_ModuleModel {
         $langue = Core_Request::getString("langue", "", "POST");
         $template = Core_Request::getString("template", "", "POST");
 
-        if (Core_Session::$userName != $name || Core_Session::$userMail != $mail || Core_Session::$userLanguage != $langue || Core_Session::$userTemplate != $template) {
-            if (Core_Session::getInstance()->validLogin($name)) {
+        if (Core_Session::getInstance()->userName != $name || Core_Session::getInstance()->userMail != $mail || Core_Session::getInstance()->userLanguage != $langue || Core_Session::getInstance()->userTemplate != $template) {
+            if (Core_Session::validLogin($name)) {
                 $validName = true;
-                if (Core_Session::$userName != $name) {
+                if (Core_Session::getInstance()->userName != $name) {
                     $name = Exec_Entities::secureText($name);
                     Core_Sql::getInstance()->select(
                     Core_Table::$USERS_TABLE, array(
@@ -154,8 +154,8 @@ class Module_Connect_Index extends Libs_ModuleModel {
                         $values = array();
                         if (!empty($pass) || !empty($pass2)) {
                             if ($pass == $pass2) {
-                                if (Core_Session::getInstance()->validPassword($pass)) {
-                                    $values['pass'] = Core_Session::getInstance()->cryptPass($pass);
+                                if (Core_Session::validPassword($pass)) {
+                                    $values['pass'] = Core_Session::cryptPass($pass);
                                 } else {
                                     $this->errorBox();
                                 }
@@ -169,11 +169,11 @@ class Module_Connect_Index extends Libs_ModuleModel {
                         $values['template'] = $template;
                         Core_Sql::getInstance()->update(
                         Core_Table::$USERS_TABLE, $values, array(
-                            "user_id = '" . Core_Session::$userId . "'")
+                            "user_id = '" . Core_Session::getInstance()->userId . "'")
                         );
 
                         if (Core_Sql::getInstance()->affectedRows() > 0) {
-                            Core_Session::getInstance()->refreshConnection();
+                            Core_Session::getInstance()->refreshSession();
                             Core_Logger::addInformationMessage(DATA_SAVED);
                         }
                     } else {
@@ -210,9 +210,9 @@ class Module_Connect_Index extends Libs_ModuleModel {
         $form->addSpace();
         $rights = Core_Access::getAdminRight();
         $form->addHtmlInFieldset("<b>");
-        if (Core_Session::$userRank == 3 && $rights[0] == "all")
+        if (Core_Session::getInstance()->userRank == 3 && $rights[0] == "all")
             $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_MAX);
-        else if (Core_Session::$userRank == 3)
+        else if (Core_Session::getInstance()->userRank == 3)
             $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_HIG);
         else
             $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_MED);
@@ -268,12 +268,12 @@ class Module_Connect_Index extends Libs_ModuleModel {
      * Formulaire de connexion
      */
     public function logon() {
-        if (!Core_Session::getInstance()->isUser()) {
+        if (!Core_Session::hasConnection()) {
             $login = Core_Request::getString("login", "", "POST");
             $password = Core_Request::getString("password", "", "POST");
 
             if (!empty($login) || !empty($password)) {
-                if (Core_Session::getInstance()->startConnection($login, $password)) {
+                if (Core_Session::startConnection($login, $password)) {
                     // Redirection de la page
                     $url = "";
                     $referer = base64_decode(urldecode(Core_Request::getString("referer", "", "POST")));
@@ -313,8 +313,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
      * Envoie des messages d'erreurs
      */
     private function errorBox() {
-        $errorMessages = Core_Session::getInstance()->getErrorMessage();
-        foreach ($errorMessages as $errorMessage) {
+        foreach (Core_Session::getErrorMessage() as $errorMessage) {
             Core_Logger::addWarningMessage($errorMessage);
         }
     }
@@ -323,7 +322,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
      * Déconnexion du client
      */
     public function logout() {
-        Core_Session::getInstance()->stopConnection();
+        Core_Session::stopConnection();
         Core_Html::getInstance()->redirect();
     }
 
@@ -331,7 +330,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
      * Formulaire d'identifiant oublié
      */
     public function forgetlogin() {
-        if (!Core_Session::getInstance()->isUser()) {
+        if (!Core_Session::hasConnection()) {
             $login = "";
             $ok = false;
             $mail = Core_Request::getString("mail", "", "POST");
@@ -382,13 +381,13 @@ class Module_Connect_Index extends Libs_ModuleModel {
      * Formulaire de mot de passe oublié
      */
     public function forgetpass() {
-        if (!Core_Session::getInstance()->isUser()) {
+        if (!Core_Session::hasConnection()) {
             $ok = false;
             $mail = "";
             $login = Core_Request::getString("login", "", "POST");
 
             if (!empty($login)) {
-                if (Core_Session::getInstance()->validLogin($login)) {
+                if (Core_Session::validLogin($login)) {
                     Core_Sql::getInstance()->select(
                     Core_Table::$USERS_TABLE, array(
                         "name, mail"), array(

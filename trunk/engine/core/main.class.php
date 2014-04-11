@@ -192,7 +192,7 @@ class Core_Main {
      * @return boolean
      */
     private function inMaintenance() {
-        return (self::isClosed() && Core_Session::$userRank < 2);
+        return (self::isClosed() && Core_Session::getInstance()->userRank < 2);
     }
 
     /**
@@ -243,7 +243,7 @@ class Core_Main {
      * Assignation et vérification du template.
      */
     private function loadMakeStyle() {
-        $template = (!Core_Session::$userTemplate) ? self::$coreConfig['defaultTemplate'] : Core_Session::$userTemplate;
+        $template = (!Core_Session::getInstance()->userTemplate) ? self::$coreConfig['defaultTemplate'] : Core_Session::getInstance()->userTemplate;
         Core_Loader::classLoader("Libs_MakeStyle");
         Libs_MakeStyle::getCurrentTemplate($template);
     }
@@ -264,7 +264,7 @@ class Core_Main {
 
         // Chargement des sessions
         Core_Loader::classLoader("Core_Session");
-        Core_Session::getInstance();
+        Core_Session::getInstance(false)->searchSession();
     }
 
     /**
