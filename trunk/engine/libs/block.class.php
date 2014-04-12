@@ -257,18 +257,18 @@ class Libs_Block {
                 if (Core_Loader::isCallable($blockClassName, "display")) {
                     Core_Translate::getInstance()->translate("blocks/" . $block->type);
 
-                    $BlockClass = new $blockClassName();
-                    $BlockClass->blockId = $block->block_id;
-                    $BlockClass->side = $block->side;
-                    $BlockClass->sideName = self::getSideLetters($block->side);
-                    $BlockClass->templateName = "block_" . $BlockClass->sideName;
-                    $BlockClass->title = $block->title;
-                    $BlockClass->content = $block->content;
-                    $BlockClass->rank = $block->rank;
+                    $blockClass = new $blockClassName();
+                    $blockClass->blockId = $block->block_id;
+                    $blockClass->side = $block->side;
+                    $blockClass->sideName = self::getSideLetters($block->side);
+                    $blockClass->templateName = "block_" . $blockClass->sideName;
+                    $blockClass->title = $block->title;
+                    $blockClass->content = $block->content;
+                    $blockClass->rank = $block->rank;
 
                     // Capture des données d'affichage
                     ob_start();
-                    $BlockClass->display();
+                    $blockClass->display();
                     $this->blocksCompiled[$block->side][] = ob_get_contents();
                     ob_end_clean();
                 } else {

@@ -307,12 +307,12 @@ class Libs_Module {
             // Affichage du module si possible
             if (!empty($this->view)) {
                 $this->updateCount();
-                $ModuleClass = new $moduleClassName();
-                $ModuleClass->setModuleData($this->getInfoModule());
+                $moduleClass = new $moduleClassName();
+                $moduleClass->setModuleData($this->getInfoModule());
 
                 // Capture des données d'affichage
                 ob_start();
-                echo $ModuleClass->{$this->view}();
+                echo $moduleClass->{$this->view}();
                 $this->moduleCompiled = ob_get_contents();
                 ob_end_clean();
             } else {
