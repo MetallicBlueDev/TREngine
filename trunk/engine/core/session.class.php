@@ -138,8 +138,10 @@ class Core_Session {
 
     /**
      * Démarrage du système de session.
+     *
+     * @param boolean $setupCache Configuration du cache
      */
-    private function __construct() {
+    private function __construct($setupCache) {
         // Marque le timer
         $this->timer = time();
 
@@ -151,11 +153,13 @@ class Core_Session {
             $this->cookieName[$key] = Core_Main::$coreConfig['cookiePrefix'] . $name;
         }
 
-        // Configuration du gestionnaire de cache
-        Core_CacheBuffer::setSectionName("sessions");
+        if ($setupCache) {
+            // Configuration du gestionnaire de cache
+            Core_CacheBuffer::setSectionName("sessions");
 
-        // Nettoyage du cache
-        Core_CacheBuffer::cleanCache($this->timer - $this->cacheTimeLimit);
+            // Nettoyage du cache
+            Core_CacheBuffer::cleanCache($this->timer - $this->cacheTimeLimit);
+        }
     }
 
     /**
@@ -174,7 +178,7 @@ class Core_Session {
     public static function checkInstance() {
         if (self::$coreSession === null) {
             // Création d'un instance autonome
-            self::$coreSession = new self();
+            self::$coreSession = new self(true);
 
             // Lanceur de session
             if (!self::$coreSession->searchSession()) {
@@ -182,7 +186,7 @@ class Core_Session {
                 self::stopConnection();
 
                 // Nouvelle instance vierge
-                self::$coreSession = new self();
+                self::$coreSession = new self(false);
             }
         }
     }
