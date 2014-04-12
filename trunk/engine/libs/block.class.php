@@ -75,7 +75,7 @@ class Libs_Block {
             // Récuperation des données des blocks
             Core_Sql::getInstance()->addBuffer("block");
 
-            while ($block = Core_Sql::getInstance()->fetchBuffer("block")) {
+            foreach (Core_Sql::getInstance()->fetchBuffer("block") as $block) {
                 $block->mods = explode("|", $block->mods);
 
                 if ($this->isBlock($block->type) // Si le block existe
