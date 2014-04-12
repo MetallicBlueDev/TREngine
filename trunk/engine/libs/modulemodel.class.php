@@ -17,13 +17,13 @@ abstract class Libs_ModuleModel {
      *
      * @var Libs_ModuleData
      */
-    public $data = null;
+    private $data = null;
 
     /**
      * Fonction d'affichage par défaut.
      */
     public function display() {
-        Core_Logger::addErrorMessage(ERROR_MODULE_IMPLEMENT . ((!empty($this->data->getName())) ? " (" . $this->data->getName() . ")" : ""));
+        Core_Logger::addErrorMessage(ERROR_MODULE_IMPLEMENT . ((!empty($this->getModuleData()->getName())) ? " (" . $this->getModuleData()->getName() . ")" : ""));
     }
 
     /**
@@ -35,7 +35,7 @@ abstract class Libs_ModuleModel {
             "name",
             "rank",
             "configs"), array(
-            $this->data->getName(),
+            $this->getModuleData()->getName(),
             0,
             "")
         );
@@ -47,11 +47,11 @@ abstract class Libs_ModuleModel {
     public function uninstall() {
         Core_Sql::getInstance()->delete(
         Core_Table::$MODULES_TABLE, array(
-            "mod_id = '" . $this->data->getId() . "'")
+            "mod_id = '" . $this->getModuleData()->getId() . "'")
         );
         Core_CacheBuffer::setSectionName("modules");
-        Core_CacheBuffer::removeCache($this->data->getName() . ".php");
-        Core_Translate::removeCache("modules/" . $this->data->getName());
+        Core_CacheBuffer::removeCache($this->getModuleData()->getName() . ".php");
+        Core_Translate::removeCache("modules/" . $this->getModuleData()->getName());
     }
 
     /**
@@ -59,6 +59,29 @@ abstract class Libs_ModuleModel {
      */
     public function setting() {
         // TODO mettre un forumlaire basique pour changer quelques configurations
+    }
+
+    /**
+     * Affecte les données du module.
+     *
+     * @param Libs_ModuleData $data
+     */
+    public function setModuleData($data) {
+        $this->data = $data;
+    }
+
+    /**
+     * Retourne le données du module.
+     *
+     * @return Libs_ModuleData
+     */
+    public function getModuleData() {
+        $rslt = $this->data;
+
+        if ($rslt === null) {
+            $rslt = new Libs_ModuleData();
+        }
+        return $rslt;
     }
 
 }

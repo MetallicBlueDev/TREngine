@@ -280,7 +280,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
                     if (!empty($referer)) {
                         $url = $referer;
                     } else {
-                        $url = $this->data->getConfigValue("defaultUrlAfterLogon", "mod=home");
+                        $url = $this->getModuleData()->getConfigValue("defaultUrlAfterLogon", "mod=home");
                     }
                     Core_Html::getInstance()->redirect("index.php?" . $url);
                 } else {

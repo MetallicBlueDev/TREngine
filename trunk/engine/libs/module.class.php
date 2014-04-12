@@ -308,7 +308,7 @@ class Libs_Module {
             if (!empty($this->view)) {
                 $this->updateCount();
                 $ModuleClass = new $moduleClassName();
-                $ModuleClass->data = $this->getInfoModule();
+                $ModuleClass->setModuleData($this->getInfoModule());
 
                 // Capture des données d'affichage
                 ob_start();
