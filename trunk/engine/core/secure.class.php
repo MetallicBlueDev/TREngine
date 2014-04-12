@@ -53,17 +53,25 @@ class Core_Secure {
     }
 
     /**
-     * Créé une instance de la classe si elle n'existe pas.
-     * Retourne l'instance de la classe.
+     * Retourne l'instance du gestionnaire de sécurité.
      *
      * @return Core_Secure
      */
-    public static function &getInstance($debuggingMode = false) {
-        if (self::$secure == null) {
+    public static function &getInstance() {
+        checkInstance();
+        return self::$secure;
+    }
+
+    /**
+     * Vérification de l'instance du gestionnaire de sécurité.
+     *
+     * @param boolean $debuggingMode
+     */
+    public static function checkInstance($debuggingMode = false) {
+        if (self::$secure === null) {
             self::$debuggingMode = $debuggingMode;
             self::$secure = new self();
         }
-        return self::$secure;
     }
 
     /**

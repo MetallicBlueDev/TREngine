@@ -11,9 +11,8 @@ require("engine/core/loader.class.php");
 
 // Chargement du système de sécurité
 Core_Loader::classLoader("Core_Secure");
-//
-Core_Secure::getInstance(true); // true = mode debug activé
-//
+Core_Secure::checkInstance(true);
+
 // Chargement du Marker
 Core_Loader::classLoader("Exec_Marker");
 Core_Secure::getInstance()->throwException("TEST");
@@ -21,6 +20,7 @@ Core_Secure::getInstance()->throwException("TEST");
 if (Core_Secure::isDebuggingMode()) {
     Exec_Marker::startTimer("all");
 }
+
 Exec_Marker::startTimer("main");
 
 // Chargement de la classe principal
