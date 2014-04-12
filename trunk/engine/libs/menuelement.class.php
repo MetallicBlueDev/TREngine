@@ -16,7 +16,7 @@ class Libs_MenuElement {
      *
      * @var array - object
      */
-    public $data = array();
+    private $data = array();
 
     /**
      * Attributs de l'élément.
@@ -65,6 +65,10 @@ class Libs_MenuElement {
         } else if ($item->parent_id == 0) {
             $this->addAttributs("class", "parent");
         }
+    }
+
+    public function &getItemData() {
+        return $this->data;
     }
 
     /**

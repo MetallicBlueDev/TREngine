@@ -81,13 +81,13 @@ class Libs_Menu {
 
         // Creation du tableau route
         if (is_object($this->items[$this->itemActive])) {
-            $route = $this->items[$this->itemActive]->data->route;
+            $route = $this->items[$this->itemActive]->getItemData()->route;
         }
 
         // Début de rendu
         $out = "<ul id=\"" . $this->identifier . "\"" . $this->attribtus . ">";
         foreach ($this->items as $key => $item) {
-            if ($item->data->parent_id == 0 && Core_Access::autorize($this->identifier, $item->data->rank)) {
+            if ($item->getItemData()->parent_id == 0 && Core_Access::autorize($this->identifier, $item->getItemData()->rank)) {
                 // Ajout du tableau route dans l'élément principal
                 if ($key == $route[0]) {
                     $item->setRoute($route);

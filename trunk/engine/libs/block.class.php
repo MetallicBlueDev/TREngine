@@ -25,7 +25,7 @@ class Libs_Block {
      *
      * @var array
      */
-    public static $blocksConfig = array();
+    private $blocksConfig = array();
 
     /**
      * Blocks compilés, tableau à deux dimensions.
@@ -83,7 +83,7 @@ class Libs_Block {
                 && Core_Session::getInstance()->userRank >= $block->rank) { // Et que le client est assez gradé
                     $block->title = Exec_Entities::textDisplay($block->title);
 
-                    self::$blocksConfig[$block->side][] = $block;
+                    $this->blocksConfig[$block->side][] = $block;
                     $this->get($block);
                 }
             }
@@ -120,7 +120,7 @@ class Libs_Block {
             && Core_Session::getInstance()->userRank >= $block->rank) { // Et que le client est assez gradé
                 $block->title = Exec_Entities::textDisplay($block->title);
 
-                self::$blocksConfig[$block->side][] = $block;
+                $this->blocksConfig[$block->side][] = $block;
                 $this->get($block);
             }
         }
@@ -360,7 +360,7 @@ class Libs_Block {
      */
     private function &getBlockBuffer(&$buffer, $side, $key) {
         // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
-        if (strpos(self::$blocksConfig[$side][$key]->content, "rewriteBuffer") !== false) {
+        if (strpos($this->blocksConfig[$side][$key]->content, "rewriteBuffer") !== false) {
             $buffer = Core_UrlRewriting::getInstance()->rewriteBuffer($buffer);
         }
         return $buffer;
