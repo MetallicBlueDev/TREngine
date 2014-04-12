@@ -264,7 +264,7 @@ class Core_Main {
 
         // Chargement des sessions
         Core_Loader::classLoader("Core_Session");
-        Core_Session::getInstance(false)->searchSession();
+        Core_Session::checkInstance();
     }
 
     /**

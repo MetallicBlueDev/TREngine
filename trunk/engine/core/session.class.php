@@ -138,10 +138,8 @@ class Core_Session {
 
     /**
      * Démarrage du système de session.
-     *
-     * @param boolean $autoSearch
      */
-    private function __construct($autoSearch = true) {
+    private function __construct() {
         // Marque le timer
         $this->timer = time();
 
@@ -158,24 +156,35 @@ class Core_Session {
 
         // Nettoyage du cache
         Core_CacheBuffer::cleanCache($this->timer - $this->cacheTimeLimit);
-
-        // Lanceur de session
-        if ($autoSearch) {
-            $this->searchSession();
-        }
     }
 
     /**
      * Instance du gestionnaire des sessions.
      *
-     * @param boolean $autoSearch
      * @return Core_Session
      */
-    public static function &getInstance($autoSearch = true) {
-        if (self::$coreSession === null) {
-            self::$coreSession = new self($autoSearch);
-        }
+    public static function &getInstance() {
+        self::checkInstance();
         return self::$coreSession;
+    }
+
+    /**
+     * Vérification de l'instance du gestionnaire des sessions.
+     */
+    public static function checkInstance() {
+        if (self::$coreSession === null) {
+            // Création d'un instance autonome
+            self::$coreSession = new self();
+
+            // Lanceur de session
+            if (!self::$coreSession->searchSession()) {
+                // La session est potentiellement corrompue
+                self::stopConnection();
+
+                // Nouvelle instance vierge
+                self::$coreSession = new self();
+            }
+        }
     }
 
     /**
@@ -318,7 +327,7 @@ class Core_Session {
     /**
      * Suppression de l'Ip bannie.
      */
-    public function deleteUserIpBan() {
+    public function cancelIpBan() {
         $this->userIpBan = "";
         Exec_Cookie::destroyCookie(self::getCookieName($this->cookieName['BLACKBAN']));
     }
@@ -342,8 +351,13 @@ class Core_Session {
 
     /**
      * Récupèration d'une session ouverte.
+     *
+     * @return boolean false session corrompue
      */
-    public function searchSession() {
+    private function searchSession() {
+        // Par défaut, la session actuel est valide
+        $isValidSession = true;
+
         if (!$this->userLogged()) {
             // Cookie de l'id du client
             $userId = self::getCookie($this->cookieName['USER']);
@@ -353,6 +367,9 @@ class Core_Session {
 
             // Vérifie si une session est ouverte
             if ((!empty($userId) && !empty($sessionId))) {
+                // La session doit être entièrement re-validée
+                $isValidSession = false;
+
                 // Cookie de langue
                 $this->userLanguage = self::getCookie($this->cookieName['LANGUE']);
 
@@ -361,8 +378,6 @@ class Core_Session {
 
                 // Cookie de l'IP BAN voir Core_BlackBan
                 $this->userIpBan = self::getCookie($this->cookieName['BLACKBAN']);
-
-                $isValidSession = false;
 
                 if (Core_CacheBuffer::cached($sessionId . ".php")) {
                     // Si fichier cache trouvé, on l'utilise
@@ -386,12 +401,9 @@ class Core_Session {
                         $this->setUser($sessions);
                     }
                 }
-
-                if (!$isValidSession) {
-                    $this->closeSession();
-                }
             }
         }
+        return $isValidSession;
     }
 
     /**

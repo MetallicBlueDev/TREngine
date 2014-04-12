@@ -45,13 +45,6 @@ class Core_BlackBan {
         }
     }
 
-    /**
-     * Reset du statue de bannis
-     */
-    private static function deleteBlackIp() {
-        Core_Session::getInstance()->deleteUserIpBan();
-    }
-
     public static function checkBlackBan() {
         self::checkOldBlackBan();
         self::checkBan();
@@ -115,7 +108,7 @@ class Core_BlackBan {
                     );
                     Core_Session::getInstance()->userIpBan = $userIp;
                 } else {
-                    self::deleteBlackIp();
+                    Core_Session::getInstance()->cancelIpBan();
                 }
             }
         } else {
