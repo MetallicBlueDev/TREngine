@@ -67,7 +67,7 @@ abstract class Libs_ModuleModel {
      * @param Libs_ModuleData $data
      */
     public function setModuleData($data) {
-        $this->data = $data;
+        $this->data = &$data;
     }
 
     /**
@@ -75,7 +75,7 @@ abstract class Libs_ModuleModel {
      *
      * @return Libs_ModuleData
      */
-    public function getModuleData() {
+    public function &getModuleData() {
         $rslt = $this->data;
 
         if ($rslt === null) {
