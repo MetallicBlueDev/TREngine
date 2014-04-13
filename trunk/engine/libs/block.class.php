@@ -201,7 +201,7 @@ class Libs_Block {
 
         if (Core_Sql::getInstance()->affectedRows() > 0) {
             // Récuperation des données des blocks
-            Core_Sql::getInstance()->addBuffer("block");
+            Core_Sql::getInstance()->addArrayBuffer("block");
 
             foreach (Core_Sql::getInstance()->fetchBuffer("block") as $block) {
                 $blockInfo = new Libs_BlockData($block);

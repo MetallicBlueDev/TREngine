@@ -154,14 +154,14 @@ class Core_Access {
             );
 
             if (Core_Sql::getInstance()->affectedRows() > 0) {
-                Core_Sql::getInstance()->addBuffer("getAdminRight");
+                Core_Sql::getInstance()->addArrayBuffer("getAdminRight");
                 $admin = Core_Sql::getInstance()->getBuffer("getAdminRight");
             }
         }
 
         $rights = array();
         if (!empty($admin)) {
-            $rights = explode("|", $admin[0]->rights);
+            $rights = explode("|", $admin[0]['rights']);
         }
         return $rights;
     }

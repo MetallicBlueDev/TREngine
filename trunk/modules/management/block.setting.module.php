@@ -134,15 +134,15 @@ class Module_Management_Block extends Libs_ModuleModel {
                         . ($blockMove['position'] - 1) . "')")
                     );
                     if (Core_Sql::getInstance()->affectedRows() > 0) {
-                        Core_Sql::getInstance()->addBuffer("blockMoveUp");
+                        Core_Sql::getInstance()->addArrayBuffer("blockMoveUp");
                         // Mise à jour de position
                         while ($row = Core_Sql::getInstance()->fetchBuffer("blockMoveUp")) {
-                            $row->position = ($row->block_id == $blockId) ? $row->position - 1 : $row->position + 1;
+                            $row['position'] = ($row['block_id'] == $blockId) ? $row['position'] - 1 : $row['position'] + 1;
 
                             Core_Sql::getInstance()->update(
                             Core_Table::$BLOCKS_TABLE, array(
-                                "position" => $row->position), array(
-                                "block_id = '" . $row->block_id . "'")
+                                "position" => $row['position']), array(
+                                "block_id = '" . $row['block_id'] . "'")
                             );
                         }
                         Core_Logger::addInformationMessage(DATA_SAVED);
@@ -191,15 +191,15 @@ class Module_Management_Block extends Libs_ModuleModel {
                             . ($blockMove['position'] + 1) . "')")
                         );
                         if (Core_Sql::getInstance()->affectedRows() > 0) {
-                            Core_Sql::getInstance()->addBuffer("blockMoveDown");
+                            Core_Sql::getInstance()->addArrayBuffer("blockMoveDown");
                             // Mise à jour de position
                             while ($row = Core_Sql::getInstance()->fetchBuffer("blockMoveDown")) {
-                                $row->position = ($row->block_id == $blockId) ? $row->position + 1 : $row->position - 1;
+                                $row['position'] = ($row['block_id'] == $blockId) ? $row['position'] + 1 : $row['position'] - 1;
 
                                 Core_Sql::getInstance()->update(
                                 Core_Table::$BLOCKS_TABLE, array(
-                                    "position" => $row->position), array(
-                                    "block_id = '" . $row->block_id . "'")
+                                    "position" => $row['position']), array(
+                                    "block_id = '" . $row['block_id'] . "'")
                                 );
                             }
                             Core_Logger::addInformationMessage(DATA_SAVED);

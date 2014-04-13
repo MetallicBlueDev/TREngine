@@ -81,20 +81,20 @@ class Libs_Menu {
 
         // Creation du tableau route
         if (is_object($this->items[$this->itemActive])) {
-            $route = $this->items[$this->itemActive]->getItemData()->route;
+            $route = $this->items[$this->itemActive]->getRoute();
         }
 
         // Début de rendu
         $out = "<ul id=\"" . $this->identifier . "\"" . $this->attribtus . ">";
         foreach ($this->items as $key => $item) {
-            if ($item->getItemData()->parent_id == 0 && Core_Access::autorize($this->identifier, $item->getItemData()->rank)) {
+            if ($item->getParentId() == 0 && Core_Access::autorize($this->identifier, $item->getRank())) {
                 // Ajout du tableau route dans l'élément principal
                 if ($key == $route[0]) {
                     $item->setRoute($route);
                 }
 
                 // Création du rendu
-                $out .= $this->items[$key]->toString($callback, $this->classParent, $this->classActive);
+                $out .= $this->items[$key]->toString($callback);
             }
         }
         $out .= "</ul>";
@@ -130,18 +130,22 @@ class Libs_Menu {
 
         if (Core_Sql::getInstance()->affectedRows() > 0) {
             // Création d'un buffer
-            Core_Sql::getInstance()->addBuffer($this->identifier, "menu_id");
+            Core_Sql::getInstance()->addArrayBuffer($this->identifier, "menu_id");
             $menus = Core_Sql::getInstance()->getBuffer($this->identifier);
 
             // Ajoute et monte tout les items
             foreach ($menus as $key => $item) {
-                // Création du chemin route
-                if ($item->parent_id > 0) {
-                    $item->route = $menus[$item->parent_id]->route;
-                }
+                $newElement = new Libs_MenuElement($item, $this->items);
+                $newElement->setRoute(array(
+                    $key));
+                $this->items[$key] = $newElement;
+            }
 
-                $item->route[] = $key;
-                $this->items[$key] = new Libs_MenuElement($item, $this->items);
+            // Création du chemin
+            foreach ($this->items as $key => $item) {
+                if ($item->getParentId() > 0) {
+                    $item->setRoute($this->items[$item->getParentId()]->getRoute());
+                }
             }
 
             Core_CacheBuffer::writingCache(

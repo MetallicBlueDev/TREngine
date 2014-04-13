@@ -294,13 +294,24 @@ class Core_Sql extends Base_Model {
     }
 
     /**
-     * Ajoute un bout de donnée dans le buffer.
+     * Ajoute le dernier résultat dans le buffer typé en tableau.
      *
      * @param string $name
      * @param string $key clé à utiliser
      */
-    public function addBuffer($name, $key = "") {
-        $this->selectedBase->addBuffer($name, $key);
+    public function addArrayBuffer($name, $key = "") {
+        $this->selectedBase->addArrayBuffer($name, $key);
+        $this->freeResult();
+    }
+
+    /**
+     * Ajoute le dernier résultat dans le buffer typé en object.
+     *
+     * @param string $name
+     * @param string $key clé à utiliser
+     */
+    public function addObjectBuffer($name, $key = "") {
+        $this->selectedBase->addObjectBuffer($name, $key);
         $this->freeResult();
     }
 
@@ -308,7 +319,7 @@ class Core_Sql extends Base_Model {
      * Retourne le buffer courant puis l'incremente.
      *
      * @param string $name
-     * @return array - object
+     * @return array / array - object
      */
     public function &fetchBuffer($name) {
         return $this->selectedBase->fetchBuffer($name);
@@ -318,7 +329,7 @@ class Core_Sql extends Base_Model {
      * Retourne le buffer complet choisi.
      *
      * @param string $name
-     * @return array - object
+     * @return array / array - object
      */
     public function &getBuffer($name) {
         return $this->selectedBase->getBuffer($name);

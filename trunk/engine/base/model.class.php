@@ -327,12 +327,32 @@ abstract class Base_Model {
     }
 
     /**
-     * Ajoute le dernier résultat dans le buffer.
+     * Ajoute le dernier résultat dans le buffer typé en tableau.
      *
      * @param string $name
      * @param string $key clé à utiliser
      */
-    public function addBuffer($name, $key) {
+    public function addArrayBuffer($name, $key) {
+        if (!isset($this->buffer[$name])) {
+            foreach ($this->fetchArray() as $row) {
+                if (!empty($key)) {
+                    $this->buffer[$name][$row[$key]] = $row;
+                } else {
+                    $this->buffer[$name][] = $row;
+                }
+            }
+
+            reset($this->buffer[$name]);
+        }
+    }
+
+    /**
+     * Ajoute le dernier résultat dans le buffer typé en object.
+     *
+     * @param string $name
+     * @param string $key clé à utiliser
+     */
+    public function addObjectBuffer($name, $key) {
         if (!isset($this->buffer[$name])) {
             foreach ($this->fetchObject() as $row) {
                 if (!empty($key)) {
@@ -350,7 +370,7 @@ abstract class Base_Model {
      * Retourne le buffer courant puis l'incrémente.
      *
      * @param string $name
-     * @return array - object
+     * @return array / array - object
      */
     public function &fetchBuffer($name) {
         $buffer = current($this->buffer[$name]);
@@ -362,7 +382,7 @@ abstract class Base_Model {
      * Retourne le buffer complet demandé.
      *
      * @param string $name
-     * @return array - object
+     * @return array / array - object
      */
     public function &getBuffer($name) {
         return $this->buffer[$name];

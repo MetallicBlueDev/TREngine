@@ -58,17 +58,49 @@ class Libs_MenuElement {
         $this->addTags("li");
 
         // Enfant trouvé
-        if ($item->parent_id > 0) {
+        if ($this->getParentId() > 0) {
             // Ajout de l'enfant
-            $this->addAttributs("class", "item" . $item->menu_id);
-            $items[$item->parent_id]->addChild($this);
-        } else if ($item->parent_id == 0) {
+            $this->addAttributs("class", "item" . $this->getMenuId());
+            $items[$this->getParentId()]->addChild($this);
+        } else if ($this->getParentId() == 0) {
             $this->addAttributs("class", "parent");
         }
     }
 
-    public function &getItemData() {
-        return $this->data;
+    /**
+     * Retourne l'identifiant du menu parent.
+     *
+     * @return int
+     */
+    public function &getParentId() {
+        return $this->data['parent_id'];
+    }
+
+    /**
+     * Retourne l'identifiant du menu.
+     *
+     * @return int
+     */
+    public function &getMenuId() {
+        return $this->data['menu_id'];
+    }
+
+    /**
+     * Retourne le contenu du menu.
+     *
+     * @return string
+     */
+    public function &getContent() {
+        return $this->data['content'];
+    }
+
+    /**
+     * Retourne le rang d'accès du menu.
+     *
+     * @return int
+     */
+    public function &getRank() {
+        return $this->data['rank'];
     }
 
     /**
@@ -165,6 +197,15 @@ class Libs_MenuElement {
     }
 
     /**
+     * Retourne le tableau de routage.
+     *
+     * @return array
+     */
+    public function &getRoute() {
+        return $this->route;
+    }
+
+    /**
      * Mise en place du tableau route.
      *
      * @param array $route
@@ -194,11 +235,11 @@ class Libs_MenuElement {
         $this->addAttributs("class", "parent");
 
         // Ajoute la classe élément
-        if ($this->data->parent_id > 0) {
-            $this->addAttributs("class", "item" . $this->data->menu_id);
+        if ($this->getParentId() > 0) {
+            $this->addAttributs("class", "item" . $this->getMenuId());
         }
 
-        $this->child[$child->data->menu_id] = &$child;
+        $this->child[$child->getMenuId()] = &$child;
     }
 
     /**
@@ -217,7 +258,7 @@ class Libs_MenuElement {
             if (!is_object($child)) {
                 $child = &$items[$child->menu_id];
             }
-            unset($this->child[$child->data->menu_id]);
+            unset($this->child[$child->getMenuId()]);
         }
     }
 
@@ -227,7 +268,7 @@ class Libs_MenuElement {
      * @param string $callback
      */
     public function &toString($callback = "") {
-        $text = $this->data->content;
+        $text = $this->getContent();
 
         // Mise en forme du texte via la callback
         if (!empty($callback) && !empty($text)) {
@@ -235,7 +276,7 @@ class Libs_MenuElement {
         }
 
         // Ajout de la classe active
-        if (isset($this->route) && Exec_Utils::inArray($this->data->menu_id, $this->route)) {
+        if (isset($this->route) && Exec_Utils::inArray($this->getMenuId(), $this->route)) {
             $this->addAttributs("class", "active");
             Libs_Breadcrumb::getInstance()->addTrail($text);
         }

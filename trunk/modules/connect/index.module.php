@@ -232,7 +232,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
                 "title")
             );
             if (Core_Sql::getInstance()->affectedRows() > 0) {
-                Core_Sql::getInstance()->addBuffer("blocks");
+                Core_Sql::getInstance()->addArrayBuffer("blocks");
                 $blocks = Core_Sql::getInstance()->getBuffer("blocks");
             }
         }
@@ -247,8 +247,8 @@ class Module_Connect_Index extends Libs_ModuleModel {
                     $form->addHtmlInFieldset(ADMIN_RIGHT_MODULE . " <b>" . $right . "</b> (#" . $identifiant . ")");
                 } else if ($zone == "BLOCK") {
                     foreach ($blocks as $block) {
-                        if ($block->block_id == $identifiant) {
-                            $right = "<b>" . $block->getBlockData()->getTitle() . "</b> (#" . $identifiant . ")";
+                        if ($block['block_id'] == $identifiant) {
+                            $right = "<b>" . $block['title'] . "</b> (#" . $identifiant . ")";
                             break;
                         }
                     }
