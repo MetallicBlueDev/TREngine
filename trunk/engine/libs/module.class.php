@@ -136,8 +136,8 @@ class Libs_Module {
     /**
      * Retourne les informations du module cible.
      *
-     * @param string $moduleName  le nom du module, par défaut le module courant.
-     * @return Libs_ModuleData informations sur le module.
+     * @param string $moduleName Le nom du module, par défaut le module courant.
+     * @return Libs_ModuleData Informations sur le module.
      */
     public function &getInfoModule($moduleName = "") {
         $moduleInfo = null;
@@ -201,7 +201,6 @@ class Libs_Module {
         // Vérification du niveau d'acces
         if (($moduleInfo->installed() && Core_Access::autorize($moduleInfo->getName())) || (!$moduleInfo->installed() && Core_Session::getInstance()->userRank > 1)) {
             if ($moduleInfo->isValid($this->page)) {
-                Core_Translate::getInstance()->translate("modules/" . $moduleInfo->getName());
 
                 if (Core_Loader::isCallable("Libs_Breadcrumb")) {
                     Libs_Breadcrumb::getInstance()->addTrail($moduleInfo->getName(), "?mod=" . $moduleInfo->getName());
@@ -217,6 +216,41 @@ class Libs_Module {
             }
         } else {
             Core_Logger::addErrorMessage(ERROR_ACCES_ZONE . " " . Core_Access::getModuleAccesError($moduleInfo->getName()));
+        }
+    }
+
+    /**
+     * Récupère le module.
+     *
+     * @param Libs_ModuleData $moduleInfo
+     */
+    private function get(&$moduleInfo) {
+        $moduleClassName = "Module_" . ucfirst($moduleInfo->getName()) . "_" . ucfirst($this->page);
+        $loaded = Core_Loader::classLoader($moduleClassName);
+
+        if ($loaded) {
+            // Retourne un view valide sinon une chaine vide
+            $this->view = $this->viewPage(array(
+                $moduleClassName,
+                ($moduleInfo->installed()) ? $this->view : "install"), false);
+
+            // Affichage du module si possible
+            if (!empty($this->view)) {
+                Core_Translate::getInstance()->translate("modules/" . $moduleInfo->getName());
+
+                $this->updateCount($moduleInfo->getId());
+
+                $moduleClass = new $moduleClassName();
+                $moduleClass->setModuleData($moduleInfo);
+
+                // Capture des données d'affichage
+                ob_start();
+                echo $moduleClass->{$this->view}();
+                $moduleInfo->setBuffer(ob_get_contents());
+                ob_end_clean();
+            } else {
+                Core_Logger::addErrorMessage(ERROR_MODULE_CODE . " (" . $moduleInfo->getName() . ")");
+            }
         }
     }
 
@@ -285,39 +319,6 @@ class Libs_Module {
                 $default), false);
         }
         return $rslt;
-    }
-
-    /**
-     * Récupère le module.
-     *
-     * @param Libs_ModuleData $moduleInfo
-     */
-    private function get(&$moduleInfo) {
-        $moduleClassName = "Module_" . ucfirst($moduleInfo->getName()) . "_" . ucfirst($this->page);
-        $loaded = Core_Loader::classLoader($moduleClassName);
-
-        if ($loaded) {
-            // Retourne un view valide sinon une chaine vide
-            $this->view = $this->viewPage(array(
-                $moduleClassName,
-                ($moduleInfo->installed()) ? $this->view : "install"), false);
-
-            // Affichage du module si possible
-            if (!empty($this->view)) {
-                $this->updateCount($moduleInfo->getId());
-
-                $moduleClass = new $moduleClassName();
-                $moduleClass->setModuleData($moduleInfo);
-
-                // Capture des données d'affichage
-                ob_start();
-                echo $moduleClass->{$this->view}();
-                $moduleInfo->setBuffer(ob_get_contents());
-                ob_end_clean();
-            } else {
-                Core_Logger::addErrorMessage(ERROR_MODULE_CODE . " (" . $moduleInfo->getName() . ")");
-            }
-        }
     }
 
     /**

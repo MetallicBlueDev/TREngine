@@ -176,12 +176,14 @@ class Libs_Block {
     }
 
     /**
-     * Chargement de blocks.
+     * Retourne les informations des blocks cibles.
      *
      * @param array $where
-     * @param boolean $checkModule
+     * @return Libs_BlockData Informations sur les blocks.
      */
-    private function launchBlock(array $where, $checkModule) {
+    private function &getInfoBlocks(array $where) {
+        $blockInfos = array();
+
         // TODO mettre en cache la requete
         Core_Sql::getInstance()->select(
         Core_Table::$BLOCKS_TABLE, array(
@@ -205,8 +207,23 @@ class Libs_Block {
                 $blockInfo = new Libs_BlockData($block);
                 $blockInfo->setSideName(self::getSideLetters($blockInfo->getSide()));
 
-                if ($blockInfo->isValid() && $blockInfo->canActive($checkModule)) {
-                    $this->blocksInfo[$blockInfo->getSide()][] = $blockInfo;
+                $blockInfos[] = $blockInfo;
+                $this->blocksInfo[$blockInfo->getSide()][] = $blockInfo;
+            }
+        }
+        return $blockInfos;
+    }
+
+    /**
+     * Chargement de blocks.
+     *
+     * @param array $where
+     * @param boolean $checkModule
+     */
+    private function launchBlock(array $where, $checkModule) {
+        foreach ($this->getInfoBlocks($where) as $blockInfo) {
+            if ($blockInfo->isValid() && $blockInfo->canActive($checkModule)) {
+                if (Core_Access::autorize("block" . $blockInfo->getId(), $blockInfo->getRank())) {
                     $this->get($blockInfo);
                 }
             }
@@ -219,27 +236,24 @@ class Libs_Block {
      * @param Libs_BlockData $blockInfo
      */
     private function get(&$blockInfo) {
-        // Vérification de l'accès
-        if (Core_Access::autorize("block" . $blockInfo->getId(), $blockInfo->getRank())) {
-            $blockClassName = "Block_" . ucfirst($blockInfo->getType());
-            $loaded = Core_Loader::classLoader($blockClassName);
+        $blockClassName = "Block_" . ucfirst($blockInfo->getType());
+        $loaded = Core_Loader::classLoader($blockClassName);
 
-            // Vérification du block
-            if ($loaded) {
-                if (Core_Loader::isCallable($blockClassName, "display")) {
-                    Core_Translate::getInstance()->translate("blocks/" . $blockInfo->getType());
+        // Vérification du block
+        if ($loaded) {
+            if (Core_Loader::isCallable($blockClassName, "display")) {
+                Core_Translate::getInstance()->translate("blocks/" . $blockInfo->getType());
 
-                    $blockClass = new $blockClassName();
-                    $blockClass->setBlockData($blockInfo);
+                $blockClass = new $blockClassName();
+                $blockClass->setBlockData($blockInfo);
 
-                    // Capture des données d'affichage
-                    ob_start();
-                    $blockClass->display();
-                    $blockInfo->setBuffer(ob_get_contents());
-                    ob_end_clean();
-                } else {
-                    Core_Logger::addErrorMessage(ERROR_BLOCK_CODE);
-                }
+                // Capture des données d'affichage
+                ob_start();
+                $blockClass->display();
+                $blockInfo->setBuffer(ob_get_contents());
+                ob_end_clean();
+            } else {
+                Core_Logger::addErrorMessage(ERROR_BLOCK_CODE);
             }
         }
     }
