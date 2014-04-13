@@ -248,7 +248,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
                 } else if ($zone == "BLOCK") {
                     foreach ($blocks as $block) {
                         if ($block->block_id == $identifiant) {
-                            $right = "<b>" . $block->title . "</b> (#" . $identifiant . ")";
+                            $right = "<b>" . $block->getBlockData()->getTitle() . "</b> (#" . $identifiant . ")";
                             break;
                         }
                     }

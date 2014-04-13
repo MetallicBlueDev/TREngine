@@ -19,11 +19,18 @@ class Libs_ModuleData {
     private $moduleName = "";
 
     /**
-     * Tableau d'information le module.
+     * Tableau d'information du module.
      *
      * @var array
      */
     private $data = array();
+
+    /**
+     * Les données compilées du module.
+     *
+     * @var string
+     */
+    private $buffer = "";
 
     /**
      * Nouvelle information de module.
@@ -31,14 +38,33 @@ class Libs_ModuleData {
      * @param string $moduleName
      * @param array $data
      */
-    public function __construct($moduleName, array $data) {
+    public function __construct($moduleName, array &$data) {
         $this->moduleName = $moduleName;
 
         // Vérification des informations
         if (count($data) < 3) {
             $data = array();
         }
+
         $this->data = $data;
+    }
+
+    /**
+     * Retourne les données compilées du module.
+     *
+     * @return string
+     */
+    public function &getBuffer() {
+        return $this->buffer;
+    }
+
+    /**
+     * Affecte les données compilées du module.
+     *
+     * @param string $buffer
+     */
+    public function setBuffer($buffer) {
+        $this->buffer = $buffer;
     }
 
     /**
@@ -97,6 +123,25 @@ class Libs_ModuleData {
             $value = $defaultValue;
         }
         return $value;
+    }
+
+    /**
+     * Vérifie que le module est installé.
+     *
+     * @return boolean
+     */
+    public function installed() {
+        return isset($this->data['mod_id']);
+    }
+
+    /**
+     * Vérifie si le module est valide (si le module existe).
+     *
+     * @param string $page
+     * @return boolean
+     */
+    public function isValid($page = "") {
+        return Libs_Module::getInstance()->isModule($this->getName(), $page);
     }
 
 }

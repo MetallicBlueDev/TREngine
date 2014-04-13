@@ -43,18 +43,11 @@ class Libs_Module {
     private $view = "";
 
     /**
-     * Module compilé.
-     *
-     * @var string
-     */
-    private $moduleCompiled = "";
-
-    /**
      * Tableau d'information sur les modules.
      *
      * @var array
      */
-    private $modules = array();
+    private $modulesInfo = array();
 
     /**
      * Création du gestionnaire.
@@ -153,8 +146,8 @@ class Libs_Module {
         $moduleName = empty($moduleName) ? $this->module : $moduleName;
 
         // Retourne le buffer
-        if (isset($this->modules[$moduleName])) {
-            $moduleInfo = $this->modules[$moduleName];
+        if (isset($this->modulesInfo[$moduleName])) {
+            $moduleInfo = $this->modulesInfo[$moduleName];
         } else {
             $moduleData = array();
 
@@ -172,14 +165,17 @@ class Libs_Module {
 
                 if (Core_Sql::getInstance()->affectedRows() > 0) {
                     $moduleData = Core_Sql::getInstance()->fetchArray();
-                    $configs = explode("|", $moduleData['configs']);
 
-                    foreach ($configs as $value) {
-                        $value = explode("=", $value);
-                        $configs[$value[0]] = urldecode($value[1]); // Chaine encodé en urlencode
+                    if (isset($moduleData['configs'])) {
+                        $moduleData['configs'] = explode("|", $moduleData['configs']);
+
+                        foreach ($moduleData['configs'] as $value) {
+                            $value = explode("=", $value);
+
+                            // Chaine encodé avec urlencode
+                            $moduleData['configs'][$value[0]] = urldecode($value[1]);
+                        }
                     }
-
-                    $moduleData['configs'] = $configs;
 
                     // Mise en cache
                     $content = Core_CacheBuffer::serializeData($moduleData);
@@ -190,8 +186,8 @@ class Libs_Module {
             }
 
             // Injection des informations du module
-            $moduleInfo = new Libs_ModuleData($moduleName, &$moduleData);
-            $this->modules[$moduleName] = $moduleInfo;
+            $moduleInfo = new Libs_ModuleData($moduleName, $moduleData);
+            $this->modulesInfo[$moduleName] = $moduleInfo;
         }
         return $moduleInfo;
     }
@@ -200,24 +196,27 @@ class Libs_Module {
      * Charge le module courant.
      */
     public function launch() {
+        $moduleInfo = $this->getInfoModule();
+
         // Vérification du niveau d'acces
-        if (($this->installed() && Core_Access::autorize($this->module)) || (!$this->installed() && Core_Session::getInstance()->userRank > 1)) {
-            if (empty($this->moduleCompiled) && $this->isModule()) {
-                Core_Translate::getInstance()->translate("modules/" . $this->module);
+        if (($moduleInfo->installed() && Core_Access::autorize($moduleInfo->getName())) || (!$moduleInfo->installed() && Core_Session::getInstance()->userRank > 1)) {
+            if ($moduleInfo->isValid($this->page)) {
+                Core_Translate::getInstance()->translate("modules/" . $moduleInfo->getName());
 
                 if (Core_Loader::isCallable("Libs_Breadcrumb")) {
-                    Libs_Breadcrumb::getInstance()->addTrail($this->module, "?mod=" . $this->module);
+                    Libs_Breadcrumb::getInstance()->addTrail($moduleInfo->getName(), "?mod=" . $moduleInfo->getName());
 
                     // TODO A MODIFIER
                     // Juste une petite exception pour le module management qui est different
-                    if ($this->module != "management") {
-                        Libs_Breadcrumb::getInstance()->addTrail($this->view, "?mod=" . $this->module . "&view=" . $this->view);
+                    if ($moduleInfo->getName() != "management") {
+                        Libs_Breadcrumb::getInstance()->addTrail($this->view, "?mod=" . $moduleInfo->getName() . "&view=" . $this->view);
                     }
                 }
-                $this->get();
+
+                $this->get($moduleInfo);
             }
         } else {
-            Core_Logger::addErrorMessage(ERROR_ACCES_ZONE . " " . Core_Access::getModuleAccesError($this->module));
+            Core_Logger::addErrorMessage(ERROR_ACCES_ZONE . " " . Core_Access::getModuleAccesError($moduleInfo->getName()));
         }
     }
 
@@ -241,14 +240,13 @@ class Libs_Module {
     /**
      * Retourne le module compilé.
      *
-     * @param string $rewriteBuffer
      * @return string
      */
-    public function &getModule($rewriteBuffer = false) {
-        $buffer = $this->moduleCompiled;
+    public function &getModule() {
+        $buffer = $this->getInfoModule()->getBuffer();
 
         // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
-        if ($rewriteBuffer || Exec_Utils::inArray("rewriteBuffer", $this->getInfoModule()->getConfigs())) {
+        if (Exec_Utils::inArray("rewriteBuffer", $this->getInfoModule()->getConfigs())) {
             $buffer = Core_UrlRewriting::getInstance()->rewriteBuffer($buffer);
         }
         return $buffer;
@@ -266,15 +264,15 @@ class Libs_Module {
         $default = "display";
 
         if (Core_Loader::isCallable($pageInfo[0], $pageInfo[1])) {
-            if ($pageInfo[1] == "install" && ($this->installed() || Core_Session::getInstance()->userRank < 2)) {
+            if ($pageInfo[1] == "install" && ($this->getInfoModule()->installed() || Core_Session::getInstance()->userRank < 2)) {
                 $rslt = $this->viewPage(array(
                     $pageInfo[0],
                     $default), false);
-            } else if ($pageInfo[1] == "uninstall" && (!$this->installed() || !Core_Access::moderate($this->module))) {
+            } else if ($pageInfo[1] == "uninstall" && (!$this->getInfoModule()->installed() || !Core_Access::moderate($this->module))) {
                 $rslt = $this->viewPage(array(
                     $pageInfo[0],
                     $default), false);
-            } else if ($pageInfo[1] == "setting" && (!$this->installed() || !Core_Access::moderate($this->module))) {
+            } else if ($pageInfo[1] == "setting" && (!$this->getInfoModule()->installed() || !Core_Access::moderate($this->module))) {
                 $rslt = $this->viewPage(array(
                     $pageInfo[0],
                     $default), false);
@@ -292,54 +290,47 @@ class Libs_Module {
     /**
      * Récupère le module.
      *
-     * @param string $viewPage
+     * @param Libs_ModuleData $moduleInfo
      */
-    private function get() {
-        $moduleClassName = "Module_" . ucfirst($this->module) . "_" . ucfirst($this->page);
+    private function get(&$moduleInfo) {
+        $moduleClassName = "Module_" . ucfirst($moduleInfo->getName()) . "_" . ucfirst($this->page);
         $loaded = Core_Loader::classLoader($moduleClassName);
 
         if ($loaded) {
             // Retourne un view valide sinon une chaine vide
             $this->view = $this->viewPage(array(
                 $moduleClassName,
-                ($this->installed()) ? $this->view : "install"), false);
+                ($moduleInfo->installed()) ? $this->view : "install"), false);
 
             // Affichage du module si possible
             if (!empty($this->view)) {
-                $this->updateCount();
+                $this->updateCount($moduleInfo->getId());
+
                 $moduleClass = new $moduleClassName();
-                $moduleClass->setModuleData($this->getInfoModule());
+                $moduleClass->setModuleData($moduleInfo);
 
                 // Capture des données d'affichage
                 ob_start();
                 echo $moduleClass->{$this->view}();
-                $this->moduleCompiled = ob_get_contents();
+                $moduleInfo->setBuffer(ob_get_contents());
                 ob_end_clean();
             } else {
-                Core_Logger::addErrorMessage(ERROR_MODULE_CODE . " (" . $this->module . ")");
+                Core_Logger::addErrorMessage(ERROR_MODULE_CODE . " (" . $moduleInfo->getName() . ")");
             }
         }
     }
 
     /**
-     * Vérifie que le module est installé.
-     *
-     * @param string $moduleName
-     * @return boolean
-     */
-    private function installed($moduleName = "") {
-        return (isset($this->getInfoModule($moduleName)['mod_id']));
-    }
-
-    /**
      * Mise à jour du compteur de visite du module courant.
+     *
+     * @param int $modId
      */
-    private function updateCount() {
+    private function updateCount($modId) {
         Core_Sql::getInstance()->addQuoted("", "count + 1");
         Core_Sql::getInstance()->update(
         Core_Table::$MODULES_TABLE, array(
             "count" => "count + 1"), array(
-            "mod_id = '" . $this->getInfoModule()->getId() . "'")
+            "mod_id = '" . $$modId . "'")
         );
     }
 

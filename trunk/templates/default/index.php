@@ -24,7 +24,7 @@
         <div id="wrapper">
             <div id="left">
 
-                <?php echo Libs_Block::getInstance()->getBlocks("right"); ?>
+                <?php echo Libs_Block::getInstance()->getBlocksBySideName("right"); ?>
 
             </div>
 
@@ -38,11 +38,11 @@
 
                 <?php echo Core_Logger::getMessages(); ?>
 
-                <?php echo Libs_Block::getInstance()->getBlocks("top"); ?>
+                <?php echo Libs_Block::getInstance()->getBlocksBySideName("top"); ?>
 
                 <?php include(TR_ENGINE_DIR . "/templates/default/module.php"); ?>
 
-                <?php echo Libs_Block::getInstance()->getBlocks("bottom"); ?>
+                <?php echo Libs_Block::getInstance()->getBlocksBySideName("bottom"); ?>
 
             </div>
         </div>

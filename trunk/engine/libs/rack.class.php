@@ -30,8 +30,8 @@ class Libs_Rack {
      *
      * @param array $startLine array('size in %', 'my title')
      */
-    public function __construct(array $startLine = array()) {
-        $this->firstLine = &$startLine;
+    public function __construct(array &$startLine = array()) {
+        $this->firstLine = $startLine;
     }
 
     /**

@@ -25,14 +25,7 @@ class Libs_Block {
      *
      * @var array
      */
-    private $blocksConfig = array();
-
-    /**
-     * Blocks compilés, tableau à deux dimensions.
-     *
-     * @var array
-     */
-    private $blocksCompiled = array();
+    private $blocksInfo = array();
 
     private function __construct() {
 
@@ -53,41 +46,10 @@ class Libs_Block {
     /**
      * Charge les blocks.
      */
-    // TODO mettre en cache la requete
     public function launchAllBlock() {
-        Core_Sql::getInstance()->select(
-        Core_Table::$BLOCKS_TABLE, array(
-            "block_id",
-            "side",
-            "position",
-            "title",
-            "content",
-            "type",
-            "rank",
-            "mods"), array(
+        $this->launchBlock(array(
             "side > 0",
-            "&& rank >= 0"), array(
-            "side",
-            "position")
-        );
-
-        if (Core_Sql::getInstance()->affectedRows() > 0) {
-            // Récuperation des données des blocks
-            Core_Sql::getInstance()->addBuffer("block");
-
-            foreach (Core_Sql::getInstance()->fetchBuffer("block") as $block) {
-                $block->mods = explode("|", $block->mods);
-
-                if ($this->isBlock($block->type) // Si le block existe
-                && $this->blockActiveMod($block->mods) // Et qu'il est actif sur la page courante
-                && Core_Session::getInstance()->userRank >= $block->rank) { // Et que le client est assez gradé
-                    $block->title = Exec_Entities::textDisplay($block->title);
-
-                    $this->blocksConfig[$block->side][] = $block;
-                    $this->get($block);
-                }
-            }
-        }
+            "&& rank >= 0"), true);
     }
 
     /**
@@ -95,54 +57,34 @@ class Libs_Block {
      *
      * @param array $where exemple array(block_id = '0').
      */
-    // TODO mettre en cache la requete
     public function launchOneBlock(array $where = array()) {
-        if (empty($where)) { // Capture de la variable
+        if (empty($where)) {
+            // Capture de la variable
             $where = array(
                 "block_id = '" . Core_Request::getInt("blockId") . "'");
         }
 
-        Core_Sql::getInstance()->select(
-        Core_Table::$BLOCKS_TABLE, array(
-            "block_id",
-            "side",
-            "position",
-            "title",
-            "content",
-            "type",
-            "rank",
-            "mods"), $where
-        );
-        if (Core_Sql::getInstance()->affectedRows() > 0) {
-            $block = Core_Sql::getInstance()->fetchObject();
-
-            if ($this->isBlock($block->type) // Si le block existe
-            && Core_Session::getInstance()->userRank >= $block->rank) { // Et que le client est assez gradé
-                $block->title = Exec_Entities::textDisplay($block->title);
-
-                $this->blocksConfig[$block->side][] = $block;
-                $this->get($block);
-            }
-        }
+        $this->launchBlock($where, false);
     }
 
     /**
-     * Retourne les blocks compilés voulu (right/left/top/bottom).
+     * Retourne les blocks compilés via le nom de leurs positions.
      *
-     * @param string $side
+     * @param string $selectedSideName
      * @return string
      */
-    public function &getBlocks($side) {
-        // Conversion du side en identifiant numérique
-        $sidePosition = is_string($side) ? self::getSideNumeric($side) : $side;
+    public function &getBlocksBySideName($selectedSideName) {
+        $selectedSide = self::getSideNumeric($selectedSideName);
+        return $this->getBlocks($selectedSide);
+    }
 
-        $blockSide = "";
-        if (isset($this->blocksCompiled[$sidePosition])) {
-            foreach ($this->blocksCompiled[$sidePosition] as $key => $block) {
-                $blockSide .= $this->getBlockBuffer($block, $sidePosition, $key);
-            }
-        }
-        return $blockSide;
+    /**
+     * Retourne le premier block compilé.
+     *
+     * @return string
+     */
+    public function &getBlock() {
+        return $this->getBlocks(-1);
     }
 
     /**
@@ -168,24 +110,13 @@ class Libs_Block {
      * @return string postion traduit (si possible).
      */
     public static function &getLitteralSide($side) {
-        $side = strtoupper(self::getSideLetters($side));
-        $side = defined($side) ? constant($side) : $side;
-        return $side;
-    }
+        // Assignation par défaut
+        $litteralSideName = $side;
 
-    /**
-     * Retourne le block compilé.
-     *
-     * @return string
-     */
-    public function &getBlock() {
-        $buffer = "";
-
-        foreach ($this->blocksCompiled as $side => $compiled) {
-            $buffer = $this->getBlockBuffer($compiled[0], $side, 0);
-            break;
+        if (is_numeric($side)) {
+            $litteralSideName = strtoupper(self::getSideLetters($side));
         }
-        return $buffer;
+        return defined($litteralSideName) ? constant($litteralSideName) : $litteralSideName;
     }
 
     /**
@@ -211,65 +142,100 @@ class Libs_Block {
     }
 
     /**
-     * Vérifie si le block est valide.
+     * Retourne les blocks compilés via leurs positions.
      *
-     * @param string $blockType
-     * @return boolean true block valide
+     * @param int $selectedSide
+     * @return string
      */
-    private function isBlock($blockType) {
-        return is_file(TR_ENGINE_DIR . "/blocks/" . $blockType . ".block.php");
-    }
+    private function &getBlocks($selectedSide) {
+        $buffer = "";
 
-    /**
-     * Vérifie si le block doit être activé.
-     *
-     * @param array $modules
-     * @return boolean true le block doit être actif.
-     */
-    private function &blockActiveMod(array $modules = array(
-        "all")) {
-        $rslt = false;
+        if ($selectedSide === -1 || ($selectedSide >= 0 && isset($this->blocksInfo[$selectedSide]))) {
+            foreach ($this->blocksInfo as $side => $blockInfoInSide) {
+                if ($selectedSide >= 0 && $side !== $selectedSide) {
+                    continue;
+                }
 
-        if (Core_Loader::isCallable("Libs_Module")) {
-            foreach ($modules as $modSelected) {
-                if ($modSelected == "all" || Libs_Module::isSelected($modSelected)) {
-                    $rslt = true;
-                    break;
+                foreach ($blockInfoInSide as $blockInfo) {
+                    $currentBuffer = $blockInfo->getBuffer();
+
+                    // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
+                    if (strpos($blockInfo->getContent(), "rewriteBuffer") !== false) {
+                        $currentBuffer = Core_UrlRewriting::getInstance()->rewriteBuffer($currentBuffer);
+                    }
+
+                    $buffer .= $currentBuffer;
+
+                    if ($selectedSide === -1) {
+                        break 2;
+                    }
                 }
             }
         }
-        return $rslt;
+        return $buffer;
+    }
+
+    /**
+     * Chargement de blocks.
+     *
+     * @param array $where
+     * @param boolean $checkModule
+     */
+    private function launchBlock(array $where, $checkModule) {
+        // TODO mettre en cache la requete
+        Core_Sql::getInstance()->select(
+        Core_Table::$BLOCKS_TABLE, array(
+            "block_id",
+            "side",
+            "position",
+            "title",
+            "content",
+            "type",
+            "rank",
+            "mods"), $where, array(
+            "side",
+            "position")
+        );
+
+        if (Core_Sql::getInstance()->affectedRows() > 0) {
+            // Récuperation des données des blocks
+            Core_Sql::getInstance()->addBuffer("block");
+
+            foreach (Core_Sql::getInstance()->fetchBuffer("block") as $block) {
+                $blockInfo = new Libs_BlockData($block);
+                $blockInfo->setSideName(self::getSideLetters($blockInfo->getSide()));
+
+                if ($blockInfo->isValid() && $blockInfo->canActive($checkModule)) {
+                    $this->blocksInfo[$blockInfo->getSide()][] = $blockInfo;
+                    $this->get($blockInfo);
+                }
+            }
+        }
     }
 
     /**
      * Récupère le block.
      *
-     * @param array - object $block
+     * @param Libs_BlockData $blockInfo
      */
-    private function get($block) {
+    private function get(&$blockInfo) {
         // Vérification de l'accès
-        if (Core_Access::autorize("block" . $block->block_id, $block->rank)) {
-            $blockClassName = "Block_" . ucfirst($block->type);
+        if (Core_Access::autorize("block" . $blockInfo->getId(), $blockInfo->getRank())) {
+            $blockClassName = "Block_" . ucfirst($blockInfo->getType());
             $loaded = Core_Loader::classLoader($blockClassName);
 
             // Vérification du block
             if ($loaded) {
                 if (Core_Loader::isCallable($blockClassName, "display")) {
-                    Core_Translate::getInstance()->translate("blocks/" . $block->type);
+                    Core_Translate::getInstance()->translate("blocks/" . $blockInfo->getType());
 
                     $blockClass = new $blockClassName();
-                    $blockClass->blockId = $block->block_id;
-                    $blockClass->side = $block->side;
-                    $blockClass->sideName = self::getSideLetters($block->side);
-                    $blockClass->templateName = "block_" . $blockClass->sideName;
-                    $blockClass->title = $block->title;
-                    $blockClass->content = $block->content;
-                    $blockClass->rank = $block->rank;
+                    $blockClass->setBlockData($blockInfo);
 
                     // Capture des données d'affichage
                     ob_start();
                     $blockClass->display();
-                    $this->blocksCompiled[$block->side][] = ob_get_contents();
+                    $blockInfo->setBuffer(ob_get_contents());
                     ob_end_clean();
                 } else {
                     Core_Logger::addErrorMessage(ERROR_BLOCK_CODE);
@@ -284,32 +250,34 @@ class Libs_Block {
      * @param int $side
      * @return string identifiant de la position (right, left...).
      */
-    private static function &getSideLetters($side) {
-        $sideLetters = $side; // Assignation par défaut
-        // Si on renseigne bien un entier
-        if (is_numeric($side)) { // On recherche la position
-            switch ($side) {
-                case 1:
-                    $sideLetters = "right";
-                    break;
-                case 2:
-                    $sideLetters = "left";
-                    break;
-                case 3:
-                    $sideLetters = "top";
-                    break;
-                case 4:
-                    $sideLetters = "bottom";
-                    break;
-                case 5:
-                    $sideLetters = "moduletop";
-                    break;
-                case 6:
-                    $sideLetters = "modulebottom";
-                    break;
-                default :
-                    Core_Secure::getInstance()->throwException("blockSide", "Numeric side:" . $side);
-            }
+    public static function &getSideLetters($side) {
+        if (!is_numeric($side)) {
+            Core_Secure::getInstance()->throwException("blockSide", "Invalid side value: " . $side);
+        }
+
+        $sideLetters = "";
+
+        switch ($side) {
+            case 1:
+                $sideLetters = "right";
+                break;
+            case 2:
+                $sideLetters = "left";
+                break;
+            case 3:
+                $sideLetters = "top";
+                break;
+            case 4:
+                $sideLetters = "bottom";
+                break;
+            case 5:
+                $sideLetters = "moduletop";
+                break;
+            case 6:
+                $sideLetters = "modulebottom";
+                break;
+            default :
+                Core_Secure::getInstance()->throwException("blockSide", "Numeric side: " . $side);
         }
         return $sideLetters;
     }
@@ -321,49 +289,35 @@ class Libs_Block {
      * @return int identifiant de la position (1, 2..).
      */
     private static function &getSideNumeric($side) {
-        $sideNumeric = $side; // Assignation par défaut
-        // Si on renseigne bien un string
-        if (is_string($side)) { // On recherche la position
-            switch ($side) {
-                case 'right':
-                    $sideNumeric = 1;
-                    break;
-                case 'left':
-                    $sideNumeric = 2;
-                    break;
-                case 'top':
-                    $sideNumeric = 3;
-                    break;
-                case 'bottom':
-                    $sideNumeric = 4;
-                    break;
-                case 'moduletop':
-                    $sideNumeric = 5;
-                    break;
-                case 'modulebottom':
-                    $sideNumeric = 6;
-                    break;
-                default :
-                    Core_Secure::getInstance()->throwException("blockSide", "Letters side:" . $side);
-            }
+        if (!is_string($side)) {
+            ore_Secure::getInstance()->throwException("blockSide", "Invalid side value: " . $side);
+        }
+
+        $sideNumeric = 0;
+
+        switch ($side) {
+            case 'right':
+                $sideNumeric = 1;
+                break;
+            case 'left':
+                $sideNumeric = 2;
+                break;
+            case 'top':
+                $sideNumeric = 3;
+                break;
+            case 'bottom':
+                $sideNumeric = 4;
+                break;
+            case 'moduletop':
+                $sideNumeric = 5;
+                break;
+            case 'modulebottom':
+                $sideNumeric = 6;
+                break;
+            default :
+                Core_Secure::getInstance()->throwException("blockSide", "Letters side: " . $side);
         }
         return $sideNumeric;
-    }
-
-    /**
-     * Réécriture du tampon de sortie si besoin.
-     *
-     * @param string $buffer
-     * @param int $side
-     * @param int $key
-     * @return string
-     */
-    private function &getBlockBuffer(&$buffer, $side, $key) {
-        // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
-        if (strpos($this->blocksConfig[$side][$key]->content, "rewriteBuffer") !== false) {
-            $buffer = Core_UrlRewriting::getInstance()->rewriteBuffer($buffer);
-        }
-        return $buffer;
     }
 
 }

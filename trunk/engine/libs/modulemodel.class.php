@@ -49,7 +49,9 @@ abstract class Libs_ModuleModel {
         Core_Table::$MODULES_TABLE, array(
             "mod_id = '" . $this->getModuleData()->getId() . "'")
         );
+
         Core_CacheBuffer::setSectionName("modules");
+
         Core_CacheBuffer::removeCache($this->getModuleData()->getName() . ".php");
         Core_Translate::removeCache("modules/" . $this->getModuleData()->getName());
     }
@@ -66,8 +68,8 @@ abstract class Libs_ModuleModel {
      *
      * @param Libs_ModuleData $data
      */
-    public function setModuleData($data) {
-        $this->data = &$data;
+    public function setModuleData(&$data) {
+        $this->data = $data;
     }
 
     /**
@@ -76,12 +78,10 @@ abstract class Libs_ModuleModel {
      * @return Libs_ModuleData
      */
     public function &getModuleData() {
-        $rslt = $this->data;
-
-        if ($rslt === null) {
-            $rslt = new Libs_ModuleData();
+        if ($this->data === null) {
+            $this->data = new Libs_ModuleData();
         }
-        return $rslt;
+        return $this->data;
     }
 
 }

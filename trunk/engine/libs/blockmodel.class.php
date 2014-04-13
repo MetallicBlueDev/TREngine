@@ -9,46 +9,11 @@
 abstract class Libs_BlockModel {
 
     /**
-     * Identifiant du block.
+     * Informations sur le block.
      *
-     * @var int
+     * @var Libs_BlockData
      */
-    public $blockId = 0;
-
-    /**
-     * Position du block en chiffre.
-     *
-     * @var int
-     */
-    public $side = 0;
-
-    /**
-     * Position du block en lettre.
-     *
-     * @var string
-     */
-    public $sideName = "";
-
-    /**
-     * Nom complet du template de block a utiliser.
-     *
-     * @var string
-     */
-    public $templateName = "";
-
-    /**
-     * Titre du block.
-     *
-     * @var string
-     */
-    public $title = "";
-
-    /**
-     * Contenu du block.
-     *
-     * @var string
-     */
-    public $content = "";
+    private $data = null;
 
     /**
      * Rank pour acceder au block.
@@ -61,7 +26,7 @@ abstract class Libs_BlockModel {
      * Affichage par défaut.
      */
     public function display() {
-        Core_Logger::addErrorMessage(ERROR_BLOCK_IMPLEMENT . ((!empty($this->title)) ? " (" . $this->title . ")" : ""));
+        Core_Logger::addErrorMessage(ERROR_BLOCK_IMPLEMENT . ((!empty($this->getBlockData()->getTitle())) ? " (" . $this->getBlockData()->getTitle() . ")" : ""));
     }
 
     /**
@@ -76,6 +41,27 @@ abstract class Libs_BlockModel {
      */
     public function uninstall() {
 
+    }
+
+    /**
+     * Affecte les données du block.
+     *
+     * @param Libs_BlockData $data
+     */
+    public function setBlockData(&$data) {
+        $this->data = $data;
+    }
+
+    /**
+     * Retourne le données du block.
+     *
+     * @return Libs_BlockData
+     */
+    public function &getBlockData() {
+        if ($this->data === null) {
+            $this->data = new Libs_BlockData();
+        }
+        return $this->data;
     }
 
 }

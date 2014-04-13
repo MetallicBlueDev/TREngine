@@ -20,26 +20,27 @@ class Block_Menutree extends Block_Menu {
         $menus->addAttributs("class", "treeview");
 
         $libsMakeStyle = new Libs_MakeStyle();
-        $libsMakeStyle->assign("blockTitle", $this->title);
+        $libsMakeStyle->assign("blockTitle", $this->getBlockData()->getTitle());
         $libsMakeStyle->assign("blockContent", $menus->render());
-        $libsMakeStyle->display($this->templateName);
+        $libsMakeStyle->display($this->getBlockData()->getTemplateName());
     }
 
     private function configure() {
         // Configure le style pour la classe
-        $this->content = strtolower($this->content);
-        switch ($this->content) {
+        $this->getBlockData()->setContent(strtolower($this->getBlockData()->getContent()));
+
+        switch ($this->getBlockData()->getContent()) {
             case "black":
             case "red":
             case "gray":
             case "famfamfam":
                 break;
             default:
-                $this->content = "";
+                $this->getBlockData()->setContent("");
         }
 
         Core_Loader::classLoader("Exec_JQuery");
-        Exec_JQuery::getTreeView("#block" . $this->blockId);
+        Exec_JQuery::getTreeView("#block" . $this->getBlockData()->getId());
     }
 
     public function install() {

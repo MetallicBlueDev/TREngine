@@ -20,13 +20,13 @@ class Block_Menujd extends Block_Menu {
 
         $menus = $this->getMenu();
         if (Core_Html::getInstance()->isJavascriptEnabled()) {
-            $menus->addAttributs("class", "jd_menu" . (($this->side == 1 || $this->side == 2) ? " jd_menu_vertical" : ""));
+            $menus->addAttributs("class", "jd_menu" . (($this->getBlockData()->getSide() == 1 || $this->getBlockData()->getSide() == 2) ? " jd_menu_vertical" : ""));
         }
 
         $libsMakeStyle = new Libs_MakeStyle();
-        $libsMakeStyle->assign("blockTitle", $this->title);
+        $libsMakeStyle->assign("blockTitle", $this->getBlockData()->getTitle());
         $libsMakeStyle->assign("blockContent", $menus->render());
-        $libsMakeStyle->display($this->templateName);
+        $libsMakeStyle->display($this->getBlockData()->getTemplateName());
     }
 
     public function install() {

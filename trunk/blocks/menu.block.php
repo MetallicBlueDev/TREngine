@@ -22,21 +22,32 @@ class Block_Menu extends Libs_BlockModel {
         $menus = $this->getMenu();
 
         $libsMakeStyle = new Libs_MakeStyle();
-        $libsMakeStyle->assign("blockTitle", $this->title);
+        $libsMakeStyle->assign("blockTitle", $this->getBlockData()->getTitle());
         $libsMakeStyle->assign("blockContent", "<div class=\"menu\">" . $menus->render() . "</div>");
-        $libsMakeStyle->display($this->templateName);
+        $libsMakeStyle->display($this->getBlockData()->getTemplateName());
     }
 
     protected function getMenu() {
         Core_Loader::classLoader("Libs_Menu");
         $menus = new Libs_Menu(
-                "block" . $this->blockId, array(
+        "block" . $this->getBlockData()->getId(), array(
             "table" => Core_Table::$MENUS_TABLES,
-            "select" => array("menu_id", "block_id", "parent_id", "content", "sublevel", "position", "rank"),
-            "where" => array("block_id = '" . $this->blockId . "'"),
-            "orderby" => array("sublevel", "parent_id", "position"),
+            "select" => array(
+                "menu_id",
+                "block_id",
+                "parent_id",
+                "content",
+                "sublevel",
+                "position",
+                "rank"),
+            "where" => array(
+                "block_id = '" . $this->getBlockData()->getId() . "'"),
+            "orderby" => array(
+                "sublevel",
+                "parent_id",
+                "position"),
             "limit" => array()
-                )
+        )
         );
         return $menus;
     }
@@ -47,7 +58,7 @@ class Block_Menu extends Libs_BlockModel {
 
     public function uninstall() {
         Core_CacheBuffer::setSectionName("menus");
-        Core_CacheBuffer::removeCache("block" . $this->blockId . ".php");
+        Core_CacheBuffer::removeCache("block" . $this->getBlockData()->getId() . ".php");
     }
 
     /**
