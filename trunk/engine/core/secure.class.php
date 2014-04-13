@@ -28,12 +28,14 @@ class Core_Secure {
      *
      * @var boolean
      */
-    private static $debuggingMode = false;
+    private $debuggingMode = false;
 
     /**
      * Routine de sécurisation.
      */
-    private function __construct() {
+    private function __construct($debuggingMode) {
+        $this->debuggingMode = $debuggingMode;
+
         $this->checkError();
         $this->checkQueryString();
         $this->checkRequestReferer();
@@ -69,8 +71,7 @@ class Core_Secure {
      */
     public static function checkInstance($debuggingMode = false) {
         if (self::$secure === null) {
-            self::$debuggingMode = $debuggingMode;
-            self::$secure = new self();
+            self::$secure = new self($debuggingMode);
         }
     }
 
@@ -80,7 +81,12 @@ class Core_Secure {
      * @return boolean
      */
     public static function &isDebuggingMode() {
-        return self::$debuggingMode;
+        $rslt = false;
+
+        if (self::$secure !== null) {
+            $rslt = self::$secure->debuggingMode;
+        }
+        return $rslt;
     }
 
     /**
@@ -107,7 +113,7 @@ class Core_Secure {
 
         // Préparation du template debug
         $libsMakeStyle = new Libs_MakeStyle();
-        $libsMakeStyle->assign("errorMessageTitle", self::getErrorMessageTitle($customMessage));
+        $libsMakeStyle->assign("errorMessageTitle", $this->getErrorMessageTitle($customMessage));
         $libsMakeStyle->assign("errorMessage", $this->getDebugMessage($ex, $argv));
 
         // Affichage du template en debug si problème
@@ -123,14 +129,22 @@ class Core_Secure {
      * @param string $customMessage
      * @return string $errorMessageTitle
      */
-    private static function getErrorMessageTitle($customMessage) {
+    private function getErrorMessageTitle($customMessage) {
         // Message d'erreur
         $errorMessageTitle = "ERROR_DEBUG_" . strtoupper($customMessage);
 
         if (defined($errorMessageTitle)) {
             $errorMessageTitle = Exec_Entities::entitiesUtf8(constant($errorMessageTitle));
         } else {
-            $errorMessageTitle = "Stop loading (Fatal error unknown).";
+            $errorMessageTitle = "Stop loading (";
+
+            if ($this->debuggingMode) {
+                $errorMessageTitle .= $customMessage;
+            } else {
+                $errorMessageTitle .= "Fatal error unknown";
+            }
+
+            $errorMessageTitle .= ").";
         }
         return $errorMessageTitle;
     }
@@ -193,7 +207,7 @@ class Core_Secure {
         // Réglages des sorties d'erreur
         $errorReporting = E_ERROR | E_WARNING | E_PARSE;
 
-        if (self::$debuggingMode) {
+        if ($this->debuggingMode) {
             $errorReporting = $errorReporting | E_DEPRECATED | E_STRICT;
         }
 
