@@ -57,7 +57,7 @@ class Libs_MakeStyle {
 
         // TODO si $templatesDir ou $currentTemplate est vide, le moteur plante !
         if (empty(self::$templatesDir) || empty(self::$currentTemplate)) {
-            Core_Secure::getInstance()->throwException("makeStyleConfig", array(
+            Core_Secure::getInstance()->throwException("makeStyleConfig", null, array(
                 "templatesDir = " . self::$templatesDir,
                 "currentTemplate = " . self::$currentTemplate));
         }
@@ -105,7 +105,8 @@ class Libs_MakeStyle {
 
         // Vérification du template
         if (!$this->isTemplate()) {
-            Core_Secure::getInstance()->throwException("makeStyle", $this->getTemplatePath());
+            Core_Secure::getInstance()->throwException("makeStyle", null, array(
+                $this->getTemplatePath()));
         }
 
         // Extrait les variables en local

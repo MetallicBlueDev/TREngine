@@ -75,6 +75,118 @@ class Core_Secure {
     }
 
     /**
+     * Vérifie si le mode de statistique et de debug est actif.
+     *
+     * @return boolean
+     */
+    public static function &isDebuggingMode() {
+        return self::$debuggingMode;
+    }
+
+    /**
+     * Affiche un message d'erreur au client.
+     * Cette fonction est activé si une erreur est détectée.
+     *
+     * @param string $customMessage Message d'erreur.
+     * @param Exception $ex L'exception interne levée.
+     * @param array $argv Argument suplementaire d'information sur l'erreur.
+     */
+    public function throwException($customMessage, Exception $ex = null, array $argv = array()) {
+        if (!class_exists("Core_Loader")) {
+            require(TR_ENGINE_DIR . "/engine/core/loader.class.php");
+        }
+
+        // Gestionnaires suivants obligatoires
+        Core_Loader::classLoader("Exec_Entities");
+        Core_Loader::classLoader("Core_Request");
+        Core_Loader::classLoader("Exec_Cookie");
+        Core_Loader::classLoader("Exec_Crypt");
+        Core_Loader::classLoader("Core_Translate");
+        Core_Loader::classLoader("Core_Html");
+        Core_Loader::classLoader("Libs_MakeStyle");
+
+        // Préparation du template debug
+        $libsMakeStyle = new Libs_MakeStyle();
+        $libsMakeStyle->assign("errorMessageTitle", self::getErrorMessageTitle($customMessage));
+        $libsMakeStyle->assign("errorMessage", $this->getDebugMessage($ex, $argv));
+
+        // Affichage du template en debug si problème
+        $libsMakeStyle->display("debug", true);
+
+        // Arret du moteur
+        exit();
+    }
+
+    /**
+     * Retourne le type d'erreur courant sous forme de message.
+     *
+     * @param string $customMessage
+     * @return string $errorMessageTitle
+     */
+    private static function getErrorMessageTitle($customMessage) {
+        // Message d'erreur
+        $errorMessageTitle = "ERROR_DEBUG_" . strtoupper($customMessage);
+
+        if (defined($errorMessageTitle)) {
+            $errorMessageTitle = Exec_Entities::entitiesUtf8(constant($errorMessageTitle));
+        } else {
+            $errorMessageTitle = "Stop loading (Fatal error unknown).";
+        }
+        return $errorMessageTitle;
+    }
+
+    /**
+     * Analyse l'erreur et prépare l'affichage de l'erreur.
+     *
+     * @param Exception $ex L'exception interne levée.
+     * @param array $argv Argument suplementaire d'information sur l'erreur.
+     * @return array $errorMessage
+     */
+    private function getDebugMessage(Exception $ex, array $argv) {
+        // Tableau avec les lignes d'erreurs
+        $errorMessage = array();
+
+        // Analyse de l'exception
+        if ($ex !== null) {
+            $trace = $ex->getTrace();
+            $nbTrace = count($trace);
+
+            for ($i = $nbTrace; $i > 0; $i--) {
+                $errorLine = "";
+
+                if (is_array($trace[$i])) {
+                    foreach ($trace[$i] as $key => $value) {
+                        if ($key == "file") {
+                            $value = preg_replace("/([a-zA-Z0-9._]+).php/", "<b>\\1</b>.php", $value);
+                            $errorLine .= " <b>" . $key . "</b> " . $value;
+                        } else if ($key == "line" || $key == "class") {
+                            $errorLine .= " in <b>" . $key . "</b> " . $value;
+                        }
+                    }
+                }
+
+                if (!empty($errorLine)) {
+                    $errorMessage[] = $errorLine;
+                }
+            }
+        }
+
+        // Si des informations suplementaire sont disponibles
+        if (!empty($argv)) {
+            $errorMessage = array_merge($errorMessage, $argv);
+        }
+
+        if (Core_Loader::isCallable("Core_Session") && Core_Loader::isCallable("Core_Sql")) {
+            if (Core_Sql::hasConnection()) {
+                if (Core_Session::getInstance()->userRank > 1) {
+                    $errorMessage = array_merge($errorMessage, (array) Core_Sql::getInstance()->getLastError());
+                }
+            }
+        }
+        return $errorMessage;
+    }
+
+    /**
      * Réglages des sorties d'erreurs.
      */
     private function checkError() {
@@ -84,6 +196,7 @@ class Core_Secure {
         if (self::$debuggingMode) {
             $errorReporting = $errorReporting | E_DEPRECATED | E_STRICT;
         }
+
         error_reporting($errorReporting);
     }
 
@@ -92,6 +205,7 @@ class Core_Secure {
      */
     private function checkQueryString() {
         $queryString = strtolower(rawurldecode($_SERVER['QUERY_STRING']));
+
         $badString = array(
             "SELECT",
             "UNION",
@@ -118,7 +232,7 @@ class Core_Secure {
 
         foreach ($badString as $stringValue) {
             if (strpos($queryString, $stringValue)) {
-                $this->throwException();
+                $this->throwException("badQueryString");
             }
         }
     }
@@ -130,7 +244,7 @@ class Core_Secure {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!empty($_SERVER['HTTP_REFERER'])) {
                 if (!preg_match("/" . $_SERVER['HTTP_HOST'] . "/", $_SERVER['HTTP_REFERER'])) {
-                    $this->throwException();
+                    $this->throwException("badRequestReferer");
                 }
             }
         }
@@ -143,6 +257,7 @@ class Core_Secure {
         if (TR_ENGINE_PHP_VERSION < "5.3.0" && function_exists("set_magic_quotes_runtime")) {
             set_magic_quotes_runtime(0);
         }
+
         $this->addSlashesForQuotes($_GET);
         $this->addSlashesForQuotes($_POST);
         $this->addSlashesForQuotes($_COOKIE);
@@ -151,137 +266,22 @@ class Core_Secure {
     /**
      * Ajoute un antislash pour chaque quote.
      *
-     * @param $key objet sans antislash
+     * @param array $key objet sans antislash
      */
-    private function addSlashesForQuotes($key) {
+    private function addSlashesForQuotes(&$key) {
         if (is_array($key)) {
-            while (list($k, $v) = each($key)) {
+            foreach ($key as $k => $v) {
                 if (is_array($key[$k])) {
                     $this->addSlashesForQuotes($key[$k]);
                 } else {
                     $key[$k] = addslashes($v);
                 }
             }
+
             reset($key);
         } else {
             $key = addslashes($key);
         }
     }
 
-    /**
-     * Affiche un message d'erreur au client.
-     * Cette fonction est activé si une erreur est détectée.
-     *
-     * @param $ie string or object L'exception interne levée.
-     * @param $argv string or array argument suplementaire d'information sur l'erreur.
-     */
-    public function throwException($ie = "", $argv = "") {
-        // Charge le loader si il faut
-        if (!class_exists("Core_Loader")) {
-            require(TR_ENGINE_DIR . "/engine/core/loader.class.php");
-        }
-
-        // Gestionnaires suivants obligatoires
-        Core_Loader::classLoader("Exec_Entities");
-        Core_Loader::classLoader("Core_Request");
-        Core_Loader::classLoader("Exec_Cookie");
-        Core_Loader::classLoader("Exec_Crypt");
-        Core_Loader::classLoader("Core_Translate");
-        Core_Loader::classLoader("Core_Html");
-        Core_Loader::classLoader("Libs_MakeStyle");
-
-        // Préparation du template debug
-        $libsMakeStyle = new Libs_MakeStyle();
-        $libsMakeStyle->assign("errorMessageTitle", $this->getErrorMessageTitle($ie));
-        $libsMakeStyle->assign("errorMessage", $this->getDebugMessage($ie, $argv));
-        // Affichage du template en debug si problème
-        $libsMakeStyle->display("debug.php", true);
-
-        exit(); // Arret du moteur
-    }
-
-    /**
-     * Analyse l'erreur et prépare l'affichage de l'erreur.
-     *
-     * @param $ie string or object L'exception interne levée.
-     * @param $argv array argument suplementaire d'information sur l'erreur.
-     * @return string $errorMessage
-     */
-    private function getDebugMessage($ie, $argv) {
-        // Tableau avec les lignes d'erreurs
-        $errorMessage = array();
-
-        // Analyse de l'exception
-        if (is_object($ie)) { // Pour une exception levé de type object
-            $trace = $ie->getTrace();
-            $nbTrace = count($trace);
-
-            for ($i = $nbTrace; $i > 0; $i--) {
-                $errorLine = "";
-                if (is_array($trace[$i])) {
-                    foreach ($trace[$i] as $key => $value) {
-                        if ($key == "file") {
-                            $value = preg_replace("/([a-zA-Z0-9._]+).php/", "<b>\\1</b>.php", $value);
-                            $errorLine .= " <b>" . $key . "</b> " . $value;
-                        } else if ($key == "line" || $key == "class") {
-                            $errorLine .= " in <b>" . $key . "</b> " . $value;
-                        }
-                    }
-                }
-                if (!empty($errorLine)) {
-                    $errorMessage[] = $errorLine;
-                }
-            }
-        }
-        if (!empty($argv)) { // Si des informations suplementaire sont disponibles
-            if (is_array($argv)) {
-                $errorMessage = array_merge($errorMessage, $argv);
-            } else {
-                $errorMessage[] = $argv;
-            }
-        }
-        if (Core_Loader::isCallable("Core_Session") && Core_Loader::isCallable("Core_Sql")) {
-            if (Core_Session::getInstance()->userRank > 1) {
-                $errorMessage = array_merge($errorMessage, (array) Core_Sql::getInstance()->getLastError());
-            }
-        }
-        return $errorMessage;
-    }
-
-    /**
-     * Retourne le type d'erreur courant sous forme de message.
-     *
-     * @param $cmd
-     * @return string $errorMessageTitle
-     */
-    private function getErrorMessageTitle($ie) {
-        // En fonction du type d'erreur
-        $cmd = "";
-
-        if (is_object($ie)) {
-            $cmd = $ie->getMessage();
-        } else {
-            $cmd = $ie;
-        }
-
-        // Message d'erreur
-        $errorMessageTitle = "ERROR_DEBUG_" . strtoupper($cmd);
-
-        if (defined($errorMessageTitle)) {
-            return Exec_Entities::entitiesUtf8(constant($errorMessageTitle));
-        }
-        return "Stop loading (Fatal error unknown).";
-    }
-
-    /**
-     * Vérifie si le mode de statistique et de debug est actif
-     *
-     * @return boolean
-     */
-    public static function &isDebuggingMode() {
-        return self::$debuggingMode;
-    }
-
 }
-
-?>

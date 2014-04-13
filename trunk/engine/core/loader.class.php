@@ -25,14 +25,7 @@ class Core_Loader {
      * @return boolean true chargé.
      */
     public static function classLoader($class) {
-        $classLoaded = false;
-
-        try {
-            $classLoaded = self::load($class);
-        } catch (Exception $ie) {
-            Core_Secure::getInstance()->throwException($ie, $class);
-        }
-        return $classLoaded;
+        return self::load($class, "");
     }
 
     /**
@@ -42,11 +35,7 @@ class Core_Loader {
      * @return boolean true chargé.
      */
     public static function langLoader($plugin) {
-        try {
-            return self::load($plugin, "lang");
-        } catch (Exception $ie) {
-            Core_Secure::getInstance()->throwException($ie, $plugin);
-        }
+        return self::load($plugin, "lang");
     }
 
     /**
@@ -56,11 +45,7 @@ class Core_Loader {
      * @return boolean true chargé.
      */
     public static function includeLoader($include) {
-        try {
-            return self::load($include, "inc");
-        } catch (Exception $ie) {
-            Core_Secure::getInstance()->throwException($ie, $include);
-        }
+        return self::load($include, "inc");
     }
 
     /**
@@ -146,69 +131,76 @@ class Core_Loader {
      * @param string $ext Extension.
      * @return boolean true chargé.
      */
-    private static function load($name, $ext = "") {
-        if (empty($name)) {
-            throw new Exception("loader");
-        }
-
-        $loaded = self::isLoaded($name);
-
-        // Si ce n'est pas déjà chargé
-        if (!$loaded) {
-            $path = "";
-
-            // Retrouve l'extension
-            if (empty($ext)) {
-                if (strpos($name, "Block_") !== false) {
-                    $ext = "block";
-                    $path = str_replace("Block_", "blocks_", $name);
-                } else if (strpos($name, "Module_") !== false) {
-                    $ext = "module";
-                    $path = str_replace("Module_", "modules_", $name);
-                } else {
-                    $ext = "class";
-                    $path = "engine_" . $name;
-                }
-            } else {
-                switch ($ext) {
-                    case 'lang':
-                        if (self::isCallable("Core_Translate")) {
-                            $path = $name . "_lang_" . Core_Translate::getInstance()->getCurrentLanguage();
-                        }
-                        break;
-                    default:
-                        $path = "engine_" . $name;
-                        break;
-                }
+    private static function load($name, $ext) {
+        try {
+            if (empty($name)) {
+                throw new Exception("loader");
             }
 
-            $path = str_replace("_", "/", $path);
-            $path = TR_ENGINE_DIR . "/" . strtolower($path) . "." . $ext . ".php";
+            $loaded = self::isLoaded($name);
 
-            if (is_file($path)) {
-                require($path);
-                self::$loaded[$name] = $path;
-                $loaded = true;
+            // Si ce n'est pas déjà chargé
+            if (!$loaded) {
+                $path = "";
 
-                if ($ext === "lang") {
-                    if (!empty($lang) && is_array($lang)) {
-                        Core_Translate::getInstance()->affectCache($lang);
+                // Retrouve l'extension
+                if (empty($ext)) {
+                    if (strpos($name, "Block_") !== false) {
+                        $ext = "block";
+                        $path = str_replace("Block_", "blocks_", $name);
+                    } else if (strpos($name, "Module_") !== false) {
+                        $ext = "module";
+                        $path = str_replace("Module_", "modules_", $name);
+                    } else {
+                        $ext = "class";
+                        $path = "engine_" . $name;
+                    }
+                } else {
+                    switch ($ext) {
+                        case 'lang':
+                            if (self::isCallable("Core_Translate")) {
+                                $path = $name . "_lang_" . Core_Translate::getInstance()->getCurrentLanguage();
+                            }
+                            break;
+                        default:
+                            $path = "engine_" . $name;
+                            break;
                     }
                 }
-            } else {
-                switch ($ext) {
-                    case 'block':
-                        Core_Logger::addErrorMessage(ERROR_BLOCK_NO_FILE);
-                        break;
-                    case 'module':
-                        Core_Logger::addErrorMessage(ERROR_MODULE_NO_FILE);
-                        break;
-                    default:
-                        throw new Exception("loader");
-                }
 
-                $loaded = false;
+                $path = str_replace("_", "/", $path);
+                $path = TR_ENGINE_DIR . "/" . strtolower($path) . "." . $ext . ".php";
+
+                if (is_file($path)) {
+                    if ($ext === "lang") {
+                        $lang = array();
+                    }
+
+                    require($path);
+                    self::$loaded[$name] = $path;
+                    $loaded = true;
+
+                    if ($ext === "lang") {
+                        if (!empty($lang) && is_array($lang)) {
+                            Core_Translate::getInstance()->affectCache($lang);
+                        }
+                    }
+                } else {
+                    switch ($ext) {
+                        case 'block':
+                            Core_Logger::addErrorMessage(ERROR_BLOCK_NO_FILE);
+                            break;
+                        case 'module':
+                            Core_Logger::addErrorMessage(ERROR_MODULE_NO_FILE);
+                            break;
+                        default:
+                            throw new Exception("loader");
+                    }
+                }
             }
+        } catch (Exception $ex) {
+            Core_Secure::getInstance()->throwException($ex->getMessage(), $ex, array(
+                $name));
         }
         return $loaded;
     }

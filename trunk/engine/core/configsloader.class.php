@@ -102,7 +102,8 @@ class Core_ConfigsLoader {
             // Ajout a la configuration courante
             Core_Main::addToConfiguration($configuration);
         } else {
-            Core_Secure::getInstance()->throwException("configPath", $configPath);
+            Core_Secure::getInstance()->throwException("configPath", null, array(
+                $configPath));
         }
     }
 
@@ -121,14 +122,16 @@ class Core_ConfigsLoader {
 
                 // Vérification du type de base de données
                 if (!is_file(TR_ENGINE_DIR . "/engine/base/" . $db['type'] . ".class.php")) {
-                    Core_Secure::getInstance()->throwException("sqlType", $db['type']);
+                    Core_Secure::getInstance()->throwException("sqlType", null, array(
+                        $db['type']));
                 }
 
                 // Démarrage de l'instance Core_Sql
                 Core_Loader::classLoader("Core_Sql");
                 Core_Sql::getInstance($db);
             } else {
-                Core_Secure::getInstance()->throwException("sqlPath", $databasePath);
+                Core_Secure::getInstance()->throwException("sqlPath", null, array(
+                    $databasePath));
             }
             return Core_Loader::isCallable("Core_Sql");
         }

@@ -266,7 +266,8 @@ class Libs_Block {
      */
     public static function &getSideLetters($side) {
         if (!is_numeric($side)) {
-            Core_Secure::getInstance()->throwException("blockSide", "Invalid side value: " . $side);
+            Core_Secure::getInstance()->throwException("blockSide", null, array(
+                "Invalid side value: " . $side));
         }
 
         $sideLetters = "";
@@ -291,7 +292,8 @@ class Libs_Block {
                 $sideLetters = "modulebottom";
                 break;
             default :
-                Core_Secure::getInstance()->throwException("blockSide", "Numeric side: " . $side);
+                Core_Secure::getInstance()->throwException("blockSide", null, array(
+                    "Numeric side: " . $side));
         }
         return $sideLetters;
     }
@@ -304,7 +306,8 @@ class Libs_Block {
      */
     private static function &getSideNumeric($side) {
         if (!is_string($side)) {
-            ore_Secure::getInstance()->throwException("blockSide", "Invalid side value: " . $side);
+            ore_Secure::getInstance()->throwException("blockSide", null, array(
+                "Invalid side value: " . $side));
         }
 
         $sideNumeric = 0;
@@ -329,7 +332,8 @@ class Libs_Block {
                 $sideNumeric = 6;
                 break;
             default :
-                Core_Secure::getInstance()->throwException("blockSide", "Letters side: " . $side);
+                Core_Secure::getInstance()->throwException("blockSide", null, array(
+                    "Letters side: " . $side));
         }
         return $sideNumeric;
     }

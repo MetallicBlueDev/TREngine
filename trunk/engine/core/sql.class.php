@@ -44,14 +44,16 @@ class Core_Sql extends Base_Model {
         }
 
         if (!Core_Loader::isCallable($baseClassName)) {
-            Core_Secure::getInstance()->throwException("sqlCode", $baseClassName);
+            Core_Secure::getInstance()->throwException("sqlCode", null, array(
+                $baseClassName));
         }
 
         try {
             $this->selectedBase = new $baseClassName();
             $this->selectedBase->initializeBase($databaseConfig);
-        } catch (Exception $ie) {
-            Core_Secure::getInstance()->throwException($ie);
+        } catch (Exception $ex) {
+            $this->selectedBase = null;
+            Core_Secure::getInstance()->throwException($ex->getMessage(), $ex);
         }
     }
 
@@ -71,10 +73,24 @@ class Core_Sql extends Base_Model {
      * @return Core_Sql
      */
     public static function &getInstance(array $database = array()) {
-        if (self::$coreSql == null) {
+        if (self::$coreSql === null) {
             self::$coreSql = new self($database);
         }
         return self::$coreSql;
+    }
+
+    /**
+     * Détermine si une connexion est disponible.
+     * 
+     * @return boolean
+     */
+    public static function hasConnection() {
+        $rslt = false;
+
+        if (self::$coreSql !== null) {
+            $rslt = (self::$coreSql->selectedBase !== null);
+        }
+        return $rslt;
     }
 
     /**
@@ -145,8 +161,8 @@ class Core_Sql extends Base_Model {
 
         try {
             $this->query();
-        } catch (Exception $ie) {
-            Core_Secure::getInstance()->throwException($ie);
+        } catch (Exception $ex) {
+            Core_Secure::getInstance()->throwException($ex->getMessage(), $ex);
         }
     }
 
@@ -180,8 +196,8 @@ class Core_Sql extends Base_Model {
 
         try {
             $this->query();
-        } catch (Exception $ie) {
-            Core_Secure::getInstance()->throwException($ie);
+        } catch (Exception $ex) {
+            Core_Secure::getInstance()->throwException($ex->getMessage(), $ex);
         }
     }
 
@@ -231,8 +247,8 @@ class Core_Sql extends Base_Model {
 
         try {
             $this->query();
-        } catch (Exception $ie) {
-            Core_Secure::getInstance()->throwException($ie);
+        } catch (Exception $ex) {
+            Core_Secure::getInstance()->throwException($ex->getMessage(), $ex);
         }
     }
 
@@ -250,8 +266,8 @@ class Core_Sql extends Base_Model {
 
         try {
             $this->query();
-        } catch (Exception $ie) {
-            Core_Secure::getInstance()->throwException($ie);
+        } catch (Exception $ex) {
+            Core_Secure::getInstance()->throwException($ex->getMessage(), $ex);
         }
     }
 
