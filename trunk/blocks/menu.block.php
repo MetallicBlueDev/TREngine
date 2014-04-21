@@ -28,7 +28,6 @@ class Block_Menu extends Libs_BlockModel {
     }
 
     protected function getMenu() {
-        Core_Loader::classLoader("Libs_Menu");
         $menus = new Libs_Menu(
         "block" . $this->getBlockData()->getId(), array(
             "table" => Core_Table::$MENUS_TABLES,

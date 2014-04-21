@@ -183,7 +183,7 @@ class Libs_MakeStyle {
     private function setFileName($fileName) {
         if (!empty($fileName) && $this->fileName != $fileName) {
             if (substr($fileName, -4) != ".php") {
-                $fileName &= ".php";
+                $fileName .= ".php";
             }
 
             $this->fileName = $fileName;

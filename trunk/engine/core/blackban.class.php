@@ -34,7 +34,6 @@ class Core_BlackBan {
             $mail = (!empty(Core_Main::$coreConfig['defaultAdministratorMail'])) ? Core_Main::$coreConfig['defaultAdministratorMail'] : TR_ENGINE_MAIL;
             $name = (!empty(Core_Main::$coreConfig['defaultSiteName'])) ? Core_Main::$coreConfig['defaultSiteName'] : "";
 
-            Core_Loader::classLoader("Exec_Mailer");
             $mail = Exec_Mailer::protectedDisplay($mail, $name);
 
             $libsMakeStyle = new Libs_MakeStyle();

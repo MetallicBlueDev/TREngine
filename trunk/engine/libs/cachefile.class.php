@@ -4,8 +4,6 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
-Core_Loader::classLoader("Libs_CacheModel");
-
 /**
  * Gestionnaire de fichier.
  *

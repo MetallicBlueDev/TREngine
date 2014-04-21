@@ -15,34 +15,6 @@ class Core_Request {
     private static $buffer = array();
 
     /**
-     * Récupère, analyse et vérifie une variable URL.
-     *
-     * @param $name string Nom de la variable
-     * @param $type string Type de donnée
-     * @param $default object Donnée par défaut
-     * @param $hash string Provenance de la variable
-     * @return object
-     */
-    private static function &getVars($name, $type, $default = "", $hash = "default") {
-        $rslt = null;
-
-        if (isset(self::$buffer[$name])) {
-            $rslt = self::$buffer[$name];
-        } else {
-            // Recherche de la méthode courante
-            $input = self::getRequest($hash);
-
-            if (isset($input[$name]) && $input[$name] !== null) {
-                $rslt = self::protect($input[$name], $type);
-                self::$buffer[$name] = $rslt;
-            } else {
-                $rslt = $default;
-            }
-        }
-        return $rslt;
-    }
-
-    /**
      * Retourne la variable demandée de type int
      *
      * @param $name string Nom de la variable
@@ -217,6 +189,32 @@ class Core_Request {
         return $content;
     }
 
-}
+    /**
+     * Récupère, analyse et vérifie une variable URL.
+     *
+     * @param $name string Nom de la variable
+     * @param $type string Type de donnée
+     * @param $default object Donnée par défaut
+     * @param $hash string Provenance de la variable
+     * @return object
+     */
+    private static function &getVars($name, $type, $default = "", $hash = "default") {
+        $rslt = null;
 
-?>
+        if (isset(self::$buffer[$name])) {
+            $rslt = self::$buffer[$name];
+        } else {
+            // Recherche de la méthode courante
+            $input = self::getRequest($hash);
+
+            if (isset($input[$name]) && $input[$name] !== null) {
+                $rslt = self::protect($input[$name], $type);
+                self::$buffer[$name] = $rslt;
+            } else {
+                $rslt = $default;
+            }
+        }
+        return $rslt;
+    }
+
+}

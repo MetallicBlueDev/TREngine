@@ -4,9 +4,6 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
-// R�solution de la dépendance du block menu
-Core_Loader::classLoader("Block_Menu");
-
 /**
  * Block de menu style Menu treeview by
  *
@@ -39,7 +36,6 @@ class Block_Menutree extends Block_Menu {
                 $this->getBlockData()->setContent("");
         }
 
-        Core_Loader::classLoader("Exec_JQuery");
         Exec_JQuery::getTreeView("#block" . $this->getBlockData()->getId());
     }
 

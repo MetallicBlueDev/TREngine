@@ -5,7 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Utilitaire d'entête et de contenu HTML.
+ * Gestionnaire HTML / Utilitaire d'entête et de contenu HTML.
  *
  * @author Sébastien Villemain
  */
@@ -370,8 +370,6 @@ class Core_Html {
             if (empty($keywords))
                 $keywords = Core_Main::$coreConfig['defaultKeyWords'];
         }
-
-        Core_Loader::classLoader("Exec_Entities");
 
         return "<meta name=\"description\" content=\"" . Exec_Entities::textDisplay($this->description) . "\" />\n"
         . "<meta name=\"keywords\" content=\"" . Exec_Entities::textDisplay($keywords) . "\" />\n";

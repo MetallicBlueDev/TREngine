@@ -41,7 +41,6 @@ class Core_ConfigsLoader {
             $configuration = array();
 
             // Vérification de l'adresse email du webmaster
-            Core_Loader::classLoader("Exec_Mailer");
             if (Exec_Mailer::validMail($config["TR_ENGINE_MAIL"])) {
                 define("TR_ENGINE_MAIL", $config["TR_ENGINE_MAIL"]);
             } else {
@@ -127,7 +126,6 @@ class Core_ConfigsLoader {
                 }
 
                 // Démarrage de l'instance Core_Sql
-                Core_Loader::classLoader("Core_Sql");
                 Core_Sql::getInstance($db);
             } else {
                 Core_Secure::getInstance()->throwException("sqlPath", null, array(
@@ -145,9 +143,6 @@ class Core_ConfigsLoader {
      */
     private function loadCacheBuffer() {
         if (!Core_Loader::isCallable("Core_CacheBuffer")) {
-            // Chargement du gestionnaire de cache
-            Core_Loader::classLoader("Core_CacheBuffer");
-
             // Mode natif PHP actif
             $modes = array(
                 "php");

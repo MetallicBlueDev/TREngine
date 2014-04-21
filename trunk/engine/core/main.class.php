@@ -37,21 +37,7 @@ class Core_Main {
         if (Core_Secure::isDebuggingMode())
             Exec_Marker::startTimer("core");
 
-        // Utilitaire
-        Core_Loader::classLoader("Exec_Utils");
-
-        // Charge le gestionnaire d'exception
-        Core_Loader::classLoader("Core_Logger");
-
-        // Chargement du convertiseur d'entities
-        Core_Loader::classLoader("Exec_Entities");
-
-        // Chargement de la configuration
-        Core_Loader::classLoader("Core_ConfigsLoader");
         new Core_ConfigsLoader();
-
-        // Chargement du gestionnaire d'accès url
-        Core_Loader::classLoader("Core_Request");
 
         // Charge la session
         $this->loadSession();
@@ -80,18 +66,9 @@ class Core_Main {
         if (Core_Secure::isDebuggingMode())
             Exec_Marker::startTimer("launcher");
 
-        // Chargement du moteur de traduction
-        Core_Loader::classLoader("Core_Translate");
-
-        // Chargement du traitement HTML
-        Core_Loader::classLoader("Core_TextEditor");
-
         // Vérification des bannissements
-        Core_Loader::classLoader("Core_BlackBan");
         Core_BlackBan::checkBlackBan();
 
-        // Chargement du gestionnaire HTML
-        Core_Loader::classLoader("Core_Html");
         Core_Html::getInstance();
 
         // Configure les informations de page demandées
@@ -104,15 +81,6 @@ class Core_Main {
 
         // Comportement different en fonction du type de client
         if (!Core_BlackBan::isBlackUser()) {
-            // Chargement du gestionnaire d'autorisation
-            Core_Loader::classLoader("Core_Access");
-
-            // Chargement des blocks
-            Core_Loader::classLoader("Libs_Block");
-
-            // Chargement de la réécriture d'URL
-            Core_Loader::classLoader("Core_UrlRewriting");
-
             if (self::isFullScreen() && Core_Loader::isCallable("Libs_Block") && Core_Loader::isCallable("Libs_Module")) {
                 if ($this->inMaintenance()) { // Affichage site fermé
                     // Charge le block login
@@ -125,7 +93,6 @@ class Core_Main {
                     $libsMakeStyle->display("close");
                 } else {
                     // Chargement et construction du fil d'ariane
-                    Core_Loader::classLoader("Libs_Breadcrumb");
                     Libs_Breadcrumb::getInstance();
 
                     Libs_Module::getInstance()->launch();
@@ -233,7 +200,6 @@ class Core_Main {
      * Création de l'instance du module.
      */
     private function loadModule() {
-        Core_Loader::classLoader("Libs_Module");
         Libs_Module::getInstance(
         Core_Request::getWord("mod"), Core_Request::getWord("page"), Core_Request::getWord("view")
         );
@@ -244,7 +210,6 @@ class Core_Main {
      */
     private function loadMakeStyle() {
         $template = (!Core_Session::getInstance()->userTemplate) ? self::$coreConfig['defaultTemplate'] : Core_Session::getInstance()->userTemplate;
-        Core_Loader::classLoader("Libs_MakeStyle");
         Libs_MakeStyle::getCurrentTemplate($template);
     }
 
@@ -252,18 +217,10 @@ class Core_Main {
      * Charge les outils de session.
      */
     private function loadSession() {
-        // Gestionnaire des cookie
-        Core_Loader::classLoader("Exec_Cookie");
-
-        // Chargement de l'outil de cryptage
-        Core_Loader::classLoader("Exec_Crypt");
-
         // Analyse pour les statistiques
-        Core_Loader::classLoader("Exec_Agent");
         Exec_Agent::getVisitorsStats();
 
         // Chargement des sessions
-        Core_Loader::classLoader("Core_Session");
         Core_Session::checkInstance();
     }
 

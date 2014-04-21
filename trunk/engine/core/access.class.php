@@ -5,7 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Gestionnaire d'accès
+ * Gestionnaire d'accès et autorisation.
  *
  * @author Sébastien Villemain
  */

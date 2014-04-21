@@ -4,9 +4,6 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
-// Résolution de la dépendance du block menu
-Core_Loader::classLoader("Block_Menu");
-
 /**
  * Block de menu style jdMenu by Jonathan Sharp
  *
@@ -15,7 +12,6 @@ Core_Loader::classLoader("Block_Menu");
 class Block_Menujd extends Block_Menu {
 
     public function display() {
-        Core_Loader::classLoader("Exec_JQuery");
         Exec_JQuery::getJdMenu();
 
         $menus = $this->getMenu();

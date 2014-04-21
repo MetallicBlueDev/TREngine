@@ -7,7 +7,6 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Module_Management_Block extends Libs_ModuleModel {
 
     public function setting() {
-        Core_Loader::classLoader("Libs_Block");
         $localView = Core_Request::getWord("localView");
 
         // Affichage et traitement
@@ -47,7 +46,6 @@ class Module_Management_Block extends Libs_ModuleModel {
     }
 
     private function tabHome() {
-        Core_Loader::classLoader("Libs_Rack");
         $firstLine = array(
             array(
                 35,
@@ -235,7 +233,6 @@ class Module_Management_Block extends Libs_ModuleModel {
                 $block = Core_Sql::getInstance()->fetchArray();
                 Libs_Breadcrumb::getInstance()->addTrail($block['title'], "?mod=management&manage=block&localView=tabEdit&blockId=" . $blockId);
 
-                Core_Loader::classLoader("Libs_Form");
                 $form = new Libs_Form("management-block-blockedit");
                 $form->setTitle(BLOCK_EDIT_TITLE);
                 $form->setDescription(BLOCK_EDIT_DESCRIPTION);

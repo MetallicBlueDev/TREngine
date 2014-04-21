@@ -5,7 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Traducteur de texte.
+ * Moteur de traduction de texte.
  *
  * @author Sébastien Villemain
  */

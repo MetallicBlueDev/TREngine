@@ -63,7 +63,6 @@ class Libs_Tabs {
         $this->selected = Core_Request::getString("selectedTab");
 
         if (self::$firstInstance) {
-            Core_Loader::classLoader("Exec_JQuery");
             Exec_JQuery::getIdTabs();
             self::$firstInstance = false;
         }

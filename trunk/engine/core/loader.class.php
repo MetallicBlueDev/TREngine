@@ -18,6 +18,12 @@ class Core_Loader {
      */
     private static $loaded = array();
 
+    public static function affectRegister() {
+        spl_autoload_register(array(
+            'Core_Loader',
+            'classLoader'));
+    }
+
     /**
      * Chargeur de classe.
      *

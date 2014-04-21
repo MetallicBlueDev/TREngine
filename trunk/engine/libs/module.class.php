@@ -4,9 +4,6 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
-Core_Loader::classLoader("Libs_ModuleData");
-Core_Loader::classLoader("Libs_ModuleModel");
-
 /**
  * Gestionnaire de module.
  *

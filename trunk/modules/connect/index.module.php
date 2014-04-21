@@ -21,8 +21,6 @@ class Module_Connect_Index extends Libs_ModuleModel {
 
     public function account() {
         if (Core_Session::hasConnection()) {
-            Core_Loader::classLoader("Libs_Form");
-            Core_Loader::classLoader("Libs_Tabs");
             // Ajout des formulaires dans les onglets
             $accountTabs = new Libs_Tabs("accounttabs");
             $accountTabs->addTab(ACCOUNT_PROFILE, $this->tabProfile());
@@ -57,7 +55,6 @@ class Module_Connect_Index extends Libs_ModuleModel {
         $signature = Core_Request::getString("signature", "", "POST");
 
         if (!empty($website)) {
-            Core_Loader::classLoader("Exec_Url");
             $values['website'] = Exec_Url::cleanUrl($website);
         }
         if (!empty($signature)) {
@@ -149,7 +146,6 @@ class Module_Connect_Index extends Libs_ModuleModel {
                     }
                 }
                 if ($validName) {
-                    Core_Loader::classLoader("Exec_Mailer");
                     if (Exec_Mailer::validMail($mail)) {
                         $values = array();
                         if (!empty($pass) || !empty($pass2)) {
@@ -289,7 +285,6 @@ class Module_Connect_Index extends Libs_ModuleModel {
             }
 
             if (Core_Main::isFullScreen() || (empty($login) && empty($password))) {
-                Core_Loader::classLoader("Libs_Form");
                 $form = new Libs_Form("login-logon");
                 $form->setTitle(LOGIN_FORM_TITLE);
                 $form->setDescription(LOGIN_FORM_DESCRIPTION);
@@ -336,7 +331,6 @@ class Module_Connect_Index extends Libs_ModuleModel {
             $mail = Core_Request::getString("mail", "", "POST");
 
             if (!empty($mail)) {
-                Core_Loader::classLoader("Exec_Mailer");
                 if (Exec_Mailer::validMail($mail)) {
                     Core_Sql::getInstance()->select(
                     Core_Table::$USERS_TABLE, array(
@@ -359,7 +353,6 @@ class Module_Connect_Index extends Libs_ModuleModel {
                 Core_Logger::addInformationMessage(FORGET_LOGIN_IS_SUBMIT_TO . " " . $mail);
             } else {
                 if (Core_Main::isFullScreen() || empty($mail)) {
-                    Core_Loader::classLoader("Libs_Form");
                     $form = new Libs_Form("login-forgetlogin");
                     $form->setTitle(FORGET_LOGIN_TITLE);
                     $form->setDescription(FORGET_LOGIN_DESCRIPTION);
@@ -412,7 +405,6 @@ class Module_Connect_Index extends Libs_ModuleModel {
                 Core_Logger::addInformationMessage(FORGET_PASSWORD_IS_SUBMIT_TO . " " . $mail);
             } else {
                 if (Core_Main::isFullScreen() || empty($login)) {
-                    Core_Loader::classLoader("Libs_Form");
                     $form = new Libs_Form("login-forgetpass");
                     $form->setTitle(FORGET_PASSWORD_TITLE);
                     $form->setDescription(FORGET_PASSWORD_DESCRIPTION);

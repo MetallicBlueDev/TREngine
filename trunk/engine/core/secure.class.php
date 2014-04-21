@@ -60,7 +60,7 @@ class Core_Secure {
      * @return Core_Secure
      */
     public static function &getInstance() {
-        checkInstance();
+        self::checkInstance();
         return self::$secure;
     }
 
@@ -100,16 +100,14 @@ class Core_Secure {
     public function throwException($customMessage, Exception $ex = null, array $argv = array()) {
         if (!class_exists("Core_Loader")) {
             require(TR_ENGINE_DIR . "/engine/core/loader.class.php");
+            Core_Loader::affectRegister();
         }
 
         // Gestionnaires suivants obligatoires
-        Core_Loader::classLoader("Exec_Entities");
-        Core_Loader::classLoader("Core_Request");
-        Core_Loader::classLoader("Exec_Cookie");
-        Core_Loader::classLoader("Exec_Crypt");
-        Core_Loader::classLoader("Core_Translate");
-        Core_Loader::classLoader("Core_Html");
-        Core_Loader::classLoader("Libs_MakeStyle");
+
+        if ($ex === null) {
+            $ex = new Exception($customMessage);
+        }
 
         // Préparation du template debug
         $libsMakeStyle = new Libs_MakeStyle();
@@ -156,12 +154,16 @@ class Core_Secure {
      * @param array $argv Argument suplementaire d'information sur l'erreur.
      * @return array $errorMessage
      */
-    private function getDebugMessage(Exception $ex, array $argv) {
+    private function getDebugMessage(Exception $ex = null, array $argv = array()) {
         // Tableau avec les lignes d'erreurs
         $errorMessage = array();
 
         // Analyse de l'exception
         if ($ex !== null) {
+            if ($this->debuggingMode) {
+                $errorMessage[] = "Exception " . $ex->getCode() . " / " . $ex->getMessage();
+            }
+
             $trace = $ex->getTrace();
             $nbTrace = count($trace);
 

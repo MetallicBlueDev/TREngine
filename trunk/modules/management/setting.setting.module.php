@@ -23,9 +23,6 @@ class Module_Management_Setting extends Libs_ModuleModel {
     }
 
     private function tabHome() {
-        Core_Loader::classLoader("Libs_Form");
-        Core_Loader::classLoader("Libs_Tabs");
-
         $accountTabs = new Libs_Tabs("settingtab");
         $accountTabs->addTab(SETTING_GENERAL_TAB, $this->tabGeneral());
         $accountTabs->addTab(SETTING_SYSTEM_TAB, $this->tabSystem());
@@ -168,7 +165,6 @@ class Module_Management_Setting extends Libs_ModuleModel {
         // Email du site
         $defaultAdministratorMail = Core_Request::getString("defaultAdministratorMail", "", "POST");
         if (Core_Main::$coreConfig['defaultAdministratorMail'] != $defaultAdministratorMail) {
-            Core_Loader::classLoader("Exec_Mailer");
             if (!empty($defaultAdministratorMail) && Exec_Mailer::validMail($defaultAdministratorMail)) {
                 $this->updateTable("defaultAdministratorMail", $defaultAdministratorMail);
                 $deleteCache = true;
@@ -325,7 +321,6 @@ class Module_Management_Setting extends Libs_ModuleModel {
         }
 
         if ($updateConfigFile) {
-            Core_Loader::classLoader("Exec_FileBuilder");
             Exec_FileBuilder::buildConfigFile(Core_Main::$coreConfig['defaultAdministratorMail'], TR_ENGINE_STATUT, $cacheTimeLimit, $cookiePrefix, $cryptKey);
         }
 
@@ -381,7 +376,6 @@ class Module_Management_Setting extends Libs_ModuleModel {
         }
 
         if ($updateFtpFile) {
-            Core_Loader::classLoader("Exec_FileBuilder");
             Exec_FileBuilder::buildFtpFile($ftpHost, $ftpPort, $ftpUser, $ftpPass, $ftpRoot, $ftpType);
         }
 
@@ -437,7 +431,6 @@ class Module_Management_Setting extends Libs_ModuleModel {
         }
 
         if ($updateDatabaseFile) {
-            Core_Loader::classLoader("Exec_FileBuilder");
             Exec_FileBuilder::buildDatabaseFile($dbHost, $dbUser, $dbPass, $dbName, $dbType, $dbPrefix);
         }
 

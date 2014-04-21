@@ -70,7 +70,6 @@ class Block_Login extends Libs_BlockModel {
                 $content .= WELCOME . " <b>" . Core_Session::getInstance()->userName . "</b> !<br />";
             }
             if ($this->displayAvatar && !empty(Core_Session::getInstance()->userAvatar)) {
-                Core_Loader::classLoader("Exec_Image");
                 $content .= "<a href=\"" . Core_Html::getLink("mod=connect&view=account") . "\">" . Exec_Image::resize(Core_Session::getInstance()->userAvatar, 80) . "</a><br />";
             }
             if ($this->displayIcons) {
@@ -89,7 +88,6 @@ class Block_Login extends Libs_BlockModel {
 
             $content .= "<div id=\"login-logonblock\">";
 
-            Core_Loader::classLoader("Libs_Form");
             switch ($this->localView) {
                 case 'logon':
                     $content .= $this->logon($moreLink);

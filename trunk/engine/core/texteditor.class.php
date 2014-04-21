@@ -4,6 +4,9 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
+/**
+ * traitement HTML.
+ */
 class Core_TextEditor {
 
     public static function smilies($text) {

@@ -4,9 +4,6 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
-Core_Loader::classLoader("Core_Table");
-Core_Loader::classLoader("Base_Model");
-
 /**
  * Gestionnaire de la communication SQL.
  *
@@ -36,14 +33,15 @@ class Core_Sql extends Base_Model {
     private function __construct(array $databaseConfig) {
         parent::__construct();
         $baseClassName = "";
+        $loaded = false;
 
         if (!empty($databaseConfig) && isset($databaseConfig['type'])) {
             // Chargement des drivers pour la base
             $baseClassName = "Base_" . ucfirst($databaseConfig['type']);
-            Core_Loader::classLoader($baseClassName);
+            $loaded = Core_Loader::classLoader($baseClassName);
         }
 
-        if (!Core_Loader::isCallable($baseClassName)) {
+        if (!$loaded) {
             Core_Secure::getInstance()->throwException("sqlCode", null, array(
                 $baseClassName));
         }
@@ -81,7 +79,7 @@ class Core_Sql extends Base_Model {
 
     /**
      * Détermine si une connexion est disponible.
-     * 
+     *
      * @return boolean
      */
     public static function hasConnection() {

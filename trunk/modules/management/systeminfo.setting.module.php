@@ -7,8 +7,6 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Module_Management_Systeminfo extends Libs_ModuleModel {
 
     public function setting() {
-        Core_Loader::classLoader("Libs_Tabs");
-
         $accountTabs = new Libs_Tabs("systeminfotab");
         $accountTabs->addTab(SYSTEMINFO_SYSTEM_INFO_TAB, $this->tabSystemInfo());
         $accountTabs->addTab(SYSTEMINFO_PHP_INFO_TAB, $this->tabPhpInfo());
@@ -17,7 +15,6 @@ class Module_Management_Systeminfo extends Libs_ModuleModel {
     }
 
     private function tabSystemInfo() {
-        Core_Loader::classLoader("Libs_Rack");
         $firstLine = array(
             array(
                 30,
