@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Description of engine
+ * Base d'une exception du moteur.
  *
  * @author Sebastien Villemain
  */
-class Fail_Engine extends Exception {
+abstract class Fail_Base extends Exception {
 
     /**
      * Une erreur généré par une couche basse du moteur.
@@ -26,6 +26,11 @@ class Fail_Engine extends Exception {
         parent::__construct($message, $failSourceNumber);
     }
 
+    /**
+     * Retourne le nom de la source de l'exception.
+     *
+     * @return string
+     */
     public function getFailSourceName() {
         $sourceName = "";
 
@@ -38,6 +43,11 @@ class Fail_Engine extends Exception {
         return $sourceName;
     }
 
+    /**
+     * Retour une description de base sur l'exception.
+     *
+     * @return string
+     */
     public function getFailInformation() {
         return "Exception " . $this->getFailSourceName() . "(" . $this->getCode() . ") : " . $this->getMessage();
     }
