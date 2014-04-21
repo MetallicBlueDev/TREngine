@@ -8,23 +8,23 @@ require("engine/core/info.class.php");
 
 // Inclusion du chargeur
 require("engine/core/loader.class.php");
+Core_Loader::affectRegister();
 
 // Chargement du système de sécurité
-Core_Loader::classLoader("Core_Secure");
 Core_Secure::checkInstance(true);
 
+require("engine/fail/engine.class.php");
+$test = new Fail_Engine("", Fail_Engine::FROM_SQL);
+$test->getFailSourceName();
+
 // Chargement du Marker
-Core_Loader::classLoader("Exec_Marker");
-Core_Secure::getInstance()->throwException("TEST");
+Core_Secure::getInstance()->throwException("TEST", new Exception("ESSAI"));
 
 if (Core_Secure::isDebuggingMode()) {
     Exec_Marker::startTimer("all");
 }
 
 Exec_Marker::startTimer("main");
-
-// Chargement de la classe principal
-Core_Loader::classLoader("Core_Main");
 
 // Préparation du moteur
 $TR_ENGINE = new Core_Main();
