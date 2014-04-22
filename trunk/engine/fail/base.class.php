@@ -22,8 +22,8 @@ abstract class Fail_Base extends Exception {
      */
     const FROM_SQL = 10;
 
-    protected function __construct($message, $failSourceNumber = self::FROM_ENGINE) {
-        parent::__construct($message, $failSourceNumber);
+    public function __construct($message, $failSourceNumber = self::FROM_ENGINE) {
+        parent::__construct($message, $failSourceNumber, null);
     }
 
     /**
@@ -32,13 +32,11 @@ abstract class Fail_Base extends Exception {
      * @return string
      */
     public function getFailSourceName() {
-        $sourceName = "";
+        $sourceName = get_called_class();
+        $pos = strpos($sourceName, "_");
 
-        foreach ($this as $key => $value) {
-            if ($value === $this->getCode()) {
-                $sourceName = $key;
-                break;
-            }
+        if ($pos > 1) {
+            $sourceName = substr($sourceName, $pos + 1, strlen($sourceName) - $pos - 1);
         }
         return $sourceName;
     }
@@ -49,7 +47,7 @@ abstract class Fail_Base extends Exception {
      * @return string
      */
     public function getFailInformation() {
-        return "Exception " . $this->getFailSourceName() . "(" . $this->getCode() . ") : " . $this->getMessage();
+        return "Exception " . $this->getFailSourceName() . " (" . $this->getCode() . ") : " . $this->getMessage();
     }
 
 }

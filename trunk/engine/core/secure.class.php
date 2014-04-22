@@ -103,10 +103,8 @@ class Core_Secure {
             Core_Loader::affectRegister();
         }
 
-        // Gestionnaires suivants obligatoires
-
         if ($ex === null) {
-            $ex = new Exception($customMessage);
+            $ex = new Fail_Engine($customMessage);
         }
 
         // Préparation du template debug
@@ -128,7 +126,7 @@ class Core_Secure {
      * @return string $errorMessageTitle
      */
     private function getErrorMessageTitle($customMessage) {
-        // Message d'erreur
+        // Message d'erreur depuis une constante
         $errorMessageTitle = "ERROR_DEBUG_" . strtoupper($customMessage);
 
         if (defined($errorMessageTitle)) {
@@ -161,17 +159,18 @@ class Core_Secure {
         // Analyse de l'exception
         if ($ex !== null) {
             if ($this->debuggingMode) {
-                $errorMessage[] = "Exception " . $ex->getCode() . " / " . $ex->getMessage();
+                if ($ex instanceof Fail_Base) {
+                    $errorMessage[] = $ex->getFailInformation();
+                } else {
+                    $errorMessage[] = "Exception PHP (" . $ex->getCode() . ") : " . $ex->getMessage();
+                }
             }
 
-            $trace = $ex->getTrace();
-            $nbTrace = count($trace);
-
-            for ($i = $nbTrace; $i > 0; $i--) {
+            foreach ($ex->getTrace() as $traceValue) {
                 $errorLine = "";
 
-                if (is_array($trace[$i])) {
-                    foreach ($trace[$i] as $key => $value) {
+                if (is_array($traceValue)) {
+                    foreach ($traceValue as $key => $value) {
                         if ($key == "file") {
                             $value = preg_replace("/([a-zA-Z0-9._]+).php/", "<b>\\1</b>.php", $value);
                             $errorLine .= " <b>" . $key . "</b> " . $value;
@@ -187,7 +186,7 @@ class Core_Secure {
             }
         }
 
-        // Si des informations suplementaire sont disponibles
+        // Fusion des informations supplémentaires
         if (!empty($argv)) {
             $errorMessage = array_merge($errorMessage, $argv);
         }
@@ -210,7 +209,7 @@ class Core_Secure {
         $errorReporting = E_ERROR | E_WARNING | E_PARSE;
 
         if ($this->debuggingMode) {
-            $errorReporting = $errorReporting | E_DEPRECATED | E_STRICT;
+            $errorReporting = E_ALL;
         }
 
         error_reporting($errorReporting);

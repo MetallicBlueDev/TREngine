@@ -7,7 +7,7 @@
  */
 class Fail_Engine extends Fail_Base {
 
-    protected function __construct($message) {
+    public function __construct($message) {
         parent::__construct($message, Fail_Base::FROM_ENGINE);
     }
 

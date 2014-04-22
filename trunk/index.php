@@ -13,13 +13,6 @@ Core_Loader::affectRegister();
 // Chargement du système de sécurité
 Core_Secure::checkInstance(true);
 
-require("engine/fail/engine.class.php");
-$test = new Fail_Engine("", Fail_Engine::FROM_SQL);
-$test->getFailSourceName();
-
-// Chargement du Marker
-Core_Secure::getInstance()->throwException("TEST", new Exception("ESSAI"));
-
 if (Core_Secure::isDebuggingMode()) {
     Exec_Marker::startTimer("all");
 }

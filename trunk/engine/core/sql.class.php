@@ -65,16 +65,24 @@ class Core_Sql extends Base_Model {
     }
 
     /**
-     * Instance du gestionnaire SQL.
+     * Retourne l'instance du gestionnaire SQL.
      *
-     * @param array $database Injection des données de la base
      * @return Core_Sql
      */
-    public static function &getInstance(array $database = array()) {
+    public static function &getInstance() {
+        checkInstance();
+        return self::$coreSql;
+    }
+
+    /**
+     * Vérification de l'instance du gestionnaire SQL.
+     *
+     * @param array $database Injection des données de la base
+     */
+    public static function checkInstance(array $database = array()) {
         if (self::$coreSql === null) {
             self::$coreSql = new self($database);
         }
-        return self::$coreSql;
     }
 
     /**

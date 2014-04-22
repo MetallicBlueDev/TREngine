@@ -126,7 +126,7 @@ class Core_ConfigsLoader {
                 }
 
                 // Démarrage de l'instance Core_Sql
-                Core_Sql::getInstance($db);
+                Core_Sql::checkInstance($db);
             } else {
                 Core_Secure::getInstance()->throwException("sqlPath", null, array(
                     $databasePath));
