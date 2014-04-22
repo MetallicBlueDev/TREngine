@@ -19,9 +19,6 @@ class Base_Mysqli extends Base_Model {
      */
     private $lastSqlCommand = "";
 
-    /**
-     * Etablie une connexion à la base de données.
-     */
     public function dbConnect() {
         $this->connId = new mysqli($this->getDatabaseHost(), $this->getDatabaseUser(), $this->getDatabasePass());
 
@@ -30,11 +27,6 @@ class Base_Mysqli extends Base_Model {
         }
     }
 
-    /**
-     * Sélectionne une base de données.
-     *
-     * @return boolean true succes
-     */
     public function dbSelect() {
         $rslt = false;
 
@@ -44,57 +36,44 @@ class Base_Mysqli extends Base_Model {
         return $rslt;
     }
 
-    /**
-     * Déconnexion à la base de données.
-     */
     public function dbDeconnect() {
         if ($this->connected()) {
-            $this->connId = mysql_close($this->connId);
+            $this->getMysqli()->close();
         }
-        $this->connId = false;
+
+        $this->connId = null;
     }
 
-    /**
-     * Envoi une requête Sql.
-     *
-     * @param $sql
-     */
     public function query($sql) {
-        $this->queries = mysql_query($sql, $this->connId);
+        $this->queries = $this->getMysqli()->query($sql);
     }
 
-    /**
-     * Retourne un tableau qui contient la ligne demandée.
-     *
-     * @return array
-     */
     public function fetchArray() {
-        if (is_resource($this->queries)) {
-            return mysql_fetch_array($this->queries, MYSQL_ASSOC);
+        $rslt = array();
+
+        if ($this->queries instanceof mysqli_result) {
+            $rslt = $this->queries->fetch_array(MYSQLI_ASSOC);
         }
-        return array();
+        return $rslt;
     }
 
-    /**
-     * Retourne un objet qui contient les ligne demandée.
-     *
-     * @return object
-     */
     public function fetchObject() {
-        return mysql_fetch_object($this->queries);
+        $rslt = null;
+
+        if ($this->queries instanceof mysqli_result) {
+            $rslt = $this->queries->fetch_object();
+        }
+        return $rslt;
     }
 
-    /**
-     * Libere la mémoire du resultat
-     *
-     * @param $querie Resource Id
-     * @return boolean
-     */
     public function freeResult($querie) {
-        if (is_resource($querie)) {
-            return mysql_free_result($querie);
+        $rslt = false;
+
+        if ($querie instanceof mysqli_result) {
+            $querie->free();
+            $rslt = true;
         }
-        return false;
+        return $rslt;
     }
 
     /**
