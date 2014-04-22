@@ -15,8 +15,6 @@ class Core_ConfigsLoader {
      * Lance le chargeur de configs
      */
     public function __construct() {
-        $this->loadVersion();
-
         if (Core_Loader::isCallable("Core_Main")) {
             if ($this->loadCacheBuffer() && $this->loadSql()) {
                 $this->loadConfig();
@@ -168,26 +166,4 @@ class Core_ConfigsLoader {
         return true;
     }
 
-    /**
-     * Charge le numéro de version du moteur
-     *
-     * @return boolean true chargé
-     */
-    private function loadVersion() {
-        if (!defined(TR_ENGINE_VERSION)) {
-            // Chemin vers le fichier de version
-            $versionPath = TR_ENGINE_DIR . "/engine/version.inc.php";
-
-            // Configuration du numéro de version
-            $TR_ENGINE_VERSION = "0.0.0.0";
-            if (is_file($versionPath)) {
-                require($versionPath);
-            }
-            define("TR_ENGINE_VERSION", $TR_ENGINE_VERSION);
-        }
-        return true;
-    }
-
 }
-
-?>

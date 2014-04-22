@@ -30,7 +30,7 @@ class Core_Sql extends Base_Model {
      *
      * @param array $databaseConfig Injection des données de la base
      */
-    private function __construct(array $databaseConfig) {
+    protected function __construct(array $databaseConfig) {
         parent::__construct();
         $baseClassName = "";
         $loaded = false;
@@ -90,7 +90,7 @@ class Core_Sql extends Base_Model {
      *
      * @return boolean
      */
-    public static function hasConnection() {
+    public static function &hasConnection() {
         $rslt = false;
 
         if (self::$coreSql !== null) {
@@ -132,7 +132,9 @@ class Core_Sql extends Base_Model {
      * Déconnexion de la base de données.
      */
     public function dbDeconnect() {
-        $this->selectedBase->dbDeconnect();
+        if (self::hasConnection()) {
+            $this->selectedBase->dbDeconnect();
+        }
     }
 
     /**
@@ -159,7 +161,7 @@ class Core_Sql extends Base_Model {
      *
      * @return string
      */
-    public function getDatabaseHost() {
+    public function &getDatabaseHost() {
         return $this->selectedBase->getDatabaseHost();
     }
 
@@ -168,7 +170,7 @@ class Core_Sql extends Base_Model {
      *
      * @return string
      */
-    public function getDatabaseUser() {
+    public function &getDatabaseUser() {
         return $this->selectedBase->getDatabaseUser();
     }
 
@@ -177,7 +179,7 @@ class Core_Sql extends Base_Model {
      *
      * @return string
      */
-    public function getDatabasePass() { // TODO NE PAS METTRE EN PUBLIC.
+    public function &getDatabasePass() { // TODO NE PAS METTRE EN PUBLIC.
         return $this->selectedBase->getDatabasePass();
     }
 
@@ -186,7 +188,7 @@ class Core_Sql extends Base_Model {
      *
      * @return string
      */
-    public function getDatabaseName() {
+    public function &getDatabaseName() {
         return $this->selectedBase->getDatabaseName();
     }
 
@@ -195,7 +197,7 @@ class Core_Sql extends Base_Model {
      *
      * @return string
      */
-    public function getDatabaseType() {
+    public function &getDatabaseType() {
         return $this->selectedBase->getDatabaseType();
     }
 
@@ -204,7 +206,7 @@ class Core_Sql extends Base_Model {
      *
      * @return string
      */
-    public function getDatabasePrefix() {
+    public function &getDatabasePrefix() {
         return $this->selectedBase->getDatabasePrefix();
     }
 
@@ -355,7 +357,7 @@ class Core_Sql extends Base_Model {
      * @return boolean
      */
     public function &connected() {
-        return $this->selectedBase->connected();
+        return $this->selectedBase !== null && $this->selectedBase->connected();
     }
 
     /**

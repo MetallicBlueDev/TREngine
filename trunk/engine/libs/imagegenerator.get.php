@@ -1,4 +1,5 @@
 <?php
+// TODO A REVOIR ENTIERE 
 if (isset($_GET['mode']) && $_GET['mode'] == "code" && !empty($_GET['code'])) { // Methode captcha code
     // Cryptage
     $text = md5($_GET['code']);

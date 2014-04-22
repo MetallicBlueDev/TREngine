@@ -30,7 +30,7 @@ class Core_Loader {
      * @param string $class Nom de la classe.
      * @return boolean true chargé.
      */
-    public static function classLoader($class) {
+    public static function &classLoader($class) {
         return self::load($class, "");
     }
 
@@ -40,7 +40,7 @@ class Core_Loader {
      * @param string $plugin Module de traduction.
      * @return boolean true chargé.
      */
-    public static function langLoader($plugin) {
+    public static function &langLoader($plugin) {
         return self::load($plugin, "lang");
     }
 
@@ -50,7 +50,7 @@ class Core_Loader {
      * @param string $include Nom de l'include.
      * @return boolean true chargé.
      */
-    public static function includeLoader($include) {
+    public static function &includeLoader($include) {
         return self::load($include, "inc");
     }
 
@@ -62,7 +62,7 @@ class Core_Loader {
      * @param boolean $static
      * @return boolean
      */
-    public static function isCallable($className, $methodName = "", $static = false) {
+    public static function &isCallable($className, $methodName = "", $static = false) {
         $rslt = false;
 
         if (!empty($methodName)) {
@@ -96,7 +96,7 @@ class Core_Loader {
      * @param string $callback Nom de la callback.
      * @return callback resultat.
      */
-    public static function callback($callback) {
+    public static function &callback($callback) {
         if (TR_ENGINE_PHP_VERSION < "5.2.3") {
             if (is_string($callback)) {
                 if (strpos($callback, "::") !== false) {
@@ -116,7 +116,7 @@ class Core_Loader {
      * @param string $name Fichier demandé.
      * @return string chemin absolu ou nulle.
      */
-    public static function getAbsolutePath($name) {
+    public static function &getAbsolutePath($name) {
         return (isLoaded($name) ? self::$loaded[$name] : null);
     }
 
@@ -137,7 +137,7 @@ class Core_Loader {
      * @param string $ext Extension.
      * @return boolean true chargé.
      */
-    private static function load($name, $ext) {
+    private static function &load($name, $ext) {
         try {
             if (empty($name)) {
                 throw new Exception("loader");

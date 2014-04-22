@@ -77,7 +77,7 @@ abstract class Base_Model {
     /**
      * Nouveau modèle de base.
      */
-    public function __construct() {
+    protected function __construct() {
         $this->database = null;
     }
 
@@ -153,7 +153,7 @@ abstract class Base_Model {
      *
      * @return string
      */
-    public function getDatabaseHost() {
+    public function &getDatabaseHost() {
         return $this->database['host'];
     }
 
@@ -162,7 +162,7 @@ abstract class Base_Model {
      *
      * @return string
      */
-    public function getDatabaseUser() {
+    public function &getDatabaseUser() {
         return $this->database['user'];
     }
 
@@ -171,7 +171,7 @@ abstract class Base_Model {
      *
      * @return string
      */
-    public function getDatabasePass() { // TODO NE PAS METTRE EN PUBLIC.
+    public function &getDatabasePass() { // TODO NE PAS METTRE EN PUBLIC.
         return $this->database['pass'];
     }
 
@@ -180,7 +180,7 @@ abstract class Base_Model {
      *
      * @return string
      */
-    public function getDatabaseName() {
+    public function &getDatabaseName() {
         return $this->database['name'];
     }
 
@@ -189,7 +189,7 @@ abstract class Base_Model {
      *
      * @return string
      */
-    public function getDatabaseType() {
+    public function &getDatabaseType() {
         return $this->database['type'];
     }
 
@@ -198,7 +198,7 @@ abstract class Base_Model {
      *
      * @return string
      */
-    public function getDatabasePrefix() {
+    public function &getDatabasePrefix() {
         return $this->database['prefix'];
     }
 
@@ -366,7 +366,9 @@ abstract class Base_Model {
      * @return boolean
      */
     public function &connected() {
-        return ($this->connId !== null) ? true : false;
+        // Stockage dans une variable pour le passage par référence
+        $rslt = ($this->connId !== null) ? true : false;
+        return $rslt;
     }
 
     /**

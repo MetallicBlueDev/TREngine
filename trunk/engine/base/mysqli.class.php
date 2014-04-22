@@ -78,7 +78,7 @@ class Base_Mysqli extends Base_Model {
 
     public function &test() {
         // Vérifie que la classe de base est utilisable
-        return (Core_Loader::isCallable("mysqli", "select_db"));
+        return Core_Loader::isCallable("mysqli", "select_db");
     }
 
     public function &getLastError() {
@@ -91,19 +91,19 @@ class Base_Mysqli extends Base_Model {
         return $this->getMysqli()->server_info;
     }
 
-    public function update($table, $values, $where, $orderby = array(), $limit = false) {
+    public function update($table, array $values, array $where, array $orderby = array(), $limit = "") {
         parent::update($table, $values, $where, $orderby, $limit);
     }
 
-    public function select($table, $values, $where = array(), $orderby = array(), $limit = false) {
+    public function select($table, array $values, array $where = array(), array $orderby = array(), $limit = "") {
         parent::select($table, $values, $where, $orderby, $limit);
     }
 
-    public function insert($table, $keys, $values) {
+    public function insert($table, array $keys, array $values) {
         parent::insert($table, $keys, $values);
     }
 
-    public function delete($table, $where = array(), $like = array(), $limit = false) {
+    public function delete($table, array $where = array(), array $like = array(), $limit = "") {
         parent::delete($table, $where, $like, $limit);
     }
 

@@ -92,7 +92,7 @@ class Base_Mysql extends Base_Model {
 
     public function &test() {
         // Vérifie que le module mysql est chargé.
-        return (function_exists("mysql_connect"));
+        return function_exists("mysql_connect");
     }
 
     public function &getLastError() {
