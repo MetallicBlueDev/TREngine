@@ -16,7 +16,7 @@ abstract class Base_Model {
      *
      * @var array
      */
-    protected $database = array(
+    private $database = array(
         "host" => "",
         "user" => "",
         "pass" => "",
@@ -26,11 +26,11 @@ abstract class Base_Model {
     );
 
     /**
-     * ID de la connexion.
+     * Objet de connexion.
      *
-     * @var string
+     * @var mixed (resource / mysqli / etc.)
      */
-    protected $connId = false;
+    protected $connId = null;
 
     /**
      * Dernier resultat de la dernière requête SQL.
@@ -85,7 +85,7 @@ abstract class Base_Model {
      * Paramètre la connexion, test la connexion puis engage une connexion.
      *
      * @param array $database
-     * @throws Exception
+     * @throws Fail_Sql
      */
     public function initializeBase(array $database) {
         if ($this->database === null) {
@@ -96,15 +96,15 @@ abstract class Base_Model {
                 $this->dbConnect();
 
                 if (!$this->connected()) {
-                    throw new Exception("sqlConnect");
+                    throw new Fail_Sql("sqlConnect");
                 }
 
                 // Sélection d'une base de données
                 if (!$this->dbSelect()) {
-                    throw new Exception("sqlDbSelect");
+                    throw new Fail_Sql("sqlDbSelect");
                 }
             } else {
-                throw new Exception("sqlTest");
+                throw new Fail_Sql("sqlTest");
             }
         }
     }
@@ -146,6 +146,60 @@ abstract class Base_Model {
      */
     public function &affectedRows() {
         return 0;
+    }
+
+    /**
+     * Retourne le nom de l'hôte.
+     *
+     * @return string
+     */
+    public function getDatabaseHost() {
+        return $this->database['host'];
+    }
+
+    /**
+     * Retourne le nom d'utilisateur.
+     *
+     * @return string
+     */
+    public function getDatabaseUser() {
+        return $this->database['user'];
+    }
+
+    /**
+     * Retourne le mot de passe.
+     *
+     * @return string
+     */
+    public function getDatabasePass() { // TODO NE PAS METTRE EN PUBLIC.
+        return $this->database['pass'];
+    }
+
+    /**
+     * Retourne le nom de la base de données.
+     *
+     * @return string
+     */
+    public function getDatabaseName() {
+        return $this->database['name'];
+    }
+
+    /**
+     * Retourne le type de base (exemple mysqli).
+     *
+     * @return string
+     */
+    public function getDatabaseType() {
+        return $this->database['type'];
+    }
+
+    /**
+     * Retourne le préfixe à utiliser sur les tables.
+     *
+     * @return string
+     */
+    public function getDatabasePrefix() {
+        return $this->database['prefix'];
     }
 
     /**
@@ -312,7 +366,7 @@ abstract class Base_Model {
      * @return boolean
      */
     public function &connected() {
-        return ($this->connId != false) ? true : false;
+        return ($this->connId !== null) ? true : false;
     }
 
     /**
@@ -530,7 +584,7 @@ abstract class Base_Model {
      * @param string
      */
     protected function &getTableName($table) {
-        return $this->database['prefix'] . "_" . $table;
+        return $this->getDatabasePrefix() . "_" . $table;
     }
 
 }

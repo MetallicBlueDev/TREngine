@@ -265,18 +265,18 @@ class Module_Management_Setting extends Libs_ModuleModel {
         $form->addInputText("ftpRoot", SETTING_SYSTEM_FTP_SETTING_ROOT, $ftp['root']);
         $form->addSpace();
 
-        $database = Core_Sql::getInstance()->getDatabase();
+        $coreSql = Core_Sql::getInstance();
         $form->addFieldset(SETTING_SYSTEM_DATABASE_SETTING_TITLE, SETTING_SYSTEM_DATABASE_SETTING_DESCRIPTION);
-        $form->addInputText("dbHost", SETTING_SYSTEM_DATABASE_SETTING_HOST, $database['host']);
-        $form->addInputText("dbName", SETTING_SYSTEM_DATABASE_SETTING_NAME, $database['name']);
-        $form->addInputText("dbPrefix", SETTING_SYSTEM_DATABASE_SETTING_PREFIX, $database['prefix']);
-        $form->addInputText("dbUser", SETTING_SYSTEM_DATABASE_SETTING_USER, $database['user']);
+        $form->addInputText("dbHost", SETTING_SYSTEM_DATABASE_SETTING_HOST, $coreSql->getDatabaseHost());
+        $form->addInputText("dbName", SETTING_SYSTEM_DATABASE_SETTING_NAME, $coreSql->getDatabaseName());
+        $form->addInputText("dbPrefix", SETTING_SYSTEM_DATABASE_SETTING_PREFIX, $coreSql->getDatabasePrefix());
+        $form->addInputText("dbUser", SETTING_SYSTEM_DATABASE_SETTING_USER, $coreSql->getDatabaseUser());
         $form->addInputPassword("dbPass", SETTING_SYSTEM_DATABASE_SETTING_PASSWORD);
 
         $form->addSelectOpenTag("dbType", SETTING_SYSTEM_DATABASE_SETTING_TYPE);
         $bases = Core_Sql::listBases();
         foreach ($bases as $base) {
-            if ($base == $database['type'])
+            if ($base == $coreSql->getDatabaseType())
                 $form->addSelectItemTag($base, "", true);
             else
                 $form->addSelectItemTag($base);
@@ -379,55 +379,55 @@ class Module_Management_Setting extends Libs_ModuleModel {
             Exec_FileBuilder::buildFtpFile($ftpHost, $ftpPort, $ftpUser, $ftpPass, $ftpRoot, $ftpType);
         }
 
-        $database = Core_Sql::getInstance()->getDatabase();
+        $coreSql = Core_Sql::getInstance();
         $updateDatabaseFile = false;
 
-        $dbHost = Core_Request::getString("dbHost", $database['host'], "POST");
-        if ($dbHost != $database['host']) {
+        $dbHost = Core_Request::getString("dbHost", $coreSql->getDatabaseHost(), "POST");
+        if ($dbHost != $coreSql->getDatabaseHost()) {
             if (!empty($dbHost))
                 $updateDatabaseFile = true;
             else
-                $dbHost = $database['host'];
+                $dbHost = $coreSql->getDatabaseHost();
         }
 
-        $dbName = Core_Request::getString("dbName", $database['name'], "POST");
-        if ($dbName != $database['name']) {
+        $dbName = Core_Request::getString("dbName", $coreSql->getDatabaseName(), "POST");
+        if ($dbName != $coreSql->getDatabaseName()) {
             if (!empty($dbName))
                 $updateDatabaseFile = true;
             else
-                $dbName = $database['name'];
+                $dbName = $coreSql->getDatabaseName();
         }
 
-        $dbPrefix = Core_Request::getString("dbPrefix", $database['prefix'], "POST");
-        if ($dbPrefix != $database['prefix']) {
+        $dbPrefix = Core_Request::getString("dbPrefix", $coreSql->getDatabasePrefix(), "POST");
+        if ($dbPrefix != $coreSql->getDatabasePrefix()) {
             if (!empty($dbPrefix))
                 $updateDatabaseFile = true;
             else
-                $dbPrefix = $database['prefix'];
+                $dbPrefix = $coreSql->getDatabasePrefix();
         }
 
-        $dbUser = Core_Request::getString("dbUser", $database['user'], "POST");
-        if ($dbUser != $database['user']) {
+        $dbUser = Core_Request::getString("dbUser", $coreSql->getDatabaseUser(), "POST");
+        if ($dbUser != $coreSql->getDatabaseUser()) {
             if (!empty($dbUser))
                 $updateDatabaseFile = true;
             else
-                $dbUser = $database['user'];
+                $dbUser = $coreSql->getDatabaseUser();
         }
 
-        $dbPass = Core_Request::getString("dbPass", $database['pass'], "POST");
-        if ($dbPass != $database['pass']) {
+        $dbPass = Core_Request::getString("dbPass", $coreSql->getDatabasePass(), "POST");
+        if ($dbPass != $coreSql->getDatabasePass()) {
             if (!empty($dbPass))
                 $updateDatabaseFile = true;
             else
-                $dbPass = $database['pass'];
+                $dbPass = $coreSql->getDatabasePass();
         }
 
-        $dbType = Core_Request::getWord("dbType", $database['type'], "POST");
-        if ($dbType != $database['type']) {
+        $dbType = Core_Request::getWord("dbType", $coreSql->getDatabaseType(), "POST");
+        if ($dbType != $coreSql->getDatabaseType()) {
             if (!empty($dbType))
                 $updateDatabaseFile = true;
             else
-                $dbType = $database['type'];
+                $dbType = $coreSql->getDatabaseType();
         }
 
         if ($updateDatabaseFile) {

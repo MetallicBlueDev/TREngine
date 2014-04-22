@@ -23,7 +23,7 @@ class Base_Mysql extends Base_Model {
      * Etablie une connexion à la base de données.
      */
     public function dbConnect() {
-        $this->connId = @mysql_connect($this->database['host'], $this->database['user'], $this->database['pass']);
+        $this->connId = mysql_connect($this->database['host'], $this->database['user'], $this->database['pass']);
     }
 
     /**
@@ -35,7 +35,7 @@ class Base_Mysql extends Base_Model {
         $rslt = false;
 
         if ($this->connId) {
-            $rslt = @mysql_select_db($this->database['name'], $this->connId);
+            $rslt = mysql_select_db($this->database['name'], $this->connId);
         }
         return $rslt;
     }
@@ -45,7 +45,7 @@ class Base_Mysql extends Base_Model {
      */
     public function dbDeconnect() {
         if ($this->connId) {
-            $this->connId = @mysql_close($this->connId);
+            $this->connId = mysql_close($this->connId);
         }
         $this->connId = false;
     }
@@ -53,10 +53,10 @@ class Base_Mysql extends Base_Model {
     /**
      * Envoi une requête Sql.
      *
-     * @param $Sql
+     * @param $sql
      */
     public function query($sql) {
-        $this->queries = @mysql_query($sql, $this->connId);
+        $this->queries = mysql_query($sql, $this->connId);
     }
 
     /**
@@ -159,7 +159,7 @@ class Base_Mysql extends Base_Model {
      * @return string
      */
     public function getVersion() {
-        $version = @mysql_get_server_info($this->connId);
+        $version = mysql_get_server_info($this->connId);
         $version = ($version !== false) ? $version : "?";
         return $version;
     }
@@ -202,5 +202,3 @@ class Base_Mysql extends Base_Model {
     }
 
 }
-
-?>

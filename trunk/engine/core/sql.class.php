@@ -155,6 +155,60 @@ class Core_Sql extends Base_Model {
     }
 
     /**
+     * Retourne le nom de l'hôte.
+     *
+     * @return string
+     */
+    public function getDatabaseHost() {
+        return $this->selectedBase->getDatabaseHost();
+    }
+
+    /**
+     * Retourne le nom d'utilisateur.
+     *
+     * @return string
+     */
+    public function getDatabaseUser() {
+        return $this->selectedBase->getDatabaseUser();
+    }
+
+    /**
+     * Retourne le mot de passe.
+     *
+     * @return string
+     */
+    public function getDatabasePass() { // TODO NE PAS METTRE EN PUBLIC.
+        return $this->selectedBase->getDatabasePass();
+    }
+
+    /**
+     * Retourne le nom de la base de données.
+     *
+     * @return string
+     */
+    public function getDatabaseName() {
+        return $this->selectedBase->getDatabaseName();
+    }
+
+    /**
+     * Retourne le type de base (exemple mysqli).
+     *
+     * @return string
+     */
+    public function getDatabaseType() {
+        return $this->selectedBase->getDatabaseType();
+    }
+
+    /**
+     * Retourne le préfixe à utiliser sur les tables.
+     *
+     * @return string
+     */
+    public function getDatabasePrefix() {
+        return $this->selectedBase->getDatabasePrefix();
+    }
+
+    /**
      * Supprime des informations.
      *
      * @param string $table Nom de la table
@@ -235,7 +289,7 @@ class Core_Sql extends Base_Model {
 
         // Création d'une exception si une réponse est négative (false)
         if ($this->getQueries() === false) {
-            throw new Exception("sqlReq");
+            throw new Fail_Sql("sqlReq");
         }
     }
 
@@ -401,16 +455,6 @@ class Core_Sql extends Base_Model {
      */
     public function &getCollation() {
         return $this->selectedBase->getCollation();
-    }
-
-    /**
-     * Récupération des données de la base.
-     *
-     * @return array
-     */
-    public function &getDatabase() {
-        // TODO SVN NE PAS FAIRE CECI
-        return $this->database;
     }
 
 }
