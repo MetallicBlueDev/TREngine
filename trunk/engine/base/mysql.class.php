@@ -5,7 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Gestionnaire de base de données MySql.
+ * Gestionnaire de base de données MySql (ancienne version).
  *
  * @author Sébastien Villemain
  */
@@ -19,177 +19,115 @@ class Base_Mysql extends Base_Model {
      */
     private $lastSqlCommand = "";
 
-    /**
-     * Etablie une connexion à la base de données.
-     */
     public function dbConnect() {
-        $this->connId = mysql_connect($this->database['host'], $this->database['user'], $this->database['pass']);
+        $link = mysql_connect($this->getDatabaseHost(), $this->getDatabaseUser(), $this->getDatabasePass());
+
+        if ($link) {
+            $this->connId = $link;
+        } else {
+            $this->connId = null;
+        }
     }
 
-    /**
-     * Sélectionne une base de données.
-     *
-     * @return boolean true succes
-     */
-    public function dbSelect() {
+    public function &dbSelect() {
         $rslt = false;
 
-        if ($this->connId) {
-            $rslt = mysql_select_db($this->database['name'], $this->connId);
+        if ($this->connected()) {
+            $rslt = mysql_select_db($this->getDatabaseName(), $this->connId);
         }
         return $rslt;
     }
 
-    /**
-     * Déconnexion à la base de données.
-     */
     public function dbDeconnect() {
-        if ($this->connId) {
-            $this->connId = mysql_close($this->connId);
+        if ($this->connected()) {
+            mysql_close($this->connId);
         }
-        $this->connId = false;
+
+        $this->connId = null;
     }
 
-    /**
-     * Envoi une requête Sql.
-     *
-     * @param $sql
-     */
     public function query($sql) {
         $this->queries = mysql_query($sql, $this->connId);
     }
 
-    /**
-     * Retourne un tableau qui contient la ligne demandée.
-     *
-     * @return array
-     */
-    public function fetchArray() {
+    public function &fetchArray() {
+        $rslt = array();
+
         if (is_resource($this->queries)) {
-            return mysql_fetch_array($this->queries, MYSQL_ASSOC);
+            $rslt = mysql_fetch_array($this->queries, MYSQL_ASSOC);
         }
-        return array();
+        return $rslt;
     }
 
-    /**
-     * Retourne un objet qui contient les ligne demandée.
-     *
-     * @return object
-     */
-    public function fetchObject() {
+    public function &fetchObject() {
         return mysql_fetch_object($this->queries);
     }
 
-    /**
-     * Libere la mémoire du resultat
-     *
-     * @param $querie Resource Id
-     * @return boolean
-     */
-    public function freeResult($querie) {
+    public function &freeResult($querie) {
+        $rslt = false;
+
         if (is_resource($querie)) {
-            return mysql_free_result($querie);
+            $rslt = mysql_free_result($querie);
         }
-        return false;
+        return $rslt;
     }
 
-    /**
-     * Get number of LAST affected rows
-     *
-     * @return int
-     */
-    public function affectedRows() {
+    public function &affectedRows() {
+        $rslt = -1;
+
         if ($this->lastSqlCommand == "SELECT" || $this->lastSqlCommand == "SHOW") {
-            return $this->mysqlNumRows($this->queries);
+            // Get number of affected rows (for SELECT only)
+            $rslt = mysql_num_rows($this->queries);
+        } else {
+            // Get number of LAST affected rows (for DELETE, UPDATE, INSERT, REPLACE)
+            $rslt = mysql_affected_rows($this->connId);
         }
-        return $this->mysqlAffectedRows();
+        return $rslt;
     }
 
-    /**
-     * Get number of LAST affected rows (for DELETE, UPDATE, INSERT, REPLACE)
-     *
-     * @return int
-     */
-    private function mysqlAffectedRows() {
-        return mysql_affected_rows($this->connId);
-    }
-
-    /**
-     * Get number of affected rows (for SELECT only)
-     *
-     * @param $queries
-     * @return int
-     */
-    private function mysqlNumRows($queries) {
-        return mysql_num_rows($queries);
-    }
-
-    /**
-     * Get the ID generated from the previous INSERT operation
-     *
-     * @return int
-     */
-    public function insertId() {
+    public function &insertId() {
+        // Get the ID generated from the previous INSERT operation
         return mysql_insert_id($this->connId);
     }
 
-    /**
-     * Vérifie que le module mysql est chargé.
-     *
-     * @return boolean
-     */
-    public function test() {
+    public function &test() {
+        // Vérifie que le module mysql est chargé.
         return (function_exists("mysql_connect"));
     }
 
-    /**
-     * Retourne les dernières erreurs
-     *
-     * @return array
-     */
     public function &getLastError() {
         $error = parent::getLastError();
         $error[] = "<b>MySql response</b> : " . mysql_error();
         return $error;
     }
 
-    /**
-     * Retourne la version de mysql
-     *
-     * @return string
-     */
-    public function getVersion() {
+    public function &getVersion() {
+        // Retourne la version de mysql
         $version = mysql_get_server_info($this->connId);
         $version = ($version !== false) ? $version : "?";
         return $version;
     }
 
-    public function update($table, $values, $where, $orderby = array(), $limit = false) {
+    public function update($table, array $values, array $where, array $orderby = array(), $limit = "") {
         $this->lastSqlCommand = "UPDATE";
         parent::update($table, $values, $where, $orderby, $limit);
     }
 
-    public function select($table, $values, $where = array(), $orderby = array(), $limit = false) {
+    public function select($table, array $values, array $where = array(), array $orderby = array(), $limit = "") {
         $this->lastSqlCommand = "SELECT";
         parent::select($table, $values, $where, $orderby, $limit);
     }
 
-    public function insert($table, $keys, $values) {
+    public function insert($table, array $keys, array $values) {
         $this->lastSqlCommand = "INSERT";
         parent::insert($table, $keys, $values);
     }
 
-    public function delete($table, $where = array(), $like = array(), $limit = false) {
+    public function delete($table, array $where = array(), array $like = array(), $limit = "") {
         $this->lastSqlCommand = "DELETE";
         parent::delete($table, $where, $like, $limit);
     }
 
-    /**
-     * Retourne le bon espacement dans une string.
-     *
-     * @param string $str
-     * @return string
-     */
     protected function &converEscapeString($str) {
         if (function_exists("mysql_real_escape_string") && is_resource($this->connId)) {
             $str = mysql_real_escape_string($str, $this->connId);
