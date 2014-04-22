@@ -70,7 +70,7 @@ class Core_Sql extends Base_Model {
      * @return Core_Sql
      */
     public static function &getInstance() {
-        checkInstance();
+        self::checkInstance();
         return self::$coreSql;
     }
 
@@ -90,13 +90,8 @@ class Core_Sql extends Base_Model {
      *
      * @return boolean
      */
-    public static function &hasConnection() {
-        $rslt = false;
-
-        if (self::$coreSql !== null) {
-            $rslt = (self::$coreSql->selectedBase !== null);
-        }
-        return $rslt;
+    public static function hasConnection() {
+        return self::$coreSql !== null && self::$coreSql->selectedBase !== null;
     }
 
     /**
@@ -106,7 +101,6 @@ class Core_Sql extends Base_Model {
      */
     public static function &listBases() {
         $baseList = array();
-
         $files = Core_CacheBuffer::listNames("engine/base");
 
         foreach ($files as $fileName) {
@@ -356,7 +350,7 @@ class Core_Sql extends Base_Model {
      *
      * @return boolean
      */
-    public function &connected() {
+    public function connected() {
         return $this->selectedBase !== null && $this->selectedBase->connected();
     }
 
@@ -413,7 +407,7 @@ class Core_Sql extends Base_Model {
         return $this->selectedBase->getBuffer($name);
     }
 
-    public function &test() {
+    public function test() {
         // NE RIEN FAIRE
         return false;
     }

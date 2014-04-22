@@ -125,7 +125,7 @@ class Core_Secure {
      * @param string $customMessage
      * @return string $errorMessageTitle
      */
-    private function getErrorMessageTitle($customMessage) {
+    private function &getErrorMessageTitle($customMessage) {
         // Message d'erreur depuis une constante
         $errorMessageTitle = "ERROR_DEBUG_" . strtoupper($customMessage);
 
@@ -152,7 +152,7 @@ class Core_Secure {
      * @param array $argv Argument suplementaire d'information sur l'erreur.
      * @return array $errorMessage
      */
-    private function getDebugMessage(Exception $ex = null, array $argv = array()) {
+    private function &getDebugMessage(Exception $ex = null, array $argv = array()) {
         // Tableau avec les lignes d'erreurs
         $errorMessage = array();
 

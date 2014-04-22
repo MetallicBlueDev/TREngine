@@ -347,7 +347,7 @@ class Core_Translate {
      *
      * @return string
      */
-    private static function getLanguageExtension() {
+    private static function &getLanguageExtension() {
         $validExtension = "";
 
         // Recherche de la langue du client
@@ -384,7 +384,7 @@ class Core_Translate {
      * @param string $extension l'extension de la langue détectée
      * @return string
      */
-    private static function getLanguage($extension) {
+    private static function &getLanguage($extension) {
         $language = "";
 
         // Langage du client via le cookie de session

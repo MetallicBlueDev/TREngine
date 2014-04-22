@@ -365,10 +365,8 @@ abstract class Base_Model {
      *
      * @return boolean
      */
-    public function &connected() {
-        // Stockage dans une variable pour le passage par référence
-        $rslt = ($this->connId !== null) ? true : false;
-        return $rslt;
+    public function connected() {
+        return ($this->connId !== null) ? true : false;
     }
 
     /**
@@ -449,7 +447,7 @@ abstract class Base_Model {
      *
      * @return boolean
      */
-    public function &test() {
+    public function test() {
         return false;
     }
 
@@ -576,7 +574,7 @@ abstract class Base_Model {
      * @param string $str
      * @return string
      */
-    protected function &converEscapeString($str) {
+    protected function converEscapeString($str) {
         return addslashes($str);
     }
 
@@ -585,7 +583,7 @@ abstract class Base_Model {
      *
      * @param string
      */
-    protected function &getTableName($table) {
+    protected function getTableName($table) {
         return $this->getDatabasePrefix() . "_" . $table;
     }
 

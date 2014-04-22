@@ -76,9 +76,9 @@ class Base_Mysqli extends Base_Model {
         return $this->getMysqli()->insert_id;
     }
 
-    public function &test() {
-        // Vérifie que la classe de base est utilisable
-        return Core_Loader::isCallable("mysqli", "select_db");
+    public function test() {
+        // Vérifie que le module mysql est chargé.
+        return function_exists("mysqli_connect");
     }
 
     public function &getLastError() {
@@ -107,7 +107,7 @@ class Base_Mysqli extends Base_Model {
         parent::delete($table, $where, $like, $limit);
     }
 
-    protected function &converEscapeString($str) {
+    protected function converEscapeString($str) {
         return $this->getMysqli()->escape_string($str);
     }
 

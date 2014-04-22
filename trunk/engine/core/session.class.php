@@ -496,7 +496,7 @@ class Core_Session {
      *
      * @return boolean true c'est un client valide
      */
-    private function &userLogged() {
+    private function userLogged() {
         return (!empty($this->userId) && !empty($this->userName) && !empty($this->sessionId) && $this->userRank > 0);
     }
 
@@ -539,7 +539,7 @@ class Core_Session {
      * @param string $userId
      * @return boolean true succès de la mise à jour
      */
-    private function &updateLastConnect($userId = "") {
+    private function updateLastConnect($userId = "") {
         // Récupere l'id du client
         if (empty($userId)) {
             $userId = $this->userId;
@@ -583,7 +583,7 @@ class Core_Session {
      *
      * @return string
      */
-    private static function &getSalt() {
+    private static function getSalt() {
         return Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowserName;
     }
 
@@ -592,7 +592,7 @@ class Core_Session {
      *
      * @return array
      */
-    private static function getUserInfo(array $where) {
+    private static function &getUserInfo(array $where) {
         Core_Sql::getInstance()->select(
         Core_Table::$USERS_TABLE, array(
             "user_id",

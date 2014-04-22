@@ -90,7 +90,7 @@ class Base_Mysql extends Base_Model {
         return mysql_insert_id($this->connId);
     }
 
-    public function &test() {
+    public function test() {
         // Vérifie que le module mysql est chargé.
         return function_exists("mysql_connect");
     }
@@ -128,7 +128,7 @@ class Base_Mysql extends Base_Model {
         parent::delete($table, $where, $like, $limit);
     }
 
-    protected function &converEscapeString($str) {
+    protected function converEscapeString($str) {
         if (function_exists("mysql_real_escape_string") && is_resource($this->connId)) {
             $str = mysql_real_escape_string($str, $this->connId);
         } else if (function_exists("mysql_escape_string")) {// WARNING: DEPRECATED
