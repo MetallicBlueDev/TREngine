@@ -89,7 +89,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
      */
     public function __construct() {
         // Ajout des informations du FTP
-        $ftp = Core_CacheBuffer::getFtp();
+        $ftp = Core_Main::getInstance()->getConfigFtp();
 
         // Pré-configuration
         if (preg_match("/(ftp:\/\/)(.+)/", $ftp['host'], $matches)) {

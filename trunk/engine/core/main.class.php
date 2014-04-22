@@ -12,6 +12,13 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Core_Main {
 
     /**
+     * Instance principal du moteur.
+     *
+     * @var Core_Main
+     */
+    private static $coreMain = null;
+
+    /**
      * Tableau d'information de configuration.
      */
     public static $coreConfig;
@@ -28,35 +35,91 @@ class Core_Main {
      */
     public static $layout = "default";
 
-    /**
-     * Préparation TR ENGINE.
-     * Procédure de préparation du moteur.
-     * Une étape avant le démarrage réel.
-     */
-    public function __construct() {
-        if (Core_Secure::isDebuggingMode())
-            Exec_Marker::startTimer("core");
-
-        new Core_ConfigsLoader();
-
-        // Charge la session
-        $this->loadSession();
-
-        if (Core_Secure::isDebuggingMode())
-            Exec_Marker::stopTimer("core");
+    private function __construct() {
+        // NE RIEN FAIRE
     }
 
     /**
-     * Ajoute l'objet a la configuration.
+     * Retourne l'instance principal du moteur.
+     *
+     * @return Core_Main
+     */
+    public static function getInstance() {
+        self::checkInstance();
+        return self::$coreMain;
+    }
+
+    /**
+     * Vérifie l'instance principal du moteur.
+     */
+    public static function checkInstance() {
+        if (self::$coreMain === null) {
+            if (Core_Secure::isDebuggingMode()) {
+                Exec_Marker::startTimer("core");
+            }
+
+            self::$coreMain = new self();
+            self::$coreMain->prepare();
+
+            if (Core_Secure::isDebuggingMode()) {
+                Exec_Marker::stopTimer("core");
+            }
+        }
+    }
+
+    /**
+     * Ajoute les données à la configuration.
      *
      * @param array
      */
-    public static function addToConfiguration($configuration = array()) {
-        if (is_array($configuration) && !empty($configuration)) {
-            foreach ($configuration as $key => $value) {
+    public function addToConfiguration(array $configuration) {
+        foreach ($configuration as $key => $value) {
+            if (is_array($value)) {
+                self::$coreConfig[$key] = $value;
+            } else {
                 self::$coreConfig[$key] = Exec_Entities::stripSlashes($value);
             }
         }
+    }
+
+    /**
+     * Ajoute les données d'inclusion à la configuration.
+     *
+     * @param string $name
+     * @param array $include
+     */
+    public function includeToConfiguration($name, array $include) {
+        $this->addToConfiguration(array(
+            $name => $include));
+    }
+
+    /**
+     * Retourne le contenu de la configuration.
+     *
+     * @param string $name
+     * @param string $subkey
+     * @return mixed
+     */
+    public function getConfigValue($name, $subkey = "") {
+        $rslt = null;
+
+        if (isset(self::$coreConfig[$name])) {
+            $rslt = self::$coreConfig[$name];
+
+            if (isset($rslt[$subkey])) {
+                $rslt = $rslt[$subkey];
+            }
+        }
+        return $rslt;
+    }
+
+    /**
+     * Retourne la configuration ftp.
+     *
+     * @return array
+     */
+    public function getConfigFtp() {
+        return $this->getConfigValue("configs_ftp");
     }
 
     /**
@@ -151,6 +214,22 @@ class Core_Main {
         if (is_file($installPath)) {
             require($installPath);
         }
+    }
+
+    /**
+     * Préparation TR ENGINE.
+     * Procédure de préparation du moteur.
+     * Une étape avant le démarrage réel.
+     */
+    private function prepare() {
+        if (!$this->loadCacheBuffer() || !$this->loadSql()) {
+            Core_Secure::getInstance()->throwException("Config error: Core_CacheBuffer and Core_Sql aren't loaded.");
+        }
+
+        $this->loadConfig();
+
+        // Charge la session
+        $this->loadSession();
     }
 
     /**
@@ -276,6 +355,142 @@ class Core_Main {
      */
     public static function isClosed() {
         return (self::$coreConfig['defaultSiteStatut'] == "close") ? true : false;
+    }
+
+    /**
+     * Charge le gestionnaire Sql
+     *
+     * @return boolean true chargé
+     */
+    private function loadSql() {
+        if (!Core_Loader::isCallable("Core_Sql")) {
+            // Chemin vers le fichier de configuration de la base de données
+            $databasePath = TR_ENGINE_DIR . "/configs/database.inc.php";
+
+            if (is_file($databasePath)) {
+                require($databasePath);
+
+                // Vérification du type de base de données
+                if (!is_file(TR_ENGINE_DIR . "/engine/base/" . $db['type'] . ".class.php")) {
+                    Core_Secure::getInstance()->throwException("sqlType", null, array(
+                        $db['type']));
+                }
+
+                // Démarrage de l'instance Core_Sql
+                Core_Sql::checkInstance($db);
+            } else {
+                Core_Secure::getInstance()->throwException("sqlPath", null, array(
+                    $databasePath));
+            }
+            return Core_Loader::isCallable("Core_Sql");
+        }
+        return true;
+    }
+
+    /**
+     * Charge le gestionnaire de cache et les données FTP.
+     *
+     * @return boolean true chargé
+     */
+    private function loadCacheBuffer() {
+        $canUseCache = Core_Loader::isCallable("Core_CacheBuffer");
+
+        if (!$canUseCache) {
+            // Mode natif PHP actif
+            Core_CacheBuffer::setModeActived(array(
+                "php"));
+
+            // Chemin du fichier de configuration ftp
+            Core_Loader::includeLoader("configs_ftp");
+
+            $mode = strtolower($this->getConfigValue("configs_ftp", "type"));
+
+            if (!empty($mode)) {
+                Core_CacheBuffer::setModeActived(array(
+                    $mode));
+            }
+
+            $canUseCache = true;
+        }
+        return $canUseCache;
+    }
+
+    /**
+     * Charge et vérifie la configuration
+     */
+    private function loadConfig() {
+        // Chemin vers le fichier de configuration générale
+        $configPath = TR_ENGINE_DIR . "/configs/config.inc.php";
+
+        if (is_file($configPath)) {
+            require($configPath);
+
+            $configuration = array();
+
+            // Vérification de l'adresse email du webmaster
+            if (Exec_Mailer::validMail($config["TR_ENGINE_MAIL"])) {
+                define("TR_ENGINE_MAIL", $config["TR_ENGINE_MAIL"]);
+            } else {
+                Core_Logger::addException("Default mail isn't valide");
+            }
+
+            // Vérification du statut
+            $config["TR_ENGINE_STATUT"] = strtolower($config["TR_ENGINE_STATUT"]);
+            if ($config["TR_ENGINE_STATUT"] == "close")
+                define("TR_ENGINE_STATUT", "close");
+            else
+                define("TR_ENGINE_STATUT", "open");
+
+            // Recherche du statut du site
+            if (TR_ENGINE_STATUT == "close") {
+                Core_Secure::getInstance()->throwException("close");
+            }
+
+            if (is_int($config['cacheTimeLimit']) && $config['cacheTimeLimit'] >= 1)
+                $configuration['cacheTimeLimit'] = $config['cacheTimeLimit'];
+            else
+                $configuration['cacheTimeLimit'] = 7;
+
+            if (!empty($config['cookiePrefix']))
+                $configuration['cookiePrefix'] = $config['cookiePrefix'];
+            else
+                $configuration['cookiePrefix'] = "tr";
+
+            if (!empty($config['cryptKey']))
+                $configuration['cryptKey'] = $config['cryptKey'];
+
+            // Ajout a la configuration courante
+            $this->main->addToConfiguration($configuration);
+
+            // Chargement de la configuration via la cache
+            $configuration = array();
+            Core_CacheBuffer::setSectionName("tmp");
+
+            // Si le cache est disponible
+            if (Core_CacheBuffer::cached("configs.php")) {
+                $configuration = Core_CacheBuffer::getCache("configs.php");
+            } else {
+                $content = "";
+                // Requête vers la base de données de configs
+                Core_Sql::getInstance()->select(Core_Table::$CONFIG_TABLE, array(
+                    "name",
+                    "value"));
+                while ($row = Core_Sql::getInstance()->fetchArray()) {
+                    $content .= Core_CacheBuffer::serializeData(array(
+                        $row['name'] => $row['value']));
+                    $configuration[$row['name']] = Exec_Entities::stripSlashes($row['value']);
+                }
+
+                // Mise en cache
+                Core_CacheBuffer::writingCache("configs.php", $content, true);
+            }
+
+            // Ajout a la configuration courante
+            $this->main->addToConfiguration($configuration);
+        } else {
+            Core_Secure::getInstance()->throwException("configPath", null, array(
+                $configPath));
+        }
     }
 
 }

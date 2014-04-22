@@ -168,6 +168,9 @@ class Core_Loader {
                                 $path = $name . "_lang_" . Core_Translate::getInstance()->getCurrentLanguage();
                             }
                             break;
+                        case 'inc':
+                            $path = $name;
+                            break;
                         default:
                             $path = "engine_" . $name;
                             break;
@@ -178,18 +181,28 @@ class Core_Loader {
                 $path = TR_ENGINE_DIR . "/" . strtolower($path) . "." . $ext . ".php";
 
                 if (is_file($path)) {
-                    if ($ext === "lang") {
-                        $lang = array();
+                    switch ($ext) {
+                        case 'lang':
+                            $lang = array();
+                            break;
+                        case 'inc':
+                            $inc = array();
+                            break;
                     }
 
                     require($path);
                     self::$loaded[$name] = $path;
                     $loaded = true;
 
-                    if ($ext === "lang") {
-                        if (!empty($lang) && is_array($lang)) {
-                            Core_Translate::getInstance()->affectCache($lang);
-                        }
+                    switch ($ext) {
+                        case 'lang':
+                            if (!empty($lang) && is_array($lang)) {
+                                Core_Translate::getInstance()->affectCache($lang);
+                            }
+                            break;
+                        case 'inc':
+                            Core_Main::getInstance()->includeToConfiguration($name, $inc);
+                            break;
                     }
                 } else {
                     switch ($ext) {

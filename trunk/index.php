@@ -20,14 +20,14 @@ if (Core_Secure::isDebuggingMode()) {
 Exec_Marker::startTimer("main");
 
 // Préparation du moteur
-$TR_ENGINE = new Core_Main();
+Core_Main::checkInstance();
 
 // Recherche de nouveau composant
-if ($TR_ENGINE->newComponentDetected()) {
+if (Core_Main::getInstance()->newComponentDetected()) {
     // Installtion des nouveaux composants
-    $TR_ENGINE->install();
+    Core_Main::getInstance()->install();
 } else {
-    $TR_ENGINE->start();
+    Core_Main::getInstance()->start();
 }
 
 if (Core_Secure::isDebuggingMode()) {

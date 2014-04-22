@@ -248,7 +248,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
         $form->addSpace();
 
         // Configuration FTP
-        $ftp = Core_CacheBuffer::getFtp();
+        $ftp = Core_Main::getInstance()->getConfigFtp();
         $form->addFieldset(SETTING_SYSTEM_FTP_SETTING_TITLE, SETTING_SYSTEM_FTP_SETTING_DESCRIPTION);
 
         $form->addSelectOpenTag("ftpType", SETTING_SYSTEM_FTP_SETTING_TYPE);
@@ -324,7 +324,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
             Exec_FileBuilder::buildConfigFile(Core_Main::$coreConfig['defaultAdministratorMail'], TR_ENGINE_STATUT, $cacheTimeLimit, $cookiePrefix, $cryptKey);
         }
 
-        $ftp = Core_CacheBuffer::getFtp();
+        $ftp = Core_Main::getInstance()->getConfigFtp();
         $updateFtpFile = false;
 
         $ftpType = Core_Request::getWord("ftpType", $ftp['type'], "POST");

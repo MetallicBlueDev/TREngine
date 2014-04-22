@@ -77,13 +77,6 @@ class Core_CacheBuffer {
     );
 
     /**
-     * Donnée du ftp
-     *
-     * @var array
-     */
-    private static $ftp = array();
-
-    /**
      * Modifier le nom de la section courante
      *
      * @param $sectionName
@@ -408,11 +401,7 @@ class Core_CacheBuffer {
      *
      * @param $modes array
      */
-    public static function setModeActived($modes = array()) {
-        if (!is_array($modes))
-            $modes = array(
-                $modes);
-
+    public static function setModeActived(array $modes = array()) {
         foreach ($modes as $mode) {
             if (isset(self::$modeActived[$mode])) {
                 self::$modeActived[$mode] = true;
@@ -427,15 +416,6 @@ class Core_CacheBuffer {
      */
     public static function getModeActived() {
         return self::$modeActived;
-    }
-
-    /**
-     * Injecter les données du FTP
-     *
-     * @param array
-     */
-    public static function setFtp($ftp = array()) {
-        self::$ftp = $ftp;
     }
 
     /**
