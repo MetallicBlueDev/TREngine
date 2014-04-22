@@ -26,4 +26,3 @@ $config['cookiePrefix'] = "tr";
 // Clé de décriptage UNIQUE (généré aleatoirement à l'installation)
 $config['cryptKey'] = "A4bT9D4V";
 // -------------------------------------------------------------------------//
-?>

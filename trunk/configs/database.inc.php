@@ -15,9 +15,8 @@ $db['pass'] = "";
 $db['name'] = "trancers_db";
 //
 // Type de base
-$db['type'] = "mysql";
+$db['type'] = "mysqli";
 //
 // Préfixe des tables
 $db['prefix'] = "tr";
 // -------------------------------------------------------------------------//
-?>
