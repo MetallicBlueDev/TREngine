@@ -230,7 +230,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
             Core_Logger::addInformationMessage(DATA_SAVED);
         }
 
-        if (Core_Main::isFullScreen()) {
+        if (Core_Main::getInstance()->isDefaultLayout()) {
             Core_Html::getInstance()->redirect("index.php?mod=management&manage=setting&selectedTab=settingtabidTab0", 1);
         }
     }
@@ -434,7 +434,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
             Exec_FileBuilder::buildDatabaseFile($dbHost, $dbUser, $dbPass, $dbName, $dbType, $dbPrefix);
         }
 
-        if (Core_Main::isFullScreen()) {
+        if (Core_Main::getInstance()->isDefaultLayout()) {
             Core_Html::getInstance()->redirect("index.php?mod=management&manage=setting&selectedTab=settingtabidTab1", 1);
         }
     }

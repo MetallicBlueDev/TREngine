@@ -27,13 +27,12 @@ class Core_Sql extends Base_Model {
 
     /**
      * Nouveau gestionnaire.
-     *
-     * @param array $databaseConfig Injection des données de la base
      */
-    protected function __construct(array $databaseConfig) {
+    protected function __construct() {
         parent::__construct();
         $baseClassName = "";
         $loaded = false;
+        $databaseConfig = Core_Main::getInstance()->getConfigDatabase();
 
         if (!empty($databaseConfig) && isset($databaseConfig['type'])) {
             // Chargement des drivers pour la base
@@ -42,6 +41,11 @@ class Core_Sql extends Base_Model {
         }
 
         if (!$loaded) {
+            Core_Secure::getInstance()->throwException("sqlType", null, array(
+                $databaseConfig['type']));
+        }
+
+        if (!Core_Loader::isCallable($baseClassName, "initializeBase")) {
             Core_Secure::getInstance()->throwException("sqlCode", null, array(
                 $baseClassName));
         }
@@ -76,12 +80,10 @@ class Core_Sql extends Base_Model {
 
     /**
      * Vérification de l'instance du gestionnaire SQL.
-     *
-     * @param array $database Injection des données de la base
      */
-    public static function checkInstance(array $database = array()) {
+    public static function checkInstance() {
         if (self::$coreSql === null) {
-            self::$coreSql = new self($database);
+            self::$coreSql = new self();
         }
     }
 

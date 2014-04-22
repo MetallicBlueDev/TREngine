@@ -72,7 +72,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
                 Core_Logger::addInformationMessage(DATA_SAVED);
             }
         }
-        if (Core_Main::isFullScreen()) {
+        if (Core_Main::getInstance()->isDefaultLayout()) {
             Core_Html::getInstance()->redirect("index.php?mod=connect&view=account&selectedTab=accounttabsidTab0", 1);
         }
     }
@@ -180,7 +180,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
                 $this->errorBox();
             }
         }
-        if (Core_Main::isFullScreen()) {
+        if (Core_Main::getInstance()->isDefaultLayout()) {
             Core_Html::getInstance()->redirect("index.php?mod=connect&view=account&selectedTab=accounttabsidTab1", 1);
         }
     }
@@ -284,7 +284,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
                 }
             }
 
-            if (Core_Main::isFullScreen() || (empty($login) && empty($password))) {
+            if (Core_Main::getInstance()->isDefaultLayout() || (empty($login) && empty($password))) {
                 $form = new Libs_Form("login-logon");
                 $form->setTitle(LOGIN_FORM_TITLE);
                 $form->setDescription(LOGIN_FORM_DESCRIPTION);
@@ -352,7 +352,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
             if ($ok) {
                 Core_Logger::addInformationMessage(FORGET_LOGIN_IS_SUBMIT_TO . " " . $mail);
             } else {
-                if (Core_Main::isFullScreen() || empty($mail)) {
+                if (Core_Main::getInstance()->isDefaultLayout() || empty($mail)) {
                     $form = new Libs_Form("login-forgetlogin");
                     $form->setTitle(FORGET_LOGIN_TITLE);
                     $form->setDescription(FORGET_LOGIN_DESCRIPTION);
@@ -404,7 +404,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
             if ($ok) {
                 Core_Logger::addInformationMessage(FORGET_PASSWORD_IS_SUBMIT_TO . " " . $mail);
             } else {
-                if (Core_Main::isFullScreen() || empty($login)) {
+                if (Core_Main::getInstance()->isDefaultLayout() || empty($login)) {
                     $form = new Libs_Form("login-forgetpass");
                     $form->setTitle(FORGET_PASSWORD_TITLE);
                     $form->setDescription(FORGET_PASSWORD_DESCRIPTION);

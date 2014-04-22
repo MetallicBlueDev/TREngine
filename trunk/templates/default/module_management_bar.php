@@ -1,5 +1,5 @@
 <?php 
-if (Core_Main::isFullScreen()) {
+if (Core_Main::getInstance()->isDefaultLayout()) {
 ?>
 	<div id="management_bar">
 		<div>

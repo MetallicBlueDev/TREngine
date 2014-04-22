@@ -172,7 +172,7 @@ class Core_Logger {
             }
 
             // Réaction différente en fonction du type d'affichage demandée
-            if (Core_Main::isFullScreen()) {
+            if (Core_Main::getInstance()->isDefaultLayout()) {
                 $rslt = "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
             } else if ($error) {
                 if (Core_Loader::isCallable("Core_Html")) {

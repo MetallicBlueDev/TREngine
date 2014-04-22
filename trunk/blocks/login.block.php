@@ -58,7 +58,7 @@ class Block_Login extends Libs_BlockModel {
         $this->displayAvatar = ($activeAvatar == 1) ? true : false;
         $this->displayIcons = ($activeIcons == 1) ? true : false;
 
-        if (Core_Main::isBlockScreen()) { // Si nous sommes dans un affichage type block
+        if (Core_Main::getInstance()->isBlockLayout()) { // Si nous sommes dans un affichage type block
             $this->localView = Core_Request::getString("localView", "", "GET");
         }
     }
@@ -79,7 +79,7 @@ class Block_Login extends Libs_BlockModel {
             }
         } else {
             $moreLink = "<ul>";
-            if (Core_Main::isRegistrationAllowed()) {
+            if (Core_Main::getInstance()->isRegistrationAllowed()) {
                 $moreLink .= "<li><b>" . Core_Html::getLinkForBlock("mod=connect&view=registration", "blockId=" . $this->getBlockData()->getId() . "&localView=registration", "#login-logonblock", GET_ACCOUNT) . "</b></li>";
             }
             $moreLink .= "<li>" . Core_Html::getLinkForBlock("mod=connect&view=logon", "blockId=" . $this->getBlockData()->getId() . "&localView=logon", "#login-logonblock", GET_LOGON) . "</li>"

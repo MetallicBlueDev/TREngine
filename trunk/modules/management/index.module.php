@@ -63,7 +63,7 @@ class Module_Management_Index extends Libs_ModuleModel {
 					$libsMakeStyle->assign("currentPageName", $currentPageName);
 
 					// Ajout du repere au fil d'ariane
-					if (Core_Main::isFullScreen()) {
+					if (Core_Main::getInstance()->isDefaultLayout()) {
 						Libs_Breadcrumb::getInstance()->addTrail(
 							$currentPageName,
 							Core_Html::getLink('?mod=management&manage=' . $pageSelected)

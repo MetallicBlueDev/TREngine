@@ -128,7 +128,7 @@ class Core_Html {
     private function &includeJavascript($forceIncludes = false) {
         if (Core_Request::getRequestMethod() != "POST" || $forceIncludes) {
             if (Core_Loader::isCallable("Core_Main"))
-                $fullScreen = Core_Main::isFullScreen();
+                $fullScreen = Core_Main::getInstance()->isDefaultLayout();
             else
                 $fullScreen = true;
 
@@ -226,7 +226,7 @@ class Core_Html {
      * @param $javaScript string
      */
     public function addJavascript($javaScript) {
-        if ($this->isJavascriptEnabled() && Core_Main::isFullScreen()) {
+        if ($this->isJavascriptEnabled() && Core_Main::getInstance()->isDefaultLayout()) {
             $this->addJavascriptJquery($javaScript);
         } else {
             $this->addJavascriptCode($javaScript);

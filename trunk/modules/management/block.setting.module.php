@@ -38,7 +38,7 @@ class Module_Management_Block extends Libs_ModuleModel {
                 $content .= $this->tabHome();
         }
 
-        if (Core_Main::isFullScreen()) {
+        if (Core_Main::getInstance()->isDefaultLayout()) {
             return "<div id=\"block_main_setting\">"
             . $content . "</div>";
         }

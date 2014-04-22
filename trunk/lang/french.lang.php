@@ -22,6 +22,7 @@ $lang = array(
     "ERROR_DEBUG_SQLTYPE" => "Le type de base Sélectionné n'est pas encore supporté.",
     "ERROR_DEBUG_SQLPATH" => "Le fichier de configuration de la base de données est introuvable.",
     "ERROR_DEBUG_SQLCODE" => "Le code d'une base de données n'est pas utilisable.",
+    "ERROR_DEBUG_FTPPATH" => "Le fichier de configuration du ftp est introuvable.",
     "ERROR_DEBUG_BADURL" => "Merci d'utiliser l'index du site pour naviguer correctement.",
     "ERROR_DEBUG_LOADER" => "Une erreur lors du chargement d'un fichier est survenue.",
     "ERROR_DEBUG_CONFIGPATH" => "Le fichier de configuration du site est introuvable.",
@@ -89,4 +90,3 @@ $lang = array(
     "DATA_INVALID" => "Les informations comportent des éléments invalides.",
     "DATA_DELETED" => "Les informations ont été correctement supprimé."
 );
-?>

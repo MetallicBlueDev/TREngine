@@ -33,7 +33,7 @@ class Core_Main {
      *
      * @var string
      */
-    public static $layout = "default";
+    private $layout = "default";
 
     private function __construct() {
         // NE RIEN FAIRE
@@ -72,7 +72,7 @@ class Core_Main {
      *
      * @param array
      */
-    public function addToConfiguration(array $configuration) {
+    public function addConfig(array $configuration) {
         foreach ($configuration as $key => $value) {
             if (is_array($value)) {
                 self::$coreConfig[$key] = $value;
@@ -88,26 +88,26 @@ class Core_Main {
      * @param string $name
      * @param array $include
      */
-    public function includeToConfiguration($name, array $include) {
-        $this->addToConfiguration(array(
+    public function addInclude($name, array $include) {
+        $this->addConfig(array(
             $name => $include));
     }
 
     /**
      * Retourne le contenu de la configuration.
      *
-     * @param string $name
-     * @param string $subkey
+     * @param string $key
+     * @param string $subKey
      * @return mixed
      */
-    public function getConfigValue($name, $subkey = "") {
+    public function getConfigValue($key, $subKey = "") {
         $rslt = null;
 
-        if (isset(self::$coreConfig[$name])) {
-            $rslt = self::$coreConfig[$name];
+        if (isset(self::$coreConfig[$key])) {
+            $rslt = self::$coreConfig[$key];
 
-            if (isset($rslt[$subkey])) {
-                $rslt = $rslt[$subkey];
+            if (isset($rslt[$subKey])) {
+                $rslt = $rslt[$subKey];
             }
         }
         return $rslt;
@@ -120,6 +120,69 @@ class Core_Main {
      */
     public function getConfigFtp() {
         return $this->getConfigValue("configs_ftp");
+    }
+
+    /**
+     * Retourne la configuration de la base de données.
+     *
+     * @return array
+     */
+    public function getConfigDatabase() {
+        return $this->getConfigValue("configs_database");
+    }
+
+    /**
+     * Détermine si l'url rewriting est activé.
+     *
+     * @return boolean
+     */
+    public function doUrlRewriting() {
+        return ($this->getConfigValue("urlRewriting") == 1) ? true : false;
+    }
+
+    /**
+     * Détermine l'état des inscriptions au site.
+     *
+     * @return boolean
+     */
+    public function isRegistrationAllowed() {
+        return ($this->getConfigValue("registrationAllowed") == 1) ? true : false;
+    }
+
+    /**
+     * Vérifie si le site est fermé.
+     *
+     * @return boolean
+     */
+    public function isClosed() {
+        return ($this->getConfigValue("defaultSiteStatut") == "close") ? true : false;
+    }
+
+    /**
+     * Détermine si l'affichage se fait en écran complet (affichage classique).
+     *
+     * @return boolean true c'est en plein écran.
+     */
+    public function isDefaultLayout() {
+        return (($this->layout == "default") ? true : false);
+    }
+
+    /**
+     * Détermine si l'affichage se fait en écran minimal ciblé module.
+     *
+     * @return boolean true c'est un affichage de module uniquement.
+     */
+    public function isModuleLayout() {
+        return (($this->layout == "module" || $this->layout == "modulepage") ? true : false);
+    }
+
+    /**
+     * Détermine si l'affichage se fait en écran minimal ciblé block.
+     *
+     * @return boolean true c'est un affichage de block uniquement.
+     */
+    public function isBlockLayout() {
+        return (($this->layout == "block" || $this->layout == "blockpage") ? true : false);
     }
 
     /**
@@ -167,10 +230,10 @@ class Core_Main {
                 }
             } else {
                 // Affichage autonome des modules et blocks
-                if (self::isModuleScreen() && Core_Loader::isCallable("Libs_Module")) {
+                if ($this->isModuleLayout() && Core_Loader::isCallable("Libs_Module")) {
                     Libs_Module::getInstance()->launch();
                     echo Libs_Module::getInstance()->getModule();
-                } else if (self::isBlockScreen() && Core_Loader::isCallable("Libs_Block")) {
+                } else if ($this->isBlockLayout() && Core_Loader::isCallable("Libs_Block")) {
                     Libs_Block::getInstance()->launchOneBlock();
                     echo Libs_Block::getInstance()->getBlock();
                 }
@@ -222,8 +285,14 @@ class Core_Main {
      * Une étape avant le démarrage réel.
      */
     private function prepare() {
-        if (!$this->loadCacheBuffer() || !$this->loadSql()) {
-            Core_Secure::getInstance()->throwException("Config error: Core_CacheBuffer and Core_Sql aren't loaded.");
+        if (!$this->loadCacheBuffer()) {
+            Core_Secure::getInstance()->throwException("ftpPath", null, array(
+                Core_Loader::getAbsolutePath("configs_ftp")));
+        }
+
+        if (!$this->loadSql()) {
+            Core_Secure::getInstance()->throwException("sqlPath", null, array(
+                Core_Loader::getAbsolutePath("configs_database")));
         }
 
         $this->loadConfig();
@@ -238,7 +307,7 @@ class Core_Main {
      * @return boolean
      */
     private function inMaintenance() {
-        return (self::isClosed() && Core_Session::getInstance()->userRank < 2);
+        return ($this->isClosed() && Core_Session::getInstance()->userRank < 2);
     }
 
     /**
@@ -247,7 +316,7 @@ class Core_Main {
      */
     private function compressionOpen() {
         header("Vary: Cookie, Accept-Encoding");
-        if (extension_loaded('zlib') && !ini_get('zlib.output_compression') && function_exists("ob_gzhandler") && !self::doUrlRewriting()) {
+        if (extension_loaded('zlib') && !ini_get('zlib.output_compression') && function_exists("ob_gzhandler") && !$this->doUrlRewriting()) {
             ob_start("ob_gzhandler");
         } else {
             ob_start();
@@ -272,7 +341,8 @@ class Core_Main {
         if ($layout != "default" && $layout != "modulepage" && $layout != "blockpage" && (($layout != "block" && $layout != "module") || (!Core_Html::getInstance()->isJavascriptEnabled()))) {
             $layout = "default";
         }
-        self::$layout = $layout;
+
+        $this->layout = $layout;
     }
 
     /**
@@ -304,119 +374,55 @@ class Core_Main {
     }
 
     /**
-     * Vérifie si l'affichage se fait en écran complet.
-     *
-     * @return boolean true c'est en plein écran.
-     */
-    public static function isFullScreen() {
-        return ((self::$layout == "default") ? true : false);
-    }
-
-    /**
-     * Vérifie si l'affichage se fait en écran minimal ciblé module.
-     *
-     * @return boolean true c'est un affichage de module uniquement.
-     */
-    public static function isModuleScreen() {
-        return ((self::$layout == "module" || self::$layout == "modulepage") ? true : false);
-    }
-
-    /**
-     * Vérifie si l'affichage se fait en écran minimal ciblé block.
-     *
-     * @return boolean true c'est un affichage de block uniquement.
-     */
-    public static function isBlockScreen() {
-        return ((self::$layout == "block" || self::$layout == "blockpage") ? true : false);
-    }
-
-    /**
-     * Vérifie si l'url rewriting est activé.
-     *
-     * @return boolean
-     */
-    public static function doUrlRewriting() {
-        return (self::$coreConfig['urlRewriting'] == 1) ? true : false;
-    }
-
-    /**
-     * état des inscriptions au site.
-     *
-     * @return boolean
-     */
-    public static function isRegistrationAllowed() {
-        return (self::$coreConfig['registrationAllowed'] == 1) ? true : false;
-    }
-
-    /**
-     * Vérifie si le site est fermé.
-     *
-     * @return boolean
-     */
-    public static function isClosed() {
-        return (self::$coreConfig['defaultSiteStatut'] == "close") ? true : false;
-    }
-
-    /**
-     * Charge le gestionnaire Sql
-     *
-     * @return boolean true chargé
-     */
-    private function loadSql() {
-        if (!Core_Loader::isCallable("Core_Sql")) {
-            // Chemin vers le fichier de configuration de la base de données
-            $databasePath = TR_ENGINE_DIR . "/configs/database.inc.php";
-
-            if (is_file($databasePath)) {
-                require($databasePath);
-
-                // Vérification du type de base de données
-                if (!is_file(TR_ENGINE_DIR . "/engine/base/" . $db['type'] . ".class.php")) {
-                    Core_Secure::getInstance()->throwException("sqlType", null, array(
-                        $db['type']));
-                }
-
-                // Démarrage de l'instance Core_Sql
-                Core_Sql::checkInstance($db);
-            } else {
-                Core_Secure::getInstance()->throwException("sqlPath", null, array(
-                    $databasePath));
-            }
-            return Core_Loader::isCallable("Core_Sql");
-        }
-        return true;
-    }
-
-    /**
      * Charge le gestionnaire de cache et les données FTP.
      *
      * @return boolean true chargé
      */
     private function loadCacheBuffer() {
-        $canUseCache = Core_Loader::isCallable("Core_CacheBuffer");
+        $canUse = Core_Loader::isCallable("Core_CacheBuffer");
 
-        if (!$canUseCache) {
+        if (!$canUse) {
             // Mode natif PHP actif
             Core_CacheBuffer::setModeActived(array(
                 "php"));
 
             // Chemin du fichier de configuration ftp
-            Core_Loader::includeLoader("configs_ftp");
+            if (Core_Loader::includeLoader("configs_ftp")) {
+                $mode = strtolower($this->getConfigValue("configs_ftp", "type"));
 
-            $mode = strtolower($this->getConfigValue("configs_ftp", "type"));
+                if (!empty($mode)) {
+                    Core_CacheBuffer::setModeActived(array(
+                        $mode));
+                }
 
-            if (!empty($mode)) {
-                Core_CacheBuffer::setModeActived(array(
-                    $mode));
+                $canUse = true;
             }
-
-            $canUseCache = true;
         }
-        return $canUseCache;
+        return $canUse;
     }
 
     /**
-     * Charge et vérifie la configuration
+     * Charge le gestionnaire Sql.
+     *
+     * @return boolean true chargé
+     */
+    private function loadSql() {
+        $canUse = Core_Loader::isCallable("Core_Sql");
+
+        if (!$canUse) {
+            // Chemin vers le fichier de configuration de la base de données
+            if (Core_Loader::includeLoader("configs_database")) {
+                // Démarrage de l'instance Core_Sql
+                Core_Sql::checkInstance();
+
+                $canUse = true;
+            }
+        }
+        return $canUse;
+    }
+
+    /**
+     * Charge et vérifie la configuration.
      */
     private function loadConfig() {
         // Chemin vers le fichier de configuration générale
@@ -460,7 +466,7 @@ class Core_Main {
                 $configuration['cryptKey'] = $config['cryptKey'];
 
             // Ajout a la configuration courante
-            $this->main->addToConfiguration($configuration);
+            $this->main->addConfig($configuration);
 
             // Chargement de la configuration via la cache
             $configuration = array();
@@ -486,7 +492,7 @@ class Core_Main {
             }
 
             // Ajout a la configuration courante
-            $this->main->addToConfiguration($configuration);
+            $this->main->addConfig($configuration);
         } else {
             Core_Secure::getInstance()->throwException("configPath", null, array(
                 $configPath));
@@ -494,5 +500,3 @@ class Core_Main {
     }
 
 }
-
-?>

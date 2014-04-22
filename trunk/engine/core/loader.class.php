@@ -201,7 +201,7 @@ class Core_Loader {
                             }
                             break;
                         case 'inc':
-                            Core_Main::getInstance()->includeToConfiguration($name, $inc);
+                            Core_Main::getInstance()->addInclude($name, $inc);
                             break;
                     }
                 } else {
