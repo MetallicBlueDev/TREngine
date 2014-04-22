@@ -438,7 +438,7 @@ class Libs_Form {
      * @param string $description
      * @return string
      */
-    private function getLabel($name, $description) {
+    private function &getLabel($name, $description) {
         $id = $this->getId($name, "input");
         $description = Exec_Entities::textDisplay($description);
         $this->addCacheVar($description);
@@ -457,7 +457,7 @@ class Libs_Form {
      * @param string $title
      * @return string
      */
-    private function getTitle($title) {
+    private function &getTitle($title) {
         $title = Exec_Entities::textDisplay($title);
         $this->addCacheVar($title);
 
@@ -475,7 +475,7 @@ class Libs_Form {
      * @param string $description
      * @return string
      */
-    private function getDescription($description) {
+    private function &getDescription($description) {
         $id = $this->getId("description");
         $description = Exec_Entities::textDisplay($description);
         $this->addCacheVar($description);
@@ -495,7 +495,7 @@ class Libs_Form {
      * @param string $options
      * @return string
      */
-    private function getId($name, $options = "") {
+    private function &getId($name, $options = "") {
         if (!empty($options)) {
             $options = "-" . $options;
         }
@@ -569,7 +569,7 @@ class Libs_Form {
      * @see Core_CacheBuffer::getCache()
      * @return string
      */
-    private function getLastCacheVar() {
+    private function &getLastCacheVar() {
         $rslt = "";
 
         if (!$this->cached) {

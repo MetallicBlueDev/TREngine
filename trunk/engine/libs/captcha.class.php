@@ -139,7 +139,7 @@ class Libs_Captcha {
      * @param Libs_Captcha $object
      * @return boolean
      */
-    public static function check($object = null) {
+    public static function &check($object = null) {
         $rslt = false;
 
         if ($object === null || !is_object($object)) {
