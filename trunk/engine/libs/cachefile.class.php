@@ -103,7 +103,7 @@ class Libs_CacheFile extends Libs_CacheModel {
      *
      * @return boolean
      */
-    public function &canUse() {
+    public function canUse() {
         return true;
     }
 

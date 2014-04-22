@@ -84,7 +84,7 @@ abstract class Libs_CacheModel {
      *
      * @return boolean true ready
      */
-    public function &canUse() {
+    public function canUse() {
         return false;
     }
 

@@ -149,7 +149,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
      *
      * @return boolean
      */
-    public function &canUse() {
+    public function canUse() {
         return $this->connected();
     }
 
@@ -158,10 +158,9 @@ class Libs_CacheFtp extends Libs_CacheModel {
      *
      * @return boolean true succès
      */
-    public function &connected() {
+    public function connected() {
         // Stockage pour passage par référence
-        $rslt = is_resource($this->connId);
-        return $rslt;
+        return is_resource($this->connId);
     }
 
     /**
