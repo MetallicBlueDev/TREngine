@@ -189,65 +189,85 @@ class Core_Main {
      * Démarrage TR ENGINE.
      */
     public function start() {
-        if (Core_Secure::isDebuggingMode())
+        if (Core_Secure::isDebuggingMode()) {
             Exec_Marker::startTimer("launcher");
+        }
 
         // Vérification des bannissements
         Core_BlackBan::checkBlackBan();
 
-        Core_Html::getInstance();
+        Core_Html::checkInstance();
 
         // Configure les informations de page demandées
         $this->loadLayout();
         $this->loadModule();
         $this->loadMakeStyle();
 
-        if (!Core_Secure::isDebuggingMode())
+        if (!Core_Secure::isDebuggingMode()) {
             $this->compressionOpen();
+        }
 
-        // Comportement different en fonction du type de client
+        // Vérification du bannissement
         if (!Core_BlackBan::isBlackUser()) {
-            if (self::isFullScreen() && Core_Loader::isCallable("Libs_Block") && Core_Loader::isCallable("Libs_Module")) {
-                if ($this->inMaintenance()) { // Affichage site fermé
-                    // Charge le block login
+            // Vérification du type d'affichage
+            if ($this->isFullScreen() && Core_Loader::isCallable("Libs_Block") && Core_Loader::isCallable("Libs_Module")) {
+                // Affichage classique du site
+                if ($this->inMaintenance()) {
+                    // Mode maintenance: possibilité de s'identifier
                     Libs_Block::getInstance()->launchOneBlock(array(
                         "type = 'login'"));
+
+                    Exec_Marker::stopTimer("main");
 
                     // Affichage des données de la page de maintenance (fermeture)
                     $libsMakeStyle = new Libs_MakeStyle();
                     $libsMakeStyle->assign("closeText", ERROR_DEBUG_CLOSE);
                     $libsMakeStyle->display("close");
                 } else {
-                    // Chargement et construction du fil d'ariane
-                    Libs_Breadcrumb::getInstance();
+                    // Mode normal: construction du fil d'ariane
+                    Libs_Breadcrumb::checkInstance();
 
                     Libs_Module::getInstance()->launch();
                     Libs_Block::getInstance()->launchAllBlock();
 
                     Exec_Marker::stopTimer("main");
+
                     $libsMakeStyle = new Libs_MakeStyle();
                     $libsMakeStyle->display("index");
                 }
             } else {
                 // Affichage autonome des modules et blocks
                 if ($this->isModuleLayout() && Core_Loader::isCallable("Libs_Module")) {
+                    // Affichage du module uniquement
                     Libs_Module::getInstance()->launch();
+
+                    Exec_Marker::stopTimer("main");
+
                     echo Libs_Module::getInstance()->getModule();
                 } else if ($this->isBlockLayout() && Core_Loader::isCallable("Libs_Block")) {
+                    // Affichage du block uniquement
                     Libs_Block::getInstance()->launchOneBlock();
+
+                    Exec_Marker::stopTimer("main");
+
                     echo Libs_Block::getInstance()->getBlock();
                 }
+
                 // Execute la commande de récupération d'erreur
-                Core_Logger::getMessages();
+                Core_Logger::displayMessages();
+
                 // Javascript autonome
                 Core_Html::getInstance()->selfJavascript();
             }
 
             // Validation du cache / Routine du cache
             Core_CacheBuffer::valideCacheBuffer();
+
             // Assemble tous les messages d'erreurs dans un fichier log
             Core_Logger::logException();
         } else {
+            Exec_Marker::stopTimer("main");
+
             Core_BlackBan::displayBlackPage();
         }
 
@@ -273,35 +293,10 @@ class Core_Main {
      */
     public function install() {
         // TODO installation a coder
-        $installPath = TR_ENGINE_DIR . "/install/index.php";
-        if (is_file($installPath)) {
-            require($installPath);
-        }
-    }
-
-    /**
-     * Préparation TR ENGINE.
-     * Procédure de préparation du moteur.
-     * Une étape avant le démarrage réel.
-     */
-    private function prepare() {
-        if (!$this->loadCacheBuffer()) {
-            Core_Secure::getInstance()->throwException("ftpPath", null, array(
-                Core_Loader::getAbsolutePath("configs_ftp")));
-        }
-
-        if (!$this->loadSql()) {
-            Core_Secure::getInstance()->throwException("sqlPath", null, array(
-                Core_Loader::getAbsolutePath("configs_database")));
-        }
-
-        if (!$this->loadConfig()) {
-            Core_Secure::getInstance()->throwException("configPath", null, array(
-                Core_Loader::getAbsolutePath("configs_config")));
-        }
-
-        // Charge la session
-        $this->loadSession();
+//        $installPath = TR_ENGINE_DIR . "/install/index.php";
+//        if (is_file($installPath)) {
+//            require($installPath);
+//        }
     }
 
     /**
@@ -319,6 +314,7 @@ class Core_Main {
      */
     private function compressionOpen() {
         header("Vary: Cookie, Accept-Encoding");
+
         if (extension_loaded('zlib') && !ini_get('zlib.output_compression') && function_exists("ob_gzhandler") && !$this->doUrlRewriting()) {
             ob_start("ob_gzhandler");
         } else {
@@ -330,7 +326,11 @@ class Core_Main {
      * Relachement des tampons de sortie.
      */
     private function compressionClose() {
-        while (ob_end_flush());
+        $canContinue = false;
+
+        do {
+            $canContinue = ob_end_flush();
+        } while ($canContinue);
     }
 
     /**
@@ -366,13 +366,30 @@ class Core_Main {
     }
 
     /**
-     * Charge les outils de session.
+     * Préparation TR ENGINE.
+     * Procédure de préparation du moteur.
+     * Une étape avant le démarrage réel.
      */
-    private function loadSession() {
+    private function prepare() {
+        if (!$this->loadCacheBuffer()) {
+            Core_Secure::getInstance()->throwException("ftpPath", null, array(
+                Core_Loader::getAbsolutePath("configs_ftp")));
+        }
+
+        if (!$this->loadSql()) {
+            Core_Secure::getInstance()->throwException("sqlPath", null, array(
+                Core_Loader::getAbsolutePath("configs_database")));
+        }
+
+        if (!$this->loadConfig()) {
+            Core_Secure::getInstance()->throwException("configPath", null, array(
+                Core_Loader::getAbsolutePath("configs_config")));
+        }
+
         // Analyse pour les statistiques
         Exec_Agent::getVisitorsStats();
 
-        // Chargement des sessions
+        // Chargement de la session
         Core_Session::checkInstance();
     }
 
@@ -425,7 +442,7 @@ class Core_Main {
     }
 
     /**
-     * Charge et vérifie la configuration.
+     * Charge la configuration générale.
      */
     private function loadConfig() {
         // Chemin vers le fichier de configuration général
@@ -479,36 +496,42 @@ class Core_Main {
                 $this->main->addConfig($newConfig);
 
                 unset(self::$coreConfig['configs_config']);
+            } else {
+                // Il n'est pas normale de n'avoir aucune information
+                $canUse = false;
             }
 
-            // Chargement de la configuration via la cache
-            $newConfig = array();
-            Core_CacheBuffer::setSectionName("tmp");
+            if ($canUse) {
+                // Chargement de la configuration via la cache
+                $newConfig = array();
+                Core_CacheBuffer::setSectionName("tmp");
 
-            // Si le cache est disponible
-            if (Core_CacheBuffer::cached("configs.php")) {
-                $newConfig = Core_CacheBuffer::getCache("configs.php");
-            } else {
-                $content = "";
+                // Si le cache est disponible
+                if (Core_CacheBuffer::cached("configs.php")) {
+                    $newConfig = Core_CacheBuffer::getCache("configs.php");
+                } else {
+                    $content = "";
 
-                // Requête vers la base de données de configs
-                Core_Sql::getInstance()->select(Core_Table::CONFIG_TABLE, array(
-                    "name",
-                    "value"));
+                    // Requête vers la base de données de configs
+                    Core_Sql::getInstance()->select(Core_Table::CONFIG_TABLE, array(
+                        "name",
+                        "value"));
 
-                foreach (Core_Sql::getInstance()->fetchArray() as $row) {
-                    $content .= Core_CacheBuffer::serializeData(array(
-                        $row['name'] => $row['value']));
-                    $newConfig[$row['name']] = Exec_Entities::stripSlashes($row['value']);
+                    foreach (Core_Sql::getInstance()->fetchArray() as $row) {
+                        $content .= Core_CacheBuffer::serializeData(array(
+                            $row['name'] => $row['value']));
+                        $newConfig[$row['name']] = Exec_Entities::stripSlashes($row['value']);
+                    }
+
+                    // Mise en cache
+                    Core_CacheBuffer::writingCache("configs.php", $content, true);
                 }
 
-                // Mise en cache
-                Core_CacheBuffer::writingCache("configs.php", $content, true);
+                // Ajout a la configuration courante
+                $this->main->addConfig($newConfig);
             }
-
-            // Ajout a la configuration courante
-            $this->main->addConfig($newConfig);
         }
+        return $canUse;
     }
 
 }

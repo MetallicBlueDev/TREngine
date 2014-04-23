@@ -36,7 +36,7 @@
 
                 <div class="cleaner"></div>
 
-                <?php echo Core_Logger::getMessages(); ?>
+                <?php Core_Logger::displayMessages(); ?>
 
                 <?php echo Libs_Block::getInstance()->getBlocksBySideName("top"); ?>
 

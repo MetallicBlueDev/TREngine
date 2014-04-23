@@ -36,10 +36,14 @@ class Libs_Breadcrumb {
      * @return Libs_Breadcrumb
      */
     public static function &getInstance() {
-        if (self::$libsBreadcrumb == null) {
+        self::checkInstance();
+        return self::$libsBreadcrumb;
+    }
+
+    public static function checkInstance() {
+        if (self::$libsBreadcrumb === null) {
             self::$libsBreadcrumb = new self();
         }
-        return self::$libsBreadcrumb;
     }
 
     /**

@@ -103,10 +103,19 @@ class Core_Html {
      * @return Core_Html
      */
     public static function &getInstance() {
-        if (self::$html == null) {
+        self::checkInstance();
+        return self::$html;
+    }
+
+    /**
+     * Retourne et si besoin créé l'instance Core_Html.
+     *
+     * @return Core_Html
+     */
+    public static function checkInstance() {
+        if (self::$html === null) {
             self::$html = new self();
         }
-        return self::$html;
     }
 
     /**

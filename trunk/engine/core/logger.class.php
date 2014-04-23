@@ -149,9 +149,7 @@ class Core_Logger {
      *
      * @return string
      */
-    public static function &getMessages() {
-        $rslt = "";
-
+    public static function displayMessages() {
         if (Core_Loader::isCallable("Core_Main")) {
             $error = self::hasMessages();
             $display = "none";
@@ -173,7 +171,7 @@ class Core_Logger {
 
             // Réaction différente en fonction du type d'affichage demandée
             if (Core_Main::getInstance()->isDefaultLayout()) {
-                $rslt = "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
+                echo "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
             } else if ($error) {
                 if (Core_Loader::isCallable("Core_Html")) {
                     if (Core_Html::getInstance()->isJavascriptEnabled()) {
@@ -181,9 +179,12 @@ class Core_Logger {
                         $rslt = "";
                     }
                 }
+
+                if (!empty($rslt)) {
+                    echo $rslt;
+                }
             }
         }
-        return $rslt;
     }
 
     /**
