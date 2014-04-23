@@ -44,7 +44,7 @@ class Core_Main {
      *
      * @return Core_Main
      */
-    public static function getInstance() {
+    public static function &getInstance() {
         self::checkInstance();
         return self::$coreMain;
     }
@@ -100,7 +100,7 @@ class Core_Main {
      * @param string $subKey
      * @return mixed
      */
-    public function getConfigValue($key, $subKey = "") {
+    public function &getConfigValue($key, $subKey = "") {
         $rslt = null;
 
         if (isset(self::$coreConfig[$key])) {
@@ -118,7 +118,7 @@ class Core_Main {
      *
      * @return array
      */
-    public function getConfigFtp() {
+    public function &getConfigFtp() {
         return $this->getConfigValue("configs_ftp");
     }
 
@@ -127,7 +127,7 @@ class Core_Main {
      *
      * @return array
      */
-    public function getConfigDatabase() {
+    public function &getConfigDatabase() {
         return $this->getConfigValue("configs_database");
     }
 
@@ -295,7 +295,10 @@ class Core_Main {
                 Core_Loader::getAbsolutePath("configs_database")));
         }
 
-        $this->loadConfig();
+        if (!$this->loadConfig()) {
+            Core_Secure::getInstance()->throwException("configPath", null, array(
+                Core_Loader::getAbsolutePath("configs_config")));
+        }
 
         // Charge la session
         $this->loadSession();
@@ -425,66 +428,78 @@ class Core_Main {
      * Charge et vérifie la configuration.
      */
     private function loadConfig() {
-        // Chemin vers le fichier de configuration générale
-        $configPath = TR_ENGINE_DIR . "/configs/config.inc.php";
+        // Chemin vers le fichier de configuration général
+        $canUse = Core_Loader::includeLoader("configs_config");
 
-        if (is_file($configPath)) {
-            require($configPath);
+        if ($canUse) {
+            $rawConfig = $this->getConfigValue("configs_config");
 
-            $configuration = array();
+            if (!empty($rawConfig)) {
+                $newConfig = array();
 
-            // Vérification de l'adresse email du webmaster
-            if (Exec_Mailer::validMail($config["TR_ENGINE_MAIL"])) {
-                define("TR_ENGINE_MAIL", $config["TR_ENGINE_MAIL"]);
-            } else {
-                Core_Logger::addException("Default mail isn't valide");
+                // Vérification de l'adresse email du webmaster
+                if (!Exec_Mailer::validMail($rawConfig["TR_ENGINE_MAIL"])) {
+                    Core_Logger::addException("Default mail isn't valide");
+                }
+
+                define("TR_ENGINE_MAIL", $rawConfig["TR_ENGINE_MAIL"]);
+
+                // Vérification du statut
+                $rawConfig["TR_ENGINE_STATUT"] = strtolower($rawConfig["TR_ENGINE_STATUT"]);
+
+                if ($rawConfig["TR_ENGINE_STATUT"] !== "close" && $rawConfig["TR_ENGINE_STATUT"] !== "open") {
+                    $rawConfig["TR_ENGINE_STATUT"] = "open";
+                }
+
+                define("TR_ENGINE_STATUT", $rawConfig["TR_ENGINE_STATUT"]);
+
+                // Recherche du statut du site
+                if (TR_ENGINE_STATUT == "close") {
+                    Core_Secure::getInstance()->throwException("close");
+                }
+
+                if (!is_int($rawConfig['cacheTimeLimit']) || $rawConfig['cacheTimeLimit'] < 1) {
+                    $rawConfig['cacheTimeLimit'] = 7;
+                }
+
+                $newConfig['cacheTimeLimit'] = (int) $rawConfig['cacheTimeLimit'];
+
+                if (empty($rawConfig['cookiePrefix'])) {
+                    $rawConfig['cookiePrefix'] = "tr";
+                }
+
+                $newConfig['cookiePrefix'] = $rawConfig['cookiePrefix'];
+
+
+                if (!empty($rawConfig['cryptKey'])) {
+                    $newConfig['cryptKey'] = $rawConfig['cryptKey'];
+                }
+
+                // Ajout a la configuration courante
+                $this->main->addConfig($newConfig);
+
+                unset(self::$coreConfig['configs_config']);
             }
-
-            // Vérification du statut
-            $config["TR_ENGINE_STATUT"] = strtolower($config["TR_ENGINE_STATUT"]);
-            if ($config["TR_ENGINE_STATUT"] == "close")
-                define("TR_ENGINE_STATUT", "close");
-            else
-                define("TR_ENGINE_STATUT", "open");
-
-            // Recherche du statut du site
-            if (TR_ENGINE_STATUT == "close") {
-                Core_Secure::getInstance()->throwException("close");
-            }
-
-            if (is_int($config['cacheTimeLimit']) && $config['cacheTimeLimit'] >= 1)
-                $configuration['cacheTimeLimit'] = $config['cacheTimeLimit'];
-            else
-                $configuration['cacheTimeLimit'] = 7;
-
-            if (!empty($config['cookiePrefix']))
-                $configuration['cookiePrefix'] = $config['cookiePrefix'];
-            else
-                $configuration['cookiePrefix'] = "tr";
-
-            if (!empty($config['cryptKey']))
-                $configuration['cryptKey'] = $config['cryptKey'];
-
-            // Ajout a la configuration courante
-            $this->main->addConfig($configuration);
 
             // Chargement de la configuration via la cache
-            $configuration = array();
+            $newConfig = array();
             Core_CacheBuffer::setSectionName("tmp");
 
             // Si le cache est disponible
             if (Core_CacheBuffer::cached("configs.php")) {
-                $configuration = Core_CacheBuffer::getCache("configs.php");
+                $newConfig = Core_CacheBuffer::getCache("configs.php");
             } else {
                 $content = "";
+
                 // Requête vers la base de données de configs
-                Core_Sql::getInstance()->select(Core_Table::$CONFIG_TABLE, array(
+                Core_Sql::getInstance()->select(Core_Table::CONFIG_TABLE, array(
                     "name",
                     "value"));
-                while ($row = Core_Sql::getInstance()->fetchArray()) {
+
+                foreach (Core_Sql::getInstance()->fetchArray() as $row) {
                     $content .= Core_CacheBuffer::serializeData(array(
                         $row['name'] => $row['value']));
-                    $configuration[$row['name']] = Exec_Entities::stripSlashes($row['value']);
+                    $newConfig[$row['name']] = Exec_Entities::stripSlashes($row['value']);
                 }
 
                 // Mise en cache
@@ -492,10 +507,7 @@ class Core_Main {
             }
 
             // Ajout a la configuration courante
-            $this->main->addConfig($configuration);
-        } else {
-            Core_Secure::getInstance()->throwException("configPath", null, array(
-                $configPath));
+            $this->main->addConfig($newConfig);
         }
     }
 

@@ -6,14 +6,14 @@ if (!defined("TR_ENGINE_INDEX")) {
 
 class Module_Project_Index extends Libs_ModuleModel {
 
-    private static $PROJECT_TABLE = "project";
+    const PROJECT_TABLE = "project";
 
     public function display() {
         $this->displayProjectsList();
     }
 
     public function displayProjectsList() {
-        Core_Sql::getInstance()->select(self::$PROJECT_TABLE, array(
+        Core_Sql::getInstance()->select(self::PROJECT_TABLE, array(
             "projectid",
             "name",
             "date",
@@ -55,7 +55,7 @@ class Module_Project_Index extends Libs_ModuleModel {
                 "img",
                 "progress",
                 "website");
-            Core_Sql::getInstance()->select(self::$PROJECT_TABLE, $values, array(
+            Core_Sql::getInstance()->select(self::PROJECT_TABLE, $values, array(
                 "projectid = '" . $projectId . "'"));
 
             if (Core_Sql::getInstance()->affectedRows() == 1) {

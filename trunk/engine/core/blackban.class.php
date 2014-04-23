@@ -25,7 +25,7 @@ class Core_BlackBan {
      */
     public static function displayBlackPage() {
         Core_Sql::getInstance()->select(
-        Core_Table::$BANNED_TABLE, array(
+        Core_Table::BANNED_TABLE, array(
             "reason"), array(
             "ip = '" . Core_Session::getInstance()->userIpBan . "'")
         );
@@ -68,7 +68,7 @@ class Core_BlackBan {
         if ($deleteOldBlackBan) {
             // Suppression des bannissements par ip trop vieux / 2 jours
             Core_Sql::getInstance()->delete(
-            Core_Table::$BANNED_TABLE, array(
+            Core_Table::BANNED_TABLE, array(
                 "ip != ''",
                 "&& (name = 'Hacker' || name = '')",
                 "&& type = '0'",
@@ -89,7 +89,7 @@ class Core_BlackBan {
             if (Core_Session::getInstance()->userIpBan != $userIp && !preg_match("/" . Core_Session::getInstance()->userIpBan . "/", $userIp)) {
                 // On verifie qu'il est bien dans la base (au cas ou il y aurait un débannissement)
                 Core_Sql::getInstance()->select(
-                Core_Table::$BANNED_TABLE, array(
+                Core_Table::BANNED_TABLE, array(
                     "ban_id"), array(
                     "ip = '" . Core_Session::getInstance()->userIpBan . "'")
                 );
@@ -101,7 +101,7 @@ class Core_BlackBan {
 
                     // Mise à jour de l'ip
                     Core_Sql::getInstance()->update(
-                    Core_Table::$BANNED_TABLE, array(
+                    Core_Table::BANNED_TABLE, array(
                         "ip" => $userIp), array(
                         "ban_id = '" . $banId . "'")
                     );
@@ -113,7 +113,7 @@ class Core_BlackBan {
         } else {
             // Sinon on recherche dans la base les bannis; leurs ip et leurs pseudo
             Core_Sql::getInstance()->select(
-            Core_Table::$BANNED_TABLE, array(
+            Core_Table::BANNED_TABLE, array(
                 "ip",
                 "name"), array(), array(
                 "ban_id")

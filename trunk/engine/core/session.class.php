@@ -548,7 +548,7 @@ class Core_Session {
         Core_Sql::getInstance()->addQuoted("", "NOW()");
 
         // Envoi la requête Sql de mise à jour
-        Core_Sql::getInstance()->update(Core_Table::$USERS_TABLE, array(
+        Core_Sql::getInstance()->update(Core_Table::USERS_TABLE, array(
             "last_connect" => "NOW()"), array(
             "user_id = '" . $userId . "'")
         );
@@ -594,7 +594,7 @@ class Core_Session {
      */
     private static function &getUserInfo(array $where) {
         Core_Sql::getInstance()->select(
-        Core_Table::$USERS_TABLE, array(
+        Core_Table::USERS_TABLE, array(
             "user_id",
             "name",
             "mail",

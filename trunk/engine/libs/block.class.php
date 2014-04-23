@@ -184,7 +184,7 @@ class Libs_Block {
 
         // TODO mettre en cache la requete
         Core_Sql::getInstance()->select(
-        Core_Table::$BLOCKS_TABLE, array(
+        Core_Table::BLOCKS_TABLE, array(
             "block_id",
             "side",
             "position",

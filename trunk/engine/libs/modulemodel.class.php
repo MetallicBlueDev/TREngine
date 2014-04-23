@@ -31,7 +31,7 @@ abstract class Libs_ModuleModel {
      */
     public function install() {
         Core_Sql::getInstance()->insert(
-        Core_Table::$MODULES_TABLE, array(
+        Core_Table::MODULES_TABLE, array(
             "name",
             "rank",
             "configs"), array(
@@ -46,7 +46,7 @@ abstract class Libs_ModuleModel {
      */
     public function uninstall() {
         Core_Sql::getInstance()->delete(
-        Core_Table::$MODULES_TABLE, array(
+        Core_Table::MODULES_TABLE, array(
             "mod_id = '" . $this->getModuleData()->getId() . "'")
         );
 

@@ -497,7 +497,7 @@ abstract class Base_Model {
      * @return string
      */
     public function &getCollation() {
-        $this->query("SHOW FULL COLUMNS FROM " . $this->getTableName(Core_Table::$CONFIG_TABLE));
+        $this->query("SHOW FULL COLUMNS FROM " . $this->getTableName(Core_Table::CONFIG_TABLE));
         $info = $this->fetchArray();
         return !empty($info['Collation']) ? $info['Collation'] : "?";
     }

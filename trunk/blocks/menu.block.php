@@ -30,7 +30,7 @@ class Block_Menu extends Libs_BlockModel {
     protected function getMenu() {
         $menus = new Libs_Menu(
         "block" . $this->getBlockData()->getId(), array(
-            "table" => Core_Table::$MENUS_TABLES,
+            "table" => Core_Table::MENUS_TABLES,
             "select" => array(
                 "menu_id",
                 "block_id",
