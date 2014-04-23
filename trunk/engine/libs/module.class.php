@@ -91,11 +91,15 @@ class Libs_Module {
      * @param string $view
      * @return Libs_Module
      */
-    public static function &getInstance($module = "", $page = "", $view = "") {
-        if (self::$libsModule == null) {
+    public static function &getInstance() {
+        self::checkInstance();
+        return self::$libsModule;
+    }
+
+    public static function checkInstance($module = "", $page = "", $view = "") {
+        if (self::$libsModule === null) {
             self::$libsModule = new self($module, $page, $view);
         }
-        return self::$libsModule;
     }
 
     /**

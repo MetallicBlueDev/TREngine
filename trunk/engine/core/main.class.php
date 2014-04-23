@@ -199,9 +199,9 @@ class Core_Main {
         Core_Html::checkInstance();
 
         // Configure les informations de page demandées
-        $this->loadLayout();
-        $this->loadModule();
-        $this->loadMakeStyle();
+        $this->checkLayout();
+        $this->checkModule();
+        $this->checkMakeStyle();
 
         if (!Core_Secure::isDebuggingMode()) {
             $this->compressionOpen();
@@ -300,6 +300,38 @@ class Core_Main {
     }
 
     /**
+     * Vérification et assignation du layout.
+     */
+    private function checkLayout() {
+        // Assignation et vérification de fonction layout
+        $layout = strtolower(Core_Request::getWord("layout"));
+
+        // Configuration du layout
+        if ($layout != "default" && $layout != "modulepage" && $layout != "blockpage" && (($layout != "block" && $layout != "module") || (!Core_Html::getInstance()->isJavascriptEnabled()))) {
+            $layout = "default";
+        }
+
+        $this->layout = $layout;
+    }
+
+    /**
+     * Vérification et assignation des informations sur le module.
+     */
+    private function checkModule() {
+        Libs_Module::checkInstance(
+        Core_Request::getWord("mod"), Core_Request::getWord("page"), Core_Request::getWord("view")
+        );
+    }
+
+    /**
+     * Vérification et assignation du template.
+     */
+    private function checkMakeStyle() {
+        $template = empty(Core_Session::getInstance()->userTemplate) ? self::$coreConfig['defaultTemplate'] : Core_Session::getInstance()->userTemplate;
+        Libs_MakeStyle::setCurrentTemplate($template);
+    }
+
+    /**
      * Vérifie l'état de maintenance.
      *
      * @return boolean
@@ -331,38 +363,6 @@ class Core_Main {
         do {
             $canContinue = ob_end_flush();
         } while ($canContinue);
-    }
-
-    /**
-     * Assignation et vérification de fonction layout.
-     */
-    private function loadLayout() {
-        // Assignation et vérification de fonction layout
-        $layout = strtolower(Core_Request::getWord("layout"));
-
-        // Configuration du layout
-        if ($layout != "default" && $layout != "modulepage" && $layout != "blockpage" && (($layout != "block" && $layout != "module") || (!Core_Html::getInstance()->isJavascriptEnabled()))) {
-            $layout = "default";
-        }
-
-        $this->layout = $layout;
-    }
-
-    /**
-     * Création de l'instance du module.
-     */
-    private function loadModule() {
-        Libs_Module::getInstance(
-        Core_Request::getWord("mod"), Core_Request::getWord("page"), Core_Request::getWord("view")
-        );
-    }
-
-    /**
-     * Assignation et vérification du template.
-     */
-    private function loadMakeStyle() {
-        $template = (!Core_Session::getInstance()->userTemplate) ? self::$coreConfig['defaultTemplate'] : Core_Session::getInstance()->userTemplate;
-        Libs_MakeStyle::getCurrentTemplate($template);
     }
 
     /**

@@ -132,6 +132,15 @@ class Libs_MakeStyle {
     }
 
     /**
+     * Retourne le dossier vers les templates.
+     *
+     * @return string
+     */
+    public static function &getTemplatesDir() {
+        return self::$templatesDir;
+    }
+
+    /**
      * Configure le dossier du template courament utilisé.
      *
      * @param string $currentTemplate
@@ -140,15 +149,6 @@ class Libs_MakeStyle {
         if (is_dir(TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . $currentTemplate)) {
             self::$currentTemplate = $currentTemplate;
         }
-    }
-
-    /**
-     * Retourne le dossier vers les templates.
-     *
-     * @return string
-     */
-    public static function &getTemplatesDir() {
-        return self::$templatesDir;
     }
 
     /**
