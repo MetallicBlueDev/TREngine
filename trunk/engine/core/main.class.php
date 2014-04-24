@@ -387,7 +387,7 @@ class Core_Main {
         }
 
         // Analyse pour les statistiques
-        Exec_Agent::getVisitorsStats();
+        Exec_Agent::executeAnalysis();
 
         // Chargement de la session
         Core_Session::checkInstance();
@@ -445,10 +445,11 @@ class Core_Main {
      * Charge la configuration générale.
      */
     private function loadConfig() {
-        // Chemin vers le fichier de configuration général
+        // Chemin vers le fichier de configuration du moteur
         $canUse = Core_Loader::includeLoader("configs_config");
 
         if ($canUse) {
+            // Tentative d'utilisation de la configuration
             $rawConfig = $this->getConfigValue("configs_config");
 
             if (!empty($rawConfig)) {
@@ -470,37 +471,40 @@ class Core_Main {
 
                 define("TR_ENGINE_STATUT", $rawConfig["TR_ENGINE_STATUT"]);
 
-                // Recherche du statut du site
                 if (TR_ENGINE_STATUT == "close") {
                     Core_Secure::getInstance()->throwException("close");
                 }
 
+                // Vérification de la durée de validité du cache
                 if (!is_int($rawConfig['cacheTimeLimit']) || $rawConfig['cacheTimeLimit'] < 1) {
                     $rawConfig['cacheTimeLimit'] = 7;
                 }
 
                 $newConfig['cacheTimeLimit'] = (int) $rawConfig['cacheTimeLimit'];
 
+                // Vérification du préfixage des cookies
                 if (empty($rawConfig['cookiePrefix'])) {
                     $rawConfig['cookiePrefix'] = "tr";
                 }
 
                 $newConfig['cookiePrefix'] = $rawConfig['cookiePrefix'];
 
-
+                // Vérification de la clé de cryptage
                 if (!empty($rawConfig['cryptKey'])) {
                     $newConfig['cryptKey'] = $rawConfig['cryptKey'];
                 }
 
-                // Ajout a la configuration courante
-                $this->main->addConfig($newConfig);
-
-                unset(self::$coreConfig['configs_config']);
+                // Ajout à la configuration courante
+                $this->addConfig($newConfig);
             } else {
                 // Il n'est pas normale de n'avoir aucune information
                 $canUse = false;
             }
 
+            // Nettoyage des clés temporaires
+            unset(self::$coreConfig['configs_config']);
+
+            // Si tout semble en ordre, nous continuons le chargement
             if ($canUse) {
                 // Chargement de la configuration via la cache
                 $newConfig = array();
@@ -528,7 +532,7 @@ class Core_Main {
                 }
 
                 // Ajout a la configuration courante
-                $this->main->addConfig($newConfig);
+                $this->addConfig($newConfig);
             }
         }
         return $canUse;

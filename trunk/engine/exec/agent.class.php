@@ -238,7 +238,7 @@ class Exec_Agent {
 	/**
 	 * Lance l'analyse et la récuperation d'information sur le client
 	 */
-	public static function getVisitorsStats() {
+	public static function executeAnalysis() {
 		// Adresse Ip du client
 		self::$userIp = self::checkUserIp();
 		
