@@ -41,7 +41,7 @@ class Module_Project_Index extends Libs_ModuleModel {
 
     public function displayProject() {
         // Identifiant du projet
-        $projectId = Core_Request::getInt("projectId", -1, "GET");
+        $projectId = Core_Request::getInteger("projectId", -1, "GET");
 
         if ($projectId >= 0) {
             $values = array(
@@ -103,8 +103,8 @@ class Module_Project_Index extends Libs_ModuleModel {
     }
 
     public function download() {
-        $projectId = Core_Request::getInt("projectId", -1, "POST");
-        $type = Core_Request::getInt("type", -1, "POST");
+        $projectId = Core_Request::getInteger("projectId", -1, "POST");
+        $type = Core_Request::getInteger("type", -1, "POST");
     }
 
     public function setting() {

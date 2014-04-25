@@ -31,8 +31,8 @@ class Core_BlackBan {
         );
 
         if (Core_Sql::getInstance()->affectedRows() > 0) {
-            $mail = (!empty(Core_Main::$coreConfig['defaultAdministratorMail'])) ? Core_Main::$coreConfig['defaultAdministratorMail'] : TR_ENGINE_MAIL;
-            $name = (!empty(Core_Main::$coreConfig['defaultSiteName'])) ? Core_Main::$coreConfig['defaultSiteName'] : "";
+            $mail = Core_Main::getInstance()->getDefaultAdministratorMail();
+            $name = Core_Main::getInstance()->getDefaultSiteName();
 
             $mail = Exec_Mailer::protectedDisplay($mail, $name);
 

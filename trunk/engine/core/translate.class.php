@@ -405,7 +405,7 @@ class Core_Translate {
             if (!self::isValid($language)) {
                 // Utilisation de la langue par défaut du site
                 if (Core_Loader::isCallable("Core_Main")) {
-                    $language = Core_Main::$coreConfig['defaultLanguage'];
+                    $language = Core_Main::getDefaultLanguage();
                 } else {
                     $language = "";
                 }

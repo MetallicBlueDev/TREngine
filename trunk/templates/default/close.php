@@ -11,9 +11,9 @@
     <body>
 
         <div style="display: none;">
-            <?php echo Core_Main::$coreConfig['defaultSiteName']; ?>
+            <?php echo Core_Main::getInstance()->getDefaultSiteName(); ?>
             <br />
-            <?php echo Core_Main::$coreConfig['defaultSiteSlogan']; ?>
+            <?php echo Core_Main::getInstance()->getDefaultSiteSlogan(); ?>
         </div>
         <div id="close_block"><br /><br /><br />
             <a href="<?php echo "http://" . TR_ENGINE_URL; ?>">
@@ -21,7 +21,7 @@
             </a>
             <div id="close_text">
                 <br /><?php echo $closeText; ?>
-                <br /><br /><?php echo Core_Main::$coreConfig['defaultSiteCloseReason']; ?>
+                <br /><br /><?php echo Core_Main::getInstance()->getDefaultSiteCloseReason(); ?>
                 <br />
                 <?php echo Libs_Block::getInstance()->getBlock(); ?>
             </div>

@@ -15,6 +15,18 @@ class Core_Request {
     private static $buffer = array();
 
     /**
+     * Retourne la variable demandée de type booléenne.
+     *
+     * @param string $name Nom de la variable
+     * @param bool $default Donnée par défaut
+     * @param string $hash Provenance de la variable
+     * @return boolean
+     */
+    public static function &getBoolean($name, $default = false, $hash = "default") {
+        return self::getVars($name, "BOOL", $default, $hash);
+    }
+
+    /**
      * Retourne la variable demandée de type int.
      *
      * @param string $name Nom de la variable
@@ -22,7 +34,7 @@ class Core_Request {
      * @param string $hash Provenance de la variable
      * @return int
      */
-    public static function &getInt($name, $default = 0, $hash = "default") {
+    public static function &getInteger($name, $default = 0, $hash = "default") {
         return self::getVars($name, "INT", $default, $hash);
     }
 

@@ -98,7 +98,7 @@ class Core_Main {
      *
      * @param string $key
      * @param string $subKey
-     * @return mixed
+     * @return string
      */
     public function &getConfigValue($key, $subKey = "") {
         $rslt = null;
@@ -141,21 +141,167 @@ class Core_Main {
     }
 
     /**
+     * Vérifie l'état de maintenance.
+     *
+     * @return boolean
+     */
+    public function doDumb() {
+        return ($this->getDefaultSiteStatut() == "close" && Core_Session::getInstance()->userRank < 2);
+    }
+
+    /**
      * Détermine l'état des inscriptions au site.
      *
      * @return boolean
      */
-    public function isRegistrationAllowed() {
+    public function registrationAllowed() {
         return ($this->getConfigValue("registrationAllowed") == 1) ? true : false;
     }
 
     /**
-     * Vérifie si le site est fermé.
+     * Retourne le préfixe des cookies.
      *
-     * @return boolean
+     * @return string
      */
-    public function isClosed() {
-        return ($this->getConfigValue("defaultSiteStatut") == "close") ? true : false;
+    public function &getCookiePrefix() {
+        return $this->getConfigValue("cookiePrefix");
+    }
+
+    /**
+     * Retourne la durée de validité du cache.
+     *
+     * @return int
+     */
+    public function &getCacheTimeLimit() {
+        return $this->getConfigValue("cacheTimeLimit");
+    }
+
+    /**
+     * Retourne la clé de cryptage.
+     *
+     * @return string
+     */
+    public function &getCryptKey() {
+        return $this->getConfigValue("cryptKey");
+    }
+
+    /**
+     * Retourne le mode du captcha.
+     *
+     * @return string
+     */
+    public function &getCaptchaMode() {
+        return $this->getConfigValue("captchaMode");
+    }
+
+    /**
+     * Retourne l'adresse email de l'administrateur.
+     *
+     * @return string
+     */
+    public function &getDefaultAdministratorMail() {
+        return $this->getDefaultConfigValue("defaultAdministratorMail", function() {
+            return TR_ENGINE_MAIL;
+        });
+    }
+
+    /**
+     * Retourne le nom du site.
+     *
+     * @return string
+     */
+    public function &getDefaultSiteName() {
+        return $this->getDefaultConfigValue("defaultSiteName", function() {
+            return Core_Request::getString("SERVER_NAME", "", "SERVER");
+        });
+    }
+
+    /**
+     * Retourne le slogan du site.
+     *
+     * @return string
+     */
+    public function &getDefaultSiteSlogan() {
+        return $this->getDefaultConfigValue("defaultSiteSlogan", function() {
+            return "TR ENGINE";
+        });
+    }
+
+    /**
+     * Retourne le status du site.
+     *
+     * @return string
+     */
+    public function &getDefaultSiteStatut() {
+        return $this->getDefaultConfigValue("defaultSiteStatut", function() {
+            return "open";
+        });
+    }
+
+    /**
+     * Retourne la raison de la fermeture du site.
+     *
+     * @return string
+     */
+    public function &getDefaultSiteCloseReason() {
+        return $this->getDefaultConfigValue("defaultSiteCloseReason", function() {
+            return " ";
+        });
+    }
+
+    /**
+     * Retourne la description du site.
+     *
+     * @return string
+     */
+    public function &getDefaultDescription() {
+        return $this->getDefaultConfigValue("defaultDescription", function() {
+            return "TR ENGINE";
+        });
+    }
+
+    /**
+     * Retourne les mots clés du site.
+     *
+     * @return string
+     */
+    public function &getDefaultKeyWords() {
+        return $this->getDefaultConfigValue("defaultKeyWords", function() {
+            return "TR ENGINE";
+        });
+    }
+
+    /**
+     * Retourne la langue par défaut.
+     *
+     * @return string
+     */
+    public function &getDefaultLanguage() {
+        return $this->getDefaultConfigValue("defaultLanguage", function() {
+            return "english";
+        });
+    }
+
+    /**
+     * Retourne le template par défaut.
+     *
+     * @return string
+     */
+    public function &getDefaultTemplate() {
+        return $this->getDefaultConfigValue("defaultTemplate", function() {
+            return " ";
+        });
+    }
+
+    /**
+     * Retourne le nom du module par défaut.
+     *
+     * @return string
+     */
+    public function &getDefaultMod() {
+        return $this->getDefaultConfigValue("defaultMod", function() {
+            return "home";
+        });
     }
 
     /**
@@ -212,7 +358,7 @@ class Core_Main {
             // Vérification du type d'affichage
             if ($this->isFullScreen() && Core_Loader::isCallable("Libs_Block") && Core_Loader::isCallable("Libs_Module")) {
                 // Affichage classique du site
-                if ($this->inMaintenance()) {
+                if ($this->doDumb()) {
                     // Mode maintenance: possibilité de s'identifier
                     Libs_Block::getInstance()->launchOneBlock(array(
                         "type = 'login'"));
@@ -238,19 +384,23 @@ class Core_Main {
             } else {
                 // Affichage autonome des modules et blocks
                 if ($this->isModuleLayout() && Core_Loader::isCallable("Libs_Module")) {
+                    $libsModule = Libs_Module::getInstance();
+
                     // Affichage du module uniquement
-                    Libs_Module::getInstance()->launch();
+                    $libsModule->launch();
 
                     Exec_Marker::stopTimer("main");
 
-                    echo Libs_Module::getInstance()->getModule();
+                    echo $libsModule->getModule();
                 } else if ($this->isBlockLayout() && Core_Loader::isCallable("Libs_Block")) {
+                    $libsBlock = Libs_Block::getInstance();
+
                     // Affichage du block uniquement
-                    Libs_Block::getInstance()->launchOneBlock();
+                    $libsBlock->launchOneBlock();
 
                     Exec_Marker::stopTimer("main");
 
-                    echo Libs_Block::getInstance()->getBlock();
+                    echo $libsBlock->getBlock();
                 }
 
                 // Execute la commande de récupération d'erreur
@@ -300,6 +450,24 @@ class Core_Main {
     }
 
     /**
+     * Retourne la valeur par défaut de la configuration.
+     *
+     * @param string $keyName
+     * @param string $callback
+     * @return string
+     */
+    private function &getDefaultConfigValue($keyName, $callback) {
+        $value = $this->getConfigValue($keyName);
+
+        if (empty($value)) {
+            $value = $callback();
+            $this->addConfig(array(
+                $keyName => $value));
+        }
+        return $value;
+    }
+
+    /**
      * Vérification et assignation du layout.
      */
     private function checkLayout() {
@@ -327,17 +495,19 @@ class Core_Main {
      * Vérification et assignation du template.
      */
     private function checkMakeStyle() {
-        $template = empty(Core_Session::getInstance()->userTemplate) ? self::$coreConfig['defaultTemplate'] : Core_Session::getInstance()->userTemplate;
-        Libs_MakeStyle::setCurrentTemplate($template);
-    }
+        $templateName = Core_Session::getInstance()->userTemplate;
 
-    /**
-     * Vérifie l'état de maintenance.
-     *
-     * @return boolean
-     */
-    private function inMaintenance() {
-        return ($this->isClosed() && Core_Session::getInstance()->userRank < 2);
+        // Tentative d'utilisation du template du client
+        if (!Libs_MakeStyle::setCurrentTemplate($templateName)) {
+            $templateName = null;
+        }
+
+        if (empty($templateName)) {
+            $templateName = $this->getDefaultTemplate();
+
+            // Tentative d'utilisation du template du site
+            Libs_MakeStyle::setCurrentTemplate($templateName);
+        }
     }
 
     /**
@@ -515,13 +685,14 @@ class Core_Main {
                     $newConfig = Core_CacheBuffer::getCache("configs.php");
                 } else {
                     $content = "";
+                    $coreSql = Core_Sql::getInstance();
 
                     // Requête vers la base de données de configs
-                    Core_Sql::getInstance()->select(Core_Table::CONFIG_TABLE, array(
+                    $coreSql->select(Core_Table::CONFIG_TABLE, array(
                         "name",
                         "value"));
 
-                    foreach (Core_Sql::getInstance()->fetchArray() as $row) {
+                    foreach ($coreSql->fetchArray() as $row) {
                         $content .= Core_CacheBuffer::serializeData(array(
                             $row['name'] => $row['value']));
                         $newConfig[$row['name']] = Exec_Entities::stripSlashes($row['value']);

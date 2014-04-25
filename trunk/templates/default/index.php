@@ -10,7 +10,7 @@
     <body>
 
         <div id="header">
-            <div style="display: none;"><h2><?php echo Core_Main::$coreConfig['defaultSiteName'] . " - " . Core_Main::$coreConfig['defaultSiteSlogan']; ?></h2></div>
+            <div style="display: none;"><h2><?php echo Core_Main::getInstance()->getDefaultSiteName() . " - " . Core_Main::getInstance()->getDefaultSiteSlogan(); ?></h2></div>
             <object type="application/x-shockwave-flash" data="templates/default/images/header.swf" width="900px" height="130px">
                 <param name="movie" value="templates/default/images/header.swf" />
                 <param name="pluginurl" value="http://www.macromedia.com/go/getflashplayer" />

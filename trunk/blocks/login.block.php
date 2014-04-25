@@ -79,7 +79,7 @@ class Block_Login extends Libs_BlockModel {
             }
         } else {
             $moreLink = "<ul>";
-            if (Core_Main::getInstance()->isRegistrationAllowed()) {
+            if (Core_Main::getInstance()->registrationAllowed()) {
                 $moreLink .= "<li><b>" . Core_Html::getLinkForBlock("mod=connect&view=registration", "blockId=" . $this->getBlockData()->getId() . "&localView=registration", "#login-logonblock", GET_ACCOUNT) . "</b></li>";
             }
             $moreLink .= "<li>" . Core_Html::getLinkForBlock("mod=connect&view=logon", "blockId=" . $this->getBlockData()->getId() . "&localView=logon", "#login-logonblock", GET_LOGON) . "</li>"

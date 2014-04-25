@@ -57,22 +57,24 @@ class Module_Management_Setting extends Libs_ModuleModel {
         $form->setDescription(SETTING_GENERAL_SITE_SETTING_DESCRIPTION);
         $form->addSpace();
 
-        $online = (Core_Main::$coreConfig['defaultSiteStatut'] == "open") ? true : false;
+        $coreMain = Core_Main::getInstance();
+
+        $online = ($coreMain->getDefaultSiteStatut() == "open") ? true : false;
         $form->addHtmlInFieldset(SETTING_GENERAL_SITE_SETTING_SITE_STATUT);
         $form->addInputRadio("defaultSiteStatut1", "defaultSiteStatut", SETTING_GENERAL_SITE_SETTING_SITE_ON, $online, "open");
         $form->addInputRadio("defaultSiteStatut2", "defaultSiteStatut", SETTING_GENERAL_SITE_SETTING_SITE_OFF, !$online, "close");
         $form->addSpace();
-        $form->addTextarea("defaultSiteCloseReason", SETTING_GENERAL_SITE_SETTING_SITE_OFF_REASON, Core_Main::$coreConfig['defaultSiteCloseReason'], "style=\"display: block;\" cols=\"50\"");
+        $form->addTextarea("defaultSiteCloseReason", SETTING_GENERAL_SITE_SETTING_SITE_OFF_REASON, $coreMain->getDefaultSiteCloseReason(), "style=\"display: block;\" cols=\"50\"");
         $form->addSpace();
 
-        $form->addInputText("defaultSiteName", SETTING_GENERAL_DEFAULT_SITE_NAME, Core_Main::$coreConfig['defaultSiteName']);
-        $form->addInputText("defaultSiteSlogan", SETTING_GENERAL_DEFAULT_SITE_SLOGAN, Core_Main::$coreConfig['defaultSiteSlogan']);
-        $form->addInputText("defaultAdministratorMail", SETTING_GENERAL_DEFAULT_ADMIN_MAIL, Core_Main::$coreConfig['defaultAdministratorMail']);
+        $form->addInputText("defaultSiteName", SETTING_GENERAL_DEFAULT_SITE_NAME, $coreMain->getDefaultSiteName());
+        $form->addInputText("defaultSiteSlogan", SETTING_GENERAL_DEFAULT_SITE_SLOGAN, $coreMain->getDefaultSiteSlogan());
+        $form->addInputText("defaultAdministratorMail", SETTING_GENERAL_DEFAULT_ADMIN_MAIL, $coreMain->getDefaultAdministratorMail());
         $form->addSpace();
 
         $form->addSelectOpenTag("defaultLanguage", SETTING_GENERAL_DEFAULT_LANGUAGE);
         $langues = Core_Translate::listLanguages();
-        $currentLanguage = Core_Main::$coreConfig['defaultLanguage'];
+        $currentLanguage = $coreMain->getDefaultLanguage();
         $form->addSelectItemTag($currentLanguage, "", true);
         foreach ($langues as $langue) {
             if ($langue == $currentLanguage)
@@ -83,7 +85,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
 
         $form->addSelectOpenTag("defaultTemplate", SETTING_GENERAL_DEFAULT_TEMPLATE);
         $templates = Libs_MakeStyle::listTemplates();
-        $currentTemplate = Core_Main::$coreConfig['defaultTemplate'];
+        $currentTemplate = $coreMain->getDefaultTemplate();
         $form->addSelectItemTag($currentTemplate, "", true);
         foreach ($templates as $template) {
             if ($template == $currentTemplate)
@@ -94,7 +96,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
 
         $form->addSelectOpenTag("defaultMod", SETTING_GENERAL_DEFAULT_MODULE);
         $modules = Libs_Module::listModules();
-        $currentModule = Core_Main::$coreConfig['defaultMod'];
+        $currentModule = $coreMain->getDefaultMod();
         $currentModuleName = "";
         foreach ($modules as $module) {
             if ($module['value'] == $currentModule) {
@@ -110,12 +112,12 @@ class Module_Management_Setting extends Libs_ModuleModel {
         $form->addFieldset(SETTING_GENERAL_METADATA_TITLE, SETTING_GENERAL_METADATA_DESCRIPTION);
         $form->addSpace();
 
-        $form->addTextarea("defaultDescription", SETTING_GENERAL_METADATA_DEFAULT_DESCRIPTION, Core_Main::$coreConfig['defaultDescription'], "style=\"display: block;\" cols=\"50\"");
+        $form->addTextarea("defaultDescription", SETTING_GENERAL_METADATA_DEFAULT_DESCRIPTION, $coreMain->getDefaultDescription(), "style=\"display: block;\" cols=\"50\"");
         $form->addSpace();
-        $form->addTextarea("defaultKeyWords", SETTING_GENERAL_METADATA_DEFAULT_KEYWORDS, Core_Main::$coreConfig['defaultKeyWords'], "style=\"display: block;\" cols=\"50\"");
+        $form->addTextarea("defaultKeyWords", SETTING_GENERAL_METADATA_DEFAULT_KEYWORDS, $coreMain->getDefaultKeyWords(), "style=\"display: block;\" cols=\"50\"");
         $form->addSpace();
 
-        $rewriting = (Core_Main::$coreConfig['urlRewriting'] == 1) ? true : false;
+        $rewriting = $coreMain->doUrlRewriting();
         $form->addHtmlInFieldset(SETTING_GENERAL_METADATA_URLREWRITING);
         $form->addInputRadio("urlRewriting1", "urlRewriting", SETTING_GENERAL_METADATA_URLREWRITING_ON, $rewriting, "1");
         $form->addInputRadio("urlRewriting2", "urlRewriting", SETTING_GENERAL_METADATA_URLREWRITING_OFF, !$rewriting, "0");
@@ -132,23 +134,24 @@ class Module_Management_Setting extends Libs_ModuleModel {
 
     private function sendGeneral() {
         $deleteCache = false;
+        $coreMain = Core_Main::getInstance();
 
         // état du site
         $defaultSiteStatut = Core_Request::getWord("defaultSiteStatut", "", "POST");
-        if (Core_Main::$coreConfig['defaultSiteStatut'] != $defaultSiteStatut) {
+        if ($coreMain->getDefaultSiteStatut() != $defaultSiteStatut) {
             $defaultSiteStatut = ($defaultSiteStatut == "close") ? "close" : "open";
             $this->updateTable("defaultSiteStatut", $defaultSiteStatut);
             $deleteCache = true;
         }
         // Raison de femeture
         $defaultSiteCloseReason = Core_Request::getString("defaultSiteCloseReason", "", "POST");
-        if (Core_Main::$coreConfig['defaultSiteCloseReason'] != $defaultSiteCloseReason) {
+        if ($coreMain->getDefaultSiteCloseReason() != $defaultSiteCloseReason) {
             $this->updateTable("defaultSiteCloseReason", $defaultSiteCloseReason);
             $deleteCache = true;
         }
         // Nom du site
         $defaultSiteName = Core_Request::getString("defaultSiteName", "", "POST");
-        if (Core_Main::$coreConfig['defaultSiteName'] != $defaultSiteName) {
+        if ($coreMain->getDefaultSiteName() != $defaultSiteName) {
             if (!empty($defaultSiteName)) {
                 $this->updateTable("defaultSiteName", $defaultSiteName);
                 $deleteCache = true;
@@ -158,13 +161,13 @@ class Module_Management_Setting extends Libs_ModuleModel {
         }
         // Slogan du site
         $defaultSiteSlogan = Core_Request::getString("defaultSiteSlogan", "", "POST");
-        if (Core_Main::$coreConfig['defaultSiteSlogan'] != $defaultSiteSlogan) {
+        if ($coreMain->getDefaultSiteSlogan() != $defaultSiteSlogan) {
             $this->updateTable("defaultSiteSlogan", $defaultSiteSlogan);
             $deleteCache = true;
         }
         // Email du site
         $defaultAdministratorMail = Core_Request::getString("defaultAdministratorMail", "", "POST");
-        if (Core_Main::$coreConfig['defaultAdministratorMail'] != $defaultAdministratorMail) {
+        if ($coreMain->getDefaultAdministratorMail() != $defaultAdministratorMail) {
             if (!empty($defaultAdministratorMail) && Exec_Mailer::validMail($defaultAdministratorMail)) {
                 $this->updateTable("defaultAdministratorMail", $defaultAdministratorMail);
                 $deleteCache = true;
@@ -174,7 +177,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
         }
         // Langue par défaut
         $defaultLanguage = Core_Request::getString("defaultLanguage", "", "POST");
-        if (Core_Main::$coreConfig['defaultLanguage'] != $defaultLanguage) {
+        if ($coreMain->getDefaultLanguage() != $defaultLanguage) {
             $langues = Core_Translate::listLanguages();
             if (!empty($defaultLanguage) && Exec_Utils::inArray($defaultLanguage, $langues)) {
                 $this->updateTable("defaultLanguage", $defaultLanguage);
@@ -185,7 +188,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
         }
         // Template par défaut
         $defaultTemplate = Core_Request::getString("defaultTemplate", "", "POST");
-        if (Core_Main::$coreConfig['defaultTemplate'] != $defaultTemplate) {
+        if ($coreMain->getDefaultTemplate() != $defaultTemplate) {
             $templates = Libs_MakeStyle::listTemplates();
             if (!empty($defaultTemplate) && Exec_Utils::inArray($defaultTemplate, $templates)) {
                 $this->updateTable("defaultTemplate", $defaultTemplate);
@@ -196,7 +199,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
         }
         // Module par défaut
         $defaultMod = Core_Request::getString("defaultMod", "", "POST");
-        if (Core_Main::$coreConfig['defaultMod'] != $defaultMod) {
+        if ($coreMain->getDefaultMod() != $defaultMod) {
             if (!empty($defaultMod)) {
                 $this->updateTable("defaultMod", $defaultMod);
                 $deleteCache = true;
@@ -206,20 +209,20 @@ class Module_Management_Setting extends Libs_ModuleModel {
         }
         // Description du site
         $defaultDescription = Core_Request::getString("defaultDescription", "", "POST");
-        if (Core_Main::$coreConfig['defaultDescription'] != $defaultDescription) {
+        if ($coreMain->getDefaultDescription() != $defaultDescription) {
             $this->updateTable("defaultDescription", $defaultDescription);
             $deleteCache = true;
         }
         // Mot clès du site
         $defaultKeyWords = Core_Request::getString("defaultKeyWords", "", "POST");
-        if (Core_Main::$coreConfig['defaultKeyWords'] != $defaultKeyWords) {
+        if ($coreMain->getDefaultKeyWords() != $defaultKeyWords) {
             $this->updateTable("defaultKeyWords", $defaultKeyWords);
             $deleteCache = true;
         }
         // état de la réécriture des URLs
-        $urlRewriting = Core_Request::getString("urlRewriting", "", "POST");
-        if (Core_Main::$coreConfig['urlRewriting'] != $urlRewriting) {
-            $urlRewriting = ($urlRewriting == 1) ? 1 : 0;
+        $urlRewriting = Core_Request::getBoolean("urlRewriting", "", "POST");
+        if ($coreMain->doUrlRewriting() != $urlRewriting) {
+            $urlRewriting = $urlRewriting ? 1 : 0;
             $this->updateTable("urlRewriting", $urlRewriting);
             $deleteCache = true;
         }
@@ -230,25 +233,27 @@ class Module_Management_Setting extends Libs_ModuleModel {
             Core_Logger::addInformationMessage(DATA_SAVED);
         }
 
-        if (Core_Main::getInstance()->isDefaultLayout()) {
+        if ($coreMain->isDefaultLayout()) {
             Core_Html::getInstance()->redirect("index.php?mod=management&manage=setting&selectedTab=settingtabidTab0", 1);
         }
     }
 
     private function tabSystem() {// TODO a finir de coder
+        $coreMain = Core_Main::getInstance();
+
         $form = new Libs_Form("management-setting-system");
         $form->setTitle(SETTING_SYSTEM_CACHE_SETTING_TITLE);
         $form->setDescription(SETTING_SYSTEM_CACHE_SETTING_DESCRIPTION);
-        $form->addInputText("cacheTimeLimit", SETTING_SYSTEM_CACHE_SETTING_CACHE_LIMIT, Core_Main::$coreConfig['cacheTimeLimit']);
-        $form->addInputText("cryptKey", SETTING_SYSTEM_CACHE_SETTING_CRYPT_KEY, Core_Main::$coreConfig['cryptKey']);
+        $form->addInputText("cacheTimeLimit", SETTING_SYSTEM_CACHE_SETTING_CACHE_LIMIT, $coreMain->getCacheTimeLimit());
+        $form->addInputText("cryptKey", SETTING_SYSTEM_CACHE_SETTING_CRYPT_KEY, $coreMain->getCryptKey());
         $form->addSpace();
 
         $form->addFieldset(SETTING_SYSTEM_SESSION_SETTING_TITLE, SETTING_SYSTEM_SESSION_SETTING_DESCRIPTION);
-        $form->addInputText("cookiePrefix", SETTING_SYSTEM_SESSION_SETTING_COOKIE_PREFIX, Core_Main::$coreConfig['cookiePrefix']);
+        $form->addInputText("cookiePrefix", SETTING_SYSTEM_SESSION_SETTING_COOKIE_PREFIX, $coreMain->getCookiePrefix());
         $form->addSpace();
 
         // Configuration FTP
-        $ftp = Core_Main::getInstance()->getConfigFtp();
+        $ftp = $coreMain->getConfigFtp();
         $form->addFieldset(SETTING_SYSTEM_FTP_SETTING_TITLE, SETTING_SYSTEM_FTP_SETTING_DESCRIPTION);
 
         $form->addSelectOpenTag("ftpType", SETTING_SYSTEM_FTP_SETTING_TYPE);
@@ -295,36 +300,37 @@ class Module_Management_Setting extends Libs_ModuleModel {
 
     private function sendSystem() {
         $updateConfigFile = false;
+        $coreMain = Core_Main::getInstance();
 
-        $cacheTimeLimit = Core_Request::getInt("cacheTimeLimit", 7, "POST");
-        if ($cacheTimeLimit != Core_Main::$coreConfig['cacheTimeLimit']) {
+        $cacheTimeLimit = Core_Request::getInteger("cacheTimeLimit", 7, "POST");
+        if ($cacheTimeLimit != $coreMain->getCacheTimeLimit()) {
             if ($cacheTimeLimit >= 1)
                 $updateConfigFile = true;
             else
-                $cacheTimeLimit = Core_Main::$coreConfig['cacheTimeLimit'];
+                $cacheTimeLimit = $coreMain->getCacheTimeLimit();
         }
 
-        $cryptKey = Core_Request::getString("cryptKey", Core_Main::$coreConfig['cryptKey'], "POST");
-        if ($cryptKey != Core_Main::$coreConfig['cryptKey']) {
+        $cryptKey = Core_Request::getString("cryptKey", $coreMain->getCryptKey(), "POST");
+        if ($cryptKey != $coreMain->getCryptKey()) {
             if (!empty($cryptKey))
                 $updateConfigFile = true;
             else
-                $cryptKey = Core_Main::$coreConfig['cryptKey'];
+                $cryptKey = $coreMain->getCryptKey();
         }
 
-        $cookiePrefix = Core_Request::getString("cookiePrefix", Core_Main::$coreConfig['cookiePrefix'], "POST");
-        if ($cookiePrefix != Core_Main::$coreConfig['cookiePrefix']) {
+        $cookiePrefix = Core_Request::getString("cookiePrefix", $coreMain->getCookiePrefix(), "POST");
+        if ($cookiePrefix != $coreMain->getCookiePrefix()) {
             if (!empty($cookiePrefix))
                 $updateConfigFile = true;
             else
-                $cookiePrefix = Core_Main::$coreConfig['cookiePrefix'];
+                $cookiePrefix = $coreMain->getCookiePrefix();
         }
 
         if ($updateConfigFile) {
-            Exec_FileBuilder::buildConfigFile(Core_Main::$coreConfig['defaultAdministratorMail'], TR_ENGINE_STATUT, $cacheTimeLimit, $cookiePrefix, $cryptKey);
+            Exec_FileBuilder::buildConfigFile($coreMain->getDefaultAdministratorMail(), TR_ENGINE_STATUT, $cacheTimeLimit, $cookiePrefix, $cryptKey);
         }
 
-        $ftp = Core_Main::getInstance()->getConfigFtp();
+        $ftp = $coreMain->getConfigFtp();
         $updateFtpFile = false;
 
         $ftpType = Core_Request::getWord("ftpType", $ftp['type'], "POST");
@@ -343,7 +349,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
                 $ftpHost = $ftp['host'];
         }
 
-        $ftpPort = Core_Request::getInt("ftpPort", 21, "POST");
+        $ftpPort = Core_Request::getInteger("ftpPort", 21, "POST");
         if ($ftpPort != $ftp['port']) {
             if (is_int($ftpPort))
                 $updateFtpFile = true;
@@ -434,7 +440,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
             Exec_FileBuilder::buildDatabaseFile($dbHost, $dbUser, $dbPass, $dbName, $dbType, $dbPrefix);
         }
 
-        if (Core_Main::getInstance()->isDefaultLayout()) {
+        if ($coreMain->isDefaultLayout()) {
             Core_Html::getInstance()->redirect("index.php?mod=management&manage=setting&selectedTab=settingtabidTab1", 1);
         }
     }

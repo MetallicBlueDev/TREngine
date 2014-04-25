@@ -84,7 +84,7 @@ class Core_Html {
     private function __construct() {
         // Configuration du préfixe accessible
         if (Core_Loader::isCallable("Core_Main")) {
-            $prefix = Core_Main::$coreConfig['cookiePrefix'];
+            $prefix = Core_Main::getInstance()->getCookiePrefix();
         } else {
             $prefix = "tr";
         }
@@ -328,11 +328,11 @@ class Core_Html {
      */
     public function getMetaHeaders() {
         $title = "";
-        if (Core_Loader::isCallable("Core_Main") && !empty(Core_Main::$coreConfig['defaultSiteName'])) {
+        if (Core_Loader::isCallable("Core_Main")) {
             if (empty($this->title))
-                $title = Core_Main::$coreConfig['defaultSiteName'] . " - " . Core_Main::$coreConfig['defaultSiteSlogan'];
+                $title = Core_Main::getInstance()->getDefaultSiteName() . " - " . Core_Main::getInstance()->getDefaultSiteSlogan();
             else
-                $title = Core_Main::$coreConfig['defaultSiteName'] . " - " . $this->title;
+                $title = Core_Main::getInstance()->getDefaultSiteName() . " - " . $this->title;
         } else {
             if (empty($this->title))
                 $title = Core_Request::getString("SERVER_NAME", "", "SERVER");
@@ -375,9 +375,9 @@ class Core_Html {
 
         if (Core_Loader::isCallable("Core_Main")) {
             if (empty($this->description))
-                $this->description = Core_Main::$coreConfig['defaultDescription'];
+                $this->description = Core_Main::getInstance()->getDefaultDescription();
             if (empty($keywords))
-                $keywords = Core_Main::$coreConfig['defaultKeyWords'];
+                $keywords = Core_Main::getInstance()->getDefaultKeyWords();
         }
 
         return "<meta name=\"description\" content=\"" . Exec_Entities::textDisplay($this->description) . "\" />\n"
@@ -435,7 +435,7 @@ class Core_Html {
     private function getSalt() {
         // Configuration de la clès accessible
         if (Core_Loader::isCallable("Core_Main"))
-            $key = Core_Main::$coreConfig['cryptKey'];
+            $key = Core_Main::getInstance()->getCryptKey();
         else
             $key = "A4bT9D4V";
         return $key;

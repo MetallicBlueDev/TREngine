@@ -6,6 +6,8 @@ if (!defined("TR_ENGINE_INDEX")) {
 
 class Core_CacheBuffer {
 
+    const SECTION_CONFIGS = "configs";
+
     /**
      * Instance d'un protocole déjà initialisé
      *
@@ -47,7 +49,7 @@ class Core_CacheBuffer {
      * @var array
      */
     private static $sectionDir = array(
-        "configs" => "configs/",
+        self::SECTION_CONFIGS => "configs/",
         "tmp" => "tmp",
         "log" => "tmp/log",
         "sessions" => "tmp/sessions",

@@ -145,12 +145,14 @@ class Core_Session {
         // Marque le timer
         $this->timer = time();
 
+        $coreMain = Core_Main::getInstance();
+
         // Durée de validité du cache en jours
-        $this->cacheTimeLimit = Core_Main::$coreConfig['cacheTimeLimit'] * 86400;
+        $this->cacheTimeLimit = $coreMain->getCacheTimeLimit() * 86400;
 
         // Complète le nom des cookies
         foreach ($this->cookieName as $key => $name) {
-            $this->cookieName[$key] = Core_Main::$coreConfig['cookiePrefix'] . $name;
+            $this->cookieName[$key] = $coreMain->getCookiePrefix() . $name;
         }
 
         if ($setupCache) {
@@ -545,14 +547,15 @@ class Core_Session {
             $userId = $this->userId;
         }
 
-        Core_Sql::getInstance()->addQuoted("", "NOW()");
+        $coreSql = Core_Sql::getInstance();
+        $coreSql->addQuoted("", "NOW()");
 
         // Envoi la requête Sql de mise à jour
-        Core_Sql::getInstance()->update(Core_Table::USERS_TABLE, array(
+        $coreSql->update(Core_Table::USERS_TABLE, array(
             "last_connect" => "NOW()"), array(
             "user_id = '" . $userId . "'")
         );
-        return (Core_Sql::getInstance()->affectedRows() == 1) ? true : false;
+        return ($coreSql->affectedRows() == 1) ? true : false;
     }
 
     /**
@@ -584,7 +587,7 @@ class Core_Session {
      * @return string
      */
     private static function getSalt() {
-        return Core_Main::$coreConfig['cryptKey'] . Exec_Agent::$userBrowserName;
+        return Core_Main::getInstance()->getCryptKey() . Exec_Agent::$userBrowserName;
     }
 
     /**
@@ -593,7 +596,8 @@ class Core_Session {
      * @return array
      */
     private static function &getUserInfo(array $where) {
-        Core_Sql::getInstance()->select(
+        $coreSql = Core_Sql::getInstance();
+        $coreSql->select(
         Core_Table::USERS_TABLE, array(
             "user_id",
             "name",
@@ -606,7 +610,7 @@ class Core_Session {
             "template",
             "langue"), $where
         );
-        return (Core_Sql::getInstance()->affectedRows() == 1) ? Core_Sql::getInstance()->fetchArray() : array();
+        return ($coreSql->affectedRows() == 1) ? $coreSql->fetchArray() : array();
     }
 
 }

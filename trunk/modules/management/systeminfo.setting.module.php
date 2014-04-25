@@ -32,6 +32,7 @@ class Module_Management_Systeminfo extends Libs_ModuleModel {
             . (($actived) ? "yes" : "no");
         }
 
+        $coreMain = Core_Main::getInstance();
         $infos = array(
             "TR ENGINE VERSION" => TR_ENGINE_VERSION,
             "TR ENGINE PHP VERSION" => TR_ENGINE_PHP_VERSION,
@@ -40,8 +41,8 @@ class Module_Management_Systeminfo extends Libs_ModuleModel {
             "TR ENGINE DIR" => TR_ENGINE_DIR,
             "TR ENGINE URL" => TR_ENGINE_URL,
             "TR ENGINE MAIL" => TR_ENGINE_MAIL,
-            "TR ENGINE valid cache time" => Core_Main::$coreConfig['cacheTimeLimit'] . " days",
-            "TR ENGINE UrlRewriting" => (($urlRewriting == 1) ? "on" : "off"),
+            "TR ENGINE valid cache time" => $coreMain->getCacheTimeLimit() . " days",
+            "TR ENGINE UrlRewriting" => (($coreMain->doUrlRewriting()) ? "on" : "off"),
             "PHP built on" => php_uname(),
             "PHP version" => phpversion(),
             "WebServer to PHP interface" => php_sapi_name(),

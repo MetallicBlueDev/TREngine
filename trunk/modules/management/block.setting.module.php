@@ -109,7 +109,7 @@ class Module_Management_Block extends Libs_ModuleModel {
     }
 
     private function sendMoveUp() {
-        $blockId = Core_Request::getInt("blockId", -1);
+        $blockId = Core_Request::getInteger("blockId", -1);
 
         if ($blockId > -1) { // Si l'id semble valide
             Core_Sql::getInstance()->select(
@@ -155,7 +155,7 @@ class Module_Management_Block extends Libs_ModuleModel {
     }
 
     private function sendMoveDown() {
-        $blockId = Core_Request::getInt("blockId", -1);
+        $blockId = Core_Request::getInteger("blockId", -1);
 
         if ($blockId > -1) { // Si l'id semble valide
             Core_Sql::getInstance()->select(
@@ -214,7 +214,7 @@ class Module_Management_Block extends Libs_ModuleModel {
 
     private function tabEdit($blockId = -1) {
         if ($blockId < 0) {
-            $blockId = Core_Request::getInt("blockId", -1);
+            $blockId = Core_Request::getInteger("blockId", -1);
         }
 
         if ($blockId > -1) { // Si l'id semble valide
@@ -300,7 +300,7 @@ class Module_Management_Block extends Libs_ModuleModel {
     }
 
     private function sendDelete() {
-        $blockId = Core_Request::getInt("blockId", -1);
+        $blockId = Core_Request::getInteger("blockId", -1);
 
         if ($blockId > -1) { // Si l'id semble valide
             Core_Sql::getInstance()->select(
@@ -336,7 +336,7 @@ class Module_Management_Block extends Libs_ModuleModel {
     }
 
     private function sendCopy() {
-        $blockId = Core_Request::getInt("blockId", -1);
+        $blockId = Core_Request::getInteger("blockId", -1);
 
         if ($blockId > -1) { // Si l'id semble valide
             $keys = array(
