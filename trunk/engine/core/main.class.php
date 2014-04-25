@@ -19,9 +19,9 @@ class Core_Main {
     private static $coreMain = null;
 
     /**
-     * Tableau d'information de configuration.
+     * Tableau de configuration.
      */
-    public static $coreConfig;
+    private $configs;
 
     /**
      * Mode de mise en page courante.
@@ -75,9 +75,9 @@ class Core_Main {
     public function addConfig(array $configuration) {
         foreach ($configuration as $key => $value) {
             if (is_array($value)) {
-                self::$coreConfig[$key] = $value;
+                $this->configs[$key] = $value;
             } else {
-                self::$coreConfig[$key] = Exec_Entities::stripSlashes($value);
+                $this->configs[$key] = Exec_Entities::stripSlashes($value);
             }
         }
     }
@@ -103,8 +103,8 @@ class Core_Main {
     public function &getConfigValue($key, $subKey = "") {
         $rslt = null;
 
-        if (isset(self::$coreConfig[$key])) {
-            $rslt = self::$coreConfig[$key];
+        if (isset($this->configs[$key])) {
+            $rslt = $this->configs[$key];
 
             if (isset($rslt[$subKey])) {
                 $rslt = $rslt[$subKey];
@@ -146,7 +146,16 @@ class Core_Main {
      * @return boolean
      */
     public function doDumb() {
-        return ($this->getDefaultSiteStatut() == "close" && Core_Session::getInstance()->userRank < 2);
+        return (!$this->doOpening() && Core_Session::getInstance()->userRank < 2);
+    }
+
+    /**
+     * Vérifie l'état du site (ouvert/fermé).
+     *
+     * @return boolean
+     */
+    public function doOpening() {
+        return ($this->getDefaultSiteStatut() == "open");
     }
 
     /**
@@ -672,7 +681,7 @@ class Core_Main {
             }
 
             // Nettoyage des clés temporaires
-            unset(self::$coreConfig['configs_config']);
+            unset($this->configs['configs_config']);
 
             // Si tout semble en ordre, nous continuons le chargement
             if ($canUse) {

@@ -59,7 +59,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
 
         $coreMain = Core_Main::getInstance();
 
-        $online = ($coreMain->getDefaultSiteStatut() == "open") ? true : false;
+        $online = $coreMain->doOpening();
         $form->addHtmlInFieldset(SETTING_GENERAL_SITE_SETTING_SITE_STATUT);
         $form->addInputRadio("defaultSiteStatut1", "defaultSiteStatut", SETTING_GENERAL_SITE_SETTING_SITE_ON, $online, "open");
         $form->addInputRadio("defaultSiteStatut2", "defaultSiteStatut", SETTING_GENERAL_SITE_SETTING_SITE_OFF, !$online, "close");
