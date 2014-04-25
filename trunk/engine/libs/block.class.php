@@ -59,7 +59,7 @@ class Libs_Block {
         if (empty($where)) {
             // Capture de la variable
             $where = array(
-                "block_id = '" . Core_Request::getInt("blockId") . "'");
+                "block_id = '" . Core_Request::getInteger("blockId") . "'");
         }
 
         $this->launchBlock($where, false);

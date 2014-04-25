@@ -47,7 +47,7 @@ class Libs_Menu {
      */
     public function __construct($identifier, array $sql = array()) {
         $this->identifier = $identifier;
-        $this->itemActive = Core_Request::getInt("item", 0);
+        $this->itemActive = Core_Request::getInteger("item", 0);
 
         Core_CacheBuffer::setSectionName("menus");
 

@@ -60,7 +60,7 @@ class Libs_Captcha {
      */
     public function __construct(&$object = null) {
         // Mode du captcha
-        $captchaMode = Core_Main::$coreConfig['captchaMode'];
+        $captchaMode = Core_Main::getInstance()->getCaptchaMode();
         $captchaMode = ($captchaMode == "off" || $captchaMode == "auto" || $captchaMode == "manu") ? $captchaMode : "auto";
 
         // Decide de l'activation

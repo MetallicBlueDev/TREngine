@@ -58,7 +58,7 @@ class Libs_Module {
         $this->page = $page;
         $this->view = $view;
 
-        $defaultModule = Core_Main::$coreConfig['defaultMod'];
+        $defaultModule = Core_Main::getInstance()->getDefaultMod();
         $defaultPage = "index";
         $defaultView = "display";
 
