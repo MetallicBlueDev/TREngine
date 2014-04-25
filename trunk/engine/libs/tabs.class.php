@@ -85,7 +85,9 @@ class Libs_Tabs {
         // Création de l'onget
         $this->tabs .= "<li><a href=\"";
 
-        if (Core_Html::getInstance()->isJavascriptEnabled()) {
+        $coreHtml = Core_Html::getInstance();
+
+        if ($coreHtml->isJavascriptEnabled()) {
             // Une simple balise pour le javascript
             $this->tabs .= "#" . $idTab;
         } else {
@@ -100,7 +102,7 @@ class Libs_Tabs {
         . (($this->selected == $idTab) ? "class=\"selected\"" : "display=\"none;\"") . ">" . Exec_Entities::textDisplay($title) . "</a></li>";
 
         // Si le javascript est actif ou que nous sommes dans l'onget courant
-        if (Core_Html::getInstance()->isJavascriptEnabled() || $this->selected == $idTab) {
+        if ($coreHtml->isJavascriptEnabled() || $this->selected == $idTab) {
             $this->tabsContent .= "<div id=\"" . $idTab . "\">" . $htmlContent . "</div>";
         }
     }

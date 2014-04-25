@@ -122,14 +122,16 @@ class Libs_Menu {
      * @param array $sql parametre de Sélection
      */
     private function loadFromDb(array $sql) {
-        Core_Sql::getInstance()->select(
+        $coreSql = Core_Sql::getInstance();
+
+        $coreSql->select(
         $sql['table'], $sql['select'], $sql['where'], $sql['orderby'], $sql['limit']
         );
 
-        if (Core_Sql::getInstance()->affectedRows() > 0) {
+        if ($coreSql->affectedRows() > 0) {
             // Création d'un buffer
-            Core_Sql::getInstance()->addArrayBuffer($this->identifier, "menu_id");
-            $menus = Core_Sql::getInstance()->getBuffer($this->identifier);
+            $coreSql->addArrayBuffer($this->identifier, "menu_id");
+            $menus = $coreSql->getBuffer($this->identifier);
 
             // Ajoute et monte tout les items
             foreach ($menus as $key => $item) {

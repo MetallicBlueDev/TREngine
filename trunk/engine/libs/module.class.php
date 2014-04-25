@@ -156,7 +156,9 @@ class Libs_Module {
             Core_CacheBuffer::setSectionName("modules");
 
             if (!Core_CacheBuffer::cached($moduleName . ".php")) {
-                Core_Sql::getInstance()->select(
+                $coreSql = Core_Sql::getInstance();
+
+                $coreSql->select(
                 Core_Table::MODULES_TABLE, array(
                     "mod_id",
                     "rank",
@@ -164,8 +166,8 @@ class Libs_Module {
                     "name =  '" . $moduleName . "'")
                 );
 
-                if (Core_Sql::getInstance()->affectedRows() > 0) {
-                    $moduleData = Core_Sql::getInstance()->fetchArray();
+                if ($coreSql->affectedRows() > 0) {
+                    $moduleData = $coreSql->fetchArray();
 
                     if (isset($moduleData['configs'])) {
                         $moduleData['configs'] = explode("|", $moduleData['configs']);
@@ -204,12 +206,13 @@ class Libs_Module {
             if ($moduleInfo->isValid($this->page)) {
 
                 if (Core_Loader::isCallable("Libs_Breadcrumb")) {
-                    Libs_Breadcrumb::getInstance()->addTrail($moduleInfo->getName(), "?mod=" . $moduleInfo->getName());
+                    $libsBreadcrumb = Libs_Breadcrumb::getInstance();
+                    $libsBreadcrumb->addTrail($moduleInfo->getName(), "?mod=" . $moduleInfo->getName());
 
                     // TODO A MODIFIER
                     // Juste une petite exception pour le module management qui est different
                     if ($moduleInfo->getName() != "management") {
-                        Libs_Breadcrumb::getInstance()->addTrail($this->view, "?mod=" . $moduleInfo->getName() . "&view=" . $this->view);
+                        $libsBreadcrumb->addTrail($this->view, "?mod=" . $moduleInfo->getName() . "&view=" . $this->view);
                     }
                 }
 
@@ -328,8 +331,10 @@ class Libs_Module {
      * @param int $modId
      */
     private function updateCount($modId) {
-        Core_Sql::getInstance()->addQuoted("", "count + 1");
-        Core_Sql::getInstance()->update(
+        $coreSql = Core_Sql::getInstance();
+
+        $coreSql->addQuoted("", "count + 1");
+        $coreSql->update(
         Core_Table::MODULES_TABLE, array(
             "count" => "count + 1"), array(
             "mod_id = '" . $$modId . "'")

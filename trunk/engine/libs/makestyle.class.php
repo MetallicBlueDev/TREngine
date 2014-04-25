@@ -144,11 +144,16 @@ class Libs_MakeStyle {
      * Configure le dossier du template courament utilisé.
      *
      * @param string $currentTemplate
+     * @return boolean
      */
     public static function setCurrentTemplate($currentTemplate) {
-        if (is_dir(TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . $currentTemplate)) {
+        $rslt = false;
+
+        if (!empty($currentTemplate) && is_dir(TR_ENGINE_DIR . "/" . self::$templatesDir . "/" . $currentTemplate)) {
             self::$currentTemplate = $currentTemplate;
+            $rslt = true;
         }
+        return $rslt;
     }
 
     /**

@@ -183,7 +183,8 @@ class Libs_Block {
         $blockInfos = array();
 
         // TODO mettre en cache la requete
-        Core_Sql::getInstance()->select(
+        $coreSql = Core_Sql::getInstance();
+        $coreSql->select(
         Core_Table::BLOCKS_TABLE, array(
             "block_id",
             "side",
@@ -197,11 +198,11 @@ class Libs_Block {
             "position")
         );
 
-        if (Core_Sql::getInstance()->affectedRows() > 0) {
+        if ($coreSql->affectedRows() > 0) {
             // Récuperation des données des blocks
-            Core_Sql::getInstance()->addArrayBuffer("block");
+            $coreSql->addArrayBuffer("block");
 
-            foreach (Core_Sql::getInstance()->fetchBuffer("block") as $block) {
+            foreach ($coreSql->fetchBuffer("block") as $block) {
                 $blockInfo = new Libs_BlockData($block);
                 $blockInfo->setSideName(self::getSideLetters($blockInfo->getSide()));
 
