@@ -50,7 +50,7 @@ class Core_Main {
     }
 
     /**
-     * Vérifie l'instance principal du moteur.
+     * Vérification de l'instance principal du moteur.
      */
     public static function checkInstance() {
         if (self::$coreMain === null) {
@@ -355,7 +355,6 @@ class Core_Main {
 
         // Configure les informations de page demandées
         $this->checkLayout();
-        $this->checkModule();
         $this->checkMakeStyle();
 
         if (!Core_Secure::isDebuggingMode()) {
@@ -379,9 +378,7 @@ class Core_Main {
                     $libsMakeStyle->assign("closeText", ERROR_DEBUG_CLOSE);
                     $libsMakeStyle->display("close");
                 } else {
-                    // Mode normal: construction du fil d'ariane
-                    Libs_Breadcrumb::checkInstance();
-
+                    // Mode normal: exécution général
                     Libs_Module::getInstance()->launch();
                     Libs_Block::getInstance()->launchAllBlock();
 
@@ -489,15 +486,6 @@ class Core_Main {
         }
 
         $this->layout = $layout;
-    }
-
-    /**
-     * Vérification et assignation des informations sur le module.
-     */
-    private function checkModule() {
-        Libs_Module::checkInstance(
-        Core_Request::getWord("mod"), Core_Request::getWord("page"), Core_Request::getWord("view")
-        );
     }
 
     /**
