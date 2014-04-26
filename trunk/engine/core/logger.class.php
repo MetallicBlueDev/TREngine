@@ -5,7 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Gestionnaire des messages.
+ * Gestionnaire de messages.
  *
  * @author Sébastien Villemain
  */
@@ -16,7 +16,7 @@ class Core_Logger {
      *
      * @var Core_Secure
      */
-    private static $logger = null;
+    private static $coreLogger = null;
 
     /**
      * Exceptions destinées au développeur.
@@ -47,13 +47,6 @@ class Core_Logger {
     private $informations = array();
 
     /**
-     * Activer l'"criture dans un fichier log.
-     *
-     * @var boolean
-     */
-    private $writeLog = true;
-
-    /**
      * Tableau contenant toutes les lignes sql envoyées.
      *
      * @var array
@@ -61,17 +54,15 @@ class Core_Logger {
     private $sqlRequest = array();
 
     /**
-     * Créé une instance de la classe si elle n'existe pas.
-     * Retourne l'instance de la classe.
+     * Retourne l'instance du gestionnaire de message.
      *
-     * @param type $canWriteLog Activer ou désactiver le rapport d'erreur dans un log.
+     * @return Core_Logger
      */
-    public static function &getInstance($canWriteLog = false) {
-        if (self::$logger == null) {
-            self::$writeLog = $canWriteLog;
-            self::$logger = new self();
+    public static function &getInstance() {
+        if (self::$coreLogger === null) {
+            self::$coreLogger = new self();
         }
-        return self::$logger;
+        return self::$coreLogger;
     }
 
     /**
@@ -258,6 +249,8 @@ class Core_Logger {
      */
     public static function logException() {
         if (Core_Loader::isCallable("Core_CacheBuffer")) {
+            // Activer ou désactiver le rapport d'erreur dans un log.
+            // Activer l'"criture dans un fichier log.
             if (self::$writeLog && self::hasExceptions()) {
                 // Positionne dans le cache
                 Core_CacheBuffer::setSectionName("log");
@@ -268,5 +261,3 @@ class Core_Logger {
     }
 
 }
-
-?>

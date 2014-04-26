@@ -209,7 +209,7 @@ class Core_Translate {
      * @return Core_Translate
      */
     public static function &getInstance() {
-        if (self::$coreTranslate == null) {
+        if (self::$coreTranslate === null) {
             self::$coreTranslate = new self();
         }
         return self::$coreTranslate;
