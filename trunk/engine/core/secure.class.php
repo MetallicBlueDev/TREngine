@@ -90,7 +90,7 @@ class Core_Secure {
     }
 
     /**
-     * Affiche un message d'erreur au client.
+     * Affiche un message d'erreur au client, mettra fin à l'exécution du moteur.
      * Cette fonction est activé si une erreur est détectée.
      *
      * @param string $customMessage Message d'erreur.
@@ -100,7 +100,6 @@ class Core_Secure {
     public function throwException($customMessage, Exception $ex = null, array $argv = array()) {
         if (!class_exists("Core_Loader")) {
             require(TR_ENGINE_DIR . "/engine/core/loader.class.php");
-            Core_Loader::affectRegister();
         }
 
         if ($ex === null) {
@@ -149,7 +148,7 @@ class Core_Secure {
      * Analyse l'erreur et prépare l'affichage de l'erreur.
      *
      * @param Exception $ex L'exception interne levée.
-     * @param array $argv Argument suplementaire d'information sur l'erreur.
+     * @param array $argv Argument supplémentaire d'information sur l'erreur.
      * @return array $errorMessage
      */
     private function &getDebugMessage(Exception $ex = null, array $argv = array()) {
@@ -171,7 +170,7 @@ class Core_Secure {
 
                 if (is_array($traceValue)) {
                     foreach ($traceValue as $key => $value) {
-                        if ($key == "file") {
+                        if ($key == "file" || $key == "function") {
                             $value = preg_replace("/([a-zA-Z0-9._]+).php/", "<b>\\1</b>.php", $value);
                             $errorLine .= " <b>" . $key . "</b> " . $value;
                         } else if ($key == "line" || $key == "class") {
@@ -188,6 +187,8 @@ class Core_Secure {
 
         // Fusion des informations supplémentaires
         if (!empty($argv)) {
+            $errorMessage[] = " ";
+            $errorMessage[] = "<b>Additional information about the error:</b>";
             $errorMessage = array_merge($errorMessage, $argv);
         }
 
