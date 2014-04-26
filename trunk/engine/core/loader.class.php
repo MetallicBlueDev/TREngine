@@ -4,6 +4,9 @@ if (!defined("TR_ENGINE_INDEX")) {
     new Core_Secure();
 }
 
+// Active le chargement automatique
+Core_Loader::affectRegister();
+
 /**
  * Chargeur de classe.
  *
@@ -16,12 +19,27 @@ class Core_Loader {
      *
      * @var array array("name" => "path")
      */
-    private static $loaded = array();
+    private static $loaded = null;
 
+    /**
+     * Inscription du chargeur de classe.
+     */
     public static function affectRegister() {
-        spl_autoload_register(array(
-            'Core_Loader',
-            'classLoader'));
+        try {
+            if (!is_null(self::$loaded)) {
+                throw new Fail_Loader("Loader already registered");
+            }
+
+            self::$loaded = array();
+
+            if (!spl_autoload_register(array(
+                'Core_Loader',
+                'classLoader'), true)) {
+                throw new Fail_Loader("spl_autoload_register fail");
+            }
+        } catch (Exception $ex) {
+            Core_Secure::getInstance()->throwException("loader", $ex);
+        }
     }
 
     /**
@@ -140,7 +158,7 @@ class Core_Loader {
     private static function &load($name, $ext) {
         try {
             if (empty($name)) {
-                throw new Exception("loader");
+                throw new Fail_Loader("loader");
             }
 
             $loaded = self::isLoaded($name);
@@ -213,7 +231,7 @@ class Core_Loader {
                             Core_Logger::addErrorMessage(ERROR_MODULE_NO_FILE);
                             break;
                         default:
-                            throw new Exception("loader");
+                            throw new Fail_Loader("loader");
                     }
                 }
             }
