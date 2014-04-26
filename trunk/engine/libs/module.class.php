@@ -48,15 +48,11 @@ class Libs_Module {
 
     /**
      * Création du gestionnaire.
-     *
-     * @param string $module
-     * @param string $page
-     * @param string $view
      */
-    private function __construct($module, $page, $view) {
-        $this->module = $module;
-        $this->page = $page;
-        $this->view = $view;
+    private function __construct() {
+        $this->module = Core_Request::getWord("mod");
+        $this->page = Core_Request::getWord("page");
+        $this->view = Core_Request::getWord("view");
 
         $defaultModule = Core_Main::getInstance()->getDefaultMod();
         $defaultPage = "index";
@@ -92,14 +88,10 @@ class Libs_Module {
      * @return Libs_Module
      */
     public static function &getInstance() {
-        self::checkInstance();
-        return self::$libsModule;
-    }
-
-    public static function checkInstance($module = "", $page = "", $view = "") {
         if (self::$libsModule === null) {
-            self::$libsModule = new self($module, $page, $view);
+            self::$libsModule = new self();
         }
+        return self::$libsModule;
     }
 
     /**
