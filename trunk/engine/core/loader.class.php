@@ -135,7 +135,12 @@ class Core_Loader {
      * @return string chemin absolu ou nulle.
      */
     public static function &getAbsolutePath($name) {
-        return (isLoaded($name) ? self::$loaded[$name] : null);
+        $rslt = null;
+
+        if (self::isLoaded($name)) {
+            $rslt = self::$loaded[$name];
+        }
+        return $rslt;
     }
 
     /**
