@@ -220,7 +220,7 @@ class Libs_MenuElement {
      * @param Libs_MenuElement or array - object $child
      * @param array - object $items
      */
-    public function &addChild(&$child, &$items = array()) {
+    public function addChild(&$child, &$items = array()) {
         // Création de l'enfant si besoin
         if (!is_object($child)) {
             $child = new Libs_MenuElement($child, $items);
