@@ -8,7 +8,6 @@ require("engine/core/info.class.php");
 
 // Inclusion du chargeur
 require("engine/core/loader.class.php");
-Core_Loader::affectRegister();
 
 // Chargement du système de sécurité
 Core_Secure::checkInstance(true);
