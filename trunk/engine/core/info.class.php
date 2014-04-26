@@ -19,54 +19,61 @@ if (TR_ENGINE_PHP_VERSION < "5.0.0") {
     exit();
 }
 
-new Core_Info();
+// Initalisation de toutes les autres informations de base
+Core_Info::initialize();
 
 /**
  * Recherche d'information rapide.
- * NOTE IMPORTANTE : cette classe doit être compatible PHP 4.
  *
  * @author Sébastien Villemain
  */
 class Core_Info {
 
-    /**
-     * Capture de la configuration courante.
-     */
-    function __construct() {
+    private static $initialized = false;
 
-        /**
-         * Chemin jusqu'à la racine.
-         *
-         * @var string
-         */
-        define("TR_ENGINE_DIR", $this->getBaseDir());
+    private function __construct() {
 
-        /**
-         * Adresse URL complète jusqu'à TR ENGINE.
-         *
-         * @var string
-         */
-        define("TR_ENGINE_URL", $this->getUrlAddress());
+    }
 
-        /**
-         * Le système d'exploitation qui exécute TR ENGINE.
-         *
-         * @var string
-         */
-        define("TR_ENGINE_PHP_OS", $this->getPhpOs());
+    public static function initialize() {
+        if (!self::$initialized) {
+            self::$initialized = true;
+            $info = new Core_Info();
 
-        /**
-         * Numéro de version du moteur.
-         *
-         * Controle de révision
-         * xx -> version courante
-         * xx -> fonctionnalitées ajoutées
-         * xx -> bugs ou failles critiques corrigés
-         * xx -> bug mineur
-         *
-         * @var string
-         */
-        define("TR_ENGINE_VERSION", "0.5.0.0");
+            /**
+             * Chemin jusqu'à la racine.
+             *
+             * @var string
+             */
+            define("TR_ENGINE_DIR", $info->getBaseDir());
+
+            /**
+             * Adresse URL complète jusqu'à TR ENGINE.
+             *
+             * @var string
+             */
+            define("TR_ENGINE_URL", $info->getUrlAddress());
+
+            /**
+             * Le système d'exploitation qui exécute TR ENGINE.
+             *
+             * @var string
+             */
+            define("TR_ENGINE_PHP_OS", $info->getPhpOs());
+
+            /**
+             * Numéro de version du moteur.
+             *
+             * Controle de révision
+             * xx -> version courante
+             * xx -> fonctionnalitées ajoutées
+             * xx -> bugs ou failles critiques corrigés
+             * xx -> bug mineur
+             *
+             * @var string
+             */
+            define("TR_ENGINE_VERSION", "0.6.0.0");
+        }
     }
 
     /**
@@ -161,7 +168,7 @@ class Core_Info {
                 $urlBase[$j] = "";
             }
         }
-        return ((empty($urlFinal)) ? @$_SERVER["SERVER_NAME"] : @$_SERVER["SERVER_NAME"] . "/" . $urlFinal);
+        return ((empty($urlFinal)) ? $_SERVER["SERVER_NAME"] : $_SERVER["SERVER_NAME"] . "/" . $urlFinal);
     }
 
     /**
@@ -174,5 +181,3 @@ class Core_Info {
     }
 
 }
-
-?>
