@@ -13,14 +13,14 @@ abstract class Fail_Base extends Exception {
     const FROM_ENGINE = -1;
 
     /**
-     * Une erreur généré par PHP.
-     */
-    const FROM_PHP = 0;
-
-    /**
      * Une erreur généré la couche SQL du moteur.
      */
     const FROM_SQL = 10;
+
+    /**
+     * Une erreur généré le chargeur de classe.
+     */
+    const FROM_LOADER = 20;
 
     public function __construct($message, $failSourceNumber = self::FROM_ENGINE) {
         parent::__construct($message, $failSourceNumber, null);
