@@ -108,9 +108,7 @@ class Core_Html {
     }
 
     /**
-     * Retourne et si besoin créé l'instance Core_Html.
-     *
-     * @return Core_Html
+     * Vérification de l'instance du gestionnaire de HTML.
      */
     public static function checkInstance() {
         if (self::$html === null) {
