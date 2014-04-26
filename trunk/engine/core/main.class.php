@@ -419,8 +419,10 @@ class Core_Main {
             // Validation du cache / Routine du cache
             Core_CacheBuffer::valideCacheBuffer();
 
-            // Assemble tous les messages d'erreurs dans un fichier log
-            Core_Logger::logException();
+            if (Core_Secure::isDebuggingMode()) {
+                // Assemble tous les messages d'erreurs dans un fichier log
+                Core_Logger::logException();
+            }
         } else {
             Exec_Marker::stopTimer("main");
 

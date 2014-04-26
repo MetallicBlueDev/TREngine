@@ -12,58 +12,25 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Core_Logger {
 
     /**
-     * Instance de cette classe.
-     *
-     * @var Core_Secure
-     */
-    private static $coreLogger = null;
-
-    /**
      * Exceptions destinées au développeur.
      *
      * @var array
      */
-    private $exceptions = array();
+    private static $exceptions = array();
 
     /**
-     * Erreurs destinées au client.
+     * Messages destinées au client.
      *
      * @var array
      */
-    private $Errors = array();
-
-    /**
-     * Avertissement destinées au client.
-     *
-     * @var array
-     */
-    private $warnings = array();
-
-    /**
-     * Informations destinées au client.
-     *
-     * @var array
-     */
-    private $informations = array();
+    private static $messages = array();
 
     /**
      * Tableau contenant toutes les lignes sql envoyées.
      *
      * @var array
      */
-    private $sqlRequest = array();
-
-    /**
-     * Retourne l'instance du gestionnaire de message.
-     *
-     * @return Core_Logger
-     */
-    public static function &getInstance() {
-        if (self::$coreLogger === null) {
-            self::$coreLogger = new self();
-        }
-        return self::$coreLogger;
-    }
+    private static $sqlRequest = array();
 
     /**
      * Ajoute une nouvelle exception.
@@ -113,57 +80,33 @@ class Core_Logger {
     }
 
     /**
-     * Ajoute un nouveau message.
-     *
-     * @param $msg string
-     * @param $type string le type d'erreur (alert / note / info)
-     */
-    private static function addMessage($msg, $type = "alert") {
-        switch ($type) {
-            case 'alert':
-                self::$Errors[] = $msg;
-                break;
-            case 'note':
-                self::$warnings[] = $msg;
-                break;
-            case 'info':
-                self::$informations[] = $msg;
-                break;
-            default:
-                self::addMessage($msg);
-                break;
-        }
-    }
-
-    /**
      * Retourne les messages pré-formatées.
      *
      * @return string
      */
     public static function displayMessages() {
         if (Core_Loader::isCallable("Core_Main")) {
-            $error = self::hasMessages();
+            $hasMessages = !empty(self::$messages);
             $display = "none";
+            $rslt = "";
 
-            if ($error) {
+            if ($hasMessages) {
                 $display = "block";
                 $rslt .= "<ul class=\"exception\">";
-                foreach (self::$Errors as $alertError) {
-                    $rslt .= "<li class=\"alert\"><div>" . $alertError . "</div></li>";
+
+                foreach (self::$messages as $type => $infos) {
+                    foreach ($infos as $message) {
+                        $rslt .= "<li class=\"" . $type . "\"><div>" . $message . "</div></li>";
+                    }
                 }
-                foreach (self::$warnings as $noteError) {
-                    $rslt .= "<li class=\"note\"><div>" . $noteError . "</div></li>";
-                }
-                foreach (self::$informations as $infoError) {
-                    $rslt .= "<li class=\"info\"><div>" . $infoError . "</div></li>";
-                }
+
                 $rslt .= "</ul>";
             }
 
             // Réaction différente en fonction du type d'affichage demandée
             if (Core_Main::getInstance()->isDefaultLayout()) {
                 echo "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
-            } else if ($error) {
+            } else if ($hasMessages) {
                 if (Core_Loader::isCallable("Core_Html")) {
                     if (Core_Html::getInstance()->isJavascriptEnabled()) {
                         Core_Html::getInstance()->addJavascript("displayMessage('" . addslashes($rslt) . "');");
@@ -179,39 +122,6 @@ class Core_Logger {
     }
 
     /**
-     * Vérifie si une exception est détectée.
-     *
-     * @return boolean
-     */
-    private static function hasExceptions() {
-        return (!empty(self::$exceptions));
-    }
-
-    /**
-     * Vérifie si une erreur mineur est détectée.
-     *
-     * @return boolean
-     */
-    private static function hasMessages() {
-        return (!empty(self::$Errors) || !empty(self::$warnings) || !empty(self::$informations));
-    }
-
-    /**
-     * Capture les exceptions en chaine de caractères.
-     *
-     * @param $var array
-     * @return string
-     */
-    private static function &serializeData($var) {
-        $content = "";
-
-        foreach ($var as $msg) {
-            $content .= $msg . "\n";
-        }
-        return $content;
-    }
-
-    /**
      * Affichage des informations de debug.
      */
     public static function displayDebugInformations() {
@@ -219,6 +129,7 @@ class Core_Logger {
             if (Core_Session::getInstance()->userRank > 1) {
                 echo "<div style=\"color: blue;\"><br />"
                 . "***********************SQL REQUESTS (" . count(self::$sqlRequest) . ") :<br />";
+
                 if (!empty(self::$sqlRequest)) {
                     echo str_replace("\n", "<br />", self::serializeData(self::$sqlRequest));
                 } else {
@@ -245,19 +156,61 @@ class Core_Logger {
     }
 
     /**
-     * Ecriture du rapport dans un fichier log.
+     * Ecriture du rapport d'erreur dans un fichier log.
      */
     public static function logException() {
         if (Core_Loader::isCallable("Core_CacheBuffer")) {
-            // Activer ou désactiver le rapport d'erreur dans un log.
-            // Activer l'"criture dans un fichier log.
-            if (self::$writeLog && self::hasExceptions()) {
+            if (self::hasExceptions()) {
                 // Positionne dans le cache
                 Core_CacheBuffer::setSectionName("log");
-                // Ecriture a la suite du cache
+
+                // Ecriture à la suite du rapport
                 Core_CacheBuffer::writingCache("exception_" . date('Y-m-d') . ".log.php", self::serializeData(self::$exceptions), false);
             }
         }
+    }
+
+    /**
+     * Ajoute un nouveau message.
+     *
+     * @param string $msg
+     * @param string $type Le type d'erreur (alert / note / info)
+     */
+    private static function addMessage($msg, $type = "alert") {
+        switch ($type) {
+            case 'alert':
+            case 'note':
+            case 'info':
+                self::$messages[$type][] = $msg;
+                break;
+            default:
+                self::addMessage($msg);
+                break;
+        }
+    }
+
+    /**
+     * Vérifie si une exception est détectée.
+     *
+     * @return boolean
+     */
+    private static function hasExceptions() {
+        return (!empty(self::$exceptions));
+    }
+
+    /**
+     * Capture les exceptions en chaine de caractères.
+     *
+     * @param $var array
+     * @return string
+     */
+    private static function &serializeData($var) {
+        $content = "";
+
+        foreach ($var as $msg) {
+            $content .= $msg . "\n";
+        }
+        return $content;
     }
 
 }
