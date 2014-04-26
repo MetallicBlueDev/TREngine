@@ -35,7 +35,7 @@ class Libs_Block {
      * @return Libs_Block
      */
     public static function &getInstance() {
-        if (self::$libsBlock == null) {
+        if (self::$libsBlock === null) {
             self::$libsBlock = new self();
         }
         return self::$libsBlock;
