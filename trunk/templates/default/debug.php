@@ -5,7 +5,7 @@
         <?php echo Core_Html::getInstance()->getMetaHeaders(); ?>
     </head>
     <body>
-        <div>
+        <div class="error">
             <b><?php echo $errorMessageTitle; ?></b>
             <br /><br />
 
