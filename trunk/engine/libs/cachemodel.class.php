@@ -76,7 +76,8 @@ abstract class Libs_CacheModel {
      */
     public function &listNames($dirPath = "") {
         unset($dirPath);
-        return array();
+        $names = array();
+        return $names;
     }
 
     /**
