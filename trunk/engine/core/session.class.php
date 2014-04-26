@@ -596,6 +596,8 @@ class Core_Session {
      * @return array
      */
     private static function &getUserInfo(array $where) {
+        $info = array();
+
         $coreSql = Core_Sql::getInstance();
         $coreSql->select(
         Core_Table::USERS_TABLE, array(
@@ -610,7 +612,11 @@ class Core_Session {
             "template",
             "langue"), $where
         );
-        return ($coreSql->affectedRows() == 1) ? $coreSql->fetchArray() : array();
+
+        if ($coreSql->affectedRows() == 1) {
+            $info = $coreSql->fetchArray();
+        }
+        return $info;
     }
 
 }
