@@ -2,7 +2,7 @@
 // -------------------------------------------------------------------------//
 // Informations sur la base de données
 //
-// Adresse de l'host de la base
+// Adresse de l'hôte de la base
 $inc['host'] = "127.0.0.1";
 //
 // Nom d'utilisateur de la base
@@ -14,7 +14,7 @@ $inc['pass'] = "";
 // Nom de la base
 $inc['name'] = "trancers_db";
 //
-// Type de base
+// Type de transaction à utiliser
 $inc['type'] = "mysqli";
 //
 // Préfixe des tables

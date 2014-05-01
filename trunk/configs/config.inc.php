@@ -23,6 +23,6 @@ $inc['cacheTimeLimit'] = 7;
 // Préfixe des noms des cookies
 $inc['cookiePrefix'] = "tr";
 //
-// Clé de décriptage UNIQUE (généré aleatoirement à l'installation)
+// Clé de cryptage unique (généré aléatoirement à l'installation)
 $inc['cryptKey'] = "A4bT9D4V";
 // -------------------------------------------------------------------------//
