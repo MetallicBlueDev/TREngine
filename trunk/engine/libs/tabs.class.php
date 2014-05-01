@@ -83,26 +83,22 @@ class Libs_Tabs {
         $idTab = $this->name . "idTab" . $this->tabCounter++;
 
         // Création de l'onget
-        $this->tabs .= "<li><a href=\"";
+        $this->tabs .= "<li>";
 
-        $coreHtml = Core_Html::getInstance();
+        // Un lien complet sans le javascript window.location = ""#" . $idTab";
+        $queryString = Core_Request::getString("QUERY_STRING", "", "SERVER");
+        $queryString = str_replace("selectedTab = " . $this->selected, "", $queryString);
+        $queryString = (substr($queryString, -1) != "&") ? $queryString . "&" : $queryString;
+        $queryString = "index.php?" . $queryString . "selectedTab = " . $idTab;
 
-        if ($coreHtml->javascriptEnabled()) {
-            // Une simple balise pour le javascript
-            $this->tabs .= "#" . $idTab;
-        } else {
-            // Un lien complet sans le javascript
-            $queryString = Core_Request::getString("QUERY_STRING", "", "SERVER");
-            $queryString = str_replace("selectedTab=" . $this->selected, "", $queryString);
-            $queryString = (substr($queryString, -1) != "&") ? $queryString . "&" : $queryString;
-            $this->tabs .= Core_UrlRewriting::getLink("index.php?" . $queryString . "selectedTab=" . $idTab);
-        }
+        // TODO A Vérifier
+        $this->tabs .= Core_Html::getLinkWithAjax($queryString, "#" . $idTab, $idTab, Exec_Entities::textDisplay($title), (($this->selected == $idTab) ? "class=\"selected\"" : "display=\"none;\""));
+//        $this->tabs .= Core_Html::getLink($queryString, false, Exec_Entities::textDisplay($title), "window.location=\"#" . $idTab . "\";", (($this->selected == $idTab) ? "class=\"selected\"" : "display=\"none;\""));
 
-        $this->tabs .= "\""
-        . (($this->selected == $idTab) ? "class=\"selected\"" : "display=\"none;\"") . ">" . Exec_Entities::textDisplay($title) . "</a></li>";
+        $this->tabs .= "</li>";
 
         // Si le javascript est actif ou que nous sommes dans l'onget courant
-        if ($coreHtml->javascriptEnabled() || $this->selected == $idTab) {
+        if (Core_Html::getInstance()->javascriptEnabled() || $this->selected == $idTab) {
             $this->tabsContent .= "<div id=\"" . $idTab . "\">" . $htmlContent . "</div>";
         }
     }

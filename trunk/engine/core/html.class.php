@@ -303,9 +303,10 @@ class Core_Html {
      * @param boolean $layout true ajouter le layout.
      * @param string $displayContent Données à afficher (texte simple ou code html)
      * @param string $onclick Données à exécuter lors du clique
+     * @param string $addons Code additionnel
      * @return string
      */
-    public static function &getLink($link, $displayContent = "", $layout = false, $onclick = "") {
+    public static function &getLink($link, $displayContent = "", $layout = false, $onclick = "", $addons = "") {
         $htmlLink = "<a href=\"" . Core_UrlRewriting::getLink($link, $layout) . "\"";
 
         // TODO A vérifier
@@ -315,6 +316,10 @@ class Core_Html {
 
         if (!empty($onclick)) {
             $htmlLink .= " onclick=\"" . $onclick . "\"";
+        }
+
+        if (!empty($addons)) {
+            $htmlLink .= " " . $addons;
         }
 
         $htmlLink .= ">";
@@ -334,27 +339,30 @@ class Core_Html {
      * @param string $linkForJavascript
      * @param string $divId
      * @param string $displayContent
+     * @param string $addons Code additionnel
      * @return string
      */
-    public static function &getLinkWithAjax($linkWithoutJavascript, $linkForJavascript, $divId, $displayContent) {
+    public static function &getLinkWithAjax($linkWithoutJavascript, $linkForJavascript, $divId, $displayContent, $addons = "") {
         // TODO A vérifier
         self::getInstance()->addJavascriptFile("jquery.js");
-        return self::getLink($linkWithoutJavascript, $displayContent, false, "validLink('" . $divId . "', '" . Core_UrlRewriting::getLink($linkForJavascript, true) . "');return false;");
+        return self::getLink($linkWithoutJavascript, $displayContent, false, "validLink('" . $divId . "', '" . Core_UrlRewriting::getLink($linkForJavascript, true) . "');return false;", $addons);
     }
 
     /**
      * Redirection ou chargement via javascript vers une page.
      *
-     * @param $url string page demandée a chargé.
-     * @param $tps int temps avant le chargement de la page.
-     * @param $method string block de destination si ce n'est pas toutes la page.
+     * @param string $url La page demandée a chargé.
+     * @param int $tps Temps avant le chargement de la page.
+     * @param string $method Block de destination si ce n'est pas toute la page.
      */
     public function redirect($url = "", $tps = 0, $method = "window") {
         // Configuration du temps
         $tps = ((!is_numeric($tps)) ? 0 : $tps) * 1000;
+
         // Configuration de l'url
         if (empty($url) || $url == "index.php?")
             $url = "index.php";
+
         // Redirection
         if ($this->javascriptEnabled() && ($tps > 0 || $method != "windows")) {
             if (Core_Request::getString("REQUEST_METHOD", "", "SERVER") == "POST" && $method != "window") {
@@ -371,22 +379,24 @@ class Core_Html {
     }
 
     /**
-     * Inclus et execute le javascript de facon autonome.
+     * Inclus et exécute le javascript de facon autonome.
      */
     public function selfJavascript() {
         echo $this->getMetaIncludeJavascript(true) . $this->getMetaExecuteJavascript();
     }
 
     /**
-     * Retourne le loader annimé.
+     * Retourne l'icône de chargement animée.
      *
      * @return string
      */
     public function getLoader() {
+        $rslt = "";
+
         if ($this->javascriptEnabled()) {
-            return "<div id=\"loader\"></div>";
+            $rslt = "<div id=\"loader\"></div>";
         }
-        return "";
+        return $rslt;
     }
 
     /**
@@ -477,8 +487,10 @@ class Core_Html {
 
             // Lorsque l'on ne force pas l'inclusion on fait un nouveau test
             if (!$forceIncludes) {
-                $this->addJavascriptFile("javascriptenabled.js");
-                $this->addJavascriptCode("javascriptEnabled('" . $this->cookieTestName . "');");
+                if (!$this->javascriptEnabled()) {
+                    $this->addJavascriptFile("javascriptenabled.js");
+                    $this->addJavascriptCode("javascriptEnabled('" . $this->cookieTestName . "');");
+                }
             }
 
             if (Core_Loader::isCallable("Exec_Agent") && Exec_Agent::$userBrowserName == "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") {
