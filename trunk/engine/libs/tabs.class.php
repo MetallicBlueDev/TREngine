@@ -67,7 +67,7 @@ class Libs_Tabs {
             self::$firstInstance = false;
         }
 
-        if (empty($this->selected) && !Core_Html::getInstance()->isJavascriptEnabled()) {
+        if (empty($this->selected) && !Core_Html::getInstance()->javascriptEnabled()) {
             $this->selected = $this->name . "idTab0";
         }
     }
@@ -87,7 +87,7 @@ class Libs_Tabs {
 
         $coreHtml = Core_Html::getInstance();
 
-        if ($coreHtml->isJavascriptEnabled()) {
+        if ($coreHtml->javascriptEnabled()) {
             // Une simple balise pour le javascript
             $this->tabs .= "#" . $idTab;
         } else {
@@ -102,7 +102,7 @@ class Libs_Tabs {
         . (($this->selected == $idTab) ? "class=\"selected\"" : "display=\"none;\"") . ">" . Exec_Entities::textDisplay($title) . "</a></li>";
 
         // Si le javascript est actif ou que nous sommes dans l'onget courant
-        if ($coreHtml->isJavascriptEnabled() || $this->selected == $idTab) {
+        if ($coreHtml->javascriptEnabled() || $this->selected == $idTab) {
             $this->tabsContent .= "<div id=\"" . $idTab . "\">" . $htmlContent . "</div>";
         }
     }

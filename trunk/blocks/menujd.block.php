@@ -15,7 +15,7 @@ class Block_Menujd extends Block_Menu {
         Exec_JQuery::getJdMenu();
 
         $menus = $this->getMenu();
-        if (Core_Html::getInstance()->isJavascriptEnabled()) {
+        if (Core_Html::getInstance()->javascriptEnabled()) {
             $menus->addAttributs("class", "jd_menu" . (($this->getBlockData()->getSide() == 1 || $this->getBlockData()->getSide() == 2) ? " jd_menu_vertical" : ""));
         }
 

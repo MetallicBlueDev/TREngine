@@ -108,7 +108,7 @@ class Core_Logger {
                 echo "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
             } else if ($hasMessages) {
                 if (Core_Loader::isCallable("Core_Html")) {
-                    if (Core_Html::getInstance()->isJavascriptEnabled()) {
+                    if (Core_Html::getInstance()->javascriptEnabled()) {
                         Core_Html::getInstance()->addJavascript("displayMessage('" . addslashes($rslt) . "');");
                         $rslt = "";
                     }

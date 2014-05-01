@@ -483,7 +483,7 @@ class Core_Main {
         $layout = strtolower(Core_Request::getWord("layout"));
 
         // Configuration du layout
-        if ($layout != "default" && $layout != "modulepage" && $layout != "blockpage" && (($layout != "block" && $layout != "module") || (!Core_Html::getInstance()->isJavascriptEnabled()))) {
+        if ($layout != "default" && $layout != "modulepage" && $layout != "blockpage" && (($layout != "block" && $layout != "module") || (!Core_Html::getInstance()->javascriptEnabled()))) {
             $layout = "default";
         }
 
