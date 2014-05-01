@@ -297,52 +297,49 @@ class Core_Html {
     }
 
     /**
-     * Réécriture d'une URL.
+     * Retourne un lien cliquable sans javascript.
      *
-     * @param $link string or array adresse URL a réécrire.
-     * @param $layout boolean true ajouter le layout.
-     * @return string or array.
+     * @param string $link Adresse URL de base.
+     * @param boolean $layout true ajouter le layout.
+     * @param string $displayContent Données à afficher (texte simple ou code html)
+     * @param string $onclick Données à exécuter lors du clique
+     * @return string
      */
-    public static function &getLink($link, $layout = false) {
-        if (is_array($link)) {
-            foreach ($link as $key => $value) {
-                $link[$key] = self::getLink($value, $layout);
-            }
-        } else {
-            if ($layout) {
-                // Configuration du layout
-                $layout = "&amp;layout=";
-                if (strpos($link, "blockId=") !== false)
-                    $layout .= "block";
-                else if (strpos($link, "mod=") !== false)
-                    $layout .= "module";
-                else
-                    $layout .= "default";
-                $link .= $layout;
-            }
-            if (strpos($link, "index.php") === false) {
-                if ($link[0] == "?")
-                    $link = "index.php" . $link;
-                else
-                    $link = "index.php?" . $link;
-            }
-            $link = Core_UrlRewriting::getInstance()->rewriteLink($link);
+    public static function &getLink($link, $displayContent = "", $layout = false, $onclick = "") {
+        $htmlLink = "<a href=\"" . Core_UrlRewriting::getLink($link, $layout) . "\"";
+
+        // TODO A vérifier
+        if (preg_match("/^[A-Za-z0-9_-+. ]/ie", $displayContent)) {
+            $htmlLink .= " title=\"" . $displayContent . "\"";
         }
-        return $link;
+
+        if (!empty($onclick)) {
+            $htmlLink .= " onclick=\"" . $onclick . "\"";
+        }
+
+        $htmlLink .= ">";
+
+        if (!empty($displayContent)) {
+            $htmlLink .= $displayContent;
+        }
+
+        $htmlLink .= "</a>";
+        return $htmlLink;
     }
 
     /**
-     * Retourne un lien web utilisable avec et sans javascript.
+     * Retourne un lien cliquable utilisable avec et sans javascript.
      *
-     * @param $fullLink string le lien vers une page (utilisé sans javascript).
-     * @param $blockLink string le lien vers une page (utilisé avec javascript).
-     * @param $divId string id du block.
-     * @param $title string Titre du lien.
+     * @param string $linkWithoutJavascript
+     * @param string $linkForJavascript
+     * @param string $divId
+     * @param string $displayContent
      * @return string
      */
-    public static function getLinkForBlock($fullLink, $blockLink, $divId, $title) {
+    public static function &getLinkWithAjax($linkWithoutJavascript, $linkForJavascript, $divId, $displayContent) {
+        // TODO A vérifier
         self::getInstance()->addJavascriptFile("jquery.js");
-        return "<a href=\"" . self::getLink($fullLink) . "\" onclick=\"validLink('" . $divId . "', '" . Core_Html::getLink($blockLink, true) . "');return false;\">" . $title . "</a>";
+        return self::getLink($linkWithoutJavascript, $displayContent, false, "validLink('" . $divId . "', '" . Core_UrlRewriting::getLink($linkForJavascript, true) . "');return false;");
     }
 
     /**

@@ -120,8 +120,7 @@ class Block_Menu extends Libs_BlockModel {
                 $text = "<small>" . $text . "</small>";
             }
             if (!empty($link)) {
-                $link = Core_Html::getLink($link);
-                $text = "<a href=\"" . (($popup) ? "javascript:window.open('" . $link . "')" : $link) . "\" alt=\"\" title=\"\">" . $text . "</a>";
+                $text = Core_Html::getLink($link, $text, false, "window.open('" . $link . "');return false;");
             }
 
             $outPut = $text;

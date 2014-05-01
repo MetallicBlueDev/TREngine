@@ -95,7 +95,7 @@ class Libs_Tabs {
             $queryString = Core_Request::getString("QUERY_STRING", "", "SERVER");
             $queryString = str_replace("selectedTab=" . $this->selected, "", $queryString);
             $queryString = (substr($queryString, -1) != "&") ? $queryString . "&" : $queryString;
-            $this->tabs .= Core_Html::getLink("index.php?" . $queryString . "selectedTab=" . $idTab);
+            $this->tabs .= Core_UrlRewriting::getLink("index.php?" . $queryString . "selectedTab=" . $idTab);
         }
 
         $this->tabs .= "\""

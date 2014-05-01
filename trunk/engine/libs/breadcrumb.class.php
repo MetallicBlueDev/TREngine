@@ -57,7 +57,7 @@ class Libs_Breadcrumb {
             }
 
             if (!empty($link)) {
-                $trail = "<a href=\"" . Core_Html::getLink($link) . "\">" . $trail . "</a>";
+                $trail = Core_Html::getLink($link, $trail);
             }
 
             $this->breadcrumbTrail[] = $trail;

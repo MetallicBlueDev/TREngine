@@ -68,7 +68,7 @@ class Module_Project_Index extends Libs_ModuleModel {
 
                 // Création de la page
                 $form = new Libs_Form(
-                "project_description", Core_Html::getLink("?mod=project&view=download&&projectId=" . $projectInfo['projectid'])
+                "project_description", Core_UrlRewriting::getLink("?mod=project&view=download&&projectId=" . $projectInfo['projectid'])
                 );
                 $form->setTitle($projectInfo['name']);
 

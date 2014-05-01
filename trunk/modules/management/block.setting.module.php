@@ -83,13 +83,13 @@ class Module_Management_Block extends Libs_ModuleModel {
         if (Core_Sql::getInstance()->affectedRows() > 0) {
             while ($row = Core_Sql::getInstance()->fetchArray()) {
                 // Parametre de la ligne
-                $title = "<a href=\"" . Core_Html::getLink("?mod=management&manage=block&localView=tabEdit&blockId=" . $row['block_id']) . "\">" . $row['title'] . "</a>";
+                $title = Core_Html::getLink("?mod=management&manage=block&localView=tabEdit&blockId=" . $row['block_id'], $row['title']);
                 $type = $row['type'];
                 $side = Libs_Block::getLitteralSide($row['side']);
-                $position = Core_Html::getLinkForBlock("?mod=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'], "?mod=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'], "#block_main_setting", "^"
+                $position = Core_Html::getLinkWithAjax("?mod=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'], "?mod=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'], "#block_main_setting", "^"
                 );
                 $position .= $row['position'];
-                $position .= Core_Html::getLinkForBlock("?mod=management&manage=block&localView=sendMoveDown&blockId=" . $row['block_id'], "?mod=management&manage=block&localView=sendMoveDown&blockId=" . $row['block_id'], "#block_main_setting", "v"
+                $position .= Core_Html::getLinkWithAjax("?mod=management&manage=block&localView=sendMoveDown&blockId=" . $row['block_id'], "?mod=management&manage=block&localView=sendMoveDown&blockId=" . $row['block_id'], "#block_main_setting", "v"
                 );
                 $rank = Core_Access::getLitteralRank($row['rank']);
                 $mods = ($row['mods'] == "all") ? BLOCK_ALL_PAGE : BLOCK_VARIES_PAGE;
@@ -283,7 +283,7 @@ class Module_Management_Block extends Libs_ModuleModel {
 
                 $form->addInputText("blockTitle", "content", $block['content']);
 
-                $position .= Core_Html::getLinkForBlock("?mod=management&manage=block&localView=movedown&blockId=" . $row['block_id'], "?mod=management&manage=block&localView=movedown&blockId=" . $row['block_id'], "#block_main_setting", "v"
+                $position .= Core_Html::getLinkWithAjax("?mod=management&manage=block&localView=movedown&blockId=" . $row['block_id'], "?mod=management&manage=block&localView=movedown&blockId=" . $row['block_id'], "#block_main_setting", "v"
                 );
                 Module_Management_Index::addDeleteButtonInToolbar("localView=sendDelete&blockId=" . $blockId);
                 Module_Management_Index::addCopyButtonInToolbar("localView=sendCopy&blockId=" . $blockId);

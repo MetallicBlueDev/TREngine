@@ -61,6 +61,42 @@ class Core_UrlRewriting {
     }
 
     /**
+     * Obtention d'une adresse URL complète.
+     *
+     * @param string $link Adresse URL à réécrire.
+     * @param boolean $layout true ajouter le layout.
+     * @return string
+     */
+    public static function &getLink($link, $layout = false) {
+        // Configuration du layout
+        if ($layout) {
+            $layout = "&amp;layout=";
+
+            if (strpos($link, "blockId=") !== false) {
+                $layout .= "block";
+            } else if (strpos($link, "mod=") !== false) {
+                $layout .= "module";
+            } else {
+                $layout .= "default";
+            }
+
+            $link .= $layout;
+        }
+
+        // Recherche de la page principal
+        if (strpos($link, "index.php") === false) {
+            if ($link[0] == "?") {
+                $link = "index.php" . $link;
+            } else {
+                $link = "index.php?" . $link;
+            }
+        }
+
+        // Finalise la réécriture du lien
+        return self::getInstance()->rewriteLink($link);
+    }
+
+    /**
      * Vérifie si les tests ont été passés avec succès.
      *
      * @return boolean

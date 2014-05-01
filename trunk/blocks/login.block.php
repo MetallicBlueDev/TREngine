@@ -70,21 +70,21 @@ class Block_Login extends Libs_BlockModel {
                 $content .= WELCOME . " <b>" . Core_Session::getInstance()->userName . "</b> !<br />";
             }
             if ($this->displayAvatar && !empty(Core_Session::getInstance()->userAvatar)) {
-                $content .= "<a href=\"" . Core_Html::getLink("mod=connect&view=account") . "\">" . Exec_Image::resize(Core_Session::getInstance()->userAvatar, 80) . "</a><br />";
+                $content .= Core_Html::getLink("mod=connect&view=account", Exec_Image::resize(Core_Session::getInstance()->userAvatar, 80)) . "<br />";
             }
             if ($this->displayIcons) {
-                $content .= "<a href=\"" . Core_Html::getLink("mod=connect&view=logout") . "\" title=\"" . LOGOUT . "\">" . LOGOUT . "</a><br />"
-                . "<a href=\"" . Core_Html::getLink("mod=connect&view=account") . "\" title=\"" . MY_ACCOUNT . "\">" . MY_ACCOUNT . "</a><br />"
-                . "<a href=\"" . Core_Html::getLink("mod=receiptbox") . "\" title=\"" . MY_RECEIPTBOX . "\">" . MY_RECEIPTBOX . " (?)</a><br />";
+                $content .= Core_Html::getLink("mod=connect&view=logout", LOGOUT) . "<br />"
+                . Core_Html::getLink("mod=connect&view=account", MY_ACCOUNT) . "<br />"
+                . Core_Html::getLink("mod=receiptbox", MY_RECEIPTBOX . " (?)") . "<br />";
             }
         } else {
             $moreLink = "<ul>";
             if (Core_Main::getInstance()->registrationAllowed()) {
-                $moreLink .= "<li><b>" . Core_Html::getLinkForBlock("mod=connect&view=registration", "blockId=" . $this->getBlockData()->getId() . "&localView=registration", "#login-logonblock", GET_ACCOUNT) . "</b></li>";
+                $moreLink .= "<li><b>" . Core_Html::getLinkWithAjax("mod=connect&view=registration", "blockId=" . $this->getBlockData()->getId() . "&localView=registration", "#login-logonblock", GET_ACCOUNT) . "</b></li>";
             }
-            $moreLink .= "<li>" . Core_Html::getLinkForBlock("mod=connect&view=logon", "blockId=" . $this->getBlockData()->getId() . "&localView=logon", "#login-logonblock", GET_LOGON) . "</li>"
-            . "<li>" . Core_Html::getLinkForBlock("mod=connect&view=forgetlogin", "blockId=" . $this->getBlockData()->getId() . "&localView=forgetlogin", "#login-logonblock", GET_FORGET_LOGIN) . "</li>"
-            . "<li>" . Core_Html::getLinkForBlock("mod=connect&view=forgetpass", "blockId=" . $this->getBlockData()->getId() . "&localView=forgetpass", "#login-logonblock", GET_FORGET_PASS) . "</li></ul>";
+            $moreLink .= "<li>" . Core_Html::getLinkWithAjax("mod=connect&view=logon", "blockId=" . $this->getBlockData()->getId() . "&localView=logon", "#login-logonblock", GET_LOGON) . "</li>"
+            . "<li>" . Core_Html::getLinkWithAjax("mod=connect&view=forgetlogin", "blockId=" . $this->getBlockData()->getId() . "&localView=forgetlogin", "#login-logonblock", GET_FORGET_LOGIN) . "</li>"
+            . "<li>" . Core_Html::getLinkWithAjax("mod=connect&view=forgetpass", "blockId=" . $this->getBlockData()->getId() . "&localView=forgetpass", "#login-logonblock", GET_FORGET_PASS) . "</li></ul>";
 
             $content .= "<div id=\"login-logonblock\">";
 
