@@ -5,18 +5,19 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Gestionnaire de transaction utilisant l'extension MySqli (nouvelle version de MySql).
- * Ne supporte que les bases de données MySql.
+ * Gestionnaire de transaction utilisant l'extension PHP Data Objects.
+ * Supporte de nombreuse type base de données.
  *
  * @author Sébastien Villemain
  */
-class Base_Mysqli extends Base_Model {
+class Base_Pdo extends Base_Model {
 
     public function dbConnect() {
-        $this->connId = new mysqli($this->getDatabaseHost(), $this->getDatabaseUser(), $this->getDatabasePass());
-
-        if ($this->getMysqli()->connect_error) {
-            Core_Logger::addException("MySqli connect_error: " . $this->getMysqli()->connect_error);
+        try {
+            // Host = mysql:dbname=testdb;host=127.0.0.1
+            $this->connId = new PDO($this->getDatabaseHost(), $this->getDatabaseUser(), $this->getDatabasePass());
+        } catch (PDOException $ex) {
+            Core_Logger::addException("PDO exception: " . $ex->getMessage());
             $this->connId = null;
         }
     }
@@ -25,24 +26,24 @@ class Base_Mysqli extends Base_Model {
         $rslt = false;
 
         if ($this->connected()) {
-            $rslt = $this->getMysqli()->select_db($this->getDatabaseName());
+            $rslt = $this->getPdo()->select_db($this->getDatabaseName());
         }
         return $rslt;
     }
 
     public function dbDeconnect() {
         if ($this->connected()) {
-            $this->getMysqli()->close();
+            $this->getPdo()->close();
         }
 
         $this->connId = null;
     }
 
     public function query($sql) {
-        $this->queries = $this->getMysqli()->query($sql);
+        $this->queries = $this->getPdo()->query($sql);
 
         if (!$this->queries) {
-            Core_Logger::addException("MySqli query: " . $this->getMysqli()->error);
+            Core_Logger::addException("MySqli query: " . $this->getPdo()->error);
         }
     }
 
@@ -86,11 +87,11 @@ class Base_Mysqli extends Base_Model {
     }
 
     public function &affectedRows() {
-        return $this->getMysqli()->affected_rows;
+        return $this->getPdo()->affected_rows;
     }
 
     public function &insertId() {
-        return $this->getMysqli()->insert_id;
+        return $this->getPdo()->insert_id;
     }
 
     public function test() {
@@ -100,12 +101,12 @@ class Base_Mysqli extends Base_Model {
 
     public function &getLastError() {
         $error = parent::getLastError();
-        $error[] = "<b>MySqli response</b> : " . $this->getMysqli()->error;
+        $error[] = "<b>MySqli response</b> : " . $this->getPdo()->error;
         return $error;
     }
 
     public function &getVersion() {
-        return $this->getMysqli()->server_info;
+        return $this->getPdo()->server_info;
     }
 
     public function update($table, array $values, array $where, array $orderby = array(), $limit = "") {
@@ -125,35 +126,16 @@ class Base_Mysqli extends Base_Model {
     }
 
     protected function converEscapeString($str) {
-        return $this->getMysqli()->escape_string($str);
+        return $this->getPdo()->escape_string($str);
     }
 
     /**
-     * Retourne la connexion mysqli.
+     * Retourne la connexion PDO.
      *
-     * @return mysqli
+     * @return PDO
      */
-    private function &getMysqli() {
+    private function &getPdo() {
         return $this->connId;
-    }
-
-    /**
-     * Retourne le résultat de la dernière requête.
-     *
-     * @param resource $query
-     * @return \mysqli_result
-     */
-    private function &getMysqliResult($query = null) {
-        $object = null;
-
-        if ($query === null) {
-            $query = $this->queries;
-        }
-
-        if ($query instanceof mysqli_result) {
-            $object = $query;
-        }
-        return $object;
     }
 
 }

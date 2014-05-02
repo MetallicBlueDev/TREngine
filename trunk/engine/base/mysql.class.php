@@ -5,7 +5,8 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Gestionnaire de base de données MySql (ancienne version).
+ * Gestionnaire de transaction utilisant l'extension MySql (ancienne version obselète).
+ * Ne supporte que les bases de données MySql.
  *
  * @author Sébastien Villemain
  */

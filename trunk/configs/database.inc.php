@@ -2,7 +2,7 @@
 // -------------------------------------------------------------------------//
 // Informations sur la base de données
 //
-// Adresse de l'hôte de la base
+// Adresse de l'hôte de la base ou la chaine complète du DSN (Data Source Name)
 $inc['host'] = "127.0.0.1";
 //
 // Nom d'utilisateur de la base
