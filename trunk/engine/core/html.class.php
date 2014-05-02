@@ -300,8 +300,8 @@ class Core_Html {
      * Retourne un lien cliquable sans javascript.
      *
      * @param string $link Adresse URL de base.
-     * @param boolean $layout true ajouter le layout.
      * @param string $displayContent Données à afficher (texte simple ou code html)
+     * @param boolean $layout true ajouter le layout.
      * @param string $onclick Données à exécuter lors du clique
      * @param string $addons Code additionnel
      * @return string
@@ -360,8 +360,9 @@ class Core_Html {
         $tps = ((!is_numeric($tps)) ? 0 : $tps) * 1000;
 
         // Configuration de l'url
-        if (empty($url) || $url == "index.php?")
+        if (empty($url) || $url == "index.php?") {
             $url = "index.php";
+        }
 
         // Redirection
         if ($this->javascriptEnabled() && ($tps > 0 || $method != "windows")) {
@@ -390,7 +391,7 @@ class Core_Html {
      *
      * @return string
      */
-    public function getLoader() {
+    public function &getLoader() {
         $rslt = "";
 
         if ($this->javascriptEnabled()) {
@@ -400,37 +401,11 @@ class Core_Html {
     }
 
     /**
-     * Retourne les mots clès et la description de la page.
-     *
-     * @return string
-     */
-    private function getMetaKeywords() {
-        $keywords = "";
-        if (is_array($this->keywords) && count($this->keywords) > 0) {
-            $keywords = implode(", ", $this->keywords);
-        }
-
-        $keywords = strip_tags($keywords);
-        // 500 caractères maximum
-        $keywords = (strlen($keywords) > 500) ? substr($keywords, 0, 500) : $keywords;
-
-        if (Core_Loader::isCallable("Core_Main")) {
-            if (empty($this->description))
-                $this->description = Core_Main::getInstance()->getDefaultDescription();
-            if (empty($keywords))
-                $keywords = Core_Main::getInstance()->getDefaultKeyWords();
-        }
-
-        return "<meta name=\"description\" content=\"" . Exec_Entities::textDisplay($this->description) . "\" />\n"
-        . "<meta name=\"keywords\" content=\"" . Exec_Entities::textDisplay($keywords) . "\" />\n";
-    }
-
-    /**
      * Retourne la combinaison de clés pour le salt.
      *
      * @return string
      */
-    private function getSalt() {
+    private function &getSalt() {
         // Configuration de la clès si accessible
         if (Core_Loader::isCallable("Core_Main")) {
             $key = Core_Main::getInstance()->getCryptKey();
@@ -463,6 +438,37 @@ class Core_Html {
                 $this->cssFile[$fileName] = $options;
             }
         }
+    }
+
+    /**
+     * Retourne les mots clès et la description de la page.
+     *
+     * @return string
+     */
+    private function getMetaKeywords() {
+        $keywords = "";
+
+        if (is_array($this->keywords) && count($this->keywords) > 0) {
+            $keywords = implode(", ", $this->keywords);
+        }
+
+        if (Core_Loader::isCallable("Core_Main")) {
+            if (empty($this->description)) {
+                $this->description = Core_Main::getInstance()->getDefaultDescription();
+            }
+
+            if (empty($keywords)) {
+                $keywords = Core_Main::getInstance()->getDefaultKeyWords();
+            }
+        }
+
+        $keywords = strip_tags($keywords);
+
+        // 500 caractères maximum
+        $keywords = (strlen($keywords) > 500) ? substr($keywords, 0, 500) : $keywords;
+
+        return "<meta name=\"description\" content=\"" . Exec_Entities::textDisplay($this->description) . "\" />\n"
+        . "<meta name=\"keywords\" content=\"" . Exec_Entities::textDisplay($keywords) . "\" />\n";
     }
 
     /**
