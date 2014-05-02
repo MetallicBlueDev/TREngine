@@ -100,9 +100,13 @@ class Base_Mysqli extends Base_Model {
         return $this->getMysqli()->insert_id;
     }
 
-    public function test() {
-        // Vérifie que le module mysql est chargé.
-        return function_exists("mysqli_connect");
+    public function &test() {
+        $rslt = function_exists("mysqli_connect");
+
+        if (!$rslt) {
+            Core_Logger::addException("MySqli function not found");
+        }
+        return $rslt;
     }
 
     public function &getLastError() {
@@ -112,7 +116,9 @@ class Base_Mysqli extends Base_Model {
     }
 
     public function &getVersion() {
-        return $this->getMysqli()->server_info;
+        // Exemple : 5.6.15-log
+        $version = $this->getMysqli()->server_info;
+        return $version;
     }
 
     public function update($table, array $values, array $where, array $orderby = array(), $limit = "") {
