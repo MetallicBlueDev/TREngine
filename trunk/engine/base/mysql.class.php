@@ -101,23 +101,25 @@ class Base_Mysql extends Base_Model {
         $rslt = -1;
 
         if ($this->lastSqlCommand == "SELECT" || $this->lastSqlCommand == "SHOW") {
-            // Get number of affected rows (for SELECT only)
             $rslt = mysql_num_rows($this->queries);
         } else {
-            // Get number of LAST affected rows (for DELETE, UPDATE, INSERT, REPLACE)
             $rslt = mysql_affected_rows($this->connId);
         }
         return $rslt;
     }
 
     public function &insertId() {
-        // Get the ID generated from the previous INSERT operation
-        return mysql_insert_id($this->connId);
+        $lastId = mysql_insert_id($this->connId);
+        return $lastId;
     }
 
-    public function test() {
-        // Vérifie que le module mysql est chargé.
-        return function_exists("mysql_connect");
+    public function &test() {
+        $rslt = function_exists("mysql_connect");
+
+        if (!$rslt) {
+            Core_Logger::addException("MySql function not found");
+        }
+        return $rslt;
     }
 
     public function &getLastError() {
@@ -127,7 +129,7 @@ class Base_Mysql extends Base_Model {
     }
 
     public function &getVersion() {
-        // Retourne la version de mysql
+        // Exemple : 5.6.15-log
         $version = mysql_get_server_info($this->connId);
         $version = ($version !== false) ? $version : "?";
         return $version;
