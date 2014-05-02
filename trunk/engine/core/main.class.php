@@ -364,7 +364,7 @@ class Core_Main {
         // Vérification du bannissement
         if (!Core_BlackBan::isBlackUser()) {
             // Vérification du type d'affichage
-            if ($this->isFullScreen() && Core_Loader::isCallable("Libs_Block") && Core_Loader::isCallable("Libs_Module")) {
+            if ($this->isDefaultLayout()) {
                 // Affichage classique du site
                 if ($this->doDumb()) {
                     // Mode maintenance: possibilité de s'identifier
@@ -389,7 +389,7 @@ class Core_Main {
                 }
             } else {
                 // Affichage autonome des modules et blocks
-                if ($this->isModuleLayout() && Core_Loader::isCallable("Libs_Module")) {
+                if ($this->isModuleLayout()) {
                     $libsModule = Libs_Module::getInstance();
 
                     // Affichage du module uniquement
@@ -398,7 +398,7 @@ class Core_Main {
                     Exec_Marker::stopTimer("main");
 
                     echo $libsModule->getModule();
-                } else if ($this->isBlockLayout() && Core_Loader::isCallable("Libs_Block")) {
+                } else if ($this->isBlockLayout()) {
                     $libsBlock = Libs_Block::getInstance();
 
                     // Affichage du block uniquement
