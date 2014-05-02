@@ -145,7 +145,7 @@ abstract class Base_Model {
      * @return int
      */
     public function &affectedRows() {
-        return 0;
+        return -1;
     }
 
     /**
@@ -269,10 +269,10 @@ abstract class Base_Model {
     /**
      * Retourne l'id de la dernière ligne inserée.
      *
-     * @return int
+     * @return string
      */
     public function &insertId() {
-        return 0;
+        return "0";
     }
 
     /**
@@ -449,8 +449,9 @@ abstract class Base_Model {
      *
      * @return boolean
      */
-    public function test() {
-        return false;
+    public function &test() {
+        $rslt = false;
+        return $rslt;
     }
 
     /**
