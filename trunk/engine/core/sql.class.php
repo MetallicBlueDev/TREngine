@@ -260,9 +260,9 @@ class Core_Sql extends Base_Model {
     }
 
     /**
-     * Retourne l'id de la dernière ligne inserée.
+     * Retourne l'identifiant de la dernière ligne inserée.
      *
-     * @return int
+     * @return string
      */
     public function &insertId() {
         return $this->selectedBase->insertId();
@@ -409,7 +409,7 @@ class Core_Sql extends Base_Model {
         return $this->selectedBase->getBuffer($name);
     }
 
-    public function test() {
+    public function &test() {
         // NE RIEN FAIRE
         return false;
     }
