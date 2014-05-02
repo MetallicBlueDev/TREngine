@@ -44,7 +44,8 @@ class Base_Mysqli extends Base_Model {
         $rslt = array();
 
         if ($this->queries instanceof mysqli_result) {
-            $rslt = $this->queries->fetch_array(MYSQLI_ASSOC);
+            $rslt = array(
+                $this->queries->fetch_array(MYSQLI_ASSOC));
         }
         return $rslt;
     }
