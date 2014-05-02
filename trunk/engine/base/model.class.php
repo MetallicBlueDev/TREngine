@@ -242,9 +242,11 @@ abstract class Base_Model {
     /**
      * Retourne un tableau contenant tous les objets demandés.
      *
+     * @param string $className Nom de la classe
      * @return array(object)
      */
-    public function &fetchObject() {
+    public function &fetchObject($className = null) {
+        unset($className);
         return array();
     }
 

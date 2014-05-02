@@ -238,8 +238,8 @@ class Core_Sql extends Base_Model {
      *
      * @return array(object)
      */
-    public function &fetchObject() {
-        return $this->selectedBase->fetchObject();
+    public function &fetchObject($className = null) {
+        return $this->selectedBase->fetchObject($className);
     }
 
     /**

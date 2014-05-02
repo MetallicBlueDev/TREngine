@@ -14,7 +14,7 @@ class Base_Pdo extends Base_Model {
 
     public function dbConnect() {
         try {
-            // Host = mysql:dbname=testdb;host=127.0.0.1
+            // Host = mysql:host=127.0.0.1
             $this->connId = new PDO($this->getDatabaseHost(), $this->getDatabaseUser(), $this->getDatabasePass());
         } catch (PDOException $ex) {
             Core_Logger::addException("PDO exception: " . $ex->getMessage());
@@ -26,50 +26,51 @@ class Base_Pdo extends Base_Model {
         $rslt = false;
 
         if ($this->connected()) {
-            $rslt = $this->getPdo()->select_db($this->getDatabaseName());
+            $rslt = ($this->getPdo()->exec("USE " . $this->getDatabaseName()) !== false);
         }
         return $rslt;
     }
 
     public function dbDeconnect() {
-        if ($this->connected()) {
-            $this->getPdo()->close();
-        }
-
         $this->connId = null;
     }
 
     public function query($sql) {
         $this->queries = $this->getPdo()->query($sql);
 
-        if (!$this->queries) {
-            Core_Logger::addException("MySqli query: " . $this->getPdo()->error);
+        if ($this->queries === false) {
+            $message = "";
+            $error = $this->getPdo()->errorInfo();
+
+            if (count($error) >= 3) {
+                $message = $error[2];
+            } else {
+                $message = implode(" // ", $error);
+            }
+
+            Core_Logger::addException("PDO query: " . $message);
         }
     }
 
     public function &fetchArray() {
         $values = array();
-        $rslt = $this->getMysqliResult();
+        $rslt = $this->getPdoResult();
 
         if ($rslt !== null) {
-            $nbRows = $rslt->num_rows;
-
-            for ($i = 0; $i < $nbRows; $i++) {
-                $values[] = $rslt->fetch_array(MYSQLI_ASSOC);
-            }
+            $values = $rslt->fetchAll(PDO::FETCH_ASSOC);
         }
         return $values;
     }
 
-    public function &fetchObject() {
-        $values = null;
-        $rslt = $this->getMysqliResult();
+    public function &fetchObject($className = null) {
+        $values = array();
+        $rslt = $this->getPdoResult();
 
         if ($rslt !== null) {
-            $nbRows = $rslt->num_rows;
-
-            for ($i = 0; $i < $nbRows; $i++) {
-                $values[] = $rslt->fetch_object();
+            if (empty($className)) {
+                $values = $rslt->fetchAll(PDO::FETCH_CLASS);
+            } else {
+                $values = $rslt->fetchAll(PDO::FETCH_CLASS, $className);
             }
         }
         return $values;
@@ -77,7 +78,7 @@ class Base_Pdo extends Base_Model {
 
     public function &freeResult($query) {
         $success = false;
-        $rslt = $this->getMysqliResult($query);
+        $rslt = $this->getPdoResult($query);
 
         if ($rslt !== null) {
             $rslt->free();
@@ -132,10 +133,29 @@ class Base_Pdo extends Base_Model {
     /**
      * Retourne la connexion PDO.
      *
-     * @return PDO
+     * @return \PDO
      */
     private function &getPdo() {
         return $this->connId;
+    }
+
+    /**
+     * Retourne le résultat de la dernière requête.
+     *
+     * @param resource $query
+     * @return \PDOStatement
+     */
+    private function &getPdoResult($query = null) {
+        $object = null;
+
+        if ($query === null) {
+            $query = $this->queries;
+        }
+
+        if ($query instanceof PDOStatement) {
+            $object = $query;
+        }
+        return $object;
     }
 
 }

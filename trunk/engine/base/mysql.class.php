@@ -50,7 +50,7 @@ class Base_Mysql extends Base_Model {
     public function query($sql) {
         $this->queries = mysql_query($sql, $this->connId);
 
-        if (!$this->queries) {
+        if ($this->queries === false) {
             Core_Logger::addException("MySql query: " . mysql_error());
         }
     }
@@ -68,14 +68,21 @@ class Base_Mysql extends Base_Model {
         return $values;
     }
 
-    public function &fetchObject() {
+    public function &fetchObject($className = null) {
         $values = array();
 
         if (is_resource($this->queries)) {
             $nbRows = $this->affectedRows();
 
-            for ($i = 0; $i < $nbRows; $i++) {
-                $values[] = mysql_fetch_object($this->queries);
+            // Vérification avant de rentrer dans la boucle (optimisation)
+            if (empty($className)) {
+                for ($i = 0; $i < $nbRows; $i++) {
+                    $values[] = mysql_fetch_object($this->queries);
+                }
+            } else {
+                for ($i = 0; $i < $nbRows; $i++) {
+                    $values[] = mysql_fetch_object($this->queries, $className);
+                }
             }
         }
         return $values;

@@ -41,7 +41,7 @@ class Base_Mysqli extends Base_Model {
     public function query($sql) {
         $this->queries = $this->getMysqli()->query($sql);
 
-        if (!$this->queries) {
+        if ($this->queries === false) {
             Core_Logger::addException("MySqli query: " . $this->getMysqli()->error);
         }
     }
@@ -60,15 +60,22 @@ class Base_Mysqli extends Base_Model {
         return $values;
     }
 
-    public function &fetchObject() {
-        $values = null;
+    public function &fetchObject($className = null) {
+        $values = array();
         $rslt = $this->getMysqliResult();
 
         if ($rslt !== null) {
             $nbRows = $rslt->num_rows;
 
-            for ($i = 0; $i < $nbRows; $i++) {
-                $values[] = $rslt->fetch_object();
+            // Vérification avant de rentrer dans la boucle (optimisation)
+            if (empty($className)) {
+                for ($i = 0; $i < $nbRows; $i++) {
+                    $values[] = $rslt->fetch_object();
+                }
+            } else {
+                for ($i = 0; $i < $nbRows; $i++) {
+                    $values[] = $rslt->fetch_object($className);
+                }
             }
         }
         return $values;
@@ -131,7 +138,7 @@ class Base_Mysqli extends Base_Model {
     /**
      * Retourne la connexion mysqli.
      *
-     * @return mysqli
+     * @return \mysqli
      */
     private function &getMysqli() {
         return $this->connId;
