@@ -225,7 +225,7 @@ class Core_Sql extends Base_Model {
     }
 
     /**
-     * Retourne un tableau qui contient la ligne demandée.
+     * Retourne un tableau contenant toutes les lignes demandées.
      *
      * @return array
      */
@@ -234,9 +234,9 @@ class Core_Sql extends Base_Model {
     }
 
     /**
-     * Retourne un objet qui contient la ligne demandée.
+     * Retourne un tableau contenant tous les objets demandés.
      *
-     * @return object
+     * @return array(object)
      */
     public function &fetchObject() {
         return $this->selectedBase->fetchObject();
@@ -359,12 +359,12 @@ class Core_Sql extends Base_Model {
     /**
      * Libère la mémoire du résultat.
      *
-     * @param resource $querie
+     * @param resource $query
      * @return boolean
      */
-    public function &freeResult($querie = null) {
-        $querie = (!empty($querie)) ? $querie : $this->getQueries();
-        return $this->selectedBase->freeResult($querie);
+    public function &freeResult($query = null) {
+        $query = (!empty($query)) ? $query : $this->getQueries();
+        return $this->selectedBase->freeResult($query);
     }
 
     /**

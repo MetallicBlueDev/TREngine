@@ -48,26 +48,43 @@ class Base_Mysql extends Base_Model {
 
     public function query($sql) {
         $this->queries = mysql_query($sql, $this->connId);
+
+        if (!$this->queries) {
+            Core_Logger::addException("MySql query: " . mysql_error());
+        }
     }
 
     public function &fetchArray() {
-        $rslt = array();
+        $values = array();
 
         if (is_resource($this->queries)) {
-            $rslt = mysql_fetch_array($this->queries, MYSQL_ASSOC);
+            $nbRows = $this->affectedRows();
+
+            for ($i = 0; $i < $nbRows; $i++) {
+                $values[] = mysql_fetch_array($this->queries, MYSQL_ASSOC);
+            }
         }
-        return $rslt;
+        return $values;
     }
 
     public function &fetchObject() {
-        return mysql_fetch_object($this->queries);
+        $values = array();
+
+        if (is_resource($this->queries)) {
+            $nbRows = $this->affectedRows();
+
+            for ($i = 0; $i < $nbRows; $i++) {
+                $values[] = mysql_fetch_object($this->queries);
+            }
+        }
+        return $values;
     }
 
-    public function &freeResult($querie) {
+    public function &freeResult($query) {
         $rslt = false;
 
-        if (is_resource($querie)) {
-            $rslt = mysql_free_result($querie);
+        if (is_resource($query)) {
+            $rslt = mysql_free_result($query);
         }
         return $rslt;
     }

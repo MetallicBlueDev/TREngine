@@ -15,6 +15,7 @@ class Base_Mysqli extends Base_Model {
         $this->connId = new mysqli($this->getDatabaseHost(), $this->getDatabaseUser(), $this->getDatabasePass());
 
         if ($this->getMysqli()->connect_error) {
+            Core_Logger::addException("MySqli connect_error: " . $this->getMysqli()->connect_error);
             $this->connId = null;
         }
     }
@@ -38,35 +39,49 @@ class Base_Mysqli extends Base_Model {
 
     public function query($sql) {
         $this->queries = $this->getMysqli()->query($sql);
+
+        if (!$this->queries) {
+            Core_Logger::addException("MySqli query: " . $this->getMysqli()->error);
+        }
     }
 
     public function &fetchArray() {
-        $rslt = array();
+        $values = array();
+        $rslt = $this->getMysqliResult();
 
-        if ($this->queries instanceof mysqli_result) {
-            $rslt = array(
-                $this->queries->fetch_array(MYSQLI_ASSOC));
+        if ($rslt !== null) {
+            $nbRows = $rslt->num_rows;
+
+            for ($i = 0; $i < $nbRows; $i++) {
+                $values[] = $rslt->fetch_array(MYSQLI_ASSOC);
+            }
         }
-        return $rslt;
+        return $values;
     }
 
     public function &fetchObject() {
-        $rslt = null;
+        $values = null;
+        $rslt = $this->getMysqliResult();
 
-        if ($this->queries instanceof mysqli_result) {
-            $rslt = $this->queries->fetch_object();
+        if ($rslt !== null) {
+            $nbRows = $rslt->num_rows;
+
+            for ($i = 0; $i < $nbRows; $i++) {
+                $values[] = $rslt->fetch_object();
+            }
         }
-        return $rslt;
+        return $values;
     }
 
-    public function &freeResult($querie) {
-        $rslt = false;
+    public function &freeResult($query) {
+        $success = false;
+        $rslt = $this->getMysqliResult($query);
 
-        if ($querie instanceof mysqli_result) {
-            $querie->free();
-            $rslt = true;
+        if ($rslt !== null) {
+            $rslt->free();
+            $success = true;
         }
-        return $rslt;
+        return $success;
     }
 
     public function &affectedRows() {
@@ -113,12 +128,31 @@ class Base_Mysqli extends Base_Model {
     }
 
     /**
-     * Retourne l'objet mysqli.
+     * Retourne la connexion mysqli.
      *
      * @return mysqli
      */
-    private function getMysqli() {
+    private function &getMysqli() {
         return $this->connId;
+    }
+
+    /**
+     * Retourne le résultat de la dernière requête.
+     *
+     * @param resource $query
+     * @return \mysqli_result
+     */
+    private function &getMysqliResult($query = null) {
+        $object = null;
+
+        if ($query === null) {
+            $query = $this->queries;
+        }
+
+        if ($query instanceof mysqli_result) {
+            $object = $query;
+        }
+        return $object;
     }
 
 }

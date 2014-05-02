@@ -231,7 +231,7 @@ abstract class Base_Model {
     }
 
     /**
-     * Retourne un tableau qui contient la ligne demandée.
+     * Retourne un tableau contenant toutes les lignes demandées.
      *
      * @return array
      */
@@ -240,9 +240,9 @@ abstract class Base_Model {
     }
 
     /**
-     * Retourne un objet qui contient la ligne demandée.
+     * Retourne un tableau contenant tous les objets demandés.
      *
-     * @return object
+     * @return array(object)
      */
     public function &fetchObject() {
         return array();
@@ -372,11 +372,11 @@ abstract class Base_Model {
     /**
      * Libère la mémoire du resultat.
      *
-     * @param resource $querie
+     * @param resource $query
      * @return boolean
      */
-    public function &freeResult($querie) {
-        unset($querie);
+    public function &freeResult($query) {
+        unset($query);
         return false;
     }
 
