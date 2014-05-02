@@ -87,7 +87,7 @@ class Base_Pdo extends Base_Model {
         return $this->getPdo()->lastInsertId();
     }
 
-    public function &test() {
+    protected function &test() {
         $rslt = false;
 
         $driverName = $this->getDatabaseHost();

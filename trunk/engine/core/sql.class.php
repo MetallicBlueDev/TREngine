@@ -409,9 +409,10 @@ class Core_Sql extends Base_Model {
         return $this->selectedBase->getBuffer($name);
     }
 
-    public function &test() {
+    protected function &test() {
         // NE RIEN FAIRE
-        return false;
+        $rslt = false;
+        return $rslt;
     }
 
     /**

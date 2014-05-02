@@ -100,7 +100,7 @@ class Base_Mysqli extends Base_Model {
         return $this->getMysqli()->insert_id;
     }
 
-    public function &test() {
+    protected function &test() {
         $rslt = function_exists("mysqli_connect");
 
         if (!$rslt) {

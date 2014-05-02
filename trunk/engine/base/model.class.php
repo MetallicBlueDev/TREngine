@@ -449,7 +449,7 @@ abstract class Base_Model {
      *
      * @return boolean
      */
-    public function &test() {
+    protected function &test() {
         $rslt = false;
         return $rslt;
     }

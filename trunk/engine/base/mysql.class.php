@@ -113,7 +113,7 @@ class Base_Mysql extends Base_Model {
         return $lastId;
     }
 
-    public function &test() {
+    protected function &test() {
         $rslt = function_exists("mysql_connect");
 
         if (!$rslt) {
