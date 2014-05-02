@@ -195,8 +195,24 @@ class Core_Secure {
         if (Core_Loader::isCallable("Core_Session") && Core_Loader::isCallable("Core_Sql")) {
             if (Core_Sql::hasConnection()) {
                 if (Core_Session::getInstance()->userRank > 1) {
-                    $errorMessage = array_merge($errorMessage, (array) Core_Sql::getInstance()->getLastError());
+                    $sqlErrors = Core_Sql::getInstance()->getLastError();
+
+                    if (!empty($sqlErrors)) {
+                        $errorMessage[] = " ";
+                        $errorMessage[] = "<b>Last Sql error message:</b>";
+                        $errorMessage = array_merge($errorMessage, $sqlErrors);
+                    }
                 }
+            }
+        }
+
+        if (Core_Loader::isCallable("Core_Logger")) {
+            $loggerExceptions = Core_Logger::getExceptions();
+
+            if (!empty($loggerExceptions)) {
+                $errorMessage[] = " ";
+                $errorMessage[] = "<b>Exceptions logged:</b>";
+                $errorMessage = array_merge($errorMessage, $loggerExceptions);
             }
         }
         return $errorMessage;
