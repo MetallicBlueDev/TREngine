@@ -39,16 +39,7 @@ class Base_Pdo extends Base_Model {
         $this->queries = $this->getPdo()->query($sql);
 
         if ($this->queries === false) {
-            $message = "";
-            $error = $this->getPdo()->errorInfo();
-
-            if (count($error) >= 3) {
-                $message = $error[2];
-            } else {
-                $message = implode(" // ", $error);
-            }
-
-            Core_Logger::addException("PDO query: " . $message);
+            Core_Logger::addException("PDO query: " . $this->getPdoErrorMessage());
         }
     }
 
@@ -77,37 +68,58 @@ class Base_Pdo extends Base_Model {
     }
 
     public function &freeResult($query) {
-        $success = false;
-        $rslt = $this->getPdoResult($query);
-
-        if ($rslt !== null) {
-            $rslt->free();
-            $success = true;
-        }
+        unset($query);
+        $success = true;
         return $success;
     }
 
     public function &affectedRows() {
-        return $this->getPdo()->affected_rows;
+        $value = -1;
+        $rslt = $this->getPdoResult();
+
+        if ($rslt !== null) {
+            $value = $rslt->rowCount();
+        }
+        return $value;
     }
 
     public function &insertId() {
-        return $this->getPdo()->insert_id;
+        return $this->getPdo()->lastInsertId();
     }
 
-    public function test() {
-        // Vérifie que le module mysql est chargé.
-        return function_exists("mysqli_connect");
+    public function &test() {
+        $rslt = false;
+
+        $driverName = $this->getDatabaseHost();
+        $pos = strpos($driverName, ":");
+
+        if ($pos !== false) {
+            $driverName = substr($driverName, 0, $pos);
+        }
+
+        foreach (PDO::getAvailableDrivers() as $availableDriverName) {
+            if ($availableDriverName == $driverName) {
+                $rslt = true;
+                break;
+            }
+        }
+
+        if (!$rslt) {
+            Core_Logger::addException("PDO driver not found: " . $driverName);
+        }
+        return $rslt;
     }
 
     public function &getLastError() {
         $error = parent::getLastError();
-        $error[] = "<b>MySqli response</b> : " . $this->getPdo()->error;
+        $error[] = "<b>Pdo response</b> : " . $this->getPdoErrorMessage();
         return $error;
     }
 
     public function &getVersion() {
-        return $this->getPdo()->server_info;
+        // Exemple : 5.6.15-log
+        $version = $this->getPdo()->getAttribute(PDO::ATTR_SERVER_VERSION);
+        return $version;
     }
 
     public function update($table, array $values, array $where, array $orderby = array(), $limit = "") {
@@ -156,6 +168,23 @@ class Base_Pdo extends Base_Model {
             $object = $query;
         }
         return $object;
+    }
+
+    /**
+     * Retourne le dernier message d'erreur.
+     *
+     * @return string
+     */
+    private function &getPdoErrorMessage() {
+        $message = "";
+        $error = $this->getPdo()->errorInfo();
+
+        if (count($error) >= 3) {
+            $message = $error[2];
+        } else {
+            $message = implode(" // ", $error);
+        }
+        return $message;
     }
 
 }
