@@ -156,6 +156,15 @@ class Core_Logger {
     }
 
     /**
+     * Retourne les exceptions rencontrées.
+     *
+     * @return array
+     */
+    public static function &getExceptions() {
+        return self::$exceptions;
+    }
+
+    /**
      * Ecriture du rapport d'erreur dans un fichier log.
      */
     public static function logException() {
