@@ -3,7 +3,8 @@
 // Informations sur la base de données
 //
 // Adresse de l'hôte de la base ou la chaine complète du DSN (Data Source Name)
-$inc['host'] = "127.0.0.1";
+// Exemple de DSN pour PDO : mysql:host=127.0.0.1
+$inc['host'] = "mysql:host=127.0.0.1";
 //
 // Nom d'utilisateur de la base
 $inc['user'] = "root";
@@ -14,8 +15,8 @@ $inc['pass'] = "";
 // Nom de la base
 $inc['name'] = "trancers_db";
 //
-// Type de transaction à utiliser
-$inc['type'] = "mysqli";
+// Type de transaction à utiliser (mysql / mysqli / pdo)
+$inc['type'] = "pdo";
 //
 // Préfixe des tables
 $inc['prefix'] = "tr";
