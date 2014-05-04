@@ -39,18 +39,6 @@ class Core_Secure {
         $this->checkError();
         $this->checkQueryString();
         $this->checkRequestReferer();
-
-        // Si nous ne sommes pas passé par l'index
-        if (!defined("TR_ENGINE_INDEX")) {
-            if (!class_exists("Core_Info")) {
-                require("info.class.php");
-            }
-
-            define("TR_ENGINE_INDEX", true);
-            $this->throwException("badUrl");
-        }
-
-        // A exécuter uniquement après avoir vérifié l'index et le numéro de version
         $this->checkGPC();
     }
 
@@ -72,6 +60,16 @@ class Core_Secure {
     public static function checkInstance($debuggingMode = false) {
         if (self::$secure === null) {
             self::$secure = new self($debuggingMode);
+
+            // Si nous ne sommes pas passé par l'index
+            if (!defined("TR_ENGINE_INDEX")) {
+                if (!class_exists("Core_Info")) {
+                    require("info.class.php");
+                }
+
+                define("TR_ENGINE_INDEX", true);
+                self::$secure->throwException("badUrl");
+            }
         }
     }
 
@@ -286,8 +284,9 @@ class Core_Secure {
      * Fonction de substitution pour MAGIC_QUOTES_GPC.
      */
     private function checkGPC() {
-        if (TR_ENGINE_PHP_VERSION < "5.3.0" && function_exists("set_magic_quotes_runtime")) {
-            set_magic_quotes_runtime(0);
+        // Désactivation de MAGIC_QUOTES_GPC
+        if (function_exists("set_magic_quotes_runtime") && function_exists("get_magic_quotes_gpc") && get_magic_quotes_gpc()) {
+            set_magic_quotes_runtime(false);
         }
 
         $this->addSlashesForQuotes($_GET);
