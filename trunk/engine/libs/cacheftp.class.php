@@ -1,11 +1,11 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
-    require("../core/secure.class.php");
-    new Core_Secure();
+    require(".." . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php");
+    Core_Secure::checkInstance();
 }
 
 /**
- * Gestionnaire des connexions vers le FTP.
+ * Gestionnaire de fichier via FTP.
  *
  * @author Sébastien Villemain
  */
@@ -107,7 +107,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
         $ftp['pass'] = (empty($ftp['pass'])) ? "" : $ftp['pass'];
 
         // Le dossier root sera redéfinie après être logué
-        $ftp['root'] = (empty($ftp['root'])) ? "/" : $ftp['root'];
+        $ftp['root'] = (empty($ftp['root'])) ? DIRECTORY_SEPARATOR : $ftp['root'];
 
         $this->ftp = $ftp;
 
@@ -280,7 +280,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
                 if ($rslt == -1) { // Une erreur est survenue
                     $this->nativeMode = false;
 
-                    Core_Logger::addException("bad response for ftp_mdtm command. Path : " . $path
+                    Core_Logger::addException("Bad response for ftp_mdtm command. Path : " . $path
                     . " Turn off the native command.");
 
                     $mTime = $this->getMTime($path);
@@ -290,7 +290,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
             } else {
                 if (!$this->setCommand("MDTM " . $this->getRootPath($path), array(
                     250))) {
-                    Core_Logger::addException("bad response for MDTM command. Path : " . $path);
+                    Core_Logger::addException("Bad response for MDTM command. Path : " . $path);
                 }
 
                 $mTime = $this->responseMsg;
@@ -345,28 +345,28 @@ class Libs_CacheFtp extends Libs_CacheModel {
      */
     private function rootConfig() {
         // Si aucun root n'est précisé
-        if ($this->ftp['root'] == "/") {
+        if ($this->ftp['root'] == DIRECTORY_SEPARATOR) {
             // On commence la recherche
             $pathFound = "";
             $listNames = $this->listNames();
 
             if (is_array($listNames)) {
                 // On décompose les dossiers
-                $listNamesSearch = explode("/", TR_ENGINE_DIR);
+                $listNamesSearch = explode(DIRECTORY_SEPARATOR, TR_ENGINE_DIR);
 
                 // On recherche des correspondances
                 foreach ($listNames as $dirName) {
                     foreach ($listNamesSearch as $dirNameSearch) {
                         // On construit le lien
                         if (($dirNameSearch == $dirName) || !empty($pathFound)) {
-                            $pathFound = (!empty($pathFound)) ? $pathFound . "/" . $dirNameSearch : $dirNameSearch;
+                            $pathFound = (!empty($pathFound)) ? $pathFound . DIRECTORY_SEPARATOR . $dirNameSearch : $dirNameSearch;
                         } else {
-                            $pathRebuild = (!empty($pathRebuild)) ? $pathRebuild . "/" . $dirNameSearch : $dirNameSearch;
+                            $pathRebuild = (!empty($pathRebuild)) ? $pathRebuild . DIRECTORY_SEPARATOR . $dirNameSearch : $dirNameSearch;
                         }
                     }
 
                     // On verifie si c'est bon et on arrete si c'est trouvé
-                    if (!empty($pathFound) && is_file("/" . $pathRebuild . "/" . $pathFound . "/engine/core/secure.class.php")) {
+                    if (!empty($pathFound) && is_file(DIRECTORY_SEPARATOR . $pathRebuild . DIRECTORY_SEPARATOR . $pathFound . DIRECTORY_SEPARATOR . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php")) {
                         break;
                     } else {
                         // Resets
@@ -377,7 +377,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
         }
 
         // Vérification du root path
-        if (is_file("/" . $pathRebuild . "/" . $pathFound . "/engine/core/secure.class.php")) {
+        if (is_file(DIRECTORY_SEPARATOR . $pathRebuild . DIRECTORY_SEPARATOR . $pathFound . DIRECTORY_SEPARATOR . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php")) {
             $this->ftp['root'] = $pathFound;
         } else if (empty($this->ftp['root'])) {
             Core_Logger::addException("Unable to configure root path.");
@@ -394,14 +394,14 @@ class Libs_CacheFtp extends Libs_CacheModel {
         if ($this->connected()) {
             if ($this->nativeMode) {
                 if (ftp_site($this->connId, "CHMOD " . $mode . " " . $this->getRootPath($path))) {
-                    Core_Logger::addException("bad response for ftp_site CHMOD command. Path : " . $path);
+                    Core_Logger::addException("Bad response for ftp_site CHMOD command. Path : " . $path);
                 }
             } else {
                 // Envoie de la commande CHMOD
                 if ($this->setCommand("SITE CHMOD " . $mode . " " . $path, array(
                     200,
                     250))) {
-                    Core_Logger::addException("bad response for SITE CHMOD command. Path : " . $path);
+                    Core_Logger::addException("Bad response for SITE CHMOD command. Path : " . $path);
                 }
             }
         }
@@ -428,7 +428,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
 
                     // Ecriture du fichier
                     if (!ftp_fget($this->connId, $buffer, $this->getRootPath($path), FTP_ASCII)) {// TODO il faut mettre une path remote ici !
-                        Core_Logger::addException("bad response for ftp_fget command. Path : " . $path);
+                        Core_Logger::addException("Bad response for ftp_fget command. Path : " . $path);
                     }
 
                     fclose($buffer);
@@ -463,7 +463,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
                     // Verification
                     if (!$this->responseCode(array(
                         226))) {
-                        Core_Logger::addException("bad response for STOR|APPE|fwrite command. Path : " . $path);
+                        Core_Logger::addException("Bad response for STOR|APPE|fwrite command. Path : " . $path);
                     }
                 }
             }
@@ -480,7 +480,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
         $pathIsDir = Core_CacheBuffer::isDir($path);
 
         // Information sur les dossiers
-        $dirs = explode("/", $this->getPath($path));
+        $dirs = explode(DIRECTORY_SEPARATOR, $this->getPath($path));
         $nbDir = count($dirs);
         $currentPath = "";
         $count = 0;
@@ -495,19 +495,19 @@ class Libs_CacheFtp extends Libs_CacheModel {
                 }
 
                 // Mise à jour du dossier courant
-                $currentPath = ($count == 1) ? $currentPath = $dir : $currentPath . "/" . $dir;
+                $currentPath = ($count == 1) ? $currentPath = $dir : $currentPath . DIRECTORY_SEPARATOR . $dir;
 
                 if (!is_dir($currentPath)) {
                     // Création du dossier
                     if ($this->connected()) {
                         if ($this->nativeMode) {
                             if (!ftp_mkdir($this->connId, $path)) {
-                                Core_Logger::addException("bad response for ftp_mkdir command. Path : " . $path);
+                                Core_Logger::addException("Bad response for ftp_mkdir command. Path : " . $path);
                             }
                         } else {
                             if (!$this->setCommand("MKD " . $path, array(
                                 257))) {
-                                Core_Logger::addException("bad response for MKD command. Path : " . $path);
+                                Core_Logger::addException("Bad response for MKD command. Path : " . $path);
                             }
                         }
 
@@ -517,9 +517,9 @@ class Libs_CacheFtp extends Libs_CacheModel {
 
                     // Des petites fichiers bonus...
                     if ($dir == "tmp") {
-                        $this->writingFile($currentPath . "/index.php", "header(\"Location: ../index.php\");");
+                        $this->writingFile($currentPath . DIRECTORY_SEPARATOR . "index.php", "header(\"Location: .." . DIRECTORY_SEPARATOR . "index.php\");");
                     } else {
-                        $this->writingFile($currentPath . "/.htaccess", "deny from all");
+                        $this->writingFile($currentPath . DIRECTORY_SEPARATOR . ".htaccess", "deny from all");
                     }
                 }
             }
@@ -552,13 +552,13 @@ class Libs_CacheFtp extends Libs_CacheModel {
             if ($this->nativeMode) {
                 // On efface le fichier, si c'est un fichier
                 if (!ftp_delete($this->connId, $this->getRootPath($path))) {
-                    Core_Logger::addException("bad response for ftp_delete command. Path : " . $path);
+                    Core_Logger::addException("Bad response for ftp_delete command. Path : " . $path);
                 }
             } else {
                 // Envoie de la commande de suppression du fichier
                 if (!$this->setCommand("DELE " . $this->getRootPath($path), array(
                     250))) {
-                    Core_Logger::addException("bad response for DELE command. Path : " . $path);
+                    Core_Logger::addException("Bad response for DELE command. Path : " . $path);
                 }
             }
         }
@@ -578,9 +578,9 @@ class Libs_CacheFtp extends Libs_CacheModel {
             foreach ($dirList as $dirPath) {
                 // Vérification avant suppression
                 if ($timeLimit > 0) {
-                    if (is_file($this->getRootPath($path . "/" . $dirPath))) {
+                    if (is_file($this->getRootPath($path . DIRECTORY_SEPARATOR . $dirPath))) {
                         // Si le fichier n'est pas périmé, on passe au suivant
-                        if ($timeLimit < $this->getMTime($path . "/" . $dirPath)) {
+                        if ($timeLimit < $this->getMTime($path . DIRECTORY_SEPARATOR . $dirPath)) {
                             continue;
                         }
                     } else {
@@ -590,12 +590,12 @@ class Libs_CacheFtp extends Libs_CacheModel {
                     }
                 }
 
-                if (is_file($this->getRootPath($path . "/" . $dirPath))) {
+                if (is_file($this->getRootPath($path . DIRECTORY_SEPARATOR . $dirPath))) {
                     // Suppression du fichier
-                    $this->removeFile($path . "/" . $dirPath, $timeLimit);
+                    $this->removeFile($path . DIRECTORY_SEPARATOR . $dirPath, $timeLimit);
                 } else {
                     // Suppression du dossier
-                    $this->removeDirectory($path . "/" . $dirPath, $timeLimit);
+                    $this->removeDirectory($path . DIRECTORY_SEPARATOR . $dirPath, $timeLimit);
                 }
             }
         }
@@ -604,13 +604,13 @@ class Libs_CacheFtp extends Libs_CacheModel {
         if ($timeLimit == 0 && $this->connected()) {
             if ($this->nativeMode) {
                 if (!ftp_rmdir($this->connId, $this->getRootPath($path))) {
-                    Core_Logger::addException("bad response for ftp_rmdir command. Path : " . $path);
+                    Core_Logger::addException("Bad response for ftp_rmdir command. Path : " . $path);
                 }
             } else {
                 // Envoi de la commande de suppression du fichier
                 if ($this->setCommand("RMD " . $this->getRootPath($path), array(
                     250))) {
-                    Core_Logger::addException("bad response for RMD command. Path : " . $path);
+                    Core_Logger::addException("Bad response for RMD command. Path : " . $path);
                 }
             }
         }
@@ -629,7 +629,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
         if ($this->connected()) {
             // Envoie de la commande au serveur
             if (!fwrite($this->connId, $cmd . $this->CRLF)) {
-                Core_Logger::addException("unable to send command: " . $cmd);
+                Core_Logger::addException("Unable to send command: " . $cmd);
             }
 
             $rslt = $this->responseCode($expectedResponse);
@@ -669,7 +669,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
                     $rslt = true;
                 }
             } else {
-                Core_Logger::addException("timeout or unrecognized response while waiting for a response from the server. Full response : " . $this->response);
+                Core_Logger::addException("Timeout or unrecognized response while waiting for a response from the server. Full response : " . $this->response);
             }
         }
         return $rslt;
@@ -706,7 +706,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
                             $this->setTimeOut();
                             $rslt = true;
                         } else {
-                            Core_Logger::addException("could not connect to host " . $this->passiveIp . " on port " . $this->passivePort
+                            Core_Logger::addException("Could not connect to host " . $this->passiveIp . " on port " . $this->passivePort
                             . ". Socket error number " . $$socket_error_number . " and error message: " . $socket_error_message);
                         }
                     }
@@ -759,7 +759,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
             220))) || $this->connected()) {
             $rslt = true;
         } else {
-            Core_Logger::addException("could not connect to host " . $this->ftp['host'] . " on port " . $this->ftp['port']);
+            Core_Logger::addException("Could not connect to host " . $this->ftp['host'] . " on port " . $this->ftp['port']);
         }
         return $rslt;
     }

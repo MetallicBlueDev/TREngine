@@ -1,7 +1,7 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
     require("secure.class.php");
-    new Core_Secure();
+    Core_Secure::checkInstance();
 }
 
 /**
@@ -429,13 +429,13 @@ class Core_Html {
     /**
      * Ajoute un fichier de style .CSS à l'entête.
      *
-     * @param string $fileName
+     * @param string $filePath
      * @param string $options
      */
-    private function addCssFile($fileName, $options = "") {
-        if (is_file(TR_ENGINE_DIR . "/" . $fileName)) {
-            if (!array_key_exists($fileName, $this->cssFile)) {
-                $this->cssFile[$fileName] = $options;
+    private function addCssFile($filePath, $options = "") {
+        if (is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . str_replace("/", DIRECTORY_SEPARATOR, $filePath))) {
+            if (!array_key_exists($filePath, $this->cssFile)) {
+                $this->cssFile[$filePath] = $options;
             }
         }
     }

@@ -1,7 +1,7 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
     require("secure.class.php");
-    new Core_Secure();
+    Core_Secure::checkInstance();
 }
 
 /**
@@ -255,7 +255,7 @@ class Core_Translate {
 
                 // Pour la sélection dans le cache
                 if (Core_Loader::isCallable("Core_CacheBuffer")) {
-                    Core_CacheBuffer::setSectionName("lang");
+                    Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_TRANSLATE);
                 }
 
                 // Chargement du fichier de traduction
@@ -321,7 +321,7 @@ class Core_Translate {
     public static function removeCache($pathLang = "") {
         $langCacheFileName = self::getLangCacheFileName($pathLang);
 
-        Core_CacheBuffer::setSectionName("lang");
+        Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_TRANSLATE);
 
         $langues = self::listLanguages();
         foreach ($langues as $langue) {
@@ -336,10 +336,10 @@ class Core_Translate {
      * @return string
      */
     private static function getLangCacheFileName($pathLang = "") {
-        if (!empty($pathLang) && substr($pathLang, -1) != "/") {
-            $pathLang .= "/";
+        if (!empty($pathLang) && substr($pathLang, -1) != DIRECTORY_SEPARATOR) {
+            $pathLang .= DIRECTORY_SEPARATOR;
         }
-        return str_replace("/", "_", $pathLang) . "_lang_";
+        return str_replace(DIRECTORY_SEPARATOR, "_", $pathLang) . "lang_";
     }
 
     /**
@@ -426,7 +426,7 @@ class Core_Translate {
      * @return boolean true langue disponible.
      */
     private static function isValid($language) {
-        return is_file(TR_ENGINE_DIR . "/lang/" . $language . ".lang.php");
+        return is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR . $language . ".lang.php");
     }
 
     /**

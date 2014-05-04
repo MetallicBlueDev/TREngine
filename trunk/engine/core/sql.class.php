@@ -1,7 +1,7 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
     require("secure.class.php");
-    new Core_Secure();
+    Core_Secure::checkInstance();
 }
 
 /**

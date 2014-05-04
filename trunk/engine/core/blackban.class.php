@@ -1,7 +1,7 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
     require("secure.class.php");
-    new Core_Secure();
+    Core_Secure::checkInstance();
 }
 
 /**
@@ -55,7 +55,7 @@ class Core_BlackBan {
     private static function checkOldBlackBan() {
         $deleteOldBlackBan = false;
 
-        Core_CacheBuffer::setSectionName("tmp");
+        Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_TMP);
         // Vérification du fichier cache
         if (!Core_CacheBuffer::cached("deleteOldBlackBan.txt")) {
             $deleteOldBlackBan = true;

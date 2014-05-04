@@ -1,19 +1,126 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
     require("secure.class.php");
-    new Core_Secure();
+    Core_Secure::checkInstance();
 }
 
 class Core_CacheBuffer {
 
+    /**
+     * Section de configuration.
+     *
+     * @var string
+     */
     const SECTION_CONFIGS = "configs";
 
     /**
-     * Instance d'un protocole déjà initialisé
+     * Section temporaire (branche principal).
+     *
+     * @var string
+     */
+    const SECTION_TMP = "tmp";
+
+    /**
+     * Section temporaire des fichiers de journaux.
+     *
+     * @var string
+     */
+    const SECTION_LOGGER = "tmp/logger";
+
+    /**
+     * Section temporaire pour le cache des sessions.
+     *
+     * @var string
+     */
+    const SECTION_SESSIONS = "tmp/sessions";
+
+    /**
+     * Section temporaire pour le cache de traduction.
+     *
+     * @var string
+     */
+    const SECTION_TRANSLATE = "tmp/translate";
+
+    /**
+     * Section temporaire pour le cache des menus.
+     *
+     * @var string
+     */
+    const SECTION_MENUS = "tmp/menus";
+
+    /**
+     * Section temporaire pour le cache des modules.
+     *
+     * @var string
+     */
+    const SECTION_MODULES = "tmp/modules";
+
+    /**
+     * Section temporaire pour le cache des listes de fichiers.
+     *
+     * @var string
+     */
+    const SECTION_FILELISTER = "tmp/fileLister";
+
+    /**
+     * Section temporaire pour le cache des formulaires.
+     *
+     * @var string
+     */
+    const SECTION_FORMS = "tmp/forms";
+
+    /**
+     * Section temporaire pour le cache des blocks.
+     *
+     * @var string
+     */
+    const SECTION_BLOCKS = "tmp/blocks";
+
+    /**
+     * Utilisation des méthodes PHP.
+     *
+     * @var string
+     */
+    const MODE_PHP = "php";
+
+    /**
+     * Utilisation des transactions FTP.
+     *
+     * @var string
+     */
+    const MODE_FTP = "ftp";
+
+    /**
+     * Utilisation des transactions FTP sécurisées.
+     *
+     * @var string
+     */
+    const MODE_SFTP = "sftp";
+
+    /**
+     * Gestionnaire de fichier.
      *
      * @var Libs_CacheModel
      */
-    private static $protocol = null;
+    private static $libsCacheModel = null;
+
+    /**
+     * Chemin de la section actuelle.
+     *
+     * @var string
+     */
+    private static $currentSection = self::SECTION_TMP;
+
+    /**
+     * Etat des modes de gestion des fichiers.
+     *
+     * @var array
+     */
+    private static $modeActived = array(
+        self::MODE_PHP => false,
+        self::MODE_FTP => false,
+        self::MODE_SFTP => false
+    );
 
     /**
      * Réécriture du cache
@@ -44,51 +151,19 @@ class Core_CacheBuffer {
     private static $updateCache = array();
 
     /**
-     * Tableau avec les chemins des differentes rubriques
+     * Change le chemin de la section.
      *
-     * @var array
+     * @param string $newSectionPath
      */
-    private static $sectionDir = array(
-        self::SECTION_CONFIGS => "configs/",
-        "tmp" => "tmp",
-        "log" => "tmp/log",
-        "sessions" => "tmp/sessions",
-        "lang" => "tmp/lang",
-        "menus" => "tmp/menus",
-        "modules" => "tmp/modules",
-        "fileList" => "tmp/fileList",
-        "form" => "tmp/form"
-    );
+    public static function changeCurrentSection($newSectionPath = self::SECTION_TMP) {
+        $newSectionPath = empty($newSectionPath) ? self::SECTION_TMP : $newSectionPath;
+        $newSectionPath = str_replace("/", DIRECTORY_SEPARATOR, $newSectionPath);
 
-    /**
-     * Nom de la section courante
-     *
-     * @var string
-     */
-    private static $sectionName = "";
-
-    /**
-     * état des modes de gestion des fichiers
-     *
-     * @var arry
-     */
-    private static $modeActived = array(
-        "php" => false,
-        "ftp" => false,
-        "sftp" => false
-    );
-
-    /**
-     * Modifier le nom de la section courante
-     *
-     * @param $sectionName
-     */
-    public static function setSectionName($sectionName = "") {
-        if (!empty($sectionName) && isset(self::$sectionDir[$sectionName])) {
-            self::$sectionName = $sectionName;
-        } else {
-            self::$sectionName = "tmp";
+        if (substr($newSectionPath, -1) === DIRECTORY_SEPARATOR) {
+            $newSectionPath = substr($newSectionPath, 0, -1);
         }
+
+        self::$currentSection = $newSectionPath;
     }
 
     /**
@@ -96,12 +171,9 @@ class Core_CacheBuffer {
      *
      * @return string
      */
-    private static function &getSectionPath() {
-        // Si pas de section, on met par défaut
-        if (empty(self::$sectionName))
-            self::setSectionName();
-        // Chemin de la section courante
-        return self::$sectionDir[self::$sectionName];
+    private static function &getSectionPath($dir) {
+        $dir = self::encodePath(self::$currentSection . DIRECTORY_SEPARATOR . $dir);
+        return $dir;
     }
 
     /**
@@ -110,7 +182,10 @@ class Core_CacheBuffer {
      * @return string Section courante
      */
     public static function &getSectionName() {
-        return self::$sectionName;
+        if (empty(self::$currentSection)) {
+            self::changeCurrentSection();
+        }
+        return self::$currentSection;
     }
 
     /**
@@ -125,12 +200,13 @@ class Core_CacheBuffer {
             $content = self::serializeData($content);
         }
         // Mise en forme de la clé
-        $key = self::encodePath(self::getSectionPath() . "/" . $path);
+        $key = self::encodePath(self::getSectionPath() . DIRECTORY_SEPARATOR . $path);
         // Ajout dans le cache
-        if ($overWrite)
+        if ($overWrite) {
             self::$writingCache[$key] = $content;
-        else
+        } else {
             self::$addCache[$key] = $content;
+        }
     }
 
     /**
@@ -141,8 +217,9 @@ class Core_CacheBuffer {
      */
     public static function removeCache($dir, $timeLimit = 0) {
         // Configuration du path
-        if (!empty($dir))
+        if (!empty($dir)) {
             $dir = "/" . $dir;
+        }
         $dir = self::encodePath(self::getSectionPath() . $dir);
         self::$removeCache[$dir] = $timeLimit;
     }
@@ -169,7 +246,7 @@ class Core_CacheBuffer {
      * @param $path chemin vers le fichier cache
      */
     public static function touchCache($path) {
-        self::$updateCache[self::encodePath(self::getSectionPath() . "/" . $path)] = time();
+        self::$updateCache[self::encodePath(self::getSectionPath() . DIRECTORY_SEPARATOR . $path)] = time();
     }
 
     /**
@@ -198,16 +275,19 @@ class Core_CacheBuffer {
      * @return boolean true le checker est valide
      */
     public static function checked($timeLimit = 0) {
+        $rslt = false;
+
         if (self::cached("checker.txt")) {
             // Si on a demandé un comparaison de temps
             if ($timeLimit > 0) {
-                if ($timeLimit < self::checkerMTime())
-                    return true;
+                if ($timeLimit < self::checkerMTime()) {
+                    $rslt = true;
+                }
             } else {
-                return true;
+                $rslt = true;
             }
         }
-        return false;
+        return $rslt;
     }
 
     /**
@@ -260,10 +340,11 @@ class Core_CacheBuffer {
      * Mise à jour du checker
      */
     public static function touchChecker() {
-        if (!self::cached("checker.txt"))
+        if (!self::cached("checker.txt")) {
             self::writingChecker();
-        else
+        } else {
             self::touchCache("checker.txt");
+        }
     }
 
     /**
@@ -302,7 +383,7 @@ class Core_CacheBuffer {
      * @return string chemin complet
      */
     public static function &getPath($path) {
-        $path = TR_ENGINE_DIR . "/" . self::getSectionPath() . "/" . $path;
+        $path = TR_ENGINE_DIR . DIRECTORY_SEPARATOR . self::$currentSection . DIRECTORY_SEPARATOR . $path;
         return $path;
     }
 
@@ -315,7 +396,7 @@ class Core_CacheBuffer {
      */
     public static function &getCache($path, $vars = array()) {
         // Réglage avant capture
-        $variableName = self::$sectionName;
+        $variableName = self::$currentSection;
         // Rend la variable global a la fonction
         ${$variableName} = "";
 
@@ -345,14 +426,14 @@ class Core_CacheBuffer {
     public static function &isDir($path) {
         $pathIsDir = false;
 
-        if (substr($path, -1) == "/") {
+        if (substr($path, -1) == DIRECTORY_SEPARATOR) {
             // Nettoyage du path qui est enfaite un dir
             $path = substr($path, 0, -1);
             $pathIsDir = true;
         } else {
             // Recherche du bout du path
             $last = "";
-            $pos = strrpos("/", $path);
+            $pos = strrpos(DIRECTORY_SEPARATOR, $path);
             if (!is_bool($pos)) {
                 $last = substr($path, $pos);
             } else {
@@ -380,17 +461,17 @@ class Core_CacheBuffer {
         if ($ext == "php") {
             // Recherche du dossier parent
             $dirBase = "";
-            $nbDir = count(explode("/", $pathFile));
+            $nbDir = count(explode(DIRECTORY_SEPARATOR, $pathFile));
             for ($i = 1; $i < $nbDir; $i++) {
-                $dirBase .= "../";
+                $dirBase .= ".." . DIRECTORY_SEPARATOR;
             }
 
             // Ecriture de l'entête
             $content = "<?php\n"
             . "if (!defined(\"TR_ENGINE_INDEX\")){"
             . "if(!class_exists(\"Core_Secure\")){"
-            . "include(\"" . $dirBase . "engine/core/secure.class.php\");"
-            . "}new Core_Secure();}"
+            . "include(\"" . $dirBase . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php\");"
+            . "}Core_Secure::checkInstance();}"
             . "// Generated on " . date('Y-m-d H:i:s') . "\n"
             . $content
             . "\n?>";
@@ -439,8 +520,8 @@ class Core_CacheBuffer {
     public static function &listNames($dirPath) {
         $dirList = array();
 
-        self::setSectionName("fileList");
-        $fileName = str_replace("/", "_", $dirPath) . ".php";
+        self::changeCurrentSection(self::SECTION_FILELISTER);
+        $fileName = str_replace(DIRECTORY_SEPARATOR, "_", $dirPath) . ".php";
 
         if (Core_CacheBuffer::cached($fileName)) {
             $dirList = self::getCache($fileName);
@@ -460,25 +541,25 @@ class Core_CacheBuffer {
      * @return Libs_CacheModel
      */
     private static function &getExecProtocol() {
-        if (self::$protocol == null) {
+        if (self::$libsCacheModel == null) {
             if (self::$modeActived['ftp']) {
                 // Démarrage du gestionnaire FTP
-                self::$protocol = new Libs_CacheFtp();
+                self::$libsCacheModel = new Libs_CacheFtp();
             } else if (self::$modeActived['sftp']) {
                 // Démarrage du gestionnaire SFTP
-                self::$protocol = new Libs_CacheSftp();
+                self::$libsCacheModel = new Libs_CacheSftp();
             } else {
                 // Démarrage du gestionnaire de fichier
-                self::$protocol = new Libs_CacheFile();
+                self::$libsCacheModel = new Libs_CacheFile();
             }
 
             // Si il y a un souci, on démarre par défaut le gestionnaire de fichier
-            if (!self::$protocol->canUse()) {
+            if (!self::$libsCacheModel->canUse()) {
                 // Démarrage du gestionnaire de fichier
-                self::$protocol = new Libs_CacheFile();
+                self::$libsCacheModel = new Libs_CacheFile();
             }
         }
-        return self::$protocol;
+        return self::$libsCacheModel;
     }
 
     /**
@@ -525,5 +606,3 @@ class Core_CacheBuffer {
     }
 
 }
-
-?>

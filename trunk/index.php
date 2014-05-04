@@ -4,10 +4,10 @@ define("TR_ENGINE_INDEX", true);
 
 // Vérification de la version PHP
 // Classe compatible PHP 4
-require("engine/core/info.class.php");
+require("engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "info.class.php");
 
 // Inclusion du chargeur
-require("engine/core/loader.class.php");
+require("engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "loader.class.php");
 
 // Chargement du système de sécurité
 Core_Secure::checkInstance(true);

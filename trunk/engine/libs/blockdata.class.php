@@ -179,7 +179,7 @@ class Libs_BlockData {
      * @return boolean true block valide
      */
     public function isValid() {
-        return is_file(TR_ENGINE_DIR . "/blocks/" . $this->getType() . ".block.php");
+        return is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . "blocks" . DIRECTORY_SEPARATOR . $this->getType() . ".block.php");
     }
 
     /**

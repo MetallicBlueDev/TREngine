@@ -1,11 +1,11 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
-    require("../core/secure.class.php");
-    new Core_Secure();
+    require(".." . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php");
+    Core_Secure::checkInstance();
 }
 
 /**
- * Gestionnaire de fichier.
+ * Gestionnaire de fichier via PHP.
  *
  * @author Sébastien Villemain
  */
@@ -19,7 +19,7 @@ class Libs_CacheFile extends Libs_CacheModel {
      * @param boolean $overWrite écrasement du fichier
      */
     public function writingCache($path, $content, $overWrite = true) {
-        if (!is_file(TR_ENGINE_DIR . "/" . $path)) {
+        if (!is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path)) {
             // Soit le fichier n'exite pas soit tout le dossier n'existe pas
             // On commence par vérifier et si besoin écrire le dossier
             $this->writingDirectory($path);
@@ -37,10 +37,10 @@ class Libs_CacheFile extends Libs_CacheModel {
      * @param int $timeLimit limite de temps
      */
     public function removeCache($dir = "", $timeLimit = 0) {
-        if (!empty($dir) && is_file(TR_ENGINE_DIR . "/" . $dir)) {
+        if (!empty($dir) && is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dir)) {
             // C'est un fichier a supprimer
             $this->removeFile($dir, $timeLimit);
-        } else if (is_dir(TR_ENGINE_DIR . "/" . $dir)) {
+        } else if (is_dir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dir)) {
             // C'est un dossier a nettoyer
             $this->removeDirectory($dir, $timeLimit);
         }
@@ -57,7 +57,7 @@ class Libs_CacheFile extends Libs_CacheModel {
             $updateTime = time();
         }
 
-        if (!touch(TR_ENGINE_DIR . "/" . $path, $updateTime)) {
+        if (!touch(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path, $updateTime)) {
             Core_Logger::addException("touch error on " . $path);
         }
     }
@@ -72,7 +72,7 @@ class Libs_CacheFile extends Libs_CacheModel {
         $dirList = array();
 
         // Si le dossier est vide, on prend le dossier par défaut
-        $dirPath = !empty($dirPath) ? TR_ENGINE_DIR . "/" . $dirPath : TR_ENGINE_DIR;
+        $dirPath = !empty($dirPath) ? TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath : TR_ENGINE_DIR;
 
         // Ouverture du dossier
         $handle = opendir($dirPath);
@@ -136,7 +136,7 @@ class Libs_CacheFile extends Libs_CacheModel {
 
             // Vérification des bytes écris
             if ($nbBytesCmd != $nbBytesFile) {
-                @unlink(TR_ENGINE_DIR . "/" . $pathFile);
+                @unlink(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $pathFile);
 
                 Core_Logger::addException("bad response for fwrite command. Path : " . $pathFile . ". "
                 . "Server response : " . $nbBytesCmd . " bytes writed, " . $nbBytesFile . " bytes readed");
@@ -174,7 +174,7 @@ class Libs_CacheFile extends Libs_CacheModel {
         $pathIsDir = Core_CacheBuffer::isDir($path);
 
         // Information sur les dossiers
-        $dirs = explode("/", TR_ENGINE_DIR . "/" . $path);
+        $dirs = explode(DIRECTORY_SEPARATOR, TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path);
         $nbDir = count($dirs);
         $currentPath = "";
         $count = 0;
@@ -190,7 +190,7 @@ class Libs_CacheFile extends Libs_CacheModel {
                 }
 
                 // Mise à jour du dossier courant
-                $currentPath = ($count == 1) ? $dir : $currentPath . "/" . $dir;
+                $currentPath = ($count == 1) ? $dir : $currentPath . DIRECTORY_SEPARATOR . $dir;
 
                 if (!is_dir($currentPath)) {
                     // Création du dossier
@@ -204,9 +204,9 @@ class Libs_CacheFile extends Libs_CacheModel {
 
                     // Des petites fichiers bonus...
                     if ($dir == "tmp") {
-                        $this->writingFile($currentPath . "/index.php", "header(\"Location: ../index.php\");");
+                        $this->writingFile($currentPath . DIRECTORY_SEPARATOR . "index.php", "header(\"Location: .." . DIRECTORY_SEPARATOR . "index.php\");");
                     } else {
-                        $this->writingFile($currentPath . "/.htaccess", "deny from all");
+                        $this->writingFile($currentPath . DIRECTORY_SEPARATOR . ".htaccess", "deny from all");
                     }
                 }
             }
@@ -226,7 +226,7 @@ class Libs_CacheFile extends Libs_CacheModel {
         // Vérification de la date
         if ($timeLimit > 0) {
             // Vérification de la date d'expiration
-            if ($timeLimit > filemtime(TR_ENGINE_DIR . "/" . $path)) {
+            if ($timeLimit > filemtime(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path)) {
                 // Fichier périmé, suppression
                 $deleteFile = true;
             }
@@ -236,7 +236,7 @@ class Libs_CacheFile extends Libs_CacheModel {
         }
 
         if ($deleteFile) {
-            $fp = @fopen(TR_ENGINE_DIR . "/" . $path, 'a');
+            $fp = @fopen(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path, 'a');
 
             if ($fp) {
                 // Verrouiller le fichier destination
@@ -247,10 +247,10 @@ class Libs_CacheFile extends Libs_CacheModel {
                 fclose($fp);
 
                 // Suppression
-                unlink(TR_ENGINE_DIR . "/" . $path);
+                unlink(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path);
             }
 
-            if (is_file(TR_ENGINE_DIR . "/" . $path)) {
+            if (is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path)) {
                 Core_Logger::addException("bad response for fopen|unlink command. Path : " . $path);
             }
         }
@@ -264,7 +264,7 @@ class Libs_CacheFile extends Libs_CacheModel {
      */
     private function removeDirectory($dirPath, $timeLimit) {
         // Ouverture du dossier
-        $handle = opendir(TR_ENGINE_DIR . "/" . $dirPath);
+        $handle = opendir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath);
 
         // Boucle sur les fichiers
         do {
@@ -275,9 +275,9 @@ class Libs_CacheFile extends Libs_CacheModel {
                 if ($file != ".." && $file != "." && $file != ".svn") {
                     // Vérification avant suppression
                     if ($timeLimit > 0) {
-                        if (is_file($dirPath . "/" . $file)) {
+                        if (is_file($dirPath . DIRECTORY_SEPARATOR . $file)) {
                             // Si le fichier n'est pas périmé, on passe au suivant
-                            if ($timeLimit < filemtime(TR_ENGINE_DIR . "/" . $dirPath . "/" . $file)) {
+                            if ($timeLimit < filemtime(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath . DIRECTORY_SEPARATOR . $file)) {
                                 continue;
                             }
                         } else {
@@ -288,12 +288,12 @@ class Libs_CacheFile extends Libs_CacheModel {
                     }
 
                     // Suppression
-                    if (is_file(TR_ENGINE_DIR . "/" . $dirPath . "/" . $file)) {
+                    if (is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath . DIRECTORY_SEPARATOR . $file)) {
                         // Suppression du fichier
-                        $this->removeFile($dirPath . "/" . $file, $timeLimit);
+                        $this->removeFile($dirPath . DIRECTORY_SEPARATOR . $file, $timeLimit);
                     } else {
                         // Suppression du dossier
-                        $this->removeDirectory($dirPath . "/" . $file, 0);
+                        $this->removeDirectory($dirPath . DIRECTORY_SEPARATOR . $file, 0);
                     }
                 }
             }
@@ -304,9 +304,9 @@ class Libs_CacheFile extends Libs_CacheModel {
 
         // Suppression du dernière dossier
         if ($timeLimit == 0) {
-            rmdir(TR_ENGINE_DIR . "/" . $dirPath);
+            rmdir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath);
 
-            if (is_dir(TR_ENGINE_DIR . "/" . $dirPath)) {
+            if (is_dir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath)) {
                 Core_Logger::addException("bad response for rmdir command. Path : " . $dirPath);
             }
         }

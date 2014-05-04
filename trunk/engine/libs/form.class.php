@@ -1,7 +1,7 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
-    require("../core/secure.class.php");
-    new Core_Secure();
+    require(".." . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php");
+    Core_Secure::checkInstance();
 }
 
 /**
@@ -85,7 +85,7 @@ class Libs_Form {
         $this->name = $name;
         $this->urlAction = !empty($urlAction) ? $urlAction : "index.php";
 
-        Core_CacheBuffer::setSectionName("form");
+        Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_FORMS);
         $this->cached = Core_CacheBuffer::cached($name . ".php");
     }
 
@@ -411,7 +411,7 @@ class Libs_Form {
         $title = $this->getTitle($this->title);
         $description = $this->getDescription($this->description);
 
-        Core_CacheBuffer::setSectionName("form");
+        Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_FORMS);
         $content = "";
 
         if ($this->cached) { // Récupèration des données mise en cache

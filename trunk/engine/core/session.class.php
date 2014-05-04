@@ -1,7 +1,7 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
     require("secure.class.php");
-    new Core_Secure();
+    Core_Secure::checkInstance();
 }
 
 /**
@@ -157,7 +157,7 @@ class Core_Session {
 
         if ($setupCache) {
             // Configuration du gestionnaire de cache
-            Core_CacheBuffer::setSectionName("sessions");
+            Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_SESSIONS);
 
             // Nettoyage du cache
             Core_CacheBuffer::cleanCache($this->timer - $this->cacheTimeLimit);
@@ -349,7 +349,7 @@ class Core_Session {
 
             if (count($user) > 1) {
                 $this->setUser($user, true);
-                Core_CacheBuffer::setSectionName("sessions");
+                Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_SESSIONS);
                 Core_CacheBuffer::writingCache($this->sessionId . ".php", $this->getUserInfosSerialized(), true);
             }
         }
@@ -417,7 +417,7 @@ class Core_Session {
      */
     private function closeSession() {
         // Destruction du fichier de session
-        Core_CacheBuffer::setSectionName("sessions");
+        Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_SESSIONS);
 
         if (Core_CacheBuffer::cached($this->sessionId . ".php")) {
             Core_CacheBuffer::removeCache($this->sessionId . ".php");
@@ -461,7 +461,7 @@ class Core_Session {
 
         if ($cookieUser && $cookieSession) {
             // Ecriture du cache
-            Core_CacheBuffer::setSectionName("sessions");
+            Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_SESSIONS);
             Core_CacheBuffer::writingCache($this->sessionId . ".php", $this->getUserInfosSerialized());
             $rslt = true;
         } else {

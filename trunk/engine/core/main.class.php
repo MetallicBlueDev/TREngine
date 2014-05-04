@@ -1,7 +1,7 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
-    require("../core/secure.class.php");
-    new Core_Secure();
+    require(".." . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php");
+    Core_Secure::checkInstance();
 }
 
 /**
@@ -677,7 +677,7 @@ class Core_Main {
             if ($canUse) {
                 // Chargement de la configuration via la cache
                 $newConfig = array();
-                Core_CacheBuffer::setSectionName("tmp");
+                Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_TMP);
 
                 // Si le cache est disponible
                 if (Core_CacheBuffer::cached("configs.php")) {

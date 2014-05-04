@@ -1,7 +1,7 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
     require("secure.class.php");
-    new Core_Secure();
+    Core_Secure::checkInstance();
 }
 
 /**
@@ -171,7 +171,7 @@ class Core_Logger {
         if (Core_Loader::isCallable("Core_CacheBuffer")) {
             if (self::hasExceptions()) {
                 // Positionne dans le cache
-                Core_CacheBuffer::setSectionName("log");
+                Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_LOGGER);
 
                 // Ecriture à la suite du rapport
                 Core_CacheBuffer::writingCache("exception_" . date('Y-m-d') . ".log.php", self::serializeData(self::$exceptions), false);

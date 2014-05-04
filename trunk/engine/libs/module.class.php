@@ -1,7 +1,7 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
-    require("../core/secure.class.php");
-    new Core_Secure();
+    require(".." . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php");
+    Core_Secure::checkInstance();
 }
 
 /**
@@ -145,7 +145,7 @@ class Libs_Module {
             $moduleData = array();
 
             // Recherche dans le cache
-            Core_CacheBuffer::setSectionName("modules");
+            Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_MODULES);
 
             if (!Core_CacheBuffer::cached($moduleName . ".php")) {
                 $coreSql = Core_Sql::getInstance();
@@ -264,7 +264,7 @@ class Libs_Module {
         // Nom de la page cible
         $page = empty($page) ? $this->page : $page;
 
-        return is_file(TR_ENGINE_DIR . "/modules/" . $moduleName . "/" . $page . ".module.php");
+        return is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . $page . ".module.php");
     }
 
     /**

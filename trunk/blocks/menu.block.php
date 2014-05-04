@@ -1,7 +1,7 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
-    require("../engine/core/secure.class.php");
-    new Core_Secure();
+    require(".." . DIRECTORY_SEPARATOR . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php");
+    Core_Secure::checkInstance();
 }
 
 /**
@@ -56,7 +56,7 @@ class Block_Menu extends Libs_BlockModel {
     }
 
     public function uninstall() {
-        Core_CacheBuffer::setSectionName("menus");
+        Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_MENUS);
         Core_CacheBuffer::removeCache("block" . $this->getBlockData()->getId() . ".php");
     }
 

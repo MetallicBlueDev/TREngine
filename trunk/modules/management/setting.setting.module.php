@@ -1,7 +1,7 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
-    require("../../engine/core/secure.class.php");
-    new Core_Secure();
+    require(".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php");
+    Core_Secure::checkInstance();
 }
 
 class Module_Management_Setting extends Libs_ModuleModel {
@@ -33,7 +33,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
      * Supprime le cache
      */
     private function deleteCache() {
-        Core_CacheBuffer::setSectionName("tmp");
+        Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_TMP);
         Core_CacheBuffer::removeCache("configs.php");
     }
 

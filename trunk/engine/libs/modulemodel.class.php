@@ -1,7 +1,7 @@
 <?php
 if (!defined("TR_ENGINE_INDEX")) {
-    require("../core/secure.class.php");
-    new Core_Secure();
+    require(".." . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php");
+    Core_Secure::checkInstance();
 }
 
 /**
@@ -50,10 +50,10 @@ abstract class Libs_ModuleModel {
             "mod_id = '" . $this->getModuleData()->getId() . "'")
         );
 
-        Core_CacheBuffer::setSectionName("modules");
+        Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_MODULES);
 
         Core_CacheBuffer::removeCache($this->getModuleData()->getName() . ".php");
-        Core_Translate::removeCache("modules/" . $this->getModuleData()->getName());
+        Core_Translate::removeCache("modules" . DIRECTORY_SEPARATOR . $this->getModuleData()->getName());
     }
 
     /**

@@ -87,37 +87,40 @@ class Core_Info {
         // Recherche du chemin absolu depuis n'importe quel fichier
         if (defined("TR_ENGINE_INDEX")) {
             // Nous sommes dans l'index
-            $baseDir = str_replace('\\', '/', getcwd());
+            $baseDir = getcwd();
         } else {
             // Chemin de base
             $baseName = str_replace($_SERVER['SCRIPT_NAME'], "", $_SERVER['SCRIPT_FILENAME']);
+            $baseName = str_replace("/", DIRECTORY_SEPARATOR, $baseName);
             $workingDirectory = getcwd();
 
             if (!empty($workingDirectory)) {
-                // Chemin jusqu'au fichier
-                $currentPath = str_replace('\\', '/', $workingDirectory);
                 // On isole le chemin en plus jusqu'au fichier
-                $path = str_replace($baseName, "", $currentPath);
-            }
+                $path = str_replace($baseName, "", $workingDirectory);
 
-            $path = substr($path, 1); // Suppression du slash
+                if (!empty($path)) {
+                    // Suppression du slash
+                    if ($path[0] == DIRECTORY_SEPARATOR) {
+                        $path = substr($path, 1);
+                    }
 
-            if (!empty($path)) { // Recherche du chemin complet
-                // Vérification en se reperant sur l'emplacement du fichier de configuration
-                while (!is_file($baseName . "/" . $path . "/configs/config.inc.php")) {
-                    // On remonte d'un cran
-                    $path = dirname($path);
-                    // La recherche n'aboutira pas
-                    if ($path == ".") {
-                        break;
+                    // Vérification en se reperant sur l'emplacement du fichier de configuration
+                    while (!is_file($baseName . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "configs" . DIRECTORY_SEPARATOR . "config.inc.php")) {
+                        // On remonte d'un cran
+                        $path = dirname($path);
+
+                        // La recherche n'aboutira pas
+                        if ($path == ".") {
+                            break;
+                        }
                     }
                 }
             }
 
             // Verification du résultat
-            if (!empty($path) && is_file($baseName . "/" . $path . "/configs/config.inc.php")) {
-                $baseDir = $baseName . "/" . $path;
-            } else if (is_file($baseName . "/configs/config.inc.php")) {
+            if (!empty($path) && is_file($baseName . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "configs" . DIRECTORY_SEPARATOR . "config.inc.php")) {
+                $baseDir = $baseName . DIRECTORY_SEPARATOR . $path;
+            } else if (is_file($baseName . DIRECTORY_SEPARATOR . "configs" . DIRECTORY_SEPARATOR . "config.inc.php")) {
                 $baseDir = $baseName;
             } else {
                 $baseDir = $baseName;
@@ -136,7 +139,7 @@ class Core_Info {
         $urlTmp = $_SERVER["REQUEST_URI"];
 
         if (substr($urlTmp, -1) == "/") {
-            $urlTmp = substr($urlTmp, 0, strlen($urlTmp) - 1);
+            $urlTmp = substr($urlTmp, 0, -1);
         }
 
         if ($urlTmp[0] == "/") {

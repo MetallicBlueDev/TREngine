@@ -2,7 +2,7 @@
 // Attention au double instances de Core_Secure...
 if (preg_match("/secure.class.php/ie", $_SERVER['PHP_SELF'])) {
     if (!defined("TR_ENGINE_INDEX")) {
-        new Core_Secure();
+        Core_Secure::checkInstance();
     }
 }
 
@@ -99,7 +99,7 @@ class Core_Secure {
      */
     public function throwException($customMessage, Exception $ex = null, array $argv = array()) {
         if (!class_exists("Core_Loader")) {
-            require(TR_ENGINE_DIR . "/engine/core/loader.class.php");
+            require(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "loader.class.php");
         }
 
         if ($ex === null) {
