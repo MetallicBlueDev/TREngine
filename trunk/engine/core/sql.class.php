@@ -281,7 +281,7 @@ class Core_Sql extends Base_Model {
         $this->selectedBase->resetQuoted();
 
         // Ajout la requête au log
-        if (Core_Secure::isDebuggingMode()) {
+        if (Core_Secure::debuggingMode()) {
             Core_Logger::addSqlRequest($sql);
         }
 

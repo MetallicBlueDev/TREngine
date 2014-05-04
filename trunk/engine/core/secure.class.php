@@ -24,6 +24,13 @@ class Core_Secure {
     private static $secure = null;
 
     /**
+     * Verrouillage de la sécurité (exception, erreur critique).
+     *
+     * @var boolean
+     */
+    private $locked = false;
+
+    /**
      * Stats et debug mode.
      *
      * @var boolean
@@ -33,13 +40,29 @@ class Core_Secure {
     /**
      * Routine de sécurisation.
      */
-    private function __construct($debuggingMode) {
-        $this->debuggingMode = $debuggingMode;
-
+    private function __construct() {
         $this->checkError();
         $this->checkQueryString();
         $this->checkRequestReferer();
         $this->checkGPC();
+
+        if (!class_exists("Core_Info")) {
+            $this->locked = true;
+            require("info.class.php");
+        }
+
+        // Attention: il ne faut pas définir l'index avant Core_Info mais avant Core_Loader
+        if (!defined("TR_ENGINE_INDEX")) {
+            $this->locked = true;
+            define("TR_ENGINE_INDEX", true);
+        }
+
+        if (!class_exists("Core_Loader")) {
+            $this->locked = true;
+            require("loader.class.php");
+        }
+
+        $this->debuggingMode = Core_Request::getBoolean("debuggingMode", false, "GET");
     }
 
     /**
@@ -54,20 +77,13 @@ class Core_Secure {
 
     /**
      * Vérification de l'instance du gestionnaire de sécurité.
-     *
-     * @param boolean $debuggingMode
      */
-    public static function checkInstance($debuggingMode = false) {
+    public static function checkInstance() {
         if (self::$secure === null) {
-            self::$secure = new self($debuggingMode);
+            self::$secure = new self();
 
             // Si nous ne sommes pas passé par l'index
-            if (!defined("TR_ENGINE_INDEX")) {
-                if (!class_exists("Core_Info")) {
-                    require("info.class.php");
-                }
-
-                define("TR_ENGINE_INDEX", true);
+            if (self::$secure->locked()) {
                 self::$secure->throwException("badUrl");
             }
         }
@@ -78,13 +94,22 @@ class Core_Secure {
      *
      * @return boolean
      */
-    public static function &isDebuggingMode() {
+    public static function &debuggingMode() {
         $rslt = false;
 
         if (self::$secure !== null) {
             $rslt = self::$secure->debuggingMode;
         }
         return $rslt;
+    }
+
+    /**
+     * Détermine si il y a verrouillage de la sécurité (risque potentiel).
+     *
+     * @return boolean
+     */
+    public function &locked() {
+        return $this->locked;
     }
 
     /**
@@ -96,9 +121,7 @@ class Core_Secure {
      * @param array $argv Argument suplementaire d'information sur l'erreur.
      */
     public function throwException($customMessage, Exception $ex = null, array $argv = array()) {
-        if (!class_exists("Core_Loader")) {
-            require(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "loader.class.php");
-        }
+        $this->locked = true;
 
         if ($ex === null) {
             $ex = new Fail_Engine($customMessage);
@@ -129,15 +152,11 @@ class Core_Secure {
         if (defined($errorMessageTitle)) {
             $errorMessageTitle = Exec_Entities::entitiesUtf8(constant($errorMessageTitle));
         } else {
-            $errorMessageTitle = "Stop loading (";
+            $errorMessageTitle = "Stop loading";
 
             if ($this->debuggingMode) {
-                $errorMessageTitle .= $customMessage;
-            } else {
-                $errorMessageTitle .= "Fatal error unknown";
+                $errorMessageTitle .= ": " . $customMessage;
             }
-
-            $errorMessageTitle .= ").";
         }
         return $errorMessageTitle;
     }
@@ -221,13 +240,7 @@ class Core_Secure {
      */
     private function checkError() {
         // Réglages des sorties d'erreur
-        $errorReporting = E_ERROR | E_WARNING | E_PARSE;
-
-        if ($this->debuggingMode) {
-            $errorReporting = E_ALL;
-        }
-
-        error_reporting($errorReporting);
+        error_reporting(defined("E_ALL") ? E_ALL : E_ERROR | E_WARNING | E_PARSE);
     }
 
     /**

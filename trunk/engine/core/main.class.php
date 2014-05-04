@@ -54,14 +54,14 @@ class Core_Main {
      */
     public static function checkInstance() {
         if (self::$coreMain === null) {
-            if (Core_Secure::isDebuggingMode()) {
+            if (Core_Secure::debuggingMode()) {
                 Exec_Marker::startTimer("core");
             }
 
             self::$coreMain = new self();
             self::$coreMain->prepare();
 
-            if (Core_Secure::isDebuggingMode()) {
+            if (Core_Secure::debuggingMode()) {
                 Exec_Marker::stopTimer("core");
             }
         }
@@ -344,7 +344,7 @@ class Core_Main {
      * Démarrage TR ENGINE.
      */
     public function start() {
-        if (Core_Secure::isDebuggingMode()) {
+        if (Core_Secure::debuggingMode()) {
             Exec_Marker::startTimer("launcher");
         }
 
@@ -357,7 +357,7 @@ class Core_Main {
         $this->checkLayout();
         $this->checkMakeStyle();
 
-        if (!Core_Secure::isDebuggingMode()) {
+        if (!Core_Secure::debuggingMode()) {
             $this->compressionOpen();
         }
 
@@ -419,7 +419,7 @@ class Core_Main {
             // Validation du cache / Routine du cache
             Core_CacheBuffer::valideCacheBuffer();
 
-            if (Core_Secure::isDebuggingMode()) {
+            if (Core_Secure::debuggingMode()) {
                 // Assemble tous les messages d'erreurs dans un fichier log
                 Core_Logger::logException();
             }
@@ -429,7 +429,7 @@ class Core_Main {
             Core_BlackBan::displayBlackPage();
         }
 
-        if (Core_Secure::isDebuggingMode()) {
+        if (Core_Secure::debuggingMode()) {
             Exec_Marker::stopTimer("launcher");
         } else {
             $this->compressionClose();
