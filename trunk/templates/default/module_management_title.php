@@ -2,7 +2,7 @@
     <div id="management_setting_title">
         <div id="management_setting_title_icon">
             <?php
-            $pictureName = is_file(TR_ENGINE_DIR . "/templates/default/management/icon_" . $pageSelected . ".png") ? $pageSelected : "no_picture";
+            $pictureName = is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "default" . DIRECTORY_SEPARATOR . "management" . DIRECTORY_SEPARATOR . "icon_" . $pageSelected . ".png") ? $pageSelected : "no_picture";
             ?>
             <img src="templates/default/management/icon_<?php echo $pictureName; ?>.png" />
         </div>

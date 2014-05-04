@@ -149,7 +149,7 @@ class Core_Info {
         $urlTmp = explode("/", $urlTmp);
 
         // Recherche du dossier courant
-        $urlBase = explode("/", TR_ENGINE_DIR);
+        $urlBase = explode(DIRECTORY_SEPARATOR, TR_ENGINE_DIR);
 
         // Construction du lien
         $urlFinal = "";

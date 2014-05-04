@@ -200,8 +200,8 @@ class Core_Loader {
                     }
                 }
 
-                $path = str_replace("_", "/", $path);
-                $path = TR_ENGINE_DIR . "/" . strtolower($path) . "." . $ext . ".php";
+                $path = str_replace("_", DIRECTORY_SEPARATOR, $path);
+                $path = TR_ENGINE_DIR . DIRECTORY_SEPARATOR . strtolower($path) . "." . $ext . ".php";
 
                 if (is_file($path)) {
                     switch ($ext) {
