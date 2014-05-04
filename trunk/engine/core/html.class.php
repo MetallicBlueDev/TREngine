@@ -493,7 +493,7 @@ class Core_Html {
 
             // Lorsque l'on ne force pas l'inclusion on fait un nouveau test
             if (!$forceIncludes) {
-                if (!$this->javascriptEnabled()) {
+                if (!$this->javascriptEnabled() && !Core_Secure::getInstance()->locked()) {
                     $this->addJavascriptFile("javascriptenabled.js");
                     $this->addJavascriptCode("javascriptEnabled('" . $this->cookieTestName . "');");
                 }
