@@ -100,7 +100,7 @@ class Core_Info {
 
                 if (!empty($path)) {
                     // Suppression du slash
-                    if ($path[0] == DIRECTORY_SEPARATOR) {
+                    if ($path[0] === DIRECTORY_SEPARATOR) {
                         $path = substr($path, 1);
                     }
 
@@ -110,7 +110,7 @@ class Core_Info {
                         $path = dirname($path);
 
                         // La recherche n'aboutira pas
-                        if ($path == ".") {
+                        if ($path === ".") {
                             break;
                         }
                     }
@@ -138,11 +138,11 @@ class Core_Info {
         // Recherche de l'URL courante
         $urlTmp = $_SERVER["REQUEST_URI"];
 
-        if (substr($urlTmp, -1) == "/") {
+        if (substr($urlTmp, -1) === "/") {
             $urlTmp = substr($urlTmp, 0, -1);
         }
 
-        if ($urlTmp[0] == "/") {
+        if ($urlTmp[0] === "/") {
             $urlTmp = substr($urlTmp, 1);
         }
 
@@ -153,13 +153,16 @@ class Core_Info {
 
         // Construction du lien
         $urlFinal = "";
-        for ($i = count($urlTmp) - 1; $i >= 0; $i--) {
-            for ($j = count($urlBase) - 1; $j >= 0; $j--) {
+        $urlTmpCounter = count($urlTmp);
+        $urlBaseCounter = count($urlBase);
+
+        for ($i = $urlTmpCounter - 1; $i >= 0; $i--) {
+            for ($j = $urlBaseCounter - 1; $j >= 0; $j--) {
                 if (empty($urlBase[$j])) {
                     continue;
                 }
 
-                if ($urlTmp[$i] != $urlBase[$j]) {
+                if ($urlTmp[$i] !== $urlBase[$j]) {
                     break;
                 }
 
@@ -168,6 +171,7 @@ class Core_Info {
                 } else {
                     $urlFinal = $urlTmp[$i] . "/" . $urlFinal;
                 }
+
                 $urlBase[$j] = "";
             }
         }

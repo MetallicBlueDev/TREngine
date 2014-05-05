@@ -20,7 +20,7 @@ class Core_Access {
      */
     public static function moderate($zoneIdentifiant, $userIdAdmin = "") {
         // Rank 3 exigé !
-        if (Core_Session::getInstance()->userRank == 3) {
+        if (Core_Session::getInstance()->userRank === 3) {
             // Recherche des droits admin
             $right = self::getAdminRight($userIdAdmin);
             $nbRights = count($right);
@@ -30,7 +30,7 @@ class Core_Access {
             // Si les réponses retourné sont correcte
             if ($nbRights > 0 && self::accessType($zoneIdentifiant, $zone, $identifiant)) {
                 // Vérification des droits
-                if ($right[0] == "all") { // Admin avec droit suprême
+                if ($right[0] === "all") { // Admin avec droit suprême
                     return true;
                 } else {
                     // Analyse des droits, un par un
@@ -39,8 +39,8 @@ class Core_Access {
                         $currentRight = $right[$i];
 
                         // Si c'est un droit de module
-                        if ($zone == "MODULE") {
-                            if (is_numeric($currentRight) && $identifiant == $currentRight) {
+                        if ($zone === "MODULE") {
+                            if (is_numeric($currentRight) && $identifiant === $currentRight) {
                                 return true;
                             }
                         } else { // Si c'est un droit spécial
@@ -52,14 +52,14 @@ class Core_Access {
                             // Vérification de la validité du droit
                             if (self::accessType($zoneIdentifiantRight, $zoneRight, $identifiantRight)) {
                                 // Vérification suivant le type de droit
-                                if ($zone == "BLOCK") {
-                                    if ($zoneRight == "BLOCK" && is_numeric($identifiantRight)) {
-                                        if ($identifiant == $identifiantRight) {
+                                if ($zone === "BLOCK") {
+                                    if ($zoneRight === "BLOCK" && is_numeric($identifiantRight)) {
+                                        if ($identifiant === $identifiantRight) {
                                             return true;
                                         }
                                     }
-                                } else if ($zone == "PAGE") {
-                                    if ($zoneRight == "PAGE" && $zoneIdentifiant == $zoneIdentifiantRight && $identifiant == $identifiantRight) {
+                                } else if ($zone === "PAGE") {
+                                    if ($zoneRight === "PAGE" && $zoneIdentifiant === $zoneIdentifiantRight && $identifiant === $identifiantRight) {
                                         if (Libs_Module::getInstance()->isModule($zoneIdentifiant, $identifiant)) {
                                             return true;
                                         }
@@ -90,9 +90,9 @@ class Core_Access {
         $error = ERROR_ACCES_FORBIDDEN;
         // Si on veut le type d'erreur pour un acces
         if ($moduleRank > -2) {
-            if ($moduleRank == -1)
+            if ($moduleRank === -1)
                 $error = ERROR_ACCES_OFF;
-            else if ($moduleRank == 1 && Core_Session::getInstance()->userRank == 0)
+            else if ($moduleRank === 1 && Core_Session::getInstance()->userRank === 0)
                 $error = ERROR_ACCES_MEMBER;
             else if ($moduleRank > 1 && Core_Session::getInstance()->userRank < $rank)
                 $error = ERROR_ACCES_ADMIN;
@@ -110,7 +110,7 @@ class Core_Access {
     public static function &autorize($zoneIdentifiant, $zoneRank = -2) {
         $access = false;
         // Si ce n'est pas un block ou une page particuliere
-        if (substr($zoneIdentifiant, 0, 5) != "block" && $zoneRank < -1) {
+        if (substr($zoneIdentifiant, 0, 5) !== "block" && $zoneRank < -1) {
             // Recherche des infos du module
             $moduleInfo = array();
             if (Core_Loader::isCallable("Libs_Module")) {
@@ -123,11 +123,11 @@ class Core_Access {
             }
         }
 
-        if ($zoneRank == 0)
+        if ($zoneRank === 0)
             $access = true; // Accès public
         else if ($zoneRank > 0 && $zoneRank < 3 && Core_Session::getInstance()->userRank >= $zoneRank)
             $access = true; // Accès membre ou admin
-        else if ($zoneRank == 3 && self::moderate($zoneIdentifiant))
+        else if ($zoneRank === 3 && self::moderate($zoneIdentifiant))
             $access = true; // Accès admin avec droits
         return $access;
     }
@@ -176,7 +176,7 @@ class Core_Access {
      */
     public static function &accessType(&$zoneIdentifiant, &$zone, &$identifiant) {
         $access = false;
-        if (substr($zoneIdentifiant, 0, 5) == "block") {
+        if (substr($zoneIdentifiant, 0, 5) === "block") {
             $zone = "BLOCK";
             $identifiant = substr($zoneIdentifiant, 5, strlen($zoneIdentifiant));
             $access = true;

@@ -176,11 +176,11 @@ class Core_Html {
      */
     public function addJavascriptFile($fileName, $options = "") {
         if (!array_key_exists($fileName, $this->javaScriptFile)) {
-            if ($fileName == "jquery.js") {
+            if ($fileName === "jquery.js") {
                 // Fixe JQuery en 1ere position
                 $this->javaScriptFile = array_merge(array(
                     $fileName => $options), $this->javaScriptFile);
-            } else if ($fileName == "tr_engine.js") {
+            } else if ($fileName === "tr_engine.js") {
                 // Fixe tr_engine en 2em position
                 if (array_key_exists("jquery.js", $this->javaScriptFile)) {
                     $this->javaScriptFile = array_merge(array(
@@ -280,7 +280,7 @@ class Core_Html {
      * @param array $keywords un tableau de mots clés
      */
     public function setKeywords(array $keywords) {
-        if (count($this->keywords) > 0) {
+        if (empty($this->keywords)) {
             array_push($this->keywords, $keywords);
         } else {
             $this->keywords = $keywords;
@@ -360,13 +360,13 @@ class Core_Html {
         $tps = ((!is_numeric($tps)) ? 0 : $tps) * 1000;
 
         // Configuration de l'url
-        if (empty($url) || $url == "index.php?") {
+        if (empty($url) || $url === "index.php?") {
             $url = "index.php";
         }
 
         // Redirection
-        if ($this->javascriptEnabled() && ($tps > 0 || $method != "windows")) {
-            if (Core_Request::getString("REQUEST_METHOD", "", "SERVER") == "POST" && $method != "window") {
+        if ($this->javascriptEnabled() && ($tps > 0 || $method !== "windows")) {
+            if (Core_Request::getString("REQUEST_METHOD", "", "SERVER") === "POST" && $method !== "window") {
                 // Commande ajax pour la redirection
                 $this->addJavascriptCode("setTimeout(function(){ $('" . $method . "').load('" . $url . "'); }, $tps);");
             } else {
@@ -423,7 +423,7 @@ class Core_Html {
         $cookieTest = Exec_Cookie::getCookie($this->cookieTestName);
 
         // Vérification de l'existance du cookie
-        $this->javaScriptEnabled = ($cookieTest == 1) ? true : false;
+        $this->javaScriptEnabled = ($cookieTest === "1") ? true : false;
     }
 
     /**
@@ -448,7 +448,7 @@ class Core_Html {
     private function getMetaKeywords() {
         $keywords = "";
 
-        if (is_array($this->keywords) && count($this->keywords) > 0) {
+        if (empty($this->keywords)) {
             $keywords = implode(", ", $this->keywords);
         }
 
@@ -478,7 +478,7 @@ class Core_Html {
      * @return string
      */
     private function &getMetaIncludeJavascript($forceIncludes = false) {
-        if (Core_Request::getRequestMethod() != "POST" || $forceIncludes) {
+        if (Core_Request::getRequestMethod() !== "POST" || $forceIncludes) {
             $fullScreen = Core_Loader::isCallable("Core_Main") ? Core_Main::getInstance()->isDefaultLayout() : true;
 
             if (($fullScreen || $forceIncludes) && $this->javascriptEnabled()) {
@@ -499,7 +499,7 @@ class Core_Html {
                 }
             }
 
-            if (Core_Loader::isCallable("Exec_Agent") && Exec_Agent::$userBrowserName == "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") {
+            if (Core_Loader::isCallable("Exec_Agent") && Exec_Agent::$userBrowserName === "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") {
                 $this->addJavascriptFile("pngfix.js", "defer");
             }
         } else {

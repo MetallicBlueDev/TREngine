@@ -98,7 +98,7 @@ class Base_Pdo extends Base_Model {
         }
 
         foreach (PDO::getAvailableDrivers() as $availableDriverName) {
-            if ($availableDriverName == $driverName) {
+            if ($availableDriverName === $driverName) {
                 $rslt = true;
                 break;
             }

@@ -83,7 +83,7 @@ class Libs_CacheFile extends Libs_CacheModel {
 
             if (!empty($file)) {
                 // Si c'est un fichier valide
-                if ($file != ".." && $file != "." && $file != "index.html" && $file != "index.htm" && $file != "index.php" && $file != ".htaccess" && $file != ".svn" && $file != "checker.txt") {
+                if ($file !== ".." && $file !== "." && $file !== "index.html" && $file !== "index.htm" && $file !== "index.php" && $file !== ".htaccess" && $file !== ".svn" && $file !== "checker.txt") {
                     $dirList[] = $file;
                 }
             }
@@ -135,7 +135,7 @@ class Libs_CacheFile extends Libs_CacheModel {
             $nbBytesCmd = fwrite($fp, $content, $nbBytesFile);
 
             // Vérification des bytes écris
-            if ($nbBytesCmd != $nbBytesFile) {
+            if ($nbBytesCmd !== $nbBytesFile) {
                 @unlink(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $pathFile);
 
                 Core_Logger::addException("bad response for fwrite command. Path : " . $pathFile . ". "
@@ -148,7 +148,7 @@ class Libs_CacheFile extends Libs_CacheModel {
         } else {
             // Recherche d'un fichier htaccess
             $strlen = strlen($pathFile);
-            $isHtaccessFile = (substr($pathFile, -9, $strlen) == ".htaccess");
+            $isHtaccessFile = (substr($pathFile, -9, $strlen) === ".htaccess");
 
             // Si c'est un htaccess, on essai de corriger le problème
             if ($isHtaccessFile) {
@@ -184,13 +184,13 @@ class Libs_CacheFile extends Libs_CacheModel {
                 $count++;
 
                 // Si le dernier élèment est un fichier ou simplement vide
-                if (($count == $nbDir && !$pathIsDir) || empty($dir)) {
+                if (($count === $nbDir && !$pathIsDir) || empty($dir)) {
                     // Il vaut mieux continuer, plutot que de faire un arret avec break
                     continue; // on passe a la suite...
                 }
 
                 // Mise à jour du dossier courant
-                $currentPath = ($count == 1) ? $dir : $currentPath . DIRECTORY_SEPARATOR . $dir;
+                $currentPath = ($count === 1) ? $dir : $currentPath . DIRECTORY_SEPARATOR . $dir;
 
                 if (!is_dir($currentPath)) {
                     // Création du dossier
@@ -203,7 +203,7 @@ class Libs_CacheFile extends Libs_CacheModel {
                     }
 
                     // Des petites fichiers bonus...
-                    if ($dir == "tmp") {
+                    if ($dir === "tmp") {
                         $this->writingFile($currentPath . DIRECTORY_SEPARATOR . "index.php", "header(\"Location: .." . DIRECTORY_SEPARATOR . "index.php\");");
                     } else {
                         $this->writingFile($currentPath . DIRECTORY_SEPARATOR . ".htaccess", "deny from all");
@@ -272,7 +272,7 @@ class Libs_CacheFile extends Libs_CacheModel {
 
             if (!empty($file)) {
                 // Si c'est un fichier valide
-                if ($file != ".." && $file != "." && $file != ".svn") {
+                if ($file !== ".." && $file !== "." && $file !== ".svn") {
                     // Vérification avant suppression
                     if ($timeLimit > 0) {
                         if (is_file($dirPath . DIRECTORY_SEPARATOR . $file)) {
@@ -303,7 +303,7 @@ class Libs_CacheFile extends Libs_CacheModel {
         closedir($handle);
 
         // Suppression du dernière dossier
-        if ($timeLimit == 0) {
+        if ($timeLimit === 0) {
             rmdir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath);
 
             if (is_dir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath)) {

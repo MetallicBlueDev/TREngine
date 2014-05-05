@@ -85,7 +85,7 @@ class Core_UrlRewriting {
 
         // Recherche de la page principal
         if (strpos($link, "index.php") === false) {
-            if ($link[0] == "?") {
+            if ($link[0] === "?") {
                 $link = "index.php" . $link;
             } else {
                 $link = "index.php?" . $link;

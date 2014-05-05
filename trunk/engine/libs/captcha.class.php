@@ -61,21 +61,21 @@ class Libs_Captcha {
     public function __construct(&$object = null) {
         // Mode du captcha
         $captchaMode = Core_Main::getInstance()->getCaptchaMode();
-        $captchaMode = ($captchaMode == "off" || $captchaMode == "auto" || $captchaMode == "manu") ? $captchaMode : "auto";
+        $captchaMode = ($captchaMode === "off" || $captchaMode === "auto" || $captchaMode === "manu") ? $captchaMode : "auto";
 
         // Decide de l'activation
-        if ($captchaMode == "off") {
+        if ($captchaMode === "off") {
             $this->enabled = false;
-        } else if ($captchaMode == "auto" && Core_Session::getInstance()->userRank > 0) {
+        } else if ($captchaMode === "auto" && Core_Session::getInstance()->userRank > 0) {
             $this->enabled = false;
-        } else if ($captchaMode == "manu" && Core_Session::getInstance()->userRank > 1) {
+        } else if ($captchaMode === "manu" && Core_Session::getInstance()->userRank > 1) {
             $this->enabled = false;
         } else {
             $this->enabled = true;
         }
 
         if ($this->enabled) {
-            $this->object = ($object != null && is_object($object)) ? $object : null;
+            $this->object = ($object !== null && is_object($object)) ? $object : null;
         }
     }
 
@@ -117,7 +117,7 @@ class Libs_Captcha {
                     break;
             }
 
-            if ($this->object != null) {
+            if ($this->object !== null) {
                 // TODO A vérifier
                 if ($this->object instanceOf Libs_Form) {
                     $this->object->addInputText("cles", $this->question, "", "", "input captcha");
@@ -168,7 +168,7 @@ class Libs_Captcha {
         $inputRobot = Core_Request::getString($this->inputRobotName, "", "POST");
 
         // Vérification du formulaire
-        if (empty($inputRobot) && $code == $this->response) {
+        if (empty($inputRobot) && $code === $this->response) {
             $rslt = true;
         } else {
             // TODO A VERIFIER
@@ -229,7 +229,7 @@ class Libs_Captcha {
             }
         } else {
             // Affichage de l'opérateur en symbole
-            $operateur = ($operateur == "*" && $this->randInt(0, 1) == 1) ? "x" : $operateur;
+            $operateur = ($operateur === "*" && $this->randInt(0, 1) == 1) ? "x" : $operateur;
         }
 
         $this->question = CAPTCHA_MAKE_SIMPLE_CALCULATION . " " . $numberOne . " " . $operateur . " " . $numberTwo . " ?";

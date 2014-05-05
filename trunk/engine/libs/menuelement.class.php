@@ -14,7 +14,7 @@ class Libs_MenuElement {
     /**
      * Item info du menu.
      *
-     * @var array - object
+     * @var array
      */
     private $data = array();
 
@@ -49,10 +49,10 @@ class Libs_MenuElement {
     /**
      * Construction de l'élément du menu
      *
-     * @param array - object $item
-     * @param array - object $items
+     * @param array $item
+     * @param array $items
      */
-    public function __construct($item, &$items) {
+    public function __construct(array $item, array &$items) {
         // Ajout des infos de l'item
         $this->data = $item;
         $this->addTags("li");
@@ -121,11 +121,11 @@ class Libs_MenuElement {
             }
 
             // Vérification des valeurs déjà enregistrées
-            if (Exec_Utils::inArray($value, $this->attributs[$name]) == false) {
-                if ($value == "parent") {
+            if (!Exec_Utils::inArray($value, $this->attributs[$name])) {
+                if ($value === "parent") {
                     array_unshift($this->attributs[$name], $value);
-                } else if ($value == "active") {
-                    if ($this->attributs[$name][0] == "parent") {
+                } else if ($value === "active") {
+                    if ($this->attributs[$name][0] === "parent") {
                         // Remplace parent par active
                         $this->attributs[$name][0] = $value;
                         // Ajoute a nouveau parent en 1er
@@ -217,15 +217,9 @@ class Libs_MenuElement {
     /**
      * Ajoute un enfant à l'item courant.
      *
-     * @param Libs_MenuElement or array - object $child
-     * @param array - object $items
+     * @param Libs_MenuElement  $child
      */
-    public function addChild(&$child, &$items = array()) {
-        // Création de l'enfant si besoin
-        if (!is_object($child)) {
-            $child = new Libs_MenuElement($child, $items);
-        }
-
+    public function addChild(Libs_MenuElement &$child) {
         // Ajout du tag UL si c'est un nouveau parent
         if (empty($this->child)) {
             $this->addTags("ul");
@@ -245,19 +239,14 @@ class Libs_MenuElement {
     /**
      * Supprime un enfant.
      *
-     * @param Libs_MenuElement or array - object $child
-     * @param array - object $items
+     * @param Libs_MenuElement $child
      */
-    public function removeChild(&$child = null, &$items = array()) {
+    public function removeChild(Libs_MenuElement &$child = null) {
         if ($child === null) {
-            foreach ($this->child as $key => $child) {
+            foreach (array_keys($this->child) as $key) {
                 unset($this->child[$key]);
             }
         } else {
-            // TODO A REVOIR - transtypage dégoutant
-            if (!is_object($child)) {
-                $child = &$items[$child->menu_id];
-            }
             unset($this->child[$child->getMenuId()]);
         }
     }

@@ -277,7 +277,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
             if ($this->nativeMode) {
                 $rslt = ftp_mdtm($this->connId, $this->getRootPath($path));
 
-                if ($rslt == -1) { // Une erreur est survenue
+                if ($rslt === -1) { // Une erreur est survenue
                     $this->nativeMode = false;
 
                     Core_Logger::addException("Bad response for ftp_mdtm command. Path : " . $path
@@ -326,7 +326,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
                 if ($this->setCommand("USER " . $this->ftp['user'], array(
                     331,
                     503))) {
-                    if ($this->responseCode == 503) {
+                    if ($this->responseCode === 503) {
                         // Désolé, déjà identifié
                         $rslt = true;
                     } else {
@@ -345,7 +345,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
      */
     private function rootConfig() {
         // Si aucun root n'est précisé
-        if ($this->ftp['root'] == DIRECTORY_SEPARATOR) {
+        if ($this->ftp['root'] === DIRECTORY_SEPARATOR) {
             // On commence la recherche
             $pathFound = "";
             $listNames = $this->listNames();
@@ -358,7 +358,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
                 foreach ($listNames as $dirName) {
                     foreach ($listNamesSearch as $dirNameSearch) {
                         // On construit le lien
-                        if (($dirNameSearch == $dirName) || !empty($pathFound)) {
+                        if (($dirNameSearch === $dirName) || !empty($pathFound)) {
                             $pathFound = (!empty($pathFound)) ? $pathFound . DIRECTORY_SEPARATOR . $dirNameSearch : $dirNameSearch;
                         } else {
                             $pathRebuild = (!empty($pathRebuild)) ? $pathRebuild . DIRECTORY_SEPARATOR . $dirNameSearch : $dirNameSearch;
@@ -490,12 +490,12 @@ class Libs_CacheFtp extends Libs_CacheModel {
                 $count++;
 
                 // Si le dernier élèment est un fichier ou simplement vide
-                if (($count == $nbDir && !$pathIsDir) || empty($dir)) {
+                if (($count === $nbDir && !$pathIsDir) || empty($dir)) {
                     break; // on passe a la suite...
                 }
 
                 // Mise à jour du dossier courant
-                $currentPath = ($count == 1) ? $currentPath = $dir : $currentPath . DIRECTORY_SEPARATOR . $dir;
+                $currentPath = ($count === 1) ? $currentPath = $dir : $currentPath . DIRECTORY_SEPARATOR . $dir;
 
                 if (!is_dir($currentPath)) {
                     // Création du dossier
@@ -516,7 +516,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
                     }
 
                     // Des petites fichiers bonus...
-                    if ($dir == "tmp") {
+                    if ($dir === "tmp") {
                         $this->writingFile($currentPath . DIRECTORY_SEPARATOR . "index.php", "header(\"Location: .." . DIRECTORY_SEPARATOR . "index.php\");");
                     } else {
                         $this->writingFile($currentPath . DIRECTORY_SEPARATOR . ".htaccess", "deny from all");
@@ -574,7 +574,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
         // Récuperation des éléments présents
         $dirList = $this->listNames($path);
 
-        if (is_array($dirList) && count($dirList) > 0) {
+        if (empty($dirList)) {
             foreach ($dirList as $dirPath) {
                 // Vérification avant suppression
                 if ($timeLimit > 0) {
@@ -601,7 +601,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
         }
 
         // Suppression du dernière dossier
-        if ($timeLimit == 0 && $this->connected()) {
+        if ($timeLimit === 0 && $this->connected()) {
             if ($this->nativeMode) {
                 if (!ftp_rmdir($this->connId, $this->getRootPath($path))) {
                     Core_Logger::addException("Bad response for ftp_rmdir command. Path : " . $path);
@@ -701,7 +701,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
                         // Tentative de connexion
                         $this->passiveData = fsockopen($this->passiveIp, $this->passivePort, $socket_error_number, $socket_error_message, $this->timeOut);
 
-                        if ($this->passiveData != false) {
+                        if ($this->passiveData !== false) {
                             // On définie le timeout, si possible
                             $this->setTimeOut();
                             $rslt = true;

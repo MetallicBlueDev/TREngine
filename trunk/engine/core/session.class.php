@@ -389,7 +389,7 @@ class Core_Session {
                     // Si fichier cache trouvé, on l'utilise
                     $sessions = Core_CacheBuffer::getCache($sessionId . ".php");
 
-                    if ($sessions['userId'] == $userId && $sessions['sessionId'] == $sessionId) {
+                    if ($sessions['userId'] === $userId && $sessions['sessionId'] === $sessionId) {
                         // Mise a jour du dernier accès toute les 5 min
                         if ((Core_CacheBuffer::cacheMTime($sessionId . ".php") + 5 * 60) < $this->timer) {
                             // En base
@@ -426,7 +426,7 @@ class Core_Session {
         // Destruction des éventuelles cookies
         foreach ($this->cookieName as $key => $value) {
             // On évite de supprimer le cookie de bannissement
-            if ($key == "BLACKBAN") {
+            if ($key === "BLACKBAN") {
                 continue;
             }
 
@@ -555,7 +555,7 @@ class Core_Session {
             "last_connect" => "NOW()"), array(
             "user_id = '" . $userId . "'")
         );
-        return ($coreSql->affectedRows() == 1) ? true : false;
+        return ($coreSql->affectedRows() === 1) ? true : false;
     }
 
     /**
@@ -613,7 +613,7 @@ class Core_Session {
             "langue"), $where
         );
 
-        if ($coreSql->affectedRows() == 1) {
+        if ($coreSql->affectedRows() === 1) {
             $info = $coreSql->fetchArray();
         }
         return $info;

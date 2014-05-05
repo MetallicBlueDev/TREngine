@@ -100,7 +100,7 @@ class Base_Mysql extends Base_Model {
     public function &affectedRows() {
         $rslt = -1;
 
-        if ($this->lastSqlCommand == "SELECT" || $this->lastSqlCommand == "SHOW") {
+        if ($this->lastSqlCommand === "SELECT" || $this->lastSqlCommand === "SHOW") {
             $rslt = mysql_num_rows($this->queries);
         } else {
             $rslt = mysql_affected_rows($this->connId);

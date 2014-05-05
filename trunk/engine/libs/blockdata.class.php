@@ -195,7 +195,7 @@ class Libs_BlockData {
             if ($checkModule) {
                 if (Core_Loader::isCallable("Libs_Module")) {
                     foreach ($this->getTargetModules() as $modSelected) {
-                        if ($modSelected == "all" || Libs_Module::isSelected($modSelected)) {
+                        if ($modSelected === "all" || Libs_Module::isSelected($modSelected)) {
                             $rslt = true;
                             break;
                         }

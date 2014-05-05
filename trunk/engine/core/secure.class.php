@@ -187,10 +187,10 @@ class Core_Secure {
 
                 if (is_array($traceValue)) {
                     foreach ($traceValue as $key => $value) {
-                        if ($key == "file" || $key == "function") {
+                        if ($key === "file" || $key === "function") {
                             $value = preg_replace("/([a-zA-Z0-9._]+).php/", "<b>\\1</b>.php", $value);
                             $errorLine .= " <b>" . $key . "</b> " . $value;
-                        } else if ($key == "line" || $key == "class") {
+                        } else if ($key === "line" || $key == "class") {
                             $errorLine .= " in <b>" . $key . "</b> " . $value;
                         }
                     }
@@ -284,7 +284,7 @@ class Core_Secure {
      * Vérification des envois POST.
      */
     private function checkRequestReferer() {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if (!empty($_SERVER['HTTP_REFERER'])) {
                 if (!preg_match("/" . $_SERVER['HTTP_HOST'] . "/", $_SERVER['HTTP_REFERER'])) {
                     $this->throwException("badRequestReferer");

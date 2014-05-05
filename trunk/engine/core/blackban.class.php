@@ -133,7 +133,7 @@ class Core_BlackBan {
                 }
 
                 // Vérification du client
-                if ($searchIp == $banList) {
+                if ($searchIp === $banList) {
                     // IP bannis !
                     Core_Session::getInstance()->userIpBan = $blackBanIp;
                 } else if (!empty(Core_Session::getInstance()->userName) && Core_Session::getInstance()->userName = $blackBanName) {

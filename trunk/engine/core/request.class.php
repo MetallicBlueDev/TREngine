@@ -202,7 +202,7 @@ class Core_Request {
             case 'BOOL':
             case 'BOOLEAN':
                 $content = (string) $content;
-                $content = ($content == "1" || $content == "true") ? "1" : "0";
+                $content = ($content === "1" || $content === "true") ? "1" : "0";
                 $content = (bool) $content;
                 break;
 

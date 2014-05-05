@@ -49,7 +49,7 @@ abstract class Base_Model {
     /**
      * Buffer sous forme de tableau array contenant des objets standards.
      *
-     * @var array - object
+     * @var array
      */
     protected $buffer = array();
 
@@ -215,10 +215,10 @@ abstract class Base_Model {
         $table = $this->getTableName($table);
 
         // Mise en place du WHERE
-        $whereValue = (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
+        $whereValue = empty($where) ? "" : " WHERE " . implode(" ", $where);
 
         // Mise en place du LIKE
-        $likeValue = (count($like) >= 1) ? " LIKE " . implode(" ", $like) : "";
+        $likeValue = empty($like) ? "" : " LIKE " . implode(" ", $like);
 
         // Fonction ET entre WHERE et LIKE
         if (!empty($whereValue) && !empty($likeValue)) {
@@ -301,13 +301,13 @@ abstract class Base_Model {
         $valuesValue = implode(", ", $values);
 
         // Mise en place du where
-        $whereValue = (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
+        $whereValue = empty($where) ? "" : " WHERE " . implode(" ", $where);
 
         // Mise en place de la limite
         $limit = empty($limit) ? "" : " LIMIT " . $limit;
 
         // Mise en place de l'ordre
-        $orderbyValue = (count($orderby) >= 1) ? " ORDER BY " . implode(", ", $orderby) : "";
+        $orderbyValue = empty($orderby) ? "" : " ORDER BY " . implode(", ", $orderby);
 
         // Mise en forme de la requête finale
         $this->sql = "SELECT " . $valuesValue . " FROM " . $table . $whereValue . $orderbyValue . $limit;
@@ -332,13 +332,13 @@ abstract class Base_Model {
             $valuesString[] = $this->converKey($key) . " = " . $this->converValue($value, $key);
         }
 
-        $whereValue = (count($where) >= 1) ? " WHERE " . implode(" ", $where) : "";
+        $whereValue = empty($where) ? "" : " WHERE " . implode(" ", $where);
 
         // Mise en place de la limite
         $limit = empty($limit) ? "" : " LIMIT " . $limit;
 
         // Mise en place de l'ordre
-        $orderbyValue = (count($orderby) >= 1) ? " ORDER BY " . implode(", ", $orderby) : "";
+        $orderbyValue = empty($orderby) ? "" : " ORDER BY " . implode(", ", $orderby);
 
         // Mise en forme de la requête finale
         $this->sql = "UPDATE " . $table . " SET " . implode(", ", $valuesString) . $whereValue . $orderbyValue . $limit;
@@ -426,7 +426,7 @@ abstract class Base_Model {
      * Retourne le buffer courant puis l'incrémente.
      *
      * @param string $name
-     * @return array / array - object
+     * @return array or object
      */
     public function &fetchBuffer($name) {
         $buffer = current($this->buffer[$name]);
@@ -438,7 +438,7 @@ abstract class Base_Model {
      * Retourne le buffer complet demandé.
      *
      * @param string $name
-     * @return array / array - object
+     * @return array or object
      */
     public function &getBuffer($name) {
         return $this->buffer[$name];
@@ -539,7 +539,7 @@ abstract class Base_Model {
         }
 
         if (is_bool($value)) {
-            $value = ($value == true) ? 1 : 0;
+            $value = ($value === true) ? 1 : 0;
         } else if (is_null($value)) {
             $value = "NULL";
         } else if (is_string($value)) {

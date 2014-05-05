@@ -336,7 +336,7 @@ class Core_Translate {
      * @return string
      */
     private static function getLangCacheFileName($pathLang = "") {
-        if (!empty($pathLang) && substr($pathLang, -1) != DIRECTORY_SEPARATOR) {
+        if (!empty($pathLang) && substr($pathLang, -1) !== DIRECTORY_SEPARATOR) {
             $pathLang .= DIRECTORY_SEPARATOR;
         }
         return str_replace(DIRECTORY_SEPARATOR, "_", $pathLang) . "lang_";
@@ -435,11 +435,11 @@ class Core_Translate {
      * @param string $extension l'extension de la langue détectée
      */
     private function configureLocale($extension) {
-        if ($this->languageUsed == "french" && TR_ENGINE_PHP_OS == "WIN") {
+        if ($this->languageUsed === "french" && TR_ENGINE_PHP_OS === "WIN") {
             setlocale(LC_TIME, "french");
-        } else if ($this->languageUsed == "french" && TR_ENGINE_PHP_OS == "BSD") {
+        } else if ($this->languageUsed === "french" && TR_ENGINE_PHP_OS === "BSD") {
             setlocale(LC_TIME, "fr_FR.ISO8859-1");
-        } else if ($this->languageUsed == "french") {
+        } else if ($this->languageUsed === "french") {
             setlocale(LC_TIME, 'fr_FR');
         } else {
             // Tentative de formatage via le nom de la langue

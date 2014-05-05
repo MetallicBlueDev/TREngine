@@ -393,7 +393,7 @@ class Core_Sql extends Base_Model {
      * Retourne le buffer courant puis l'incremente.
      *
      * @param string $name
-     * @return array / array - object
+     * @return array or object
      */
     public function &fetchBuffer($name) {
         return $this->selectedBase->fetchBuffer($name);
@@ -403,7 +403,7 @@ class Core_Sql extends Base_Model {
      * Retourne le buffer complet choisi.
      *
      * @param string $name
-     * @return array / array - object
+     * @return array or object
      */
     public function &getBuffer($name) {
         return $this->selectedBase->getBuffer($name);

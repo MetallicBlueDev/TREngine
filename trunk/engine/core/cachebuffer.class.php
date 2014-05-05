@@ -413,8 +413,8 @@ class Core_CacheBuffer {
      * @param array $required
      * @return boolean true action demandée
      */
-    private static function cacheRequired($required) {
-        return (is_array($required) && count($required) > 0);
+    private static function cacheRequired(array $required) {
+        return !empty($required);
     }
 
     /**
@@ -426,7 +426,7 @@ class Core_CacheBuffer {
     public static function &isDir($path) {
         $pathIsDir = false;
 
-        if (substr($path, -1) == DIRECTORY_SEPARATOR) {
+        if (substr($path, -1) === DIRECTORY_SEPARATOR) {
             // Nettoyage du path qui est enfaite un dir
             $path = substr($path, 0, -1);
             $pathIsDir = true;
@@ -458,7 +458,7 @@ class Core_CacheBuffer {
     public static function &getHeader($pathFile, $content) {
         $ext = substr($pathFile, -3);
         // Entête des fichier PHP
-        if ($ext == "php") {
+        if ($ext === "php") {
             // Recherche du dossier parent
             $dirBase = "";
             $nbDir = count(explode(DIRECTORY_SEPARATOR, $pathFile));
@@ -527,7 +527,7 @@ class Core_CacheBuffer {
             $dirList = self::getCache($fileName);
         } else {
             $protocol = self::getExecProtocol();
-            if ($protocol != null) {
+            if ($protocol !== null) {
                 $dirList = $protocol->listNames($dirPath);
                 self::writingCache($fileName, $dirList);
             }
@@ -541,7 +541,7 @@ class Core_CacheBuffer {
      * @return Libs_CacheModel
      */
     private static function &getExecProtocol() {
-        if (self::$libsCacheModel == null) {
+        if (self::$libsCacheModel === null) {
             if (self::$modeActived['ftp']) {
                 // Démarrage du gestionnaire FTP
                 self::$libsCacheModel = new Libs_CacheFtp();
@@ -571,7 +571,7 @@ class Core_CacheBuffer {
             // Protocole a utiliser
             $protocol = self::getExecProtocol();
 
-            if ($protocol != null) {
+            if ($protocol !== null) {
                 // Suppression de cache demandée
                 if (self::cacheRequired(self::$removeCache)) {
                     foreach (self::$removeCache as $dir => $timeLimit) {

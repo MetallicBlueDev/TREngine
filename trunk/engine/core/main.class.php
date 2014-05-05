@@ -137,7 +137,7 @@ class Core_Main {
      * @return boolean
      */
     public function doUrlRewriting() {
-        return ($this->getConfigValue("urlRewriting") == 1) ? true : false;
+        return ($this->getConfigValue("urlRewriting") === "1") ? true : false;
     }
 
     /**
@@ -155,7 +155,7 @@ class Core_Main {
      * @return boolean
      */
     public function doOpening() {
-        return ($this->getDefaultSiteStatut() == "open");
+        return ($this->getDefaultSiteStatut() === "open");
     }
 
     /**
@@ -164,7 +164,7 @@ class Core_Main {
      * @return boolean
      */
     public function registrationAllowed() {
-        return ($this->getConfigValue("registrationAllowed") == 1) ? true : false;
+        return ($this->getConfigValue("registrationAllowed") === "1") ? true : false;
     }
 
     /**
@@ -319,7 +319,7 @@ class Core_Main {
      * @return boolean true c'est en plein écran.
      */
     public function isDefaultLayout() {
-        return (($this->layout == "default") ? true : false);
+        return (($this->layout === "default") ? true : false);
     }
 
     /**
@@ -328,7 +328,7 @@ class Core_Main {
      * @return boolean true c'est un affichage de module uniquement.
      */
     public function isModuleLayout() {
-        return (($this->layout == "module" || $this->layout == "modulepage") ? true : false);
+        return (($this->layout === "module" || $this->layout === "modulepage") ? true : false);
     }
 
     /**
@@ -337,7 +337,7 @@ class Core_Main {
      * @return boolean true c'est un affichage de block uniquement.
      */
     public function isBlockLayout() {
-        return (($this->layout == "block" || $this->layout == "blockpage") ? true : false);
+        return (($this->layout === "block" || $this->layout == "blockpage") ? true : false);
     }
 
     /**
@@ -483,7 +483,7 @@ class Core_Main {
         $layout = strtolower(Core_Request::getWord("layout"));
 
         // Configuration du layout
-        if ($layout != "default" && $layout != "modulepage" && $layout != "blockpage" && (($layout != "block" && $layout != "module") || (!Core_Html::getInstance()->javascriptEnabled()))) {
+        if ($layout !== "default" && $layout !== "modulepage" && $layout !== "blockpage" && (($layout !== "block" && $layout !== "module") || (!Core_Html::getInstance()->javascriptEnabled()))) {
             $layout = "default";
         }
 
