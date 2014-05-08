@@ -49,7 +49,7 @@ class Libs_Menu {
         $this->identifier = $identifier;
         $this->itemActive = Core_Request::getInteger("item", 0);
 
-        Core_Cache::changeCurrentSection(Core_Cache::SECTION_MENUS);
+        Core_Cache::getInstance(Core_Cache::SECTION_MENUS);
 
         if ($this->isCached()) {
             $this->loadFromCache();
@@ -113,7 +113,7 @@ class Libs_Menu {
      * @return boolean
      */
     private function isCached() {
-        return (Core_Cache::cached($this->identifier . ".php"));
+        return (Core_Cache::getInstance()->cached($this->identifier . ".php"));
     }
 
     /**
@@ -148,8 +148,8 @@ class Libs_Menu {
                 }
             }
 
-            Core_Cache::writingCache(
-            $this->identifier . ".php", Core_Cache::serializeData(serialize($this->items))
+            Core_Cache::getInstance()->writingCache(
+            $this->identifier . ".php", Core_Cache::getInstance()->serializeData(serialize($this->items))
             );
         }
     }

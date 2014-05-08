@@ -175,7 +175,7 @@ class Libs_MakeStyle {
 
         // Vérification du dossier template
         if (is_dir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . self::$templatesDir)) {
-            $templates = Core_Cache::listNames(self::$templatesDir);
+            $templates = Core_Cache::getInstance()->getFileNames(self::$templatesDir);
         }
         return $templates;
     }

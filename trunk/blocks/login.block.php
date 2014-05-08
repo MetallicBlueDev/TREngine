@@ -183,11 +183,11 @@ class Block_Login extends Libs_BlockModel {
     }
 
     public function uninstall() {
-        Core_Cache::changeCurrentSection(Core_Cache::SECTION_FORMS);
-        Core_Cache::removeCache("login-logonblock.php");
-        Core_Cache::removeCache("login-forgetloginblock.php");
-        Core_Cache::removeCache("login-forgetpassblock.php");
-        Core_Cache::removeCache("login-registrationblock.php");
+        Core_Cache::getInstance(Core_Cache::SECTION_FORMS);
+        Core_Cache::getInstance()->removeCache("login-logonblock.php");
+        Core_Cache::getInstance()->removeCache("login-forgetloginblock.php");
+        Core_Cache::getInstance()->removeCache("login-forgetpassblock.php");
+        Core_Cache::getInstance()->removeCache("login-registrationblock.php");
     }
 
 }

@@ -125,7 +125,7 @@ class Libs_Block {
     public static function &listBlocks() {
         $blockList = array();
 
-        $files = Core_Cache::listNames("blocks");
+        $files = Core_Cache::getInstance()->getFileNames("blocks");
 
         foreach ($files as $fileName) {
             // Nettoyage du nom de la page

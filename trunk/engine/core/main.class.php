@@ -692,10 +692,10 @@ class Core_Main {
             if ($canUse) {
                 // Chargement de la configuration via la cache
                 $newConfig = array();
-                Core_Cache::changeCurrentSection(Core_Cache::SECTION_TMP);
+                Core_Cache::getInstance(Core_Cache::SECTION_TMP);
 
                 // Si le cache est disponible
-                if (Core_Cache::cached("configs.php")) {
+                if (Core_Cache::getInstance()->cached("configs.php")) {
                     $newConfig = Core_Cache::getCache("configs.php");
                 } else {
                     $content = "";
@@ -707,13 +707,13 @@ class Core_Main {
                         "value"));
 
                     foreach ($coreSql->fetchArray() as $row) {
-                        $content .= Core_Cache::serializeData(array(
+                        $content .= Core_Cache::getInstance()->serializeData(array(
                             $row['name'] => $row['value']));
                         $newConfig[$row['name']] = Exec_Entities::stripSlashes($row['value']);
                     }
 
                     // Mise en cache
-                    Core_Cache::writingCache("configs.php", $content, true);
+                    Core_Cache::getInstance()->writingCache("configs.php", $content, true);
                 }
 
                 // Ajout a la configuration courante

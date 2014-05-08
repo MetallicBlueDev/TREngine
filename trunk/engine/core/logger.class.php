@@ -131,7 +131,7 @@ class Core_Logger {
                 . "***********************SQL REQUESTS (" . count(self::$sqlRequest) . ") :<br />";
 
                 if (!empty(self::$sqlRequest)) {
-                    echo str_replace("\n", "<br />", self::serializeData(self::$sqlRequest));
+                    echo str_replace("\n", "<br />", $this->serializeData(self::$sqlRequest));
                 } else {
                     echo "<span style=\"color: green;\">No sql request registred.</span>";
                 }
@@ -140,7 +140,7 @@ class Core_Logger {
 
                 if (self::hasExceptions()) {
                     echo "<span style=\"color: red;\">"
-                    . str_replace("\n", "<br />", self::serializeData(self::$exceptions))
+                    . str_replace("\n", "<br />", $this->serializeData(self::$exceptions))
                     . "</span>";
                 } else {
                     echo "<span style=\"color: green;\">No exception registred.</span>";
@@ -171,10 +171,10 @@ class Core_Logger {
         if (Core_Loader::isCallable("Core_Cache")) {
             if (self::hasExceptions()) {
                 // Positionne dans le cache
-                Core_Cache::changeCurrentSection(Core_Cache::SECTION_LOGGER);
+                Core_Cache::getInstance(Core_Cache::SECTION_LOGGER);
 
                 // Ecriture à la suite du rapport
-                Core_Cache::writingCache("exception_" . date('Y-m-d') . ".log.php", self::serializeData(self::$exceptions), false);
+                Core_Cache::getInstance()->writingCache("exception_" . date('Y-m-d') . ".log.php", $this->serializeData(self::$exceptions), false);
             }
         }
     }

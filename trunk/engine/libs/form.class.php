@@ -85,8 +85,8 @@ class Libs_Form {
         $this->name = $name;
         $this->urlAction = !empty($urlAction) ? $urlAction : "index.php";
 
-        Core_Cache::changeCurrentSection(Core_Cache::SECTION_FORMS);
-        $this->cached = Core_Cache::cached($name . ".php");
+        Core_Cache::getInstance(Core_Cache::SECTION_FORMS);
+        $this->cached = Core_Cache::getInstance()->cached($name . ".php");
     }
 
     /**
@@ -411,7 +411,7 @@ class Libs_Form {
         $title = $this->getTitle($this->title);
         $description = $this->getDescription($this->description);
 
-        Core_Cache::changeCurrentSection(Core_Cache::SECTION_FORMS);
+        Core_Cache::getInstance(Core_Cache::SECTION_FORMS);
         $content = "";
 
         if ($this->cached) { // Récupèration des données mise en cache
@@ -422,8 +422,8 @@ class Libs_Form {
             . (($this->doFieldset) ? "</fieldset>" : "") . "</form>";
 
             // Enregistrement dans le cache
-            $data = Core_Cache::serializeData($data);
-            Core_Cache::writingCache($this->name . ".php", $data);
+            $data = Core_Cache::getInstance()->serializeData($data);
+            Core_Cache::getInstance()->writingCache($this->name . ".php", $data);
 
             // Lecture pour l'affichage
             eval(" \$content = $data; "); // Ne pas ajouter de quote : les données sont déjà serialisées

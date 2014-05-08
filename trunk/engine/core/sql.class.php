@@ -46,7 +46,7 @@ class Core_Sql extends Base_Model {
                 $databaseConfig['type']));
         }
 
-        if (!Core_Loader::isCallable($baseClassName, "initializeBase")) {
+        if (!Core_Loader::isCallable($baseClassName, "initialize")) {
             Core_Secure::getInstance()->throwException("sqlCode", null, array(
                 $baseClassName));
         }
@@ -104,7 +104,7 @@ class Core_Sql extends Base_Model {
      */
     public static function &listBases() {
         $baseList = array();
-        $files = Core_Cache::listNames("engine/base");
+        $files = Core_Cache::getInstance()->getFileNames("engine/base");
 
         foreach ($files as $fileName) {
             // Nettoyage du nom de la page
@@ -116,11 +116,6 @@ class Core_Sql extends Base_Model {
             }
         }
         return $baseList;
-    }
-
-    protected function canUse() {
-        // NE RIEN FAIRE
-        return false;
     }
 
     /**
@@ -190,7 +185,7 @@ class Core_Sql extends Base_Model {
      *
      * @return string
      */
-    public function &getTransactionPass() { // TODO NE PAS METTRE EN PUBLIC.
+    public function &getTransactionPass() {
         return $this->selectedBase->getTransactionPass();
     }
 
