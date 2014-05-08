@@ -11,13 +11,11 @@ if (!defined("TR_ENGINE_INDEX")) {
  */
 class Libs_CacheFile extends Libs_CacheModel {
 
-    /**
-     * Ecriture du ficher cache.
-     *
-     * @param string $path chemin vers le fichier cache
-     * @param string $content contenu du fichier cache
-     * @param boolean $overWrite écrasement du fichier
-     */
+    public function canUse() {
+        // Gestionnaire natif; toujours diponible
+        return true;
+    }
+
     public function writingCache($path, $content, $overWrite = true) {
         if (!is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path)) {
             // Soit le fichier n'exite pas soit tout le dossier n'existe pas
@@ -29,13 +27,16 @@ class Libs_CacheFile extends Libs_CacheModel {
         $this->writingFile($path, $content, $overWrite);
     }
 
-    /**
-     * Supprime un fichier ou supprime tout fichier trop vieux.
-     * Suprime aussi un dossier.
-     *
-     * @param string $dir chemin vers le fichier ou le dossier
-     * @param int $timeLimit limite de temps
-     */
+    public function touchCache($path, $updateTime = 0) {
+        if ($updateTime < 1) {
+            $updateTime = time();
+        }
+
+        if (!touch(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path, $updateTime)) {
+            Core_Logger::addException("Touch error on " . $path);
+        }
+    }
+
     public function removeCache($dir = "", $timeLimit = 0) {
         if (!empty($dir) && is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dir)) {
             // C'est un fichier a supprimer
@@ -46,29 +47,11 @@ class Libs_CacheFile extends Libs_CacheModel {
         }
     }
 
-    /**
-     * Mise à jour de la date de dernière modification.
-     *
-     * @param string $path chemin vers le fichier cache
-     * @param int $updateTime
-     */
-    public function touchCache($path, $updateTime = 0) {
-        if ($updateTime < 1) {
-            $updateTime = time();
-        }
-
-        if (!touch(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path, $updateTime)) {
-            Core_Logger::addException("touch error on " . $path);
-        }
+    public function &getCacheMTime($path) {
+        return filemtime(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path);
     }
 
-    /**
-     * Retourne le listing avec uniquement les fichiers et dossiers présent.
-     *
-     * @param string $dirPath
-     * @return array
-     */
-    public function &listNames($dirPath = "") {
+    public function &getFileNames($dirPath = "") {
         $dirList = array();
 
         // Si le dossier est vide, on prend le dossier par défaut
@@ -96,15 +79,6 @@ class Libs_CacheFile extends Libs_CacheModel {
         sort($dirList);
         reset($dirList);
         return $dirList;
-    }
-
-    /**
-     * Etat du gestionnaire.
-     *
-     * @return boolean
-     */
-    public function canUse() {
-        return true;
     }
 
     /**
@@ -138,7 +112,7 @@ class Libs_CacheFile extends Libs_CacheModel {
             if ($nbBytesCmd !== $nbBytesFile) {
                 @unlink(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $pathFile);
 
-                Core_Logger::addException("bad response for fwrite command. Path : " . $pathFile . ". "
+                Core_Logger::addException("Bad response for fwrite command. Path : " . $pathFile . ". "
                 . "Server response : " . $nbBytesCmd . " bytes writed, " . $nbBytesFile . " bytes readed");
             }
 
@@ -160,7 +134,7 @@ class Libs_CacheFile extends Libs_CacheModel {
                 rename($htaccessPath . "index.html", $htaccessPath . ".htaccess");
             }
 
-            Core_Logger::addException("bad response for fopen command. Path : " . $pathFile);
+            Core_Logger::addException("Bad response for fopen command. Path : " . $pathFile);
         }
     }
 
@@ -199,7 +173,7 @@ class Libs_CacheFile extends Libs_CacheModel {
 
                     // Vérification de l'existence du fichier
                     if (!is_dir($currentPath)) {
-                        Core_Logger::addException("bad response for mkdir|chmod command. Path : " . $currentPath);
+                        Core_Logger::addException("Bad response for mkdir|chmod command. Path : " . $currentPath);
                     }
 
                     // Des petites fichiers bonus...
@@ -225,8 +199,9 @@ class Libs_CacheFile extends Libs_CacheModel {
 
         // Vérification de la date
         if ($timeLimit > 0) {
+
             // Vérification de la date d'expiration
-            if ($timeLimit > filemtime(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path)) {
+            if ($timeLimit > $this->getCacheMTime($path)) {
                 // Fichier périmé, suppression
                 $deleteFile = true;
             }
@@ -251,7 +226,7 @@ class Libs_CacheFile extends Libs_CacheModel {
             }
 
             if (is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path)) {
-                Core_Logger::addException("bad response for fopen|unlink command. Path : " . $path);
+                Core_Logger::addException("Bad response for fopen|unlink command. Path : " . $path);
             }
         }
     }
@@ -277,7 +252,8 @@ class Libs_CacheFile extends Libs_CacheModel {
                     if ($timeLimit > 0) {
                         if (is_file($dirPath . DIRECTORY_SEPARATOR . $file)) {
                             // Si le fichier n'est pas périmé, on passe au suivant
-                            if ($timeLimit < filemtime(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath . DIRECTORY_SEPARATOR . $file)) {
+
+                            if ($timeLimit < $this->getCacheMTime($dirPath . DIRECTORY_SEPARATOR . $file)) {
                                 continue;
                             }
                         } else {
@@ -307,7 +283,7 @@ class Libs_CacheFile extends Libs_CacheModel {
             rmdir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath);
 
             if (is_dir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath)) {
-                Core_Logger::addException("bad response for rmdir command. Path : " . $dirPath);
+                Core_Logger::addException("Bad response for rmdir command. Path : " . $dirPath);
             }
         }
     }

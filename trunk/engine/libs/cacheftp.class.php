@@ -3,6 +3,7 @@ if (!defined("TR_ENGINE_INDEX")) {
     require(".." . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php");
     Core_Secure::checkInstance();
 }
+// TODO il faut verifier entierement les paths de la classe
 
 /**
  * Gestionnaire de fichier via FTP.
@@ -81,35 +82,9 @@ class Libs_CacheFtp extends Libs_CacheModel {
      */
     private $passiveData = "";
 
-    // TODO il faut verifier entierement les paths de la classe
-
-    /**
-     * Création de la connexion.
-     * Paramètrage de la connexion.
-     */
-    public function __construct() {
-        // Ajout des informations du FTP
+    public function initializeCache(array &$ftp) {
         $ftp = Core_Main::getInstance()->getConfigFtp();
-
-        // Pré-configuration
-        if (preg_match("/(ftp:\/\/)(.+)/", $ftp['host'], $matches)) {
-            $ftp['host'] = $matches[2];
-        }
-
-        if (preg_match("/(.+)(\/)/", $ftp['host'], $matches)) {
-            $ftp['host'] = $matches[1];
-        }
-
-        // Réglage de configuration
-        $ftp['host'] = (empty($ftp['host'])) ? "127.0.0.1" : $ftp['host'];
-        $ftp['port'] = (is_numeric($ftp['port'])) ? $ftp['port'] : 21;
-        $ftp['user'] = (empty($ftp['user'])) ? "root" : $ftp['user'];
-        $ftp['pass'] = (empty($ftp['pass'])) ? "" : $ftp['pass'];
-
-        // Le dossier root sera redéfinie après être logué
-        $ftp['root'] = (empty($ftp['root'])) ? DIRECTORY_SEPARATOR : $ftp['root'];
-
-        $this->ftp = $ftp;
+        parent::initializeCache($ftp);
 
         // Recherche de l'extension FTP
         if (extension_loaded("ftp") && function_exists('ftp_connect')) {
@@ -139,36 +114,26 @@ class Libs_CacheFtp extends Libs_CacheModel {
         $this->disconnect();
     }
 
+    public function canUse() {
+        return $this->connected();
+    }
+
+    public function writingCache($path, $content, $overWrite = true) {
+        if (!is_file($this->getRootPath($path))) {
+            // Soit le fichier n'exite pas, soit tout le dossier n'existe pas
+            // On commence par vérifier et si besoin écrire le dossier
+            $this->writingDirectory($path);
+        }
+
+        // Réécriture rapide sur un fichier
+        $this->writingFile($path, $content, $overWrite);
+    }
+
     public function touchCache($path, $updateTime = 0) {
         // TODO mise a jour de la date de modif a coder
         parent::touchCache($path, $updateTime);
     }
 
-    /**
-     * Etat de la connexion FTP.
-     *
-     * @return boolean
-     */
-    public function canUse() {
-        return $this->connected();
-    }
-
-    /**
-     * Vérifie si la connexion est établie.
-     *
-     * @return boolean true succès
-     */
-    public function connected() {
-        // Stockage pour passage par référence
-        return is_resource($this->connId);
-    }
-
-    /**
-     * Supprime un fichier ou supprime tout fichier trop vieux.
-     *
-     * @param string $dir chemin vers le fichier ou le dossier
-     * @param string $timeLimit limite de temps
-     */
     public function removeCache($dir = "", $timeLimit = 0) {
         if (!empty($dir) && is_file($this->getRootPath($dir))) {
             // C'est un fichier a supprimer
@@ -179,13 +144,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
         }
     }
 
-    /**
-     * Récupération de la liste des dossiers et fichiers au chemin path.
-     *
-     * @param string $path : chemin où doit être listé les dossiers
-     * @return array liste des dossiers trouvés
-     */
-    public function &listNames($path = "") {
+    public function &getFileNames($path = "") {
         $dirList = array();
 
         if ($this->connected()) {
@@ -246,31 +205,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
         return $dirList;
     }
 
-    /**
-     * Ecriture du ficher cache.
-     *
-     * @param string $path chemin vers le fichier cache
-     * @param string $content contenu du fichier cache
-     * @param boolean $overWrite écrasement du fichier
-     */
-    public function writingCache($path, $content, $overWrite = true) {
-        if (!is_file($this->getRootPath($path))) {
-            // Soit le fichier n'exite pas, soit tout le dossier n'existe pas
-            // On commence par vérifier et si besoin écrire le dossier
-            $this->writingDirectory($path);
-        }
-
-        // Réécriture rapide sur un fichier
-        $this->writingFile($path, $content, $overWrite);
-    }
-
-    /**
-     * Recherche la date de dernière modification du fichier.
-     *
-     * @param string $path
-     * @return int date de dernière modification
-     */
-    private function &getMTime($path) {
+    public function &getCacheMTime($path) {
         $mTime = 0;
 
         if ($this->connected()) {
@@ -300,6 +235,16 @@ class Libs_CacheFtp extends Libs_CacheModel {
     }
 
     /**
+     * Vérifie si la connexion est établie.
+     *
+     * @return boolean true succès
+     */
+    public function connected() {
+        // Stockage pour passage par référence
+        return is_resource($this->connId);
+    }
+
+    /**
      * Retourne le chemin complet FTP.
      *
      * @param string $path chemin local
@@ -320,10 +265,10 @@ class Libs_CacheFtp extends Libs_CacheModel {
 
         if ($this->connected()) {
             if ($this->nativeMode) {
-                $rslt = ftp_login($this->connId, $this->ftp['user'], $this->ftp['pass']);
+                $rslt = ftp_login($this->connId, $this->getFtpUser(), $this->getFtpPass());
             } else {
                 // Envoi user
-                if ($this->setCommand("USER " . $this->ftp['user'], array(
+                if ($this->setCommand("USER " . $this->getFtpUser(), array(
                     331,
                     503))) {
                     if ($this->responseCode === 503) {
@@ -331,7 +276,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
                         $rslt = true;
                     } else {
                         // Envoi du mot de passe
-                        $rslt = $this->setCommand("PASS " . $this->ftp['pass'], array(
+                        $rslt = $this->setCommand("PASS " . $this->getFtpPass(), array(
                             230));
                     }
                 }
@@ -345,10 +290,10 @@ class Libs_CacheFtp extends Libs_CacheModel {
      */
     private function rootConfig() {
         // Si aucun root n'est précisé
-        if ($this->ftp['root'] === DIRECTORY_SEPARATOR) {
+        if ($this->getFtpRoot() === DIRECTORY_SEPARATOR) {
             // On commence la recherche
             $pathFound = "";
-            $listNames = $this->listNames();
+            $listNames = $this->getFileNames();
 
             if (is_array($listNames)) {
                 // On décompose les dossiers
@@ -378,8 +323,8 @@ class Libs_CacheFtp extends Libs_CacheModel {
 
         // Vérification du root path
         if (is_file(DIRECTORY_SEPARATOR . $pathRebuild . DIRECTORY_SEPARATOR . $pathFound . DIRECTORY_SEPARATOR . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php")) {
-            $this->ftp['root'] = $pathFound;
-        } else if (empty($this->ftp['root'])) {
+            $this->setFtpRoot($pathFound);
+        } else if (empty($this->getFtpRoot())) {
             Core_Logger::addException("Unable to configure root path.");
         }
     }
@@ -572,7 +517,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
      */
     private function removeDirectory($path, $timeLimit) {
         // Récuperation des éléments présents
-        $dirList = $this->listNames($path);
+        $dirList = $this->getFileNames($path);
 
         if (empty($dirList)) {
             foreach ($dirList as $dirPath) {
@@ -743,9 +688,9 @@ class Libs_CacheFtp extends Libs_CacheModel {
         // Si aucune connexion engagé
         if (!$this->connected()) {
             if ($this->nativeMode) {
-                $this->connId = ftp_connect($this->ftp['host'], $this->ftp['port'], $this->timeOut);
+                $this->connId = ftp_connect($this->getFtpHost(), $this->getFtpPort(), $this->timeOut);
             } else {
-                $this->connId = fsockopen($this->ftp['host'], $this->ftp['port'], $socket_error_number, $socket_error_message, $this->timeOut);
+                $this->connId = fsockopen($this->getFtpHost(), $this->getFtpPort(), $socket_error_number, $socket_error_message, $this->timeOut);
             }
 
             // On définie le timeout, si possible
@@ -759,7 +704,7 @@ class Libs_CacheFtp extends Libs_CacheModel {
             220))) || $this->connected()) {
             $rslt = true;
         } else {
-            Core_Logger::addException("Could not connect to host " . $this->ftp['host'] . " on port " . $this->ftp['port']);
+            Core_Logger::addException("Could not connect to host " . $this->getFtpHost() . " on port " . $this->getFtpPort());
         }
         return $rslt;
     }

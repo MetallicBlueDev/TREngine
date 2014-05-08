@@ -167,25 +167,58 @@ class Core_CacheBuffer {
     }
 
     /**
-     * Retourne le chemin de la section courante
-     *
-     * @return string
-     */
-    private static function &getSectionPath($dir) {
-        $dir = self::encodePath(self::$currentSection . DIRECTORY_SEPARATOR . $dir);
-        return $dir;
-    }
-
-    /**
-     * Nom de la section courante
+     * Retourne le chemin de la section actuel.
      *
      * @return string Section courante
      */
-    public static function &getSectionName() {
+    public static function &getCurrentSectionName() {
         if (empty(self::$currentSection)) {
             self::changeCurrentSection();
         }
         return self::$currentSection;
+    }
+
+    /**
+     * Execute la routine du cache
+     */
+    public static function valideCacheBuffer() {
+        // Si le cache a besoin de générer une action
+        if (self::cacheRequired(self::$removeCache) || self::cacheRequired(self::$writingCache) || self::cacheRequired(self::$addCache) || self::cacheRequired(self::$updateCache)) {
+            // Protocole a utiliser
+            $protocol = self::getExecProtocol();
+
+            if ($protocol !== null) {
+                // Suppression de cache demandée
+                if (self::cacheRequired(self::$removeCache)) {
+                    foreach (self::$removeCache as $dir => $timeLimit) {
+                        $protocol->removeCache($dir, $timeLimit);
+                    }
+                }
+
+                // Ecriture de cache demandée
+                if (self::cacheRequired(self::$writingCache)) {
+                    foreach (self::$writingCache as $path => $content) {
+                        $protocol->writingCache($path, $content, true);
+                    }
+                }
+
+                // Ecriture à la suite de cache demandée
+                if (self::cacheRequired(self::$addCache)) {
+                    foreach (self::$addCache as $path => $content) {
+                        $protocol->writingCache($path, $content, false);
+                    }
+                }
+
+                // Mise à jour de cache demandée
+                if (self::cacheRequired(self::$updateCache)) {
+                    foreach (self::$updateCache as $path => $updateTime) {
+                        $protocol->touchCache($path, $updateTime);
+                    }
+                }
+            }
+            // Destruction du gestionnaire
+            unset($protocol);
+        }
     }
 
     /**
@@ -200,7 +233,7 @@ class Core_CacheBuffer {
             $content = self::serializeData($content);
         }
         // Mise en forme de la clé
-        $key = self::encodePath(self::getSectionPath() . DIRECTORY_SEPARATOR . $path);
+        $key = self::encodePath(self::getCurrentSectionPath() . DIRECTORY_SEPARATOR . $path);
         // Ajout dans le cache
         if ($overWrite) {
             self::$writingCache[$key] = $content;
@@ -220,7 +253,7 @@ class Core_CacheBuffer {
         if (!empty($dir)) {
             $dir = "/" . $dir;
         }
-        $dir = self::encodePath(self::getSectionPath() . $dir);
+        $dir = self::encodePath(self::getCurrentSectionPath() . $dir);
         self::$removeCache[$dir] = $timeLimit;
     }
 
@@ -246,7 +279,7 @@ class Core_CacheBuffer {
      * @param $path chemin vers le fichier cache
      */
     public static function touchCache($path) {
-        self::$updateCache[self::encodePath(self::getSectionPath() . DIRECTORY_SEPARATOR . $path)] = time();
+        self::$updateCache[self::encodePath(self::getCurrentSectionPath() . DIRECTORY_SEPARATOR . $path)] = time();
     }
 
     /**
@@ -318,25 +351,6 @@ class Core_CacheBuffer {
     }
 
     /**
-     * Serialize la variable en chaine de caractères pour une mise en cache
-     *
-     * @param string $key
-     * @param string $value
-     * @return string
-     */
-    private static function &serializeVariable($key, $value) {
-        $content .= "$" . self::getSectionName() . $key . " = \"" . Exec_Entities::addSlashes($value) . "\"; ";
-        return $content;
-    }
-
-    /**
-     * Ecriture du checker
-     */
-    private static function writingChecker() {
-        self::writingCache("checker.txt", "1");
-    }
-
-    /**
      * Mise à jour du checker
      */
     public static function touchChecker() {
@@ -354,26 +368,6 @@ class Core_CacheBuffer {
      */
     public static function checkerMTime() {
         return self::cacheMTime("checker.txt");
-    }
-
-    /**
-     * Encode un chemin
-     *
-     * @param string $path
-     * @return string
-     */
-    private static function &encodePath($path) {
-        return $path;
-    }
-
-    /**
-     * Décode un chemin
-     *
-     * @param string $encodePath
-     * @return string
-     */
-    private static function &decodePath($encodePath) {
-        return $encodePath;
     }
 
     /**
@@ -405,16 +399,6 @@ class Core_CacheBuffer {
             require(self::getPath($path));
         }
         return ${$variableName};
-    }
-
-    /**
-     * Recherche si le cache a besoin de génére une action
-     *
-     * @param array $required
-     * @return boolean true action demandée
-     */
-    private static function cacheRequired(array $required) {
-        return !empty($required);
     }
 
     /**
@@ -528,7 +512,7 @@ class Core_CacheBuffer {
         } else {
             $protocol = self::getExecProtocol();
             if ($protocol !== null) {
-                $dirList = $protocol->listNames($dirPath);
+                $dirList = $protocol->getFileNames($dirPath);
                 self::writingCache($fileName, $dirList);
             }
         }
@@ -563,46 +547,42 @@ class Core_CacheBuffer {
     }
 
     /**
-     * Execute la routine du cache
+     * Retourne le chemin de la section courante
+     *
+     * @return string
      */
-    public static function valideCacheBuffer() {
-        // Si le cache a besoin de générer une action
-        if (self::cacheRequired(self::$removeCache) || self::cacheRequired(self::$writingCache) || self::cacheRequired(self::$addCache) || self::cacheRequired(self::$updateCache)) {
-            // Protocole a utiliser
-            $protocol = self::getExecProtocol();
+    private static function &getCurrentSectionPath($dir) {
+        $dir = self::$currentSection . DIRECTORY_SEPARATOR . $dir;
+        return $dir;
+    }
 
-            if ($protocol !== null) {
-                // Suppression de cache demandée
-                if (self::cacheRequired(self::$removeCache)) {
-                    foreach (self::$removeCache as $dir => $timeLimit) {
-                        $protocol->removeCache($dir, $timeLimit);
-                    }
-                }
+    /**
+     * Recherche si le cache a besoin de génére une action
+     *
+     * @param array $required
+     * @return boolean true action demandée
+     */
+    private static function cacheRequired(array $required) {
+        return !empty($required);
+    }
 
-                // Ecriture de cache demandée
-                if (self::cacheRequired(self::$writingCache)) {
-                    foreach (self::$writingCache as $path => $content) {
-                        $protocol->writingCache($path, $content, true);
-                    }
-                }
+    /**
+     * Serialize la variable en chaine de caractères pour une mise en cache
+     *
+     * @param string $key
+     * @param string $value
+     * @return string
+     */
+    private static function &serializeVariable($key, $value) {
+        $content .= "$" . self::getCurrentSectionName() . $key . " = \"" . Exec_Entities::addSlashes($value) . "\"; ";
+        return $content;
+    }
 
-                // Ecriture à la suite de cache demandée
-                if (self::cacheRequired(self::$addCache)) {
-                    foreach (self::$addCache as $path => $content) {
-                        $protocol->writingCache($path, $content, false);
-                    }
-                }
-
-                // Mise à jour de cache demandée
-                if (self::cacheRequired(self::$updateCache)) {
-                    foreach (self::$updateCache as $path => $updateTime) {
-                        $protocol->touchCache($path, $updateTime);
-                    }
-                }
-            }
-            // Destruction du gestionnaire
-            unset($protocol);
-        }
+    /**
+     * Ecriture du checker
+     */
+    private static function writingChecker() {
+        self::writingCache("checker.txt", "1");
     }
 
 }

@@ -59,7 +59,7 @@ class Core_Sql extends Base_Model {
         }
     }
 
-    public function initializeBase(array $database) {
+    public function initializeBase(array &$database) {
         // NE RIEN FAIRE
         unset($database);
     }

@@ -87,7 +87,7 @@ abstract class Base_Model {
      * @param array $database
      * @throws Fail_Sql
      */
-    public function initializeBase(array $database) {
+    public function initializeBase(array &$database) {
         if ($this->database === null) {
             $this->database = $database;
 

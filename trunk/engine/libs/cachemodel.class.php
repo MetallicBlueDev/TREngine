@@ -25,7 +25,7 @@ abstract class Libs_CacheModel {
      *
      * @var array
      */
-    protected $ftp = array(
+    private $ftp = array(
         "host" => "",
         "port" => "",
         "user" => "",
@@ -34,11 +34,117 @@ abstract class Libs_CacheModel {
     );
 
     /**
+     * Nouveau modèle de cache.
+     */
+    protected function __construct() {
+        $this->ftp = null;
+    }
+
+    /**
+     * Paramètre la connexion.
+     *
+     * @param array $ftp
+     */
+    public function initializeCache(array &$ftp) {
+        if ($this->ftp === null) {
+            if (empty($ftp)) {
+                $ftp = array();
+            } else {
+                if (preg_match("/(ftp:\/\/)(.+)/", $ftp['host'], $matches)) {
+                    $ftp['host'] = $matches[2];
+                }
+
+                if (preg_match("/(.+)(\/)/", $ftp['host'], $matches)) {
+                    $ftp['host'] = $matches[1];
+                }
+
+                // Réglage de configuration
+                $ftp['host'] = (empty($ftp['host'])) ? "127.0.0.1" : $ftp['host'];
+                $ftp['port'] = (is_numeric($ftp['port'])) ? $ftp['port'] : 21;
+                $ftp['user'] = (empty($ftp['user'])) ? "root" : $ftp['user'];
+                $ftp['pass'] = (empty($ftp['pass'])) ? "" : $ftp['pass'];
+
+                // Le dossier root sera redéfini après être identifié
+                $ftp['root'] = (empty($ftp['root'])) ? DIRECTORY_SEPARATOR : $ftp['root'];
+            }
+
+            $this->ftp = $ftp;
+        }
+    }
+
+    public function __destruct() {
+
+    }
+
+    /**
+     * Retourne l'adresse de l'hôte.
+     *
+     * @return string
+     */
+    public function &getFtpHost() {
+        return $this->ftp['host'];
+    }
+
+    /**
+     * Retourne le port.
+     *
+     * @return int
+     */
+    public function &getFtpPort() {
+        return $this->ftp['port'];
+    }
+
+    /**
+     * Retourne l'identifiant du connexion.
+     *
+     * @return string
+     */
+    public function &getFtpUser() {
+        return $this->ftp['user'];
+    }
+
+    /**
+     * Retourne le mot de passe de connexion.
+     *
+     * @return string
+     */
+    public function &getFtpPass() {
+        return $this->ftp['pass'];
+    }
+
+    /**
+     * Retourne le chemin racine.
+     *
+     * @return string
+     */
+    public function &getFtpRoot() {
+        return $this->ftp['root'];
+    }
+
+    /**
+     * Affecte le chemin racine.
+     *
+     * @param string $newRoot
+     */
+    public function setFtpRoot(&$newRoot) {
+        $this->ftp['root'] = $newRoot;
+    }
+
+    /**
+     * Détermine si le gestionnaire est utilisable.
+     *
+     * @return boolean true ready
+     */
+    public function canUse() {
+        return false;
+    }
+
+    /**
      * Ecriture du fichier cache.
      *
-     * @param string $path
-     * @param string $content
-     * @param boolean $overWrite
+     * @param string $path chemin vers le fichier cache
+     * @param string $content contenu du fichier cache
+     * @param boolean $overWrite écrasement du fichier
      */
     public function writingCache($path, $content, $overWrite = true) {
         unset($path);
@@ -49,7 +155,7 @@ abstract class Libs_CacheModel {
     /**
      * Mise à jour de la date de dernière modification.
      *
-     * @param string $path
+     * @param string $path chemin vers le fichier cache
      * @param int $updateTime
      */
     public function touchCache($path, $updateTime = 0) {
@@ -58,10 +164,10 @@ abstract class Libs_CacheModel {
     }
 
     /**
-     * Supprime un fichier ou supprime tout fichier trop vieux.
+     * Supprime tous fichiers trop vieux.
      *
-     * @param string $dir
-     * @param int $timeLimit
+     * @param string $dir chemin vers le fichier ou le dossier
+     * @param string $timeLimit limite de temps
      */
     public function removeCache($dir = "", $timeLimit = 0) {
         unset($dir);
@@ -69,24 +175,27 @@ abstract class Libs_CacheModel {
     }
 
     /**
-     * Retourne le listing avec uniquement les fichiers présent.
+     * Retourne la liste des fichiers et dossiers présents.
      *
      * @param string $dirPath
      * @return array
      */
-    public function &listNames($dirPath = "") {
+    public function &getFileNames($dirPath = "") {
         unset($dirPath);
         $names = array();
         return $names;
     }
 
     /**
-     * Détermine si le gestion est utilisable.
+     * Retourne la date de dernière modification du fichier.
      *
-     * @return boolean true ready
+     * @param string $path
+     * @return int
      */
-    public function canUse() {
-        return false;
+    public function &getCacheMTime($path) {
+        unset($path);
+        $time = 0;
+        return $time;
     }
 
 }
