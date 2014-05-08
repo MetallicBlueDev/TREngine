@@ -1,0 +1,8 @@
+/* Style générale des formulaires */
+form {
+	background: none;
+}
+
+input {
+	width: 130px;
+}
