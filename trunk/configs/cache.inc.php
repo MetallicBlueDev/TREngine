@@ -2,7 +2,7 @@
 // -------------------------------------------------------------------------//
 // Informations sur le cache
 //
-// Type de transaction à utiliser (php / ftp / sftp)
+// Type de transaction à utiliser (php / ftp / sftp /  socket)
 $inc['type'] = "php";
 //
 // Adresse de l'hôte
