@@ -131,6 +131,15 @@ class Core_Sql extends Base_Model {
     }
 
     /**
+     * Retourne l'état de la connexion.
+     *
+     * @return boolean
+     */
+    public function dbConnected() {
+        return $this->selectedBase !== null && $this->selectedBase->dbConnected();
+    }
+
+    /**
      * Déconnexion de la base de données.
      */
     public function dbDeconnect() {
@@ -351,15 +360,6 @@ class Core_Sql extends Base_Model {
      */
     public function &getSql() {
         return $this->selectedBase->getSql();
-    }
-
-    /**
-     * Retourne l'état de la connexion.
-     *
-     * @return boolean
-     */
-    public function connected() {
-        return $this->selectedBase !== null && $this->selectedBase->connected();
     }
 
     /**
