@@ -1,0 +1,45 @@
+.project_body, .project_body_25, .project_body_50, .project_body_75 {
+    border: 1px solid black;
+	background-color: #628291;
+	padding: 5px;
+	margin: 15px;
+	height: 37px;
+}
+.project_body:hover, .project_body_25:hover, .project_body_50:hover, .project_body_75:hover{
+	background-color: #7f96a4;
+}
+.project_body_25 {
+	background-color: #888291;
+}
+.project_body_50 {
+	background-color: #628d91;
+}
+.project_body_75 {
+	background-color: #629a91;
+}
+.project_img {
+	border: 0px;
+	padding: 1px;
+	float: left;
+	height: 32px;
+	width: 32px;
+}
+.project_text {
+	margin: 5px;
+	float: left;
+}
+
+.project_description_header {
+    border: 1px solid black;
+	background-color: #628291;
+	padding: 5px;
+	margin: 15px;
+	height: 128px;
+}
+.project_description_img {
+	border: 0px;
+	padding: 1px;
+	float: left;
+	height: 128px;
+	width: 128px;
+}
