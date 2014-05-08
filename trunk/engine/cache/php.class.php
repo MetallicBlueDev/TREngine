@@ -11,7 +11,12 @@ if (!defined("TR_ENGINE_INDEX")) {
  */
 class Cache_Php extends Cache_Model {
 
-    public function canUse() {
+    protected function canUse() {
+        // Gestionnaire natif; toujours diponible
+        return true;
+    }
+
+    public function netConnected() {
         // Gestionnaire natif; toujours diponible
         return true;
     }

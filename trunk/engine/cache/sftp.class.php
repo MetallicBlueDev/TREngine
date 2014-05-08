@@ -10,5 +10,10 @@ if (!defined("TR_ENGINE_INDEX")) {
  * @author Sébastien Villemain
  */
 class Cache_Sftp extends Cache_Model {
-    // TODO classe a coder...
+
+    protected function canUse() {
+        // TODO classe a coder..
+        return false;
+    }
+
 }

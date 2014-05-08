@@ -5,11 +5,11 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Modèle de classe pour un gestionnaire de fichier.
+ * Modèle pour un gestionnaire de fichier.
  *
  * @author Sébastien Villemain
  */
-abstract class Cache_Model {
+abstract class Cache_Model extends Core_Transaction {
 
     /**
      * Droit d'écriture CHMOD.
@@ -20,69 +20,31 @@ abstract class Cache_Model {
      */
     protected $chmod = 0777;
 
-    /**
-     * Configuration du FTP.
-     *
-     * @var array
-     */
-    private $ftp = array(
-        "host" => "",
-        "port" => "",
-        "user" => "",
-        "pass" => "",
-        "root" => ""
-    );
-
-    /**
-     * Nouveau modèle de cache.
-     */
-    protected function __construct() {
-        $this->ftp = null;
+    protected function throwException($message) {
+        throw new Fail_Cache("cache" . $message);
     }
 
-    /**
-     * Paramètre la connexion.
-     *
-     * @param array $ftp
-     */
-    public function initializeCache(array &$ftp) {
-        if ($this->ftp === null) {
-            if (empty($ftp)) {
-                $ftp = array();
-            } else {
-                if (preg_match("/(ftp:\/\/)(.+)/", $ftp['host'], $matches)) {
-                    $ftp['host'] = $matches[2];
-                }
-
-                if (preg_match("/(.+)(\/)/", $ftp['host'], $matches)) {
-                    $ftp['host'] = $matches[1];
-                }
-
-                // Réglage de configuration
-                $ftp['host'] = (empty($ftp['host'])) ? "127.0.0.1" : $ftp['host'];
-                $ftp['port'] = (is_numeric($ftp['port'])) ? $ftp['port'] : 21;
-                $ftp['user'] = (empty($ftp['user'])) ? "root" : $ftp['user'];
-                $ftp['pass'] = (empty($ftp['pass'])) ? "" : $ftp['pass'];
-
-                // Le dossier root sera redéfini après être identifié
-                $ftp['root'] = (empty($ftp['root'])) ? DIRECTORY_SEPARATOR : $ftp['root'];
+    public function initialize(array &$transaction) {
+        if (!empty($transaction)) {
+            if (preg_match("/(ftp:\/\/)(.+)/", $transaction['host'], $matches)) {
+                $transaction['host'] = $matches[2];
             }
 
-            $this->ftp = $ftp;
+            if (preg_match("/(.+)(\/)/", $transaction['host'], $matches)) {
+                $transaction['host'] = $matches[1];
+            }
+
+            // Réglage de configuration
+            $transaction['host'] = (empty($transaction['host'])) ? "127.0.0.1" : $transaction['host'];
+            $transaction['port'] = (is_numeric($transaction['port'])) ? $transaction['port'] : 21;
+            $transaction['user'] = (empty($transaction['user'])) ? "root" : $transaction['user'];
+            $transaction['pass'] = (empty($transaction['pass'])) ? "" : $transaction['pass'];
+
+            // Le dossier root sera redéfini après être identifié
+            $transaction['root'] = (empty($transaction['root'])) ? DIRECTORY_SEPARATOR : $transaction['root'];
         }
-    }
 
-    public function __destruct() {
-
-    }
-
-    /**
-     * Retourne l'adresse de l'hôte.
-     *
-     * @return string
-     */
-    public function &getFtpHost() {
-        return $this->ftp['host'];
+        parent::initialize($transaction);
     }
 
     /**
@@ -90,26 +52,8 @@ abstract class Cache_Model {
      *
      * @return int
      */
-    public function &getFtpPort() {
-        return $this->ftp['port'];
-    }
-
-    /**
-     * Retourne l'identifiant du connexion.
-     *
-     * @return string
-     */
-    public function &getFtpUser() {
-        return $this->ftp['user'];
-    }
-
-    /**
-     * Retourne le mot de passe de connexion.
-     *
-     * @return string
-     */
-    public function &getFtpPass() {
-        return $this->ftp['pass'];
+    public function &getServerPort() {
+        return $this->getTransactionValue("port");
     }
 
     /**
@@ -117,8 +61,8 @@ abstract class Cache_Model {
      *
      * @return string
      */
-    public function &getFtpRoot() {
-        return $this->ftp['root'];
+    public function &getServerRoot() {
+        return $this->getTransactionValue("root");
     }
 
     /**
@@ -126,17 +70,8 @@ abstract class Cache_Model {
      *
      * @param string $newRoot
      */
-    public function setFtpRoot(&$newRoot) {
-        $this->ftp['root'] = $newRoot;
-    }
-
-    /**
-     * Détermine si le gestionnaire est utilisable.
-     *
-     * @return boolean true ready
-     */
-    public function canUse() {
-        return false;
+    public function setServerRoot(&$newRoot) {
+        $this->setTransactionValue("root", $newRoot);
     }
 
     /**
