@@ -21,8 +21,8 @@ class Base_Mysqli extends Base_Model {
         return $rslt;
     }
 
-    public function dbConnect() {
-        $this->connId = new mysqli($this->getDatabaseHost(), $this->getDatabaseUser(), $this->getDatabasePass());
+    public function netConnect() {
+        $this->connId = new mysqli($this->getTransactionHost(), $this->getTransactionUser(), $this->getTransactionPass());
 
         if ($this->getMysqli()->connect_error) {
             Core_Logger::addException("MySqli connect_error: " . $this->getMysqli()->connect_error);
@@ -30,17 +30,17 @@ class Base_Mysqli extends Base_Model {
         }
     }
 
-    public function &dbSelect() {
+    public function &netSelect() {
         $rslt = false;
 
-        if ($this->dbConnected()) {
+        if ($this->netConnected()) {
             $rslt = $this->getMysqli()->select_db($this->getDatabaseName());
         }
         return $rslt;
     }
 
-    public function dbDeconnect() {
-        if ($this->dbConnected()) {
+    public function netDeconnect() {
+        if ($this->netConnected()) {
             $this->getMysqli()->close();
         }
 

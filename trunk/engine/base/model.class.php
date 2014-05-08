@@ -9,28 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-abstract class Base_Model {
-
-    /**
-     * Configuration de la base de données.
-     *
-     * @var array
-     */
-    private $database = array(
-        "host" => "",
-        "user" => "",
-        "pass" => "",
-        "name" => "",
-        "type" => "",
-        "prefix" => ""
-    );
-
-    /**
-     * Objet de connexion.
-     *
-     * @var mixed (resource / mysqli / etc.)
-     */
-    protected $connId = null;
+abstract class Base_Model extends Core_Transaction {
 
     /**
      * Dernier resultat de la dernière requête SQL.
@@ -74,87 +53,8 @@ abstract class Base_Model {
      */
     protected $quoted = array();
 
-    /**
-     * Nouveau modèle de base.
-     */
-    protected function __construct() {
-        $this->database = null;
-    }
-
-    /**
-     * Paramètre la connexion, test la connexion puis engage une connexion.
-     *
-     * @param array $database
-     * @throws Fail_Sql
-     */
-    public function initializeBase(array &$database) {
-        if ($this->database === null) {
-            $this->database = $database;
-
-            if ($this->canUse()) {
-                // Connexion au serveur
-                $this->dbConnect();
-
-                if (!$this->dbConnected()) {
-                    throw new Fail_Sql("sqlConnect");
-                }
-
-                // Sélection d'une base de données
-                if (!$this->dbSelect()) {
-                    throw new Fail_Sql("sqlDbSelect");
-                }
-            } else {
-                throw new Fail_Sql("sqlTest");
-            }
-        }
-    }
-
-    /**
-     * Destruction de la communication.
-     */
-    public function __destruct() {
-        $this->dbDeconnect();
-    }
-
-    /**
-     * Détermine si le gestionnaire est utilisable.
-     *
-     * @return boolean
-     */
-    protected function canUse() {
-        return false;
-    }
-
-    /**
-     * Etablie une connexion à la base de données.
-     */
-    public function dbConnect() {
-
-    }
-
-    /**
-     * Retourne l'état de la connexion.
-     *
-     * @return boolean
-     */
-    public function dbConnected() {
-        return ($this->connId !== null) ? true : false;
-    }
-
-    /**
-     * Déconnexion de la base de données.
-     */
-    public function dbDeconnect() {
-
-    }
-
-    /**
-     * Sélectionne une base de données.
-     *
-     * @return boolean true succès
-     */
-    public function &dbSelect() {
-        return false;
+    protected function throwException($message) {
+        throw new Fail_Sql("sql" . $message);
     }
 
     /**
@@ -163,34 +63,8 @@ abstract class Base_Model {
      * @return int
      */
     public function &affectedRows() {
-        return -1;
-    }
-
-    /**
-     * Retourne le nom de l'hôte.
-     *
-     * @return string
-     */
-    public function &getDatabaseHost() {
-        return $this->database['host'];
-    }
-
-    /**
-     * Retourne le nom d'utilisateur.
-     *
-     * @return string
-     */
-    public function &getDatabaseUser() {
-        return $this->database['user'];
-    }
-
-    /**
-     * Retourne le mot de passe.
-     *
-     * @return string
-     */
-    public function &getDatabasePass() { // TODO NE PAS METTRE EN PUBLIC.
-        return $this->database['pass'];
+        $rslt = -1;
+        return $rslt;
     }
 
     /**
@@ -199,16 +73,7 @@ abstract class Base_Model {
      * @return string
      */
     public function &getDatabaseName() {
-        return $this->database['name'];
-    }
-
-    /**
-     * Retourne le type de base (exemple mysqli).
-     *
-     * @return string
-     */
-    public function &getDatabaseType() {
-        return $this->database['type'];
+        return $this->getTransactionValue("name");
     }
 
     /**
@@ -217,7 +82,7 @@ abstract class Base_Model {
      * @return string
      */
     public function &getDatabasePrefix() {
-        return $this->database['prefix'];
+        return $this->getTransactionValue("prefix");
     }
 
     /**
@@ -254,7 +119,8 @@ abstract class Base_Model {
      * @return array
      */
     public function &fetchArray() {
-        return array();
+        $rslt = array();
+        return $rslt;
     }
 
     /**
@@ -265,7 +131,8 @@ abstract class Base_Model {
      */
     public function &fetchObject($className = null) {
         unset($className);
-        return array();
+        $rslt = array();
+        return $rslt;
     }
 
     /**
@@ -290,7 +157,8 @@ abstract class Base_Model {
      * @return string
      */
     public function &insertId() {
-        return "0";
+        $rslt = "0";
+        return $rslt;
     }
 
     /**
@@ -388,7 +256,8 @@ abstract class Base_Model {
      */
     public function &freeResult($query) {
         unset($query);
-        return false;
+        $rslt = false;
+        return $rslt;
     }
 
     /**

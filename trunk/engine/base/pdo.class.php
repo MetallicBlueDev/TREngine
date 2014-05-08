@@ -15,7 +15,7 @@ class Base_Pdo extends Base_Model {
     protected function canUse() {
         $rslt = false;
 
-        $driverName = $this->getDatabaseHost();
+        $driverName = $this->getTransactionHost();
         $pos = strpos($driverName, ":");
 
         if ($pos !== false) {
@@ -35,26 +35,26 @@ class Base_Pdo extends Base_Model {
         return $rslt;
     }
 
-    public function dbConnect() {
+    public function netConnect() {
         try {
             // Host = mysql:host=127.0.0.1
-            $this->connId = new PDO($this->getDatabaseHost(), $this->getDatabaseUser(), $this->getDatabasePass());
+            $this->connId = new PDO($this->getTransactionHost(), $this->getTransactionUser(), $this->getTransactionPass());
         } catch (PDOException $ex) {
             Core_Logger::addException("PDO exception: " . $ex->getMessage());
             $this->connId = null;
         }
     }
 
-    public function &dbSelect() {
+    public function &netSelect() {
         $rslt = false;
 
-        if ($this->dbConnected()) {
+        if ($this->netConnected()) {
             $rslt = ($this->getPdo()->exec("USE " . $this->getDatabaseName()) !== false);
         }
         return $rslt;
     }
 
-    public function dbDeconnect() {
+    public function netDeconnect() {
         $this->connId = null;
     }
 

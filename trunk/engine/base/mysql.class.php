@@ -29,8 +29,8 @@ class Base_Mysql extends Base_Model {
         return $rslt;
     }
 
-    public function dbConnect() {
-        $link = mysql_connect($this->getDatabaseHost(), $this->getDatabaseUser(), $this->getDatabasePass());
+    public function netConnect() {
+        $link = mysql_connect($this->getTransactionHost(), $this->getTransactionUser(), $this->getTransactionPass());
 
         if ($link) {
             $this->connId = $link;
@@ -39,17 +39,17 @@ class Base_Mysql extends Base_Model {
         }
     }
 
-    public function &dbSelect() {
+    public function &netSelect() {
         $rslt = false;
 
-        if ($this->dbConnected()) {
+        if ($this->netConnected()) {
             $rslt = mysql_select_db($this->getDatabaseName(), $this->connId);
         }
         return $rslt;
     }
 
-    public function dbDeconnect() {
-        if ($this->dbConnected()) {
+    public function netDeconnect() {
+        if ($this->netConnected()) {
             mysql_close($this->connId);
         }
 
