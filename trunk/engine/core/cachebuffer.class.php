@@ -528,19 +528,19 @@ class Core_CacheBuffer {
         if (self::$selectedCache === null) {
             if (self::$modeActived['ftp']) {
                 // Démarrage du gestionnaire FTP
-                self::$selectedCache = new Libs_CacheFtp();
+                self::$selectedCache = new Cache_Ftp();
             } else if (self::$modeActived['sftp']) {
                 // Démarrage du gestionnaire SFTP
-                self::$selectedCache = new Libs_CacheSftp();
+                self::$selectedCache = new Cache_Sftp();
             } else {
                 // Démarrage du gestionnaire de fichier
-                self::$selectedCache = new Libs_CacheFile();
+                self::$selectedCache = new Cache_Php();
             }
 
             // Si il y a un souci, on démarre par défaut le gestionnaire de fichier
             if (!self::$selectedCache->canUse()) {
                 // Démarrage du gestionnaire de fichier
-                self::$selectedCache = new Libs_CacheFile();
+                self::$selectedCache = new Cache_Php();
             }
         }
         return self::$selectedCache;
