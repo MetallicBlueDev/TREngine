@@ -53,14 +53,14 @@ class Core_Sql extends Base_Model {
 
         try {
             $this->selectedBase = new $baseClassName();
-            $this->selectedBase->initializeBase($databaseConfig);
+            $this->selectedBase->initialize($databaseConfig);
         } catch (Exception $ex) {
             $this->selectedBase = null;
             Core_Secure::getInstance()->throwException($ex->getMessage(), $ex);
         }
     }
 
-    public function initializeBase(array &$database) {
+    public function initialize(array &$database) {
         // NE RIEN FAIRE
         unset($database);
     }
@@ -126,8 +126,8 @@ class Core_Sql extends Base_Model {
     /**
      * Etablie une connexion à la base de données.
      */
-    public function dbConnect() {
-        $this->selectedBase->dbConnect();
+    public function netConnect() {
+        $this->selectedBase->netConnect();
     }
 
     /**
@@ -135,16 +135,16 @@ class Core_Sql extends Base_Model {
      *
      * @return boolean
      */
-    public function dbConnected() {
-        return $this->selectedBase !== null && $this->selectedBase->dbConnected();
+    public function netConnected() {
+        return $this->selectedBase !== null && $this->selectedBase->netConnected();
     }
 
     /**
      * Déconnexion de la base de données.
      */
-    public function dbDeconnect() {
+    public function netDeconnect() {
         if (self::hasConnection()) {
-            $this->selectedBase->dbDeconnect();
+            $this->selectedBase->netDeconnect();
         }
     }
 
@@ -153,8 +153,8 @@ class Core_Sql extends Base_Model {
      *
      * @return boolean
      */
-    public function &dbSelect() {
-        return $this->selectedBase->dbSelect();
+    public function &netSelect() {
+        return $this->selectedBase->netSelect();
     }
 
     /**
@@ -172,8 +172,8 @@ class Core_Sql extends Base_Model {
      *
      * @return string
      */
-    public function &getDatabaseHost() {
-        return $this->selectedBase->getDatabaseHost();
+    public function &getTransactionHost() {
+        return $this->selectedBase->getTransactionHost();
     }
 
     /**
@@ -181,8 +181,8 @@ class Core_Sql extends Base_Model {
      *
      * @return string
      */
-    public function &getDatabaseUser() {
-        return $this->selectedBase->getDatabaseUser();
+    public function &getTransactionUser() {
+        return $this->selectedBase->getTransactionUser();
     }
 
     /**
@@ -190,8 +190,8 @@ class Core_Sql extends Base_Model {
      *
      * @return string
      */
-    public function &getDatabasePass() { // TODO NE PAS METTRE EN PUBLIC.
-        return $this->selectedBase->getDatabasePass();
+    public function &getTransactionPass() { // TODO NE PAS METTRE EN PUBLIC.
+        return $this->selectedBase->getTransactionPass();
     }
 
     /**
@@ -208,8 +208,8 @@ class Core_Sql extends Base_Model {
      *
      * @return string
      */
-    public function &getDatabaseType() {
-        return $this->selectedBase->getDatabaseType();
+    public function &getTransactionType() {
+        return $this->selectedBase->getTransactionType();
     }
 
     /**
