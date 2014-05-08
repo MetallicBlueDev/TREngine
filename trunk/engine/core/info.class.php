@@ -62,6 +62,13 @@ class Core_Info {
             define("TR_ENGINE_PHP_OS", $info->getPhpOs());
 
             /**
+             * Le retour de chariot du serveur TR ENGINE.
+             *
+             * @var string
+             */
+            define("TR_ENGINE_CRLF", $info->getCrLf());
+
+            /**
              * Numéro de version du moteur.
              *
              * Controle de révision
@@ -185,6 +192,25 @@ class Core_Info {
      */
     private function getPhpOs() {
         return strtoupper(substr(PHP_OS, 0, 3));
+    }
+
+    /**
+     * Retourne le retour chariot du serveur.
+     *
+     * @return string
+     */
+    private function getCrLf() {
+        $rslt = "";
+
+        // Le retour chariot de chaque OS
+        if (TR_ENGINE_PHP_OS === "WIN") {
+            $rslt = "\r\n";
+        } else if (TR_ENGINE_PHP_OS === "MAC") {
+            $rslt = "\r";
+        } else {
+            $rslt = "\n";
+        }
+        return $rslt;
     }
 
 }
