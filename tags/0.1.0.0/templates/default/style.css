@@ -1,0 +1,215 @@
+body {
+	background: #6b737b;
+	font-family: verdana, Arial, Sans-serif;
+	font-size: 11px;
+	color: #000;
+}
+* {
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+}
+a:link, a:visited, a:active {
+	color: #404040;
+	text-decoration: none;
+}
+a:hover {
+	color: #e6eaeb;
+	text-decoration: underline;
+}
+
+/* Style graphique pour mettre en valeur quelques elements dans un texte */
+.bolder {
+	font-weight: bolder;
+	color: #05587b;
+}
+.input, .textarea, select {
+	background-color: #d0dfe6;
+	border-top: 2px solid #7194a4;
+	border-bottom: 2px solid #7194a4;
+	color: #05587b;
+}
+.input:hover, .textarea:hover {
+	background-color: #fff;
+}
+input[type='text'], input[type='password'] {
+	width: 130px;
+}
+
+/* Style générale des formulaires */
+form {
+	padding: 8px;
+	width: 90%;
+	position: relative;
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto;
+	background-image: url(images/background_form.png);
+}
+
+/* Style additionnel pour les formulaires standard */
+.form fieldset {
+	border-top: 1px solid #05587b;
+}
+.form label {
+	font-weight: normal;
+}
+.form legend {
+	color: #05587b;
+	font-size: 14px;
+	padding: 5px;
+}
+
+/* Classe d'erreur (input incomplet par exemple) */
+.error {
+	background-color: #de9da1;
+	border-left: 0px solid #de9da1;
+	border-right: 0px solid #de9da1;
+}
+/* Entête */
+#header {
+	position: relative;
+	width: 900px;	
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto; 
+}
+/* Contenu du milieu */
+#wrapper {
+	position: relative;
+	width: 900px;	
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto;
+	background: url(images/background_middle.jpg);
+	overflow: hidden;
+}
+/* Pieds de page */
+#footer {
+	width: 900px;
+	height: 130px;
+	margin: 0 auto;
+	background: url(images/footer.jpg);
+}
+/* Cadre des modules */
+#module_top {
+	margin-top: 5px;
+	width: 645px;
+	height: 60px;
+	background: url(images/module_top.jpg);
+}
+#module_middle {
+	width: 645px;
+	background: url(images/module_middle.jpg);
+}
+#module_bottom {
+	width: 645px;
+	height: 60px;
+	background: url(images/module_bottom.jpg);
+}
+/* Cadre des blocks */
+.block_top {
+	margin-top: 10px;
+	margin-left: 30px;
+	margin-right: 10px;
+	width: 174px;
+	height: 57px;
+}
+.block_middle {
+	margin-left: 30px;
+	margin-right: 10px;
+	width: 174px;
+	background: url(images/block_middle.jpg);
+}
+.block_bottom {
+	margin-left: 30px;
+	margin-right: 10px;
+	width: 174px;
+	height: 35px;
+	background: url(images/block_bottom.jpg);
+}
+.block_content {
+	padding-left: 10px;
+	padding-right: 12px;
+}
+.block_content ul {
+	padding-top: 5px;
+	list-style-type: none;
+}
+/* Block de message (ajax et autre) */
+#block_message {
+	padding: 5px;
+}
+/* Liste d'erreur rencontrée */
+#block_message .exception {
+	margin: 5px;
+}
+#block_message .exception li {
+	margin-top: 10px;
+	list-style-type: none;
+	padding-left: 25px;
+	height: 20px;
+	font-size: 13px;
+}
+/* Texte de l'erreur */
+#block_message .exception li div {
+	padding-top: 2px;
+}
+#block_message .exception .alert {
+	background: url(images/block_error_alert.png) no-repeat 2px 2px;
+	background-color: #efaaa9;
+}
+#block_message .exception .note {
+	background: url(images/block_error_note.png) no-repeat 2px 2px;
+	background-color: #f7c259;
+}
+#block_message .exception .info {
+	background: url(images/block_error_info.png) no-repeat 2px 2px;
+	background-color: #98c3f1;
+}
+/* Partie gauche */
+#left {
+	width: 214px;
+	float: left;
+	position: relative;
+}
+/* Interieur */
+#middle {
+	width: 645px;
+	float: left;
+	position: relative;
+}
+/* Fil ariane */
+#breadcrumb {
+	float: left;
+	position: relative;
+	height: 11px; /* pour être correctement aligné avec le loader */
+}
+#breadcrumb a:hover {
+	color: #05587b;
+}
+/* Chargeur annimé */
+#loader {
+	float: left;
+	position: relative;
+	background: url(images/loader.gif) no-repeat 0 0;
+}
+/* Cleaner */
+.cleaner {
+	clear: both;
+}
+/* Menu et contenu des onglets (idTabs) */
+.tabs ul a {
+	background: #848e97;
+}
+.tabs ul a:hover { background: #6f8592; }
+.tabs ul a.selected {
+	background: #848e97;
+	border-bottom: 1px solid #848e97;
+}
+.tabs div {
+	background: #848e97;
+}
