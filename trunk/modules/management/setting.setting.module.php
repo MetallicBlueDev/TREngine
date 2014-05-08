@@ -272,16 +272,16 @@ class Module_Management_Setting extends Libs_ModuleModel {
 
         $coreSql = Core_Sql::getInstance();
         $form->addFieldset(SETTING_SYSTEM_DATABASE_SETTING_TITLE, SETTING_SYSTEM_DATABASE_SETTING_DESCRIPTION);
-        $form->addInputText("dbHost", SETTING_SYSTEM_DATABASE_SETTING_HOST, $coreSql->getDatabaseHost());
+        $form->addInputText("dbHost", SETTING_SYSTEM_DATABASE_SETTING_HOST, $coreSql->getTransactionHost());
         $form->addInputText("dbName", SETTING_SYSTEM_DATABASE_SETTING_NAME, $coreSql->getDatabaseName());
         $form->addInputText("dbPrefix", SETTING_SYSTEM_DATABASE_SETTING_PREFIX, $coreSql->getDatabasePrefix());
-        $form->addInputText("dbUser", SETTING_SYSTEM_DATABASE_SETTING_USER, $coreSql->getDatabaseUser());
+        $form->addInputText("dbUser", SETTING_SYSTEM_DATABASE_SETTING_USER, $coreSql->getTransactionUser());
         $form->addInputPassword("dbPass", SETTING_SYSTEM_DATABASE_SETTING_PASSWORD);
 
         $form->addSelectOpenTag("dbType", SETTING_SYSTEM_DATABASE_SETTING_TYPE);
         $bases = Core_Sql::listBases();
         foreach ($bases as $base) {
-            if ($base == $coreSql->getDatabaseType())
+            if ($base == $coreSql->getTransactionType())
                 $form->addSelectItemTag($base, "", true);
             else
                 $form->addSelectItemTag($base);
@@ -388,12 +388,12 @@ class Module_Management_Setting extends Libs_ModuleModel {
         $coreSql = Core_Sql::getInstance();
         $updateDatabaseFile = false;
 
-        $dbHost = Core_Request::getString("dbHost", $coreSql->getDatabaseHost(), "POST");
-        if ($dbHost != $coreSql->getDatabaseHost()) {
+        $dbHost = Core_Request::getString("dbHost", $coreSql->getTransactionHost(), "POST");
+        if ($dbHost != $coreSql->getTransactionHost()) {
             if (!empty($dbHost))
                 $updateDatabaseFile = true;
             else
-                $dbHost = $coreSql->getDatabaseHost();
+                $dbHost = $coreSql->getTransactionHost();
         }
 
         $dbName = Core_Request::getString("dbName", $coreSql->getDatabaseName(), "POST");
@@ -412,28 +412,28 @@ class Module_Management_Setting extends Libs_ModuleModel {
                 $dbPrefix = $coreSql->getDatabasePrefix();
         }
 
-        $dbUser = Core_Request::getString("dbUser", $coreSql->getDatabaseUser(), "POST");
-        if ($dbUser != $coreSql->getDatabaseUser()) {
+        $dbUser = Core_Request::getString("dbUser", $coreSql->getTransactionUser(), "POST");
+        if ($dbUser != $coreSql->getTransactionUser()) {
             if (!empty($dbUser))
                 $updateDatabaseFile = true;
             else
-                $dbUser = $coreSql->getDatabaseUser();
+                $dbUser = $coreSql->getTransactionUser();
         }
 
-        $dbPass = Core_Request::getString("dbPass", $coreSql->getDatabasePass(), "POST");
-        if ($dbPass != $coreSql->getDatabasePass()) {
+        $dbPass = Core_Request::getString("dbPass", $coreSql->getTransactionPass(), "POST");
+        if ($dbPass != $coreSql->getTransactionPass()) {
             if (!empty($dbPass))
                 $updateDatabaseFile = true;
             else
-                $dbPass = $coreSql->getDatabasePass();
+                $dbPass = $coreSql->getTransactionPass();
         }
 
-        $dbType = Core_Request::getWord("dbType", $coreSql->getDatabaseType(), "POST");
-        if ($dbType != $coreSql->getDatabaseType()) {
+        $dbType = Core_Request::getWord("dbType", $coreSql->getTransactionType(), "POST");
+        if ($dbType != $coreSql->getTransactionType()) {
             if (!empty($dbType))
                 $updateDatabaseFile = true;
             else
-                $dbType = $coreSql->getDatabaseType();
+                $dbType = $coreSql->getTransactionType();
         }
 
         if ($updateDatabaseFile) {
