@@ -12,6 +12,15 @@ if (!defined("TR_ENGINE_INDEX")) {
  */
 class Base_Mysqli extends Base_Model {
 
+    protected function canUse() {
+        $rslt = function_exists("mysqli_connect");
+
+        if (!$rslt) {
+            Core_Logger::addException("MySqli function not found");
+        }
+        return $rslt;
+    }
+
     public function dbConnect() {
         $this->connId = new mysqli($this->getDatabaseHost(), $this->getDatabaseUser(), $this->getDatabasePass());
 
@@ -98,15 +107,6 @@ class Base_Mysqli extends Base_Model {
 
     public function &insertId() {
         return $this->getMysqli()->insert_id;
-    }
-
-    protected function &test() {
-        $rslt = function_exists("mysqli_connect");
-
-        if (!$rslt) {
-            Core_Logger::addException("MySqli function not found");
-        }
-        return $rslt;
     }
 
     public function &getLastError() {

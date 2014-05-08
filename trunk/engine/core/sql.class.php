@@ -117,6 +117,11 @@ class Core_Sql extends Base_Model {
         return $baseList;
     }
 
+    protected function canUse() {
+        // NE RIEN FAIRE
+        return false;
+    }
+
     /**
      * Etablie une connexion à la base de données.
      */
@@ -407,12 +412,6 @@ class Core_Sql extends Base_Model {
      */
     public function &getBuffer($name) {
         return $this->selectedBase->getBuffer($name);
-    }
-
-    protected function &test() {
-        // NE RIEN FAIRE
-        $rslt = false;
-        return $rslt;
     }
 
     /**

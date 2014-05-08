@@ -20,6 +20,15 @@ class Base_Mysql extends Base_Model {
      */
     private $lastSqlCommand = "";
 
+    protected function canUse() {
+        $rslt = function_exists("mysql_connect");
+
+        if (!$rslt) {
+            Core_Logger::addException("MySql function not found");
+        }
+        return $rslt;
+    }
+
     public function dbConnect() {
         $link = mysql_connect($this->getDatabaseHost(), $this->getDatabaseUser(), $this->getDatabasePass());
 
@@ -111,15 +120,6 @@ class Base_Mysql extends Base_Model {
     public function &insertId() {
         $lastId = mysql_insert_id($this->connId);
         return $lastId;
-    }
-
-    protected function &test() {
-        $rslt = function_exists("mysql_connect");
-
-        if (!$rslt) {
-            Core_Logger::addException("MySql function not found");
-        }
-        return $rslt;
     }
 
     public function &getLastError() {

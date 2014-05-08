@@ -12,6 +12,29 @@ if (!defined("TR_ENGINE_INDEX")) {
  */
 class Base_Pdo extends Base_Model {
 
+    protected function canUse() {
+        $rslt = false;
+
+        $driverName = $this->getDatabaseHost();
+        $pos = strpos($driverName, ":");
+
+        if ($pos !== false) {
+            $driverName = substr($driverName, 0, $pos);
+        }
+
+        foreach (PDO::getAvailableDrivers() as $availableDriverName) {
+            if ($availableDriverName === $driverName) {
+                $rslt = true;
+                break;
+            }
+        }
+
+        if (!$rslt) {
+            Core_Logger::addException("PDO driver not found: " . $driverName);
+        }
+        return $rslt;
+    }
+
     public function dbConnect() {
         try {
             // Host = mysql:host=127.0.0.1
@@ -85,29 +108,6 @@ class Base_Pdo extends Base_Model {
 
     public function &insertId() {
         return $this->getPdo()->lastInsertId();
-    }
-
-    protected function &test() {
-        $rslt = false;
-
-        $driverName = $this->getDatabaseHost();
-        $pos = strpos($driverName, ":");
-
-        if ($pos !== false) {
-            $driverName = substr($driverName, 0, $pos);
-        }
-
-        foreach (PDO::getAvailableDrivers() as $availableDriverName) {
-            if ($availableDriverName === $driverName) {
-                $rslt = true;
-                break;
-            }
-        }
-
-        if (!$rslt) {
-            Core_Logger::addException("PDO driver not found: " . $driverName);
-        }
-        return $rslt;
     }
 
     public function &getLastError() {

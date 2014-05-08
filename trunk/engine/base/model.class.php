@@ -91,7 +91,7 @@ abstract class Base_Model {
         if ($this->database === null) {
             $this->database = $database;
 
-            if ($this->test()) {
+            if ($this->canUse()) {
                 // Connexion au serveur
                 $this->dbConnect();
 
@@ -114,6 +114,15 @@ abstract class Base_Model {
      */
     public function __destruct() {
         $this->dbDeconnect();
+    }
+
+    /**
+     * Détermine si le gestionnaire est utilisable.
+     *
+     * @return boolean
+     */
+    protected function canUse() {
+        return false;
     }
 
     /**
@@ -442,16 +451,6 @@ abstract class Base_Model {
      */
     public function &getBuffer($name) {
         return $this->buffer[$name];
-    }
-
-    /**
-     * Vérifie si la plateforme est disponible.
-     *
-     * @return boolean
-     */
-    protected function &test() {
-        $rslt = false;
-        return $rslt;
     }
 
     /**
