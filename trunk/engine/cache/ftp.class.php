@@ -40,12 +40,6 @@ class Cache_Ftp extends Cache_Model {
             } else {
                 // Force le timeout, si possible
                 $this->setTimeOut();
-
-                // Envoi de l'identifiant
-                if (ftp_login($this->connId, $this->getTransactionUser(), $this->getTransactionPass())) {
-                    // Configuration du chemin FTP
-                    $this->rootConfig();
-                }
             }
         }
     }
@@ -56,6 +50,20 @@ class Cache_Ftp extends Cache_Model {
                 Core_Logger::addException("Unable to close connection");
             }
         }
+    }
+
+    public function &netSelect() {
+        $rslt = false;
+
+        // Envoi de l'identifiant
+        if (ftp_login($this->connId, $this->getTransactionUser(), $this->getTransactionPass())) {
+            // Configuration du chemin FTP
+            $this->rootConfig();
+            $rslt = true;
+        } else {
+            Core_Logger::addException("Unable to login.");
+        }
+        return $rslt;
     }
 
     public function writingCache($path, $content, $overWrite = true) {

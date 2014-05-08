@@ -21,6 +21,11 @@ class Cache_Php extends Cache_Model {
         return true;
     }
 
+    public function &netSelect() {
+        $rslt = true;
+        return $rslt;
+    }
+
     public function writingCache($path, $content, $overWrite = true) {
         if (!is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path)) {
             // Soit le fichier n'exite pas soit tout le dossier n'existe pas

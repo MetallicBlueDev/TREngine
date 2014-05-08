@@ -78,25 +78,6 @@ class Cache_Socket extends Cache_Model {
             } else {
                 // Force le timeout, si possible
                 $this->setTimeOut();
-
-                // Envoi de l'identifiant
-                if ($this->sendCommandAndCheckResponse("USER " . $this->getTransactionUser(), array(
-                    331,
-                    503))) {
-                    if ($this->lastResponseCode === 503) {
-                        // Oops, déjà identifié
-                        $rslt = true;
-                    } else {
-                        // Envoi du mot de passe
-                        $rslt = $this->sendCommandAndCheckResponse("PASS " . $this->getTransactionPass(), array(
-                            230));
-
-                        if ($rslt) {
-                            // Configuration du chemin FTP
-                            $this->rootConfig();
-                        }
-                    }
-                }
             }
         }
     }
@@ -109,6 +90,34 @@ class Cache_Socket extends Cache_Model {
                 Core_Logger::addException("Unable to close connection");
             }
         }
+    }
+
+    public function &netSelect() {
+        $rslt = false;
+
+        // Envoi de l'identifiant
+        if ($this->sendCommandAndCheckResponse("USER " . $this->getTransactionUser(), array(
+            331,
+            503))) {
+            if ($this->lastResponseCode === 503) {
+                // Oops, déjà identifié
+                $rslt = true;
+            } else {
+                // Envoi du mot de passe
+                $rslt = $this->sendCommandAndCheckResponse("PASS " . $this->getTransactionPass(), array(
+                    230));
+
+                if ($rslt) {
+                    // Configuration du chemin FTP
+                    $this->rootConfig();
+                } else {
+                    Core_Logger::addException("Unable to login: bad password?");
+                }
+            }
+        } else {
+            Core_Logger::addException("Unable to login: bad user?");
+        }
+        return $rslt;
     }
 
     public function writingCache($path, $content, $overWrite = true) {
