@@ -31,8 +31,9 @@ class Core_BlackBan {
         );
 
         if (Core_Sql::getInstance()->affectedRows() > 0) {
-            $mail = Core_Main::getInstance()->getDefaultAdministratorMail();
-            $name = Core_Main::getInstance()->getDefaultSiteName();
+            $coreMain = Core_Main::getInstance();
+            $mail = $coreMain->getDefaultAdministratorMail();
+            $name = $coreMain->getDefaultSiteName();
 
             $mail = Exec_Mailer::protectedDisplay($mail, $name);
 
