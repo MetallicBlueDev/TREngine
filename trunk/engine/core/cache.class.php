@@ -4,7 +4,7 @@ if (!defined("TR_ENGINE_INDEX")) {
     Core_Secure::checkInstance();
 }
 
-class Core_CacheBuffer {
+class Core_Cache {
 
     /**
      * Section de configuration.
@@ -507,7 +507,7 @@ class Core_CacheBuffer {
         self::changeCurrentSection(self::SECTION_FILELISTER);
         $fileName = str_replace(DIRECTORY_SEPARATOR, "_", $dirPath) . ".php";
 
-        if (Core_CacheBuffer::cached($fileName)) {
+        if (Core_Cache::cached($fileName)) {
             $dirList = self::getCache($fileName);
         } else {
             $protocol = self::getExecProtocol();

@@ -89,7 +89,7 @@ class Cache_Php extends Cache_Model {
      * @param boolean $overWrite écrasement du fichier
      */
     private function writingFile($pathFile, $content, $overWrite = true) {
-        $content = ($overWrite) ? Core_CacheBuffer::getHeader($pathFile, $content) : $content;
+        $content = ($overWrite) ? Core_Cache::getHeader($pathFile, $content) : $content;
 
         // Tentative d'écriture du fichier
         // Des problèmes on été constaté avec l'utilisation du chemin absolu TR_ENGINE_DIR
@@ -145,7 +145,7 @@ class Cache_Php extends Cache_Model {
      */
     private function writingDirectory($path) {
         // Savoir si le path est un dossier ou un fichier
-        $pathIsDir = Core_CacheBuffer::isDir($path);
+        $pathIsDir = Core_Cache::isDir($path);
 
         // Information sur les dossiers
         $dirs = explode(DIRECTORY_SEPARATOR, TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path);

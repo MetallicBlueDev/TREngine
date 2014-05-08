@@ -360,7 +360,7 @@ class Cache_Ftp extends Cache_Model {
      * @param boolean $overWrite
      */
     private function writingFile($path, $content, $overWrite = true) {
-        $content = ($overWrite) ? Core_CacheBuffer::getHeader($path, $content) : $content;
+        $content = ($overWrite) ? Core_Cache::getHeader($path, $content) : $content;
 //$path : local => chemin valide local jusqu'au fichier, remote => chemin valide FTP (avec le root donc) jusqu'au fichier
         if ($this->connected()) {
             // Demarrage du mode passif
@@ -422,7 +422,7 @@ class Cache_Ftp extends Cache_Model {
      */
     private function writingDirectory($path) {
         // Savoir si le path est un dossier ou un fichier
-        $pathIsDir = Core_CacheBuffer::isDir($path);
+        $pathIsDir = Core_Cache::isDir($path);
 
         // Information sur les dossiers
         $dirs = explode(DIRECTORY_SEPARATOR, $this->getPath($path));

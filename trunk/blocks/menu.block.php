@@ -56,8 +56,8 @@ class Block_Menu extends Libs_BlockModel {
     }
 
     public function uninstall() {
-        Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_MENUS);
-        Core_CacheBuffer::removeCache("block" . $this->getBlockData()->getId() . ".php");
+        Core_Cache::changeCurrentSection(Core_Cache::SECTION_MENUS);
+        Core_Cache::removeCache("block" . $this->getBlockData()->getId() . ".php");
     }
 
     /**

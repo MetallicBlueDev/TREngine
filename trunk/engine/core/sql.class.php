@@ -103,7 +103,7 @@ class Core_Sql extends Base_Model {
      */
     public static function &listBases() {
         $baseList = array();
-        $files = Core_CacheBuffer::listNames("engine/base");
+        $files = Core_Cache::listNames("engine/base");
 
         foreach ($files as $fileName) {
             // Nettoyage du nom de la page

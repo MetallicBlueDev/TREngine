@@ -98,7 +98,7 @@ class Module_Management_Index extends Libs_ModuleModel {
     public static function &listManagementPages() {
         $page = "";
         $pageList = array();
-        $files = Core_CacheBuffer::listNames("modules/management");
+        $files = Core_Cache::listNames("modules/management");
         foreach ($files as $key => $fileName) {
             // Nettoyage du nom de la page
             $pos = strpos($fileName, ".setting.module");

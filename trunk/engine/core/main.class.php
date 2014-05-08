@@ -417,7 +417,7 @@ class Core_Main {
             }
 
             // Validation du cache / Routine du cache
-            Core_CacheBuffer::valideCacheBuffer();
+            Core_Cache::valideCacheBuffer();
 
             if (Core_Secure::debuggingMode()) {
                 // Assemble tous les messages d'erreurs dans un fichier log
@@ -572,7 +572,7 @@ class Core_Main {
 
         if (!$canUse) {
             // Mode natif PHP actif
-            Core_CacheBuffer::setModeActived(array(
+            Core_Cache::setModeActived(array(
                 "php"));
 
             // Chemin du fichier de configuration ftp
@@ -580,7 +580,7 @@ class Core_Main {
                 $mode = strtolower($this->getConfigValue("configs_ftp", "type"));
 
                 if (!empty($mode)) {
-                    Core_CacheBuffer::setModeActived(array(
+                    Core_Cache::setModeActived(array(
                         $mode));
                 }
 
@@ -677,11 +677,11 @@ class Core_Main {
             if ($canUse) {
                 // Chargement de la configuration via la cache
                 $newConfig = array();
-                Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_TMP);
+                Core_Cache::changeCurrentSection(Core_Cache::SECTION_TMP);
 
                 // Si le cache est disponible
-                if (Core_CacheBuffer::cached("configs.php")) {
-                    $newConfig = Core_CacheBuffer::getCache("configs.php");
+                if (Core_Cache::cached("configs.php")) {
+                    $newConfig = Core_Cache::getCache("configs.php");
                 } else {
                     $content = "";
                     $coreSql = Core_Sql::getInstance();
@@ -692,13 +692,13 @@ class Core_Main {
                         "value"));
 
                     foreach ($coreSql->fetchArray() as $row) {
-                        $content .= Core_CacheBuffer::serializeData(array(
+                        $content .= Core_Cache::serializeData(array(
                             $row['name'] => $row['value']));
                         $newConfig[$row['name']] = Exec_Entities::stripSlashes($row['value']);
                     }
 
                     // Mise en cache
-                    Core_CacheBuffer::writingCache("configs.php", $content, true);
+                    Core_Cache::writingCache("configs.php", $content, true);
                 }
 
                 // Ajout a la configuration courante

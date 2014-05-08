@@ -101,7 +101,7 @@ class Libs_Module {
      */
     public static function &listModules() {
         $moduleList = array();
-        $modules = Core_CacheBuffer::listNames("modules");
+        $modules = Core_Cache::listNames("modules");
 
         foreach ($modules as $module) {
             $moduleList[] = array(
@@ -145,9 +145,9 @@ class Libs_Module {
             $moduleData = array();
 
             // Recherche dans le cache
-            Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_MODULES);
+            Core_Cache::changeCurrentSection(Core_Cache::SECTION_MODULES);
 
-            if (!Core_CacheBuffer::cached($moduleName . ".php")) {
+            if (!Core_Cache::cached($moduleName . ".php")) {
                 $coreSql = Core_Sql::getInstance();
 
                 $coreSql->select(
@@ -173,11 +173,11 @@ class Libs_Module {
                     }
 
                     // Mise en cache
-                    $content = Core_CacheBuffer::serializeData($moduleData);
-                    Core_CacheBuffer::writingCache($moduleName . ".php", $content);
+                    $content = Core_Cache::serializeData($moduleData);
+                    Core_Cache::writingCache($moduleName . ".php", $content);
                 }
             } else {
-                $moduleData = Core_CacheBuffer::getCache($moduleName . ".php");
+                $moduleData = Core_Cache::getCache($moduleName . ".php");
             }
 
             // Injection des informations du module

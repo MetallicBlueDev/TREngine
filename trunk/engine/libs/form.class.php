@@ -85,8 +85,8 @@ class Libs_Form {
         $this->name = $name;
         $this->urlAction = !empty($urlAction) ? $urlAction : "index.php";
 
-        Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_FORMS);
-        $this->cached = Core_CacheBuffer::cached($name . ".php");
+        Core_Cache::changeCurrentSection(Core_Cache::SECTION_FORMS);
+        $this->cached = Core_Cache::cached($name . ".php");
     }
 
     /**
@@ -411,19 +411,19 @@ class Libs_Form {
         $title = $this->getTitle($this->title);
         $description = $this->getDescription($this->description);
 
-        Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_FORMS);
+        Core_Cache::changeCurrentSection(Core_Cache::SECTION_FORMS);
         $content = "";
 
         if ($this->cached) { // Récupèration des données mise en cache
-            $content = Core_CacheBuffer::getCache($this->name . ".php", $this->cacheVars);
+            $content = Core_Cache::getCache($this->name . ".php", $this->cacheVars);
         } else { // Préparation puis mise en cache
             $data = "<form action=\"" . $url . "\" method=\"post\" id=\"form-" . $name . "\" name=\"" . $name . "\""
             . " class=\"" . $class . "\"><fieldset>" . $title . $description . $this->inputData
             . (($this->doFieldset) ? "</fieldset>" : "") . "</form>";
 
             // Enregistrement dans le cache
-            $data = Core_CacheBuffer::serializeData($data);
-            Core_CacheBuffer::writingCache($this->name . ".php", $data);
+            $data = Core_Cache::serializeData($data);
+            Core_Cache::writingCache($this->name . ".php", $data);
 
             // Lecture pour l'affichage
             eval(" \$content = $data; "); // Ne pas ajouter de quote : les données sont déjà serialisées
@@ -566,7 +566,7 @@ class Libs_Form {
     /**
      * Retourne la dernière variable de cache.
      *
-     * @see Core_CacheBuffer::getCache()
+     * @see Core_Cache::getCache()
      * @return string
      */
     private function &getLastCacheVar() {

@@ -55,14 +55,14 @@ class Core_BlackBan {
     private static function checkOldBlackBan() {
         $deleteOldBlackBan = false;
 
-        Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_TMP);
+        Core_Cache::changeCurrentSection(Core_Cache::SECTION_TMP);
         // Vérification du fichier cache
-        if (!Core_CacheBuffer::cached("deleteOldBlackBan.txt")) {
+        if (!Core_Cache::cached("deleteOldBlackBan.txt")) {
             $deleteOldBlackBan = true;
-            Core_CacheBuffer::writingCache("deleteOldBlackBan.txt", "1");
-        } else if ((time() - 2 * 24 * 60 * 60) < Core_CacheBuffer::cacheMTime("deleteOldBlackBan.txt")) {
+            Core_Cache::writingCache("deleteOldBlackBan.txt", "1");
+        } else if ((time() - 2 * 24 * 60 * 60) < Core_Cache::cacheMTime("deleteOldBlackBan.txt")) {
             $deleteOldBlackBan = false;
-            Core_CacheBuffer::touchCache("deleteOldBlackBan.txt");
+            Core_Cache::touchCache("deleteOldBlackBan.txt");
         }
 
         if ($deleteOldBlackBan) {

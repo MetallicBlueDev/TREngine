@@ -33,8 +33,8 @@ class Module_Management_Setting extends Libs_ModuleModel {
      * Supprime le cache
      */
     private function deleteCache() {
-        Core_CacheBuffer::changeCurrentSection(Core_CacheBuffer::SECTION_TMP);
-        Core_CacheBuffer::removeCache("configs.php");
+        Core_Cache::changeCurrentSection(Core_Cache::SECTION_TMP);
+        Core_Cache::removeCache("configs.php");
     }
 
     /**
@@ -257,7 +257,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
         $form->addFieldset(SETTING_SYSTEM_FTP_SETTING_TITLE, SETTING_SYSTEM_FTP_SETTING_DESCRIPTION);
 
         $form->addSelectOpenTag("ftpType", SETTING_SYSTEM_FTP_SETTING_TYPE);
-        $modeFtp = Core_CacheBuffer::getModeActived();
+        $modeFtp = Core_Cache::getModeActived();
         foreach ($modeFtp as $mode => $actived) {
             $form->addSelectItemTag($mode, "", $actived);
         }
