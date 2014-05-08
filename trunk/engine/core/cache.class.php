@@ -169,34 +169,41 @@ class Core_Cache extends Cache_Model {
         $loaded = false;
         $cacheConfig = Core_Main::getInstance()->getConfigCache();
 
-        if (!empty($cacheConfig) && isset($cacheConfig['type'])) {
-            // Chargement des drivers pour la base
-            $cacheClassName = "Base_" . ucfirst($cacheConfig['type']);
-            $loaded = Core_Loader::classLoader($cacheClassName);
+        // Mode par défaut
+        if (empty($cacheConfig) || !isset($cacheConfig['type'])) {
+            $cacheConfig['type'] = "php";
         }
 
+        // Chargement des drivers pour le cache
+        $cacheClassName = "Cache_" . ucfirst($cacheConfig['type']);
+        $loaded = Core_Loader::classLoader($cacheClassName);
+
         if (!$loaded) {
-            Core_Secure::getInstance()->throwException("sqlType", null, array(
+            Core_Secure::getInstance()->throwException("cacheType", null, array(
                 $cacheConfig['type']));
         }
 
-        if (!Core_Loader::isCallable($cacheClassName, "initializeBase")) {
-            Core_Secure::getInstance()->throwException("sqlCode", null, array(
+        if (!Core_Loader::isCallable($cacheClassName, "initializeCache")) {
+            Core_Secure::getInstance()->throwException("cacheCode", null, array(
                 $cacheClassName));
         }
 
         try {
-            $this->selectedBase = new $cacheClassName();
-            $this->selectedBase->initializeBase($cacheConfig);
+            $this->selectedCache = new $cacheClassName();
+            $this->selectedCache->initialize($cacheConfig);
         } catch (Exception $ex) {
-            $this->selectedBase = null;
+            $this->selectedCache = null;
             Core_Secure::getInstance()->throwException($ex->getMessage(), $ex);
         }
     }
 
-    public function initializeCache(array &$ftp) {
+    public function initialize(array &$cache) {
         // NE RIEN FAIRE
-        unset($ftp);
+        unset($cache);
+    }
+
+    public function __destruct() {
+        $this->selectedCache = null;
     }
 
     /**
