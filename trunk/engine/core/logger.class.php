@@ -168,7 +168,7 @@ class Core_Logger {
      * Ecriture du rapport d'erreur dans un fichier log.
      */
     public static function logException() {
-        if (Core_Loader::isCallable("Core_CacheBuffer")) {
+        if (Core_Loader::isCallable("Core_Cache")) {
             if (self::hasExceptions()) {
                 // Positionne dans le cache
                 Core_Cache::changeCurrentSection(Core_Cache::SECTION_LOGGER);

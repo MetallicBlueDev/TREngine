@@ -254,19 +254,19 @@ class Core_Translate {
                 $content = "";
 
                 // Pour la sélection dans le cache
-                if (Core_Loader::isCallable("Core_CacheBuffer")) {
+                if (Core_Loader::isCallable("Core_Cache")) {
                     Core_Cache::changeCurrentSection(Core_Cache::SECTION_TRANSLATE);
                 }
 
                 // Chargement du fichier de traduction
-                if (!Core_Loader::isCallable("Core_CacheBuffer") || !Core_Cache::cached($langCacheFileName) || (Core_Cache::cacheMTime($langCacheFileName) < filemtime($langOriginalPath))) {
+                if (!Core_Loader::isCallable("Core_Cache") || !Core_Cache::cached($langCacheFileName) || (Core_Cache::cacheMTime($langCacheFileName) < filemtime($langOriginalPath))) {
                     foreach ($this->cache as $key => $value) {
                         if (!empty($key) && !empty($value)) {
                             $content .= "define(\"" . $key . "\",\"" . self::entitiesTranslate($value) . "\");";
                         }
                     }
 
-                    if (Core_Loader::isCallable("Core_CacheBuffer")) {
+                    if (Core_Loader::isCallable("Core_Cache")) {
                         Core_Cache::writingCache($langCacheFileName, $content);
                     }
                 }
@@ -275,7 +275,7 @@ class Core_Translate {
                 $data = "";
 
                 // Données de traduction
-                if (Core_Loader::isCallable("Core_CacheBuffer") && Core_Cache::cached($langCacheFileName)) {
+                if (Core_Loader::isCallable("Core_Cache") && Core_Cache::cached($langCacheFileName)) {
                     // TODO REVOIR LE CHEMIN DYNAMIQUEMENT
                     $data = "require(TR_ENGINE_DIR . '/tmp/lang/" . $langCacheFileName . "');";
                 } else if (!empty($content)) {

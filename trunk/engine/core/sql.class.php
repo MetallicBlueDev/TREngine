@@ -30,6 +30,7 @@ class Core_Sql extends Base_Model {
      */
     protected function __construct() {
         parent::__construct();
+
         $baseClassName = "";
         $loaded = false;
         $databaseConfig = Core_Main::getInstance()->getConfigDatabase();

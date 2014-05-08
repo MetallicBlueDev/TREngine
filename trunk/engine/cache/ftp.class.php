@@ -83,7 +83,7 @@ class Cache_Ftp extends Cache_Model {
     private $passiveData = "";
 
     public function initializeCache(array &$ftp) {
-        $ftp = Core_Main::getInstance()->getConfigFtp();
+        $ftp = Core_Main::getInstance()->getConfigCache();
         parent::initializeCache($ftp);
 
         // Recherche de l'extension FTP

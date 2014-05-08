@@ -51,9 +51,9 @@ class Exec_FileBuilder {
         . "// -------------------------------------------------------------------------//\n"
         . "?>\n";
 
-        if (Core_Loader::isCallable("Core_CacheBuffer")) {
+        if (Core_Loader::isCallable("Core_Cache")) {
             Core_Cache::changeCurrentSection(Core_Cache::SECTION_CONFIGS);
-            Core_Cache::writingCache("configs.inc.php", $content, true);
+            Core_Cache::writingCache("config.inc.php", $content, true);
         }
     }
 
@@ -73,7 +73,7 @@ class Exec_FileBuilder {
             $port = 21;
 
         // Vérification du mode de ftp
-        if (Core_Loader::isCallable("Core_CacheBuffer")) {
+        if (Core_Loader::isCallable("Core_Cache")) {
             $mode = Core_Cache::getModeActived();
             $type = (isset($mode[$type])) ? $type : "";
         }
@@ -102,9 +102,9 @@ class Exec_FileBuilder {
         . "// -------------------------------------------------------------------------//\n"
         . "?>\n";
 
-        if (Core_Loader::isCallable("Core_CacheBuffer")) {
+        if (Core_Loader::isCallable("Core_Cache")) {
             Core_Cache::changeCurrentSection(Core_Cache::SECTION_CONFIGS);
-            Core_Cache::writingCache("ftp.inc.php", $content, true);
+            Core_Cache::writingCache("cache.inc.php", $content, true);
         }
     }
 
@@ -149,7 +149,7 @@ class Exec_FileBuilder {
         . "// -------------------------------------------------------------------------//\n"
         . "?>\n";
 
-        if (Core_Loader::isCallable("Core_CacheBuffer")) {
+        if (Core_Loader::isCallable("Core_Cache")) {
             Core_Cache::changeCurrentSection(Core_Cache::SECTION_CONFIGS);
             Core_Cache::writingCache("database.inc.php", $content, true);
         }

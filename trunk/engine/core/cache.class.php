@@ -4,7 +4,12 @@ if (!defined("TR_ENGINE_INDEX")) {
     Core_Secure::checkInstance();
 }
 
-class Core_Cache {
+/**
+ * Gestionnaire de fichier cache.
+ *
+ * @author Sébastien Villemain
+ */
+class Core_Cache extends Cache_Model {
 
     /**
      * Section de configuration.
@@ -98,6 +103,13 @@ class Core_Cache {
     const MODE_SFTP = "sftp";
 
     /**
+     * Gestionnnaire de cache.
+     *
+     * @var Core_Cache
+     */
+    private static $coreCache = null;
+
+    /**
      * Gestionnaire de fichier.
      *
      * @var Cache_Model
@@ -149,6 +161,62 @@ class Core_Cache {
      * @var array
      */
     private static $updateCache = array();
+
+    protected function __construct() {
+        parent::__construct();
+
+        $cacheClassName = "";
+        $loaded = false;
+        $cacheConfig = Core_Main::getInstance()->getConfigCache();
+
+        if (!empty($cacheConfig) && isset($cacheConfig['type'])) {
+            // Chargement des drivers pour la base
+            $cacheClassName = "Base_" . ucfirst($cacheConfig['type']);
+            $loaded = Core_Loader::classLoader($cacheClassName);
+        }
+
+        if (!$loaded) {
+            Core_Secure::getInstance()->throwException("sqlType", null, array(
+                $cacheConfig['type']));
+        }
+
+        if (!Core_Loader::isCallable($cacheClassName, "initializeBase")) {
+            Core_Secure::getInstance()->throwException("sqlCode", null, array(
+                $cacheClassName));
+        }
+
+        try {
+            $this->selectedBase = new $cacheClassName();
+            $this->selectedBase->initializeBase($cacheConfig);
+        } catch (Exception $ex) {
+            $this->selectedBase = null;
+            Core_Secure::getInstance()->throwException($ex->getMessage(), $ex);
+        }
+    }
+
+    public function initializeCache(array &$ftp) {
+        // NE RIEN FAIRE
+        unset($ftp);
+    }
+
+    /**
+     * Retourne l'instance du gestionnaire de cache.
+     *
+     * @return Core_Cache
+     */
+    public static function &getInstance() {
+        self::checkInstance();
+        return self::$coreCache;
+    }
+
+    /**
+     * Vérification de l'instance du gestionnaire de cache.
+     */
+    public static function checkInstance() {
+        if (self::$coreCache === null) {
+            self::$coreCache = new self();
+        }
+    }
 
     /**
      * Change le chemin de la section.

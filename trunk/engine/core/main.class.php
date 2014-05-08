@@ -114,12 +114,12 @@ class Core_Main {
     }
 
     /**
-     * Retourne la configuration ftp.
+     * Retourne la configuration du cache.
      *
      * @return array
      */
-    public function &getConfigFtp() {
-        return $this->getConfigValue("configs_ftp");
+    public function &getConfigCache() {
+        return $this->getConfigValue("configs_cache");
     }
 
     /**
@@ -540,9 +540,9 @@ class Core_Main {
      * Une étape avant le démarrage réel.
      */
     private function prepare() {
-        if (!$this->loadCacheBuffer()) {
-            Core_Secure::getInstance()->throwException("ftpPath", null, array(
-                Core_Loader::getAbsolutePath("configs_ftp")));
+        if (!$this->loadCache()) {
+            Core_Secure::getInstance()->throwException("cachePath", null, array(
+                Core_Loader::getAbsolutePath("configs_cache")));
         }
 
         if (!$this->loadSql()) {
@@ -562,27 +562,42 @@ class Core_Main {
         Core_Session::checkInstance();
     }
 
+//    private function loadCacheBuffer() {
+//        $canUse = Core_Loader::isCallable("Core_Cache");
+//
+//        if (!$canUse) {
+//            // Mode natif PHP actif
+//            Core_Cache::setModeActived(array(
+//                "php"));
+//
+//            // Chemin du fichier de configuration ftp
+//            if (Core_Loader::includeLoader("configs_cache")) {
+//                $mode = strtolower($this->getConfigValue("configs_cache", "type"));
+//
+//                if (!empty($mode)) {
+//                    Core_Cache::setModeActived(array(
+//                        $mode));
+//                }
+//
+//                $canUse = true;
+//            }
+//        }
+//        return $canUse;
+//    }
+
     /**
-     * Charge le gestionnaire de cache et les données FTP.
+     * Charge le gestionnaire de cache.
      *
      * @return boolean true chargé
      */
-    private function loadCacheBuffer() {
-        $canUse = Core_Loader::isCallable("Core_CacheBuffer");
+    private function loadCache() {
+        $canUse = Core_Loader::isCallable("Core_Cache");
 
         if (!$canUse) {
-            // Mode natif PHP actif
-            Core_Cache::setModeActived(array(
-                "php"));
-
-            // Chemin du fichier de configuration ftp
-            if (Core_Loader::includeLoader("configs_ftp")) {
-                $mode = strtolower($this->getConfigValue("configs_ftp", "type"));
-
-                if (!empty($mode)) {
-                    Core_Cache::setModeActived(array(
-                        $mode));
-                }
+            // Chemin vers le fichier de configuration du cache
+            if (Core_Loader::includeLoader("configs_cache")) {
+                // Démarrage de l'instance Core_Cache
+                Core_Cache::checkInstance();
 
                 $canUse = true;
             }

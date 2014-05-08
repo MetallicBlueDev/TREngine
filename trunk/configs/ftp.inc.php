@@ -2,21 +2,21 @@
 // -------------------------------------------------------------------------//
 // Informations sur le cache
 //
-// Adresse de l'hôte du FTP
+// Type de transaction à utiliser (php / ftp / sftp)
+$inc['type'] = "php";
+//
+// Adresse de l'hôte
 $inc['host'] = "127.0.0.1";
 //
 // Numéro de port d'écoute
 $inc['port'] = "21";
 //
-// Nom d'utilisateur du FTP
+// Nom d'utilisateur
 $inc['user'] = "root";
 //
-// Mot de passe de l'utilisateur du FTP
+// Mot de passe de l'utilisateur
 $inc['pass'] = "";
 //
-// Chemin racine du FTP
+// Chemin racine
 $inc['root'] = "";
-//
-// Type de transaction à utiliser (php / ftp / sftp)
-$inc['type'] = "";
 // -------------------------------------------------------------------------//

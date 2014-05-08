@@ -573,7 +573,7 @@ class Libs_Form {
         $rslt = "";
 
         if (!$this->cached) {
-            // Le nom de la "vars" est relatif a Core_CacheBuffer::getCache()
+            // Le nom de la "vars" est relatif a Core_Cache::getCache()
             $rslt = "$" . "vars[" . ($this->cacheVarsIndex - 1) . "]";
         }
         return $rslt;
