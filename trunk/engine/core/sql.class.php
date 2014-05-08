@@ -66,7 +66,7 @@ class Core_Sql extends Base_Model {
     }
 
     public function __destruct() {
-        parent::__destruct();
+        $this->selectedBase = null;
     }
 
     /**
