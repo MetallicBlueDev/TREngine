@@ -9,6 +9,6 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-class Libs_CacheSftp extends Libs_CacheModel {
+class Cache_Sftp extends Cache_Model {
     // TODO classe a coder...
 }

@@ -9,7 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-class Libs_CacheFile extends Libs_CacheModel {
+class Cache_File extends Cache_Model {
 
     public function canUse() {
         // Gestionnaire natif; toujours diponible

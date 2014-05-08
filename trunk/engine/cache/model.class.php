@@ -9,7 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-abstract class Libs_CacheModel {
+abstract class Cache_Model {
 
     /**
      * Droit d'écriture CHMOD.

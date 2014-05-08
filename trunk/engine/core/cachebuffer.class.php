@@ -100,9 +100,9 @@ class Core_CacheBuffer {
     /**
      * Gestionnaire de fichier.
      *
-     * @var Libs_CacheModel
+     * @var Cache_Model
      */
-    private static $libsCacheModel = null;
+    private static $selectedCache = null;
 
     /**
      * Chemin de la section actuelle.
@@ -522,28 +522,28 @@ class Core_CacheBuffer {
     /**
      * Démarre et retourne le protocole du cache
      *
-     * @return Libs_CacheModel
+     * @return Cache_Model
      */
     private static function &getExecProtocol() {
-        if (self::$libsCacheModel === null) {
+        if (self::$selectedCache === null) {
             if (self::$modeActived['ftp']) {
                 // Démarrage du gestionnaire FTP
-                self::$libsCacheModel = new Libs_CacheFtp();
+                self::$selectedCache = new Libs_CacheFtp();
             } else if (self::$modeActived['sftp']) {
                 // Démarrage du gestionnaire SFTP
-                self::$libsCacheModel = new Libs_CacheSftp();
+                self::$selectedCache = new Libs_CacheSftp();
             } else {
                 // Démarrage du gestionnaire de fichier
-                self::$libsCacheModel = new Libs_CacheFile();
+                self::$selectedCache = new Libs_CacheFile();
             }
 
             // Si il y a un souci, on démarre par défaut le gestionnaire de fichier
-            if (!self::$libsCacheModel->canUse()) {
+            if (!self::$selectedCache->canUse()) {
                 // Démarrage du gestionnaire de fichier
-                self::$libsCacheModel = new Libs_CacheFile();
+                self::$selectedCache = new Libs_CacheFile();
             }
         }
-        return self::$libsCacheModel;
+        return self::$selectedCache;
     }
 
     /**

@@ -10,7 +10,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-class Libs_CacheFtp extends Libs_CacheModel {
+class Cache_Ftp extends Cache_Model {
 
     /**
      * Utilisation du mode natif avec extension.
