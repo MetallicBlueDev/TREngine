@@ -33,14 +33,14 @@ class Base_Mysqli extends Base_Model {
     public function &dbSelect() {
         $rslt = false;
 
-        if ($this->connected()) {
+        if ($this->dbConnected()) {
             $rslt = $this->getMysqli()->select_db($this->getDatabaseName());
         }
         return $rslt;
     }
 
     public function dbDeconnect() {
-        if ($this->connected()) {
+        if ($this->dbConnected()) {
             $this->getMysqli()->close();
         }
 

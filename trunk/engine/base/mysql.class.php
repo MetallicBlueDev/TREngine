@@ -42,14 +42,14 @@ class Base_Mysql extends Base_Model {
     public function &dbSelect() {
         $rslt = false;
 
-        if ($this->connected()) {
+        if ($this->dbConnected()) {
             $rslt = mysql_select_db($this->getDatabaseName(), $this->connId);
         }
         return $rslt;
     }
 
     public function dbDeconnect() {
-        if ($this->connected()) {
+        if ($this->dbConnected()) {
             mysql_close($this->connId);
         }
 

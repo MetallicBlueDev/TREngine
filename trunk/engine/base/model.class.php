@@ -95,7 +95,7 @@ abstract class Base_Model {
                 // Connexion au serveur
                 $this->dbConnect();
 
-                if (!$this->connected()) {
+                if (!$this->dbConnected()) {
                     throw new Fail_Sql("sqlConnect");
                 }
 
@@ -130,6 +130,15 @@ abstract class Base_Model {
      */
     public function dbConnect() {
 
+    }
+
+    /**
+     * Retourne l'état de la connexion.
+     *
+     * @return boolean
+     */
+    public function dbConnected() {
+        return ($this->connId !== null) ? true : false;
     }
 
     /**
@@ -369,15 +378,6 @@ abstract class Base_Model {
      */
     public function &getSql() {
         return $this->sql;
-    }
-
-    /**
-     * Retourne l'état de la connexion.
-     *
-     * @return boolean
-     */
-    public function connected() {
-        return ($this->connId !== null) ? true : false;
     }
 
     /**

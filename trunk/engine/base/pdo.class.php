@@ -48,7 +48,7 @@ class Base_Pdo extends Base_Model {
     public function &dbSelect() {
         $rslt = false;
 
-        if ($this->connected()) {
+        if ($this->dbConnected()) {
             $rslt = ($this->getPdo()->exec("USE " . $this->getDatabaseName()) !== false);
         }
         return $rslt;
