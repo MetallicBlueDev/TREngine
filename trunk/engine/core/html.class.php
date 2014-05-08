@@ -227,14 +227,22 @@ class Core_Html {
         $title = "";
 
         if (Core_Loader::isCallable("Core_Main")) {
-            $title .= Core_Main::getInstance()->getDefaultSiteName() . " - ";
+            $coreMain = Core_Main::getInstance();
+            $title = $coreMain->getDefaultSiteName();
 
             if (empty($this->title)) {
-                $title .= Core_Main::getInstance()->getDefaultSiteSlogan();
+                // Titre automatique
+                $title .= " - " . $coreMain->getDefaultSiteSlogan();
+
+                if (Core_Loader::isCallable("Libs_Module")) {
+                    $title .= " / " . Libs_Module::getInstance()->getInfoModule()->getName();
+                }
             } else {
-                $title .= $this->title;
+                // Titre manuel
+                $title = $this->title . " - " . $title;
             }
         } else {
+            // Titre en mode dégradé
             $title .= Core_Request::getString("SERVER_NAME", "", "SERVER");
 
             if (!empty($this->title)) {
