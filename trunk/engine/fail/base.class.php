@@ -22,6 +22,11 @@ abstract class Fail_Base extends Exception {
      */
     const FROM_LOADER = 20;
 
+    /**
+     * Une erreur généré la couche du cache du moteur.
+     */
+    const FROM_CACHE = 30;
+
     public function __construct($message, $failSourceNumber = self::FROM_ENGINE) {
         parent::__construct($message, $failSourceNumber, null);
     }
