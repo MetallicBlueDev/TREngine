@@ -99,7 +99,7 @@ class Libs_Module {
      *
      * @return array => array("value" => valeur du module, "name" => nom du module).
      */
-    public static function &listModules() {
+    public static function &getModuleList() {
         $moduleList = array();
         $modules = Core_Cache::getInstance()->getFileNames("modules");
 
@@ -177,7 +177,7 @@ class Libs_Module {
                     Core_Cache::getInstance()->writingCache($moduleName . ".php", $content);
                 }
             } else {
-                $moduleData = Core_Cache::getCache($moduleName . ".php");
+                $moduleData = Core_Cache::getInstance()->getCache($moduleName . ".php");
             }
 
             // Injection des informations du module

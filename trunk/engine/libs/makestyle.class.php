@@ -170,7 +170,7 @@ class Libs_MakeStyle {
      *
      * @return array
      */
-    public static function &listTemplates() {
+    public static function &getTemplateList() {
         $templates = array();
 
         // Vérification du dossier template

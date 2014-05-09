@@ -103,7 +103,7 @@ class Libs_Menu {
      * Chargement du menu via le cache.
      */
     private function loadFromCache() {
-        $data = Core_Cache::getCache($this->identifier . ".php");
+        $data = Core_Cache::getInstance()->getCache($this->identifier . ".php");
         $this->items = unserialize(Exec_Entities::stripSlashes($data));
     }
 

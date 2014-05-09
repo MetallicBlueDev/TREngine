@@ -90,7 +90,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
         // Liste des langages disponibles
         $form->addSpace();
         $form->addSelectOpenTag("langue", ACCOUNT_PRIVATE_LANGUE);
-        $langues = Core_Translate::listLanguages();
+        $langues = Core_Translate::getLangList();
         $currentLanguage = Core_Translate::getInstance()->getCurrentLanguage();
         $form->addSelectItemTag($currentLanguage, "", true);
         foreach ($langues as $langue) {
@@ -103,7 +103,7 @@ class Module_Connect_Index extends Libs_ModuleModel {
         // Liste des templates disponibles
         if (Core_Loader::isCallable("Libs_MakeStyle")) {
             $form->addSelectOpenTag("template", ACCOUNT_PRIVATE_TEMPLATE);
-            $templates = Libs_MakeStyle::listTemplates();
+            $templates = Libs_MakeStyle::getTemplateList();
             $currentTemplate = Libs_MakeStyle::getCurrentTemplate();
             $form->addSelectItemTag($currentTemplate, "", true);
             foreach ($templates as $template) {

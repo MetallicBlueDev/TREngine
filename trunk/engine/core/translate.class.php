@@ -298,19 +298,8 @@ class Core_Translate {
      *
      * @return array
      */
-    public static function &listLanguages() {
-        $langues = array();
-
-        $files = Core_Cache::getInstance()->getFileNames("lang");
-
-        foreach ($files as $fileName) {
-            $pos = strpos($fileName, ".lang");
-
-            if ($pos !== false && $pos > 0) {
-                $langues[] = substr($fileName, 0, $pos);
-            }
-        }
-        return $langues;
+    public static function &getLangList() {
+        return Core_Cache::getInstance()->getClassNames("lang", ".lang");
     }
 
     /**
@@ -323,7 +312,7 @@ class Core_Translate {
 
         Core_Cache::getInstance(Core_Cache::SECTION_TRANSLATE);
 
-        $langues = self::listLanguages();
+        $langues = self::getLangList();
         foreach ($langues as $langue) {
             Core_Cache::getInstance()->removeCache($langCacheFileName . $langue . ".lang.php");
         }

@@ -73,7 +73,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
         $form->addSpace();
 
         $form->addSelectOpenTag("defaultLanguage", SETTING_GENERAL_DEFAULT_LANGUAGE);
-        $langues = Core_Translate::listLanguages();
+        $langues = Core_Translate::getLangList();
         $currentLanguage = $coreMain->getDefaultLanguage();
         $form->addSelectItemTag($currentLanguage, "", true);
         foreach ($langues as $langue) {
@@ -84,7 +84,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
         $form->addSelectCloseTag();
 
         $form->addSelectOpenTag("defaultTemplate", SETTING_GENERAL_DEFAULT_TEMPLATE);
-        $templates = Libs_MakeStyle::listTemplates();
+        $templates = Libs_MakeStyle::getTemplateList();
         $currentTemplate = $coreMain->getDefaultTemplate();
         $form->addSelectItemTag($currentTemplate, "", true);
         foreach ($templates as $template) {
@@ -95,7 +95,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
         $form->addSelectCloseTag();
 
         $form->addSelectOpenTag("defaultMod", SETTING_GENERAL_DEFAULT_MODULE);
-        $modules = Libs_Module::listModules();
+        $modules = Libs_Module::getModuleList();
         $currentModule = $coreMain->getDefaultMod();
         $currentModuleName = "";
         foreach ($modules as $module) {
@@ -178,7 +178,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
         // Langue par défaut
         $defaultLanguage = Core_Request::getString("defaultLanguage", "", "POST");
         if ($coreMain->getDefaultLanguage() != $defaultLanguage) {
-            $langues = Core_Translate::listLanguages();
+            $langues = Core_Translate::getLangList();
             if (!empty($defaultLanguage) && Exec_Utils::inArray($defaultLanguage, $langues)) {
                 $this->updateTable("defaultLanguage", $defaultLanguage);
                 $deleteCache = true;
@@ -189,7 +189,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
         // Template par défaut
         $defaultTemplate = Core_Request::getString("defaultTemplate", "", "POST");
         if ($coreMain->getDefaultTemplate() != $defaultTemplate) {
-            $templates = Libs_MakeStyle::listTemplates();
+            $templates = Libs_MakeStylegetTemplateListes();
             if (!empty($defaultTemplate) && Exec_Utils::inArray($defaultTemplate, $templates)) {
                 $this->updateTable("defaultTemplate", $defaultTemplate);
                 $deleteCache = true;
@@ -258,7 +258,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
 
         $form->addSelectOpenTag("ftpType", SETTING_SYSTEM_FTP_SETTING_TYPE);
 
-        $modeFtp = Core_Cache::getCacheTypes();
+        $modeFtp = Core_Cache::getInstance()->getCacheList();
         $currentMode = Core_Cache::getInstance()->getTransactionType();
         foreach ($modeFtp as $mode) {
             $actived = ($currentMode === $mode);
@@ -282,7 +282,7 @@ class Module_Management_Setting extends Libs_ModuleModel {
         $form->addInputPassword("dbPass", SETTING_SYSTEM_DATABASE_SETTING_PASSWORD);
 
         $form->addSelectOpenTag("dbType", SETTING_SYSTEM_DATABASE_SETTING_TYPE);
-        $bases = Core_Sql::listBases();
+        $bases = Core_Sql::getBaseList();
         foreach ($bases as $base) {
             if ($base == $coreSql->getTransactionType())
                 $form->addSelectItemTag($base, "", true);

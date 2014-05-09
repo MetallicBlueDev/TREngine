@@ -241,7 +241,7 @@ class Module_Management_Block extends Libs_ModuleModel {
                 $form->addHtmlInFieldset("ID : #" . $blockId);
                 $form->addInputText("blockTitle", BLOCK_TITLE, $block['title']);
 
-                $blockList = Libs_Block::listBlocks();
+                $blockList = Libs_Block::getBlockList();
                 $form->addSelectOpenTag("blockType", BLOCK_TYPE);
                 $form->addSelectItemTag($block['type'], "", true);
                 foreach ($blockList as $blockType) {

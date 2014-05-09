@@ -124,18 +124,18 @@ class Core_Cache extends Cache_Model {
     private $currentSection = self::SECTION_TMP;
 
     /**
-     * Réécriture du cache
+     * Réécriture du cache.
      *
      * @var array
      */
     private $writingCache = array();
 
     /**
-     * Ecriture du cache a la suite
+     * Ecriture du cache à la suite.
      *
      * @var array
      */
-    private $addCache = array();
+    private $writingNewCache = array();
 
     /**
      * Suppression du cache
@@ -149,7 +149,7 @@ class Core_Cache extends Cache_Model {
      *
      * @var array
      */
-    private $updateCache = array();
+    private $touchCache = array();
 
     protected function __construct() {
         parent::__construct();
@@ -332,7 +332,7 @@ class Core_Cache extends Cache_Model {
         if ($overWrite) {
             $this->writingCache[$key] = $content;
         } else {
-            $this->addCache[$key] = $content;
+            $this->writingNewCache[$key] = $content;
         }
     }
 
@@ -343,7 +343,7 @@ class Core_Cache extends Cache_Model {
      * @param int $updateTime
      */
     public function touchCache($path) {
-        $this->updateCache[$this->getCurrentSectionPath($path)] = time();
+        $this->touchCache[$this->getCurrentSectionPath($path)] = time();
     }
 
     /**
@@ -363,7 +363,7 @@ class Core_Cache extends Cache_Model {
      * @param string $dirPath
      * @return array
      */
-    public function &getFileNames($dirPath = "") {
+    public function &getFileNames($dirPath) {
         $dirList = array();
 
         $this->changeCurrentSection(self::SECTION_FILELISTER);
@@ -386,6 +386,36 @@ class Core_Cache extends Cache_Model {
      */
     public function &getCacheMTime($path) {
         return $this->selectedCache->getCacheMTime($path);
+    }
+
+    /**
+     * Retourne la liste des fichiers trouvés avec l'extension demandé.
+     *
+     * @param string $dirPath
+     * @param string $extension
+     * @return array
+     */
+    public function &getClassNames($dirPath, $extension = ".class") {
+        $names = array();
+        $files = $this->getFileNames($dirPath);
+
+        foreach ($files as $fileName) {
+            $pos = strpos($fileName, $extension);
+
+            if ($pos !== false && $pos > 0) {
+                $names[] = substr($fileName, 0, $pos);
+            }
+        }
+        return $names;
+    }
+
+    /**
+     * Retourne la liste des types de base supporté
+     *
+     * @return array
+     */
+    public function &getCacheList() {
+        return $this->getClassNames("engine/cache");
     }
 
     /**
@@ -444,15 +474,15 @@ class Core_Cache extends Cache_Model {
     }
 
     /**
-     * Capture le cache ciblé dans un tableau
+     * Capture le cache ciblé dans un tableau.
      *
      * @param $path Chemin du cache
      * @param $vars array tableau supplementaire contenant des variables pour résoudre les problèmes de visiblilité (par exemple)
      * @return string
      */
-    public static function &getCache($path, $vars = array()) {
+    public function &getCache($path, $vars = array()) {
         // Réglage avant capture
-        $variableName = self::$currentSection;
+        $variableName = $this->currentSection;
 
         // Rend la variable global a la fonction
         ${$variableName} = "";
@@ -627,45 +657,6 @@ class Core_Cache extends Cache_Model {
     }
 
     /**
-     * Retourne les modes d'écriture actif
-     *
-     * @return array sous la forme array('php' => true, 'ftp' => false)
-     */
-    public static function getModeActived() {
-        return self::$modeActived;
-    }
-
-    /**
-     * Retourne la liste des types de base supporté
-     *
-     * @return array
-     */
-    public static function &getCacheTypes() {
-        $baseList = array();
-        $files = Core_Cache::getInstance()->getFileNames("engine/cache");
-
-        foreach ($files as $fileName) {
-            // Nettoyage du nom de la page
-            $pos = strpos($fileName, ".class");
-
-            // Si c'est une page administrable
-            if ($pos !== false && $pos > 0) {
-                $baseList[] = substr($fileName, 0, $pos);
-            }
-        }
-        return $baseList;
-    }
-
-    /**
-     * Récupération des données du FTP
-     *
-     * @param array
-     */
-    public static function getFtp() {
-        return self::$ftp;
-    }
-
-    /**
      * Retourne le chemin de la section courante
      *
      * @param string $dir
@@ -673,39 +664,12 @@ class Core_Cache extends Cache_Model {
      * @return string
      */
     private function &getCurrentSectionPath($dir, $includeRoot = false) {
-        $dir = self::$currentSection . DIRECTORY_SEPARATOR . $dir;
+        $dir = $this->currentSection . DIRECTORY_SEPARATOR . $dir;
 
         if ($includeRoot) {
             $dir = TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dir;
         }
         return $dir;
-    }
-
-    /**
-     * Démarre et retourne le protocole du cache
-     *
-     * @return Cache_Model
-     */
-    private static function &getExecProtocol() {
-        if (self::$selectedCache === null) {
-            if (self::$modeActived['ftp']) {
-                // Démarrage du gestionnaire FTP
-                self::$selectedCache = new Cache_Ftp();
-            } else if (self::$modeActived['sftp']) {
-                // Démarrage du gestionnaire SFTP
-                self::$selectedCache = new Cache_Sftp();
-            } else {
-                // Démarrage du gestionnaire de fichier
-                self::$selectedCache = new Cache_Php();
-            }
-
-            // Si il y a un souci, on démarre par défaut le gestionnaire de fichier
-            if (!self::$selectedCache->canUse()) {
-                // Démarrage du gestionnaire de fichier
-                self::$selectedCache = new Cache_Php();
-            }
-        }
-        return self::$selectedCache;
     }
 
     /**

@@ -415,7 +415,7 @@ class Libs_Form {
         $content = "";
 
         if ($this->cached) { // Récupèration des données mise en cache
-            $content = Core_Cache::getCache($this->name . ".php", $this->cacheVars);
+            $content = Core_Cache::getInstance()->getCache($this->name . ".php", $this->cacheVars);
         } else { // Préparation puis mise en cache
             $data = "<form action=\"" . $url . "\" method=\"post\" id=\"form-" . $name . "\" name=\"" . $name . "\""
             . " class=\"" . $class . "\"><fieldset>" . $title . $description . $this->inputData
@@ -566,14 +566,14 @@ class Libs_Form {
     /**
      * Retourne la dernière variable de cache.
      *
-     * @see Core_Cache::getCache()
+     * @see Core_Cache::getInstance()->getCache()
      * @return string
      */
     private function &getLastCacheVar() {
         $rslt = "";
 
         if (!$this->cached) {
-            // Le nom de la "vars" est relatif a Core_Cache::getCache()
+            // Le nom de la "vars" est relatif a Core_Cache::getInstance()->getCache()
             $rslt = "$" . "vars[" . ($this->cacheVarsIndex - 1) . "]";
         }
         return $rslt;

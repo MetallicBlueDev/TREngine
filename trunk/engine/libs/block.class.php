@@ -122,21 +122,8 @@ class Libs_Block {
      *
      * @return array
      */
-    public static function &listBlocks() {
-        $blockList = array();
-
-        $files = Core_Cache::getInstance()->getFileNames("blocks");
-
-        foreach ($files as $fileName) {
-            // Nettoyage du nom de la page
-            $pos = strpos($fileName, ".block");
-
-            // Si c'est un block
-            if ($pos !== false && $pos > 0) {
-                $blockList[] = substr($fileName, 0, $pos);
-            }
-        }
-        return $blockList;
+    public static function &getBlockList() {
+        return Core_Cache::getInstance()->getClassNames("blocks", ".block");
     }
 
     /**

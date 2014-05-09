@@ -102,20 +102,8 @@ class Core_Sql extends Base_Model {
      *
      * @return array
      */
-    public static function &listBases() {
-        $baseList = array();
-        $files = Core_Cache::getInstance()->getFileNames("engine/base");
-
-        foreach ($files as $fileName) {
-            // Nettoyage du nom de la page
-            $pos = strpos($fileName, ".class");
-
-            // Si c'est une page administrable
-            if ($pos !== false && $pos > 0) {
-                $baseList[] = substr($fileName, 0, $pos);
-            }
-        }
-        return $baseList;
+    public static function &getBaseList() {
+        return Core_Cache::getInstance()->getClassNames("engine/base");
     }
 
     /**

@@ -120,7 +120,7 @@ class Exec_FileBuilder {
     public static function buildDatabaseFile($host, $user, $pass, $name, $type, $prefix) {
         // Vérification du type de base de données
         if (Core_Loader::isCallable("Core_Sql")) {
-            $bases = Core_Sql::listBases();
+            $bases = Core_Sql::getBaseList();
             $type = (isset($bases[$type])) ? $type : "mysql";
         }
 

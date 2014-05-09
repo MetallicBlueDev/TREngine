@@ -696,7 +696,7 @@ class Core_Main {
 
                 // Si le cache est disponible
                 if (Core_Cache::getInstance()->cached("configs.php")) {
-                    $newConfig = Core_Cache::getCache("configs.php");
+                    $newConfig = Core_Cache::getInstance()->getCache("configs.php");
                 } else {
                     $content = "";
                     $coreSql = Core_Sql::getInstance();

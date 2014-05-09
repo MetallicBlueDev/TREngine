@@ -26,7 +26,7 @@ class Module_Management_Systeminfo extends Libs_ModuleModel {
         $rack = new Libs_Rack($firstLine);
 
         $modeActivedContent = "";
-        $modeActived = Core_Cache::getCacheTypes();
+        $modeActived = Core_Cache::getInstance()->getCacheList();
         $currentMode = Core_Cache::getInstance()->getTransactionType();
         foreach ($modeActived as $mode) {
             $actived = ($currentMode === $mode);

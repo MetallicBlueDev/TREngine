@@ -26,8 +26,8 @@ class Module_Management_Index extends Libs_ModuleModel {
         // Nom de la page administable
         $managePage = Core_Request::getString("manage");
 
-        $pageList = self::listManagementPages(); // Liste de pages de configuration
-        $moduleList = Libs_Module::listModules(); // Liste des modules
+        $pageList = self::getManagementList(); // Liste de pages de configuration
+        $moduleList = Libs_Module::getModuleList(); // Liste des modules
         // Préparation de la mise en page
         $libsMakeStyle = new Libs_MakeStyle();
         $libsMakeStyle->assign("pageList", $pageList);
@@ -95,23 +95,17 @@ class Module_Management_Index extends Libs_ModuleModel {
      *
      * @return array => array("value" => valeur de la page, "name" => nom de la page).
      */
-    public static function &listManagementPages() {
-        $page = "";
+    public static function &getManagementList() {
         $pageList = array();
-        $files = Core_Cache::getInstance()->getFileNames("modules/management");
-        foreach ($files as $key => $fileName) {
-            // Nettoyage du nom de la page
-            $pos = strpos($fileName, ".setting.module");
-            // Si c'est une page administrable
-            if ($pos !== false && $pos > 0) {
-                $page = substr($fileName, 0, $pos);
-                // Vérification des droits de l'utilisateur
-                if (Core_Access::moderate("management/" . $page . ".setting")) {
-                    $name = self::getManagementPageName($page);
-                    $pageList[] = array(
-                        "value" => $page,
-                        "name" => $name);
-                }
+        $files = Core_Cache::getInstance()->getClassNames("modules/management", ".setting.module");
+
+        foreach ($files as $page) {
+            // Vérification des droits de l'utilisateur
+            if (Core_Access::moderate("management/" . $page . ".setting")) {
+                $name = self::getManagementPageName($page);
+                $pageList[] = array(
+                    "value" => $page,
+                    "name" => $name);
             }
         }
         return $pageList;
