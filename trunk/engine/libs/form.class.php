@@ -415,7 +415,7 @@ class Libs_Form {
         $content = "";
 
         if ($this->cached) { // Récupèration des données mise en cache
-            $content = Core_Cache::getInstance()->getCache($this->name . ".php", $this->cacheVars);
+            $content = Core_Cache::getInstance()->readCache($this->name . ".php", $this->cacheVars);
         } else { // Préparation puis mise en cache
             $data = "<form action=\"" . $url . "\" method=\"post\" id=\"form-" . $name . "\" name=\"" . $name . "\""
             . " class=\"" . $class . "\"><fieldset>" . $title . $description . $this->inputData

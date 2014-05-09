@@ -370,7 +370,7 @@ class Core_Cache extends Cache_Model {
         $fileName = str_replace(DIRECTORY_SEPARATOR, "_", $dirPath) . ".php";
 
         if ($this->cached($fileName)) {
-            $dirList = $this->getCache($fileName);
+            $dirList = $this->readCache($fileName);
         } else {
             $dirList = $this->selectedCache->getNameList($dirPath);
             $this->writeCache($fileName, $dirList);
@@ -410,7 +410,7 @@ class Core_Cache extends Cache_Model {
     }
 
     /**
-     * Retourne la liste des types de base supporté
+     * Retourne la liste des types de cache supporté.
      *
      * @return array
      */
@@ -474,13 +474,13 @@ class Core_Cache extends Cache_Model {
     }
 
     /**
-     * Capture le cache ciblé dans un tableau.
+     * Lecture du cache ciblé dans un tableau.
      *
      * @param $path Chemin du cache
      * @param $vars array tableau supplementaire contenant des variables pour résoudre les problèmes de visiblilité (par exemple)
      * @return string
      */
-    public function &getCache($path, $vars = array()) {
+    public function &readCache($path, $vars = array()) {
         // Réglage avant capture
         $variableName = $this->currentSection;
 

@@ -384,7 +384,7 @@ class Core_Session {
 
                 if (Core_Cache::getInstance()->cached($sessionId . ".php")) {
                     // Si fichier cache trouvé, on l'utilise
-                    $sessions = Core_Cache::getInstance()->getCache($sessionId . ".php");
+                    $sessions = Core_Cache::getInstance()->readCache($sessionId . ".php");
 
                     if ($sessions['userId'] === $userId && $sessions['sessionId'] === $sessionId) {
                         // Mise a jour du dernier accès toute les 5 min

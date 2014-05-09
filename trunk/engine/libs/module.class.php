@@ -177,7 +177,7 @@ class Libs_Module {
                     Core_Cache::getInstance()->writeCache($moduleName . ".php", $content);
                 }
             } else {
-                $moduleData = Core_Cache::getInstance()->getCache($moduleName . ".php");
+                $moduleData = Core_Cache::getInstance()->readCache($moduleName . ".php");
             }
 
             // Injection des informations du module
