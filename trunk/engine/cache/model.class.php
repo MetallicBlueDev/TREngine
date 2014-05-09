@@ -133,4 +133,67 @@ abstract class Cache_Model extends Core_Transaction {
         return $time;
     }
 
+    /**
+     * Détermine si le chemin est celui d'un dossier.
+     *
+     * @param $path
+     * @return boolean true c'est un dossier
+     */
+    protected static function &isDirectoryPath($path) {
+        $pathIsDir = false;
+
+        if (substr($path, -1) === DIRECTORY_SEPARATOR) {
+            $pathIsDir = true;
+        } else {
+            // Recherche du bout du path
+            $supposedFileName = "";
+            $pos = strrpos(DIRECTORY_SEPARATOR, $path);
+
+            if ($pos !== false) {
+                $supposedFileName = substr($path, $pos);
+            } else {
+                $supposedFileName = $path;
+            }
+
+            // Si ce n'est pas un fichier (avec ext.)
+            if (strpos($supposedFileName, ".") === false) {
+                $pathIsDir = true;
+            }
+        }
+        return $pathIsDir;
+    }
+
+    /**
+     * Ecriture de l'entête du fichier.
+     *
+     * @param $pathFile
+     * @param $content
+     * @return string $content
+     */
+    protected static function &getFileHeader($pathFile, $content) {
+        $ext = substr($pathFile, -3);
+
+        // Entête des fichier PHP
+        if ($ext === "php") {
+            // Recherche du dossier parent
+            $dirBase = "";
+            $nbDir = count(explode(DIRECTORY_SEPARATOR, $pathFile));
+
+            for ($i = 1; $i < $nbDir; $i++) {
+                $dirBase .= ".." . DIRECTORY_SEPARATOR;
+            }
+
+            // Ecriture de l'entête
+            $content = "<?php\n"
+            . "if (!defined(\"TR_ENGINE_INDEX\")){"
+            . "if(!class_exists(\"Core_Secure\")){"
+            . "include(\"" . $dirBase . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php\");"
+            . "}Core_Secure::checkInstance();}"
+            . "// Generated on " . date('Y-m-d H:i:s') . "\n"
+            . $content
+            . "\n?>";
+        }
+        return $content;
+    }
+
 }

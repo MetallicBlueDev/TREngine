@@ -416,8 +416,8 @@ class Core_Main {
                 Core_Html::getInstance()->selfJavascript();
             }
 
-            // Validation du cache / Routine du cache
-            Core_Cache::valideCacheBuffer();
+            // Validation et routine du cache
+            Core_Cache::getInstance()->workspaceCache();
 
             if (Core_Secure::debuggingMode()) {
                 // Assemble tous les messages d'erreurs dans un fichier log

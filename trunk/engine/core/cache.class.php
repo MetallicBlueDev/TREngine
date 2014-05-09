@@ -103,6 +103,11 @@ class Core_Cache extends Cache_Model {
     const MODE_SFTP = "sftp";
 
     /**
+     * @var string
+     */
+    const CHECKER_FILENAME = "checker.txt";
+
+    /**
      * Gestionnnaire de cache.
      *
      * @var Core_Cache
@@ -124,28 +129,28 @@ class Core_Cache extends Cache_Model {
     private $currentSection = self::SECTION_TMP;
 
     /**
-     * Réécriture du cache.
+     * Réécriture du complète du cache.
      *
      * @var array
      */
-    private $writingCache = array();
+    private $overwriteCache = array();
 
     /**
      * Ecriture du cache à la suite.
      *
      * @var array
      */
-    private $writingNewCache = array();
+    private $writeCache = array();
 
     /**
-     * Suppression du cache
+     * Suppression du cache.
      *
      * @var array
      */
     private $removeCache = array();
 
     /**
-     * Mise à jour de dernière modification du cache
+     * Mise à jour de dernière modification du cache.
      *
      * @var array
      */
@@ -330,9 +335,9 @@ class Core_Cache extends Cache_Model {
 
         // Ajout dans le cache
         if ($overwrite) {
-            $this->writingCache[$key] = $content;
+            $this->overwriteCache[$key] = $content;
         } else {
-            $this->writingNewCache[$key] = $content;
+            $this->writeCache[$key] = $content;
         }
     }
 
@@ -495,165 +500,71 @@ class Core_Cache extends Cache_Model {
     }
 
     /**
-     * Test si le chemin est celui d'un dossier
-     *
-     * @param $path
-     * @return boolean true c'est un dossier
-     */
-    public static function &isDir($path) {
-        $pathIsDir = false;
-
-        if (substr($path, -1) === DIRECTORY_SEPARATOR) {
-            // Nettoyage du path qui est enfaite un dir
-            $path = substr($path, 0, -1);
-            $pathIsDir = true;
-        } else {
-            // Recherche du bout du path
-            $last = "";
-            $pos = strrpos(DIRECTORY_SEPARATOR, $path);
-            if (!is_bool($pos)) {
-                $last = substr($path, $pos);
-            } else {
-                $last = $path;
-            }
-
-            // Si ce n'est pas un fichier (avec ext.)
-            if (strpos($last, ".") === false) {
-                $pathIsDir = true;
-            }
-        }
-        return $pathIsDir;
-    }
-
-    /**
-     * Ecriture des entêtes de fichier
-     *
-     * @param $pathFile
-     * @param $content
-     * @return string $content
-     */
-    public static function &getHeader($pathFile, $content) {
-        $ext = substr($pathFile, -3);
-        // Entête des fichier PHP
-        if ($ext === "php") {
-            // Recherche du dossier parent
-            $dirBase = "";
-            $nbDir = count(explode(DIRECTORY_SEPARATOR, $pathFile));
-            for ($i = 1; $i < $nbDir; $i++) {
-                $dirBase .= ".." . DIRECTORY_SEPARATOR;
-            }
-
-            // Ecriture de l'entête
-            $content = "<?php\n"
-            . "if (!defined(\"TR_ENGINE_INDEX\")){"
-            . "if(!class_exists(\"Core_Secure\")){"
-            . "include(\"" . $dirBase . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php\");"
-            . "}Core_Secure::checkInstance();}"
-            . "// Generated on " . date('Y-m-d H:i:s') . "\n"
-            . $content
-            . "\n?>";
-        }
-        return $content;
-    }
-
-    /**
-     * Parcours récursivement le dossier cache courant afin de supprimer les fichiers trop vieux.
-     * Nettoie le dossier courant du cache.
+     * Parcours récursivement le dossier du cache actuel afin de supprimer les fichiers trop vieux.
+     * (Nettoie le dossier courant du cache).
      *
      * @param $timeLimit la limite de temps
      */
     public function cleanCache($timeLimit) {
-        // Vérification de la validité du checker
-        if (!self::checked($timeLimit)) {
-            // Mise à jour ou creation du fichier checker
-            self::touchChecker();
-            // Suppression du cache périmé
-            self::removeCache("", $timeLimit);
-        }
-    }
+        $exist = $this->cached(self::CHECKER_FILENAME);
+        $valid = false;
 
-    /**
-     * Execute la routine du cache
-     */
-    public static function valideCacheBuffer() {
-        // Si le cache a besoin de générer une action
-        if (self::cacheRequired(self::$removeCache) || self::cacheRequired(self::$writingCache) || self::cacheRequired(self::$addCache) || self::cacheRequired(self::$updateCache)) {
-            // Protocole a utiliser
-            $protocol = self::getExecProtocol();
-
-            if ($protocol !== null) {
-                // Suppression de cache demandée
-                if (self::cacheRequired(self::$removeCache)) {
-                    foreach (self::$removeCache as $dir => $timeLimit) {
-                        $protocol->removeCache($dir, $timeLimit);
-                    }
-                }
-
-                // Ecriture de cache demandée
-                if (self::cacheRequired(self::$writingCache)) {
-                    foreach (self::$writingCache as $path => $content) {
-                        $protocol->writeCache($path, $content, true);
-                    }
-                }
-
-                // Ecriture à la suite de cache demandée
-                if (self::cacheRequired(self::$addCache)) {
-                    foreach (self::$addCache as $path => $content) {
-                        $protocol->writeCache($path, $content, false);
-                    }
-                }
-
-                // Mise à jour de cache demandée
-                if (self::cacheRequired(self::$updateCache)) {
-                    foreach (self::$updateCache as $path => $updateTime) {
-                        $protocol->touchCache($path, $updateTime);
-                    }
-                }
-            }
-            // Destruction du gestionnaire
-            unset($protocol);
-        }
-    }
-
-    /**
-     * Vérifie la présence du checker et sa validité
-     *
-     * @return boolean true le checker est valide
-     */
-    public static function checked($timeLimit = 0) {
-        $rslt = false;
-
-        if ($this->cached("checker.txt")) {
-            // Si on a demandé un comparaison de temps
+        if ($exist) {
+            // Vérification de la validité du checker
             if ($timeLimit > 0) {
-                if ($timeLimit < self::checkerMTime()) {
-                    $rslt = true;
+                if ($timeLimit < $this->getCacheMTime(self::CHECKER_FILENAME)) {
+                    $valid = true;
                 }
             } else {
-                $rslt = true;
+                $valid = true;
             }
         }
-        return $rslt;
-    }
 
-    /**
-     * Mise à jour du checker
-     */
-    public static function touchChecker() {
-        if (!$this->cached("checker.txt")) {
-            self::writingChecker();
-        } else {
-            self::touchCache("checker.txt");
+        if (!$valid) {
+            // Mise à jour ou creation du fichier checker
+            if (!$exist) {
+                $this->writeCache(self::CHECKER_FILENAME, "1");
+            } else {
+                $this->touchCache(self::CHECKER_FILENAME);
+            }
+
+            // Suppression du cache périmé
+            $this->removeCache("", $timeLimit);
         }
     }
 
     /**
-     * Date de dernière modification du checker
-     *
-     * @return int Unix timestamp ou false
+     * Exécute la routine du cache.
      */
-    public static function checkerMTime() {
-        return $this->getCacheMTime("checker.txt");
+    public function workspaceCache() {
+        // Si le cache a besoin de générer une action
+        if (!empty($this->removeCache)) {
+            // Suppression de cache demandée
+            foreach ($this->removeCache as $path => $timeLimit) {
+                $this->selectedCache->removeCache($path, $timeLimit);
+            }
+        }
+
+        if (!empty($this->writeCache)) {
+            // Ecriture de cache demandée
+            foreach ($this->writeCache as $path => $content) {
+                $this->selectedCache->writeCache($path, $content, true);
+            }
+        }
+
+        if (!empty($this->overwriteCache)) {
+            // Ecriture à la suite de cache demandée
+            foreach ($this->overwriteCache as $path => $content) {
+                $this->selectedCache->writeCache($path, $content, false);
+            }
+        }
+
+        if (!empty($this->touchCache)) {
+            // Mise à jour de cache demandée
+            foreach ($this->touchCache as $path => $updateTime) {
+                $this->selectedCache->touchCache($path, $updateTime);
+            }
+        }
     }
 
     /**
@@ -673,16 +584,6 @@ class Core_Cache extends Cache_Model {
     }
 
     /**
-     * Recherche si le cache a besoin de génére une action
-     *
-     * @param array $required
-     * @return boolean true action demandée
-     */
-    private static function cacheRequired(array $required) {
-        return !empty($required);
-    }
-
-    /**
      * Serialize la variable en chaine de caractères pour une mise en cache
      *
      * @param string $key
@@ -697,13 +598,6 @@ class Core_Cache extends Cache_Model {
         $prefix = str_replace(DIRECTORY_SEPARATOR, "_", $this->currentSection);
         $content .= "$" . $prefix . $key . " = \"" . Exec_Entities::addSlashes($value) . "\"; ";
         return $content;
-    }
-
-    /**
-     * Ecriture du checker
-     */
-    private static function writingChecker() {
-        self::writingCache("checker.txt", "1");
     }
 
 }
