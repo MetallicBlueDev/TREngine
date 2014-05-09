@@ -79,12 +79,12 @@ abstract class Cache_Model extends Core_Transaction {
      *
      * @param string $path chemin vers le fichier cache
      * @param string $content contenu du fichier cache
-     * @param boolean $overWrite écrasement du fichier
+     * @param boolean $overwrite écrasement du fichier
      */
-    public function writingCache($path, $content, $overWrite = true) {
+    public function writeCache($path, $content, $overwrite = true) {
         unset($path);
         unset($content);
-        unset($overWrite);
+        unset($overwrite);
     }
 
     /**
@@ -115,7 +115,7 @@ abstract class Cache_Model extends Core_Transaction {
      * @param string $dirPath
      * @return array
      */
-    public function &getFileNames($dirPath = "") {
+    public function &getNameList($dirPath = "") {
         unset($dirPath);
         $names = array();
         return $names;

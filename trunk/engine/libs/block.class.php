@@ -123,7 +123,7 @@ class Libs_Block {
      * @return array
      */
     public static function &getBlockList() {
-        return Core_Cache::getInstance()->getClassNames("blocks", ".block");
+        return Core_Cache::getInstance()->getFileList("blocks", ".block");
     }
 
     /**

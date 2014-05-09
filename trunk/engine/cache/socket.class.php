@@ -120,15 +120,15 @@ class Cache_Socket extends Cache_Model {
         return $rslt;
     }
 
-    public function writingCache($path, $content, $overWrite = true) {
+    public function writeCache($path, $content, $overwrite = true) {
         if (!is_file($this->getRootPath($path))) {
             // Soit le fichier n'exite pas, soit tout le dossier n'existe pas
             // On commence par vérifier et si besoin écrire le dossier
-            $this->writingDirectory($path);
+            $this->writeDirectory($path);
         }
 
         // Réécriture rapide sur un fichier
-        $this->writingFile($path, $content, $overWrite);
+        $this->writeFile($path, $content, $overwrite);
     }
 
     public function touchCache($path, $updateTime = 0) {
@@ -146,7 +146,7 @@ class Cache_Socket extends Cache_Model {
         }
     }
 
-    public function &getFileNames($path = "") {
+    public function &getNameList($path = "") {
         $dirList = array();
 
         if ($this->netConnected()) {
@@ -304,7 +304,7 @@ class Cache_Socket extends Cache_Model {
         if ($this->getServerRoot() === DIRECTORY_SEPARATOR) {
             // On commence la recherche
             $pathFound = "";
-            $listNames = $this->getFileNames();
+            $listNames = $this->getNameList();
 
             if (is_array($listNames)) {
                 // On décompose les dossiers
@@ -359,16 +359,16 @@ class Cache_Socket extends Cache_Model {
      *
      * @param string $path
      * @param string $content
-     * @param boolean $overWrite
+     * @param boolean $overwrite
      */
-    private function writingFile($path, $content, $overWrite = true) {
-        $content = ($overWrite) ? Core_Cache::getHeader($path, $content) : $content;
+    private function writeFile($path, $content, $overwrite = true) {
+        $content = ($overwrite) ? Core_Cache::getHeader($path, $content) : $content;
 //$path : local => chemin valide local jusqu'au fichier, remote => chemin valide FTP (avec le root donc) jusqu'au fichier
         if ($this->netConnected()) {
             // Demarrage du mode passif
             if ($this->setPassiveMode()) {
                 // Envoi de la commande
-                if ($overWrite) {
+                if ($overwrite) {
                     $this->sendCommandAndCheckResponse("STOR " . $this->getRootPath($path), array(
                         150,
                         125));
@@ -408,7 +408,7 @@ class Cache_Socket extends Cache_Model {
      *
      * @param string $path : chemin valide à créer
      */
-    private function writingDirectory($path) {
+    private function writeDirectory($path) {
         // Savoir si le path est un dossier ou un fichier
         $pathIsDir = Core_Cache::isDir($path);
 
@@ -444,9 +444,9 @@ class Cache_Socket extends Cache_Model {
 
                     // Des petites fichiers bonus...
                     if ($dir === "tmp") {
-                        $this->writingFile($currentPath . DIRECTORY_SEPARATOR . "index.php", "header(\"Location: .." . DIRECTORY_SEPARATOR . "index.php\");");
+                        $this->writeFile($currentPath . DIRECTORY_SEPARATOR . "index.php", "header(\"Location: .." . DIRECTORY_SEPARATOR . "index.php\");");
                     } else {
-                        $this->writingFile($currentPath . DIRECTORY_SEPARATOR . ".htaccess", "deny from all");
+                        $this->writeFile($currentPath . DIRECTORY_SEPARATOR . ".htaccess", "deny from all");
                     }
                 }
             }
@@ -492,7 +492,7 @@ class Cache_Socket extends Cache_Model {
      */
     private function removeDirectory($path, $timeLimit) {
         // Récuperation des éléments présents
-        $dirList = $this->getFileNames($path);
+        $dirList = $this->getNameList($path);
 
         if (empty($dirList)) {
             foreach ($dirList as $dirPath) {

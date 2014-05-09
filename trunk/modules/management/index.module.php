@@ -97,7 +97,7 @@ class Module_Management_Index extends Libs_ModuleModel {
      */
     public static function &getManagementList() {
         $pageList = array();
-        $files = Core_Cache::getInstance()->getClassNames("modules/management", ".setting.module");
+        $files = Core_Cache::getInstance()->getFileList("modules/management", ".setting.module");
 
         foreach ($files as $page) {
             // Vérification des droits de l'utilisateur

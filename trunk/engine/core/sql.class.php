@@ -103,7 +103,7 @@ class Core_Sql extends Base_Model {
      * @return array
      */
     public static function &getBaseList() {
-        return Core_Cache::getInstance()->getClassNames("engine/base");
+        return Core_Cache::getInstance()->getFileList("engine/base");
     }
 
     /**

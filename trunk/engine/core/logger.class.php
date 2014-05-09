@@ -174,7 +174,7 @@ class Core_Logger {
                 Core_Cache::getInstance(Core_Cache::SECTION_LOGGER);
 
                 // Ecriture à la suite du rapport
-                Core_Cache::getInstance()->writingCache("exception_" . date('Y-m-d') . ".log.php", $this->serializeData(self::$exceptions), false);
+                Core_Cache::getInstance()->writeCache("exception_" . date('Y-m-d') . ".log.php", $this->serializeData(self::$exceptions), false);
             }
         }
     }

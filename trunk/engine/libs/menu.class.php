@@ -148,7 +148,7 @@ class Libs_Menu {
                 }
             }
 
-            Core_Cache::getInstance()->writingCache(
+            Core_Cache::getInstance()->writeCache(
             $this->identifier . ".php", Core_Cache::getInstance()->serializeData(serialize($this->items))
             );
         }

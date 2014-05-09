@@ -423,7 +423,7 @@ class Libs_Form {
 
             // Enregistrement dans le cache
             $data = Core_Cache::getInstance()->serializeData($data);
-            Core_Cache::getInstance()->writingCache($this->name . ".php", $data);
+            Core_Cache::getInstance()->writeCache($this->name . ".php", $data);
 
             // Lecture pour l'affichage
             eval(" \$content = $data; "); // Ne pas ajouter de quote : les données sont déjà serialisées

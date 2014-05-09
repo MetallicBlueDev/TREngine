@@ -318,9 +318,9 @@ class Core_Cache extends Cache_Model {
      *
      * @param string $path chemin vers le fichier cache
      * @param string $content contenu du fichier cache
-     * @param boolean $overWrite écrasement du fichier
+     * @param boolean $overwrite écrasement du fichier
      */
-    public function writingCache($path, $content, $overWrite = true) {
+    public function writeCache($path, $content, $overwrite = true) {
         if (is_array($content)) {
             $content = $this->serializeData($content);
         }
@@ -329,7 +329,7 @@ class Core_Cache extends Cache_Model {
         $key = $this->getCurrentSectionPath($path);
 
         // Ajout dans le cache
-        if ($overWrite) {
+        if ($overwrite) {
             $this->writingCache[$key] = $content;
         } else {
             $this->writingNewCache[$key] = $content;
@@ -363,7 +363,7 @@ class Core_Cache extends Cache_Model {
      * @param string $dirPath
      * @return array
      */
-    public function &getFileNames($dirPath) {
+    public function &getNameList($dirPath) {
         $dirList = array();
 
         $this->changeCurrentSection(self::SECTION_FILELISTER);
@@ -372,8 +372,8 @@ class Core_Cache extends Cache_Model {
         if ($this->cached($fileName)) {
             $dirList = $this->getCache($fileName);
         } else {
-            $dirList = $this->selectedCache->getFileNames($dirPath);
-            $this->writingCache($fileName, $dirList);
+            $dirList = $this->selectedCache->getNameList($dirPath);
+            $this->writeCache($fileName, $dirList);
         }
         return $dirList;
     }
@@ -395,9 +395,9 @@ class Core_Cache extends Cache_Model {
      * @param string $extension
      * @return array
      */
-    public function &getClassNames($dirPath, $extension = ".class") {
+    public function &getFileList($dirPath, $extension = ".class") {
         $names = array();
-        $files = $this->getFileNames($dirPath);
+        $files = $this->getNameList($dirPath);
 
         foreach ($files as $fileName) {
             $pos = strpos($fileName, $extension);
@@ -415,7 +415,7 @@ class Core_Cache extends Cache_Model {
      * @return array
      */
     public function &getCacheList() {
-        return $this->getClassNames("engine/cache");
+        return $this->getFileList("engine/cache");
     }
 
     /**
@@ -592,14 +592,14 @@ class Core_Cache extends Cache_Model {
                 // Ecriture de cache demandée
                 if (self::cacheRequired(self::$writingCache)) {
                     foreach (self::$writingCache as $path => $content) {
-                        $protocol->writingCache($path, $content, true);
+                        $protocol->writeCache($path, $content, true);
                     }
                 }
 
                 // Ecriture à la suite de cache demandée
                 if (self::cacheRequired(self::$addCache)) {
                     foreach (self::$addCache as $path => $content) {
-                        $protocol->writingCache($path, $content, false);
+                        $protocol->writeCache($path, $content, false);
                     }
                 }
 

@@ -713,7 +713,7 @@ class Core_Main {
                     }
 
                     // Mise en cache
-                    Core_Cache::getInstance()->writingCache("configs.php", $content, true);
+                    Core_Cache::getInstance()->writeCache("configs.php", $content, true);
                 }
 
                 // Ajout a la configuration courante

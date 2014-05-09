@@ -347,7 +347,7 @@ class Core_Session {
             if (count($user) > 1) {
                 $this->setUser($user, true);
                 Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS);
-                Core_Cache::getInstance()->writingCache($this->sessionId . ".php", $this->getUserInfosSerialized(), true);
+                Core_Cache::getInstance()->writeCache($this->sessionId . ".php", $this->getUserInfosSerialized(), true);
             }
         }
     }
@@ -459,7 +459,7 @@ class Core_Session {
         if ($cookieUser && $cookieSession) {
             // Ecriture du cache
             Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS);
-            Core_Cache::getInstance()->writingCache($this->sessionId . ".php", $this->getUserInfosSerialized());
+            Core_Cache::getInstance()->writeCache($this->sessionId . ".php", $this->getUserInfosSerialized());
             $rslt = true;
         } else {
             Core_Logger::addWarningMessage(ERROR_SESSION_COOKIE);

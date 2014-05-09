@@ -60,7 +60,7 @@ class Core_BlackBan {
         // Vérification du fichier cache
         if (!Core_Cache::getInstance()->cached("deleteOldBlackBan.txt")) {
             $deleteOldBlackBan = true;
-            Core_Cache::getInstance()->writingCache("deleteOldBlackBan.txt", "1");
+            Core_Cache::getInstance()->writeCache("deleteOldBlackBan.txt", "1");
         } else if ((time() - 2 * 24 * 60 * 60) < Core_Cache::getInstance()->getCacheMTime("deleteOldBlackBan.txt")) {
             $deleteOldBlackBan = false;
             Core_Cache::getInstance()->touchCache("deleteOldBlackBan.txt");

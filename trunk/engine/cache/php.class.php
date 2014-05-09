@@ -26,15 +26,15 @@ class Cache_Php extends Cache_Model {
         return $rslt;
     }
 
-    public function writingCache($path, $content, $overWrite = true) {
+    public function writeCache($path, $content, $overwrite = true) {
         if (!is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path)) {
             // Soit le fichier n'exite pas soit tout le dossier n'existe pas
             // On commence par vérifier et si besoin écrire le dossier
-            $this->writingDirectory($path);
+            $this->writeDirectory($path);
         }
 
         // Réécriture rapide sur un fichier
-        $this->writingFile($path, $content, $overWrite);
+        $this->writeFile($path, $content, $overwrite);
     }
 
     public function touchCache($path, $updateTime = 0) {
@@ -61,7 +61,7 @@ class Cache_Php extends Cache_Model {
         return filemtime(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path);
     }
 
-    public function &getFileNames($dirPath = "") {
+    public function &getNameList($dirPath = "") {
         $dirList = array();
 
         // Si le dossier est vide, on prend le dossier par défaut
@@ -96,10 +96,10 @@ class Cache_Php extends Cache_Model {
      *
      * @param string $pathFile chemin vers le fichier cache
      * @param string $content contenu du fichier cache
-     * @param boolean $overWrite écrasement du fichier
+     * @param boolean $overwrite écrasement du fichier
      */
-    private function writingFile($pathFile, $content, $overWrite = true) {
-        $content = ($overWrite) ? Core_Cache::getHeader($pathFile, $content) : $content;
+    private function writeFile($pathFile, $content, $overwrite = true) {
+        $content = ($overwrite) ? Core_Cache::getHeader($pathFile, $content) : $content;
 
         // Tentative d'écriture du fichier
         // Des problèmes on été constaté avec l'utilisation du chemin absolu TR_ENGINE_DIR
@@ -109,7 +109,7 @@ class Cache_Php extends Cache_Model {
             // Verrouiller le fichier destination
             flock($fp, LOCK_EX);
 
-            if ($overWrite) {
+            if ($overwrite) {
                 // Tronque pour une réécriture complete
                 ftruncate($fp, 0);
             }
@@ -138,7 +138,7 @@ class Cache_Php extends Cache_Model {
             if ($isHtaccessFile) {
                 // On créée le même fichier en HTML
                 $htaccessPath = substr($pathFile, 0, $strlen - 9);
-                $this->writingFile($htaccessPath . "index.html", $content, $overWrite);
+                $this->writeFile($htaccessPath . "index.html", $content, $overwrite);
 
                 // Puis on renomme
                 rename($htaccessPath . "index.html", $htaccessPath . ".htaccess");
@@ -153,7 +153,7 @@ class Cache_Php extends Cache_Model {
      *
      * @param string $path chemin voulu
      */
-    private function writingDirectory($path) {
+    private function writeDirectory($path) {
         // Savoir si le path est un dossier ou un fichier
         $pathIsDir = Core_Cache::isDir($path);
 
@@ -188,9 +188,9 @@ class Cache_Php extends Cache_Model {
 
                     // Des petites fichiers bonus...
                     if ($dir === "tmp") {
-                        $this->writingFile($currentPath . DIRECTORY_SEPARATOR . "index.php", "header(\"Location: .." . DIRECTORY_SEPARATOR . "index.php\");");
+                        $this->writeFile($currentPath . DIRECTORY_SEPARATOR . "index.php", "header(\"Location: .." . DIRECTORY_SEPARATOR . "index.php\");");
                     } else {
-                        $this->writingFile($currentPath . DIRECTORY_SEPARATOR . ".htaccess", "deny from all");
+                        $this->writeFile($currentPath . DIRECTORY_SEPARATOR . ".htaccess", "deny from all");
                     }
                 }
             }

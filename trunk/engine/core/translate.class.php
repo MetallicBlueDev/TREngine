@@ -267,7 +267,7 @@ class Core_Translate {
                     }
 
                     if (Core_Loader::isCallable("Core_Cache")) {
-                        Core_Cache::getInstance()->writingCache($langCacheFileName, $content);
+                        Core_Cache::getInstance()->writeCache($langCacheFileName, $content);
                     }
                 }
 
@@ -299,7 +299,7 @@ class Core_Translate {
      * @return array
      */
     public static function &getLangList() {
-        return Core_Cache::getInstance()->getClassNames("lang", ".lang");
+        return Core_Cache::getInstance()->getFileList("lang", ".lang");
     }
 
     /**

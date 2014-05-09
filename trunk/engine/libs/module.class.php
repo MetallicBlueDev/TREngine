@@ -101,7 +101,7 @@ class Libs_Module {
      */
     public static function &getModuleList() {
         $moduleList = array();
-        $modules = Core_Cache::getInstance()->getFileNames("modules");
+        $modules = Core_Cache::getInstance()->getNameList("modules");
 
         foreach ($modules as $module) {
             $moduleList[] = array(
@@ -174,7 +174,7 @@ class Libs_Module {
 
                     // Mise en cache
                     $content = Core_Cache::getInstance()->serializeData($moduleData);
-                    Core_Cache::getInstance()->writingCache($moduleName . ".php", $content);
+                    Core_Cache::getInstance()->writeCache($moduleName . ".php", $content);
                 }
             } else {
                 $moduleData = Core_Cache::getInstance()->getCache($moduleName . ".php");
