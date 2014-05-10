@@ -254,20 +254,21 @@ class Core_Translate {
                 $content = "";
 
                 // Pour la sélection dans le cache
+                $coreCache = null;
                 if (Core_Loader::isCallable("Core_Cache")) {
-                    Core_Cache::getInstance(Core_Cache::SECTION_TRANSLATE);
+                    $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_TRANSLATE);
                 }
 
                 // Chargement du fichier de traduction
-                if (!Core_Loader::isCallable("Core_Cache") || !Core_Cache::getInstance()->cached($langCacheFileName) || (Core_Cache::getInstance()->getCacheMTime($langCacheFileName) < filemtime($langOriginalPath))) {
+                if ($coreCache === null || !$coreCache->cached($langCacheFileName) || ($coreCache->getCacheMTime($langCacheFileName) < filemtime($langOriginalPath))) {
                     foreach ($this->cache as $key => $value) {
                         if (!empty($key) && !empty($value)) {
                             $content .= "define(\"" . $key . "\",\"" . self::entitiesTranslate($value) . "\");";
                         }
                     }
 
-                    if (Core_Loader::isCallable("Core_Cache")) {
-                        Core_Cache::getInstance()->writeCache($langCacheFileName, $content);
+                    if ($coreCache !== null) {
+                        $coreCache->writeCache($langCacheFileName, $content);
                     }
                 }
 
@@ -275,7 +276,7 @@ class Core_Translate {
                 $data = "";
 
                 // Données de traduction
-                if (Core_Loader::isCallable("Core_Cache") && Core_Cache::getInstance()->cached($langCacheFileName)) {
+                if ($coreCache !== null && $coreCache->cached($langCacheFileName)) {
                     // TODO REVOIR LE CHEMIN DYNAMIQUEMENT
                     $data = "require(TR_ENGINE_DIR . '/tmp/lang/" . $langCacheFileName . "');";
                 } else if (!empty($content)) {
@@ -310,11 +311,11 @@ class Core_Translate {
     public static function removeCache($pathLang = "") {
         $langCacheFileName = self::getLangCacheFileName($pathLang);
 
-        Core_Cache::getInstance(Core_Cache::SECTION_TRANSLATE);
+        $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_TRANSLATE);
 
         $langues = self::getLangList();
         foreach ($langues as $langue) {
-            Core_Cache::getInstance()->removeCache($langCacheFileName . $langue . ".lang.php");
+            $coreCache->removeCache($langCacheFileName . $langue . ".lang.php");
         }
     }
 

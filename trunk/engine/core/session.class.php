@@ -346,8 +346,7 @@ class Core_Session {
 
             if (count($user) > 1) {
                 $this->setUser($user, true);
-                Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS);
-                Core_Cache::getInstance()->writeCache($this->sessionId . ".php", $this->getUserInfosSerialized(), true);
+                Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS)->writeCache($this->sessionId . ".php", $this->getUserInfosSerialized(), true);
             }
         }
     }
@@ -382,18 +381,20 @@ class Core_Session {
                 // Cookie de l'IP BAN voir Core_BlackBan
                 $this->userIpBan = self::getCookie($this->cookieName['BLACKBAN']);
 
-                if (Core_Cache::getInstance()->cached($sessionId . ".php")) {
+                $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS);
+
+                if ($coreCache->cached($sessionId . ".php")) {
                     // Si fichier cache trouvé, on l'utilise
-                    $sessions = Core_Cache::getInstance()->readCache($sessionId . ".php");
+                    $sessions = $coreCache->readCache($sessionId . ".php");
 
                     if ($sessions['userId'] === $userId && $sessions['sessionId'] === $sessionId) {
                         // Mise a jour du dernier accès toute les 5 min
-                        if ((Core_Cache::getInstance()->getCacheMTime($sessionId . ".php") + 5 * 60) < $this->timer) {
+                        if (($coreCache->getCacheMTime($sessionId . ".php") + 5 * 60) < $this->timer) {
                             // En base
                             $isValidSession = $this->updateLastConnect($userId);
 
                             // En cache
-                            Core_Cache::getInstance()->touchCache($sessionId . ".php");
+                            $coreCache->touchCache($sessionId . ".php");
                         } else {
                             $isValidSession = true;
                         }
@@ -414,10 +415,10 @@ class Core_Session {
      */
     private function closeSession() {
         // Destruction du fichier de session
-        Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS);
+        $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS);
 
-        if (Core_Cache::getInstance()->cached($this->sessionId . ".php")) {
-            Core_Cache::getInstance()->removeCache($this->sessionId . ".php");
+        if ($coreCache->cached($this->sessionId . ".php")) {
+            $coreCache->removeCache($this->sessionId . ".php");
         }
 
         // Destruction des éventuelles cookies
@@ -458,8 +459,7 @@ class Core_Session {
 
         if ($cookieUser && $cookieSession) {
             // Ecriture du cache
-            Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS);
-            Core_Cache::getInstance()->writeCache($this->sessionId . ".php", $this->getUserInfosSerialized());
+            Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS)->writeCache($this->sessionId . ".php", $this->getUserInfosSerialized());
             $rslt = true;
         } else {
             Core_Logger::addWarningMessage(ERROR_SESSION_COOKIE);
@@ -487,7 +487,7 @@ class Core_Session {
             "userIpBan" => $this->userIpBan,
             "sessionId" => $this->sessionId
         );
-        return Core_Cache::getInstance()->serializeData($data);
+        return Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS)->serializeData($data);
     }
 
     /**

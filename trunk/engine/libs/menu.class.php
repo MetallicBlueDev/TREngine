@@ -49,8 +49,6 @@ class Libs_Menu {
         $this->identifier = $identifier;
         $this->itemActive = Core_Request::getInteger("item", 0);
 
-        Core_Cache::getInstance(Core_Cache::SECTION_MENUS);
-
         if ($this->isCached()) {
             $this->loadFromCache();
         } else if (count($sql) >= 3) {
@@ -103,7 +101,7 @@ class Libs_Menu {
      * Chargement du menu via le cache.
      */
     private function loadFromCache() {
-        $data = Core_Cache::getInstance()->readCache($this->identifier . ".php");
+        $data = Core_Cache::getInstance(Core_Cache::SECTION_MENUS)->readCache($this->identifier . ".php");
         $this->items = unserialize(Exec_Entities::stripSlashes($data));
     }
 
@@ -113,7 +111,7 @@ class Libs_Menu {
      * @return boolean
      */
     private function isCached() {
-        return (Core_Cache::getInstance()->cached($this->identifier . ".php"));
+        return (Core_Cache::getInstance(Core_Cache::SECTION_MENUS)->cached($this->identifier . ".php"));
     }
 
     /**
@@ -148,8 +146,9 @@ class Libs_Menu {
                 }
             }
 
-            Core_Cache::getInstance()->writeCache(
-            $this->identifier . ".php", Core_Cache::getInstance()->serializeData(serialize($this->items))
+            $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_MENUS);
+            $coreCache->writeCache(
+            $this->identifier . ".php", $coreCache->serializeData(serialize($this->items))
             );
         }
     }

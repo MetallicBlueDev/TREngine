@@ -50,9 +50,7 @@ abstract class Libs_ModuleModel {
             "mod_id = '" . $this->getModuleData()->getId() . "'")
         );
 
-        Core_Cache::getInstance(Core_Cache::SECTION_MODULES);
-
-        Core_Cache::getInstance()->removeCache($this->getModuleData()->getName() . ".php");
+        Core_Cache::getInstance(Core_Cache::SECTION_MODULES)->removeCache($this->getModuleData()->getName() . ".php");
         Core_Translate::removeCache("modules" . DIRECTORY_SEPARATOR . $this->getModuleData()->getName());
     }
 

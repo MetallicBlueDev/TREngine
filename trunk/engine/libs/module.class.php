@@ -145,9 +145,9 @@ class Libs_Module {
             $moduleData = array();
 
             // Recherche dans le cache
-            Core_Cache::getInstance(Core_Cache::SECTION_MODULES);
+            $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_MODULES);
 
-            if (!Core_Cache::getInstance()->cached($moduleName . ".php")) {
+            if (!$coreCache->cached($moduleName . ".php")) {
                 $coreSql = Core_Sql::getInstance();
 
                 $coreSql->select(
@@ -173,11 +173,11 @@ class Libs_Module {
                     }
 
                     // Mise en cache
-                    $content = Core_Cache::getInstance()->serializeData($moduleData);
-                    Core_Cache::getInstance()->writeCache($moduleName . ".php", $content);
+                    $content = $coreCache->serializeData($moduleData);
+                    $coreCache->writeCache($moduleName . ".php", $content);
                 }
             } else {
-                $moduleData = Core_Cache::getInstance()->readCache($moduleName . ".php");
+                $moduleData = $coreCache->readCache($moduleName . ".php");
             }
 
             // Injection des informations du module

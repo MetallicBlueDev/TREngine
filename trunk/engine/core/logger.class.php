@@ -170,11 +170,8 @@ class Core_Logger {
     public static function logException() {
         if (Core_Loader::isCallable("Core_Cache")) {
             if (self::hasExceptions()) {
-                // Positionne dans le cache
-                Core_Cache::getInstance(Core_Cache::SECTION_LOGGER);
-
                 // Ecriture à la suite du rapport
-                Core_Cache::getInstance()->writeCache("exception_" . date('Y-m-d') . ".log.php", $this->serializeData(self::$exceptions), false);
+                Core_Cache::getInstance(Core_Cache::SECTION_LOGGER)->writeCache("exception_" . date('Y-m-d') . ".log.php", $this->serializeData(self::$exceptions), false);
             }
         }
     }

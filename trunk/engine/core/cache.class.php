@@ -486,8 +486,7 @@ class Core_Cache extends Cache_Model {
      * @return string
      */
     public function &readCache($path, $vars = array()) {
-        // Réglage avant capture
-        $variableName = $this->currentSection;
+        $variableName = $this->getVariableName();
 
         // Rend la variable global a la fonction
         ${$variableName} = "";
@@ -590,14 +589,24 @@ class Core_Cache extends Cache_Model {
      * @param string $value
      * @return string
      */
-    private static function &serializeVariable($key, $value) {
+    private function &serializeVariable($key, $value) {
+        $content .= "$" . $this->getVariableName($key) . " = \"" . Exec_Entities::addSlashes($value) . "\"; ";
+        return $content;
+    }
+
+    /**
+     * Retourne le nom de la variable de cache.
+     *
+     * @param string $key
+     * @return string
+     */
+    private function &getVariableName($key = "") {
         if (empty($this->currentSection)) {
             $this->changeCurrentSection();
         }
 
-        $prefix = str_replace(DIRECTORY_SEPARATOR, "_", $this->currentSection);
-        $content .= "$" . $prefix . $key . " = \"" . Exec_Entities::addSlashes($value) . "\"; ";
-        return $content;
+        $variableName = str_replace(DIRECTORY_SEPARATOR, "_", $this->currentSection) . $key;
+        return $variableName;
     }
 
 }
