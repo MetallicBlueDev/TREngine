@@ -47,7 +47,7 @@ class Cache_Php extends Cache_Model {
         }
     }
 
-    public function removeCache($dir = "", $timeLimit = 0) {
+    public function removeCache($dir, $timeLimit = 0) {
         if (!empty($dir) && is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dir)) {
             // C'est un fichier a supprimer
             $this->removeFile($dir, $timeLimit);
@@ -61,14 +61,14 @@ class Cache_Php extends Cache_Model {
         return filemtime(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path);
     }
 
-    public function &getNameList($dirPath = "") {
+    public function &getNameList($path) {
         $dirList = array();
 
         // Si le dossier est vide, on prend le dossier par défaut
-        $dirPath = !empty($dirPath) ? TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath : TR_ENGINE_DIR;
+        $path = !empty($path) ? TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path : TR_ENGINE_DIR;
 
         // Ouverture du dossier
-        $handle = opendir($dirPath);
+        $handle = opendir($path);
 
         // Boucle sur les fichiers
         do {

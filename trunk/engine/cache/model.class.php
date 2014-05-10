@@ -104,7 +104,7 @@ abstract class Cache_Model extends Core_Transaction {
      * @param string $dir chemin vers le fichier ou le dossier
      * @param string $timeLimit limite de temps
      */
-    public function removeCache($dir = "", $timeLimit = 0) {
+    public function removeCache($dir, $timeLimit = 0) {
         unset($dir);
         unset($timeLimit);
     }
@@ -112,11 +112,11 @@ abstract class Cache_Model extends Core_Transaction {
     /**
      * Retourne la liste des fichiers et dossiers présents.
      *
-     * @param string $dirPath
+     * @param string $path
      * @return array
      */
-    public function &getNameList($dirPath = "") {
-        unset($dirPath);
+    public function &getNameList($path) {
+        unset($path);
         $names = array();
         return $names;
     }

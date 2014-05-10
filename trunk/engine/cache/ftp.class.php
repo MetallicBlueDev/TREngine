@@ -82,7 +82,7 @@ class Cache_Ftp extends Cache_Model {
         parent::touchCache($path, $updateTime);
     }
 
-    public function removeCache($dir = "", $timeLimit = 0) {
+    public function removeCache($dir, $timeLimit = 0) {
         if (!empty($dir) && is_file($this->getRootPath($dir))) {
             // C'est un fichier a supprimer
             $this->removeFile($dir, $timeLimit);
@@ -92,7 +92,7 @@ class Cache_Ftp extends Cache_Model {
         }
     }
 
-    public function &getNameList($path = "") {
+    public function &getNameList($path) {
         $dirList = array();
 
         if ($this->netConnected()) {

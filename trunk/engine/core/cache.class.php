@@ -347,8 +347,12 @@ class Core_Cache extends Cache_Model {
      * @param string $path chemin vers le fichier cache
      * @param int $updateTime
      */
-    public function touchCache($path) {
-        $this->touchCache[$this->getCurrentSectionPath($path)] = time();
+    public function touchCache($path, $updateTime = 0) {
+        if ($updateTime <= 0) {
+            $updateTime = time();
+        }
+
+        $this->touchCache[$this->getCurrentSectionPath($path)] = $updateTime;
     }
 
     /**
@@ -365,19 +369,19 @@ class Core_Cache extends Cache_Model {
      * Retourne la liste des fichiers et dossiers présents.
      * Un filtre automatique est appliqué sur les éléments tel que "..", "." ou encore "index.html"...
      *
-     * @param string $dirPath
+     * @param string $path
      * @return array
      */
-    public function &getNameList($dirPath) {
+    public function &getNameList($path) {
         $dirList = array();
 
         $this->changeCurrentSection(self::SECTION_FILELISTER);
-        $fileName = str_replace(DIRECTORY_SEPARATOR, "_", $dirPath) . ".php";
+        $fileName = str_replace(DIRECTORY_SEPARATOR, "_", $path) . ".php";
 
         if ($this->cached($fileName)) {
             $dirList = $this->readCache($fileName);
         } else {
-            $dirList = $this->selectedCache->getNameList($dirPath);
+            $dirList = $this->selectedCache->getNameList($path);
             $this->writeCache($fileName, $dirList);
         }
         return $dirList;
@@ -590,7 +594,7 @@ class Core_Cache extends Cache_Model {
      * @return string
      */
     private function &serializeVariable($key, $value) {
-        $content .= "$" . $this->getVariableName($key) . " = \"" . Exec_Entities::addSlashes($value) . "\"; ";
+        $content = "$" . $this->getVariableName($key) . " = \"" . Exec_Entities::addSlashes($value) . "\"; ";
         return $content;
     }
 
