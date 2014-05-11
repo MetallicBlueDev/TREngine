@@ -177,7 +177,7 @@ abstract class Cache_Model extends Core_Transaction {
         if ($ext === "php") {
             // Recherche du dossier parent
             $dirBase = "";
-            $nbDir = count(explode(DIRECTORY_SEPARATOR, $pathFile));
+            $nbDir = count(explode(DIRECTORY_SEPARATOR, str_replace(TR_ENGINE_DIR, "", $pathFile)));
 
             for ($i = 1; $i < $nbDir; $i++) {
                 $dirBase .= ".." . DIRECTORY_SEPARATOR;

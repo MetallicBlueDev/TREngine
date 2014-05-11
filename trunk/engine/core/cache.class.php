@@ -553,14 +553,14 @@ class Core_Cache extends Cache_Model {
         if (!empty($this->writeCache)) {
             // Ecriture de cache demandée
             foreach ($this->writeCache as $path => $content) {
-                $this->selectedCache->writeCache($path, $content, true);
+                $this->selectedCache->writeCache($path, $content, false);
             }
         }
 
         if (!empty($this->overwriteCache)) {
             // Ecriture à la suite de cache demandée
             foreach ($this->overwriteCache as $path => $content) {
-                $this->selectedCache->writeCache($path, $content, false);
+                $this->selectedCache->writeCache($path, $content, true);
             }
         }
 
