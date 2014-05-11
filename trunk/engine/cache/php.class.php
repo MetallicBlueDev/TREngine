@@ -38,10 +38,6 @@ class Cache_Php extends Cache_Model {
     }
 
     public function touchCache($path, $updateTime = 0) {
-        if ($updateTime < 1) {
-            $updateTime = time();
-        }
-
         if (!touch(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path, $updateTime)) {
             Core_Logger::addException("Touch error on " . $path);
         }
