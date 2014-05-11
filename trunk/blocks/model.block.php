@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Block de base, hérité par tous les autres blocks.
  * Modèle pour le contenu d'un block.
- * 
+ *
  * @author Sébastien Villemain
  */
 abstract class Block_Model {
@@ -63,7 +63,7 @@ abstract class Block_Model {
      */
     public function &getBlockData() {
         if ($this->data === null) {
-            $this->data = new Libs_BlockData();
+            $this->data = new Libs_BlockData(array());
         }
         return $this->data;
     }

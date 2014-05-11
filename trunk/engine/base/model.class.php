@@ -307,7 +307,8 @@ abstract class Base_Model extends Core_Transaction {
      * @return array or object
      */
     public function &fetchBuffer($name) {
-        $buffer = current($this->buffer[$name]);
+        $buffer = array(
+            current($this->buffer[$name]));
         next($this->buffer[$name]);
         return $buffer;
     }
