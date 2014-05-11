@@ -348,6 +348,8 @@ class Core_Main {
             Exec_Marker::startTimer("launcher");
         }
 
+        Core_Translate::checkInstance();
+
         // Vérification des bannissements
         Core_BlackBan::checkBlackBan();
 
@@ -561,29 +563,6 @@ class Core_Main {
         // Chargement de la session
         Core_Session::checkInstance();
     }
-
-//    private function loadCacheBuffer() {
-//        $canUse = Core_Loader::isCallable("Core_Cache");
-//
-//        if (!$canUse) {
-//            // Mode natif PHP actif
-//            Core_Cache::setModeActived(array(
-//                "php"));
-//
-//            // Chemin du fichier de configuration ftp
-//            if (Core_Loader::includeLoader("configs_cache")) {
-//                $mode = strtolower($this->getConfigValue("configs_cache", "type"));
-//
-//                if (!empty($mode)) {
-//                    Core_Cache::setModeActived(array(
-//                        $mode));
-//                }
-//
-//                $canUse = true;
-//            }
-//        }
-//        return $canUse;
-//    }
 
     /**
      * Charge le gestionnaire de cache.
