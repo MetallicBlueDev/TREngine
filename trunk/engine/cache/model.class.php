@@ -101,11 +101,11 @@ abstract class Cache_Model extends Core_Transaction {
     /**
      * Supprime tous fichiers trop vieux.
      *
-     * @param string $dir chemin vers le fichier ou le dossier
+     * @param string $path chemin vers le fichier ou le dossier
      * @param string $timeLimit limite de temps
      */
-    public function removeCache($dir, $timeLimit = 0) {
-        unset($dir);
+    public function removeCache($path, $timeLimit = 0) {
+        unset($path);
         unset($timeLimit);
     }
 

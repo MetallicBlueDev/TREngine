@@ -82,13 +82,13 @@ class Cache_Ftp extends Cache_Model {
         parent::touchCache($path, $updateTime);
     }
 
-    public function removeCache($dir, $timeLimit = 0) {
-        if (!empty($dir) && is_file($this->getRootPath($dir))) {
+    public function removeCache($path, $timeLimit = 0) {
+        if (!empty($path) && is_file($this->getRootPath($path))) {
             // C'est un fichier a supprimer
-            $this->removeFile($dir, $timeLimit);
-        } else if (is_dir($this->getRootPath($dir))) {
+            $this->removeFile($path, $timeLimit);
+        } else if (is_dir($this->getRootPath($path))) {
             // C'est un dossier a nettoyer
-            $this->removeDirectory($dir, $timeLimit);
+            $this->removeDirectory($path, $timeLimit);
         }
     }
 

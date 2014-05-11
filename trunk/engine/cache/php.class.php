@@ -47,13 +47,13 @@ class Cache_Php extends Cache_Model {
         }
     }
 
-    public function removeCache($dir, $timeLimit = 0) {
-        if (!empty($dir) && is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dir)) {
+    public function removeCache($path, $timeLimit = 0) {
+        if (!empty($path) && is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path)) {
             // C'est un fichier a supprimer
-            $this->removeFile($dir, $timeLimit);
-        } else if (is_dir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dir)) {
+            $this->removeFile($path, $timeLimit);
+        } else if (is_dir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path)) {
             // C'est un dossier a nettoyer
-            $this->removeDirectory($dir, $timeLimit);
+            $this->removeDirectory($path, $timeLimit);
         }
     }
 
