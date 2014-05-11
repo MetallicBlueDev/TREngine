@@ -29,7 +29,7 @@ class Core_UrlRewriting {
      * Nouveau gestionnaire.
      */
     private function __construct() {
-        if (Core_Main::doUrlRewriting()) {
+        if (Core_Main::getInstance()->doUrlRewriting()) {
             $this->canUse = $this->testPassed();
         }
     }
