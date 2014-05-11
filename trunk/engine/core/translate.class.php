@@ -285,7 +285,7 @@ class Core_Translate {
                 // Données de traduction
                 if ($coreCache !== null && $coreCache->cached($langCacheFileName)) {
                     // TODO REVOIR LE CHEMIN DYNAMIQUEMENT
-                    $data = "require(TR_ENGINE_DIR . '/tmp/lang/" . $langCacheFileName . "');";
+                    $data = "require(TR_ENGINE_DIR . '/tmp/translate/" . $langCacheFileName . "');";
                 } else if (!empty($content)) {
                     $data = $content;
                 }
