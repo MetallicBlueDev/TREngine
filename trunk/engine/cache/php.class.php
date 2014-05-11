@@ -54,7 +54,8 @@ class Cache_Php extends Cache_Model {
     }
 
     public function &getCacheMTime($path) {
-        return filemtime(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path);
+        $mTime = filemtime(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path);
+        return $mTime;
     }
 
     public function &getNameList($path) {
