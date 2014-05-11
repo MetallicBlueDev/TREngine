@@ -9,7 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-class Block_Menu extends Libs_BlockModel {
+class Block_Menu extends Block_Model {
 
     /**
      * TAG pour les options

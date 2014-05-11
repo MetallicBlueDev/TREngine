@@ -9,7 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-class Block_Login extends Libs_BlockModel {
+class Block_Login extends Block_Model {
 
     /**
      * Affiche le texte de bienvenue.

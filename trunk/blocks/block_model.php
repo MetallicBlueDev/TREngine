@@ -1,12 +1,16 @@
 <?php
+if (!defined("TR_ENGINE_INDEX")) {
+    require(".." . DIRECTORY_SEPARATOR . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php");
+    Core_Secure::checkInstance();
+}
 
 /**
  * Block de base, hérité par tous les autres blocks.
  * Modèle pour le contenu d'un block.
- *
+ * 
  * @author Sébastien Villemain
  */
-abstract class Libs_BlockModel {
+abstract class Block_Model {
 
     /**
      * Informations sur le block.

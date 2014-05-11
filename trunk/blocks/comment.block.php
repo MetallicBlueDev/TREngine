@@ -9,7 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-class Block_Comment extends Libs_BlockModel {
+class Block_Comment extends Block_Model {
 
     private $displayOnModule = array();
 
