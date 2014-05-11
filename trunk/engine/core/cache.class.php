@@ -440,7 +440,9 @@ class Core_Cache extends Cache_Model {
             $newSectionPath = substr($newSectionPath, 0, -1);
         }
 
-        $this->currentSection = $newSectionPath;
+        if ($this->currentSection !== $newSectionPath) {
+            $this->currentSection = $newSectionPath;
+        }
     }
 
     /**
