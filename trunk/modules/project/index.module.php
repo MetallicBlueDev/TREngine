@@ -4,7 +4,7 @@ if (!defined("TR_ENGINE_INDEX")) {
     Core_Secure::checkInstance();
 }
 
-class Module_Project_Index extends Libs_ModuleModel {
+class Module_Project_Index extends Module_Model {
 
     const PROJECT_TABLE = "project";
 

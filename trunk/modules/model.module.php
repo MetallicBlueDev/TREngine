@@ -10,7 +10,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-abstract class Libs_ModuleModel {
+abstract class Module_Model {
 
     /**
      * Informations sur le module.

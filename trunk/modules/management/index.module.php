@@ -9,7 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-class Module_Management_Index extends Libs_ModuleModel {
+class Module_Management_Index extends Module_Model {
 
     /**
      * Tableau contenant les boutons de la barre d'outil.

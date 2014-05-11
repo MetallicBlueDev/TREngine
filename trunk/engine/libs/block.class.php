@@ -230,6 +230,9 @@ class Libs_Block {
             if (Core_Loader::isCallable($blockClassName, "display")) {
                 Core_Translate::getInstance()->translate("blocks/" . $blockInfo->getType());
 
+                /**
+                 * @var Block_Model
+                 */
                 $blockClass = new $blockClassName();
                 $blockClass->setBlockData($blockInfo);
 

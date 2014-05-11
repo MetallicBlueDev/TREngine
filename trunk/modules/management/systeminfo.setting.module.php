@@ -4,7 +4,7 @@ if (!defined("TR_ENGINE_INDEX")) {
     Core_Secure::checkInstance();
 }
 
-class Module_Management_Systeminfo extends Libs_ModuleModel {
+class Module_Management_Systeminfo extends Module_Model {
 
     public function setting() {
         $accountTabs = new Libs_Tabs("systeminfotab");

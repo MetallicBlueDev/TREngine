@@ -9,7 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-class Module_Connect_Index extends Libs_ModuleModel {
+class Module_Connect_Index extends Module_Model {
 
     public function display() {
         if (Core_Session::hasConnection()) {
