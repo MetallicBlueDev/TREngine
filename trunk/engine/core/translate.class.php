@@ -200,19 +200,26 @@ class Core_Translate {
         $this->languageUsed = self::getLanguage($extension);
 
         $this->configureLocale($extension);
-        $this->translate();
     }
 
     /**
-     * Instance du gestionnaire de traduction.
+     * Retourne le gestionnaire de traduction.
      *
      * @return Core_Translate
      */
     public static function &getInstance() {
+        self::checkInstance();
+        return self::$coreTranslate;
+    }
+
+    /**
+     * Vérification de l'instance du gestionnaire de traduction.
+     */
+    public static function checkInstance() {
         if (self::$coreTranslate === null) {
             self::$coreTranslate = new self();
+            self::$coreTranslate->translate(DIRECTORY_SEPARATOR);
         }
-        return self::$coreTranslate;
     }
 
     /**
@@ -238,9 +245,9 @@ class Core_Translate {
     /**
      * Traduction de la page via le fichier.
      *
-     * @param string $pathLang : chemin du fichier de traduction.
+     * @param string $pathLang chemin du fichier de traduction.
      */
-    public function translate($pathLang = "") {
+    public function translate($pathLang) {
         $loaded = Core_Loader::isLoaded($pathLang);
 
         // Traduction uniquement si besoin
@@ -249,7 +256,7 @@ class Core_Translate {
             $loaded = Core_Loader::langLoader($pathLang);
 
             if ($loaded && !empty($this->cache)) {
-                $langCacheFileName = self::getLangCacheFileName($pathLang) . $this->currentLanguage;
+                $langCacheFileName = self::getLangCacheFileName($pathLang) . $this->languageUsed . ".php";
                 $langOriginalPath = Core_Loader::getAbsolutePath($pathLang);
                 $content = "";
 
@@ -341,7 +348,7 @@ class Core_Translate {
         $validExtension = "";
 
         // Recherche de la langue du client
-        $languageClient = explode(',', Core_Request:: getString("HTTP_ACCEPT_LANGUAGE", "", "SERVER"));
+        $languageClient = explode(',', Core_Request::getString("HTTP_ACCEPT_LANGUAGE", "", "SERVER"));
         $extension = strtolower(substr(trim($languageClient[0]), 0, 2));
 
         if (isset(self::$languageList[$extension])) {

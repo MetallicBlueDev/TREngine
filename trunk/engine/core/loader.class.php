@@ -188,7 +188,13 @@ class Core_Loader {
                     switch ($ext) {
                         case 'lang':
                             if (self::isCallable("Core_Translate")) {
-                                $path = $name . "_lang_" . Core_Translate::getInstance()->getCurrentLanguage();
+                                if ($name === DIRECTORY_SEPARATOR) {
+                                    $path = "lang_";
+                                } else {
+                                    $path = $name . "_lang_";
+                                }
+
+                                $path .= Core_Translate::getInstance()->getCurrentLanguage();
                             }
                             break;
                         case 'inc':
