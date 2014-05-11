@@ -358,11 +358,11 @@ class Core_Cache extends Cache_Model {
     /**
      * Supprime tous fichiers trop vieux.
      *
-     * @param string $dir chemin vers le fichier ou le dossier
+     * @param string $path chemin vers le fichier ou le dossier
      * @param string $timeLimit limite de temps
      */
-    public function removeCache($dir, $timeLimit = 0) {
-        $this->removeCache[$this->getCurrentSectionPath($dir)] = $timeLimit;
+    public function removeCache($path, $timeLimit = 0) {
+        $this->removeCache[$this->getCurrentSectionPath($path)] = $timeLimit;
     }
 
     /**
@@ -394,7 +394,7 @@ class Core_Cache extends Cache_Model {
      * @return int
      */
     public function &getCacheMTime($path) {
-        return $this->selectedCache->getCacheMTime($path);
+        return $this->selectedCache->getCacheMTime($this->getCurrentSectionPath($path));
     }
 
     /**
