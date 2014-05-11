@@ -280,22 +280,17 @@ class Core_Translate {
                 }
 
                 $this->cache = array();
-                $data = "";
 
                 // Données de traduction
                 if ($coreCache !== null && $coreCache->cached($langCacheFileName)) {
-                    // TODO REVOIR LE CHEMIN DYNAMIQUEMENT
-                    $data = "require(TR_ENGINE_DIR . '/tmp/translate/" . $langCacheFileName . "');";
+                    $coreCache->readCache($langCacheFileName);
                 } else if (!empty($content)) {
-                    $data = $content;
-                }
-
-                // Traduction disponible
-                if (!empty($data)) {
-                    ob_start();
-                    print eval(" $data ");
-                    ob_get_contents();
-                    ob_end_clean();
+                    if (!empty($content)) {
+                        ob_start();
+                        print eval(" $content ");
+                        ob_get_contents();
+                        ob_end_clean();
+                    }
                 }
             }
         }
