@@ -114,7 +114,9 @@ class Libs_Block {
         if (is_numeric($side)) {
             $litteralSideName = strtoupper(self::getSideAsLetters($side));
         }
-        return defined($litteralSideName) ? constant($litteralSideName) : $litteralSideName;
+
+        $litteralSideName = defined($litteralSideName) ? constant($litteralSideName) : $litteralSideName;
+        return $litteralSideName;
     }
 
     /**
