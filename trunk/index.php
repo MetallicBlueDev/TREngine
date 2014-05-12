@@ -2,7 +2,7 @@
 // On est passé dans l'index
 define("TR_ENGINE_INDEX", true);
 
-// Vérification de la version PHP 
+// Vérification de la version PHP
 require("engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "info.class.php");
 
 // Inclusion du chargeur
@@ -20,11 +20,12 @@ Exec_Marker::startTimer("main");
 // Préparation du moteur
 Core_Main::checkInstance();
 
-// Recherche de nouveau composant
+// Recherche de nouveaux composants
 if (Core_Main::getInstance()->newComponentDetected()) {
-    // Installtion des nouveaux composants
+    // Installation des nouveaux composants
     Core_Main::getInstance()->install();
 } else {
+    // Démarrage classique
     Core_Main::getInstance()->start();
 }
 
