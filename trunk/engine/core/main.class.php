@@ -693,7 +693,7 @@ class Core_Main {
                     }
 
                     // Mise en cache
-                    $coreCache->writeCache("configs.php", $content, true);
+                    $coreCache->writeCache("configs.php", $content);
                 }
 
                 // Ajout a la configuration courante

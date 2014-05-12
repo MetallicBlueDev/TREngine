@@ -342,7 +342,7 @@ class Core_Session {
 
             if (count($user) > 1) {
                 $this->setUser($user, true);
-                Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS)->writeCache($this->sessionId . ".php", $this->getUserInfosSerialized(), true);
+                Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS)->writeCache($this->sessionId . ".php", $this->getUserInfosSerialized());
             }
         }
     }

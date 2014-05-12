@@ -52,7 +52,7 @@ class Exec_FileBuilder {
         . "?>\n";
 
         if (Core_Loader::isCallable("Core_Cache")) {
-            Core_Cache::getInstance(Core_Cache::SECTION_CONFIGS)->writeCache("config.inc.php", $content, true);
+            Core_Cache::getInstance(Core_Cache::SECTION_CONFIGS)->writeCache("config.inc.php", $content);
         }
     }
 
@@ -101,7 +101,7 @@ class Exec_FileBuilder {
         . "?>\n";
 
         if (Core_Loader::isCallable("Core_Cache")) {
-            Core_Cache::getInstance(Core_Cache::SECTION_CONFIGS)->writeCache("cache.inc.php", $content, true);
+            Core_Cache::getInstance(Core_Cache::SECTION_CONFIGS)->writeCache("cache.inc.php", $content);
         }
     }
 
@@ -147,7 +147,7 @@ class Exec_FileBuilder {
         . "?>\n";
 
         if (Core_Loader::isCallable("Core_Cache")) {
-            Core_Cache::getInstance(Core_Cache::SECTION_CONFIGS)->writeCache("database.inc.php", $content, true);
+            Core_Cache::getInstance(Core_Cache::SECTION_CONFIGS)->writeCache("database.inc.php", $content);
         }
     }
 
