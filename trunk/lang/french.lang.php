@@ -33,7 +33,7 @@ $lang = array(
     "ERROR_DEBUG_MAKESTYLE" => "Une erreur est survenue lors de la lecture d'un template.",
     "ERROR_DEBUG_MAKESTYLECONFIG" => "La configuration des templates n'est pas valide.",
     "ERROR_DEBUG_BLOCKSIDE" => "Un block tente de s'afficher dans une position invalide.",
-    "ERROR_DEBUG_TEST" => "Sébastien",
+    "ERROR_DEBUG_ACCESSRANK" => "Un type de droit non reconnu a été détecté.",
 // Erreur diverse
     "ERROR_404" => "Erreur 404, la page demandée est introuvable.",
     "ERROR_BLOCK_CODE" => "Le code d'un block n'est pas utilisable.",

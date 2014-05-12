@@ -91,7 +91,7 @@ class Module_Management_Block extends Module_Model {
                 $position .= $row['position'];
                 $position .= Core_Html::getLinkWithAjax("?mod=management&manage=block&localView=sendMoveDown&blockId=" . $row['block_id'], "?mod=management&manage=block&localView=sendMoveDown&blockId=" . $row['block_id'], "#block_main_setting", "v"
                 );
-                $rank = Core_Access::getLitteralRank($row['rank']);
+                $rank = Core_Access::getRankAsLitteral($row['rank']);
                 $mods = ($row['mods'] == "all") ? BLOCK_ALL_PAGE : BLOCK_VARIES_PAGE;
                 // Ajout de la ligne au tableau
                 $rack->addLine(array(
@@ -266,7 +266,7 @@ class Module_Management_Block extends Module_Model {
                 // TODO rafraichir la liste des ordres (position) suivant la liste des positions (side)
                 $form->addInputText("blockTitle", BLOCK_POSITION, $block['position']);
 
-                $rankList = Core_Access::listRanks();
+                $rankList = Core_Access::getRankList();
                 $form->addSelectOpenTag("blockRank", BLOCK_ACCESS);
                 $currentRankName = "";
                 foreach ($rankList as $blockRank) {

@@ -5,7 +5,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 }
 
 /**
- * Gestionnaire d'accès et autorisation.
+ * Gestionnaire des accès et autorisation.
  *
  * @author Sébastien Villemain
  */
@@ -209,46 +209,56 @@ class Core_Access {
     }
 
     /**
-     * Retourne le type d'acces suivant le numéro
+     * Retourne le type d'acces avec la traduction.
      *
-     * @param $rank string or int
-     * @return string
+     * @param int $rank
+     * @return string accès traduit (si possible).
      */
-    public static function &getLitteralRank($rank) {
-        if (is_numeric($rank)) {
-            switch ($rank) {
-                case -1:
-                    $rank = ACCESS_NONE;
-                    break;
-                case 0:
-                    $rank = ACCESS_PUBLIC;
-                    break;
-                case 1:
-                    $rank = ACCESS_REGISTRED;
-                    break;
-                case 2:
-                    $rank = ACCESS_ADMIN;
-                    break;
-                case 3:
-                    $rank = ACCESS_ADMIN_RIGHT;
-                    break;
-            }
+    public static function &getRankAsLitteral($rank) {
+        if (!is_numeric($rank)) {
+            Core_Secure::getInstance()->throwException("accessRank", null, array(
+                "Invalid rank value: " . $rank));
         }
-        $rank = defined($rank) ? constant($rank) : $rank;
-        return $rank;
+
+        $rankLitteral = "";
+
+        switch ($rank) {
+            case -1:
+                $rankLitteral = ACCESS_NONE;
+                break;
+            case 0:
+                $rankLitteral = ACCESS_PUBLIC;
+                break;
+            case 1:
+                $rankLitteral = ACCESS_REGISTRED;
+                break;
+            case 2:
+                $rankLitteral = ACCESS_ADMIN;
+                break;
+            case 3:
+                $rankLitteral = ACCESS_ADMIN_RIGHT;
+                break;
+            default :
+                Core_Secure::getInstance()->throwException("accessRank", null, array(
+                    "Numeric rank: " . $rank));
+        }
+
+        $rankLitteral = defined($rankLitteral) ? constant($rankLitteral) : $rankLitteral;
+        return $rankLitteral;
     }
 
     /**
-     * Retourne la liste des niveau d'acces disponibles
+     * Liste des niveaux d'accès disponibles.
      *
-     * @return array("numeric" => identifiant int, "letters" => nom du niveau)
+     * @return array array("numeric" => identifiant int, "letters" => nom du niveau)
      */
-    public static function &listRanks() {
+    public static function &getRankList() {
         $rankList = array();
+
         for ($i = -1; $i < 4; $i++) {
             $rankList[] = array(
                 "numeric" => $i,
-                "letters" => self::getLitteralRank($i));
+                "letters" => self::getRankAsLitteral($i));
         }
         return $rankList;
     }
