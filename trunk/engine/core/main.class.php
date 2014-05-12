@@ -351,7 +351,8 @@ class Core_Main {
         Core_Translate::checkInstance();
 
         // Vérification des bannissements
-        Core_BlackBan::checkBlackBan();
+        $coreSession = Core_Session::getInstance();
+        $coreSession->checkBanishment();
 
         Core_Html::checkInstance();
 
@@ -363,8 +364,12 @@ class Core_Main {
             $this->compressionOpen();
         }
 
-        // Vérification du bannissement
-        if (!Core_BlackBan::isBlackUser()) {
+        if ($coreSession->bannedSession()) {
+            // Isoloire du bannissement
+            $coreSession->displayBanishment();
+
+            Exec_Marker::stopTimer("main");
+        } else {
             // Vérification du type d'affichage
             if ($this->isDefaultLayout()) {
                 // Affichage classique du site
@@ -425,10 +430,6 @@ class Core_Main {
                 // Assemble tous les messages d'erreurs dans un fichier log
                 Core_Logger::logException();
             }
-        } else {
-            Exec_Marker::stopTimer("main");
-
-            Core_BlackBan::displayBlackPage();
         }
 
         if (Core_Secure::debuggingMode()) {

@@ -12,6 +12,16 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Core_Session {
 
     /**
+     * Nom du fichier cache de bannissement.
+     */
+    const BANISHMENT_FILENAME = "banishment.txt";
+
+    /**
+     * Durée (en jour) d'un bannissement.
+     */
+    const BANISHMENT_DURATION = 2;
+
+    /**
      * Instance de la session.
      *
      * @var Core_Session
@@ -138,10 +148,8 @@ class Core_Session {
 
     /**
      * Démarrage du système de session.
-     *
-     * @param boolean $setupCache Configuration du cache
      */
-    private function __construct($setupCache) {
+    private function __construct() {
         // Marque le timer
         $this->timer = time();
 
@@ -153,11 +161,6 @@ class Core_Session {
         // Complète le nom des cookies
         foreach ($this->cookieName as $key => $name) {
             $this->cookieName[$key] = $coreMain->getCookiePrefix() . $name;
-        }
-
-        if ($setupCache) {
-            // Nettoyage du cache
-            Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS)->cleanCache($this->timer - $this->cacheTimeLimit);
         }
     }
 
@@ -177,7 +180,8 @@ class Core_Session {
     public static function checkInstance() {
         if (self::$coreSession === null) {
             // Création d'un instance autonome
-            self::$coreSession = new self(true);
+            self::$coreSession = new self();
+            self::$coreSession->cleanCache();
 
             // Lanceur de session
             if (!self::$coreSession->searchSession()) {
@@ -185,7 +189,7 @@ class Core_Session {
                 self::stopConnection();
 
                 // Nouvelle instance vierge
-                self::$coreSession = new self(false);
+                self::$coreSession = new self();
             }
         }
     }
@@ -328,14 +332,6 @@ class Core_Session {
     }
 
     /**
-     * Suppression de l'Ip bannie.
-     */
-    public function cancelIpBan() {
-        $this->userIpBan = "";
-        Exec_Cookie::destroyCookie(self::getCookieName($this->cookieName['BLACKBAN']));
-    }
-
-    /**
      * Actualise la session courante.
      */
     public function refreshSession() {
@@ -349,6 +345,153 @@ class Core_Session {
                 Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS)->writeCache($this->sessionId . ".php", $this->getUserInfosSerialized(), true);
             }
         }
+    }
+
+    /**
+     * Détermine si l'utilisateur a été banni.
+     *
+     * @return boolean true le client est banni
+     */
+    public function bannedSession() {
+        return empty($this->userIpBan) ? false : true;
+    }
+
+    /**
+     * Routine de vérification des bannissements.
+     */
+    public function checkBanishment() {
+        $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_TMP);
+        $coreSql = Core_Sql::getInstance();
+
+        $cleanBanishment = false;
+
+        // Vérification du fichier cache
+        if (!$coreCache->cached(self::BANISHMENT_FILENAME)) {
+            $cleanBanishment = true;
+            $coreCache->writeCache(self::BANISHMENT_FILENAME, "1");
+        } else if ((time() - (self::BANISHMENT_DURATION * 24 * 60 * 60)) > $coreCache->getCacheMTime(self::BANISHMENT_FILENAME)) {
+            $cleanBanishment = true;
+            $coreCache->touchCache(self::BANISHMENT_FILENAME);
+        }
+
+        // Nettoyage des adresses IP périmées de la base de données.
+        if ($cleanBanishment) {
+            $coreSql->delete(
+            Core_Table::BANNED_TABLE, array(
+                "ip != ''",
+                "&& (name = 'Hacker' || name = '')",
+                "&& type = '0'",
+                "&& DATE_ADD(date, INTERVAL " . self::BANISHMENT_DURATION . " DAY) > CURDATE()"
+            )
+            );
+        }
+
+        $userIp = Exec_Agent::$userIp;
+
+        // Recherche de bannissement de session
+        if ($this->bannedSession()) {
+            // Si l'ip n'est plus du tout valide
+            if ($this->userIpBan != $userIp && !preg_match("/" . $this->userIpBan . "/", $userIp)) {
+                $coreSql = Core_Sql::getInstance();
+
+                // Vérification en base (au cas ou il y aurait un débannissement)
+                $coreSql->select(
+                Core_Table::BANNED_TABLE, array(
+                    "ban_id"), array(
+                    "ip = '" . $this->userIpBan . "'")
+                );
+
+                if ($coreSql->affectedRows() > 0) {
+                    // Bannissement toujours en place
+                    list($banId) = $coreSql->fetchArray();
+
+                    // Mise à jour de l'ip
+                    $coreSql->update(
+                    Core_Table::BANNED_TABLE, array(
+                        "ip" => $userIp), array(
+                        "ban_id = '" . $banId . "'")
+                    );
+
+                    $this->userIpBan = $userIp;
+                } else {
+                    // Suppression du bannissement
+                    $this->userIpBan = "";
+                    Exec_Cookie::destroyCookie(self::getCookieName($this->cookieName['BLACKBAN']));
+                }
+            }
+        } else {
+            // Sinon on recherche dans la base les bannis; leurs ip et leurs pseudo
+            $coreSql->select(
+            Core_Table::BANNED_TABLE, array(
+                "ip",
+                "name"), array(), array(
+                "ban_id")
+            );
+
+            foreach ($coreSql->fetchArray() as $value) {
+                list($banFullIp, $banName) = $value;
+                $banIp = explode(".", $banFullIp);
+
+                // Filtre pour la vérification
+                if (isset($banIp[3]) && !empty($banIp[3])) {
+                    $banList = $banFullIp;
+                    $searchIp = $userIp;
+                } else {
+                    $banList = $banIp[0] . $banIp[1] . $banIp[2];
+                    $uIp = explode(".", $userIp);
+                    $searchIp = $uIp[0] . $uIp[1] . $uIp[2];
+                }
+
+                // Vérification du client
+                if ($searchIp === $banList) {
+                    // IP bannis !
+                    $this->userIpBan = $banFullIp;
+                } else if (!empty($this->userName) && $this->userName === $banName) {
+                    // Pseudo bannis !
+                    $this->userIpBan = $banFullIp;
+                } else {
+                    $this->userIpBan = "";
+                }
+
+                // La vérification a déjà aboutie, on arrête
+                if ($this->bannedSession()) {
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Affichage de l'isoloire pour le bannissement.
+     */
+    public function displayBanishment() {
+        $coreSql = Core_Sql::getInstance();
+
+        $coreSql->select(
+        Core_Table::BANNED_TABLE, array(
+            "reason"), array(
+            "ip = '" . $this->userIpBan . "'")
+        );
+
+        if ($coreSql->affectedRows() > 0) {
+            $coreMain = Core_Main::getInstance();
+            $mail = $coreMain->getDefaultAdministratorMail();
+            $mail = Exec_Mailer::protectedDisplay($mail, $coreMain->getDefaultSiteName());
+            $reason = $coreSql->fetchArray()['reason'];
+
+            $libsMakeStyle = new Libs_MakeStyle();
+            $libsMakeStyle->assign("mail", $mail);
+            $libsMakeStyle->assign("reason", Exec_Entities::textDisplay($reason));
+            $libsMakeStyle->assign("ip", $this->userIpBan);
+            $libsMakeStyle->display("banishment");
+        }
+    }
+
+    /**
+     * Nettoyage du cache de session utilisateur.
+     */
+    private function cleanCache() {
+        Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS)->cleanCache($this->timer - $this->cacheTimeLimit);
     }
 
     /**
