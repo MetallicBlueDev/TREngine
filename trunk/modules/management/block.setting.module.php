@@ -85,7 +85,7 @@ class Module_Management_Block extends Module_Model {
                 // Parametre de la ligne
                 $title = Core_Html::getLink("?mod=management&manage=block&localView=tabEdit&blockId=" . $row['block_id'], $row['title']);
                 $type = $row['type'];
-                $side = Libs_Block::getLitteralSide($row['side']);
+                $side = Libs_Block::getSideAsLitteral($row['side']);
                 $position = Core_Html::getLinkWithAjax("?mod=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'], "?mod=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'], "#block_main_setting", "^"
                 );
                 $position .= $row['position'];
@@ -251,7 +251,7 @@ class Module_Management_Block extends Module_Model {
                 }
                 $form->addSelectCloseTag();
 
-                $sideList = Libs_Block::listSide();
+                $sideList = Libs_Block::getSideList();
                 $form->addSelectOpenTag("blockSide", BLOCK_SIDE);
                 $currentSideName = "";
                 foreach ($sideList as $blockSide) {

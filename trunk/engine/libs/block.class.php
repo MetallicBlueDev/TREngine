@@ -72,7 +72,7 @@ class Libs_Block {
      * @return string
      */
     public function &getBlocksBySideName($selectedSideName) {
-        $selectedSide = self::getSideNumeric($selectedSideName);
+        $selectedSide = self::getSideAsNumeric($selectedSideName);
         return $this->getBlocks($selectedSide);
     }
 
@@ -90,13 +90,13 @@ class Libs_Block {
      *
      * @return array array("numeric" => identifiant int, "letters" => nom de la position).
      */
-    public static function &listSide() {
+    public static function &getSideList() {
         $sideList = array();
 
         for ($i = 1; $i < 7; $i++) {
             $sideList[] = array(
                 "numeric" => $i,
-                "letters" => self::getLitteralSide($i));
+                "letters" => self::getSideAsLitteral($i));
         }
         return $sideList;
     }
@@ -107,12 +107,12 @@ class Libs_Block {
      * @param string $side
      * @return string postion traduit (si possible).
      */
-    public static function &getLitteralSide($side) {
+    public static function &getSideAsLitteral($side) {
         // Assignation par défaut
         $litteralSideName = $side;
 
         if (is_numeric($side)) {
-            $litteralSideName = strtoupper(self::getSideLetters($side));
+            $litteralSideName = strtoupper(self::getSideAsLetters($side));
         }
         return defined($litteralSideName) ? constant($litteralSideName) : $litteralSideName;
     }
@@ -191,7 +191,7 @@ class Libs_Block {
 
             foreach ($coreSql->fetchBuffer("block") as $block) {
                 $blockInfo = new Libs_BlockData($block);
-                $blockInfo->setSideName(self::getSideLetters($blockInfo->getSide()));
+                $blockInfo->setSideName(self::getSideAsLetters($blockInfo->getSide()));
 
                 $blockInfos[] = $blockInfo;
                 $this->blocksInfo[$blockInfo->getSide()][] = $blockInfo;
@@ -253,7 +253,7 @@ class Libs_Block {
      * @param int $side
      * @return string identifiant de la position (right, left...).
      */
-    public static function &getSideLetters($side) {
+    public static function &getSideAsLetters($side) {
         if (!is_numeric($side)) {
             Core_Secure::getInstance()->throwException("blockSide", null, array(
                 "Invalid side value: " . $side));
@@ -293,7 +293,7 @@ class Libs_Block {
      * @param string $side
      * @return int identifiant de la position (1, 2..).
      */
-    private static function &getSideNumeric($side) {
+    private static function &getSideAsNumeric($side) {
         if (!is_string($side)) {
             ore_Secure::getInstance()->throwException("blockSide", null, array(
                 "Invalid side value: " . $side));
