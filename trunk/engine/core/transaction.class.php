@@ -7,7 +7,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 /**
  * Gestionnaire de transaction de base.
  *
- * @author Sebastien Villemain
+ * @author Sébastien Villemain
  */
 abstract class Core_Transaction {
 
@@ -136,7 +136,7 @@ abstract class Core_Transaction {
 
     /**
      * Change la valeur de clé.
-     * 
+     *
      * @param string $keyName
      * @param string $value
      */

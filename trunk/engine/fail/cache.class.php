@@ -3,7 +3,7 @@
 /**
  * Exception lancée par le cache.
  *
- * @author Sebastien Villemain
+ * @author Sébastien Villemain
  */
 class Fail_Cache extends Fail_Base {
 

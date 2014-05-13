@@ -3,7 +3,7 @@
 /**
  * Exception inconnue lancée par le moteur.
  *
- * @author Sebastien Villemain
+ * @author Sébastien Villemain
  */
 class Fail_Engine extends Fail_Base {
 

@@ -3,7 +3,7 @@
 /**
  * Base d'une exception du moteur.
  *
- * @author Sebastien Villemain
+ * @author Sébastien Villemain
  */
 abstract class Fail_Base extends Exception {
 

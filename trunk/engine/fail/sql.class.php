@@ -3,7 +3,7 @@
 /**
  * Exception lancée par SQL.
  *
- * @author Sebastien Villemain
+ * @author Sébastien Villemain
  */
 class Fail_Sql extends Fail_Base {
 

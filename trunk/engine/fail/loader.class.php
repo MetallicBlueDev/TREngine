@@ -3,7 +3,7 @@
 /**
  * Exception lancée par le chargeur de classe.
  *
- * @author Sebastien Villemain
+ * @author Sébastien Villemain
  */
 class Fail_Loader extends Fail_Base {
 
