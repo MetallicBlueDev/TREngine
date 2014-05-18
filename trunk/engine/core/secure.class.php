@@ -239,7 +239,6 @@ class Core_Secure {
      * Réglages des sorties d'erreurs.
      */
     private function checkError() {
-        // Réglages des sorties d'erreur
         error_reporting(defined("E_ALL") ? E_ALL : E_ERROR | E_WARNING | E_PARSE);
     }
 
@@ -249,12 +248,12 @@ class Core_Secure {
     private function checkQueryString() {
         $queryString = strtolower(rawurldecode($_SERVER['QUERY_STRING']));
 
-        $badString = array(
-            "SELECT",
-            "UNION",
-            "INSERT",
-            "UPDATE",
-            "AND",
+        $badStrings = array(
+            "select",
+            "union",
+            "insert",
+            "update",
+            "and",
             "%20union%20",
             "/*",
             "*/union/*",
@@ -273,8 +272,8 @@ class Core_Secure {
             "<body",
             "<link");
 
-        foreach ($badString as $stringValue) {
-            if (strpos($queryString, $stringValue)) {
+        foreach ($badStrings as $badStringValue) {
+            if (strpos($queryString, $badStringValue)) {
                 $this->throwException("badQueryString");
             }
         }
