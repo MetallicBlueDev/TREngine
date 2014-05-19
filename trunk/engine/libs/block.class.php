@@ -76,7 +76,7 @@ class Libs_Block {
 
     /**
      * Liste des positions valides.
-     * 
+     *
      * @var array array("name" => 0)
      */
     private static $sideRegistred = array(
@@ -339,7 +339,7 @@ class Libs_Block {
                 "Invalid side value: " . $side));
         }
 
-        $sideLetters = array_search($side, self::$sideRegistred);
+        $sideLetters = array_search($side, self::$sideRegistred, true);
 
         if ($sideLetters === false) {
             Core_Secure::getInstance()->throwException("blockSide", null, array(
