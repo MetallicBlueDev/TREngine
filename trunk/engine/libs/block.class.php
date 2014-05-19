@@ -12,6 +12,84 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Libs_Block {
 
     /**
+     * Postion inconnue.
+     *
+     * @var int
+     */
+    const SIDE_NONE = 0;
+
+    /**
+     * Postion le plus à droite.
+     *
+     * @var int
+     */
+    const SIDE_RIGHT = 1;
+
+    /**
+     * Position le plus à gauche.
+     *
+     * @var int
+     */
+    const SIDE_LEFT = 2;
+
+    /**
+     * Position le plus en haut.
+     *
+     * @var int
+     */
+    const SIDE_TOP = 3;
+
+    /**
+     * Position le plus en bas.
+     *
+     * @var int
+     */
+    const SIDE_BOTTOM = 4;
+
+    /**
+     * Position dans le module à droite.
+     *
+     * @var int
+     */
+    const SIDE_MODULE_RIGHT = 5;
+
+    /**
+     * Position dans le module à gauche.
+     *
+     * @var int
+     */
+    const SIDE_MODULE_LEFT = 6;
+
+    /**
+     * Position dans le module en haut.
+     *
+     * @var int
+     */
+    const SIDE_MODULE_TOP = 7;
+
+    /**
+     * Position dans le module en bas.
+     *
+     * @var int
+     */
+    const SIDE_MODULE_BOTTOM = 8;
+
+    /**
+     * Liste des positions valides.
+     * 
+     * @var array array("name" => 0)
+     */
+    private static $sideRegistred = array(
+        "right" => self::SIDE_RIGHT,
+        "left" => self::SIDE_LEFT,
+        "top" => self::SIDE_TOP,
+        "bottom" => self::SIDE_BOTTOM,
+        "moduleright" => self::SIDE_MODULE_RIGHT,
+        "moduleleft" => self::SIDE_MODULE_LEFT,
+        "moduletop" => self::SIDE_MODULE_TOP,
+        "modulebottom" => self::SIDE_MODULE_BOTTOM);
+
+    /**
      * Gestionnnaire de blocks.
      *
      * @var Libs_Block
@@ -46,8 +124,8 @@ class Libs_Block {
      */
     public function launchAllBlock() {
         $this->launchBlock(array(
-            "side > 0",
-            "&& rank >= 0"), true);
+            "side > " . self::SIDE_NONE,
+            "&& rank >= " . Core_Access::RANK_NONE), true);
     }
 
     /**
@@ -261,30 +339,11 @@ class Libs_Block {
                 "Invalid side value: " . $side));
         }
 
-        $sideLetters = "";
+        $sideLetters = array_search($side, self::$sideRegistred);
 
-        switch ($side) {
-            case 1:
-                $sideLetters = "right";
-                break;
-            case 2:
-                $sideLetters = "left";
-                break;
-            case 3:
-                $sideLetters = "top";
-                break;
-            case 4:
-                $sideLetters = "bottom";
-                break;
-            case 5:
-                $sideLetters = "moduletop";
-                break;
-            case 6:
-                $sideLetters = "modulebottom";
-                break;
-            default :
-                Core_Secure::getInstance()->throwException("blockSide", null, array(
-                    "Numeric side: " . $side));
+        if ($sideLetters === false) {
+            Core_Secure::getInstance()->throwException("blockSide", null, array(
+                "Numeric side: " . $side));
         }
         return $sideLetters;
     }
@@ -297,35 +356,16 @@ class Libs_Block {
      */
     private static function &getSideAsNumeric($side) {
         if (!is_string($side)) {
-            ore_Secure::getInstance()->throwException("blockSide", null, array(
+            Core_Secure::getInstance()->throwException("blockSide", null, array(
                 "Invalid side value: " . $side));
         }
 
-        $sideNumeric = 0;
-
-        switch ($side) {
-            case 'right':
-                $sideNumeric = 1;
-                break;
-            case 'left':
-                $sideNumeric = 2;
-                break;
-            case 'top':
-                $sideNumeric = 3;
-                break;
-            case 'bottom':
-                $sideNumeric = 4;
-                break;
-            case 'moduletop':
-                $sideNumeric = 5;
-                break;
-            case 'modulebottom':
-                $sideNumeric = 6;
-                break;
-            default :
-                Core_Secure::getInstance()->throwException("blockSide", null, array(
-                    "Letters side: " . $side));
+        if (!isset(self::$sideRegistred[$side])) {
+            Core_Secure::getInstance()->throwException("blockSide", null, array(
+                "Letters side: " . $side));
         }
+
+        $sideNumeric = self::$sideRegistred[$side];
         return $sideNumeric;
     }
 
