@@ -127,7 +127,7 @@ abstract class Base_Model extends Core_Transaction {
      * Retourne un tableau contenant tous les objets demandés.
      *
      * @param string $className Nom de la classe
-     * @return array(object)
+     * @return object[]
      */
     public function &fetchObject($className = null) {
         unset($className);
