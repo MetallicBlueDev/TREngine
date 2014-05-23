@@ -219,7 +219,7 @@ class Core_Cache extends Cache_Model {
      */
     public static function checkInstance() {
         if (self::$coreCache === null) {
-            self::$coreCache = new self();
+            self::$coreCache = new Core_Cache();
         }
     }
 

@@ -37,7 +37,7 @@ class Libs_Breadcrumb {
      */
     public static function &getInstance() {
         if (self::$libsBreadcrumb === null) {
-            self::$libsBreadcrumb = new self();
+            self::$libsBreadcrumb = new Libs_Breadcrumb();
         }
         return self::$libsBreadcrumb;
     }

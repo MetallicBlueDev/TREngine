@@ -83,7 +83,7 @@ $lang = array(
     "ACCESS_PUBLIC" => "Public",
     "ACCESS_REGISTRED" => "Membre",
     "ACCESS_ADMIN" => "Administrateur",
-    "ACCESS_ADMIN_RIGHT" => "Administrateur avec droit",
+    "ACCESS_SPECIFIC_RIGHT" => "Administrateur avec droit",
 // Divers
     "WELCOME" => "Bienvenue",
     "MAIL" => "Votre adresse email",

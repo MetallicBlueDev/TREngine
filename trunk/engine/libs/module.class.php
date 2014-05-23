@@ -89,7 +89,7 @@ class Libs_Module {
      */
     public static function &getInstance() {
         if (self::$libsModule === null) {
-            self::$libsModule = new self();
+            self::$libsModule = new Libs_Module();
         }
         return self::$libsModule;
     }

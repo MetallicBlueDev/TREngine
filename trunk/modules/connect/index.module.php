@@ -26,7 +26,7 @@ class Module_Connect_Index extends Module_Model {
             $accountTabs->addTab(ACCOUNT_PROFILE, $this->tabProfile());
             $accountTabs->addTab(ACCOUNT_PRIVATE, $this->tabAccount());
             $accountTabs->addTab(ACCOUNT_AVATAR, $this->tabAvatar());
-            if (Core_Session::getInstance()->userRank > 1) {
+            if (Core_Session::getInstance()->getUserInfos()->hasAdminRank()) {
                 $accountTabs->addTab(ACCOUNT_ADMIN, $this->tabAdmin());
             }
             echo $accountTabs->render();
@@ -41,7 +41,7 @@ class Module_Connect_Index extends Module_Model {
         $form->setDescription(ACCOUNT_PROFILE_DESCRIPTION);
         $form->addSpace();
         $form->addInputText("website", ACCOUNT_PROFILE_WEBSITE);
-        $form->addTextarea("signature", ACCOUNT_PROFILE_SIGNATURE, Core_Session::getInstance()->userSignature, "style=\"display: block;\" rows=\"5\" cols=\"50\"");
+        $form->addTextarea("signature", ACCOUNT_PROFILE_SIGNATURE, Core_Session::getInstance()->getUserInfos()->getSignature(), "style=\"display: block;\" rows=\"5\" cols=\"50\"");
         $form->addInputHidden("mod", "connect");
         $form->addInputHidden("view", "sendProfile");
         $form->addInputHidden("layout", "module");
@@ -62,13 +62,16 @@ class Module_Connect_Index extends Module_Model {
         }
 
         if (!empty($values)) {
-            Core_Sql::getInstance()->update(
+            $coreSql = Core_Sql::getInstance();
+            $coreSession = Core_Session::getInstance();
+
+            $coreSql->update(
             Core_Table::USERS_TABLE, $values, array(
-                "user_id = '" . Core_Session::getInstance()->userId . "'")
+                "user_id = '" . $coreSession->getUserInfos()->getId() . "'")
             );
 
-            if (Core_Sql::getInstance()->affectedRows() > 0) {
-                Core_Session::getInstance()->refreshSession();
+            if ($coreSql->affectedRows() > 0) {
+                $coreSession->refreshSession();
                 Core_Logger::addInformationMessage(DATA_SAVED);
             }
         }
@@ -78,14 +81,16 @@ class Module_Connect_Index extends Module_Model {
     }
 
     private function tabAccount() {
+        $userInfos = Core_Session::getInstance()->getUserInfos();
+
         $form = new Libs_Form("account-accountprivate");
         $form->setTitle(ACCOUNT_PRIVATE_TITLE);
         $form->setDescription(ACCOUNT_PRIVATE_DESCRIPTION);
         $form->addSpace();
-        $form->addInputText("name", LOGIN, Core_Session::getInstance()->userName);
+        $form->addInputText("name", LOGIN, $userInfos->getName());
         $form->addInputPassword("pass", PASSWORD);
         $form->addInputPassword("pass2", ACCOUNT_PRIVATE_PASSWORD_CONFIRME);
-        $form->addInputText("mail", MAIL, Core_Session::getInstance()->userMail);
+        $form->addInputText("mail", MAIL, $userInfos->getMail());
 
         // Liste des langages disponibles
         $form->addSpace();
@@ -123,6 +128,8 @@ class Module_Connect_Index extends Module_Model {
     }
 
     public function sendAccount() {
+        $userInfos = Core_Session::getInstance()->getUserInfos();
+
         $name = Core_Request::getWord("name", "", "POST");
         $pass = Core_Request::getString("pass", "", "POST");
         $pass2 = Core_Request::getString("pass2", "", "POST");
@@ -130,16 +137,19 @@ class Module_Connect_Index extends Module_Model {
         $langue = Core_Request::getString("langue", "", "POST");
         $template = Core_Request::getString("template", "", "POST");
 
-        if (Core_Session::getInstance()->userName != $name || Core_Session::getInstance()->userMail != $mail || Core_Session::getInstance()->userLanguage != $langue || Core_Session::getInstance()->userTemplate != $template) {
+        if ($userInfos->getName() != $name || $userInfos->getMail() != $mail || $userInfos->getLangue() != $langue || $userInfos->getTemplate() != $template) {
             if (Core_Session::validLogin($name)) {
                 $validName = true;
-                if (Core_Session::getInstance()->userName != $name) {
+
+                if ($userInfos->getName() != $name) {
                     $name = Exec_Entities::secureText($name);
+
                     Core_Sql::getInstance()->select(
                     Core_Table::USERS_TABLE, array(
                         "user_id"), array(
                         "name = '" . $name . "'")
                     );
+
                     if (Core_Sql::getInstance()->affectedRows() > 0) {
                         $validName = false;
                         Core_Logger::addWarningMessage(ACCOUNT_PRIVATE_LOGIN_IS_ALLOWED);
@@ -165,7 +175,7 @@ class Module_Connect_Index extends Module_Model {
                         $values['template'] = $template;
                         Core_Sql::getInstance()->update(
                         Core_Table::USERS_TABLE, $values, array(
-                            "user_id = '" . Core_Session::getInstance()->userId . "'")
+                            "user_id = '" . $userInfos->getId() . "'")
                         );
 
                         if (Core_Sql::getInstance()->affectedRows() > 0) {
@@ -198,6 +208,8 @@ class Module_Connect_Index extends Module_Model {
     }
 
     private function tabAdmin() {
+        $userInfos = Core_Session::getInstance()->getUserInfos();
+
         $form = new Libs_Form("account-admin");
         $form->setTitle(ACCOUNT_ADMIN_TITLE);
         $form->setDescription(ACCOUNT_ADMIN_DESCRIPTION);
@@ -238,7 +250,7 @@ class Module_Connect_Index extends Module_Model {
         foreach ($rights as $key => $right) {
             if ($right == "all") {
                 $form->addHtmlInFieldset(ADMIN_RIGHT_ALL);
-            } else if (Core_Access::accessType($right, $zone, $identifiant)) {
+            } else if (Core_Access::getAccessType($right, $zone, $identifiant)) {
                 if ($zone == "MODULE") {
                     $form->addHtmlInFieldset(ADMIN_RIGHT_MODULE . " <b>" . $right . "</b> (#" . $identifiant . ")");
                 } else if ($zone == "BLOCK") {

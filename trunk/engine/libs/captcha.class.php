@@ -63,12 +63,10 @@ class Libs_Captcha {
         $captchaMode = Core_Main::getInstance()->getCaptchaMode();
         $captchaMode = ($captchaMode === "off" || $captchaMode === "auto" || $captchaMode === "manu") ? $captchaMode : "auto";
 
+        $userInfos = Core_Session::getInstance()->getUserInfos();
+
         // Decide de l'activation
-        if ($captchaMode === "off") {
-            $this->enabled = false;
-        } else if ($captchaMode === "auto" && Core_Session::getInstance()->userRank > 0) {
-            $this->enabled = false;
-        } else if ($captchaMode === "manu" && Core_Session::getInstance()->userRank > 1) {
+        if ($captchaMode === "off" || ($captchaMode === "auto" && $userInfos->hasRank()) || ($captchaMode === "manu" && $userInfos->hasAdminRank())) {
             $this->enabled = false;
         } else {
             $this->enabled = true;

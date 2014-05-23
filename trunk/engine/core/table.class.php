@@ -54,10 +54,10 @@ class Core_Table {
     const USERS_TABLE = "users";
 
     /**
-     * Table des administrateurs.
+     * Table des droits des utilisateurs.
      *
      * @var string
      */
-    const USERS_ADMIN_TABLE = "users_admin";
+    const USERS_RIGHTS_TABLE = "users_rights";
 
 }

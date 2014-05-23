@@ -114,7 +114,7 @@ class Libs_Block {
      */
     public static function &getInstance() {
         if (self::$libsBlock === null) {
-            self::$libsBlock = new self();
+            self::$libsBlock = new Libs_Block();
         }
         return self::$libsBlock;
     }
@@ -289,9 +289,7 @@ class Libs_Block {
     private function launchBlock(array $where, $checkModule) {
         foreach ($this->getInfoBlocks($where) as $blockInfo) {
             if ($blockInfo->isValid() && $blockInfo->canActive($checkModule)) {
-                if (Core_Access::autorize("block" . $blockInfo->getId(), $blockInfo->getRank())) {
-                    $this->get($blockInfo);
-                }
+                $this->get($blockInfo);
             }
         }
     }

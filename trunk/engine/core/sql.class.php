@@ -84,7 +84,7 @@ class Core_Sql extends Base_Model {
      */
     public static function checkInstance() {
         if (self::$coreSql === null) {
-            self::$coreSql = new self();
+            self::$coreSql = new Core_Sql();
         }
     }
 
@@ -234,7 +234,7 @@ class Core_Sql extends Base_Model {
     /**
      * Retourne un tableau contenant tous les objets demandés.
      *
-     * @return array(object)
+     * @return object[]
      */
     public function &fetchObject($className = null) {
         return $this->selectedBase->fetchObject($className);

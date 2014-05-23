@@ -80,7 +80,7 @@ class Core_Secure {
      */
     public static function checkInstance() {
         if (self::$secure === null) {
-            self::$secure = new self();
+            self::$secure = new Core_Secure();
 
             // Si nous ne sommes pas passé par l'index
             if (self::$secure->locked()) {
@@ -211,7 +211,7 @@ class Core_Secure {
 
         if (Core_Loader::isCallable("Core_Session") && Core_Loader::isCallable("Core_Sql")) {
             if (Core_Sql::hasConnection()) {
-                if (Core_Session::getInstance()->userRank > 1) {
+                if (Core_Session::getInstance()->getUserInfos()->hasRegisteredRank()) {
                     $sqlErrors = Core_Sql::getInstance()->getLastError();
 
                     if (!empty($sqlErrors)) {

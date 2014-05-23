@@ -50,88 +50,28 @@ class Core_Session {
     private $cacheTimeLimit = 0;
 
     /**
-     * Id du client.
+     * Adresse Ip du client bannis.
      *
      * @var string
      */
-    public $userId = "";
+    private $userIpBan = "";
 
     /**
-     * Nom du client.
-     *
-     * @var string
-     */
-    public $userName = "";
-
-    /**
-     * Type de compte lié au client.
-     *
-     * @var int
-     */
-    public $userRank = 0;
-
-    /**
-     * Id de la session courante du client.
+     * Identifiant de la session courante du client.
      *
      * @var string
      */
     private $sessionId = "";
 
     /**
-     * Langue du client.
+     * Informations sur le client.
      *
-     * @var string
+     * @var Core_SessionData
      */
+    private $userInfos = null;
+    public $userRank = 0;
     public $userLanguage = "";
-
-    /**
-     * Template du client.
-     *
-     * @var string
-     */
     public $userTemplate = "";
-
-    /**
-     * Adresse Ip du client bannis.
-     *
-     * @var string
-     */
-    public $userIpBan = "";
-
-    /**
-     * URL de l'avatar de l'utilisateur.
-     *
-     * @var string
-     */
-    public $userAvatar = "includes/avatars/nopic.png";
-
-    /**
-     * Adresse email du client.
-     *
-     * @var string
-     */
-    public $userMail = "";
-
-    /**
-     * Date d'inscription du client.
-     *
-     * @var string
-     */
-    private $userInscriptionDate = "";
-
-    /**
-     * Signature du client.
-     *
-     * @var string
-     */
-    public $userSignature = "";
-
-    /**
-     * Site Internet du client.
-     *
-     * @var string
-     */
-    private $userWebSite = "";
 
     /**
      * Nom des cookies.
@@ -180,7 +120,7 @@ class Core_Session {
     public static function checkInstance() {
         if (self::$coreSession === null) {
             // Création d'un instance autonome
-            self::$coreSession = new self();
+            self::$coreSession = new Core_Session();
             self::$coreSession->cleanCache();
 
             // Lanceur de session
@@ -189,7 +129,7 @@ class Core_Session {
                 self::stopConnection();
 
                 // Nouvelle instance vierge
-                self::$coreSession = new self();
+                self::$coreSession = new Core_Session();
             }
         }
     }
@@ -332,17 +272,28 @@ class Core_Session {
     }
 
     /**
+     *
+     * @return Core_SessionData
+     */
+    public function getUserInfos() {
+        if ($this->userInfos === null) {
+            $this->userInfos = new Core_SessionData(array());
+        }
+        return $this->userInfos;
+    }
+
+    /**
      * Actualise la session courante.
      */
     public function refreshSession() {
         if ($this->userLogged()) {
             // Rafraichir le cache de session
             $user = self::getUserInfo(array(
-                "user_id = '" . $this->userId . "'"));
+                "user_id = '" . $this->userInfos->getId() . "'"));
 
             if (count($user) > 1) {
                 $this->setUser($user, true);
-                Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS)->writeCache($this->sessionId . ".php", $this->getUserInfosSerialized());
+                Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS)->writeCache($this->sessionId . ".php", $this->serializeSession());
             }
         }
     }
@@ -446,7 +397,7 @@ class Core_Session {
                 if ($searchIp === $banList) {
                     // IP bannis !
                     $this->userIpBan = $banFullIp;
-                } else if (!empty($this->userName) && $this->userName === $banName) {
+                } else if ($this->userInfos !== null && $this->userInfos->getName() === $banName) {
                     // Pseudo bannis !
                     $this->userIpBan = $banFullIp;
                 } else {
@@ -590,7 +541,7 @@ class Core_Session {
         // Creation des cookies
         $cookieUser = Exec_Cookie::createCookie(
         self::getCookieName($this->cookieName['USER']), Exec_Crypt::md5Encrypt(
-        $this->userId, self::getSalt()
+        $this->userInfos->getId(), self::getSalt()
         ), $cookieTimeLimit
         );
 
@@ -602,7 +553,7 @@ class Core_Session {
 
         if ($cookieUser && $cookieSession) {
             // Ecriture du cache
-            Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS)->writeCache($this->sessionId . ".php", $this->getUserInfosSerialized());
+            Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS)->writeCache($this->sessionId . ".php", $this->serializeSession());
             $rslt = true;
         } else {
             Core_Logger::addWarningMessage(ERROR_SESSION_COOKIE);
@@ -611,25 +562,14 @@ class Core_Session {
     }
 
     /**
-     * Mise en chaine de caractères des informations du client.
+     * Retourne les informations de session sérialisées.
      *
      * @return string
      */
-    private function &getUserInfosSerialized() {
-        $data = array(
-            "userId" => $this->userId,
-            "name" => $this->userName,
-            "mail" => $this->userMail,
-            "rank" => $this->userRank,
-            "date" => $this->userInscriptionDate,
-            "avatar" => $this->userAvatar,
-            "signature" => $this->userSignature,
-            "website" => $this->userWebSite,
-            "langue" => $this->userLanguage,
-            "template" => $this->userTemplate,
-            "userIpBan" => $this->userIpBan,
-            "sessionId" => $this->sessionId
-        );
+    private function &serializeSession() {
+        $data = $this->userInfos->getData();
+        $data['userIpBan'] = $this->userIpBan;
+        $data['sessionId'] = $this->sessionId;
         return Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS)->serializeData($data);
     }
 
@@ -639,7 +579,7 @@ class Core_Session {
      * @return boolean true c'est un client valide
      */
     private function userLogged() {
-        return (!empty($this->userId) && !empty($this->userName) && !empty($this->sessionId) && $this->userRank > 0);
+        return (!empty($this->sessionId) && $this->userInfos !== null);
     }
 
     /**
@@ -649,14 +589,6 @@ class Core_Session {
      * @param boolean $refreshAll
      */
     private function setUser($info, $refreshAll = false) {
-        $this->userId = isset($info['userId']) ? $info['userId'] : $info['user_id'];
-        $this->userName = Exec_Entities::stripSlashes($info['name']);
-        $this->userMail = $info['mail'];
-        $this->userRank = (int) $info['rank'];
-        $this->userInscriptionDate = $info['date'];
-        $this->userAvatar = $info['avatar'];
-        $this->userSignature = Exec_Entities::stripSlashes($info['signature']);
-        $this->userWebSite = Exec_Entities::stripSlashes($info['website']);
 
         if (!empty($info['sessionId'])) {
             $this->sessionId = $info['sessionId'];
@@ -681,12 +613,7 @@ class Core_Session {
      * @param string $userId
      * @return boolean true succès de la mise à jour
      */
-    private function updateLastConnect($userId = "") {
-        // Récupere l'id du client
-        if (empty($userId)) {
-            $userId = $this->userId;
-        }
-
+    private function updateLastConnect($userId) {
         $coreSql = Core_Sql::getInstance();
         $coreSql->addQuoted("", "NOW()");
 

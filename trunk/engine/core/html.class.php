@@ -116,7 +116,7 @@ class Core_Html {
      */
     public static function checkInstance() {
         if (self::$coreHtml === null) {
-            self::$coreHtml = new self();
+            self::$coreHtml = new Core_Html();
         }
     }
 

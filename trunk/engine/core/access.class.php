@@ -12,6 +12,54 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Core_Access {
 
     /**
+     * Accès non défini.
+     *
+     * @var int
+     */
+    const RANK_NONE = 0;
+
+    /**
+     * Accès publique.
+     *
+     * @var int
+     */
+    const RANK_PUBLIC = 1;
+
+    /**
+     * Accès aux membres.
+     *
+     * @var int
+     */
+    const RANK_REGITRED = 2;
+
+    /**
+     * Accès aux administrateurs.
+     *
+     * @var int
+     */
+    const RANK_ADMIN = 3;
+
+    /**
+     * Accès avec droit spécifique.
+     *
+     * @var int
+     */
+    const RANK_SPECIFIC_RIGHT = 4;
+
+    /**
+     * Liste des rangs valides.
+     *
+     * @var array array("name" => 0)
+     */
+    private static $rankRegistred = array(
+        "ACCESS_NONE" => self::RANK_NONE,
+        "ACCESS_PUBLIC" => self::RANK_PUBLIC,
+        "ACCESS_REGISTRED" => self::RANK_REGITRED,
+        "ACCESS_ADMIN" => self::RANK_ADMIN,
+        "ACCESS_SPECIFIC_RIGHT" => self::RANK_SPECIFIC_RIGHT);
+    private static $types = array();
+
+    /**
      * Vérifie si le client a les droits suffisant pour acceder au module
      *
      * @param $zoneIdentifiant string module ou page administrateur (module/page) ou id du block sous forme block + Id
@@ -19,28 +67,26 @@ class Core_Access {
      * @return boolean true le client visé a la droit
      */
     public static function moderate($zoneIdentifiant, $userIdAdmin = "") {
-        // Rank 3 exigé !
-        if (Core_Session::getInstance()->userRank === 3) {
-            // Recherche des droits admin
-            $right = self::getAdminRight($userIdAdmin);
-            $nbRights = count($right);
-            $zone = "";
-            $identifiant = "";
+        if (Core_Session::getInstance()->getUserInfos()->hasAdminRank()) {
+            // Recherche des droits administrateur
+            $rights = self::getAdminRight($userIdAdmin);
+            $nbRights = count($rights);
+            $coreAccessType = self::getAccessType($zoneIdentifiant);
 
             // Si les réponses retourné sont correcte
-            if ($nbRights > 0 && self::accessType($zoneIdentifiant, $zone, $identifiant)) {
+            if ($nbRights > 0 && $coreAccessType->valid()) {
                 // Vérification des droits
-                if ($right[0] === "all") { // Admin avec droit suprême
+                if ($rights[0] === "all") { // Admin avec droit suprême
                     return true;
                 } else {
                     // Analyse des droits, un par un
                     for ($i = 0; $i <= $nbRights; $i++) {
                         // Droit courant étudié
-                        $currentRight = $right[$i];
+                        $currentRight = $rights[$i];
 
                         // Si c'est un droit de module
-                        if ($zone === "MODULE") {
-                            if (is_numeric($currentRight) && $identifiant === $currentRight) {
+                        if ($coreAccessType->isModuleZone()) {
+                            if (is_numeric($currentRight) && $coreAccessType->getIdentifiant() === $currentRight) {
                                 return true;
                             }
                         } else { // Si c'est un droit spécial
@@ -50,7 +96,7 @@ class Core_Access {
                             $identifiantRight = "";
 
                             // Vérification de la validité du droit
-                            if (self::accessType($zoneIdentifiantRight, $zoneRight, $identifiantRight)) {
+                            if (self::getAccessType($zoneIdentifiantRight, $zoneRight, $identifiantRight)) {
                                 // Vérification suivant le type de droit
                                 if ($zone === "BLOCK") {
                                     if ($zoneRight === "BLOCK" && is_numeric($identifiantRight)) {
@@ -142,7 +188,7 @@ class Core_Access {
         if (!empty($userIdAdmin))
             $userIdAdmin = Exec_Entities::secureText($userIdAdmin);
         else
-            $userIdAdmin = Core_Session::getInstance()->userId;
+            $userIdAdmin = Core_Session::getInstance()->getUserInfos()->getId();
 
         $admin = array();
         $admin = Core_Sql::getInstance()->getBuffer("getAdminRight");
@@ -167,45 +213,42 @@ class Core_Access {
     }
 
     /**
-     * Identifie le type d'acces lié a l'identifiant entré
+     * Retourne l'identification du type d'accès.
      *
-     * @param $zoneIdentifiant string module ou page administrateur (module/page) ou id du block sous forme block + Id
-     * @param $zone string la zone type trouvée (BLOCK/PAGE/MODULE)
-     * @param $identifiant string l'identifiant lié au type trouvé
-     * @return boolean true identifiant valide
+     * @param string $zoneIdentifiant valeur du type d'accès.
+     * @return Core_AccessType
      */
-    public static function &accessType(&$zoneIdentifiant, &$zone, &$identifiant) {
-        $access = false;
-        if (substr($zoneIdentifiant, 0, 5) === "block") {
-            $zone = "BLOCK";
-            $identifiant = substr($zoneIdentifiant, 5, strlen($zoneIdentifiant));
-            $access = true;
-        } else if (($pathPos = strrpos($zoneIdentifiant, "/")) !== false) {
-            $module = substr($zoneIdentifiant, 0, $pathPos);
-            $page = substr($zoneIdentifiant, $pathPos + 1, strlen($zoneIdentifiant));
+    public static function &getAccessType($zoneIdentifiant) {
+        if (!isset(self::$types[$zoneIdentifiant])) {
+            self::$types[$zoneIdentifiant] = new Core_AccessType($zoneIdentifiant);
+        }
+        return self::$types[$zoneIdentifiant];
+    }
 
-            if (Core_Loader::isCallable("Libs_Module") && Libs_Module::getInstance()->isModule($module, $page)) {
-                $zone = "PAGE";
-                $zoneIdentifiant = $module;
-                $identifiant = $page;
-                $access = true;
-            }
-        } else if (!is_numeric($zoneIdentifiant)) {
-            // Recherche d'informations sur le module
-            $moduleInfo = array();
-            if (Core_Loader::isCallable("Libs_Module")) {
-                $moduleInfo = Libs_Module::getInstance()->getInfoModule($zoneIdentifiant);
-            }
+    public static function &autorize(Core_AccessType $accessType) {
+        $rslt = false;
 
-            if (!empty($moduleInfo)) {
-                if (is_numeric($moduleInfo['mod_id'])) {
-                    $zone = "MODULE";
-                    $identifiant = $moduleInfo['mod_id'];
-                    $access = true;
+        if ($accessType->valid()) {
+            $userInfos = Core_Session::getInstance()->getUserInfos();
+
+            if ($userInfos->getRank() >= $accessType->getRank()) {
+                if ($accessType->getRank() === self::RANK_SPECIFIC_RIGHT) {
+                    foreach ($userInfos->getRights() as $userAccessType) {
+                        if (!$userAccessType->valid()) {
+                            continue;
+                        }
+
+                        if ($accessType->isAssignableFrom($userAccessType)) {
+                            $rslt = true;
+                            break;
+                        }
+                    }
+                } else {
+                    $rslt = true;
                 }
             }
         }
-        return $access;
+        return $rslt;
     }
 
     /**
@@ -220,27 +263,11 @@ class Core_Access {
                 "Invalid rank value: " . $rank));
         }
 
-        $rankLitteral = "";
+        $rankLitteral = array_search($rank, self::$rankRegistred, true);
 
-        switch ($rank) {
-            case -1:
-                $rankLitteral = ACCESS_NONE;
-                break;
-            case 0:
-                $rankLitteral = ACCESS_PUBLIC;
-                break;
-            case 1:
-                $rankLitteral = ACCESS_REGISTRED;
-                break;
-            case 2:
-                $rankLitteral = ACCESS_ADMIN;
-                break;
-            case 3:
-                $rankLitteral = ACCESS_ADMIN_RIGHT;
-                break;
-            default :
-                Core_Secure::getInstance()->throwException("accessRank", null, array(
-                    "Numeric rank: " . $rank));
+        if ($rankLitteral === false) {
+            Core_Secure::getInstance()->throwException("accessRank", null, array(
+                "Numeric rank: " . $rank));
         }
 
         $rankLitteral = defined($rankLitteral) ? constant($rankLitteral) : $rankLitteral;
@@ -255,7 +282,7 @@ class Core_Access {
     public static function &getRankList() {
         $rankList = array();
 
-        for ($i = -1; $i < 4; $i++) {
+        for ($i = self::RANK_NONE; $i <= self::RANK_SPECIFIC_RIGHT; $i++) {
             $rankList[] = array(
                 "numeric" => $i,
                 "letters" => self::getRankAsLitteral($i));

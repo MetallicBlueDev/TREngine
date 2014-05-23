@@ -58,7 +58,7 @@ class Core_Main {
                 Exec_Marker::startTimer("core");
             }
 
-            self::$coreMain = new self();
+            self::$coreMain = new Core_Main();
             self::$coreMain->prepare();
 
             if (Core_Secure::debuggingMode()) {
@@ -146,7 +146,7 @@ class Core_Main {
      * @return boolean
      */
     public function doDumb() {
-        return (!$this->doOpening() && Core_Session::getInstance()->userRank < 2);
+        return (!$this->doOpening() && !Core_Session::getInstance()->getUserInfos()->hasAdminRank());
     }
 
     /**
@@ -497,7 +497,7 @@ class Core_Main {
      * Vérification et assignation du template.
      */
     private function checkMakeStyle() {
-        $templateName = Core_Session::getInstance()->userTemplate;
+        $templateName = Core_Session::getInstance()->getUserInfos()->getTemplate();
 
         // Tentative d'utilisation du template du client
         if (!Libs_MakeStyle::setCurrentTemplate($templateName)) {

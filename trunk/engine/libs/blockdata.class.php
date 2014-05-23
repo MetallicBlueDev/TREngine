@@ -5,7 +5,7 @@
  *
  * @author Sébastien Villemain
  */
-class Libs_BlockData {
+class Libs_BlockData implements Core_AccessToken {
 
     /**
      * Tableau d'information du block.
@@ -191,7 +191,7 @@ class Libs_BlockData {
     public function &canActive($checkModule = true) {
         $rslt = false;
 
-        if (Core_Session::getInstance()->userRank >= $this->getRank()) {
+        if (Core_Access::autorize(Core_AccessType::getTypeFromExchange($this))) {
             if ($checkModule) {
                 if (Core_Loader::isCallable("Libs_Module")) {
                     foreach ($this->getTargetModules() as $modSelected) {
@@ -206,6 +206,16 @@ class Libs_BlockData {
             }
         }
         return $rslt;
+    }
+
+    /**
+     * Retourne le zone d'échange.
+     *
+     * @return string
+     */
+    public function &getZone() {
+        $zone = "BLOCK";
+        return $zone;
     }
 
 }

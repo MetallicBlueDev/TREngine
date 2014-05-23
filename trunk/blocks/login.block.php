@@ -66,11 +66,13 @@ class Block_Login extends Block_Model {
     private function &render() {
         $content = "";
         if (Core_Session::hasConnection()) {
+            $userInfos = Core_Session::getInstance()->getUserInfos();
+
             if ($this->displayText) {
-                $content .= WELCOME . " <b>" . Core_Session::getInstance()->userName . "</b> !<br />";
+                $content .= WELCOME . " <b>" . $userInfos->getName() . "</b> !<br />";
             }
-            if ($this->displayAvatar && !empty(Core_Session::getInstance()->userAvatar)) {
-                $content .= Core_Html::getLink("mod=connect&view=account", Exec_Image::resize(Core_Session::getInstance()->userAvatar, 80)) . "<br />";
+            if ($this->displayAvatar && !empty($userInfos->getAvatar())) {
+                $content .= Core_Html::getLink("mod=connect&view=account", Exec_Image::resize($userInfos->getAvatar(), 80)) . "<br />";
             }
             if ($this->displayIcons) {
                 $content .= Core_Html::getLink("mod=connect&view=logout", LOGOUT) . "<br />"

@@ -41,7 +41,7 @@ class Core_UrlRewriting {
      */
     public static function &getInstance() {
         if (self::$coreUrlRewriting === null) {
-            self::$coreUrlRewriting = new self();
+            self::$coreUrlRewriting = new Core_UrlRewriting();
         }
         return self::$coreUrlRewriting;
     }

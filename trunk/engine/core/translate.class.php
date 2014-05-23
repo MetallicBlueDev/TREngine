@@ -217,7 +217,7 @@ class Core_Translate {
      */
     public static function checkInstance() {
         if (self::$coreTranslate === null) {
-            self::$coreTranslate = new self();
+            self::$coreTranslate = new Core_Translate();
             self::$coreTranslate->translate(DIRECTORY_SEPARATOR);
         }
     }

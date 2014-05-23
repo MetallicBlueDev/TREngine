@@ -9,7 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-class Libs_ModuleData {
+class Libs_ModuleData implements Core_AccessToken {
 
     /**
      * Nom du module courant.
@@ -142,6 +142,16 @@ class Libs_ModuleData {
      */
     public function isValid($page = "") {
         return Libs_Module::getInstance()->isModule($this->getName(), $page);
+    }
+
+    /**
+     * Retourne le zone d'échange.
+     * 
+     * @return string
+     */
+    public function &getZone() {
+        $zone = "MODULE";
+        return $zone;
     }
 
 }
