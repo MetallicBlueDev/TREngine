@@ -9,7 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-class Core_AccessType {
+class Core_AccessType implements Core_AccessToken {
 
     /**
      * Accès passe partout.
@@ -40,8 +40,9 @@ class Core_AccessType {
      * @param array $rights
      * @return Core_AccessType
      */
-    public static function getTypeFromDatabase(array &$rights) {
-        return new Core_AccessType($rights);
+    public static function &getTypeFromDatabase(array &$rights) {
+        $newAccess = new Core_AccessType($rights);
+        return $newAccess;
     }
 
     /**
@@ -50,7 +51,7 @@ class Core_AccessType {
      * @param Core_AccessToken $data
      * @return Core_AccessType
      */
-    public static function getTypeFromExchange(Core_AccessToken $data) {
+    public static function &getTypeFromExchange(Core_AccessToken $data) {
         $infos = array(
             "zone" => $data->getZone(),
             "rank" => $data->getRank(),
@@ -63,8 +64,9 @@ class Core_AccessType {
      *
      * @return int
      */
-    public function getRank() {
-        return isset($this->rights['rank']) ? $this->rights['rank'] : Core_Access::RANK_NONE;
+    public function &getRank() {
+        $rank = isset($this->rights['rank']) ? $this->rights['rank'] : Core_Access::RANK_NONE;
+        return $rank;
     }
 
     /**
@@ -72,7 +74,7 @@ class Core_AccessType {
      *
      * @return string
      */
-    public function getZone() {
+    public function &getZone() {
         return $this->rights['zone'];
     }
 
@@ -81,7 +83,7 @@ class Core_AccessType {
      *
      * @return string
      */
-    public function getPage() {
+    public function &getPage() {
         return $this->rights['page'];
     }
 
@@ -90,7 +92,7 @@ class Core_AccessType {
      *
      * @return string
      */
-    public function getIdentifiant() {
+    public function &getId() {
         return $this->rights['identifiant'];
     }
 
@@ -135,7 +137,7 @@ class Core_AccessType {
      *
      * @return boolean
      */
-    public function valid() {
+    public function &valid() {
         if (!$this->alreadyChecked()) {
             $this->checkValidity();
         }
@@ -152,7 +154,7 @@ class Core_AccessType {
         $rslt = false;
 
         if ($otherAccessType->getZone() === $this->getZone() || $otherAccessType->getZone() === self::MAGIC_ACCESS) {
-            if ($otherAccessType->getIdentifiant() === $this->getIdentifiant() || $otherAccessType->getIdentifiant() === self::MAGIC_ACCESS) {
+            if ($otherAccessType->getId() === $this->getId() || $otherAccessType->getId() === self::MAGIC_ACCESS) {
                 if (empty($this->getPage()) || ($this->getPage() === $otherAccessType->getPage() || $otherAccessType->getPage() === self::MAGIC_ACCESS)) {
                     $rslt = true;
                 }
@@ -165,11 +167,13 @@ class Core_AccessType {
      * Routine de vérification du type d'accès.
      */
     private function checkValidity() {
+        $valid = false;
+
         if (!empty($this->getZone())) {
-            if (!empty($this->getIdentifiant())) {
+            if (!empty($this->getId())) {
                 if ($this->isModuleZone()) {
                     if ($this->hasPageAccess()) {
-                        if (Core_Loader::isCallable("Libs_Module") && Libs_Module::getInstance()->isModule($this->getPage(), $this->getIdentifiant())) {
+                        if (Core_Loader::isCallable("Libs_Module") && Libs_Module::getInstance()->isModule($this->getPage(), $this->getId())) {
                             $valid = true;
                         }
                     } else {
@@ -177,7 +181,7 @@ class Core_AccessType {
                         $moduleInfo = null;
 
                         if (Core_Loader::isCallable("Libs_Module")) {
-                            $moduleInfo = Libs_Module::getInstance()->getInfoModule($this->getIdentifiant());
+                            $moduleInfo = Libs_Module::getInstance()->getInfoModule($this->getId());
                         }
 
                         if ($moduleInfo !== null && is_numeric($moduleInfo->getId())) {

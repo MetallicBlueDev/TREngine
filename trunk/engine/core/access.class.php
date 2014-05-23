@@ -86,7 +86,7 @@ class Core_Access {
 
                         // Si c'est un droit de module
                         if ($coreAccessType->isModuleZone()) {
-                            if (is_numeric($currentRight) && $coreAccessType->getIdentifiant() === $currentRight) {
+                            if (is_numeric($currentRight) && $coreAccessType->getId() === $currentRight) {
                                 return true;
                             }
                         } else { // Si c'est un droit spécial
