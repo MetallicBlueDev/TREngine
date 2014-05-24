@@ -77,9 +77,19 @@ abstract class Module_Model {
      */
     public function &getModuleData() {
         if ($this->data === null) {
-            $this->data = new Libs_ModuleData("", array());
+            $empty = array();
+            $this->data = new Libs_ModuleData("", $empty);
         }
         return $this->data;
+    }
+
+    /**
+     * Retourne l'accès spécifique de ce module.
+     *
+     * @return Core_AccessType
+     */
+    public function &getAccessType() {
+        return Core_AccessType::getTypeFromToken($this->getModuleData());
     }
 
 }
