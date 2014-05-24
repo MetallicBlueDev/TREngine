@@ -227,7 +227,7 @@ class Libs_Module {
             // Retourne un view valide sinon une chaine vide
             $this->view = $this->viewPage(array(
                 $moduleClassName,
-                ($moduleInfo->installed()) ? $this->view : "install"), false);
+                ($moduleInfo->installed()) ? $this->view : "install"));
 
             // Affichage du module si possible
             if (!empty($this->view)) {
@@ -288,33 +288,37 @@ class Libs_Module {
      * Retourne un view valide sinon une chaine vide.
      *
      * @param array $pageInfo
-     * @param boolean $setAlternative
      * @return string
      */
-    private function &viewPage(array $pageInfo, $setAlternative = true) {
-        $rslt = "";
-        $default = "display";
+    private function &viewPage(array $pageInfo) {
+        $invalid = false;
 
         if (Core_Loader::isCallable($pageInfo[0], $pageInfo[1])) {
-            if ($pageInfo[1] === "install" && ($this->getInfoModule()->installed() || !Core_Session::getInstance()->getUserInfos()->hasAdminRank())) {
-                $rslt = $this->viewPage(array(
-                    $pageInfo[0],
-                    $default), false);
-            } else if ($pageInfo[1] === "uninstall" && (!$this->getInfoModule()->installed() || !Core_Access::moderate($this->module))) {
-                $rslt = $this->viewPage(array(
-                    $pageInfo[0],
-                    $default), false);
-            } else if ($pageInfo[1] === "setting" && (!$this->getInfoModule()->installed() || !Core_Access::moderate($this->module))) {
-                $rslt = $this->viewPage(array(
-                    $pageInfo[0],
-                    $default), false);
-            } else {
-                $rslt = $pageInfo[1];
+            $userInfos = Core_Session::getInstance()->getUserInfos();
+
+            if ($pageInfo[1] === "install" && ($this->getInfoModule()->installed() || !$userInfos->hasAdminRank())) {
+                $invalid = true;
+            } else if ($pageInfo[1] === "uninstall" && (!$this->getInfoModule()->installed() || !$userInfos->hasAdminRank())) {
+                $invalid = true;
+            } else if ($pageInfo[1] === "setting" && (!$this->getInfoModule()->installed() || !$userInfos->hasAdminRank())) {
+                $invalid = true;
             }
-        } else if ($setAlternative && $pageInfo[1] !== $default) {
-            $rslt = $this->viewPage(array(
-                $pageInfo[0],
-                $default), false);
+        } else {
+            $invalid = true;
+        }
+
+        $rslt = "";
+
+        if ($invalid) {
+            $default = "display";
+
+            if ($pageInfo[1] !== $default) {
+                $rslt = $this->viewPage(array(
+                    $pageInfo[0],
+                    $default));
+            }
+        } else {
+            $rslt = $pageInfo[1];
         }
         return $rslt;
     }
