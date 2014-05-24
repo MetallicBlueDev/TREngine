@@ -216,56 +216,42 @@ class Module_Connect_Index extends Module_Model {
 
         // Type de compte admin
         $form->addSpace();
-        $rights = Core_Access::getAdminRight();
         $form->addHtmlInFieldset("<b>");
-        if (Core_Session::getInstance()->userRank == 3 && $rights[0] == "all")
+
+        if ($userInfos->hasSuperAdminRank()) {
             $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_MAX);
-        else if (Core_Session::getInstance()->userRank == 3)
+        } else if ($userInfos->hasAdminWithRightsRank()) {
             $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_HIG);
-        else
+        } else {
             $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_MED);
+        }
+
         $form->addHtmlInFieldset("</b>");
 
         // Liste des droits
         $form->addSpace();
         $form->addHtmlInFieldset("<u>" . ACCOUNT_ADMIN_RIGHT . ":</u>");
 
-        // Requête pour la liste des blocks
-        $blocks = array();
-
-        if ($rights[0] != "all") {
-            Core_Sql::getInstance()->select(
-            Core_Table::BLOCKS_TABLE, array(
-                "block_id",
-                "title")
-            );
-            if (Core_Sql::getInstance()->affectedRows() > 0) {
-                Core_Sql::getInstance()->addArrayBuffer("blocks");
-                $blocks = Core_Sql::getInstance()->getBuffer("blocks");
-            }
-        }
-
-        $zone = "";
-        $identifiant = "";
-        foreach ($rights as $key => $right) {
-            if ($right == "all") {
-                $form->addHtmlInFieldset(ADMIN_RIGHT_ALL);
-            } else if (Core_Access::getAccessType($right, $zone, $identifiant)) {
-                if ($zone == "MODULE") {
-                    $form->addHtmlInFieldset(ADMIN_RIGHT_MODULE . " <b>" . $right . "</b> (#" . $identifiant . ")");
-                } else if ($zone == "BLOCK") {
-                    foreach ($blocks as $block) {
-                        if ($block['block_id'] == $identifiant) {
-                            $right = "<b>" . $block['title'] . "</b> (#" . $identifiant . ")";
-                            break;
-                        }
-                    }
-                    $form->addHtmlInFieldset(ADMIN_RIGHT_BLOCK . " " . $right);
-                } else if ($zone == "PAGE") {
-                    $form->addHtmlInFieldset(ADMIN_RIGHT_PAGE . " <b>" . $identifiant . "</b> (" . $right . ")");
+        if ($userInfos->hasSuperAdminRank()) {
+            $form->addHtmlInFieldset(ADMIN_RIGHT_ALL);
+        } else {
+            foreach ($userInfos->getRights() as $userAccessType) {
+                if (!$userAccessType->valid()) {
+                    continue;
                 }
+
+                $text = "";
+
+                if ($userAccessType->isModuleZone()) {
+                    $text = ADMIN_RIGHT_MODULE;
+                } else if ($userAccessType->isBlockZone()) {
+                    $text = ADMIN_RIGHT_BLOCK;
+                }
+
+                $form->addHtmlInFieldset($text . " <b>" . $userAccessType->getPage() . "</b> (#" . $userAccessType->getId() . ")");
             }
         }
+
         $form->addInputHidden("mod", "connect");
         $form->addInputHidden("view", "account");
         $form->addInputHidden("layout", "module");
