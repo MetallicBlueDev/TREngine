@@ -111,6 +111,16 @@ class Core_AccessType implements Core_AccessToken {
     }
 
     /**
+     * Change la formule de la page.
+     *
+     * @param string $newPage
+     */
+    public function &setPage($newPage) {
+        $this->rights['page'] = $newPage;
+        unset($this->rights['validity']);
+    }
+
+    /**
      * Identifiant du type d'accès (par exemple 01 ou une page précise).
      *
      * @return string
