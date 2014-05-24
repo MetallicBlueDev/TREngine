@@ -57,7 +57,6 @@ class Core_Access {
         "ACCESS_REGISTRED" => self::RANK_REGITRED,
         "ACCESS_ADMIN" => self::RANK_ADMIN,
         "ACCESS_SPECIFIC_RIGHT" => self::RANK_SPECIFIC_RIGHT);
-    private static $types = array();
 
     /**
      * Vérifie si le client a les droits suffisant pour acceder au module
@@ -121,27 +120,24 @@ class Core_Access {
     }
 
     /**
-     * Retourne l'erreur d'acces liée au module
+     * Retourne l'erreur d'accès liée au jeton.
      *
-     * @param $mod
+     * @param Core_AccessToken $token
      * @return string
      */
-    public static function &getModuleAccesError($mod) {
-        // Recherche des infos du module
-        $moduleRank = -2;
-        if (Core_Loader::isCallable("Libs_Module")) {
-            $moduleRank = Libs_Module::getInstance()->getInfoModule($mod)->getRank();
-        }
-
+    public static function &getAccessErrorMessage(Core_AccessToken $token) {
         $error = ERROR_ACCES_FORBIDDEN;
-        // Si on veut le type d'erreur pour un acces
-        if ($moduleRank > -2) {
-            if ($moduleRank === -1)
-                $error = ERROR_ACCES_OFF;
-            else if ($moduleRank === 1 && !Core_Session::getInstance()->getUserInfos()->hasRank())
+
+        if ($token->getRank() === -1) {
+            $error = ERROR_ACCES_OFF;
+        } else {
+            $userInfos = Core_Session::getInstance()->getUserInfos();
+
+            if ($token->getRank() === 1 && !$userInfos->hasRegisteredRank()) {
                 $error = ERROR_ACCES_MEMBER;
-            else if ($moduleRank > 1 && Core_Session::getInstance()->getUserInfos()->getRank() < $rank)
+            } else if ($token->getRank() > 1 && $userInfos->getRank() < $token->getRank()) {
                 $error = ERROR_ACCES_ADMIN;
+            }
         }
         return $error;
     }
@@ -209,10 +205,10 @@ class Core_Access {
     public static function &getRankList() {
         $rankList = array();
 
-        for ($i = self::RANK_NONE; $i <= self::RANK_SPECIFIC_RIGHT; $i++) {
+        foreach (self::$rankRegistred as $rank) {
             $rankList[] = array(
-                "numeric" => $i,
-                "letters" => self::getRankAsLitteral($i));
+                "numeric" => $rank,
+                "letters" => self::getRankAsLitteral($rank));
         }
         return $rankList;
     }

@@ -210,7 +210,7 @@ class Libs_Module {
                 $this->get($moduleInfo);
             }
         } else {
-            Core_Logger::addErrorMessage(ERROR_ACCES_ZONE . " " . Core_Access::getModuleAccesError($moduleInfo->getName()));
+            Core_Logger::addErrorMessage(ERROR_ACCES_ZONE . " " . Core_Access::getAccessErrorMessage($moduleInfo));
         }
     }
 
