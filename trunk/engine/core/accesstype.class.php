@@ -20,7 +20,7 @@ class Core_AccessType implements Core_AccessToken {
 
     /**
      * Cache d'accès typé.
-     * 
+     *
      * @var Core_AccessType[]
      */
     private static $cache = array();
@@ -214,7 +214,18 @@ class Core_AccessType implements Core_AccessToken {
                         }
                     }
                 } else if ($this->isBlockZone()) {
-                    // TODO Recherche d'information sur le block
+                    // Recherche d'information sur le block
+                    $blockInfo = null;
+
+                    if (Core_Loader::isCallable("Libs_Block")) {
+                        $blockInfo = Libs_Block::getInstance()->getInfoBlock($this->getId());
+                    }
+
+                    if ($blockInfo !== null && is_numeric($blockInfo->getId())) {
+                        $this->rights['page'] = $blockInfo->getType();
+                        $this->rights['identifiant'] = $blockInfo->getId();
+                        $valid = true;
+                    }
                     $valid = true;
                 } else {
                     $valid = true;
