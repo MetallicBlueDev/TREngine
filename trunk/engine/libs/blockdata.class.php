@@ -191,7 +191,7 @@ class Libs_BlockData implements Core_AccessToken {
     public function &canActive($checkModule = true) {
         $rslt = false;
 
-        if (Core_Access::autorize(Core_AccessType::getTypeFromExchange($this))) {
+        if (Core_Access::autorize(Core_AccessType::getTypeFromToken($this))) {
             if ($checkModule) {
                 if (Core_Loader::isCallable("Libs_Module")) {
                     foreach ($this->getTargetModules() as $modSelected) {
