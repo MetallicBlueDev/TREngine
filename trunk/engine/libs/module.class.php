@@ -138,7 +138,6 @@ class Libs_Module {
         // Nom du module cible
         $moduleName = empty($moduleName) ? $this->module : $moduleName;
 
-        // Retourne le buffer
         if (isset($this->modulesInfo[$moduleName])) {
             $moduleInfo = $this->modulesInfo[$moduleName];
         } else {
