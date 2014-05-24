@@ -19,6 +19,13 @@ class Core_AccessType implements Core_AccessToken {
     const MAGIC_ACCESS = "all";
 
     /**
+     * Cache d'accès typé.
+     * 
+     * @var Core_AccessType[]
+     */
+    private static $cache = array();
+
+    /**
      * Données complètes des droits.
      *
      * @var array
@@ -51,12 +58,28 @@ class Core_AccessType implements Core_AccessToken {
      * @param Core_AccessToken $data
      * @return Core_AccessType
      */
-    public static function &getTypeFromExchange(Core_AccessToken $data) {
+    public static function &getTypeFromToken(Core_AccessToken $data) {
         $infos = array(
             "zone" => $data->getZone(),
             "rank" => $data->getRank(),
             "identifiant" => $data->getId());
         return self::getTypeFromDatabase($infos);
+    }
+
+    /**
+     * Retourne l'accès typé administrateur.
+     *
+     * @return Core_AccessType
+     */
+    public static function &getTypeFromAdmin() {
+        if (!isset(self::$cache[self::MAGIC_ACCESS])) {
+            $infos = array(
+                "zone" => self::MAGIC_ACCESS,
+                "rank" => self::MAGIC_ACCESS,
+                "identifiant" => self::MAGIC_ACCESS);
+            self::$cache[self::MAGIC_ACCESS] = self::getTypeFromDatabase($infos);
+        }
+        return self::$cache[self::MAGIC_ACCESS];
     }
 
     /**
