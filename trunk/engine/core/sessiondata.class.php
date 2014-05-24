@@ -106,6 +106,24 @@ class Core_SessionData implements Core_AccessToken {
     }
 
     /**
+     * Détermine si l'utilisateur est administrateur.
+     *
+     * @return boolean
+     */
+    public function hasAdminWithRightsRank() {
+        return $this->hasAdminRank() && count($this->getRights()) > 0;
+    }
+
+    /**
+     * Détermine si l'utilisateur est super administrateur.
+     *
+     * @return boolean
+     */
+    public function hasSuperAdminRank() {
+        return $this->hasAdminRank() && Core_Access::autorize(Core_AccessType::getTypeFromAdmin());
+    }
+
+    /**
      * Date d'inscription du client.
      *
      * @return timestamp
