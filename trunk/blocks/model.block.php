@@ -20,13 +20,6 @@ abstract class Block_Model {
     private $data = null;
 
     /**
-     * Rank pour acceder au block.
-     *
-     * @var int
-     */
-    public $rank = "";
-
-    /**
      * Affichage par défaut.
      */
     public function display() {
@@ -63,9 +56,19 @@ abstract class Block_Model {
      */
     public function &getBlockData() {
         if ($this->data === null) {
-            $this->data = new Libs_BlockData(array());
+            $empty = array();
+            $this->data = new Libs_BlockData($empty);
         }
         return $this->data;
+    }
+
+    /**
+     * Retourne l'accès spécifique de ce module.
+     *
+     * @return Core_AccessType
+     */
+    public function &getAccessType() {
+        return Core_AccessType::getTypeFromToken($this->getBlockData());
     }
 
 }
