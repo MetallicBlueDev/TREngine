@@ -98,10 +98,13 @@ class Module_Management_Index extends Module_Model {
     public static function &getManagementList() {
         $pageList = array();
         $files = Core_Cache::getInstance()->getFileList("modules/management", ".setting.module");
+        $currentAccessType = $this->getAccessType();
 
         foreach ($files as $page) {
+            $currentAccessType->setPage("management/" . $page . ".setting");
+
             // Vérification des droits de l'utilisateur
-            if (Core_Access::moderate("management/" . $page . ".setting")) {
+            if (Core_Access::autorize($currentAccessType)) {
                 $name = self::getManagementPageName($page);
                 $pageList[] = array(
                     "value" => $page,
