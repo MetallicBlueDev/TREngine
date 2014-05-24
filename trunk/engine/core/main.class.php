@@ -375,8 +375,7 @@ class Core_Main {
                 // Affichage classique du site
                 if ($this->doDumb()) {
                     // Mode maintenance: possibilité de s'identifier
-                    Libs_Block::getInstance()->launchOneBlock(array(
-                        "type = 'login'"));
+                    Libs_Block::getInstance()->launchBlockType("login");
 
                     Exec_Marker::stopTimer("main");
 
@@ -409,7 +408,7 @@ class Core_Main {
                     $libsBlock = Libs_Block::getInstance();
 
                     // Affichage du block uniquement
-                    $libsBlock->launchOneBlock();
+                    $libsBlock->launchBlockRequested();
 
                     Exec_Marker::stopTimer("main");
 
