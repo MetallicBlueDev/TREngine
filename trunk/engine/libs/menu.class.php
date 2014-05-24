@@ -83,7 +83,14 @@ class Libs_Menu {
         // Début de rendu
         $out = "<ul id=\"" . $this->identifier . "\"" . $this->attribtus . ">";
         foreach ($this->items as $key => $item) {
-            if ($item->getParentId() == 0 && Core_Access::autorize($this->identifier, $item->getRank())) {
+            $infos = array(
+                "zone" => "MENU",
+                "rank" => $item->getRank(),
+                "identifiant" => $this->identifier);
+
+            $newAccessType = Core_AccessType::getTypeFromDatabase($infos);
+
+            if ($item->getParentId() == 0 && Core_Access::autorize($newAccessType)) {
                 // Ajout du tableau route dans l'élément principal
                 if ($key == $route[0]) {
                     $item->setRoute($route);

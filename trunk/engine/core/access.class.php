@@ -147,85 +147,12 @@ class Core_Access {
     }
 
     /**
-     * Autorise ou refuse l'accès a la ressource cible
+     * Autorise ou refuse l'accès à la ressource cible.
      *
-     * @param $zoneIdentifiant string block+Id ou module/page.php ou module
-     * @param $zoneRank int
-     * @return boolean true accès autorisé
+     * @param Core_AccessType $accessType
+     * @return boolean
      */
-    public static function &autorize($zoneIdentifiant, $zoneRank = -2) {
-        $access = false;
-        // Si ce n'est pas un block ou une page particuliere
-        if (substr($zoneIdentifiant, 0, 5) !== "block" && $zoneRank < -1) {
-            // Recherche des infos du module
-            $moduleInfo = array();
-            if (Core_Loader::isCallable("Libs_Module")) {
-                $moduleInfo = Libs_Module::getInstance()->getInfoModule($zoneIdentifiant);
-            }
-
-            if (!empty($moduleInfo)) {
-                $zoneIdentifiant = $moduleInfo['name'];
-                $zoneRank = $moduleInfo['rank'];
-            }
-        }
-
-        if ($zoneRank === 0)
-            $access = true; // Accès public
-        else if ($zoneRank > 0 && $zoneRank < 3 && Core_Session::getInstance()->userRank >= $zoneRank)
-            $access = true; // Accès membre ou admin
-        else if ($zoneRank === 3 && self::moderate($zoneIdentifiant))
-            $access = true; // Accès admin avec droits
-        return $access;
-    }
-
-    /**
-     * Retourne les droits de l'admin ciblé
-     *
-     * @param $userIdAdmin string userId
-     * @return array liste des droits
-     */
-    public static function &getAdminRight($userIdAdmin = "") {
-        if (!empty($userIdAdmin))
-            $userIdAdmin = Exec_Entities::secureText($userIdAdmin);
-        else
-            $userIdAdmin = Core_Session::getInstance()->getUserInfos()->getId();
-
-        $admin = array();
-        $admin = Core_Sql::getInstance()->getBuffer("getAdminRight");
-        if (empty($admin)) { // Si la requête n'est pas en cache
-            Core_Sql::getInstance()->select(
-            Core_Table::USERS_ADMIN_TABLE, array(
-                "rights"), array(
-                "user_id = '" . $userIdAdmin . "'")
-            );
-
-            if (Core_Sql::getInstance()->affectedRows() > 0) {
-                Core_Sql::getInstance()->addArrayBuffer("getAdminRight");
-                $admin = Core_Sql::getInstance()->getBuffer("getAdminRight");
-            }
-        }
-
-        $rights = array();
-        if (!empty($admin)) {
-            $rights = explode("|", $admin[0]['rights']);
-        }
-        return $rights;
-    }
-
-    /**
-     * Retourne l'identification du type d'accès.
-     *
-     * @param string $zoneIdentifiant valeur du type d'accès.
-     * @return Core_AccessType
-     */
-    public static function &getAccessType($zoneIdentifiant) {
-        if (!isset(self::$types[$zoneIdentifiant])) {
-            self::$types[$zoneIdentifiant] = new Core_AccessType($zoneIdentifiant);
-        }
-        return self::$types[$zoneIdentifiant];
-    }
-
-    public static function &autorize(Core_AccessType $accessType) {
+    public static function &autorize(Core_AccessType &$accessType) {
         $rslt = false;
 
         if ($accessType->valid()) {

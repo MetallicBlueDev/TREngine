@@ -193,7 +193,7 @@ class Libs_Module {
         $moduleInfo = $this->getInfoModule();
 
         // Vérification du niveau d'acces
-        if (($moduleInfo->installed() && Core_Access::autorize($moduleInfo->getName())) || (!$moduleInfo->installed() && Core_Session::getInstance()->userRank > 1)) {
+        if (($moduleInfo->installed() && Core_Access::autorize(Core_AccessType::getTypeFromToken($moduleInfo))) || (!$moduleInfo->installed() && Core_Session::getInstance()->getUserInfos()->hasAdminRank())) {
             if ($moduleInfo->isValid($this->page)) {
 
                 if (Core_Loader::isCallable("Libs_Breadcrumb")) {
