@@ -69,9 +69,6 @@ class Core_Session {
      * @var Core_SessionData
      */
     private $userInfos = null;
-    public $userRank = 0;
-    public $userLanguage = "";
-    public $userTemplate = "";
 
     /**
      * Nom des cookies.
@@ -277,7 +274,7 @@ class Core_Session {
      */
     public function getUserInfos() {
         if ($this->userInfos === null) {
-            $this->userInfos = new Core_SessionData(array());
+            $this->setUserAnonymous();
         }
         return $this->userInfos;
     }
@@ -288,11 +285,11 @@ class Core_Session {
     public function refreshSession() {
         if ($this->userLogged()) {
             // Rafraichir le cache de session
-            $user = self::getUserInfo(array(
+            $userInfos = self::getUserInfo(array(
                 "user_id = '" . $this->userInfos->getId() . "'"));
 
-            if (count($user) > 1) {
-                $this->setUser($user, true);
+            if (count($userInfos) > 1) {
+                $this->setUser($userInfos, true);
                 Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS)->writeCache($this->sessionId . ".php", $this->serializeSession());
             }
         }
@@ -461,19 +458,19 @@ class Core_Session {
             // Cookie de session
             $sessionId = self::getCookie($this->cookieName['SESSION']);
 
+            // Cookie de langue
+            $userLanguage = self::getCookie($this->cookieName['LANGUE']);
+
+            // Cookie de template
+            $userTemplate = self::getCookie($this->cookieName['TEMPLATE']);
+
+            // Bannissement par IP
+            $this->userIpBan = self::getCookie($this->cookieName['BLACKBAN']);
+
             // Vérifie si une session est ouverte
             if ((!empty($userId) && !empty($sessionId))) {
                 // La session doit être entièrement re-validée
                 $isValidSession = false;
-
-                // Cookie de langue
-                $this->userLanguage = self::getCookie($this->cookieName['LANGUE']);
-
-                // Cookie de template
-                $this->userTemplate = self::getCookie($this->cookieName['TEMPLATE']);
-
-                // Cookie de l'IP BAN voir Core_BlackBan
-                $this->userIpBan = self::getCookie($this->cookieName['BLACKBAN']);
 
                 $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_SESSIONS);
 
@@ -481,7 +478,7 @@ class Core_Session {
                     // Si fichier cache trouvé, on l'utilise
                     $sessions = $coreCache->readCache($sessionId . ".php");
 
-                    if ($sessions['userId'] === $userId && $sessions['sessionId'] === $sessionId) {
+                    if ($sessions['user_id'] === $userId && $sessions['sessionId'] === $sessionId) {
                         // Mise a jour du dernier accès toute les 5 min
                         if (($coreCache->getCacheMTime($sessionId . ".php") + 5 * 60) < $this->timer) {
                             // En base
@@ -497,8 +494,14 @@ class Core_Session {
                     if ($isValidSession) {
                         // Injection des informations du client
                         $this->setUser($sessions);
+                        $this->userInfos->setLangue($userLanguage);
+                        $this->userInfos->setTemplate($userTemplate);
                     }
                 }
+            } else {
+                $this->setUserAnonymous();
+                $this->userInfos->setLangue($userLanguage);
+                $this->userInfos->setTemplate($userTemplate);
             }
         }
         return $isValidSession;
@@ -583,27 +586,30 @@ class Core_Session {
     }
 
     /**
+     * Injection d'un client anonyme.
+     */
+    private function setUserAnonymous() {
+        $empty = array();
+        $this->setUser($empty);
+    }
+
+    /**
      * Injection des informations du client.
      *
-     * @param array $info
+     * @param array $session
      * @param boolean $refreshAll
      */
-    private function setUser($info, $refreshAll = false) {
-
-        if (!empty($info['sessionId'])) {
-            $this->sessionId = $info['sessionId'];
+    private function setUser($session, $refreshAll = false) {
+        if ($this->userInfos === null || $refreshAll) {
+            $this->userInfos = new Core_SessionData($session);
         }
 
-        if (!empty($info['userIpBan'])) {
-            $this->userIpBan = $info['userIpBan'];
+        if (!empty($session['sessionId'])) {
+            $this->sessionId = $session['sessionId'];
         }
 
-        if (empty($this->userLanguage) || $refreshAll) {
-            $this->userLanguage = $info['langue'];
-        }
-
-        if (empty($this->userTemplate) || $refreshAll) {
-            $this->userTemplate = $info['template'];
+        if (!empty($session['userIpBan'])) {
+            $this->userIpBan = $session['userIpBan'];
         }
     }
 
