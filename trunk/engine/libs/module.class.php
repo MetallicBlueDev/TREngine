@@ -296,7 +296,7 @@ class Libs_Module {
         $default = "display";
 
         if (Core_Loader::isCallable($pageInfo[0], $pageInfo[1])) {
-            if ($pageInfo[1] === "install" && ($this->getInfoModule()->installed() || Core_Session::getInstance()->userRank < 2)) {
+            if ($pageInfo[1] === "install" && ($this->getInfoModule()->installed() || !Core_Session::getInstance()->getUserInfos()->hasAdminRank())) {
                 $rslt = $this->viewPage(array(
                     $pageInfo[0],
                     $default), false);

@@ -381,7 +381,7 @@ class Core_Translate {
 
         // Langage du client via le cookie de session
         if (Core_Loader::isCallable("Core_Session")) {
-            $userLanguage = strtolower(trim(Core_Session::getInstance()->userLanguage));
+            $userLanguage = strtolower(trim(Core_Session::getInstance()->getUserInfos()->getLangue()));
         } else {
             $userLanguage = "";
         }

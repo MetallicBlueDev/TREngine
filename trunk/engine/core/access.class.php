@@ -138,9 +138,9 @@ class Core_Access {
         if ($moduleRank > -2) {
             if ($moduleRank === -1)
                 $error = ERROR_ACCES_OFF;
-            else if ($moduleRank === 1 && Core_Session::getInstance()->userRank === 0)
+            else if ($moduleRank === 1 && !Core_Session::getInstance()->getUserInfos()->hasRank())
                 $error = ERROR_ACCES_MEMBER;
-            else if ($moduleRank > 1 && Core_Session::getInstance()->userRank < $rank)
+            else if ($moduleRank > 1 && Core_Session::getInstance()->getUserInfos()->getRank() < $rank)
                 $error = ERROR_ACCES_ADMIN;
         }
         return $error;
