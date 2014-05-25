@@ -351,7 +351,7 @@ class Core_Session {
 
                 if ($coreSql->affectedRows() > 0) {
                     // Bannissement toujours en place
-                    list($banId) = $coreSql->fetchArray();
+                    $banId = $coreSql->fetchArray()[0]['ban_id'];
 
                     // Mise à jour de l'ip
                     $coreSql->update(
@@ -377,26 +377,34 @@ class Core_Session {
             );
 
             foreach ($coreSql->fetchArray() as $value) {
-                list($banFullIp, $banName) = $value;
-                $banIp = explode(".", $banFullIp);
+                $banIp = !empty($value['ip']) ? explode(".", $value['ip']) : array();
+                $banIpCounter = count($banIp);
 
                 // Filtre pour la vérification
-                if (isset($banIp[3]) && !empty($banIp[3])) {
-                    $banList = $banFullIp;
+                if ($banIpCounter >= 4) {
+                    $banList = $value['ip'];
                     $searchIp = $userIp;
                 } else {
-                    $banList = $banIp[0] . $banIp[1] . $banIp[2];
+                    for ($index = 0; $index < $banIpCounter; $index++) {
+                        $banList .= $banIp[$index];
+                    }
+
                     $uIp = explode(".", $userIp);
-                    $searchIp = $uIp[0] . $uIp[1] . $uIp[2];
+                    $userIpCounter = count($uIp);
+                    $userIpCounter = $userIpCounter < $banIpCounter ? $userIpCounter : $banIpCounter;
+
+                    for ($index = 0; $index < $userIpCounter; $index++) {
+                        $searchIp .= $uIp[$index];
+                    }
                 }
 
                 // Vérification du client
-                if ($searchIp === $banList) {
+                if (!empty($searchIp) && $searchIp === $banList) {
                     // IP bannis !
-                    $this->userIpBan = $banFullIp;
-                } else if ($this->userInfos !== null && $this->userInfos->getName() === $banName) {
+                    $this->userIpBan = $value['ip'];
+                } else if ($this->userInfos !== null && $this->userInfos->getName() === $value['name']) {
                     // Pseudo bannis !
-                    $this->userIpBan = $banFullIp;
+                    $this->userIpBan = $value['ip'];
                 } else {
                     $this->userIpBan = "";
                 }
