@@ -59,67 +59,6 @@ class Core_Access {
         "ACCESS_SPECIFIC_RIGHT" => self::RANK_SPECIFIC_RIGHT);
 
     /**
-     * Vérifie si le client a les droits suffisant pour acceder au module
-     *
-     * @param $zoneIdentifiant string module ou page administrateur (module/page) ou id du block sous forme block + Id
-     * @param $userIdAdmin string Id de l'administrateur a vérifier
-     * @return boolean true le client visé a la droit
-     */
-    public static function moderate($zoneIdentifiant, $userIdAdmin = "") {
-        if (Core_Session::getInstance()->getUserInfos()->hasAdminRank()) {
-            // Recherche des droits administrateur
-            $rights = self::getAdminRight($userIdAdmin);
-            $nbRights = count($rights);
-            $coreAccessType = self::getAccessType($zoneIdentifiant);
-
-            // Si les réponses retourné sont correcte
-            if ($nbRights > 0 && $coreAccessType->valid()) {
-                // Vérification des droits
-                if ($rights[0] === "all") { // Admin avec droit suprême
-                    return true;
-                } else {
-                    // Analyse des droits, un par un
-                    for ($i = 0; $i <= $nbRights; $i++) {
-                        // Droit courant étudié
-                        $currentRight = $rights[$i];
-
-                        // Si c'est un droit de module
-                        if ($coreAccessType->isModuleZone()) {
-                            if (is_numeric($currentRight) && $coreAccessType->getId() === $currentRight) {
-                                return true;
-                            }
-                        } else { // Si c'est un droit spécial
-                            // Affectation des variables pour le droit courant
-                            $zoneIdentifiantRight = $currentRight;
-                            $zoneRight = "";
-                            $identifiantRight = "";
-
-                            // Vérification de la validité du droit
-                            if (self::getAccessType($zoneIdentifiantRight, $zoneRight, $identifiantRight)) {
-                                // Vérification suivant le type de droit
-                                if ($zone === "BLOCK") {
-                                    if ($zoneRight === "BLOCK" && is_numeric($identifiantRight)) {
-                                        if ($identifiant === $identifiantRight) {
-                                            return true;
-                                        }
-                                    }
-                                } else if ($zone === "PAGE") {
-                                    if ($zoneRight === "PAGE" && $zoneIdentifiant === $zoneIdentifiantRight && $identifiant === $identifiantRight) {
-                                        if (Libs_Module::getInstance()->isModule($zoneIdentifiant, $identifiant)) {
-                                            return true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
      * Retourne l'erreur d'accès liée au jeton.
      *
      * @param Core_AccessToken $token
@@ -146,16 +85,17 @@ class Core_Access {
      * Autorise ou refuse l'accès à la ressource cible.
      *
      * @param Core_AccessType $accessType
+     * @param boolean $forceSpecificRank
      * @return boolean
      */
-    public static function &autorize(Core_AccessType &$accessType) {
+    public static function &autorize(Core_AccessType &$accessType, $forceSpecificRank = false) {
         $rslt = false;
 
         if ($accessType->valid()) {
             $userInfos = Core_Session::getInstance()->getUserInfos();
 
             if ($userInfos->getRank() >= $accessType->getRank()) {
-                if ($accessType->getRank() === self::RANK_SPECIFIC_RIGHT) {
+                if ($accessType->getRank() === self::RANK_SPECIFIC_RIGHT || $forceSpecificRank) {
                     foreach ($userInfos->getRights() as $userAccessType) {
                         if (!$userAccessType->valid()) {
                             continue;
