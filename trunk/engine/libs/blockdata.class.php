@@ -5,14 +5,7 @@
  *
  * @author Sébastien Villemain
  */
-class Libs_BlockData implements Core_AccessToken {
-
-    /**
-     * Tableau d'information du block.
-     *
-     * @var array
-     */
-    private $data = array();
+class Libs_BlockData extends Core_DataStorage implements Core_AccessToken {
 
     /**
      * Position du block en lettre.
@@ -34,20 +27,16 @@ class Libs_BlockData implements Core_AccessToken {
      * @param array $data
      */
     public function __construct(array &$data) {
+        parent::__construct();
+
         // Vérification des informations
         if (count($data) < 3) {
             $data = array();
         }
 
-        if (isset($data['mods'])) {
-            $data['mods'] = explode("|", $data['mods']);
-        }
-
-        if (isset($data['title'])) {
-            $data['title'] = Exec_Entities::textDisplay($data['title']);
-        }
-
-        $this->data = $data;
+        $this->newStorage($data);
+        $this->updateDataValue("mods", explode("|", $this->getDataValue("mods")));
+        $this->updateDataValue("title", Exec_Entities::textDisplay($this->getDataValue("title")));
     }
 
     /**
@@ -74,7 +63,7 @@ class Libs_BlockData implements Core_AccessToken {
      * @return int
      */
     public function &getId() {
-        return $this->data['block_id'];
+        return $this->getDataValue("block_id");
     }
 
     /**
@@ -83,7 +72,7 @@ class Libs_BlockData implements Core_AccessToken {
      * @return int
      */
     public function &getSide() {
-        return $this->data['side'];
+        return $this->getDataValue("side");
     }
 
     /**
@@ -119,7 +108,7 @@ class Libs_BlockData implements Core_AccessToken {
      * @return string
      */
     public function &getTitle() {
-        return $this->data['title'];
+        return $this->getDataValue("title");
     }
 
     /**
@@ -128,7 +117,7 @@ class Libs_BlockData implements Core_AccessToken {
      * @return string
      */
     public function &getContent() {
-        return $this->data['content'];
+        return $this->getDataValue("content");
     }
 
     /**
@@ -137,7 +126,7 @@ class Libs_BlockData implements Core_AccessToken {
      * @param string $content
      */
     public function setContent($content) {
-        $this->data['content'] = $content;
+        $this->setDataValue("content", $content);
     }
 
     /**
@@ -146,7 +135,7 @@ class Libs_BlockData implements Core_AccessToken {
      * @return int
      */
     public function &getRank() {
-        return $this->data['rank'];
+        return $this->getDataValue("rank");
     }
 
     /**
@@ -155,7 +144,7 @@ class Libs_BlockData implements Core_AccessToken {
      * @return array
      */
     public function &getTargetModules() {
-        $rslt = $this->data['mods'];
+        $rslt = $this->getDataValue("mods");
 
         if (empty($rslt)) {
             $rslt = array(
@@ -170,7 +159,7 @@ class Libs_BlockData implements Core_AccessToken {
      * @return string
      */
     public function &getType() {
-        return $this->data['type'];
+        return $this->getDataValue("type");
     }
 
     /**

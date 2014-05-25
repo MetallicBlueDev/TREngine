@@ -73,7 +73,7 @@ abstract class Base_Model extends Core_Transaction {
      * @return string
      */
     public function &getDatabaseName() {
-        return $this->getTransactionValue("name");
+        return $this->getDataValue("name");
     }
 
     /**
@@ -82,7 +82,7 @@ abstract class Base_Model extends Core_Transaction {
      * @return string
      */
     public function &getDatabasePrefix() {
-        return $this->getTransactionValue("prefix");
+        return $this->getDataValue("prefix");
     }
 
     /**

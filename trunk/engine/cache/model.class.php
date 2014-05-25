@@ -53,7 +53,7 @@ abstract class Cache_Model extends Core_Transaction {
      * @return int
      */
     public function &getServerPort() {
-        return $this->getTransactionValue("port");
+        return $this->getDataValue("port");
     }
 
     /**
@@ -62,7 +62,7 @@ abstract class Cache_Model extends Core_Transaction {
      * @return string
      */
     public function &getServerRoot() {
-        return $this->getTransactionValue("root");
+        return $this->getDataValue("root");
     }
 
     /**
@@ -71,7 +71,7 @@ abstract class Cache_Model extends Core_Transaction {
      * @param string $newRoot
      */
     public function setServerRoot(&$newRoot) {
-        $this->setTransactionValue("root", $newRoot);
+        $this->setDataValue("root", $newRoot);
     }
 
     /**

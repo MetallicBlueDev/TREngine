@@ -9,7 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-class Libs_ModuleData implements Core_AccessToken {
+class Libs_ModuleData extends Core_DataStorage implements Core_AccessToken {
 
     /**
      * Nom du module courant.
@@ -17,13 +17,6 @@ class Libs_ModuleData implements Core_AccessToken {
      * @var string
      */
     private $moduleName = "";
-
-    /**
-     * Tableau d'information du module.
-     *
-     * @var array
-     */
-    private $data = array();
 
     /**
      * Les données compilées du module.
@@ -39,6 +32,8 @@ class Libs_ModuleData implements Core_AccessToken {
      * @param array $data
      */
     public function __construct($moduleName, array &$data) {
+        parent::__construct();
+
         $this->moduleName = $moduleName;
 
         // Vérification des informations
@@ -46,7 +41,7 @@ class Libs_ModuleData implements Core_AccessToken {
             $data = array();
         }
 
-        $this->data = $data;
+        $this->newStorage($data);
     }
 
     /**
@@ -82,7 +77,7 @@ class Libs_ModuleData implements Core_AccessToken {
      * @return int
      */
     public function &getId() {
-        return $this->data['mod_id'];
+        return $this->getDataValue("mod_id");
     }
 
     /**
@@ -91,7 +86,7 @@ class Libs_ModuleData implements Core_AccessToken {
      * @return int
      */
     public function &getRank() {
-        return $this->data['rank'];
+        return $this->getDataValue("rank");
     }
 
     /**
@@ -100,7 +95,7 @@ class Libs_ModuleData implements Core_AccessToken {
      * @return int
      */
     public function &getConfigs() {
-        return $this->data['configs'];
+        return $this->getDataValue("configs");
     }
 
     /**
@@ -113,9 +108,9 @@ class Libs_ModuleData implements Core_AccessToken {
     public function &getConfigValue($key, $defaultValue = "") {
         $value = null;
 
-        if (isset($this->data['configs'])) {
-            if (isset($this->data['configs'][$key])) {
-                $value = $this->data['configs'][$key];
+        if ($this->hasValue("configs")) {
+            if (isset($this->hasValue("configs")[$key])) {
+                $value = $this->getDataValue("configs")[$key];
             }
         }
 
@@ -131,7 +126,7 @@ class Libs_ModuleData implements Core_AccessToken {
      * @return boolean
      */
     public function installed() {
-        return isset($this->data['mod_id']);
+        return $this->hasValue("mod_id");
     }
 
     /**
@@ -146,7 +141,7 @@ class Libs_ModuleData implements Core_AccessToken {
 
     /**
      * Retourne le zone d'échange.
-     * 
+     *
      * @return string
      */
     public function &getZone() {

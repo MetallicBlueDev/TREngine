@@ -9,20 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-abstract class Core_Transaction {
-
-    /**
-     * Configuration de la transaction.
-     *
-     * @var array
-     */
-    private $transaction = array(
-        "host" => "",
-        "user" => "",
-        "pass" => "",
-        "name" => "",
-        "type" => "",
-    );
+abstract class Core_Transaction extends Core_DataStorage {
 
     /**
      * Objet de connexion.
@@ -35,7 +22,7 @@ abstract class Core_Transaction {
      * Nouveau modèle de transaction.
      */
     protected function __construct() {
-        $this->transaction = null;
+        parent::__construct();
     }
 
     /**
@@ -45,8 +32,8 @@ abstract class Core_Transaction {
      * @throws Fail_Engine
      */
     public function initialize(array &$transaction) {
-        if ($this->transaction === null) {
-            $this->transaction = $transaction;
+        if (!$this->initialized()) {
+            $this->newStorage($transaction);
 
             if ($this->canUse()) {
                 // Connexion au serveur
@@ -126,31 +113,12 @@ abstract class Core_Transaction {
     }
 
     /**
-     * Retourne la valeur de la clé.
-     *
-     * @return string
-     */
-    protected function &getTransactionValue($keyName) {
-        return $this->transaction[$keyName];
-    }
-
-    /**
-     * Change la valeur de clé.
-     *
-     * @param string $keyName
-     * @param string $value
-     */
-    protected function &setTransactionValue($keyName, $value) {
-        $this->transaction[$keyName] = $value;
-    }
-
-    /**
      * Retourne le nom de l'hôte.
      *
      * @return string
      */
     public function &getTransactionHost() {
-        return $this->getTransactionValue("host");
+        return $this->getDataValue("host");
     }
 
     /**
@@ -159,7 +127,7 @@ abstract class Core_Transaction {
      * @return string
      */
     public function &getTransactionUser() {
-        return $this->getTransactionValue("user");
+        return $this->getDataValue("user");
     }
 
     /**
@@ -168,7 +136,7 @@ abstract class Core_Transaction {
      * @return string
      */
     public function &getTransactionPass() {
-        return $this->getTransactionValue("pass");
+        return $this->getDataValue("pass");
     }
 
     /**
@@ -177,7 +145,7 @@ abstract class Core_Transaction {
      * @return string
      */
     public function &getTransactionType() {
-        return $this->getTransactionValue("type");
+        return $this->getDataValue("type");
     }
 
 }

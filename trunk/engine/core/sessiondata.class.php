@@ -5,14 +5,7 @@
  *
  * @author Sébastien Villemain
  */
-class Core_SessionData implements Core_AccessToken {
-
-    /**
-     * Information sur le client.
-     *
-     * @var array
-     */
-    private $data = array();
+class Core_SessionData extends Core_DataStorage implements Core_AccessToken {
 
     /**
      * Nouvelle information de block.
@@ -20,17 +13,18 @@ class Core_SessionData implements Core_AccessToken {
      * @param array $data
      */
     public function __construct(array &$data) {
+        parent::__construct();
+
         // Vérification des informations
         if (count($data) < 3) {
             $data = array();
         }
 
-        $data['name'] = Exec_Entities::stripSlashes($data['name']);
-        $data['rank'] = (int) $data['rank'];
-        $data['signature'] = Exec_Entities::stripSlashes($data['signature']);
-        $data['website'] = Exec_Entities::stripSlashes($data['website']);
-
-        $this->data = $data;
+        $this->newStorage($data);
+        $this->updateDataValue("name", Exec_Entities::stripSlashes($this->getDataValue("name")));
+        $this->updateDataValue("rank", (int) $this->getDataValue("rank"));
+        $this->updateDataValue("signature", Exec_Entities::stripSlashes($this->getDataValue("signature")));
+        $this->updateDataValue("website", Exec_Entities::stripSlashes($this->getDataValue("website")));
     }
 
     /**
@@ -39,7 +33,7 @@ class Core_SessionData implements Core_AccessToken {
      * @return array
      */
     public function &getData() {
-        return $this->data;
+        return $this->getStorage();
     }
 
     /**
@@ -48,7 +42,7 @@ class Core_SessionData implements Core_AccessToken {
      * @return string
      */
     public function &getId() {
-        return $this->data['user_id'];
+        return $this->getDataValue("user_id");
     }
 
     /**
@@ -57,7 +51,7 @@ class Core_SessionData implements Core_AccessToken {
      * @return string
      */
     public function &getName() {
-        return $this->data['name'];
+        return $this->getDataValue("name");
     }
 
     /**
@@ -66,7 +60,7 @@ class Core_SessionData implements Core_AccessToken {
      * @return string
      */
     public function &getMail() {
-        return $this->data['mail'];
+        return $this->getDataValue("mail");
     }
 
     /**
@@ -75,7 +69,7 @@ class Core_SessionData implements Core_AccessToken {
      * @return int
      */
     public function &getRank() {
-        return $this->data['rank'];
+        return $this->getDataValue("rank");
     }
 
     /**
@@ -129,7 +123,7 @@ class Core_SessionData implements Core_AccessToken {
      * @return timestamp
      */
     public function &getDate() {
-        return $this->data['date'];
+        return $this->getDataValue("date");
     }
 
     /**
@@ -138,10 +132,10 @@ class Core_SessionData implements Core_AccessToken {
      * @return string
      */
     public function &getAvatar() {
-        if (empty($this->data['avatar'])) {
+        $avatar = $this->getDataValue("avatar");
+
+        if (empty($avatar)) {
             $avatar = "includes/avatars/nopic.png";
-        } else {
-            $avatar = $this->data['avatar'];
         }
         return $avatar;
     }
@@ -152,7 +146,7 @@ class Core_SessionData implements Core_AccessToken {
      * @return string
      */
     public function &getWebsite() {
-        return $this->data['website'];
+        return $this->getDataValue("website");
     }
 
     /**
@@ -161,7 +155,7 @@ class Core_SessionData implements Core_AccessToken {
      * @return string
      */
     public function &getSignature() {
-        return $this->data['signature'];
+        return $this->getDataValue("signature");
     }
 
     /**
@@ -170,7 +164,7 @@ class Core_SessionData implements Core_AccessToken {
      * @return string
      */
     public function &getTemplate() {
-        return $this->data['template'];
+        return $this->getDataValue("template");
     }
 
     /**
@@ -180,8 +174,8 @@ class Core_SessionData implements Core_AccessToken {
      * @param boolean $force
      */
     public function setTemplate($template, $force = false) {
-        if (!isset($this->data['template']) || $force) {
-            $this->data['template'] = $template;
+        if (!$this->hasValue("template") || $force) {
+            $this->setDataValue("template", $template);
         }
     }
 
@@ -191,7 +185,7 @@ class Core_SessionData implements Core_AccessToken {
      * @return string
      */
     public function &getLangue() {
-        return $this->data['langue'];
+        return $this->getDataValue("langue");
     }
 
     /**
@@ -201,8 +195,8 @@ class Core_SessionData implements Core_AccessToken {
      * @param boolean $force
      */
     public function setLangue($langue, $force = false) {
-        if (!isset($this->data['langue']) || $force) {
-            $this->data['langue'] = $langue;
+        if (!$this->hasValue("langue") || $force) {
+            $this->setDataValue("langue", $langue);
         }
     }
 
@@ -215,7 +209,7 @@ class Core_SessionData implements Core_AccessToken {
         if (!$this->hasRights()) {
             $this->checkRights();
         }
-        return $this->data['rights'];
+        return $this->getDataValue("rights");
     }
 
     /**
@@ -242,7 +236,7 @@ class Core_SessionData implements Core_AccessToken {
             }
         }
 
-        $this->data['rights'] = $accessTypes;
+        $this->setDataValue("rights", $accessTypes);
     }
 
     /**
@@ -251,7 +245,7 @@ class Core_SessionData implements Core_AccessToken {
      * @return boolean
      */
     private function hasRights() {
-        return isset($this->data['rights']);
+        return $this->hasValue("rights");
     }
 
     /**
