@@ -236,7 +236,6 @@ class Core_AccessType implements Core_AccessToken {
                         $this->rights['identifiant'] = $blockInfo->getId();
                         $valid = true;
                     }
-                    $valid = true;
                 } else {
                     $valid = true;
                 }
