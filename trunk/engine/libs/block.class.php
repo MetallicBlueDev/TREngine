@@ -278,7 +278,7 @@ class Libs_Block {
                 );
 
                 if ($coreSql->affectedRows() > 0) {
-                    $blockData = $coreSql->fetchArray();
+                    $blockData = $coreSql->fetchArray()[0];
 
                     // Mise en cache
                     $content = $coreCache->serializeData($blockData);
@@ -422,7 +422,7 @@ class Libs_Block {
                 "Invalid side value: " . $side));
         }
 
-        $sideLetters = array_search($side, self::$sideRegistred, true);
+        $sideLetters = array_search($side, self::$sideRegistred);
 
         if ($sideLetters === false) {
             Core_Secure::getInstance()->throwException("blockSide", null, array(
