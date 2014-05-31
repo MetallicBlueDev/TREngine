@@ -126,7 +126,7 @@ class Core_Access {
                 "Invalid rank value: " . $rank));
         }
 
-        $rankLitteral = array_search($rank, self::$rankRegistred, true);
+        $rankLitteral = array_search($rank, self::$rankRegistred);
 
         if ($rankLitteral === false) {
             Core_Secure::getInstance()->throwException("accessRank", null, array(
