@@ -323,7 +323,7 @@ class Libs_Block {
 
                 // Mise en cache
                 $content = $coreCache->serializeData($blocksIndexer);
-                $coreCache->writeCache("blocks_header.php", $content);
+                $coreCache->writeCache("blocks_indexer.php", $content);
             }
         } else {
             $blocksIndexer = $coreCache->readCache(self::BLOCKS_INDEXER_FILENAME);

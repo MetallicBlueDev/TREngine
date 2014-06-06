@@ -458,7 +458,7 @@ class Core_Cache extends Cache_Model {
         if (is_array($data)) {
             foreach ($data as $key => $value) {
                 if (is_array($value)) {
-                    $lastKey .= "['" . $key . "']";
+                    $lastKey = "['" . $key . "']";
                     $content .= $this->serializeData($value, $lastKey);
                 } else {
                     $content .= $this->serializeVariable($lastKey . "['" . $key . "']", $value);

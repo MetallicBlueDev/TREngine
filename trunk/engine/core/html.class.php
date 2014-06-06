@@ -318,7 +318,7 @@ class Core_Html {
         $htmlLink = "<a href=\"" . Core_UrlRewriting::getLink($link, $layout) . "\"";
 
         // TODO A vérifier
-        if (preg_match("/^[A-Za-z0-9_-+. ]/ie", $displayContent)) {
+        if (preg_match("/^[A-Za-z0-9.-\s]+$/ie", $displayContent)) {
             $htmlLink .= " title=\"" . $displayContent . "\"";
         }
 
