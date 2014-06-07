@@ -241,6 +241,9 @@ class Core_Loader {
                         case 'module':
                             Core_Logger::addErrorMessage(ERROR_MODULE_NO_FILE);
                             break;
+                        case 'lang':
+                            // Aucune traduction disponible
+                            break;
                         default:
                             throw new Fail_Loader("loader");
                     }
