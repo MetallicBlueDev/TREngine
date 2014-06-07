@@ -391,7 +391,7 @@ class Libs_Block {
         // Vérification du block
         if ($loaded) {
             if (Core_Loader::isCallable($blockClassName, "display")) {
-                Core_Translate::getInstance()->translate("blocks/" . $blockInfo->getType());
+                Core_Translate::getInstance()->translate("blocks" . DIRECTORY_SEPARATOR . $blockInfo->getType());
 
                 /**
                  * @var Block_Model

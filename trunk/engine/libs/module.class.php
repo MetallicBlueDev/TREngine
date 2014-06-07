@@ -232,7 +232,7 @@ class Libs_Module {
 
             // Affichage du module si possible
             if (!empty($this->view)) {
-                Core_Translate::getInstance()->translate("modules/" . $moduleInfo->getName());
+                Core_Translate::getInstance()->translate("modules" . DIRECTORY_SEPARATOR . $moduleInfo->getName());
 
                 $this->updateCount($moduleInfo->getId());
 
