@@ -336,7 +336,7 @@ class Libs_Module {
         $coreSql->update(
         Core_Table::MODULES_TABLE, array(
             "count" => "count + 1"), array(
-            "mod_id = '" . $$modId . "'")
+            "mod_id = '" . $modId . "'")
         );
     }
 
