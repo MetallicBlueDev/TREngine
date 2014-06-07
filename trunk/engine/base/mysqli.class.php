@@ -102,7 +102,16 @@ class Base_Mysqli extends Base_Model {
     }
 
     public function &affectedRows() {
-        return $this->getMysqli()->affected_rows;
+        $nbRows = $this->getMysqli()->affected_rows;
+
+        if ($nbRows < 0) {
+            $rslt = $this->getMysqliResult();
+
+            if ($rslt !== null) {
+                $nbRows = $rslt->num_rows;
+            }
+        }
+        return $nbRows;
     }
 
     public function &insertId() {
