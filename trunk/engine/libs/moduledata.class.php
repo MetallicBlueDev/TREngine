@@ -12,13 +12,6 @@ if (!defined("TR_ENGINE_INDEX")) {
 class Libs_ModuleData extends Core_DataStorage implements Core_AccessToken {
 
     /**
-     * Nom du module courant.
-     *
-     * @var string
-     */
-    private $moduleName = "";
-
-    /**
      * Les données compilées du module.
      *
      * @var string
@@ -28,13 +21,10 @@ class Libs_ModuleData extends Core_DataStorage implements Core_AccessToken {
     /**
      * Nouvelle information de module.
      *
-     * @param string $moduleName
      * @param array $data
      */
-    public function __construct($moduleName, array &$data) {
+    public function __construct(array &$data) {
         parent::__construct();
-
-        $this->moduleName = $moduleName;
 
         // Vérification des informations
         if (count($data) < 3) {
@@ -68,7 +58,7 @@ class Libs_ModuleData extends Core_DataStorage implements Core_AccessToken {
      * @return string Le nom du module.
      */
     public function &getName() {
-        return $this->moduleName;
+        return $this->getDataValue("name");
     }
 
     /**

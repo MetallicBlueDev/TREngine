@@ -152,13 +152,14 @@ class Libs_Module {
                 $coreSql->select(
                 Core_Table::MODULES_TABLE, array(
                     "mod_id",
+                    "name",
                     "rank",
                     "configs"), array(
                     "name =  '" . $moduleName . "'")
                 );
 
                 if ($coreSql->affectedRows() > 0) {
-                    $moduleData = $coreSql->fetchArray();
+                    $moduleData = $coreSql->fetchArray()[0];
 
                     if (isset($moduleData['configs'])) {
                         $moduleData['configs'] = explode("|", $moduleData['configs']);
@@ -180,7 +181,7 @@ class Libs_Module {
             }
 
             // Injection des informations du module
-            $moduleInfo = new Libs_ModuleData($moduleName, $moduleData);
+            $moduleInfo = new Libs_ModuleData($moduleData);
             $this->modulesInfo[$moduleName] = $moduleInfo;
         }
         return $moduleInfo;

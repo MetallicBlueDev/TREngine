@@ -6,7 +6,7 @@ if (!defined("TR_ENGINE_INDEX")) {
 
 /**
  * Représente un jeton d'accès à une zone.
- * 
+ *
  * @author Sébastien Villemain
  */
 interface Core_AccessToken {
@@ -24,6 +24,13 @@ interface Core_AccessToken {
      * @return string
      */
     public function &getId();
+
+    /**
+     * Retourne le nom spécifique de la zone d'échange.
+     *
+     * @return string
+     */
+    public function &getName();
 
     /**
      * Retourne le rang de la zone d'échange.

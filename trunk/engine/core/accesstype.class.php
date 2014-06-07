@@ -62,7 +62,8 @@ class Core_AccessType implements Core_AccessToken {
         $infos = array(
             "zone" => $data->getZone(),
             "rank" => $data->getRank(),
-            "identifiant" => $data->getId());
+            "identifiant" => $data->getId(),
+            "name" => $data->getName());
         return self::getTypeFromDatabase($infos);
     }
 
@@ -127,6 +128,15 @@ class Core_AccessType implements Core_AccessToken {
      */
     public function &getId() {
         return $this->rights['identifiant'];
+    }
+
+    /**
+     * Name du type d'accès (par exemple home pour un module).
+     *
+     * @return string
+     */
+    public function &getName() {
+        return $this->rights['name'];
     }
 
     /**
@@ -214,7 +224,7 @@ class Core_AccessType implements Core_AccessToken {
                         $moduleInfo = null;
 
                         if (Core_Loader::isCallable("Libs_Module")) {
-                            $moduleInfo = Libs_Module::getInstance()->getInfoModule($this->getId());
+                            $moduleInfo = Libs_Module::getInstance()->getInfoModule($this->getName());
                         }
 
                         if ($moduleInfo !== null && is_numeric($moduleInfo->getId())) {

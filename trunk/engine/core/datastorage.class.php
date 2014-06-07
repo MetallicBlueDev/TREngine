@@ -53,11 +53,13 @@ abstract class Core_DataStorage {
      *
      * @return mixed
      */
-    protected function &getDataValue($keyName) {
+    protected function &getDataValue($keyName, $defaultValue = null) {
         $value = null;
 
         if ($this->exist($keyName)) {
             $value = $this->data[$keyName];
+        } else {
+            $value = $defaultValue;
         }
         return $value;
     }

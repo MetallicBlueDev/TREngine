@@ -78,7 +78,7 @@ abstract class Module_Model {
     public function &getModuleData() {
         if ($this->data === null) {
             $empty = array();
-            $this->data = new Libs_ModuleData("", $empty);
+            $this->data = new Libs_ModuleData($empty);
         }
         return $this->data;
     }

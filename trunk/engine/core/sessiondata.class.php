@@ -69,7 +69,7 @@ class Core_SessionData extends Core_DataStorage implements Core_AccessToken {
      * @return int
      */
     public function &getRank() {
-        return $this->getDataValue("rank");
+        return $this->getDataValue("rank", 0);
     }
 
     /**

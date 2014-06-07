@@ -67,6 +67,15 @@ class Libs_BlockData extends Core_DataStorage implements Core_AccessToken {
     }
 
     /**
+     * Retourne la position du block en lettre.
+     *
+     * @return int
+     */
+    public function &getName() {
+        return $this->getSideName();
+    }
+
+    /**
      * Retourne la position du block en chiffre.
      *
      * @return int
