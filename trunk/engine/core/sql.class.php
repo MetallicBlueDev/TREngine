@@ -408,13 +408,21 @@ class Core_Sql extends Base_Model {
     }
 
     /**
-     * Marquer une clé comme déjà quotée.
+     * Marquer une clé comme déjà protégée.
      *
      * @param string $key
-     * @param boolean $value
      */
-    public function addQuoted($key, $value = true) {
-        $this->selectedBase->addQuoted($key, $value);
+    public function addQuotedKey($key) {
+        $this->selectedBase->addQuotedKey($key);
+    }
+
+    /**
+     * Marquer une valeur comme déjà protégée.
+     *
+     * @param string $value
+     */
+    public function addQuotedValue($value) {
+        $this->selectedBase->addQuotedValue($value);
     }
 
     public function resetQuoted() {

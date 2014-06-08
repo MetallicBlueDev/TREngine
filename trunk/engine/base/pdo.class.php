@@ -139,7 +139,22 @@ class Base_Pdo extends Base_Model {
     }
 
     protected function converEscapeString($str) {
-        return $this->getPdo()->escape_string($str);
+        // Impossible d'utiliser $this->getPdo()->quote($str) car incompatible avec la méthode interne addQuote()
+        return str_replace(array(
+            '\\',
+            "\0",
+            "\n",
+            "\r",
+            "'",
+            '"',
+            "\x1a"), array(
+            '\\\\',
+            '\\0',
+            '\\n',
+            '\\r',
+            "\\'",
+            '\\"',
+            '\\Z'), $str);
     }
 
     /**

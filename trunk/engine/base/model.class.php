@@ -47,7 +47,7 @@ abstract class Base_Model extends Core_Transaction {
     protected $quoteValue = "'";
 
     /**
-     * Tableau contenant les clés déjà quotées.
+     * Tableau contenant les clés et valeurs déjà protégées.
      *
      * @var array
      */
@@ -215,7 +215,7 @@ abstract class Base_Model extends Core_Transaction {
         // Affectation des clès à leurs valeurs
         $valuesString = array();
         foreach ($values as $key => $value) {
-            $valuesString[] = $this->converKey($key) . " = " . $this->converValue($value, $key);
+            $valuesString[] = $this->converKey($key) . " = " . $this->converValue($value);
         }
 
         $whereValue = empty($where) ? "" : " WHERE " . implode(" ", $where);
@@ -334,15 +334,23 @@ abstract class Base_Model extends Core_Transaction {
     }
 
     /**
-     * Marquer une clé et/ou une valeur comme déjà quoté.
+     * Marquer une clé comme déjà protégée.
      *
      * @param string $key
-     * @param boolean $value
      */
-    public function addQuoted($key, $value = true) {
+    public function addQuotedKey($key) {
         if (!empty($key)) {
-            $this->quoted[$key] = $value;
-        } else {
+            $this->quoted[$key] = true;
+        }
+    }
+
+    /**
+     * Marquer une valeur comme déjà protégée.
+     *
+     * @param string $value
+     */
+    public function addQuotedValue($value) {
+        if (!empty($value)) {
             $this->quoted[] = $value;
         }
     }
@@ -414,6 +422,7 @@ abstract class Base_Model extends Core_Transaction {
         } else if (is_string($value)) {
             $value = $this->converEscapeString($value);
         }
+
         if (!is_array($value)) {
             $value = $this->addQuote($value, true);
         }
@@ -441,7 +450,7 @@ abstract class Base_Model extends Core_Transaction {
     }
 
     /**
-     * Retourne le bon espacement dans une string.
+     * Protège les caractères spéciaux SQL.
      *
      * @param string $str
      * @return string

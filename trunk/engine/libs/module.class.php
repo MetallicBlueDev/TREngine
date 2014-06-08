@@ -332,7 +332,7 @@ class Libs_Module {
     private function updateCount($modId) {
         $coreSql = Core_Sql::getInstance();
 
-        $coreSql->addQuoted("", "count + 1");
+        $coreSql->addQuotedValue("count + 1");
         $coreSql->update(
         Core_Table::MODULES_TABLE, array(
             "count" => "count + 1"), array(

@@ -629,7 +629,7 @@ class Core_Session {
      */
     private function updateLastConnect($userId) {
         $coreSql = Core_Sql::getInstance();
-        $coreSql->addQuoted("", "NOW()");
+        $coreSql->addQuotedValue("NOW()");
 
         // Envoi la requête Sql de mise à jour
         $coreSql->update(Core_Table::USERS_TABLE, array(
