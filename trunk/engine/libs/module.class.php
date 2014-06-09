@@ -162,14 +162,7 @@ class Libs_Module {
                     $moduleData = $coreSql->fetchArray()[0];
 
                     if (isset($moduleData['configs'])) {
-                        $moduleData['configs'] = explode("|", $moduleData['configs']);
-
-                        foreach ($moduleData['configs'] as $value) {
-                            $value = explode("=", $value);
-
-                            // Chaine encodé avec urlencode
-                            $moduleData['configs'][$value[0]] = urldecode($value[1]);
-                        }
+                        $moduleData['configs'] = self::getModuleConfigs($moduleData['configs']);
                     }
 
                     // Mise en cache
@@ -213,6 +206,28 @@ class Libs_Module {
         } else {
             Core_Logger::addErrorMessage(ERROR_ACCES_ZONE . " " . Core_Access::getAccessErrorMessage($moduleInfo));
         }
+    }
+
+    /**
+     * Retourne le jeu de configuration du module.
+     *
+     * @param string $moduleConfigs
+     * @return array
+     */
+    private static function getModuleConfigs(&$moduleConfigs) {
+        $moduleConfigs = explode("|", $moduleConfigs);
+
+        foreach ($moduleConfigs as $config) {
+            if (!empty($config)) {
+                $values = explode("=", $config);
+
+                if (count($values) > 1) {
+                    // Chaine encodé avec urlencode
+                    $moduleConfigs[$values[0]] = urldecode($values[1]);
+                }
+            }
+        }
+        return $moduleConfigs;
     }
 
     /**
