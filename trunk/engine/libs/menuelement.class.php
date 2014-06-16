@@ -9,14 +9,7 @@ if (!defined("TR_ENGINE_INDEX")) {
  *
  * @author Sébastien Villemain
  */
-class Libs_MenuElement {
-
-    /**
-     * Item info du menu.
-     *
-     * @var array
-     */
-    private $data = array();
+class Libs_MenuElement extends Core_DataStorage {
 
     /**
      * Attributs de l'élément.
@@ -53,8 +46,9 @@ class Libs_MenuElement {
      * @param array $items
      */
     public function __construct(array $item, array &$items) {
-        // Ajout des infos de l'item
-        $this->data = $item;
+        parent::__construct();
+
+        $this->newStorage($item);
         $this->addTags("li");
 
         // Enfant trouvé
@@ -73,7 +67,7 @@ class Libs_MenuElement {
      * @return int
      */
     public function &getParentId() {
-        return $this->data['parent_id'];
+        return $this->getDataValue("parent_id");
     }
 
     /**
@@ -82,7 +76,7 @@ class Libs_MenuElement {
      * @return int
      */
     public function &getMenuId() {
-        return $this->data['menu_id'];
+        return $this->getDataValue("menu_id");
     }
 
     /**
@@ -91,7 +85,7 @@ class Libs_MenuElement {
      * @return string
      */
     public function &getContent() {
-        return $this->data['content'];
+        return $this->getDataValue("content");
     }
 
     /**
@@ -100,7 +94,7 @@ class Libs_MenuElement {
      * @return int
      */
     public function &getRank() {
-        return $this->data['rank'];
+        return $this->getDataValue("rank");
     }
 
     /**

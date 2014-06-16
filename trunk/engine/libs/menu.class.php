@@ -88,11 +88,9 @@ class Libs_Menu {
                 "rank" => $item->getRank(),
                 "identifiant" => $this->identifier);
 
-            $newAccessType = Core_AccessType::getTypeFromDatabase($infos);
-
-            if ($item->getParentId() == 0 && Core_Access::autorize($newAccessType)) {
+            if ($item->getParentId() == 0 && Core_Access::autorize(Core_AccessType::getTypeFromDatabase($infos))) {
                 // Ajout du tableau route dans l'élément principal
-                if ($key == $route[0]) {
+                if ($key === $route[0]) {
                     $item->setRoute($route);
                 }
 
