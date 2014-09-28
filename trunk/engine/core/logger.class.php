@@ -171,7 +171,7 @@ class Core_Logger {
         if (Core_Loader::isCallable("Core_Cache")) {
             if (self::hasExceptions()) {
                 // Ecriture à la suite du rapport
-                Core_Cache::getInstance(Core_Cache::SECTION_LOGGER)->writeCache("exception_" . date('Y-m-d') . ".log.php", $this->serializeData(self::$exceptions), false);
+                Core_Cache::getInstance(Core_Cache::SECTION_LOGGER)->writeCache("exception_" . date('Y-m-d') . ".log.php", self::serializeData(self::$exceptions), false);
             }
         }
     }
