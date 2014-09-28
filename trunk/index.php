@@ -12,10 +12,10 @@ require("engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "loader.
 Core_Secure::checkInstance();
 
 if (Core_Secure::debuggingMode()) {
-    Exec_Marker::startTimer("all");
+    Exec_TimeMarker::startMeasurement("all");
 }
 
-Exec_Marker::startTimer("main");
+Exec_TimeMarker::startMeasurement("main");
 
 // Préparation du moteur
 Core_Main::checkInstance();
@@ -30,6 +30,6 @@ if (Core_Main::getInstance()->newComponentDetected()) {
 }
 
 if (Core_Secure::debuggingMode()) {
-    Exec_Marker::stopTimer("all");
+    Exec_TimeMarker::stopMeasurement("all");
     Core_Logger::displayDebugInformations();
 }

@@ -55,14 +55,14 @@ class Core_Main {
     public static function checkInstance() {
         if (self::$coreMain === null) {
             if (Core_Secure::debuggingMode()) {
-                Exec_Marker::startTimer("core");
+                Exec_TimeMarker::startMeasurement("core");
             }
 
             self::$coreMain = new Core_Main();
             self::$coreMain->prepare();
 
             if (Core_Secure::debuggingMode()) {
-                Exec_Marker::stopTimer("core");
+                Exec_TimeMarker::stopMeasurement("core");
             }
         }
     }
@@ -345,7 +345,7 @@ class Core_Main {
      */
     public function start() {
         if (Core_Secure::debuggingMode()) {
-            Exec_Marker::startTimer("launcher");
+            Exec_TimeMarker::startMeasurement("launcher");
         }
 
         Core_Translate::checkInstance();
@@ -368,7 +368,7 @@ class Core_Main {
             // Isoloire du bannissement
             $coreSession->displayBanishment();
 
-            Exec_Marker::stopTimer("main");
+            Exec_TimeMarker::stopMeasurement("main");
         } else {
             // Vérification du type d'affichage
             if ($this->isDefaultLayout()) {
@@ -377,7 +377,7 @@ class Core_Main {
                     // Mode maintenance: possibilité de s'identifier
                     Libs_Block::getInstance()->launchBlockType("login");
 
-                    Exec_Marker::stopTimer("main");
+                    Exec_TimeMarker::stopMeasurement("main");
 
                     // Affichage des données de la page de maintenance (fermeture)
                     $libsMakeStyle = new Libs_MakeStyle();
@@ -388,7 +388,7 @@ class Core_Main {
                     Libs_Module::getInstance()->launch();
                     Libs_Block::getInstance()->launchAllBlock();
 
-                    Exec_Marker::stopTimer("main");
+                    Exec_TimeMarker::stopMeasurement("main");
 
                     $libsMakeStyle = new Libs_MakeStyle();
                     $libsMakeStyle->display("index");
@@ -401,7 +401,7 @@ class Core_Main {
                     // Affichage du module uniquement
                     $libsModule->launch();
 
-                    Exec_Marker::stopTimer("main");
+                    Exec_TimeMarker::stopMeasurement("main");
 
                     echo $libsModule->getModule();
                 } else if ($this->isBlockLayout()) {
@@ -410,7 +410,7 @@ class Core_Main {
                     // Affichage du block uniquement
                     $libsBlock->launchBlockRequested();
 
-                    Exec_Marker::stopTimer("main");
+                    Exec_TimeMarker::stopMeasurement("main");
 
                     echo $libsBlock->getBlock();
                 }
@@ -432,7 +432,7 @@ class Core_Main {
         }
 
         if (Core_Secure::debuggingMode()) {
-            Exec_Marker::stopTimer("launcher");
+            Exec_TimeMarker::stopMeasurement("launcher");
         } else {
             $this->compressionClose();
         }
