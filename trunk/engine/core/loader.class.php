@@ -170,69 +170,10 @@ class Core_Loader {
 
             // Si ce n'est pas déjà chargé
             if (!$loaded) {
-                $path = "";
-
-                // Retrouve l'extension
-                if (empty($ext)) {
-                    if (strpos($name, "Block_") !== false) {
-                        $ext = "block";
-                        $path = str_replace("Block_", "blocks_", $name);
-                    } else if (strpos($name, "Module_") !== false) {
-                        $ext = "module";
-                        $path = str_replace("Module_", "modules_", $name);
-                    } else {
-                        $ext = "class";
-                        $path = "engine_" . $name;
-                    }
-                } else {
-                    switch ($ext) {
-                        case 'lang':
-                            if (self::isCallable("Core_Translate")) {
-                                if ($name === DIRECTORY_SEPARATOR) {
-                                    $path = "lang_";
-                                } else {
-                                    $path = $name . "_lang_";
-                                }
-
-                                $path .= Core_Translate::getInstance()->getCurrentLanguage();
-                            }
-                            break;
-                        case 'inc':
-                            $path = $name;
-                            break;
-                        default:
-                            $path = "engine_" . $name;
-                            break;
-                    }
-                }
-
-                $path = str_replace("_", DIRECTORY_SEPARATOR, $path);
-                $path = TR_ENGINE_DIR . DIRECTORY_SEPARATOR . strtolower($path) . "." . $ext . ".php";
+                $path = self::getFilePath($ext, $name);
 
                 if (is_file($path)) {
-                    switch ($ext) {
-                        case 'lang':
-                            $lang = array();
-                            break;
-                        case 'inc':
-                            $inc = array();
-                            break;
-                    }
-
-                    require($path);
-                    self::$loaded[$name] = $path;
-                    $loaded = true;
-
-                    switch ($ext) {
-                        case 'lang':
-                            if (!empty($lang) && is_array($lang)) {
-                                Core_Translate::getInstance()->affectCache($lang);
-                            }
-                            break;
-                        case 'inc':
-                            Core_Main::getInstance()->addInclude($name, $inc);
-                            break;
-                    }
+                    $loaded = self::loadFilePath($ext, $name, $path);
                 } else {
                     switch ($ext) {
                         case 'block':
@@ -252,6 +193,92 @@ class Core_Loader {
         } catch (Exception $ex) {
             Core_Secure::getInstance()->throwException($ex->getMessage(), $ex, array(
                 $name));
+        }
+        return $loaded;
+    }
+
+    /**
+     * Détermine le chemin vers le fichier.
+     *
+     * @param type $ext
+     * @param type $name
+     * @return string
+     */
+    private static function &getFilePath(&$ext, $name) {
+        $path = "";
+
+        if (empty($ext)) {
+            // Retrouve l'extension
+            if (strpos($name, "Block_") !== false) {
+                $ext = "block";
+                $path = str_replace("Block_", "blocks_", $name);
+            } else if (strpos($name, "Module_") !== false) {
+                $ext = "module";
+                $path = str_replace("Module_", "modules_", $name);
+            } else {
+                $ext = "class";
+                $path = "engine_" . $name;
+            }
+        } else {
+            switch ($ext) {
+                case 'lang':
+                    if (self::isCallable("Core_Translate")) {
+                        if ($name === DIRECTORY_SEPARATOR) {
+                            $path = "lang_";
+                        } else {
+                            $path = $name . "_lang_";
+                        }
+
+                        $path .= Core_Translate::getInstance()->getCurrentLanguage();
+                    }
+                    break;
+                case 'inc':
+                    $path = $name;
+                    break;
+                default:
+                    $path = "engine_" . $name;
+                    break;
+            }
+        }
+
+        $path = str_replace("_", DIRECTORY_SEPARATOR, $path);
+        $path = TR_ENGINE_DIR . DIRECTORY_SEPARATOR . strtolower($path) . "." . $ext . ".php";
+        return $path;
+    }
+
+    /**
+     * Charge le fichier suivant son type, son nom et son chemin.
+     *
+     * @param type $ext
+     * @param type $name
+     * @param type $path
+     * @return boolean
+     */
+    private static function &loadFilePath($ext, $name, $path) {
+        $loaded = false;
+
+        switch ($ext) {
+            case 'lang':
+                $lang = array();
+                break;
+            case 'inc':
+                $inc = array();
+                break;
+        }
+
+        require($path);
+        self::$loaded[$name] = $path;
+        $loaded = true;
+
+        switch ($ext) {
+            case 'lang':
+                if (!empty($lang) && is_array($lang)) {
+                    Core_Translate::getInstance()->affectCache($lang);
+                }
+                break;
+            case 'inc':
+                Core_Main::getInstance()->addInclude($name, $inc);
+                break;
         }
         return $loaded;
     }
