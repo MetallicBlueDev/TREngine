@@ -12,6 +12,41 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class CoreLoader {
 
     /**
+     * Fichier représentant une classe PHP pure.
+     *
+     * @var string
+     */
+    const TYPE_CLASS = "class";
+
+    /**
+     * Fichier représentant un block.
+     *
+     * @var string
+     */
+    const TYPE_BLOCK = "block";
+
+    /**
+     * Fichier représentant un module.
+     *
+     * @var string
+     */
+    const TYPE_MODULE = "module";
+
+    /**
+     * Fichier représentant une traduction.
+     *
+     * @var string
+     */
+    const TYPE_TRANSLATE = "lang";
+
+    /**
+     * Fichier représentant une inclusion spécifique.
+     *
+     * @var string
+     */
+    const TYPE_INCLUDE = "inc";
+
+    /**
      * Tableau des classes chargées.
      *
      * @var array array("name" => "path")
@@ -46,7 +81,7 @@ class CoreLoader {
      * @return boolean true chargé.
      */
     public static function &classLoader($class) {
-        return self::load($class, "");
+        return self::load($class, ""); // Type indéterminé
     }
 
     /**
@@ -55,8 +90,8 @@ class CoreLoader {
      * @param string $plugin Module de traduction.
      * @return boolean true chargé.
      */
-    public static function &langLoader($plugin) {
-        return self::load($plugin, "lang");
+    public static function &translateLoader($plugin) {
+        return self::load($plugin, self::TYPE_TRANSLATE);
     }
 
     /**
@@ -66,7 +101,7 @@ class CoreLoader {
      * @return boolean true chargé.
      */
     public static function &includeLoader($include) {
-        return self::load($include, "inc");
+        return self::load($include, self::TYPE_INCLUDE);
     }
 
     /**
@@ -167,19 +202,20 @@ class CoreLoader {
 
             // Si ce n'est pas déjà chargé
             if (!$loaded) {
+                $ext = self::getExtension($ext, $name);
                 $path = self::getFilePath($ext, $name);
 
                 if (is_file($path)) {
                     $loaded = self::loadFilePath($ext, $name, $path);
                 } else {
                     switch ($ext) {
-                        case 'block':
+                        case self::TYPE_BLOCK:
                             Core_Logger::addErrorMessage(ERROR_BLOCK_NO_FILE);
                             break;
-                        case 'module':
+                        case self::TYPE_MODULE:
                             Core_Logger::addErrorMessage(ERROR_MODULE_NO_FILE);
                             break;
-                        case 'lang':
+                        case self::TYPE_TRANSLATE:
                             // Aucune traduction disponible
                             break;
                         default:
@@ -196,73 +232,96 @@ class CoreLoader {
     }
 
     /**
+     * Retourne le type d'extension de fichier.
+     *
+     * @param string $ext
+     * @return string
+     */
+    private static function &getExtension(&$ext, $name) {
+        if (empty($ext)) {
+            // Retrouve l'extension
+            if (strpos($name, "\Blocks\Block") !== false) {
+                $ext = self::TYPE_BLOCK;
+            } else if (strpos($name, "Modules\Module") !== false) {
+                $ext = self::TYPE_MODULE;
+            } else {
+                $ext = self::TYPE_CLASS;
+            }
+        }
+        return $ext;
+    }
+
+    /**
      * Détermine le chemin vers le fichier.
      *
      * @param type $ext
      * @param type $name
      * @return string
      */
-    private static function &getFilePath(&$ext, $name) {
+    private static function &getFilePath($ext, $name) {
         $path = "";
-        $fileExt = ".";
 
-        if (empty($ext)) {
-            // Retrouve l'extension
-            if (strpos($name, "Block_") !== false) {
-                $ext = "block";
-                $path = str_replace("Block_", "blocks" . DIRECTORY_SEPARATOR . "Block_", $name);
-            } else if (strpos($name, "Module_") !== false) {
-                $ext = "module";
-                $path = str_replace("Module_", "modules" . DIRECTORY_SEPARATOR . "Module_", $name);
-            } else {
-                $ext = "class";
-                $path = "engine_" . $name;
-            }
-        } else {
-            switch ($ext) {
-                case 'lang':
-                    if (self::isCallable("Core_Translate")) {
-                        if ($name === DIRECTORY_SEPARATOR) {
-                            $path = "lang_";
-                        } else {
-                            $path = $name . "_lang_";
-                        }
-
-                        $path .= Core_Translate::getInstance()->getCurrentLanguage();
+        switch ($ext) {
+            case self::TYPE_CLASS:
+            case self::TYPE_BLOCK:
+            case self::TYPE_MODULE:
+                $path = self::getFilePathFromNamespace($name);
+                break;
+            case self::TYPE_TRANSLATE:
+                if (self::isCallable("Core_Translate")) {
+                    if ($name === DIRECTORY_SEPARATOR) {
+                        $path = "lang" . DIRECTORY_SEPARATOR;
+                    } else {
+                        $path = $name . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR;
                     }
-                    break;
-                case 'inc':
-                    $path = $name;
-                    break;
-                default:
-                    $path = "engine_" . $name;
-                    break;
-            }
 
-            $fileExt &= $ext;
+                    $path .= Core_Translate::getInstance()->getCurrentLanguage();
+                }
+
+                $path .= "." . $ext;
+                break;
+            case self::TYPE_INCLUDE:
+                $path = $name . "." . $ext;
+                break;
+            default:
+                throw new Fail_Loader("loader");
         }
 
-        $path = str_replace("_", DIRECTORY_SEPARATOR, $path);
-        $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . strtolower($path) . $fileExt . ".php";
+        $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path . ".php";
+        return $path;
+    }
+
+    /**
+     * Retourne le chemin vers le fichier contenant la classe.
+     *
+     * @param string $name
+     * @return string
+     */
+    private static function &getFilePathFromNamespace($name) {
+        // Supprime le premier namespace
+        $path = str_replace("TREngine\\", "", $name);
+
+        // Conversion du namespace en dossier
+        $path = str_replace("\\", DIRECTORY_SEPARATOR, $path);
         return $path;
     }
 
     /**
      * Charge le fichier suivant son type, son nom et son chemin.
      *
-     * @param type $ext
-     * @param type $name
-     * @param type $path
+     * @param string $ext
+     * @param string $name
+     * @param string $path
      * @return boolean
      */
     private static function &loadFilePath($ext, $name, $path) {
         $loaded = false;
 
         switch ($ext) {
-            case 'lang':
+            case self::TYPE_TRANSLATE:
                 $lang = array();
                 break;
-            case 'inc':
+            case self::TYPE_INCLUDE:
                 $inc = array();
                 break;
         }
@@ -272,12 +331,12 @@ class CoreLoader {
         $loaded = true;
 
         switch ($ext) {
-            case 'lang':
+            case self::TYPE_TRANSLATE:
                 if (!empty($lang) && is_array($lang)) {
                     Core_Translate::getInstance()->affectCache($lang);
                 }
                 break;
-            case 'inc':
+            case self::TYPE_INCLUDE:
                 Core_Main::getInstance()->addInclude($name, $inc);
                 break;
         }
