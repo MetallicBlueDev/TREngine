@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Libs_ModuleData extends Core_DataStorage implements Core_AccessToken {
+class Libs_ModuleData extends CoreDataStorage implements CoreAccessToken {
 
     /**
      * Les données compilées du module.

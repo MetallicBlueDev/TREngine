@@ -10,14 +10,14 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class Exec_JQuery {
 
     public static function getTreeView($identifier) {
-        $coreHtml = Core_Html::getInstance();
+        $coreHtml = CoreHtml::getInstance();
         $coreHtml->addCssInculdeFile("jquery.treeview.css");
         $coreHtml->addJavascriptFile("jquery.treeview.js");
         $coreHtml->addJavascriptJquery("$('" . $identifier . "').treeview({animated: 'fast', collapsed: true, unique: true, persist: 'location'});");
     }
 
     public static function getJdMenu() {
-        $coreHtml = Core_Html::getInstance();
+        $coreHtml = CoreHtml::getInstance();
         // Ajout du fichier de style
         $coreHtml->addCssInculdeFile("jquery.jdMenu.css");
 
@@ -32,13 +32,13 @@ class Exec_JQuery {
     }
 
     public static function getIdTabs() {
-        $coreHtml = Core_Html::getInstance();
+        $coreHtml = CoreHtml::getInstance();
         $coreHtml->addJavascriptFile("jquery.idTabs.js");
         $coreHtml->addCssInculdeFile("jquery.idTabs.css");
     }
 
     public static function getSlimbox() {
-        $coreHtml = Core_Html::getInstance();
+        $coreHtml = CoreHtml::getInstance();
         $coreHtml->addJavascriptFile("jquery.slimbox.js");
         $coreHtml->addCssInculdeFile("jquery.slimbox.css");
     }

@@ -27,7 +27,7 @@ class Block_Menu extends Block_Model {
     protected function getMenu() {
         $menus = new Libs_Menu(
         "block" . $this->getBlockData()->getId(), array(
-            "table" => Core_Table::MENUS_TABLES,
+            "table" => CoreTable::MENUS_TABLES,
             "select" => array(
                 "menu_id",
                 "block_id",
@@ -53,7 +53,7 @@ class Block_Menu extends Block_Model {
     }
 
     public function uninstall() {
-        Core_Cache::getInstance(Core_Cache::SECTION_MENUS)->removeCache("block" . $this->getBlockData()->getId() . ".php");
+        CoreCache::getInstance(CoreCache::SECTION_MENUS)->removeCache("block" . $this->getBlockData()->getId() . ".php");
     }
 
     /**
@@ -116,7 +116,7 @@ class Block_Menu extends Block_Model {
                 $text = "<small>" . $text . "</small>";
             }
             if (!empty($link)) {
-                $text = Core_Html::getLink($link, $text, false, "window.open('" . $link . "');return false;");
+                $text = CoreHtml::getLink($link, $text, false, "window.open('" . $link . "');return false;");
             }
 
             $outPut = $text;

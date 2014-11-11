@@ -7,7 +7,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Cache_Socket extends Cache_Model {
+class Cache_Socket extends CacheModel {
 
     /**
      * Limite de temps de la connexion.
@@ -55,7 +55,7 @@ class Cache_Socket extends Cache_Model {
         $rslt = function_exists("fsockopen");
 
         if (!$rslt) {
-            Core_Logger::addException("Socket function not found");
+            CoreLogger::addException("Socket function not found");
         }
         return false;
     }
@@ -70,7 +70,7 @@ class Cache_Socket extends Cache_Model {
             $this->connId = fsockopen($this->getTransactionHost(), $this->getServerPort(), $socketErrorNumber, $socketErrorMessage, $this->timeOut);
 
             if ($this->connId === false) {
-                Core_Logger::addException("Could not connect to host " . $this->getTransactionHost() . " on port " . $this->getServerPort() . ". ErrorCode = " . $socketErrorNumber . " ErrorMessage = " . $socketErrorMessage);
+                CoreLogger::addException("Could not connect to host " . $this->getTransactionHost() . " on port " . $this->getServerPort() . ". ErrorCode = " . $socketErrorNumber . " ErrorMessage = " . $socketErrorMessage);
                 $this->connId = null;
             } else {
                 // Force le timeout, si possible
@@ -84,7 +84,7 @@ class Cache_Socket extends Cache_Model {
             $this->sendCommand("QUIT");
 
             if (!fclose($this->connId)) {
-                Core_Logger::addException("Unable to close connection");
+                CoreLogger::addException("Unable to close connection");
             }
         }
     }
@@ -108,11 +108,11 @@ class Cache_Socket extends Cache_Model {
                     // Configuration du chemin FTP
                     $this->rootConfig();
                 } else {
-                    Core_Logger::addException("Unable to login: bad password?");
+                    CoreLogger::addException("Unable to login: bad password?");
                 }
             }
         } else {
-            Core_Logger::addException("Unable to login: bad user?");
+            CoreLogger::addException("Unable to login: bad user?");
         }
         return $rslt;
     }
@@ -200,7 +200,7 @@ class Cache_Socket extends Cache_Model {
         if ($this->netConnected()) {
             if (!$this->sendCommandAndCheckResponse("MDTM " . $this->getRootPath($path), array(
                 250))) {
-                Core_Logger::addException("Bad response for MDTM command. Path : " . $path);
+                CoreLogger::addException("Bad response for MDTM command. Path : " . $path);
             }
 
             $mTime = $this->lastResponseMessage;
@@ -243,7 +243,7 @@ class Cache_Socket extends Cache_Model {
      */
     private function sendCommand($cmd) {
         if (!fwrite($this->connId, $cmd . TR_ENGINE_CRLF)) {
-            Core_Logger::addException("Unable to send command: " . $cmd);
+            CoreLogger::addException("Unable to send command: " . $cmd);
         }
     }
 
@@ -277,7 +277,7 @@ class Cache_Socket extends Cache_Model {
                 $rslt = true;
             }
         } else {
-            Core_Logger::addException("Timeout or unrecognized response while waiting for a response from the server. Full response : " . $response);
+            CoreLogger::addException("Timeout or unrecognized response while waiting for a response from the server. Full response : " . $response);
         }
         return $rslt;
     }
@@ -333,7 +333,7 @@ class Cache_Socket extends Cache_Model {
         if (is_file(DIRECTORY_SEPARATOR . $pathRebuild . DIRECTORY_SEPARATOR . $pathFound . DIRECTORY_SEPARATOR . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php")) {
             $this->setServerRoot($pathFound);
         } else if (empty($this->getServerRoot())) {
-            Core_Logger::addException("Unable to configure root path.");
+            CoreLogger::addException("Unable to configure root path.");
         }
     }
 
@@ -347,7 +347,7 @@ class Cache_Socket extends Cache_Model {
         if ($this->sendCommandAndCheckResponse("SITE CHMOD " . $mode . " " . $path, array(
             200,
             250))) {
-            Core_Logger::addException("Bad response for SITE CHMOD command. Path : " . $path);
+            CoreLogger::addException("Bad response for SITE CHMOD command. Path : " . $path);
         }
     }
 
@@ -394,7 +394,7 @@ class Cache_Socket extends Cache_Model {
                 // Verification
                 if (!$this->receiveResponseCode(array(
                     226))) {
-                    Core_Logger::addException("Bad response for STOR|APPE|fwrite command. Path : " . $path);
+                    CoreLogger::addException("Bad response for STOR|APPE|fwrite command. Path : " . $path);
                 }
             }
         }
@@ -432,7 +432,7 @@ class Cache_Socket extends Cache_Model {
                     if ($this->netConnected()) {
                         if (!$this->sendCommandAndCheckResponse("MKD " . $path, array(
                             257))) {
-                            Core_Logger::addException("Bad response for MKD command. Path : " . $path);
+                            CoreLogger::addException("Bad response for MKD command. Path : " . $path);
                         }
 
                         // Ajuste les droits CHMOD
@@ -476,7 +476,7 @@ class Cache_Socket extends Cache_Model {
             // Envoie de la commande de suppression du fichier
             if (!$this->sendCommandAndCheckResponse("DELE " . $this->getRootPath($path), array(
                 250))) {
-                Core_Logger::addException("Bad response for DELE command. Path : " . $path);
+                CoreLogger::addException("Bad response for DELE command. Path : " . $path);
             }
         }
     }
@@ -522,7 +522,7 @@ class Cache_Socket extends Cache_Model {
             // Envoi de la commande de suppression du fichier
             if ($this->sendCommandAndCheckResponse("RMD " . $this->getRootPath($path), array(
                 250))) {
-                Core_Logger::addException("Bad response for RMD command. Path : " . $path);
+                CoreLogger::addException("Bad response for RMD command. Path : " . $path);
             }
         }
     }
@@ -552,7 +552,7 @@ class Cache_Socket extends Cache_Model {
                     $this->setTimeOut();
                     $rslt = true;
                 } else {
-                    Core_Logger::addException("Could not connect to host " . $this->passiveIp . " on port " . $this->passivePort
+                    CoreLogger::addException("Could not connect to host " . $this->passiveIp . " on port " . $this->passivePort
                     . ". Socket error number " . $$socket_error_number . " and error message: " . $socket_error_message);
                 }
             }

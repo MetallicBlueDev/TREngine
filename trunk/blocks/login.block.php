@@ -55,35 +55,35 @@ class Block_Login extends Block_Model {
         $this->displayAvatar = ($activeAvatar == 1) ? true : false;
         $this->displayIcons = ($activeIcons == 1) ? true : false;
 
-        if (Core_Main::getInstance()->isBlockLayout()) { // Si nous sommes dans un affichage type block
-            $this->localView = Core_Request::getString("localView", "", "GET");
+        if (CoreMain::getInstance()->isBlockLayout()) { // Si nous sommes dans un affichage type block
+            $this->localView = CoreRequest::getString("localView", "", "GET");
         }
     }
 
     private function &render() {
         $content = "";
-        if (Core_Session::hasConnection()) {
-            $userInfos = Core_Session::getInstance()->getUserInfos();
+        if (CoreSession::hasConnection()) {
+            $userInfos = CoreSession::getInstance()->getUserInfos();
 
             if ($this->displayText) {
                 $content .= WELCOME . " <b>" . $userInfos->getName() . "</b> !<br />";
             }
             if ($this->displayAvatar && !empty($userInfos->getAvatar())) {
-                $content .= Core_Html::getLink("mod=connect&view=account", Exec_Image::resize($userInfos->getAvatar(), 80)) . "<br />";
+                $content .= CoreHtml::getLink("mod=connect&view=account", Exec_Image::resize($userInfos->getAvatar(), 80)) . "<br />";
             }
             if ($this->displayIcons) {
-                $content .= Core_Html::getLink("mod=connect&view=logout", LOGOUT) . "<br />"
-                . Core_Html::getLink("mod=connect&view=account", MY_ACCOUNT) . "<br />"
-                . Core_Html::getLink("mod=receiptbox", MY_RECEIPTBOX . " (?)") . "<br />";
+                $content .= CoreHtml::getLink("mod=connect&view=logout", LOGOUT) . "<br />"
+                . CoreHtml::getLink("mod=connect&view=account", MY_ACCOUNT) . "<br />"
+                . CoreHtml::getLink("mod=receiptbox", MY_RECEIPTBOX . " (?)") . "<br />";
             }
         } else {
             $moreLink = "<ul>";
-            if (Core_Main::getInstance()->registrationAllowed()) {
-                $moreLink .= "<li><b>" . Core_Html::getLinkWithAjax("mod=connect&view=registration", "blockId=" . $this->getBlockData()->getId() . "&localView=registration", "#login-logonblock", GET_ACCOUNT) . "</b></li>";
+            if (CoreMain::getInstance()->registrationAllowed()) {
+                $moreLink .= "<li><b>" . CoreHtml::getLinkWithAjax("mod=connect&view=registration", "blockId=" . $this->getBlockData()->getId() . "&localView=registration", "#login-logonblock", GET_ACCOUNT) . "</b></li>";
             }
-            $moreLink .= "<li>" . Core_Html::getLinkWithAjax("mod=connect&view=logon", "blockId=" . $this->getBlockData()->getId() . "&localView=logon", "#login-logonblock", GET_LOGON) . "</li>"
-            . "<li>" . Core_Html::getLinkWithAjax("mod=connect&view=forgetlogin", "blockId=" . $this->getBlockData()->getId() . "&localView=forgetlogin", "#login-logonblock", GET_FORGET_LOGIN) . "</li>"
-            . "<li>" . Core_Html::getLinkWithAjax("mod=connect&view=forgetpass", "blockId=" . $this->getBlockData()->getId() . "&localView=forgetpass", "#login-logonblock", GET_FORGET_PASS) . "</li></ul>";
+            $moreLink .= "<li>" . CoreHtml::getLinkWithAjax("mod=connect&view=logon", "blockId=" . $this->getBlockData()->getId() . "&localView=logon", "#login-logonblock", GET_LOGON) . "</li>"
+            . "<li>" . CoreHtml::getLinkWithAjax("mod=connect&view=forgetlogin", "blockId=" . $this->getBlockData()->getId() . "&localView=forgetlogin", "#login-logonblock", GET_FORGET_LOGIN) . "</li>"
+            . "<li>" . CoreHtml::getLinkWithAjax("mod=connect&view=forgetpass", "blockId=" . $this->getBlockData()->getId() . "&localView=forgetpass", "#login-logonblock", GET_FORGET_PASS) . "</li></ul>";
 
             $content .= "<div id=\"login-logonblock\">";
 
@@ -119,13 +119,13 @@ class Block_Login extends Block_Model {
         $form = new Libs_Form("login-logonblock");
         $form->addInputText("login", LOGIN, "", "maxlength=\"180\"");
         $form->addInputPassword("password", PASSWORD, "maxlength=\"180\"");
-        $form->addInputHidden("referer", urlencode(base64_encode(Core_Request::getString("QUERY_STRING", "", "SERVER"))));
+        $form->addInputHidden("referer", urlencode(base64_encode(CoreRequest::getString("QUERY_STRING", "", "SERVER"))));
         $form->addInputHidden("mod", "connect");
         $form->addInputHidden("view", "logon");
         $form->addInputHidden("layout", "module");
         $form->addInputSubmit("submit", GET_LOGON);
         $form->addHtmlInFieldset($moreLink);
-        Core_Html::getInstance()->addJavascript("validLogon('#form-login-logonblock', '#form-login-logonblock-login-input', '#form-login-logonblock-password-input');");
+        CoreHtml::getInstance()->addJavascript("validLogon('#form-login-logonblock', '#form-login-logonblock-login-input', '#form-login-logonblock-password-input');");
         return $form->render("login-logonblock");
     }
 
@@ -143,7 +143,7 @@ class Block_Login extends Block_Model {
         $form->addInputHidden("layout", "module");
         $form->addInputSubmit("submit", VALID);
         $form->addHtmlInFieldset($moreLink);
-        Core_Html::getInstance()->addJavascript("validForgetLogin('#form-login-forgetloginblock', '#form-login-forgetloginblock-mail-input');");
+        CoreHtml::getInstance()->addJavascript("validForgetLogin('#form-login-forgetloginblock', '#form-login-forgetloginblock-mail-input');");
         return $form->render("login-forgetloginblock");
     }
 
@@ -161,7 +161,7 @@ class Block_Login extends Block_Model {
         $form->addInputHidden("layout", "module");
         $form->addInputSubmit("submit", VALID);
         $form->addHtmlInFieldset($moreLink);
-        Core_Html::getInstance()->addJavascript("validForgetPass('#form-login-forgetpassblock', '#form-login-forgetpassblock-login-input');");
+        CoreHtml::getInstance()->addJavascript("validForgetPass('#form-login-forgetpassblock', '#form-login-forgetpassblock-login-input');");
         return $form->render("login-forgetpassblock");
     }
 
@@ -173,7 +173,7 @@ class Block_Login extends Block_Model {
         //$form->addInputHidden("layout", "module");
         $form->addInputSubmit("submit", VALID);
         $form->addHtmlInFieldset($moreLink);
-        //Core_Html::getInstance()->addJavascript("validForgetPass('#form-login-registrationblock', '#form-login-registrationblock-login-input');");
+        //CoreHtml::getInstance()->addJavascript("validForgetPass('#form-login-registrationblock', '#form-login-registrationblock-login-input');");
         return $form->render("login-registrationblock");
     }
 
@@ -182,7 +182,7 @@ class Block_Login extends Block_Model {
     }
 
     public function uninstall() {
-        $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_FORMS);
+        $coreCache = CoreCache::getInstance(CoreCache::SECTION_FORMS);
         $coreCache->removeCache("login-logonblock.php");
         $coreCache->removeCache("login-forgetloginblock.php");
         $coreCache->removeCache("login-forgetpassblock.php");

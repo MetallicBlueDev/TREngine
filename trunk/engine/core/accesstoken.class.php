@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -6,7 +9,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-interface Core_AccessToken {
+interface CoreAccessToken {
 
     /**
      * Retourne la zone d'échange actuelle.

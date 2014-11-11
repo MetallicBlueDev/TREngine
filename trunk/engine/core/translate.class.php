@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -6,12 +9,12 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Core_Translate {
+class CoreTranslate {
 
     /**
      * Instance du gestionnaire du traducteur.
      *
-     * @var Core_Translate
+     * @var CoreTranslate
      */
     private static $coreTranslate = null;
 
@@ -202,7 +205,7 @@ class Core_Translate {
     /**
      * Retourne le gestionnaire de traduction.
      *
-     * @return Core_Translate
+     * @return CoreTranslate
      */
     public static function &getInstance() {
         self::checkInstance();
@@ -214,7 +217,7 @@ class Core_Translate {
      */
     public static function checkInstance() {
         if (self::$coreTranslate === null) {
-            self::$coreTranslate = new Core_Translate();
+            self::$coreTranslate = new CoreTranslate();
             self::$coreTranslate->translate(DIRECTORY_SEPARATOR);
         }
     }
@@ -259,8 +262,8 @@ class Core_Translate {
 
                 // Pour la sélection dans le cache
                 $coreCache = null;
-                if (CoreLoader::isCallable("Core_Cache")) {
-                    $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_TRANSLATE);
+                if (CoreLoader::isCallable("CoreCache")) {
+                    $coreCache = CoreCache::getInstance(CoreCache::SECTION_TRANSLATE);
                 }
 
                 // Chargement du fichier de traduction
@@ -299,7 +302,7 @@ class Core_Translate {
      * @return array
      */
     public static function &getLangList() {
-        return Core_Cache::getInstance()->getFileList("lang", ".lang");
+        return CoreCache::getInstance()->getFileList("lang", ".lang");
     }
 
     /**
@@ -310,7 +313,7 @@ class Core_Translate {
     public static function removeCache($pathLang = "") {
         $langCacheFileName = self::getLangCacheFileName($pathLang);
 
-        $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_TRANSLATE);
+        $coreCache = CoreCache::getInstance(CoreCache::SECTION_TRANSLATE);
 
         $langues = self::getLangList();
         foreach ($langues as $langue) {
@@ -340,7 +343,7 @@ class Core_Translate {
         $validExtension = "";
 
         // Recherche de la langue du client
-        $languageClient = explode(',', Core_Request::getString("HTTP_ACCEPT_LANGUAGE", "", "SERVER"));
+        $languageClient = explode(',', CoreRequest::getString("HTTP_ACCEPT_LANGUAGE", "", "SERVER"));
         $extension = strtolower(substr(trim($languageClient[0]), 0, 2));
 
         if (isset(self::$languageList[$extension])) {
@@ -348,7 +351,7 @@ class Core_Translate {
         } else {
             // Recherche de l'URL
             if (!defined("TR_ENGINE_URL")) {
-                $url = Core_Request::getString("SERVER_NAME", "", "SERVER");
+                $url = CoreRequest::getString("SERVER_NAME", "", "SERVER");
             } else {
                 $url = TR_ENGINE_URL;
             }
@@ -377,8 +380,8 @@ class Core_Translate {
         $language = "";
 
         // Langage du client via le cookie de session
-        if (CoreLoader::isCallable("Core_Session")) {
-            $userLanguage = strtolower(trim(Core_Session::getInstance()->getUserInfos()->getLangue()));
+        if (CoreLoader::isCallable("CoreSession")) {
+            $userLanguage = strtolower(trim(CoreSession::getInstance()->getUserInfos()->getLangue()));
         } else {
             $userLanguage = "";
         }
@@ -393,8 +396,8 @@ class Core_Translate {
             // Si la langue trouvé en invalide
             if (!self::isValid($language)) {
                 // Utilisation de la langue par défaut du site
-                if (CoreLoader::isCallable("Core_Main")) {
-                    $language = Core_Main::getInstance()->getDefaultLanguage();
+                if (CoreLoader::isCallable("CoreMain")) {
+                    $language = CoreMain::getInstance()->getDefaultLanguage();
                 } else {
                     $language = "";
                 }

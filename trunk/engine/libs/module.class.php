@@ -47,11 +47,11 @@ class Libs_Module {
      * Création du gestionnaire.
      */
     private function __construct() {
-        $this->module = Core_Request::getWord("mod");
-        $this->page = Core_Request::getWord("page");
-        $this->view = Core_Request::getWord("view");
+        $this->module = CoreRequest::getWord("mod");
+        $this->page = CoreRequest::getWord("page");
+        $this->view = CoreRequest::getWord("view");
 
-        $defaultModule = Core_Main::getInstance()->getDefaultMod();
+        $defaultModule = CoreMain::getInstance()->getDefaultMod();
         $defaultPage = "index";
         $defaultView = "display";
 
@@ -63,7 +63,7 @@ class Libs_Module {
         if (!$this->isModule()) {
             if (!empty($this->module) || !empty($this->page)) {
                 // Afficher une erreur 404
-                Core_Logger::addInformationMessage(ERROR_404);
+                CoreLogger::addInformationMessage(ERROR_404);
             }
 
             $this->module = $defaultModule;
@@ -98,7 +98,7 @@ class Libs_Module {
      */
     public static function &getModuleList() {
         $moduleList = array();
-        $modules = Core_Cache::getInstance()->getNameList("modules");
+        $modules = CoreCache::getInstance()->getNameList("modules");
 
         foreach ($modules as $module) {
             $moduleList[] = array(
@@ -141,13 +141,13 @@ class Libs_Module {
             $moduleData = array();
 
             // Recherche dans le cache
-            $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_MODULES);
+            $coreCache = CoreCache::getInstance(CoreCache::SECTION_MODULES);
 
             if (!$coreCache->cached($moduleName . ".php")) {
-                $coreSql = Core_Sql::getInstance();
+                $coreSql = CoreSql::getInstance();
 
                 $coreSql->select(
-                Core_Table::MODULES_TABLE, array(
+                CoreTable::MODULES_TABLE, array(
                     "mod_id",
                     "name",
                     "rank",
@@ -184,7 +184,7 @@ class Libs_Module {
         $moduleInfo = $this->getInfoModule();
 
         // Vérification du niveau d'acces
-        if (($moduleInfo->installed() && Core_Access::autorize(Core_AccessType::getTypeFromToken($moduleInfo))) || (!$moduleInfo->installed() && Core_Session::getInstance()->getUserInfos()->hasAdminRank())) {
+        if (($moduleInfo->installed() && CoreAccess::autorize(CoreAccessType::getTypeFromToken($moduleInfo))) || (!$moduleInfo->installed() && CoreSession::getInstance()->getUserInfos()->hasAdminRank())) {
             if ($moduleInfo->isValid($this->page)) {
 
                 if (CoreLoader::isCallable("Libs_Breadcrumb")) {
@@ -201,7 +201,7 @@ class Libs_Module {
                 $this->get($moduleInfo);
             }
         } else {
-            Core_Logger::addErrorMessage(ERROR_ACCES_ZONE . " " . Core_Access::getAccessErrorMessage($moduleInfo));
+            CoreLogger::addErrorMessage(ERROR_ACCES_ZONE . " " . CoreAccess::getAccessErrorMessage($moduleInfo));
         }
     }
 
@@ -233,7 +233,7 @@ class Libs_Module {
      * @param Libs_ModuleData $moduleInfo
      */
     private function get(&$moduleInfo) {
-        $moduleClassName = "Module_" . ucfirst($moduleInfo->getName()) . "_" . ucfirst($this->page);
+        $moduleClassName = "Module" . ucfirst($moduleInfo->getName()) . ucfirst($this->page);
         $loaded = CoreLoader::classLoader($moduleClassName);
 
         if ($loaded) {
@@ -244,7 +244,7 @@ class Libs_Module {
 
             // Affichage du module si possible
             if (!empty($this->view)) {
-                Core_Translate::getInstance()->translate("modules" . DIRECTORY_SEPARATOR . $moduleInfo->getName());
+                CoreTranslate::getInstance()->translate("modules" . DIRECTORY_SEPARATOR . $moduleInfo->getName());
 
                 $this->updateCount($moduleInfo->getId());
 
@@ -260,7 +260,7 @@ class Libs_Module {
                 $moduleInfo->setBuffer(ob_get_contents());
                 ob_end_clean();
             } else {
-                Core_Logger::addErrorMessage(ERROR_MODULE_CODE . " (" . $moduleInfo->getName() . ")");
+                CoreLogger::addErrorMessage(ERROR_MODULE_CODE . " (" . $moduleInfo->getName() . ")");
             }
         }
     }
@@ -292,7 +292,7 @@ class Libs_Module {
 
         // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
         if (Exec_Utils::inArray("rewriteBuffer", $this->getInfoModule()->getConfigs())) {
-            $buffer = Core_UrlRewriting::getInstance()->rewriteBuffer($buffer);
+            $buffer = CoreUrlRewriting::getInstance()->rewriteBuffer($buffer);
         }
         return $buffer;
     }
@@ -307,7 +307,7 @@ class Libs_Module {
         $invalid = false;
 
         if (CoreLoader::isCallable($pageInfo[0], $pageInfo[1])) {
-            $userInfos = Core_Session::getInstance()->getUserInfos();
+            $userInfos = CoreSession::getInstance()->getUserInfos();
 
             if ($pageInfo[1] === "install" && ($this->getInfoModule()->installed() || !$userInfos->hasAdminRank())) {
                 $invalid = true;
@@ -342,11 +342,11 @@ class Libs_Module {
      * @param int $modId
      */
     private function updateCount($modId) {
-        $coreSql = Core_Sql::getInstance();
+        $coreSql = CoreSql::getInstance();
 
         $coreSql->addQuotedValue("count + 1");
         $coreSql->update(
-        Core_Table::MODULES_TABLE, array(
+        CoreTable::MODULES_TABLE, array(
             "count" => "count + 1"), array(
             "mod_id = '" . $modId . "'")
         );

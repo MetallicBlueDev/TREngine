@@ -210,10 +210,10 @@ class CoreLoader {
                 } else {
                     switch ($ext) {
                         case self::TYPE_BLOCK:
-                            Core_Logger::addErrorMessage(ERROR_BLOCK_NO_FILE);
+                            CoreLogger::addErrorMessage(ERROR_BLOCK_NO_FILE);
                             break;
                         case self::TYPE_MODULE:
-                            Core_Logger::addErrorMessage(ERROR_MODULE_NO_FILE);
+                            CoreLogger::addErrorMessage(ERROR_MODULE_NO_FILE);
                             break;
                         case self::TYPE_TRANSLATE:
                             // Aucune traduction disponible
@@ -268,14 +268,14 @@ class CoreLoader {
                 $path = self::getFilePathFromNamespace($name);
                 break;
             case self::TYPE_TRANSLATE:
-                if (self::isCallable("Core_Translate")) {
+                if (self::isCallable("CoreTranslate")) {
                     if ($name === DIRECTORY_SEPARATOR) {
                         $path = "lang" . DIRECTORY_SEPARATOR;
                     } else {
                         $path = $name . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR;
                     }
 
-                    $path .= Core_Translate::getInstance()->getCurrentLanguage();
+                    $path .= CoreTranslate::getInstance()->getCurrentLanguage();
                 }
 
                 $path .= "." . $ext;
@@ -333,11 +333,11 @@ class CoreLoader {
         switch ($ext) {
             case self::TYPE_TRANSLATE:
                 if (!empty($lang) && is_array($lang)) {
-                    Core_Translate::getInstance()->affectCache($lang);
+                    CoreTranslate::getInstance()->affectCache($lang);
                 }
                 break;
             case self::TYPE_INCLUDE:
-                Core_Main::getInstance()->addInclude($name, $inc);
+                CoreMain::getInstance()->addInclude($name, $inc);
                 break;
         }
         return $loaded;

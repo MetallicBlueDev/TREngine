@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -6,12 +9,12 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Core_UrlRewriting {
+class CoreUrlRewriting {
 
     /**
      * Gestionnnaire de réécriture.
      *
-     * @var Core_UrlRewriting
+     * @var CoreUrlRewriting
      */
     private static $coreUrlRewriting = null;
 
@@ -26,7 +29,7 @@ class Core_UrlRewriting {
      * Nouveau gestionnaire.
      */
     private function __construct() {
-        if (Core_Main::getInstance()->doUrlRewriting()) {
+        if (CoreMain::getInstance()->doUrlRewriting()) {
             $this->canUse = $this->testPassed();
         }
     }
@@ -34,11 +37,11 @@ class Core_UrlRewriting {
     /**
      * Instance du gestionnaire de réécriture du tampon de sortie.
      *
-     * @return Core_UrlRewriting
+     * @return CoreUrlRewriting
      */
     public static function &getInstance() {
         if (self::$coreUrlRewriting === null) {
-            self::$coreUrlRewriting = new Core_UrlRewriting();
+            self::$coreUrlRewriting = new CoreUrlRewriting();
         }
         return self::$coreUrlRewriting;
     }
@@ -103,7 +106,7 @@ class Core_UrlRewriting {
         // TODO vérifie si fichier tmp de test est OK
         // si pas OK et pas de fichier tmp pour signaler la désactivation
         // on tente de mettre urlRewriting a 0 puis on créé le fichier tmp de désactivation
-        // si déjà fichier tmp de décastivation ajouter erreur dans Core_Logger
+        // si déjà fichier tmp de décastivation ajouter erreur dans CoreLogger
         return $rslt;
     }
 

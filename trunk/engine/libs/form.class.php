@@ -81,7 +81,7 @@ class Libs_Form {
     public function __construct($name, $urlAction = "") {
         $this->name = $name;
         $this->urlAction = !empty($urlAction) ? $urlAction : "index.php";
-        $this->cached = Core_Cache::getInstance(Core_Cache::SECTION_FORMS)->cached($name . ".php");
+        $this->cached = CoreCache::getInstance(CoreCache::SECTION_FORMS)->cached($name . ".php");
     }
 
     /**
@@ -406,7 +406,7 @@ class Libs_Form {
         $title = $this->getTitle($this->title);
         $description = $this->getDescription($this->description);
 
-        $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_FORMS);
+        $coreCache = CoreCache::getInstance(CoreCache::SECTION_FORMS);
         $content = "";
 
         if ($this->cached) { // Récupèration des données mise en cache
@@ -561,14 +561,14 @@ class Libs_Form {
     /**
      * Retourne la dernière variable de cache.
      *
-     * @see Core_Cache::getInstance()->getCache()
+     * @see CoreCache::getInstance()->getCache()
      * @return string
      */
     private function &getLastCacheVar() {
         $rslt = "";
 
         if (!$this->cached) {
-            // Le nom de la "vars" est relatif a Core_Cache::getInstance()->getCache()
+            // Le nom de la "vars" est relatif a CoreCache::getInstance()->getCache()
             $rslt = "$" . "vars[" . ($this->cacheVarsIndex - 1) . "]";
         }
         return $rslt;

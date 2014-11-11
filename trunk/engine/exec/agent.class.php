@@ -227,9 +227,9 @@ class Exec_Agent {
         self::$userIp = self::checkUserIp();
 
         // Analyse pour les statistiques
-        self::$userReferer = htmlentities(Core_Request::getString("HTTP_REFERER", "", "SERVER"), ENT_QUOTES);
+        self::$userReferer = htmlentities(CoreRequest::getString("HTTP_REFERER", "", "SERVER"), ENT_QUOTES);
         self::$userHost = strtolower(@gethostbyaddr(self::$userIp));
-        self::$userAgent = Core_Request::getString("HTTP_USER_AGENT", "", "SERVER");
+        self::$userAgent = CoreRequest::getString("HTTP_USER_AGENT", "", "SERVER");
 
         // Details sur le client
         self::$userHost = self::checkUserHost();
@@ -244,11 +244,11 @@ class Exec_Agent {
      */
     private static function &checkUserIp() {
         // Recherche de l'IP
-        $userIp = Core_Request::getString("HTTP_CLIENT_IP", "", "SERVER");
+        $userIp = CoreRequest::getString("HTTP_CLIENT_IP", "", "SERVER");
         if (empty($userIp)) {
-            $userIp = Core_Request::getString("HTTP_X_FORWARDED_FOR", "", "SERVER");
+            $userIp = CoreRequest::getString("HTTP_X_FORWARDED_FOR", "", "SERVER");
             if (empty($userIp)) {
-                $userIp = Core_Request::getString("REMOTE_ADDR", "", "SERVER");
+                $userIp = CoreRequest::getString("REMOTE_ADDR", "", "SERVER");
             }
         }
         return $userIp;

@@ -20,15 +20,15 @@ abstract class Module_Model {
      * Fonction d'affichage par défaut.
      */
     public function display() {
-        Core_Logger::addErrorMessage(ERROR_MODULE_IMPLEMENT . ((!empty($this->getModuleData()->getName())) ? " (" . $this->getModuleData()->getName() . ")" : ""));
+        CoreLogger::addErrorMessage(ERROR_MODULE_IMPLEMENT . ((!empty($this->getModuleData()->getName())) ? " (" . $this->getModuleData()->getName() . ")" : ""));
     }
 
     /**
      * Installation du module courant.
      */
     public function install() {
-        Core_Sql::getInstance()->insert(
-        Core_Table::MODULES_TABLE, array(
+        CoreSql::getInstance()->insert(
+        CoreTable::MODULES_TABLE, array(
             "name",
             "rank",
             "configs"), array(
@@ -42,13 +42,13 @@ abstract class Module_Model {
      * Désinstallation du module courant.
      */
     public function uninstall() {
-        Core_Sql::getInstance()->delete(
-        Core_Table::MODULES_TABLE, array(
+        CoreSql::getInstance()->delete(
+        CoreTable::MODULES_TABLE, array(
             "mod_id = '" . $this->getModuleData()->getId() . "'")
         );
 
-        Core_Cache::getInstance(Core_Cache::SECTION_MODULES)->removeCache($this->getModuleData()->getName() . ".php");
-        Core_Translate::removeCache("modules" . DIRECTORY_SEPARATOR . $this->getModuleData()->getName());
+        CoreCache::getInstance(CoreCache::SECTION_MODULES)->removeCache($this->getModuleData()->getName() . ".php");
+        CoreTranslate::removeCache("modules" . DIRECTORY_SEPARATOR . $this->getModuleData()->getName());
     }
 
     /**
@@ -83,10 +83,10 @@ abstract class Module_Model {
     /**
      * Retourne l'accès spécifique de ce module.
      *
-     * @return Core_AccessType
+     * @return CoreAccessType
      */
     public function &getAccessType() {
-        return Core_AccessType::getTypeFromToken($this->getModuleData());
+        return CoreAccessType::getTypeFromToken($this->getModuleData());
     }
 
 }

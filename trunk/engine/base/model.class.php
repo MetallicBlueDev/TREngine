@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-abstract class Base_Model extends Core_Transaction {
+abstract class BaseModel extends CoreTransaction {
 
     /**
      * Dernier resultat de la dernière requête SQL.
@@ -374,7 +374,7 @@ abstract class Base_Model extends Core_Transaction {
      * @return string
      */
     public function &getCollation() {
-        $this->query("SHOW FULL COLUMNS FROM " . $this->getTableName(Core_Table::CONFIG_TABLE));
+        $this->query("SHOW FULL COLUMNS FROM " . $this->getTableName(CoreTable::CONFIG_TABLE));
         $info = $this->fetchArray();
         return !empty($info['Collation']) ? $info['Collation'] : "?";
     }

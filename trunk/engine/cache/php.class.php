@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Cache_Php extends Cache_Model {
+class Cache_Php extends CacheModel {
 
     protected function canUse() {
         // Gestionnaire natif; toujours diponible
@@ -36,7 +36,7 @@ class Cache_Php extends Cache_Model {
 
     public function touchCache($path, $updateTime = 0) {
         if (!touch(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path, $updateTime)) {
-            Core_Logger::addException("Touch error on " . $path);
+            CoreLogger::addException("Touch error on " . $path);
         }
     }
 
@@ -116,7 +116,7 @@ class Cache_Php extends Cache_Model {
             if ($nbBytesCmd !== $nbBytesFile) {
                 @unlink(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $pathFile);
 
-                Core_Logger::addException("Bad response for fwrite command. Path : " . $pathFile . ". "
+                CoreLogger::addException("Bad response for fwrite command. Path : " . $pathFile . ". "
                 . "Server response : " . $nbBytesCmd . " bytes writed, " . $nbBytesFile . " bytes readed");
             }
 
@@ -138,7 +138,7 @@ class Cache_Php extends Cache_Model {
                 rename($htaccessPath . "index.html", $htaccessPath . ".htaccess");
             }
 
-            Core_Logger::addException("Bad response for fopen command. Path : " . $pathFile);
+            CoreLogger::addException("Bad response for fopen command. Path : " . $pathFile);
         }
     }
 
@@ -177,7 +177,7 @@ class Cache_Php extends Cache_Model {
 
                     // Vérification de l'existence du fichier
                     if (!is_dir($currentPath)) {
-                        Core_Logger::addException("Bad response for mkdir|chmod command. Path : " . $currentPath);
+                        CoreLogger::addException("Bad response for mkdir|chmod command. Path : " . $currentPath);
                     }
 
                     // Des petites fichiers bonus...
@@ -230,7 +230,7 @@ class Cache_Php extends Cache_Model {
             }
 
             if (is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path)) {
-                Core_Logger::addException("Bad response for fopen|unlink command. Path : " . $path);
+                CoreLogger::addException("Bad response for fopen|unlink command. Path : " . $path);
             }
         }
     }
@@ -287,7 +287,7 @@ class Cache_Php extends Cache_Model {
             rmdir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $dirPath);
 
             if (is_dir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $dirPath)) {
-                Core_Logger::addException("Bad response for rmdir command. Path : " . $dirPath);
+                CoreLogger::addException("Bad response for rmdir command. Path : " . $dirPath);
             }
         }
     }

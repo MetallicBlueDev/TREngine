@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -6,7 +9,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Core_Logger {
+class CoreLogger {
 
     /**
      * Exceptions destinées au développeur.
@@ -82,7 +85,7 @@ class Core_Logger {
      * @return string
      */
     public static function displayMessages() {
-        if (CoreLoader::isCallable("Core_Main")) {
+        if (CoreLoader::isCallable("CoreMain")) {
             $hasMessages = !empty(self::$messages);
             $display = "none";
             $rslt = "";
@@ -101,12 +104,12 @@ class Core_Logger {
             }
 
             // Réaction différente en fonction du type d'affichage demandée
-            if (Core_Main::getInstance()->isDefaultLayout()) {
+            if (CoreMain::getInstance()->isDefaultLayout()) {
                 echo "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
             } else if ($hasMessages) {
-                if (CoreLoader::isCallable("Core_Html")) {
-                    if (Core_Html::getInstance()->javascriptEnabled()) {
-                        Core_Html::getInstance()->addJavascript("displayMessage('" . addslashes($rslt) . "');");
+                if (CoreLoader::isCallable("CoreHtml")) {
+                    if (CoreHtml::getInstance()->javascriptEnabled()) {
+                        CoreHtml::getInstance()->addJavascript("displayMessage('" . addslashes($rslt) . "');");
                         $rslt = "";
                     }
                 }
@@ -122,8 +125,8 @@ class Core_Logger {
      * Affichage des informations de debug.
      */
     public static function displayDebugInformations() {
-        if (CoreLoader::isCallable("Core_Main") && CoreLoader::isCallable("Core_Session")) {
-            if (Core_Session::getInstance()->getUserInfos()->hasRegisteredRank()) {
+        if (CoreLoader::isCallable("CoreMain") && CoreLoader::isCallable("CoreSession")) {
+            if (CoreSession::getInstance()->getUserInfos()->hasRegisteredRank()) {
                 echo "<div style=\"color: blue;\"><br />"
                 . "***********************SQL REQUESTS (" . count(self::$sqlRequest) . ") :<br />";
 
@@ -165,10 +168,10 @@ class Core_Logger {
      * Ecriture du rapport d'erreur dans un fichier log.
      */
     public static function logException() {
-        if (CoreLoader::isCallable("Core_Cache")) {
+        if (CoreLoader::isCallable("CoreCache")) {
             if (self::hasExceptions()) {
                 // Ecriture à la suite du rapport
-                Core_Cache::getInstance(Core_Cache::SECTION_LOGGER)->writeCache("exception_" . date('Y-m-d') . ".log.php", self::serializeData(self::$exceptions), false);
+                CoreCache::getInstance(CoreCache::SECTION_LOGGER)->writeCache("exception_" . date('Y-m-d') . ".log.php", self::serializeData(self::$exceptions), false);
             }
         }
     }

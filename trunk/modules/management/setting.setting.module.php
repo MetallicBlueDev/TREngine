@@ -4,7 +4,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class Module_Management_Setting extends Module_Model {
 
     public function setting() {
-        $localView = Core_Request::getWord("localView", "", "POST");
+        $localView = CoreRequest::getWord("localView", "", "POST");
 
         switch ($localView) {
             case "sendGeneral":
@@ -30,7 +30,7 @@ class Module_Management_Setting extends Module_Model {
      * Supprime le cache
      */
     private function deleteCache() {
-        Core_Cache::getInstance(Core_Cache::SECTION_TMP)->removeCache("configs.php");
+        CoreCache::getInstance(CoreCache::SECTION_TMP)->removeCache("configs.php");
     }
 
     /**
@@ -40,8 +40,8 @@ class Module_Management_Setting extends Module_Model {
      * @param $where array
      */
     private function updateTable($key, $value) {
-        Core_Sql::getInstance()->update(
-        Core_Table::CONFIG_TABLE, array(
+        CoreSql::getInstance()->update(
+        CoreTable::CONFIG_TABLE, array(
             "value" => $value), array(
             "name = '" . $key . "'")
         );
@@ -53,7 +53,7 @@ class Module_Management_Setting extends Module_Model {
         $form->setDescription(SETTING_GENERAL_SITE_SETTING_DESCRIPTION);
         $form->addSpace();
 
-        $coreMain = Core_Main::getInstance();
+        $coreMain = CoreMain::getInstance();
 
         $online = $coreMain->doOpening();
         $form->addHtmlInFieldset(SETTING_GENERAL_SITE_SETTING_SITE_STATUT);
@@ -69,7 +69,7 @@ class Module_Management_Setting extends Module_Model {
         $form->addSpace();
 
         $form->addSelectOpenTag("defaultLanguage", SETTING_GENERAL_DEFAULT_LANGUAGE);
-        $langues = Core_Translate::getLangList();
+        $langues = CoreTranslate::getLangList();
         $currentLanguage = $coreMain->getDefaultLanguage();
         $form->addSelectItemTag($currentLanguage, "", true);
         foreach ($langues as $langue) {
@@ -124,99 +124,99 @@ class Module_Management_Setting extends Module_Model {
         $form->addInputHidden("manage", "setting");
         $form->addInputHidden("localView", "sendGeneral");
         $form->addInputSubmit("submit", VALID);
-        Core_Html::getInstance()->addJavascript("validGeneralSetting('#form-management-setting-general', '#form-management-setting-general-defaultSiteName-input', '#form-management-setting-general-defaultAdministratorMail-input');");
+        CoreHtml::getInstance()->addJavascript("validGeneralSetting('#form-management-setting-general', '#form-management-setting-general-defaultSiteName-input', '#form-management-setting-general-defaultAdministratorMail-input');");
         return $form->render();
     }
 
     private function sendGeneral() {
         $deleteCache = false;
-        $coreMain = Core_Main::getInstance();
+        $coreMain = CoreMain::getInstance();
 
         // état du site
-        $defaultSiteStatut = Core_Request::getWord("defaultSiteStatut", "", "POST");
+        $defaultSiteStatut = CoreRequest::getWord("defaultSiteStatut", "", "POST");
         if ($coreMain->getDefaultSiteStatut() != $defaultSiteStatut) {
             $defaultSiteStatut = ($defaultSiteStatut == "close") ? "close" : "open";
             $this->updateTable("defaultSiteStatut", $defaultSiteStatut);
             $deleteCache = true;
         }
         // Raison de femeture
-        $defaultSiteCloseReason = Core_Request::getString("defaultSiteCloseReason", "", "POST");
+        $defaultSiteCloseReason = CoreRequest::getString("defaultSiteCloseReason", "", "POST");
         if ($coreMain->getDefaultSiteCloseReason() != $defaultSiteCloseReason) {
             $this->updateTable("defaultSiteCloseReason", $defaultSiteCloseReason);
             $deleteCache = true;
         }
         // Nom du site
-        $defaultSiteName = Core_Request::getString("defaultSiteName", "", "POST");
+        $defaultSiteName = CoreRequest::getString("defaultSiteName", "", "POST");
         if ($coreMain->getDefaultSiteName() != $defaultSiteName) {
             if (!empty($defaultSiteName)) {
                 $this->updateTable("defaultSiteName", $defaultSiteName);
                 $deleteCache = true;
             } else {
-                Core_Logger::addErrorMessage(SETTING_GENERAL_DEFAULT_SITE_NAME_INVALID);
+                CoreLogger::addErrorMessage(SETTING_GENERAL_DEFAULT_SITE_NAME_INVALID);
             }
         }
         // Slogan du site
-        $defaultSiteSlogan = Core_Request::getString("defaultSiteSlogan", "", "POST");
+        $defaultSiteSlogan = CoreRequest::getString("defaultSiteSlogan", "", "POST");
         if ($coreMain->getDefaultSiteSlogan() != $defaultSiteSlogan) {
             $this->updateTable("defaultSiteSlogan", $defaultSiteSlogan);
             $deleteCache = true;
         }
         // Email du site
-        $defaultAdministratorMail = Core_Request::getString("defaultAdministratorMail", "", "POST");
+        $defaultAdministratorMail = CoreRequest::getString("defaultAdministratorMail", "", "POST");
         if ($coreMain->getDefaultAdministratorMail() != $defaultAdministratorMail) {
             if (!empty($defaultAdministratorMail) && Exec_Mailer::validMail($defaultAdministratorMail)) {
                 $this->updateTable("defaultAdministratorMail", $defaultAdministratorMail);
                 $deleteCache = true;
             } else {
-                Core_Logger::addErrorMessage(SETTING_GENERAL_DEFAULT_ADMIN_MAIL_INVALID);
+                CoreLogger::addErrorMessage(SETTING_GENERAL_DEFAULT_ADMIN_MAIL_INVALID);
             }
         }
         // Langue par défaut
-        $defaultLanguage = Core_Request::getString("defaultLanguage", "", "POST");
+        $defaultLanguage = CoreRequest::getString("defaultLanguage", "", "POST");
         if ($coreMain->getDefaultLanguage() != $defaultLanguage) {
-            $langues = Core_Translate::getLangList();
+            $langues = CoreTranslate::getLangList();
             if (!empty($defaultLanguage) && Exec_Utils::inArray($defaultLanguage, $langues)) {
                 $this->updateTable("defaultLanguage", $defaultLanguage);
                 $deleteCache = true;
             } else {
-                Core_Logger::addErrorMessage(SETTING_GENERAL_DEFAULT_LANGUAGE_INVALID);
+                CoreLogger::addErrorMessage(SETTING_GENERAL_DEFAULT_LANGUAGE_INVALID);
             }
         }
         // Template par défaut
-        $defaultTemplate = Core_Request::getString("defaultTemplate", "", "POST");
+        $defaultTemplate = CoreRequest::getString("defaultTemplate", "", "POST");
         if ($coreMain->getDefaultTemplate() != $defaultTemplate) {
             $templates = Libs_MakeStylegetTemplateListes();
             if (!empty($defaultTemplate) && Exec_Utils::inArray($defaultTemplate, $templates)) {
                 $this->updateTable("defaultTemplate", $defaultTemplate);
                 $deleteCache = true;
             } else {
-                Core_Logger::addErrorMessage(SETTING_GENERAL_DEFAULT_TEMPLATE_INVALID);
+                CoreLogger::addErrorMessage(SETTING_GENERAL_DEFAULT_TEMPLATE_INVALID);
             }
         }
         // Module par défaut
-        $defaultMod = Core_Request::getString("defaultMod", "", "POST");
+        $defaultMod = CoreRequest::getString("defaultMod", "", "POST");
         if ($coreMain->getDefaultMod() != $defaultMod) {
             if (!empty($defaultMod)) {
                 $this->updateTable("defaultMod", $defaultMod);
                 $deleteCache = true;
             } else {
-                Core_Logger::addErrorMessage(SETTING_GENERAL_DEFAULT_MODULE_INVALID);
+                CoreLogger::addErrorMessage(SETTING_GENERAL_DEFAULT_MODULE_INVALID);
             }
         }
         // Description du site
-        $defaultDescription = Core_Request::getString("defaultDescription", "", "POST");
+        $defaultDescription = CoreRequest::getString("defaultDescription", "", "POST");
         if ($coreMain->getDefaultDescription() != $defaultDescription) {
             $this->updateTable("defaultDescription", $defaultDescription);
             $deleteCache = true;
         }
         // Mot clès du site
-        $defaultKeyWords = Core_Request::getString("defaultKeyWords", "", "POST");
+        $defaultKeyWords = CoreRequest::getString("defaultKeyWords", "", "POST");
         if ($coreMain->getDefaultKeyWords() != $defaultKeyWords) {
             $this->updateTable("defaultKeyWords", $defaultKeyWords);
             $deleteCache = true;
         }
         // état de la réécriture des URLs
-        $urlRewriting = Core_Request::getBoolean("urlRewriting", "", "POST");
+        $urlRewriting = CoreRequest::getBoolean("urlRewriting", "", "POST");
         if ($coreMain->doUrlRewriting() != $urlRewriting) {
             $urlRewriting = $urlRewriting ? 1 : 0;
             $this->updateTable("urlRewriting", $urlRewriting);
@@ -226,16 +226,16 @@ class Module_Management_Setting extends Module_Model {
         // Suppression du cache
         if ($deleteCache) {
             $this->deleteCache();
-            Core_Logger::addInformationMessage(DATA_SAVED);
+            CoreLogger::addInformationMessage(DATA_SAVED);
         }
 
         if ($coreMain->isDefaultLayout()) {
-            Core_Html::getInstance()->redirect("index.php?mod=management&manage=setting&selectedTab=settingtabidTab0", 1);
+            CoreHtml::getInstance()->redirect("index.php?mod=management&manage=setting&selectedTab=settingtabidTab0", 1);
         }
     }
 
     private function tabSystem() {// TODO a finir de coder
-        $coreMain = Core_Main::getInstance();
+        $coreMain = CoreMain::getInstance();
 
         $form = new Libs_Form("management-setting-system");
         $form->setTitle(SETTING_SYSTEM_CACHE_SETTING_TITLE);
@@ -254,7 +254,7 @@ class Module_Management_Setting extends Module_Model {
 
         $form->addSelectOpenTag("ftpType", SETTING_SYSTEM_FTP_SETTING_TYPE);
 
-        $coreCache = Core_Cache::getInstance();
+        $coreCache = CoreCache::getInstance();
         $modeFtp = $coreCache->getCacheList();
         $currentMode = $coreCache->getTransactionType();
         foreach ($modeFtp as $mode) {
@@ -270,7 +270,7 @@ class Module_Management_Setting extends Module_Model {
         $form->addInputText("ftpRoot", SETTING_SYSTEM_FTP_SETTING_ROOT, $ftp['root']);
         $form->addSpace();
 
-        $coreSql = Core_Sql::getInstance();
+        $coreSql = CoreSql::getInstance();
         $form->addFieldset(SETTING_SYSTEM_DATABASE_SETTING_TITLE, SETTING_SYSTEM_DATABASE_SETTING_DESCRIPTION);
         $form->addInputText("dbHost", SETTING_SYSTEM_DATABASE_SETTING_HOST, $coreSql->getTransactionHost());
         $form->addInputText("dbName", SETTING_SYSTEM_DATABASE_SETTING_NAME, $coreSql->getDatabaseName());
@@ -279,7 +279,7 @@ class Module_Management_Setting extends Module_Model {
         $form->addInputPassword("dbPass", SETTING_SYSTEM_DATABASE_SETTING_PASSWORD);
 
         $form->addSelectOpenTag("dbType", SETTING_SYSTEM_DATABASE_SETTING_TYPE);
-        $bases = Core_Sql::getBaseList();
+        $bases = CoreSql::getBaseList();
         foreach ($bases as $base) {
             if ($base == $coreSql->getTransactionType())
                 $form->addSelectItemTag($base, "", true);
@@ -294,15 +294,15 @@ class Module_Management_Setting extends Module_Model {
         $form->addInputHidden("manage", "setting");
         $form->addInputHidden("localView", "sendSystem");
         $form->addInputSubmit("submit", VALID);
-        //Core_Html::getInstance()->addJavascript("validSystemSetting('#form-management-setting-system', '#form-management-setting-system-defaultSiteName-input', '#form-management-setting-system-defaultAdministratorMail-input');");
+        //CoreHtml::getInstance()->addJavascript("validSystemSetting('#form-management-setting-system', '#form-management-setting-system-defaultSiteName-input', '#form-management-setting-system-defaultAdministratorMail-input');");
         return $form->render();
     }
 
     private function sendSystem() {
         $updateConfigFile = false;
-        $coreMain = Core_Main::getInstance();
+        $coreMain = CoreMain::getInstance();
 
-        $cacheTimeLimit = Core_Request::getInteger("cacheTimeLimit", 7, "POST");
+        $cacheTimeLimit = CoreRequest::getInteger("cacheTimeLimit", 7, "POST");
         if ($cacheTimeLimit != $coreMain->getCacheTimeLimit()) {
             if ($cacheTimeLimit >= 1)
                 $updateConfigFile = true;
@@ -310,7 +310,7 @@ class Module_Management_Setting extends Module_Model {
                 $cacheTimeLimit = $coreMain->getCacheTimeLimit();
         }
 
-        $cryptKey = Core_Request::getString("cryptKey", $coreMain->getCryptKey(), "POST");
+        $cryptKey = CoreRequest::getString("cryptKey", $coreMain->getCryptKey(), "POST");
         if ($cryptKey != $coreMain->getCryptKey()) {
             if (!empty($cryptKey))
                 $updateConfigFile = true;
@@ -318,7 +318,7 @@ class Module_Management_Setting extends Module_Model {
                 $cryptKey = $coreMain->getCryptKey();
         }
 
-        $cookiePrefix = Core_Request::getString("cookiePrefix", $coreMain->getCookiePrefix(), "POST");
+        $cookiePrefix = CoreRequest::getString("cookiePrefix", $coreMain->getCookiePrefix(), "POST");
         if ($cookiePrefix != $coreMain->getCookiePrefix()) {
             if (!empty($cookiePrefix))
                 $updateConfigFile = true;
@@ -333,7 +333,7 @@ class Module_Management_Setting extends Module_Model {
         $ftp = $coreMain->getConfigCache();
         $updateFtpFile = false;
 
-        $ftpType = Core_Request::getWord("ftpType", $ftp['type'], "POST");
+        $ftpType = CoreRequest::getWord("ftpType", $ftp['type'], "POST");
         if ($ftpType != $ftp['type']) {
             if (!empty($ftpType))
                 $updateFtpFile = true;
@@ -341,7 +341,7 @@ class Module_Management_Setting extends Module_Model {
                 $ftpType = $ftp['type'];
         }
 
-        $ftpHost = Core_Request::getString("ftpHost", $ftp['host'], "POST");
+        $ftpHost = CoreRequest::getString("ftpHost", $ftp['host'], "POST");
         if ($ftpHost != $ftp['host']) {
             if (!empty($ftpHost))
                 $updateFtpFile = true;
@@ -349,7 +349,7 @@ class Module_Management_Setting extends Module_Model {
                 $ftpHost = $ftp['host'];
         }
 
-        $ftpPort = Core_Request::getInteger("ftpPort", 21, "POST");
+        $ftpPort = CoreRequest::getInteger("ftpPort", 21, "POST");
         if ($ftpPort != $ftp['port']) {
             if (is_int($ftpPort))
                 $updateFtpFile = true;
@@ -357,7 +357,7 @@ class Module_Management_Setting extends Module_Model {
                 $ftpPort = $ftp['port'];
         }
 
-        $ftpUser = Core_Request::getString("ftpUser", $ftp['user'], "POST");
+        $ftpUser = CoreRequest::getString("ftpUser", $ftp['user'], "POST");
         if ($ftpUser != $ftp['user']) {
             if (!empty($ftpUser))
                 $updateFtpFile = true;
@@ -365,7 +365,7 @@ class Module_Management_Setting extends Module_Model {
                 $ftpUser = $ftp['user'];
         }
 
-        $ftpPass = Core_Request::getString("ftpPass", $ftp['pass'], "POST");
+        $ftpPass = CoreRequest::getString("ftpPass", $ftp['pass'], "POST");
         if ($ftpPass != $ftp['pass']) {
             if (!empty($ftpPass))
                 $updateFtpFile = true;
@@ -373,7 +373,7 @@ class Module_Management_Setting extends Module_Model {
                 $ftpPass = $ftp['pass'];
         }
 
-        $ftpRoot = Core_Request::getString("ftpRoot", $ftp['root'], "POST");
+        $ftpRoot = CoreRequest::getString("ftpRoot", $ftp['root'], "POST");
         if ($ftpRoot != $ftp['root']) {
             if (!empty($ftpRoot))
                 $updateFtpFile = true;
@@ -385,10 +385,10 @@ class Module_Management_Setting extends Module_Model {
             Exec_FileBuilder::buildFtpFile($ftpHost, $ftpPort, $ftpUser, $ftpPass, $ftpRoot, $ftpType);
         }
 
-        $coreSql = Core_Sql::getInstance();
+        $coreSql = CoreSql::getInstance();
         $updateDatabaseFile = false;
 
-        $dbHost = Core_Request::getString("dbHost", $coreSql->getTransactionHost(), "POST");
+        $dbHost = CoreRequest::getString("dbHost", $coreSql->getTransactionHost(), "POST");
         if ($dbHost != $coreSql->getTransactionHost()) {
             if (!empty($dbHost))
                 $updateDatabaseFile = true;
@@ -396,7 +396,7 @@ class Module_Management_Setting extends Module_Model {
                 $dbHost = $coreSql->getTransactionHost();
         }
 
-        $dbName = Core_Request::getString("dbName", $coreSql->getDatabaseName(), "POST");
+        $dbName = CoreRequest::getString("dbName", $coreSql->getDatabaseName(), "POST");
         if ($dbName != $coreSql->getDatabaseName()) {
             if (!empty($dbName))
                 $updateDatabaseFile = true;
@@ -404,7 +404,7 @@ class Module_Management_Setting extends Module_Model {
                 $dbName = $coreSql->getDatabaseName();
         }
 
-        $dbPrefix = Core_Request::getString("dbPrefix", $coreSql->getDatabasePrefix(), "POST");
+        $dbPrefix = CoreRequest::getString("dbPrefix", $coreSql->getDatabasePrefix(), "POST");
         if ($dbPrefix != $coreSql->getDatabasePrefix()) {
             if (!empty($dbPrefix))
                 $updateDatabaseFile = true;
@@ -412,7 +412,7 @@ class Module_Management_Setting extends Module_Model {
                 $dbPrefix = $coreSql->getDatabasePrefix();
         }
 
-        $dbUser = Core_Request::getString("dbUser", $coreSql->getTransactionUser(), "POST");
+        $dbUser = CoreRequest::getString("dbUser", $coreSql->getTransactionUser(), "POST");
         if ($dbUser != $coreSql->getTransactionUser()) {
             if (!empty($dbUser))
                 $updateDatabaseFile = true;
@@ -420,7 +420,7 @@ class Module_Management_Setting extends Module_Model {
                 $dbUser = $coreSql->getTransactionUser();
         }
 
-        $dbPass = Core_Request::getString("dbPass", $coreSql->getTransactionPass(), "POST");
+        $dbPass = CoreRequest::getString("dbPass", $coreSql->getTransactionPass(), "POST");
         if ($dbPass != $coreSql->getTransactionPass()) {
             if (!empty($dbPass))
                 $updateDatabaseFile = true;
@@ -428,7 +428,7 @@ class Module_Management_Setting extends Module_Model {
                 $dbPass = $coreSql->getTransactionPass();
         }
 
-        $dbType = Core_Request::getWord("dbType", $coreSql->getTransactionType(), "POST");
+        $dbType = CoreRequest::getWord("dbType", $coreSql->getTransactionType(), "POST");
         if ($dbType != $coreSql->getTransactionType()) {
             if (!empty($dbType))
                 $updateDatabaseFile = true;
@@ -441,7 +441,7 @@ class Module_Management_Setting extends Module_Model {
         }
 
         if ($coreMain->isDefaultLayout()) {
-            Core_Html::getInstance()->redirect("index.php?mod=management&manage=setting&selectedTab=settingtabidTab1", 1);
+            CoreHtml::getInstance()->redirect("index.php?mod=management&manage=setting&selectedTab=settingtabidTab1", 1);
         }
     }
 

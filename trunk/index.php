@@ -12,18 +12,18 @@ if (CoreSecure::debuggingMode()) {
 Exec_TimeMarker::startMeasurement("main");
 
 // Préparation du moteur
-Core_Main::checkInstance();
+CoreMain::checkInstance();
 
 // Recherche de nouveaux composants
-if (Core_Main::getInstance()->newComponentDetected()) {
+if (CoreMain::getInstance()->newComponentDetected()) {
     // Installation des nouveaux composants
-    Core_Main::getInstance()->install();
+    CoreMain::getInstance()->install();
 } else {
     // Démarrage classique
-    Core_Main::getInstance()->start();
+    CoreMain::getInstance()->start();
 }
 
 if (CoreSecure::debuggingMode()) {
     Exec_TimeMarker::stopMeasurement("all");
-    Core_Logger::displayDebugInformations();
+    CoreLogger::displayDebugInformations();
 }

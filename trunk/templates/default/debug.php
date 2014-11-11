@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
     <head>
         <link rel="stylesheet" href="templates/default/style.css" type="text/css" />
-        <?php echo Core_Html::getInstance()->getMetaHeaders(); ?>
+        <?php echo CoreHtml::getInstance()->getMetaHeaders(); ?>
     </head>
     <body>
         <div class="error">
@@ -18,7 +18,7 @@
                 </ul>
             <?php } ?>
 
-            <?php echo Core_Html::getInstance()->getMetaFooters(); ?>
+            <?php echo CoreHtml::getInstance()->getMetaFooters(); ?>
         </div>
     </body>
 </html>

@@ -23,7 +23,7 @@ class Module_Management_Systeminfo extends Module_Model {
         $rack = new Libs_Rack($firstLine);
 
         $modeActivedContent = "";
-        $coreCache = Core_Cache::getInstance();
+        $coreCache = CoreCache::getInstance();
         $modeActived = $coreCache->getCacheList();
         $currentMode = $coreCache->getTransactionType();
         foreach ($modeActived as $mode) {
@@ -32,7 +32,7 @@ class Module_Management_Systeminfo extends Module_Model {
             . (($actived) ? "yes" : "no");
         }
 
-        $coreMain = Core_Main::getInstance();
+        $coreMain = CoreMain::getInstance();
         $infos = array(
             "TR ENGINE VERSION" => TR_ENGINE_VERSION,
             "TR ENGINE PHP VERSION" => TR_ENGINE_PHP_VERSION,
@@ -46,8 +46,8 @@ class Module_Management_Systeminfo extends Module_Model {
             "PHP built on" => php_uname(),
             "PHP version" => phpversion(),
             "WebServer to PHP interface" => php_sapi_name(),
-            "Database version" => Core_Sql::getInstance()->getVersion(),
-            "Database collation" => Core_Sql::getInstance()->getCollation()
+            "Database version" => CoreSql::getInstance()->getVersion(),
+            "Database collation" => CoreSql::getInstance()->getCollation()
         );
 
         foreach ($infos as $key => $value) {

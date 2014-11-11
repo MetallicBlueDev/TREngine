@@ -1,10 +1,13 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
  * traitement HTML.
  */
-class Core_TextEditor {
+class CoreTextEditor {
 
     public static function &smilies($text) {
         return $text;

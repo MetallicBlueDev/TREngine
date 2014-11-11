@@ -50,7 +50,7 @@ class CoreSecure {
             define("TR_ENGINE_INDEX", true);
         }
 
-        $this->debuggingMode = Core_Request::getBoolean("debuggingMode", false, "GET");
+        $this->debuggingMode = CoreRequest::getBoolean("debuggingMode", false, "GET");
     }
 
     /**
@@ -197,10 +197,10 @@ class CoreSecure {
             $errorMessage = array_merge($errorMessage, $argv);
         }
 
-        if (CoreLoader::isCallable("Core_Session") && CoreLoader::isCallable("Core_Sql")) {
-            if (Core_Sql::hasConnection()) {
-                if (Core_Session::getInstance()->getUserInfos()->hasRegisteredRank()) {
-                    $sqlErrors = Core_Sql::getInstance()->getLastError();
+        if (CoreLoader::isCallable("CoreSession") && CoreLoader::isCallable("CoreSql")) {
+            if (CoreSql::hasConnection()) {
+                if (CoreSession::getInstance()->getUserInfos()->hasRegisteredRank()) {
+                    $sqlErrors = CoreSql::getInstance()->getLastError();
 
                     if (!empty($sqlErrors)) {
                         $errorMessage[] = " ";
@@ -211,8 +211,8 @@ class CoreSecure {
             }
         }
 
-        if (CoreLoader::isCallable("Core_Logger")) {
-            $loggerExceptions = Core_Logger::getExceptions();
+        if (CoreLoader::isCallable("CoreLogger")) {
+            $loggerExceptions = CoreLogger::getExceptions();
 
             if (!empty($loggerExceptions)) {
                 $errorMessage[] = " ";

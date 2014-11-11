@@ -57,14 +57,14 @@ class Libs_Tabs {
      */
     public function __construct($name) {
         $this->name = $name;
-        $this->selected = Core_Request::getString("selectedTab");
+        $this->selected = CoreRequest::getString("selectedTab");
 
         if (self::$firstInstance) {
             Exec_JQuery::getIdTabs();
             self::$firstInstance = false;
         }
 
-        if (empty($this->selected) && !Core_Html::getInstance()->javascriptEnabled()) {
+        if (empty($this->selected) && !CoreHtml::getInstance()->javascriptEnabled()) {
             $this->selected = $this->name . "idTab0";
         }
     }
@@ -83,7 +83,7 @@ class Libs_Tabs {
         $this->tabs .= "<li>";
 
         // Un lien complet sans le javascript window.location = ""#" . $idTab";
-        $queryString = Core_Request::getString("QUERY_STRING", "", "SERVER");
+        $queryString = CoreRequest::getString("QUERY_STRING", "", "SERVER");
         $queryString = str_replace("selectedTab = " . $this->selected, "", $queryString);
         $queryString = (substr($queryString, -1) !== "&") ? $queryString . "&" : $queryString;
         $queryString = "index.php?" . $queryString . "selectedTab = " . $idTab;
@@ -91,13 +91,13 @@ class Libs_Tabs {
         $tabSelected = ($this->selected === $idTab);
 
         // TODO A Vérifier
-        $this->tabs .= Core_Html::getLinkWithAjax($queryString, "#" . $idTab, $idTab, Exec_Entities::textDisplay($title), ($tabSelected ? "class=\"selected\"" : "display=\"none;\""));
-//        $this->tabs .= Core_Html::getLink($queryString, false, Exec_Entities::textDisplay($title), "window.location=\"#" . $idTab . "\";", $tabSelected ? "class=\"selected\"" : "display=\"none;\""));
+        $this->tabs .= CoreHtml::getLinkWithAjax($queryString, "#" . $idTab, $idTab, Exec_Entities::textDisplay($title), ($tabSelected ? "class=\"selected\"" : "display=\"none;\""));
+//        $this->tabs .= CoreHtml::getLink($queryString, false, Exec_Entities::textDisplay($title), "window.location=\"#" . $idTab . "\";", $tabSelected ? "class=\"selected\"" : "display=\"none;\""));
 
         $this->tabs .= "</li>";
 
         // Si le javascript est actif ou que nous sommes dans l'onget courant
-        if (Core_Html::getInstance()->javascriptEnabled() || $tabSelected) {
+        if (CoreHtml::getInstance()->javascriptEnabled() || $tabSelected) {
             $this->tabsContent .= "<div id=\"" . $idTab . "\">" . $htmlContent . "</div>";
         }
     }

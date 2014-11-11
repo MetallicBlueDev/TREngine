@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-abstract class Cache_Model extends Core_Transaction {
+abstract class CacheModel extends CoreTransaction {
 
     /**
      * Droit d'écriture CHMOD.

@@ -17,11 +17,11 @@ class Module_Management_Index extends Module_Model {
 
     public function display() {
         // Ajout du CSS du template et du fichier javascript par défaut
-        Core_HTML::getInstance()->addCssTemplateFile("module_management.css");
-        Core_HTML::getInstance()->addJavascriptFile("management.js");
+        CoreHtml::getInstance()->addCssTemplateFile("module_management.css");
+        CoreHtml::getInstance()->addJavascriptFile("management.js");
 
         // Nom de la page administable
-        $managePage = Core_Request::getString("manage");
+        $managePage = CoreRequest::getString("manage");
 
         $pageList = self::getManagementList(); // Liste de pages de configuration
         $moduleList = Libs_Module::getModuleList(); // Liste des modules
@@ -58,7 +58,7 @@ class Module_Management_Index extends Module_Model {
                     $libsMakeStyle->assign("currentPageName", $currentPageName);
 
                     // Ajout du repere au fil d'ariane
-                    if (Core_Main::getInstance()->isDefaultLayout()) {
+                    if (CoreMain::getInstance()->isDefaultLayout()) {
                         Libs_Breadcrumb::getInstance()->addTrail(
                         $currentPageName, "?mod=management&manage=" . $pageSelected
                         );
@@ -94,14 +94,14 @@ class Module_Management_Index extends Module_Model {
      */
     public static function &getManagementList() {
         $pageList = array();
-        $files = Core_Cache::getInstance()->getFileList("modules/management", ".setting.module");
+        $files = CoreCache::getInstance()->getFileList("modules/management", ".setting.module");
         $currentAccessType = $this->getAccessType();
 
         foreach ($files as $page) {
             $currentAccessType->setPage("management/" . $page . ".setting");
 
             // Vérification des droits de l'utilisateur
-            if (Core_Access::autorize($currentAccessType)) {
+            if (CoreAccess::autorize($currentAccessType)) {
                 $name = self::getManagementPageName($page);
                 $pageList[] = array(
                     "value" => $page,

@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -6,7 +9,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Core_Access {
+class CoreAccess {
 
     /**
      * Accès non défini.
@@ -58,16 +61,16 @@ class Core_Access {
     /**
      * Retourne l'erreur d'accès liée au jeton.
      *
-     * @param Core_AccessToken $token
+     * @param CoreAccessToken $token
      * @return string
      */
-    public static function &getAccessErrorMessage(Core_AccessToken $token) {
+    public static function &getAccessErrorMessage(CoreAccessToken $token) {
         $error = ERROR_ACCES_FORBIDDEN;
 
         if ($token->getRank() === -1) {
             $error = ERROR_ACCES_OFF;
         } else {
-            $userInfos = Core_Session::getInstance()->getUserInfos();
+            $userInfos = CoreSession::getInstance()->getUserInfos();
 
             if ($token->getRank() === 1 && !$userInfos->hasRegisteredRank()) {
                 $error = ERROR_ACCES_MEMBER;
@@ -81,15 +84,15 @@ class Core_Access {
     /**
      * Autorise ou refuse l'accès à la ressource cible.
      *
-     * @param Core_AccessType $accessType
+     * @param CoreAccessType $accessType
      * @param boolean $forceSpecificRank
      * @return boolean
      */
-    public static function &autorize(Core_AccessType &$accessType, $forceSpecificRank = false) {
+    public static function &autorize(CoreAccessType &$accessType, $forceSpecificRank = false) {
         $rslt = false;
 
         if ($accessType->valid()) {
-            $userInfos = Core_Session::getInstance()->getUserInfos();
+            $userInfos = CoreSession::getInstance()->getUserInfos();
 
             if ($userInfos->getRank() >= $accessType->getRank()) {
                 if ($accessType->getRank() === self::RANK_SPECIFIC_RIGHT || $forceSpecificRank) {

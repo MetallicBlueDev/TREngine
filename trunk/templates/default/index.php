@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
     <head>
-        <?php echo Core_Html::getInstance()->getMetaHeaders(); ?>
+        <?php echo CoreHtml::getInstance()->getMetaHeaders(); ?>
         <link rel="stylesheet" href="templates/default/style.css" type="text/css" />
         <?php if (CoreLoader::isCallable("Exec_Agent") && Exec_Agent::$userBrowserName == "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") { ?>
             <link rel="stylesheet" href="templates/default/ie6.css" type="text/css" />
@@ -10,7 +10,7 @@
     <body>
 
         <div id="header">
-            <div style="display: none;"><h2><?php echo Core_Main::getInstance()->getDefaultSiteName() . " - " . Core_Main::getInstance()->getDefaultSiteSlogan(); ?></h2></div>
+            <div style="display: none;"><h2><?php echo CoreMain::getInstance()->getDefaultSiteName() . " - " . CoreMain::getInstance()->getDefaultSiteSlogan(); ?></h2></div>
             <object type="application/x-shockwave-flash" data="templates/default/images/header.swf" width="900px" height="130px">
                 <param name="movie" value="templates/default/images/header.swf" />
                 <param name="pluginurl" value="http://www.macromedia.com/go/getflashplayer" />
@@ -30,13 +30,13 @@
 
             <div id="middle">
 
-                <?php echo Core_Html::getInstance()->getLoader(); ?>
+                <?php echo CoreHtml::getInstance()->getLoader(); ?>
 
                 <div id="breadcrumb"><?php echo Libs_Breadcrumb::getInstance()->getBreadcrumbTrail(" >> "); ?></div>
 
                 <div class="cleaner"></div>
 
-                <?php Core_Logger::displayMessages(); ?>
+                <?php CoreLogger::displayMessages(); ?>
 
                 <?php echo Libs_Block::getInstance()->getBlocksBySideName("top"); ?>
 
@@ -52,6 +52,6 @@
                 Page g&eacute;n&eacute;r&eacute;e en <?php echo Exec_TimeMarker::getMeasurement("main"); ?> ms.
             </div>
         </div>
-        <?php echo Core_Html::getInstance()->getMetaFooters(); ?>
+        <?php echo CoreHtml::getInstance()->getMetaFooters(); ?>
     </body>
 </html>

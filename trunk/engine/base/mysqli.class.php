@@ -7,13 +7,13 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Base_Mysqli extends Base_Model {
+class BaseMysqli extends BaseModel {
 
     protected function canUse() {
         $rslt = function_exists("mysqli_connect");
 
         if (!$rslt) {
-            Core_Logger::addException("MySqli function not found");
+            CoreLogger::addException("MySqli function not found");
         }
         return $rslt;
     }
@@ -22,7 +22,7 @@ class Base_Mysqli extends Base_Model {
         $this->connId = new mysqli($this->getTransactionHost(), $this->getTransactionUser(), $this->getTransactionPass());
 
         if ($this->getMysqli()->connect_error) {
-            Core_Logger::addException("MySqli connect_error: " . $this->getMysqli()->connect_error);
+            CoreLogger::addException("MySqli connect_error: " . $this->getMysqli()->connect_error);
             $this->connId = null;
         }
     }
@@ -48,7 +48,7 @@ class Base_Mysqli extends Base_Model {
         $this->queries = $this->getMysqli()->query($sql);
 
         if ($this->queries === false) {
-            Core_Logger::addException("MySqli query: " . $this->getMysqli()->error);
+            CoreLogger::addException("MySqli query: " . $this->getMysqli()->error);
         }
     }
 

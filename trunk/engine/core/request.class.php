@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -6,7 +9,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Core_Request {
+class CoreRequest {
 
     /**
      * Tableau buffer des requêtes.
@@ -223,7 +226,7 @@ class Core_Request {
                 }
                 break;
             default:
-                Core_Logger::addException("Core_Request : data type unknown");
+                CoreLogger::addException("CoreRequest : data type unknown");
                 $content = self::protect($content, "STRING");
                 break;
         }

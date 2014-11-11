@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -6,12 +9,12 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Core_Html {
+class CoreHtml {
 
     /**
      * Instance de cette classe.
      *
-     * @var Core_Html
+     * @var CoreHtml
      */
     private static $coreHtml = null;
 
@@ -83,8 +86,8 @@ class Core_Html {
      */
     private function __construct() {
         // Configuration du préfixe accessible
-        if (CoreLoader::isCallable("Core_Main")) {
-            $prefix = Core_Main::getInstance()->getCookiePrefix();
+        if (CoreLoader::isCallable("CoreMain")) {
+            $prefix = CoreMain::getInstance()->getCookiePrefix();
         } else {
             $prefix = "tr";
         }
@@ -99,9 +102,9 @@ class Core_Html {
     }
 
     /**
-     * Retourne et si besoin créé l'instance Core_Html.
+     * Retourne et si besoin créé l'instance CoreHtml.
      *
-     * @return Core_Html
+     * @return CoreHtml
      */
     public static function &getInstance() {
         self::checkInstance();
@@ -113,7 +116,7 @@ class Core_Html {
      */
     public static function checkInstance() {
         if (self::$coreHtml === null) {
-            self::$coreHtml = new Core_Html();
+            self::$coreHtml = new CoreHtml();
         }
     }
 
@@ -149,7 +152,7 @@ class Core_Html {
      * @param string $javaScript
      */
     public function addJavascript($javaScript) {
-        if ($this->javascriptEnabled() && CoreLoader::isCallable("Core_Main") && Core_Main::getInstance()->isDefaultLayout()) {
+        if ($this->javascriptEnabled() && CoreLoader::isCallable("CoreMain") && CoreMain::getInstance()->isDefaultLayout()) {
             $this->addJavascriptJquery($javaScript);
         } else {
             $this->addJavascriptCode($javaScript);
@@ -223,8 +226,8 @@ class Core_Html {
     public function getMetaHeaders() {
         $title = "";
 
-        if (CoreLoader::isCallable("Core_Main")) {
-            $coreMain = Core_Main::getInstance();
+        if (CoreLoader::isCallable("CoreMain")) {
+            $coreMain = CoreMain::getInstance();
             $title = $coreMain->getDefaultSiteName();
 
             if (empty($this->title)) {
@@ -240,7 +243,7 @@ class Core_Html {
             }
         } else {
             // Titre en mode dégradé
-            $title .= Core_Request::getString("SERVER_NAME", "", "SERVER");
+            $title .= CoreRequest::getString("SERVER_NAME", "", "SERVER");
 
             if (!empty($this->title)) {
                 $title .= " - " . $this->title;
@@ -312,7 +315,7 @@ class Core_Html {
      * @return string
      */
     public static function &getLink($link, $displayContent = "", $layout = false, $onclick = "", $addons = "") {
-        $htmlLink = "<a href=\"" . Core_UrlRewriting::getLink($link, $layout) . "\"";
+        $htmlLink = "<a href=\"" . CoreUrlRewriting::getLink($link, $layout) . "\"";
 
         // TODO A vérifier
         if (preg_match("/^[A-Za-z0-9.-\s]+$/ie", $displayContent)) {
@@ -350,7 +353,7 @@ class Core_Html {
     public static function &getLinkWithAjax($linkWithoutJavascript, $linkForJavascript, $divId, $displayContent, $addons = "") {
         // TODO A vérifier
         self::getInstance()->addJavascriptFile("jquery.js");
-        return self::getLink($linkWithoutJavascript, $displayContent, false, "validLink('" . $divId . "', '" . Core_UrlRewriting::getLink($linkForJavascript, true) . "');return false;", $addons);
+        return self::getLink($linkWithoutJavascript, $displayContent, false, "validLink('" . $divId . "', '" . CoreUrlRewriting::getLink($linkForJavascript, true) . "');return false;", $addons);
     }
 
     /**
@@ -371,7 +374,7 @@ class Core_Html {
 
         // Redirection
         if ($this->javascriptEnabled() && ($tps > 0 || $method !== "windows")) {
-            if (Core_Request::getString("REQUEST_METHOD", "", "SERVER") === "POST" && $method !== "window") {
+            if (CoreRequest::getString("REQUEST_METHOD", "", "SERVER") === "POST" && $method !== "window") {
                 // Commande ajax pour la redirection
                 $this->addJavascriptCode("setTimeout(function(){ $('" . $method . "').load('" . $url . "'); }, $tps);");
             } else {
@@ -412,8 +415,8 @@ class Core_Html {
      */
     private function &getSalt() {
         // Configuration de la clès si accessible
-        if (CoreLoader::isCallable("Core_Main")) {
-            $key = Core_Main::getInstance()->getCryptKey();
+        if (CoreLoader::isCallable("CoreMain")) {
+            $key = CoreMain::getInstance()->getCryptKey();
         } else {
             $key = "A4bT9D4V";
         }
@@ -457,13 +460,13 @@ class Core_Html {
             $keywords = implode(", ", $this->keywords);
         }
 
-        if (CoreLoader::isCallable("Core_Main")) {
+        if (CoreLoader::isCallable("CoreMain")) {
             if (empty($this->description)) {
-                $this->description = Core_Main::getInstance()->getDefaultDescription();
+                $this->description = CoreMain::getInstance()->getDefaultDescription();
             }
 
             if (empty($keywords)) {
-                $keywords = Core_Main::getInstance()->getDefaultKeyWords();
+                $keywords = CoreMain::getInstance()->getDefaultKeyWords();
             }
         }
 
@@ -483,8 +486,8 @@ class Core_Html {
      * @return string
      */
     private function &getMetaIncludeJavascript($forceIncludes = false) {
-        if (Core_Request::getRequestMethod() !== "POST" || $forceIncludes) {
-            $fullScreen = CoreLoader::isCallable("Core_Main") ? Core_Main::getInstance()->isDefaultLayout() : true;
+        if (CoreRequest::getRequestMethod() !== "POST" || $forceIncludes) {
+            $fullScreen = CoreLoader::isCallable("CoreMain") ? CoreMain::getInstance()->isDefaultLayout() : true;
 
             if (($fullScreen || $forceIncludes) && $this->javascriptEnabled()) {
                 if (!empty($this->javaScriptJquery)) {

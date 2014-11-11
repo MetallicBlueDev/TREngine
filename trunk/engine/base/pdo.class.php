@@ -7,7 +7,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Base_Pdo extends Base_Model {
+class BasePdo extends BaseModel {
 
     protected function canUse() {
         $rslt = false;
@@ -27,7 +27,7 @@ class Base_Pdo extends Base_Model {
         }
 
         if (!$rslt) {
-            Core_Logger::addException("PDO driver not found: " . $driverName);
+            CoreLogger::addException("PDO driver not found: " . $driverName);
         }
         return $rslt;
     }
@@ -37,7 +37,7 @@ class Base_Pdo extends Base_Model {
             // Host = mysql:host=127.0.0.1
             $this->connId = new PDO($this->getTransactionHost(), $this->getTransactionUser(), $this->getTransactionPass());
         } catch (PDOException $ex) {
-            Core_Logger::addException("PDO exception: " . $ex->getMessage());
+            CoreLogger::addException("PDO exception: " . $ex->getMessage());
             $this->connId = null;
         }
     }
@@ -59,7 +59,7 @@ class Base_Pdo extends Base_Model {
         $this->queries = $this->getPdo()->query($sql);
 
         if ($this->queries === false) {
-            Core_Logger::addException("PDO query: " . $this->getPdoErrorMessage());
+            CoreLogger::addException("PDO query: " . $this->getPdoErrorMessage());
         }
     }
 

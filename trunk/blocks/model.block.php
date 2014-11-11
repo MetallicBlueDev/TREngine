@@ -20,7 +20,7 @@ abstract class Block_Model {
      * Affichage par défaut.
      */
     public function display() {
-        Core_Logger::addErrorMessage(ERROR_BLOCK_IMPLEMENT . ((!empty($this->getBlockData()->getTitle())) ? " (" . $this->getBlockData()->getTitle() . ")" : ""));
+        CoreLogger::addErrorMessage(ERROR_BLOCK_IMPLEMENT . ((!empty($this->getBlockData()->getTitle())) ? " (" . $this->getBlockData()->getTitle() . ")" : ""));
     }
 
     /**
@@ -62,10 +62,10 @@ abstract class Block_Model {
     /**
      * Retourne l'accès spécifique de ce module.
      *
-     * @return Core_AccessType
+     * @return CoreAccessType
      */
     public function &getAccessType() {
-        return Core_AccessType::getTypeFromToken($this->getBlockData());
+        return CoreAccessType::getTypeFromToken($this->getBlockData());
     }
 
 }

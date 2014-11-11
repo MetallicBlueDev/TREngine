@@ -57,10 +57,10 @@ class Libs_Captcha {
      */
     public function __construct(&$object = null) {
         // Mode du captcha
-        $captchaMode = Core_Main::getInstance()->getCaptchaMode();
+        $captchaMode = CoreMain::getInstance()->getCaptchaMode();
         $captchaMode = ($captchaMode === "off" || $captchaMode === "auto" || $captchaMode === "manu") ? $captchaMode : "auto";
 
-        $userInfos = Core_Session::getInstance()->getUserInfos();
+        $userInfos = CoreSession::getInstance()->getUserInfos();
 
         // Decide de l'activation
         if ($captchaMode === "off" || ($captchaMode === "auto" && $userInfos->hasRank()) || ($captchaMode === "manu" && $userInfos->hasAdminRank())) {
@@ -146,7 +146,7 @@ class Libs_Captcha {
         }
 
         if (!$rslt) {
-            Core_Logger::addWarningMessage(CAPTCHA_INVALID);
+            CoreLogger::addWarningMessage(CAPTCHA_INVALID);
         }
         return $rslt;
     }
@@ -159,15 +159,15 @@ class Libs_Captcha {
     private function &internalCheck() {
         $rslt = false;
 
-        $code = Core_Request::getString("cles", "", "POST");
-        $inputRobot = Core_Request::getString($this->inputRobotName, "", "POST");
+        $code = CoreRequest::getString("cles", "", "POST");
+        $inputRobot = CoreRequest::getString($this->inputRobotName, "", "POST");
 
         // Vérification du formulaire
         if (empty($inputRobot) && $code === $this->response) {
             $rslt = true;
         } else {
             // TODO A VERIFIER
-            Core_Logger::addWarningMessage(CAPTCHA_INVALID);
+            CoreLogger::addWarningMessage(CAPTCHA_INVALID);
         }
         return $rslt;
     }

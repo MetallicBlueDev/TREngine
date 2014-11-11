@@ -173,7 +173,7 @@ class Libs_MakeStyle {
 
         // Vérification du dossier template
         if (is_dir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . self::$templatesDir)) {
-            $templates = Core_Cache::getInstance()->getNameList(self::$templatesDir);
+            $templates = CoreCache::getInstance()->getNameList(self::$templatesDir);
         }
         return $templates;
     }

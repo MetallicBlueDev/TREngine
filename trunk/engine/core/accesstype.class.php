@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -6,7 +9,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Core_AccessType implements Core_AccessToken {
+class CoreAccessType implements CoreAccessToken {
 
     /**
      * Accès passe partout.
@@ -18,7 +21,7 @@ class Core_AccessType implements Core_AccessToken {
     /**
      * Cache d'accès typé.
      *
-     * @var Core_AccessType[]
+     * @var CoreAccessType[]
      */
     private static $cache = array();
 
@@ -42,20 +45,20 @@ class Core_AccessType implements Core_AccessToken {
      * Retourne l'accès spécifique.
      *
      * @param array $rights
-     * @return Core_AccessType
+     * @return CoreAccessType
      */
     public static function &getTypeFromDatabase(array &$rights) {
-        $newAccess = new Core_AccessType($rights);
+        $newAccess = new CoreAccessType($rights);
         return $newAccess;
     }
 
     /**
      * Retourne l'accès spécifique suivant la zone.
      *
-     * @param Core_AccessToken $data
-     * @return Core_AccessType
+     * @param CoreAccessToken $data
+     * @return CoreAccessType
      */
-    public static function &getTypeFromToken(Core_AccessToken $data) {
+    public static function &getTypeFromToken(CoreAccessToken $data) {
         $infos = array(
             "zone" => $data->getZone(),
             "rank" => $data->getRank(),
@@ -67,7 +70,7 @@ class Core_AccessType implements Core_AccessToken {
     /**
      * Retourne l'accès typé administrateur.
      *
-     * @return Core_AccessType
+     * @return CoreAccessType
      */
     public static function &getTypeFromAdmin() {
         if (!isset(self::$cache[self::MAGIC_ACCESS])) {
@@ -86,7 +89,7 @@ class Core_AccessType implements Core_AccessToken {
      * @return int
      */
     public function &getRank() {
-        $rank = isset($this->rights['rank']) ? $this->rights['rank'] : Core_Access::RANK_NONE;
+        $rank = isset($this->rights['rank']) ? $this->rights['rank'] : CoreAccess::RANK_NONE;
         return $rank;
     }
 
@@ -187,10 +190,10 @@ class Core_AccessType implements Core_AccessToken {
     /**
      * Détermine si accès sont semblables.
      *
-     * @param Core_AccessType $otherAccessType
+     * @param CoreAccessType $otherAccessType
      * @return boolean
      */
-    public function isAssignableFrom(Core_AccessType $otherAccessType) {
+    public function isAssignableFrom(CoreAccessType $otherAccessType) {
         $rslt = false;
 
         if ($otherAccessType->getZone() === $this->getZone() || $otherAccessType->getZone() === self::MAGIC_ACCESS) {

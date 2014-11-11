@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -6,19 +9,19 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Core_Sql extends Base_Model {
+class CoreSql extends BaseModel {
 
     /**
      * Gestionnnaire SQL.
      *
-     * @var Core_Sql
+     * @var CoreSql
      */
     private static $coreSql = null;
 
     /**
      * Modèle de base sélectionné.
      *
-     * @var Base_Model
+     * @var BaseModel
      */
     private $selectedBase = null;
 
@@ -30,11 +33,11 @@ class Core_Sql extends Base_Model {
 
         $baseClassName = "";
         $loaded = false;
-        $databaseConfig = Core_Main::getInstance()->getConfigDatabase();
+        $databaseConfig = CoreMain::getInstance()->getConfigDatabase();
 
         if (!empty($databaseConfig) && isset($databaseConfig['type'])) {
             // Chargement des drivers pour la base
-            $baseClassName = "Base_" . ucfirst($databaseConfig['type']);
+            $baseClassName = "Base" . ucfirst($databaseConfig['type']);
             $loaded = CoreLoader::classLoader($baseClassName);
         }
 
@@ -69,7 +72,7 @@ class Core_Sql extends Base_Model {
     /**
      * Retourne l'instance du gestionnaire SQL.
      *
-     * @return Core_Sql
+     * @return CoreSql
      */
     public static function &getInstance() {
         self::checkInstance();
@@ -81,7 +84,7 @@ class Core_Sql extends Base_Model {
      */
     public static function checkInstance() {
         if (self::$coreSql === null) {
-            self::$coreSql = new Core_Sql();
+            self::$coreSql = new CoreSql();
         }
     }
 
@@ -100,7 +103,7 @@ class Core_Sql extends Base_Model {
      * @return array
      */
     public static function &getBaseList() {
-        return Core_Cache::getInstance()->getFileList("engine/base");
+        return CoreCache::getInstance()->getFileList("engine/base");
     }
 
     /**
@@ -277,7 +280,7 @@ class Core_Sql extends Base_Model {
 
         // Ajout la requête au log
         if (CoreSecure::debuggingMode()) {
-            Core_Logger::addSqlRequest($sql);
+            CoreLogger::addSqlRequest($sql);
         }
 
         // Création d'une exception si une réponse est négative (false)

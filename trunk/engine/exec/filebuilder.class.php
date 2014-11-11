@@ -48,8 +48,8 @@ class Exec_FileBuilder {
         . "// -------------------------------------------------------------------------//\n"
         . "?>\n";
 
-        if (CoreLoader::isCallable("Core_Cache")) {
-            Core_Cache::getInstance(Core_Cache::SECTION_CONFIGS)->writeCache("config.inc.php", $content);
+        if (CoreLoader::isCallable("CoreCache")) {
+            CoreCache::getInstance(CoreCache::SECTION_CONFIGS)->writeCache("config.inc.php", $content);
         }
     }
 
@@ -69,8 +69,8 @@ class Exec_FileBuilder {
             $port = 21;
 
         // Vérification du mode de ftp
-        if (CoreLoader::isCallable("Core_Cache")) {
-            $type = Core_Cache::getInstance(Core_Cache::SECTION_CONFIGS)->getTransactionType();
+        if (CoreLoader::isCallable("CoreCache")) {
+            $type = CoreCache::getInstance(CoreCache::SECTION_CONFIGS)->getTransactionType();
         }
 
         $content = "<?php \n"
@@ -97,8 +97,8 @@ class Exec_FileBuilder {
         . "// -------------------------------------------------------------------------//\n"
         . "?>\n";
 
-        if (CoreLoader::isCallable("Core_Cache")) {
-            Core_Cache::getInstance(Core_Cache::SECTION_CONFIGS)->writeCache("cache.inc.php", $content);
+        if (CoreLoader::isCallable("CoreCache")) {
+            CoreCache::getInstance(CoreCache::SECTION_CONFIGS)->writeCache("cache.inc.php", $content);
         }
     }
 
@@ -114,8 +114,8 @@ class Exec_FileBuilder {
      */
     public static function buildDatabaseFile($host, $user, $pass, $name, $type, $prefix) {
         // Vérification du type de base de données
-        if (CoreLoader::isCallable("Core_Sql")) {
-            $bases = Core_Sql::getBaseList();
+        if (CoreLoader::isCallable("CoreSql")) {
+            $bases = CoreSql::getBaseList();
             $type = (isset($bases[$type])) ? $type : "mysql";
         }
 
@@ -143,8 +143,8 @@ class Exec_FileBuilder {
         . "// -------------------------------------------------------------------------//\n"
         . "?>\n";
 
-        if (CoreLoader::isCallable("Core_Cache")) {
-            Core_Cache::getInstance(Core_Cache::SECTION_CONFIGS)->writeCache("database.inc.php", $content);
+        if (CoreLoader::isCallable("CoreCache")) {
+            CoreCache::getInstance(CoreCache::SECTION_CONFIGS)->writeCache("database.inc.php", $content);
         }
     }
 

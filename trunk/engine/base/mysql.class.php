@@ -7,7 +7,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Base_Mysql extends Base_Model {
+class BaseMysql extends BaseModel {
 
     /**
      * Le type de la dernière commande.
@@ -21,7 +21,7 @@ class Base_Mysql extends Base_Model {
         $rslt = function_exists("mysql_connect");
 
         if (!$rslt) {
-            Core_Logger::addException("MySql function not found");
+            CoreLogger::addException("MySql function not found");
         }
         return $rslt;
     }
@@ -57,7 +57,7 @@ class Base_Mysql extends Base_Model {
         $this->queries = mysql_query($sql, $this->connId);
 
         if ($this->queries === false) {
-            Core_Logger::addException("MySql query: " . mysql_error());
+            CoreLogger::addException("MySql query: " . mysql_error());
         }
     }
 

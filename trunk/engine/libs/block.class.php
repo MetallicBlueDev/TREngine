@@ -130,7 +130,7 @@ class Libs_Block {
 
         foreach ($blocksIndexer as $blockRawInfo) {
             if ($blockRawInfo['side'] > self::SIDE_NONE) {
-                if ($blockRawInfo['rank'] >= Core_Access::RANK_NONE) {
+                if ($blockRawInfo['rank'] >= CoreAccess::RANK_NONE) {
                     $this->launchBlock($blockRawInfo['block_id'], true);
                 }
             }
@@ -141,7 +141,7 @@ class Libs_Block {
      * Charge le block requêté.
      */
     public function launchBlockRequested() {
-        $blockId = Core_Request::getInteger("blockId");
+        $blockId = CoreRequest::getInteger("blockId");
         $this->launchBlock($blockId, false);
     }
 
@@ -238,7 +238,7 @@ class Libs_Block {
      * @return array
      */
     public static function &getBlockList() {
-        return Core_Cache::getInstance()->getFileList("blocks", ".block");
+        return CoreCache::getInstance()->getFileList("blocks", ".block");
     }
 
     /**
@@ -256,13 +256,13 @@ class Libs_Block {
             $blockData = array();
 
             // Recherche dans le cache
-            $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_BLOCKS);
+            $coreCache = CoreCache::getInstance(CoreCache::SECTION_BLOCKS);
 
             if (!$coreCache->cached($blockId . ".php")) {
-                $coreSql = Core_Sql::getInstance();
+                $coreSql = CoreSql::getInstance();
 
                 $coreSql->select(
-                Core_Table::BLOCKS_TABLE, array(
+                CoreTable::BLOCKS_TABLE, array(
                     "block_id",
                     "side",
                     "position",
@@ -300,13 +300,13 @@ class Libs_Block {
      */
     private function getBlocksIndexer() {
         $blocksIndexer = array();
-        $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_BLOCKS);
+        $coreCache = CoreCache::getInstance(CoreCache::SECTION_BLOCKS);
 
         if (!$coreCache->cached(self::BLOCKS_INDEXER_FILENAME)) {
-            $coreSql = Core_Sql::getInstance();
+            $coreSql = CoreSql::getInstance();
 
             $coreSql->select(
-            Core_Table::BLOCKS_TABLE, array(
+            CoreTable::BLOCKS_TABLE, array(
                 "block_id",
                 "side",
                 "type",
@@ -347,7 +347,7 @@ class Libs_Block {
 
                 // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
                 if (strpos($blockInfo->getContent(), "rewriteBuffer") !== false) {
-                    $currentBuffer = Core_UrlRewriting::getInstance()->rewriteBuffer($currentBuffer);
+                    $currentBuffer = CoreUrlRewriting::getInstance()->rewriteBuffer($currentBuffer);
                 }
 
                 $buffer .= $currentBuffer;
@@ -382,13 +382,13 @@ class Libs_Block {
      * @param Libs_BlockData $blockInfo
      */
     private function get(&$blockInfo) {
-        $blockClassName = "Block_" . ucfirst($blockInfo->getType());
+        $blockClassName = "Block" . ucfirst($blockInfo->getType());
         $loaded = CoreLoader::classLoader($blockClassName);
 
         // Vérification du block
         if ($loaded) {
             if (CoreLoader::isCallable($blockClassName, "display")) {
-                Core_Translate::getInstance()->translate("blocks" . DIRECTORY_SEPARATOR . $blockInfo->getType());
+                CoreTranslate::getInstance()->translate("blocks" . DIRECTORY_SEPARATOR . $blockInfo->getType());
 
                 /**
                  * @var Block_Model
@@ -402,7 +402,7 @@ class Libs_Block {
                 $blockInfo->setBuffer(ob_get_contents());
                 ob_end_clean();
             } else {
-                Core_Logger::addErrorMessage(ERROR_BLOCK_CODE);
+                CoreLogger::addErrorMessage(ERROR_BLOCK_CODE);
             }
         }
     }

@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -6,12 +9,12 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Core_Main {
+class CoreMain {
 
     /**
      * Instance principal du moteur.
      *
-     * @var Core_Main
+     * @var CoreMain
      */
     private static $coreMain = null;
 
@@ -39,7 +42,7 @@ class Core_Main {
     /**
      * Retourne l'instance principal du moteur.
      *
-     * @return Core_Main
+     * @return CoreMain
      */
     public static function &getInstance() {
         self::checkInstance();
@@ -55,7 +58,7 @@ class Core_Main {
                 Exec_TimeMarker::startMeasurement("core");
             }
 
-            self::$coreMain = new Core_Main();
+            self::$coreMain = new CoreMain();
             self::$coreMain->prepare();
 
             if (CoreSecure::debuggingMode()) {
@@ -143,7 +146,7 @@ class Core_Main {
      * @return boolean
      */
     public function doDumb() {
-        return (!$this->doOpening() && !Core_Session::getInstance()->getUserInfos()->hasAdminRank());
+        return (!$this->doOpening() && !CoreSession::getInstance()->getUserInfos()->hasAdminRank());
     }
 
     /**
@@ -218,7 +221,7 @@ class Core_Main {
      */
     public function &getDefaultSiteName() {
         return $this->getDefaultConfigValue("defaultSiteName", function() {
-            return Core_Request::getString("SERVER_NAME", "", "SERVER");
+            return CoreRequest::getString("SERVER_NAME", "", "SERVER");
         });
     }
 
@@ -345,13 +348,13 @@ class Core_Main {
             Exec_TimeMarker::startMeasurement("launcher");
         }
 
-        Core_Translate::checkInstance();
+        CoreTranslate::checkInstance();
 
         // Vérification des bannissements
-        $coreSession = Core_Session::getInstance();
+        $coreSession = CoreSession::getInstance();
         $coreSession->checkBanishment();
 
-        Core_Html::checkInstance();
+        CoreHtml::checkInstance();
 
         // Configure les informations de page demandées
         $this->checkLayout();
@@ -413,18 +416,18 @@ class Core_Main {
                 }
 
                 // Execute la commande de récupération d'erreur
-                Core_Logger::displayMessages();
+                CoreLogger::displayMessages();
 
                 // Javascript autonome
-                Core_Html::getInstance()->selfJavascript();
+                CoreHtml::getInstance()->selfJavascript();
             }
 
             // Validation et routine du cache
-            Core_Cache::getInstance()->workspaceCache();
+            CoreCache::getInstance()->workspaceCache();
 
             if (CoreSecure::debuggingMode()) {
                 // Assemble tous les messages d'erreurs dans un fichier log
-                Core_Logger::logException();
+                CoreLogger::logException();
             }
         }
 
@@ -479,10 +482,10 @@ class Core_Main {
      */
     private function checkLayout() {
         // Assignation et vérification de fonction layout
-        $layout = strtolower(Core_Request::getWord("layout"));
+        $layout = strtolower(CoreRequest::getWord("layout"));
 
         // Configuration du layout
-        if ($layout !== "default" && $layout !== "modulepage" && $layout !== "blockpage" && (($layout !== "block" && $layout !== "module") || (!Core_Html::getInstance()->javascriptEnabled()))) {
+        if ($layout !== "default" && $layout !== "modulepage" && $layout !== "blockpage" && (($layout !== "block" && $layout !== "module") || (!CoreHtml::getInstance()->javascriptEnabled()))) {
             $layout = "default";
         }
 
@@ -493,7 +496,7 @@ class Core_Main {
      * Vérification et assignation du template.
      */
     private function checkMakeStyle() {
-        $templateName = Core_Session::getInstance()->getUserInfos()->getTemplate();
+        $templateName = CoreSession::getInstance()->getUserInfos()->getTemplate();
 
         // Tentative d'utilisation du template du client
         if (!Libs_MakeStyle::setCurrentTemplate($templateName)) {
@@ -558,7 +561,7 @@ class Core_Main {
         Exec_Agent::executeAnalysis();
 
         // Chargement de la session
-        Core_Session::checkInstance();
+        CoreSession::checkInstance();
     }
 
     /**
@@ -567,13 +570,13 @@ class Core_Main {
      * @return boolean true chargé
      */
     private function loadCache() {
-        $canUse = CoreLoader::isCallable("Core_Cache");
+        $canUse = CoreLoader::isCallable("CoreCache");
 
         if (!$canUse) {
             // Chemin vers le fichier de configuration du cache
             if (CoreLoader::includeLoader("configs_cache")) {
-                // Démarrage de l'instance Core_Cache
-                Core_Cache::checkInstance();
+                // Démarrage de l'instance CoreCache
+                CoreCache::checkInstance();
 
                 $canUse = true;
             }
@@ -587,13 +590,13 @@ class Core_Main {
      * @return boolean true chargé
      */
     private function loadSql() {
-        $canUse = CoreLoader::isCallable("Core_Sql");
+        $canUse = CoreLoader::isCallable("CoreSql");
 
         if (!$canUse) {
             // Chemin vers le fichier de configuration de la base de données
             if (CoreLoader::includeLoader("configs_database")) {
-                // Démarrage de l'instance Core_Sql
-                Core_Sql::checkInstance();
+                // Démarrage de l'instance CoreSql
+                CoreSql::checkInstance();
 
                 $canUse = true;
             }
@@ -617,7 +620,7 @@ class Core_Main {
 
                 // Vérification de l'adresse email du webmaster
                 if (!Exec_Mailer::validMail($rawConfig["TR_ENGINE_MAIL"])) {
-                    Core_Logger::addException("Default mail isn't valide");
+                    CoreLogger::addException("Default mail isn't valide");
                 }
 
                 define("TR_ENGINE_MAIL", $rawConfig["TR_ENGINE_MAIL"]);
@@ -668,17 +671,17 @@ class Core_Main {
             if ($canUse) {
                 // Chargement de la configuration via la cache
                 $newConfig = array();
-                $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_TMP);
+                $coreCache = CoreCache::getInstance(CoreCache::SECTION_TMP);
 
                 // Si le cache est disponible
                 if ($coreCache->cached("configs.php")) {
                     $newConfig = $coreCache->readCache("configs.php");
                 } else {
                     $content = "";
-                    $coreSql = Core_Sql::getInstance();
+                    $coreSql = CoreSql::getInstance();
 
                     // Requête vers la base de données de configs
-                    $coreSql->select(Core_Table::CONFIG_TABLE, array(
+                    $coreSql->select(CoreTable::CONFIG_TABLE, array(
                         "name",
                         "value"));
 

@@ -44,7 +44,7 @@ class Libs_Menu {
      */
     public function __construct($identifier, array $sql = array()) {
         $this->identifier = $identifier;
-        $this->itemActive = Core_Request::getInteger("item", 0);
+        $this->itemActive = CoreRequest::getInteger("item", 0);
 
         if ($this->isCached()) {
             $this->loadFromCache();
@@ -85,7 +85,7 @@ class Libs_Menu {
                 "rank" => $item->getRank(),
                 "identifiant" => $this->identifier);
 
-            if ($item->getParentId() == 0 && Core_Access::autorize(Core_AccessType::getTypeFromDatabase($infos))) {
+            if ($item->getParentId() == 0 && CoreAccess::autorize(CoreAccessType::getTypeFromDatabase($infos))) {
                 // Ajout du tableau route dans l'élément principal
                 if ($key === $route[0]) {
                     $item->setRoute($route);
@@ -103,7 +103,7 @@ class Libs_Menu {
      * Chargement du menu via le cache.
      */
     private function loadFromCache() {
-        $data = Core_Cache::getInstance(Core_Cache::SECTION_MENUS)->readCache($this->identifier . ".php");
+        $data = CoreCache::getInstance(CoreCache::SECTION_MENUS)->readCache($this->identifier . ".php");
         $this->items = unserialize(Exec_Entities::stripSlashes($data));
     }
 
@@ -113,7 +113,7 @@ class Libs_Menu {
      * @return boolean
      */
     private function isCached() {
-        return (Core_Cache::getInstance(Core_Cache::SECTION_MENUS)->cached($this->identifier . ".php"));
+        return (CoreCache::getInstance(CoreCache::SECTION_MENUS)->cached($this->identifier . ".php"));
     }
 
     /**
@@ -122,7 +122,7 @@ class Libs_Menu {
      * @param array $sql parametre de Sélection
      */
     private function loadFromDb(array $sql) {
-        $coreSql = Core_Sql::getInstance();
+        $coreSql = CoreSql::getInstance();
 
         $coreSql->select(
         $sql['table'], $sql['select'], $sql['where'], $sql['orderby'], $sql['limit']
@@ -148,7 +148,7 @@ class Libs_Menu {
                 }
             }
 
-            $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_MENUS);
+            $coreCache = CoreCache::getInstance(CoreCache::SECTION_MENUS);
             $coreCache->writeCache(
             $this->identifier . ".php", $coreCache->serializeData(serialize($this->items))
             );

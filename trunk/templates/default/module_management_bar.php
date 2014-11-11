@@ -1,15 +1,15 @@
 <?php
-if (Core_Main::getInstance()->isDefaultLayout()) {
+if (CoreMain::getInstance()->isDefaultLayout()) {
     ?>
     <div id="management_bar">
         <div>
-            <?php echo Core_Html::getLink('?mod=management', '<img alt="" src="templates/default/management/bar_home.png" />'); ?>
+            <?php echo CoreHtml::getLink('?mod=management', '<img alt="" src="templates/default/management/bar_home.png" />'); ?>
         </div>
         <div>
-            <?php echo Core_Html::getLink('?mod=management&manage=update', '<img alt=""  src="templates/default/management/bar_update.png" />'); ?>
+            <?php echo CoreHtml::getLink('?mod=management&manage=update', '<img alt=""  src="templates/default/management/bar_update.png" />'); ?>
         </div>
         <div id="management_bar_setting_page">
-            <select onchange="document.location = '<?php echo Core_UrlRewriting::getLink('?mod=management&manage='); ?>' + this.options[this.selectedIndex].value;">
+            <select onchange="document.location = '<?php echo CoreUrlRewriting::getLink('?mod=management&manage='); ?>' + this.options[this.selectedIndex].value;">
                 <option value=""></option>
                 <?php
                 foreach ($pageList as $page) {
@@ -23,7 +23,7 @@ if (Core_Main::getInstance()->isDefaultLayout()) {
         </div>
 
         <div id="management_bar_module_page">
-            <select onchange="document.location = '<?php echo Core_UrlRewriting::getLink('?mod=management&manage='); ?>' + this.options[this.selectedIndex].value;">
+            <select onchange="document.location = '<?php echo CoreUrlRewriting::getLink('?mod=management&manage='); ?>' + this.options[this.selectedIndex].value;">
                 <option value=""></option>
                 <?php
                 foreach ($moduleList as $module) {

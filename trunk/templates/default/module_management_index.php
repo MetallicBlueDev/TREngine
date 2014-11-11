@@ -6,7 +6,7 @@
         $pictureName = is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "default" . DIRECTORY_SEPARATOR . "management" . DIRECTORY_SEPARATOR . "icon_" . $page['value'] . ".png") ? $page['value'] : "no_picture";
         ?>
         <div class="management_index_block">
-            <?php echo Core_Html::getLink('?mod=management&manage=' . $page['value'], '<img alt="" src="templates/default/management/icon_' . $pictureName . '.png" style="border: 0;" /><div><b>' . $page['name'] . '</b></div>'); ?>
+            <?php echo CoreHtml::getLink('?mod=management&manage=' . $page['value'], '<img alt="" src="templates/default/management/icon_' . $pictureName . '.png" style="border: 0;" /><div><b>' . $page['name'] . '</b></div>'); ?>
         </div>
         <?php
     }

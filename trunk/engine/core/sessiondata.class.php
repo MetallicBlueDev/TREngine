@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -6,7 +9,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Core_SessionData extends Core_DataStorage implements Core_AccessToken {
+class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
 
     /**
      * Nouvelle information de block.
@@ -79,7 +82,7 @@ class Core_SessionData extends Core_DataStorage implements Core_AccessToken {
      * @return boolean
      */
     public function hasRank() {
-        return $this->getRank() > Core_Access::RANK_PUBLIC;
+        return $this->getRank() > CoreAccess::RANK_PUBLIC;
     }
 
     /**
@@ -88,7 +91,7 @@ class Core_SessionData extends Core_DataStorage implements Core_AccessToken {
      * @return boolean
      */
     public function hasRegisteredRank() {
-        return $this->getRank() >= Core_Access::RANK_REGITRED;
+        return $this->getRank() >= CoreAccess::RANK_REGITRED;
     }
 
     /**
@@ -97,7 +100,7 @@ class Core_SessionData extends Core_DataStorage implements Core_AccessToken {
      * @return boolean
      */
     public function hasAdminRank() {
-        return $this->getRank() >= Core_Access::RANK_ADMIN;
+        return $this->getRank() >= CoreAccess::RANK_ADMIN;
     }
 
     /**
@@ -115,7 +118,7 @@ class Core_SessionData extends Core_DataStorage implements Core_AccessToken {
      * @return boolean
      */
     public function hasSuperAdminRank() {
-        return $this->hasAdminRank() && Core_Access::autorize(Core_AccessType::getTypeFromAdmin());
+        return $this->hasAdminRank() && CoreAccess::autorize(CoreAccessType::getTypeFromAdmin());
     }
 
     /**
@@ -204,7 +207,7 @@ class Core_SessionData extends Core_DataStorage implements Core_AccessToken {
     /**
      * Retourne la liste des accès que dispose le client.
      *
-     * @return Core_AccessType[] array(0 => Core_AccessType)
+     * @return CoreAccessType[] array(0 => CoreAccessType)
      */
     public function &getRights() {
         if (!$this->hasRights()) {
@@ -220,10 +223,10 @@ class Core_SessionData extends Core_DataStorage implements Core_AccessToken {
         $accessTypes = array();
 
         if ($this->hasRank()) {
-            $coreSql = Core_Sql::getInstance();
+            $coreSql = CoreSql::getInstance();
 
             $coreSql->select(
-            Core_Table::USERS_RIGHTS_TABLE, array(
+            CoreTable::USERS_RIGHTS_TABLE, array(
                 "zone",
                 "page",
                 "identifiant"), array(
@@ -232,7 +235,7 @@ class Core_SessionData extends Core_DataStorage implements Core_AccessToken {
 
             if ($coreSql->affectedRows() > 0) {
                 foreach ($coreSql->fetchArray() as $rights) {
-                    $accessTypes[] = Core_AccessType::getTypeFromDatabase($rights);
+                    $accessTypes[] = CoreAccessType::getTypeFromDatabase($rights);
                 }
             }
         }

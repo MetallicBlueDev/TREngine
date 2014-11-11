@@ -14,7 +14,7 @@ foreach ($projects as $key => $projectItem) {
         $progress = "";
     ?>
 
-    <?php echo Core_Html::getLink('?mod=project&view=displayProject&projectId=' . $projectItem['projectid'], '
+    <?php echo CoreHtml::getLink('?mod=project&view=displayProject&projectId=' . $projectItem['projectid'], '
         <div class="project_body' . $progress . '">
             <div>
                 <div class="project_img"><img alt="" src="templates/default/project/' . strtolower($projectItem['language']) . '.png" /></div>

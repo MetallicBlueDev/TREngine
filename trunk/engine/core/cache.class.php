@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -6,7 +9,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Core_Cache extends Cache_Model {
+class CoreCache extends CacheModel {
 
     /**
      * Section de configuration.
@@ -107,14 +110,14 @@ class Core_Cache extends Cache_Model {
     /**
      * Gestionnnaire de cache.
      *
-     * @var Core_Cache
+     * @var CoreCache
      */
     private static $coreCache = null;
 
     /**
      * Gestionnaire de fichier.
      *
-     * @var Cache_Model
+     * @var CacheModel
      */
     private $selectedCache = null;
 
@@ -158,7 +161,7 @@ class Core_Cache extends Cache_Model {
 
         $cacheClassName = "";
         $loaded = false;
-        $cacheConfig = Core_Main::getInstance()->getConfigCache();
+        $cacheConfig = CoreMain::getInstance()->getConfigCache();
 
         // Mode par défaut
         if (empty($cacheConfig) || !isset($cacheConfig['type'])) {
@@ -166,7 +169,7 @@ class Core_Cache extends Cache_Model {
         }
 
         // Chargement des drivers pour le cache
-        $cacheClassName = "Cache_" . ucfirst($cacheConfig['type']);
+        $cacheClassName = "Cache" . ucfirst($cacheConfig['type']);
         $loaded = CoreLoader::classLoader($cacheClassName);
 
         if (!$loaded) {
@@ -200,7 +203,7 @@ class Core_Cache extends Cache_Model {
     /**
      * Retourne l'instance du gestionnaire de cache.
      *
-     * @return Core_Cache
+     * @return CoreCache
      */
     public static function &getInstance($newSectionPath = null) {
         self::checkInstance();
@@ -216,7 +219,7 @@ class Core_Cache extends Cache_Model {
      */
     public static function checkInstance() {
         if (self::$coreCache === null) {
-            self::$coreCache = new Core_Cache();
+            self::$coreCache = new CoreCache();
         }
     }
 

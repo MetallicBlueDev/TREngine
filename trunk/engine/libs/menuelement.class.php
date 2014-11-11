@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Libs_MenuElement extends Core_DataStorage {
+class Libs_MenuElement extends CoreDataStorage {
 
     /**
      * Attributs de l'élément.
