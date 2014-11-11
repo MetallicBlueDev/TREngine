@@ -5,7 +5,7 @@ define("TR_ENGINE_INDEX", true);
 // Import de base
 require 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
-if (Core_Secure::debuggingMode()) {
+if (CoreSecure::debuggingMode()) {
     Exec_TimeMarker::startMeasurement("all");
 }
 
@@ -23,7 +23,7 @@ if (Core_Main::getInstance()->newComponentDetected()) {
     Core_Main::getInstance()->start();
 }
 
-if (Core_Secure::debuggingMode()) {
+if (CoreSecure::debuggingMode()) {
     Exec_TimeMarker::stopMeasurement("all");
     Core_Logger::displayDebugInformations();
 }

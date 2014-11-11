@@ -13,7 +13,7 @@ $lang = array(
     "ERROR_ACCES_MEMBER" => "Pour consulter cette page, il est nécessaire d'être un membre du site.",
     "ERROR_ACCES_ADMIN" => "Vous ne possedez pas les droits suffisants pour afficher cette page.",
     "ERROR_ACCES_FORBIDDEN" => "Vous n'avez pas l'autorisation d'afficher cette page.",
-// Erreur critique généré par Core_Secure
+// Erreur critique généré par CoreSecure
     "ERROR_DEBUG_CLOSE" => "Le site est actuellement fermé.",
     "ERROR_DEBUG_SQLCONNECT" => "Erreur de connexion à la base de données.",
     "ERROR_DEBUG_SQLSELECT" => "Erreur lors de la sélection de la base de données.",

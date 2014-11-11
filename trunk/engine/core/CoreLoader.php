@@ -35,7 +35,7 @@ class CoreLoader {
                 throw new Fail_Loader("spl_autoload_register fail");
             }
         } catch (Exception $ex) {
-            Core_Secure::getInstance()->throwException("loader", $ex);
+            CoreSecure::getInstance()->throwException("loader", $ex);
         }
     }
 
@@ -188,7 +188,7 @@ class CoreLoader {
                 }
             }
         } catch (Exception $ex) {
-            Core_Secure::getInstance()->throwException($ex->getMessage(), $ex, array(
+            CoreSecure::getInstance()->throwException($ex->getMessage(), $ex, array(
                 $name,
                 $ext));
         }

@@ -183,9 +183,9 @@ abstract class Cache_Model extends Core_Transaction {
             // Ecriture de l'entête
             $content = "<?php\n"
             . "if (!defined(\"TR_ENGINE_INDEX\")){"
-            . "if(!class_exists(\"Core_Secure\")){"
+            . "if(!class_exists(\"CoreSecure\")){"
             . "include(\"" . $dirBase . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php\");"
-            . "}Core_Secure::checkInstance();}"
+            . "}CoreSecure::checkInstance();}"
             . "// Generated on " . date('Y-m-d H:i:s') . "\n"
             . $content
             . "\n?>";

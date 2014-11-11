@@ -51,14 +51,14 @@ class Core_Main {
      */
     public static function checkInstance() {
         if (self::$coreMain === null) {
-            if (Core_Secure::debuggingMode()) {
+            if (CoreSecure::debuggingMode()) {
                 Exec_TimeMarker::startMeasurement("core");
             }
 
             self::$coreMain = new Core_Main();
             self::$coreMain->prepare();
 
-            if (Core_Secure::debuggingMode()) {
+            if (CoreSecure::debuggingMode()) {
                 Exec_TimeMarker::stopMeasurement("core");
             }
         }
@@ -341,7 +341,7 @@ class Core_Main {
      * Démarrage TR ENGINE.
      */
     public function start() {
-        if (Core_Secure::debuggingMode()) {
+        if (CoreSecure::debuggingMode()) {
             Exec_TimeMarker::startMeasurement("launcher");
         }
 
@@ -357,7 +357,7 @@ class Core_Main {
         $this->checkLayout();
         $this->checkMakeStyle();
 
-        if (!Core_Secure::debuggingMode()) {
+        if (!CoreSecure::debuggingMode()) {
             $this->compressionOpen();
         }
 
@@ -422,13 +422,13 @@ class Core_Main {
             // Validation et routine du cache
             Core_Cache::getInstance()->workspaceCache();
 
-            if (Core_Secure::debuggingMode()) {
+            if (CoreSecure::debuggingMode()) {
                 // Assemble tous les messages d'erreurs dans un fichier log
                 Core_Logger::logException();
             }
         }
 
-        if (Core_Secure::debuggingMode()) {
+        if (CoreSecure::debuggingMode()) {
             Exec_TimeMarker::stopMeasurement("launcher");
         } else {
             $this->compressionClose();
@@ -540,17 +540,17 @@ class Core_Main {
      */
     private function prepare() {
         if (!$this->loadCache()) {
-            Core_Secure::getInstance()->throwException("cachePath", null, array(
+            CoreSecure::getInstance()->throwException("cachePath", null, array(
                 CoreLoader::getAbsolutePath("configs_cache")));
         }
 
         if (!$this->loadSql()) {
-            Core_Secure::getInstance()->throwException("sqlPath", null, array(
+            CoreSecure::getInstance()->throwException("sqlPath", null, array(
                 CoreLoader::getAbsolutePath("configs_database")));
         }
 
         if (!$this->loadConfig()) {
-            Core_Secure::getInstance()->throwException("configPath", null, array(
+            CoreSecure::getInstance()->throwException("configPath", null, array(
                 CoreLoader::getAbsolutePath("configs_config")));
         }
 
@@ -632,7 +632,7 @@ class Core_Main {
                 define("TR_ENGINE_STATUT", $rawConfig["TR_ENGINE_STATUT"]);
 
                 if (TR_ENGINE_STATUT == "close") {
-                    Core_Secure::getInstance()->throwException("close");
+                    CoreSecure::getInstance()->throwException("close");
                 }
 
                 // Vérification de la durée de validité du cache

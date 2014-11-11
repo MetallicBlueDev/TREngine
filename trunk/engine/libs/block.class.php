@@ -415,14 +415,14 @@ class Libs_Block {
      */
     private static function &getSideAsLetters($side) {
         if (!is_numeric($side)) {
-            Core_Secure::getInstance()->throwException("blockSide", null, array(
+            CoreSecure::getInstance()->throwException("blockSide", null, array(
                 "Invalid side value: " . $side));
         }
 
         $sideLetters = array_search($side, self::$sideRegistred);
 
         if ($sideLetters === false) {
-            Core_Secure::getInstance()->throwException("blockSide", null, array(
+            CoreSecure::getInstance()->throwException("blockSide", null, array(
                 "Numeric side: " . $side));
         }
         return $sideLetters;
@@ -436,12 +436,12 @@ class Libs_Block {
      */
     private static function &getSideAsNumeric($side) {
         if (!is_string($side)) {
-            Core_Secure::getInstance()->throwException("blockSide", null, array(
+            CoreSecure::getInstance()->throwException("blockSide", null, array(
                 "Invalid side value: " . $side));
         }
 
         if (!isset(self::$sideRegistred[$side])) {
-            Core_Secure::getInstance()->throwException("blockSide", null, array(
+            CoreSecure::getInstance()->throwException("blockSide", null, array(
                 "Letters side: " . $side));
         }
 

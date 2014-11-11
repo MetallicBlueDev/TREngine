@@ -45,5 +45,5 @@ if (!defined("TR_ENGINE_AUTOLOADED")) {
 if (!defined("TR_ENGINE_SECURE")) {
     // La sécurité a été vérifiée
     define("TR_ENGINE_SECURE", true);
-    Core_Secure::checkInstance();
+    CoreSecure::checkInstance();
 }

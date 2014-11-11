@@ -9,12 +9,12 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Core_Secure {
+class CoreSecure {
 
     /**
      * Instance de cette classe.
      *
-     * @var Core_Secure
+     * @var CoreSecure
      */
     private static $secure = null;
 
@@ -53,7 +53,7 @@ class Core_Secure {
     /**
      * Retourne l'instance du gestionnaire de sécurité.
      *
-     * @return Core_Secure
+     * @return CoreSecure
      */
     public static function &getInstance() {
         self::checkInstance();
@@ -65,7 +65,7 @@ class Core_Secure {
      */
     public static function checkInstance() {
         if (self::$secure === null) {
-            self::$secure = new Core_Secure();
+            self::$secure = new CoreSecure();
 
             // Si nous ne sommes pas passé par l'index
             if (self::$secure->locked()) {

@@ -39,12 +39,12 @@ class Core_Sql extends Base_Model {
         }
 
         if (!$loaded) {
-            Core_Secure::getInstance()->throwException("sqlType", null, array(
+            CoreSecure::getInstance()->throwException("sqlType", null, array(
                 $databaseConfig['type']));
         }
 
         if (!CoreLoader::isCallable($baseClassName, "initialize")) {
-            Core_Secure::getInstance()->throwException("sqlCode", null, array(
+            CoreSecure::getInstance()->throwException("sqlCode", null, array(
                 $baseClassName));
         }
 
@@ -53,7 +53,7 @@ class Core_Sql extends Base_Model {
             $this->selectedBase->initialize($databaseConfig);
         } catch (Exception $ex) {
             $this->selectedBase = null;
-            Core_Secure::getInstance()->throwException($ex->getMessage(), $ex);
+            CoreSecure::getInstance()->throwException($ex->getMessage(), $ex);
         }
     }
 
@@ -215,7 +215,7 @@ class Core_Sql extends Base_Model {
         try {
             $this->query();
         } catch (Exception $ex) {
-            Core_Secure::getInstance()->throwException($ex->getMessage(), $ex);
+            CoreSecure::getInstance()->throwException($ex->getMessage(), $ex);
         }
     }
 
@@ -250,7 +250,7 @@ class Core_Sql extends Base_Model {
         try {
             $this->query();
         } catch (Exception $ex) {
-            Core_Secure::getInstance()->throwException($ex->getMessage(), $ex);
+            CoreSecure::getInstance()->throwException($ex->getMessage(), $ex);
         }
     }
 
@@ -276,7 +276,7 @@ class Core_Sql extends Base_Model {
         $this->selectedBase->resetQuoted();
 
         // Ajout la requête au log
-        if (Core_Secure::debuggingMode()) {
+        if (CoreSecure::debuggingMode()) {
             Core_Logger::addSqlRequest($sql);
         }
 
@@ -301,7 +301,7 @@ class Core_Sql extends Base_Model {
         try {
             $this->query();
         } catch (Exception $ex) {
-            Core_Secure::getInstance()->throwException($ex->getMessage(), $ex);
+            CoreSecure::getInstance()->throwException($ex->getMessage(), $ex);
         }
     }
 
@@ -320,7 +320,7 @@ class Core_Sql extends Base_Model {
         try {
             $this->query();
         } catch (Exception $ex) {
-            Core_Secure::getInstance()->throwException($ex->getMessage(), $ex);
+            CoreSecure::getInstance()->throwException($ex->getMessage(), $ex);
         }
     }
 

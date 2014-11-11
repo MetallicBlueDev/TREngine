@@ -170,12 +170,12 @@ class Core_Cache extends Cache_Model {
         $loaded = CoreLoader::classLoader($cacheClassName);
 
         if (!$loaded) {
-            Core_Secure::getInstance()->throwException("cacheType", null, array(
+            CoreSecure::getInstance()->throwException("cacheType", null, array(
                 $cacheConfig['type']));
         }
 
         if (!CoreLoader::isCallable($cacheClassName, "initialize")) {
-            Core_Secure::getInstance()->throwException("cacheCode", null, array(
+            CoreSecure::getInstance()->throwException("cacheCode", null, array(
                 $cacheClassName));
         }
 
@@ -184,7 +184,7 @@ class Core_Cache extends Cache_Model {
             $this->selectedCache->initialize($cacheConfig);
         } catch (Exception $ex) {
             $this->selectedCache = null;
-            Core_Secure::getInstance()->throwException($ex->getMessage(), $ex);
+            CoreSecure::getInstance()->throwException($ex->getMessage(), $ex);
         }
     }
 
