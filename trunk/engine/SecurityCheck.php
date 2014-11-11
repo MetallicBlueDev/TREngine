@@ -3,6 +3,7 @@
 namespace TREngine\Engine;
 
 use TREngine\Engine\Core\CoreLoader;
+use TREngine\Engine\Core\CoreInfo;
 
 if (!defined("TR_ENGINE_INITIALIZED")) {
     // Les fichiers de base sont instanciés

@@ -1,4 +1,8 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
+// Exceptionnellement, NE PAS inclure SecurityCheck
 if (preg_match("/CoreInfo.php/ie", $_SERVER['PHP_SELF'])) {
     exit();
 }
