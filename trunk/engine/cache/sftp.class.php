@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Cache_Sftp extends CacheModel {
+class CacheSftp extends CacheModel {
 
     protected function canUse() {
         // TODO classe a coder..

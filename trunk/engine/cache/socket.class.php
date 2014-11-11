@@ -7,7 +7,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Cache_Socket extends CacheModel {
+class CacheSocket extends CacheModel {
 
     /**
      * Limite de temps de la connexion.

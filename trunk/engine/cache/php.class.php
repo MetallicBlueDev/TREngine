@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Cache_Php extends CacheModel {
+class CachePhp extends CacheModel {
 
     protected function canUse() {
         // Gestionnaire natif; toujours diponible

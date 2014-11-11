@@ -7,7 +7,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Cache_Ftp extends CacheModel {
+class CacheFtp extends CacheModel {
 
     /**
      * Le timeout de la connexion.
