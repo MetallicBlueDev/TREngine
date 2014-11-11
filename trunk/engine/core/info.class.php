@@ -45,7 +45,7 @@ class Core_Info {
              *
              * @var string
              */
-            define("TR_ENGINE_DIR", $info->getBaseDir());
+            define("TR_ENGINE_INDEXDIR", $info->getBaseDir());
 
             /**
              * Adresse URL complète jusqu'à TR ENGINE.
@@ -156,7 +156,7 @@ class Core_Info {
         $urlTmp = explode("/", $urlTmp);
 
         // Recherche du dossier courant
-        $urlBase = explode(DIRECTORY_SEPARATOR, TR_ENGINE_DIR);
+        $urlBase = explode(DIRECTORY_SEPARATOR, TR_ENGINE_INDEXDIR);
 
         // Construction du lien
         $urlFinal = "";

@@ -450,7 +450,7 @@ class Core_Main {
      */
     public function install() {
         // TODO installation a coder
-//        $installPath = TR_ENGINE_DIR . "/install/index.php";
+//        $installPath = TR_ENGINE_INDEXDIR . "/install/index.php";
 //        if (is_file($installPath)) {
 //            require $installPath;
 //        }

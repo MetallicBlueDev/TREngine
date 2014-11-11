@@ -580,7 +580,7 @@ class Core_Cache extends Cache_Model {
         $dir = $this->currentSection . DIRECTORY_SEPARATOR . $dir;
 
         if ($includeRoot) {
-            $dir = TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dir;
+            $dir = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $dir;
         }
         return $dir;
     }

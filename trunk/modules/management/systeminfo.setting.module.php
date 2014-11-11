@@ -38,7 +38,7 @@ class Module_Management_Systeminfo extends Module_Model {
             "TR ENGINE PHP VERSION" => TR_ENGINE_PHP_VERSION,
             "TR ENGINE PHP OS" => TR_ENGINE_PHP_OS,
             "TR ENGINE actived cache" => $modeActivedContent,
-            "TR ENGINE DIR" => TR_ENGINE_DIR,
+            "TR ENGINE DIR" => TR_ENGINE_INDEXDIR,
             "TR ENGINE URL" => TR_ENGINE_URL,
             "TR ENGINE MAIL" => TR_ENGINE_MAIL,
             "TR ENGINE valid cache time" => $coreMain->getCacheTimeLimit() . " days",

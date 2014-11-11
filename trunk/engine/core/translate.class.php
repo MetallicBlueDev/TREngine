@@ -415,7 +415,7 @@ class Core_Translate {
      * @return boolean true langue disponible.
      */
     private static function isValid($language) {
-        return is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR . $language . ".lang.php");
+        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR . $language . ".lang.php");
     }
 
     /**

@@ -236,7 +236,7 @@ class Core_Loader {
         }
 
         $path = str_replace("_", DIRECTORY_SEPARATOR, $path);
-        $path = TR_ENGINE_DIR . DIRECTORY_SEPARATOR . strtolower($path) . "." . $ext . ".php";
+        $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . strtolower($path) . "." . $ext . ".php";
         return $path;
     }
 

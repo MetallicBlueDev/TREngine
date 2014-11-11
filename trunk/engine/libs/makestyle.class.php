@@ -124,7 +124,7 @@ class Libs_MakeStyle {
      * @param string $templatesDir
      */
     public static function setTemplatesDir($templatesDir) {
-        if (is_dir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $templatesDir)) {
+        if (is_dir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $templatesDir)) {
             self::$templatesDir = $templatesDir;
         }
     }
@@ -147,7 +147,7 @@ class Libs_MakeStyle {
     public static function setCurrentTemplate($currentTemplate) {
         $rslt = false;
 
-        if (!empty($currentTemplate) && is_dir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . self::$templatesDir . DIRECTORY_SEPARATOR . $currentTemplate)) {
+        if (!empty($currentTemplate) && is_dir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . self::$templatesDir . DIRECTORY_SEPARATOR . $currentTemplate)) {
             self::$currentTemplate = $currentTemplate;
             $rslt = true;
         }
@@ -172,7 +172,7 @@ class Libs_MakeStyle {
         $templates = array();
 
         // Vérification du dossier template
-        if (is_dir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . self::$templatesDir)) {
+        if (is_dir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . self::$templatesDir)) {
             $templates = Core_Cache::getInstance()->getNameList(self::$templatesDir);
         }
         return $templates;
@@ -203,9 +203,9 @@ class Libs_MakeStyle {
         $path = "";
 
         if ($this->debugMode) {
-            $path = TR_ENGINE_DIR . DIRECTORY_SEPARATOR . "engine" . DIRECTORY_SEPARATOR . "libs" . DIRECTORY_SEPARATOR . "makestyle.debug";
+            $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "engine" . DIRECTORY_SEPARATOR . "libs" . DIRECTORY_SEPARATOR . "makestyle.debug";
         } else {
-            $path = TR_ENGINE_DIR . DIRECTORY_SEPARATOR . self::$templatesDir . DIRECTORY_SEPARATOR . self::$currentTemplate . DIRECTORY_SEPARATOR . $this->fileName;
+            $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . self::$templatesDir . DIRECTORY_SEPARATOR . self::$currentTemplate . DIRECTORY_SEPARATOR . $this->fileName;
         }
         return $path;
     }

@@ -24,7 +24,7 @@ class Cache_Php extends Cache_Model {
     }
 
     public function writeCache($path, $content, $overwrite = true) {
-        if (!is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path)) {
+        if (!is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path)) {
             // Soit le fichier n'exite pas soit tout le dossier n'existe pas
             // On commence par vérifier et si besoin écrire le dossier
             $this->writeDirectory($path);
@@ -35,23 +35,23 @@ class Cache_Php extends Cache_Model {
     }
 
     public function touchCache($path, $updateTime = 0) {
-        if (!touch(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path, $updateTime)) {
+        if (!touch(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path, $updateTime)) {
             Core_Logger::addException("Touch error on " . $path);
         }
     }
 
     public function removeCache($path, $timeLimit = 0) {
-        if (!empty($path) && is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path)) {
+        if (!empty($path) && is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path)) {
             // C'est un fichier a supprimer
             $this->removeFile($path, $timeLimit);
-        } else if (is_dir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path)) {
+        } else if (is_dir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path)) {
             // C'est un dossier a nettoyer
             $this->removeDirectory($path, $timeLimit);
         }
     }
 
     public function &getCacheMTime($path) {
-        $mTime = filemtime(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path);
+        $mTime = filemtime(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path);
         return $mTime;
     }
 
@@ -59,7 +59,7 @@ class Cache_Php extends Cache_Model {
         $dirList = array();
 
         // Si le dossier est vide, on prend le dossier par défaut
-        $path = !empty($path) ? TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path : TR_ENGINE_DIR;
+        $path = !empty($path) ? TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path : TR_ENGINE_INDEXDIR;
 
         // Ouverture du dossier
         $handle = opendir($path);
@@ -96,7 +96,7 @@ class Cache_Php extends Cache_Model {
         $content = ($overwrite) ? self::getFileHeader($pathFile, $content) : $content;
 
         // Tentative d'écriture du fichier
-        // Des problèmes on été constaté avec l'utilisation du chemin absolu TR_ENGINE_DIR
+        // Des problèmes on été constaté avec l'utilisation du chemin absolu TR_ENGINE_INDEXDIR
         $fp = fopen($pathFile, 'a');
 
         if ($fp) {
@@ -114,7 +114,7 @@ class Cache_Php extends Cache_Model {
 
             // Vérification des bytes écris
             if ($nbBytesCmd !== $nbBytesFile) {
-                @unlink(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $pathFile);
+                @unlink(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $pathFile);
 
                 Core_Logger::addException("Bad response for fwrite command. Path : " . $pathFile . ". "
                 . "Server response : " . $nbBytesCmd . " bytes writed, " . $nbBytesFile . " bytes readed");
@@ -152,7 +152,7 @@ class Cache_Php extends Cache_Model {
         $pathIsDir = self::isDirectoryPath($path);
 
         // Information sur les dossiers
-        $dirs = explode(DIRECTORY_SEPARATOR, TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path);
+        $dirs = explode(DIRECTORY_SEPARATOR, TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path);
         $nbDir = count($dirs);
         $currentPath = "";
         $count = 0;
@@ -215,7 +215,7 @@ class Cache_Php extends Cache_Model {
         }
 
         if ($deleteFile) {
-            $fp = @fopen(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path, 'a');
+            $fp = @fopen(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path, 'a');
 
             if ($fp) {
                 // Verrouiller le fichier destination
@@ -226,10 +226,10 @@ class Cache_Php extends Cache_Model {
                 fclose($fp);
 
                 // Suppression
-                unlink(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path);
+                unlink(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path);
             }
 
-            if (is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $path)) {
+            if (is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path)) {
                 Core_Logger::addException("Bad response for fopen|unlink command. Path : " . $path);
             }
         }
@@ -243,7 +243,7 @@ class Cache_Php extends Cache_Model {
      */
     private function removeDirectory($dirPath, $timeLimit) {
         // Ouverture du dossier
-        $handle = opendir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath);
+        $handle = opendir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $dirPath);
 
         // Boucle sur les fichiers
         do {
@@ -268,7 +268,7 @@ class Cache_Php extends Cache_Model {
                     }
 
                     // Suppression
-                    if (is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath . DIRECTORY_SEPARATOR . $file)) {
+                    if (is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $dirPath . DIRECTORY_SEPARATOR . $file)) {
                         // Suppression du fichier
                         $this->removeFile($dirPath . DIRECTORY_SEPARATOR . $file, $timeLimit);
                     } else {
@@ -284,9 +284,9 @@ class Cache_Php extends Cache_Model {
 
         // Suppression du dernière dossier
         if ($timeLimit === 0) {
-            rmdir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath);
+            rmdir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $dirPath);
 
-            if (is_dir(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . $dirPath)) {
+            if (is_dir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $dirPath)) {
                 Core_Logger::addException("Bad response for rmdir command. Path : " . $dirPath);
             }
         }

@@ -40,7 +40,7 @@
 
                 <?php echo Libs_Block::getInstance()->getBlocksBySideName("top"); ?>
 
-                <?php include(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "default" . DIRECTORY_SEPARATOR . "module.php"); ?>
+                <?php include(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "default" . DIRECTORY_SEPARATOR . "module.php"); ?>
 
                 <?php echo Libs_Block::getInstance()->getBlocksBySideName("bottom"); ?>
 

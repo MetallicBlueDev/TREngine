@@ -305,7 +305,7 @@ class Cache_Socket extends Cache_Model {
 
             if (is_array($listNames)) {
                 // On décompose les dossiers
-                $listNamesSearch = explode(DIRECTORY_SEPARATOR, TR_ENGINE_DIR);
+                $listNamesSearch = explode(DIRECTORY_SEPARATOR, TR_ENGINE_INDEXDIR);
 
                 // On recherche des correspondances
                 foreach ($listNames as $dirName) {

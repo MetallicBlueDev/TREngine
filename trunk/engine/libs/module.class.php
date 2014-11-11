@@ -279,7 +279,7 @@ class Libs_Module {
         // Nom de la page cible
         $page = empty($page) ? $this->page : $page;
 
-        return is_file(TR_ENGINE_DIR . DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . $page . ".module.php");
+        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . $page . ".module.php");
     }
 
     /**
