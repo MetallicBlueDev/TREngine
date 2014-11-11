@@ -1,4 +1,5 @@
 <?php
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
  * Exception inconnue lancée par le moteur.

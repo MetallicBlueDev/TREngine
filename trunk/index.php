@@ -1,15 +1,9 @@
 <?php
-// On est passé dans l'index
+// Définition de l'index
 define("TR_ENGINE_INDEX", true);
 
-// Vérification de la version PHP
-require("engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "info.class.php");
-
-// Inclusion du chargeur
-require("engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "loader.class.php");
-
-// Chargement du système de sécurité
-Core_Secure::checkInstance();
+// Import de base
+require 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 if (Core_Secure::debuggingMode()) {
     Exec_TimeMarker::startMeasurement("all");

@@ -1,11 +1,5 @@
 <?php
-if (!defined("TR_ENGINE_INDEX")) {
-    require("secure.class.php");
-    Core_Secure::checkInstance();
-}
-
-// Active le chargement automatique
-Core_Loader::affectRegister();
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
  * Chargeur de classe.

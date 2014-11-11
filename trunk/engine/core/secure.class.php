@@ -1,10 +1,5 @@
 <?php
-// Attention au double instances de Core_Secure...
-if (preg_match("/secure.class.php/ie", $_SERVER['PHP_SELF'])) {
-    if (!defined("TR_ENGINE_INDEX")) {
-        Core_Secure::checkInstance();
-    }
-}
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
  * Système de sécurité.
@@ -46,20 +41,10 @@ class Core_Secure {
         $this->checkRequestReferer();
         $this->checkGPC();
 
-        if (!class_exists("Core_Info")) {
-            $this->locked = true;
-            require("info.class.php");
-        }
-
         // Attention: il ne faut pas définir l'index avant Core_Info mais avant Core_Loader
         if (!defined("TR_ENGINE_INDEX")) {
             $this->locked = true;
             define("TR_ENGINE_INDEX", true);
-        }
-
-        if (!class_exists("Core_Loader")) {
-            $this->locked = true;
-            require("loader.class.php");
         }
 
         $this->debuggingMode = Core_Request::getBoolean("debuggingMode", false, "GET");
