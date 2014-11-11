@@ -24,7 +24,7 @@ if (!defined("TR_ENGINE_INITIALIZED")) {
         }
 
         // Initalisation de toutes les autres informations de base
-        require DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'info.class.php';
+        require DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'CoreInfo.php';
         CoreInfo::initialize();
     }
 

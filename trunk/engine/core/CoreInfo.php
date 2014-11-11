@@ -1,5 +1,5 @@
 <?php
-if (preg_match("/info.class.php/ie", $_SERVER['PHP_SELF'])) {
+if (preg_match("/CoreInfo.php/ie", $_SERVER['PHP_SELF'])) {
     exit();
 }
 
