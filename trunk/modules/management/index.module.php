@@ -52,7 +52,7 @@ class Module_Management_Index extends Module_Model {
                 }
 
                 // Si aucune erreur, on lance le module
-                if (Core_Loader::classLoader($moduleClassPage)) {
+                if (CoreLoader::classLoader($moduleClassPage)) {
                     // Nom de la page courane
                     $currentPageName = self::getManagementPageName($pageSelected);
                     $libsMakeStyle->assign("currentPageName", $currentPageName);
@@ -66,7 +66,7 @@ class Module_Management_Index extends Module_Model {
 
                     $ModuleClass = new $moduleClassName();
                     $content = "";
-                    if (Core_Loader::isCallable($moduleClassPage, "setting")) {
+                    if (CoreLoader::isCallable($moduleClassPage, "setting")) {
                         $content = $ModuleClass->setting();
                     }
 

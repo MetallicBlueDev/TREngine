@@ -309,10 +309,10 @@ class Module_Management_Block extends Module_Model {
                 $block = Core_Sql::getInstance()->fetchArray();
 
                 $blockClassName = "Block_" . ucfirst($block['type']);
-                $loaded = Core_Loader::classLoader($blockClassName);
+                $loaded = CoreLoader::classLoader($blockClassName);
 
                 if ($loaded) {
-                    if (Core_Loader::isCallable($blockClassName, "uninstall")) {
+                    if (CoreLoader::isCallable($blockClassName, "uninstall")) {
                         $BlockClass = new $blockClassName();
                         $BlockClass->uninstall();
                     }

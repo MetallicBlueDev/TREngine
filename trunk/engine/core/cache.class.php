@@ -167,14 +167,14 @@ class Core_Cache extends Cache_Model {
 
         // Chargement des drivers pour le cache
         $cacheClassName = "Cache_" . ucfirst($cacheConfig['type']);
-        $loaded = Core_Loader::classLoader($cacheClassName);
+        $loaded = CoreLoader::classLoader($cacheClassName);
 
         if (!$loaded) {
             Core_Secure::getInstance()->throwException("cacheType", null, array(
                 $cacheConfig['type']));
         }
 
-        if (!Core_Loader::isCallable($cacheClassName, "initialize")) {
+        if (!CoreLoader::isCallable($cacheClassName, "initialize")) {
             Core_Secure::getInstance()->throwException("cacheCode", null, array(
                 $cacheClassName));
         }

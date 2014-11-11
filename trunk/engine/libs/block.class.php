@@ -383,11 +383,11 @@ class Libs_Block {
      */
     private function get(&$blockInfo) {
         $blockClassName = "Block_" . ucfirst($blockInfo->getType());
-        $loaded = Core_Loader::classLoader($blockClassName);
+        $loaded = CoreLoader::classLoader($blockClassName);
 
         // Vérification du block
         if ($loaded) {
-            if (Core_Loader::isCallable($blockClassName, "display")) {
+            if (CoreLoader::isCallable($blockClassName, "display")) {
                 Core_Translate::getInstance()->translate("blocks" . DIRECTORY_SEPARATOR . $blockInfo->getType());
 
                 /**

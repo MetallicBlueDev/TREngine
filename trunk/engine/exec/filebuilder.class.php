@@ -48,7 +48,7 @@ class Exec_FileBuilder {
         . "// -------------------------------------------------------------------------//\n"
         . "?>\n";
 
-        if (Core_Loader::isCallable("Core_Cache")) {
+        if (CoreLoader::isCallable("Core_Cache")) {
             Core_Cache::getInstance(Core_Cache::SECTION_CONFIGS)->writeCache("config.inc.php", $content);
         }
     }
@@ -69,7 +69,7 @@ class Exec_FileBuilder {
             $port = 21;
 
         // Vérification du mode de ftp
-        if (Core_Loader::isCallable("Core_Cache")) {
+        if (CoreLoader::isCallable("Core_Cache")) {
             $type = Core_Cache::getInstance(Core_Cache::SECTION_CONFIGS)->getTransactionType();
         }
 
@@ -97,7 +97,7 @@ class Exec_FileBuilder {
         . "// -------------------------------------------------------------------------//\n"
         . "?>\n";
 
-        if (Core_Loader::isCallable("Core_Cache")) {
+        if (CoreLoader::isCallable("Core_Cache")) {
             Core_Cache::getInstance(Core_Cache::SECTION_CONFIGS)->writeCache("cache.inc.php", $content);
         }
     }
@@ -114,7 +114,7 @@ class Exec_FileBuilder {
      */
     public static function buildDatabaseFile($host, $user, $pass, $name, $type, $prefix) {
         // Vérification du type de base de données
-        if (Core_Loader::isCallable("Core_Sql")) {
+        if (CoreLoader::isCallable("Core_Sql")) {
             $bases = Core_Sql::getBaseList();
             $type = (isset($bases[$type])) ? $type : "mysql";
         }
@@ -143,7 +143,7 @@ class Exec_FileBuilder {
         . "// -------------------------------------------------------------------------//\n"
         . "?>\n";
 
-        if (Core_Loader::isCallable("Core_Cache")) {
+        if (CoreLoader::isCallable("Core_Cache")) {
             Core_Cache::getInstance(Core_Cache::SECTION_CONFIGS)->writeCache("database.inc.php", $content);
         }
     }

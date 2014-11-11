@@ -9,7 +9,7 @@ if (!defined("TR_ENGINE_INITIALIZED")) {
     }
 
     // Inclusion du chargeur si besoin
-    if (!class_exists("Core_Loader", false)) {
+    if (!class_exists("CoreLoader", false)) {
         require DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'loader.class.php';
     }
 }
@@ -17,7 +17,7 @@ if (!defined("TR_ENGINE_INITIALIZED")) {
 if (!defined("TR_ENGINE_AUTOLOADED")) {
     // Le chargeur est pret
     define("TR_ENGINE_AUTOLOADED", true);
-    Core_Loader::affectRegister();
+    CoreLoader::affectRegister();
 }
 
 // Chargement du système de sécurité

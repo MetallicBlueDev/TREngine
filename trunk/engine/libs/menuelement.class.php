@@ -252,7 +252,7 @@ class Libs_MenuElement extends Core_DataStorage {
 
         // Mise en forme du texte via la callback
         if (!empty($callback) && !empty($text)) {
-            $text = Core_Loader::callback($callback, $text);
+            $text = CoreLoader::callback($callback, $text);
         }
 
         // Ajout de la classe active

@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Core_Loader {
+class CoreLoader {
 
     /**
      * Tableau des classes chargées.
@@ -27,7 +27,7 @@ class Core_Loader {
             self::$loaded = array();
 
             if (!spl_autoload_register(array(
-                'Core_Loader',
+                'CoreLoader',
                 'classLoader'), true)) {
                 throw new Fail_Loader("spl_autoload_register fail");
             }
@@ -186,7 +186,8 @@ class Core_Loader {
             }
         } catch (Exception $ex) {
             Core_Secure::getInstance()->throwException($ex->getMessage(), $ex, array(
-                $name));
+                $name,
+                $ext));
         }
         return $loaded;
     }
@@ -200,15 +201,16 @@ class Core_Loader {
      */
     private static function &getFilePath(&$ext, $name) {
         $path = "";
+        $fileExt = ".";
 
         if (empty($ext)) {
             // Retrouve l'extension
             if (strpos($name, "Block_") !== false) {
                 $ext = "block";
-                $path = str_replace("Block_", "blocks_", $name);
+                $path = str_replace("Block_", "blocks" . DIRECTORY_SEPARATOR . "Block_", $name);
             } else if (strpos($name, "Module_") !== false) {
                 $ext = "module";
-                $path = str_replace("Module_", "modules_", $name);
+                $path = str_replace("Module_", "modules" . DIRECTORY_SEPARATOR . "Module_", $name);
             } else {
                 $ext = "class";
                 $path = "engine_" . $name;
@@ -233,10 +235,12 @@ class Core_Loader {
                     $path = "engine_" . $name;
                     break;
             }
+
+            $fileExt &= $ext;
         }
 
         $path = str_replace("_", DIRECTORY_SEPARATOR, $path);
-        $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . strtolower($path) . "." . $ext . ".php";
+        $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . strtolower($path) . $fileExt . ".php";
         return $path;
     }
 

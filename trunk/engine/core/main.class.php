@@ -541,17 +541,17 @@ class Core_Main {
     private function prepare() {
         if (!$this->loadCache()) {
             Core_Secure::getInstance()->throwException("cachePath", null, array(
-                Core_Loader::getAbsolutePath("configs_cache")));
+                CoreLoader::getAbsolutePath("configs_cache")));
         }
 
         if (!$this->loadSql()) {
             Core_Secure::getInstance()->throwException("sqlPath", null, array(
-                Core_Loader::getAbsolutePath("configs_database")));
+                CoreLoader::getAbsolutePath("configs_database")));
         }
 
         if (!$this->loadConfig()) {
             Core_Secure::getInstance()->throwException("configPath", null, array(
-                Core_Loader::getAbsolutePath("configs_config")));
+                CoreLoader::getAbsolutePath("configs_config")));
         }
 
         // Analyse pour les statistiques
@@ -567,11 +567,11 @@ class Core_Main {
      * @return boolean true chargé
      */
     private function loadCache() {
-        $canUse = Core_Loader::isCallable("Core_Cache");
+        $canUse = CoreLoader::isCallable("Core_Cache");
 
         if (!$canUse) {
             // Chemin vers le fichier de configuration du cache
-            if (Core_Loader::includeLoader("configs_cache")) {
+            if (CoreLoader::includeLoader("configs_cache")) {
                 // Démarrage de l'instance Core_Cache
                 Core_Cache::checkInstance();
 
@@ -587,11 +587,11 @@ class Core_Main {
      * @return boolean true chargé
      */
     private function loadSql() {
-        $canUse = Core_Loader::isCallable("Core_Sql");
+        $canUse = CoreLoader::isCallable("Core_Sql");
 
         if (!$canUse) {
             // Chemin vers le fichier de configuration de la base de données
-            if (Core_Loader::includeLoader("configs_database")) {
+            if (CoreLoader::includeLoader("configs_database")) {
                 // Démarrage de l'instance Core_Sql
                 Core_Sql::checkInstance();
 
@@ -606,7 +606,7 @@ class Core_Main {
      */
     private function loadConfig() {
         // Chemin vers le fichier de configuration du moteur
-        $canUse = Core_Loader::includeLoader("configs_config");
+        $canUse = CoreLoader::includeLoader("configs_config");
 
         if ($canUse) {
             // Tentative d'utilisation de la configuration

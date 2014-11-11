@@ -103,7 +103,7 @@ class Module_Connect_Index extends Module_Model {
         $form->addSelectCloseTag();
 
         // Liste des templates disponibles
-        if (Core_Loader::isCallable("Libs_MakeStyle")) {
+        if (CoreLoader::isCallable("Libs_MakeStyle")) {
             $form->addSelectOpenTag("template", ACCOUNT_PRIVATE_TEMPLATE);
             $templates = Libs_MakeStyle::getTemplateList();
             $currentTemplate = Libs_MakeStyle::getCurrentTemplate();

@@ -83,7 +83,7 @@ class Core_Html {
      */
     private function __construct() {
         // Configuration du préfixe accessible
-        if (Core_Loader::isCallable("Core_Main")) {
+        if (CoreLoader::isCallable("Core_Main")) {
             $prefix = Core_Main::getInstance()->getCookiePrefix();
         } else {
             $prefix = "tr";
@@ -149,7 +149,7 @@ class Core_Html {
      * @param string $javaScript
      */
     public function addJavascript($javaScript) {
-        if ($this->javascriptEnabled() && Core_Loader::isCallable("Core_Main") && Core_Main::getInstance()->isDefaultLayout()) {
+        if ($this->javascriptEnabled() && CoreLoader::isCallable("Core_Main") && Core_Main::getInstance()->isDefaultLayout()) {
             $this->addJavascriptJquery($javaScript);
         } else {
             $this->addJavascriptCode($javaScript);
@@ -210,7 +210,7 @@ class Core_Html {
      * @param string $options
      */
     public function addCssTemplateFile($fileName, $options = "") {
-        if (Core_Loader::isCallable("Libs_MakeStyle")) {
+        if (CoreLoader::isCallable("Libs_MakeStyle")) {
             $this->addCssFile(Libs_MakeStyle::getTemplatesDir() . "/" . Libs_MakeStyle::getCurrentTemplate() . "/" . $fileName, $options);
         }
     }
@@ -223,7 +223,7 @@ class Core_Html {
     public function getMetaHeaders() {
         $title = "";
 
-        if (Core_Loader::isCallable("Core_Main")) {
+        if (CoreLoader::isCallable("Core_Main")) {
             $coreMain = Core_Main::getInstance();
             $title = $coreMain->getDefaultSiteName();
 
@@ -231,7 +231,7 @@ class Core_Html {
                 // Titre automatique
                 $title .= " - " . $coreMain->getDefaultSiteSlogan();
 
-                if (Core_Loader::isCallable("Libs_Module")) {
+                if (CoreLoader::isCallable("Libs_Module")) {
                     $title .= " / " . Libs_Module::getInstance()->getInfoModule()->getName();
                 }
             } else {
@@ -412,7 +412,7 @@ class Core_Html {
      */
     private function &getSalt() {
         // Configuration de la clès si accessible
-        if (Core_Loader::isCallable("Core_Main")) {
+        if (CoreLoader::isCallable("Core_Main")) {
             $key = Core_Main::getInstance()->getCryptKey();
         } else {
             $key = "A4bT9D4V";
@@ -457,7 +457,7 @@ class Core_Html {
             $keywords = implode(", ", $this->keywords);
         }
 
-        if (Core_Loader::isCallable("Core_Main")) {
+        if (CoreLoader::isCallable("Core_Main")) {
             if (empty($this->description)) {
                 $this->description = Core_Main::getInstance()->getDefaultDescription();
             }
@@ -484,7 +484,7 @@ class Core_Html {
      */
     private function &getMetaIncludeJavascript($forceIncludes = false) {
         if (Core_Request::getRequestMethod() !== "POST" || $forceIncludes) {
-            $fullScreen = Core_Loader::isCallable("Core_Main") ? Core_Main::getInstance()->isDefaultLayout() : true;
+            $fullScreen = CoreLoader::isCallable("Core_Main") ? Core_Main::getInstance()->isDefaultLayout() : true;
 
             if (($fullScreen || $forceIncludes) && $this->javascriptEnabled()) {
                 if (!empty($this->javaScriptJquery)) {
@@ -504,7 +504,7 @@ class Core_Html {
                 }
             }
 
-            if (Core_Loader::isCallable("Exec_Agent") && Exec_Agent::$userBrowserName === "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") {
+            if (CoreLoader::isCallable("Exec_Agent") && Exec_Agent::$userBrowserName === "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") {
                 $this->addJavascriptFile("pngfix.js", "defer");
             }
         } else {

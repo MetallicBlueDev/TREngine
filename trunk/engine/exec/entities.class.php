@@ -138,7 +138,7 @@ class Exec_Entities {
     public static function &textDisplay($text) {
         $text = self::entitiesUtf8($text);
         //$text = self::stripSlashes($text);
-        if (Core_Loader::isCallable("Core_TextEditor")) {
+        if (CoreLoader::isCallable("Core_TextEditor")) {
             $text = Core_TextEditor::text($text);
             $text = Core_TextEditor::smilies($text);
         }

@@ -41,7 +41,7 @@ class Core_Secure {
         $this->checkRequestReferer();
         $this->checkGPC();
 
-        // Attention: il ne faut pas définir l'index avant Core_Info mais avant Core_Loader
+        // Attention: il ne faut pas définir l'index avant Core_Info mais avant CoreLoader
         if (!defined("TR_ENGINE_INDEX")) {
             $this->locked = true;
             define("TR_ENGINE_INDEX", true);
@@ -194,7 +194,7 @@ class Core_Secure {
             $errorMessage = array_merge($errorMessage, $argv);
         }
 
-        if (Core_Loader::isCallable("Core_Session") && Core_Loader::isCallable("Core_Sql")) {
+        if (CoreLoader::isCallable("Core_Session") && CoreLoader::isCallable("Core_Sql")) {
             if (Core_Sql::hasConnection()) {
                 if (Core_Session::getInstance()->getUserInfos()->hasRegisteredRank()) {
                     $sqlErrors = Core_Sql::getInstance()->getLastError();
@@ -208,7 +208,7 @@ class Core_Secure {
             }
         }
 
-        if (Core_Loader::isCallable("Core_Logger")) {
+        if (CoreLoader::isCallable("Core_Logger")) {
             $loggerExceptions = Core_Logger::getExceptions();
 
             if (!empty($loggerExceptions)) {

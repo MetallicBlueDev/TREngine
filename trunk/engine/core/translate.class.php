@@ -245,21 +245,21 @@ class Core_Translate {
      * @param string $pathLang chemin du fichier de traduction.
      */
     public function translate($pathLang) {
-        $loaded = Core_Loader::isLoaded($pathLang);
+        $loaded = CoreLoader::isLoaded($pathLang);
 
         // Traduction uniquement si besoin
         if (!$loaded) {
             $this->cache = array();
-            $loaded = Core_Loader::langLoader($pathLang);
+            $loaded = CoreLoader::langLoader($pathLang);
 
             if ($loaded && !empty($this->cache)) {
                 $langCacheFileName = self::getLangCacheFileName($pathLang) . $this->languageUsed . ".php";
-                $langOriginalPath = Core_Loader::getAbsolutePath($pathLang);
+                $langOriginalPath = CoreLoader::getAbsolutePath($pathLang);
                 $content = "";
 
                 // Pour la sélection dans le cache
                 $coreCache = null;
-                if (Core_Loader::isCallable("Core_Cache")) {
+                if (CoreLoader::isCallable("Core_Cache")) {
                     $coreCache = Core_Cache::getInstance(Core_Cache::SECTION_TRANSLATE);
                 }
 
@@ -377,7 +377,7 @@ class Core_Translate {
         $language = "";
 
         // Langage du client via le cookie de session
-        if (Core_Loader::isCallable("Core_Session")) {
+        if (CoreLoader::isCallable("Core_Session")) {
             $userLanguage = strtolower(trim(Core_Session::getInstance()->getUserInfos()->getLangue()));
         } else {
             $userLanguage = "";
@@ -393,7 +393,7 @@ class Core_Translate {
             // Si la langue trouvé en invalide
             if (!self::isValid($language)) {
                 // Utilisation de la langue par défaut du site
-                if (Core_Loader::isCallable("Core_Main")) {
+                if (CoreLoader::isCallable("Core_Main")) {
                     $language = Core_Main::getInstance()->getDefaultLanguage();
                 } else {
                     $language = "";

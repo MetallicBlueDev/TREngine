@@ -187,7 +187,7 @@ class Libs_Module {
         if (($moduleInfo->installed() && Core_Access::autorize(Core_AccessType::getTypeFromToken($moduleInfo))) || (!$moduleInfo->installed() && Core_Session::getInstance()->getUserInfos()->hasAdminRank())) {
             if ($moduleInfo->isValid($this->page)) {
 
-                if (Core_Loader::isCallable("Libs_Breadcrumb")) {
+                if (CoreLoader::isCallable("Libs_Breadcrumb")) {
                     $libsBreadcrumb = Libs_Breadcrumb::getInstance();
                     $libsBreadcrumb->addTrail($moduleInfo->getName(), "?mod=" . $moduleInfo->getName());
 
@@ -234,7 +234,7 @@ class Libs_Module {
      */
     private function get(&$moduleInfo) {
         $moduleClassName = "Module_" . ucfirst($moduleInfo->getName()) . "_" . ucfirst($this->page);
-        $loaded = Core_Loader::classLoader($moduleClassName);
+        $loaded = CoreLoader::classLoader($moduleClassName);
 
         if ($loaded) {
             // Retourne un view valide sinon une chaine vide
@@ -306,7 +306,7 @@ class Libs_Module {
     private function &viewPage(array $pageInfo) {
         $invalid = false;
 
-        if (Core_Loader::isCallable($pageInfo[0], $pageInfo[1])) {
+        if (CoreLoader::isCallable($pageInfo[0], $pageInfo[1])) {
             $userInfos = Core_Session::getInstance()->getUserInfos();
 
             if ($pageInfo[1] === "install" && ($this->getInfoModule()->installed() || !$userInfos->hasAdminRank())) {

@@ -139,7 +139,7 @@ class Exec_Crypt {
                 $cryptData = "*" . sha1(pack("H*", sha1($data)));
                 break;
             default:
-                if (Core_Loader::isCallable("Core_Logger")) {
+                if (CoreLoader::isCallable("Core_Logger")) {
                     Core_Logger::addException("Unsupported crypt method. Method : " . $method);
                 }
                 $cryptData = self::cryptData($data, $salt);

@@ -35,7 +35,7 @@ class Core_Sql extends Base_Model {
         if (!empty($databaseConfig) && isset($databaseConfig['type'])) {
             // Chargement des drivers pour la base
             $baseClassName = "Base_" . ucfirst($databaseConfig['type']);
-            $loaded = Core_Loader::classLoader($baseClassName);
+            $loaded = CoreLoader::classLoader($baseClassName);
         }
 
         if (!$loaded) {
@@ -43,7 +43,7 @@ class Core_Sql extends Base_Model {
                 $databaseConfig['type']));
         }
 
-        if (!Core_Loader::isCallable($baseClassName, "initialize")) {
+        if (!CoreLoader::isCallable($baseClassName, "initialize")) {
             Core_Secure::getInstance()->throwException("sqlCode", null, array(
                 $baseClassName));
         }

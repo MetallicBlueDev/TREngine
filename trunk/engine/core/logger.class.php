@@ -82,7 +82,7 @@ class Core_Logger {
      * @return string
      */
     public static function displayMessages() {
-        if (Core_Loader::isCallable("Core_Main")) {
+        if (CoreLoader::isCallable("Core_Main")) {
             $hasMessages = !empty(self::$messages);
             $display = "none";
             $rslt = "";
@@ -104,7 +104,7 @@ class Core_Logger {
             if (Core_Main::getInstance()->isDefaultLayout()) {
                 echo "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
             } else if ($hasMessages) {
-                if (Core_Loader::isCallable("Core_Html")) {
+                if (CoreLoader::isCallable("Core_Html")) {
                     if (Core_Html::getInstance()->javascriptEnabled()) {
                         Core_Html::getInstance()->addJavascript("displayMessage('" . addslashes($rslt) . "');");
                         $rslt = "";
@@ -122,7 +122,7 @@ class Core_Logger {
      * Affichage des informations de debug.
      */
     public static function displayDebugInformations() {
-        if (Core_Loader::isCallable("Core_Main") && Core_Loader::isCallable("Core_Session")) {
+        if (CoreLoader::isCallable("Core_Main") && CoreLoader::isCallable("Core_Session")) {
             if (Core_Session::getInstance()->getUserInfos()->hasRegisteredRank()) {
                 echo "<div style=\"color: blue;\"><br />"
                 . "***********************SQL REQUESTS (" . count(self::$sqlRequest) . ") :<br />";
@@ -165,7 +165,7 @@ class Core_Logger {
      * Ecriture du rapport d'erreur dans un fichier log.
      */
     public static function logException() {
-        if (Core_Loader::isCallable("Core_Cache")) {
+        if (CoreLoader::isCallable("Core_Cache")) {
             if (self::hasExceptions()) {
                 // Ecriture à la suite du rapport
                 Core_Cache::getInstance(Core_Cache::SECTION_LOGGER)->writeCache("exception_" . date('Y-m-d') . ".log.php", self::serializeData(self::$exceptions), false);

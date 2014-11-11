@@ -192,7 +192,7 @@ class Libs_BlockData extends Core_DataStorage implements Core_AccessToken {
 
         if (Core_Access::autorize(Core_AccessType::getTypeFromToken($this))) {
             if ($checkModule) {
-                if (Core_Loader::isCallable("Libs_Module")) {
+                if (CoreLoader::isCallable("Libs_Module")) {
                     foreach ($this->getTargetModules() as $modSelected) {
                         if ($modSelected === "all" || Libs_Module::isSelected($modSelected)) {
                             $rslt = true;
