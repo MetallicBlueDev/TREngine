@@ -250,7 +250,7 @@ class Core_Translate {
         // Traduction uniquement si besoin
         if (!$loaded) {
             $this->cache = array();
-            $loaded = CoreLoader::langLoader($pathLang);
+            $loaded = CoreLoader::translateLoader($pathLang);
 
             if ($loaded && !empty($this->cache)) {
                 $langCacheFileName = self::getLangCacheFileName($pathLang) . $this->languageUsed . ".php";
