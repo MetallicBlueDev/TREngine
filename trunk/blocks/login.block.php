@@ -42,7 +42,7 @@ class Block_Login extends Block_Model {
         if (!empty($this->localView)) {
             echo $this->render();
         } else {
-            $libsMakeStyle = new Libs_MakeStyle();
+            $libsMakeStyle = new LibsMakeStyle();
             $libsMakeStyle->assign("blockTitle", $this->getBlockData()->getTitle());
             $libsMakeStyle->assign("blockContent", $this->render());
             $libsMakeStyle->display($this->getBlockData()->getTemplateName());
@@ -116,7 +116,7 @@ class Block_Login extends Block_Model {
      * @return string
      */
     private function &logon($moreLink) {
-        $form = new Libs_Form("login-logonblock");
+        $form = new LibsForm("login-logonblock");
         $form->addInputText("login", LOGIN, "", "maxlength=\"180\"");
         $form->addInputPassword("password", PASSWORD, "maxlength=\"180\"");
         $form->addInputHidden("referer", urlencode(base64_encode(CoreRequest::getString("QUERY_STRING", "", "SERVER"))));
@@ -136,7 +136,7 @@ class Block_Login extends Block_Model {
      * @return string
      */
     private function &forgetlogin($moreLink) {
-        $form = new Libs_Form("login-forgetloginblock");
+        $form = new LibsForm("login-forgetloginblock");
         $form->addInputText("mail", MAIL . " ");
         $form->addInputHidden("mod", "connect");
         $form->addInputHidden("view", "forgetlogin");
@@ -154,7 +154,7 @@ class Block_Login extends Block_Model {
      * @return string
      */
     private function &forgetpass($moreLink) {
-        $form = new Libs_Form("login-forgetpassblock");
+        $form = new LibsForm("login-forgetpassblock");
         $form->addInputText("login", LOGIN . " ");
         $form->addInputHidden("mod", "connect");
         $form->addInputHidden("view", "forgetpass");
@@ -166,7 +166,7 @@ class Block_Login extends Block_Model {
     }
 
     private function &registration($moreLink) { // TODO registration block a coder
-        $form = new Libs_Form("login-registrationblock");
+        $form = new LibsForm("login-registrationblock");
         $form->addInputText("login", LOGIN . " ");
         $form->addInputHidden("mod", "connect");
         $form->addInputHidden("view", "registration");

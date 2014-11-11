@@ -19,7 +19,7 @@ class Module_Connect_Index extends Module_Model {
     public function account() {
         if (CoreSession::hasConnection()) {
             // Ajout des formulaires dans les onglets
-            $accountTabs = new Libs_Tabs("accounttabs");
+            $accountTabs = new LibsTabs("accounttabs");
             $accountTabs->addTab(ACCOUNT_PROFILE, $this->tabProfile());
             $accountTabs->addTab(ACCOUNT_PRIVATE, $this->tabAccount());
             $accountTabs->addTab(ACCOUNT_AVATAR, $this->tabAvatar());
@@ -33,7 +33,7 @@ class Module_Connect_Index extends Module_Model {
     }
 
     private function tabProfile() {
-        $form = new Libs_Form("account-profile");
+        $form = new LibsForm("account-profile");
         $form->setTitle(ACCOUNT_PROFILE_TITLE);
         $form->setDescription(ACCOUNT_PROFILE_DESCRIPTION);
         $form->addSpace();
@@ -80,7 +80,7 @@ class Module_Connect_Index extends Module_Model {
     private function tabAccount() {
         $userInfos = CoreSession::getInstance()->getUserInfos();
 
-        $form = new Libs_Form("account-accountprivate");
+        $form = new LibsForm("account-accountprivate");
         $form->setTitle(ACCOUNT_PRIVATE_TITLE);
         $form->setDescription(ACCOUNT_PRIVATE_DESCRIPTION);
         $form->addSpace();
@@ -103,10 +103,10 @@ class Module_Connect_Index extends Module_Model {
         $form->addSelectCloseTag();
 
         // Liste des templates disponibles
-        if (CoreLoader::isCallable("Libs_MakeStyle")) {
+        if (CoreLoader::isCallable("LibsMakeStyle")) {
             $form->addSelectOpenTag("template", ACCOUNT_PRIVATE_TEMPLATE);
-            $templates = Libs_MakeStyle::getTemplateList();
-            $currentTemplate = Libs_MakeStyle::getCurrentTemplate();
+            $templates = LibsMakeStyle::getTemplateList();
+            $currentTemplate = LibsMakeStyle::getCurrentTemplate();
             $form->addSelectItemTag($currentTemplate, "", true);
             foreach ($templates as $template) {
                 if ($template == $currentTemplate)
@@ -193,7 +193,7 @@ class Module_Connect_Index extends Module_Model {
     }
 
     private function tabAvatar() {
-        $form = new Libs_Form("account-avatar");
+        $form = new LibsForm("account-avatar");
         $form->setTitle(ACCOUNT_AVATAR_TITLE);
         $form->setDescription(ACCOUNT_AVATAR_DESCRIPTION);
         $form->addSpace();
@@ -207,7 +207,7 @@ class Module_Connect_Index extends Module_Model {
     private function tabAdmin() {
         $userInfos = CoreSession::getInstance()->getUserInfos();
 
-        $form = new Libs_Form("account-admin");
+        $form = new LibsForm("account-admin");
         $form->setTitle(ACCOUNT_ADMIN_TITLE);
         $form->setDescription(ACCOUNT_ADMIN_DESCRIPTION);
 
@@ -280,7 +280,7 @@ class Module_Connect_Index extends Module_Model {
             }
 
             if (CoreMain::getInstance()->isDefaultLayout() || (empty($login) && empty($password))) {
-                $form = new Libs_Form("login-logon");
+                $form = new LibsForm("login-logon");
                 $form->setTitle(LOGIN_FORM_TITLE);
                 $form->setDescription(LOGIN_FORM_DESCRIPTION);
                 $form->addInputText("login", LOGIN, "", "maxlength=\"180\" value=\"" . $login . "\"");
@@ -348,7 +348,7 @@ class Module_Connect_Index extends Module_Model {
                 CoreLogger::addInformationMessage(FORGET_LOGIN_IS_SUBMIT_TO . " " . $mail);
             } else {
                 if (CoreMain::getInstance()->isDefaultLayout() || empty($mail)) {
-                    $form = new Libs_Form("login-forgetlogin");
+                    $form = new LibsForm("login-forgetlogin");
                     $form->setTitle(FORGET_LOGIN_TITLE);
                     $form->setDescription(FORGET_LOGIN_DESCRIPTION);
                     $form->addInputText("mail", MAIL);
@@ -400,7 +400,7 @@ class Module_Connect_Index extends Module_Model {
                 CoreLogger::addInformationMessage(FORGET_PASSWORD_IS_SUBMIT_TO . " " . $mail);
             } else {
                 if (CoreMain::getInstance()->isDefaultLayout() || empty($login)) {
-                    $form = new Libs_Form("login-forgetpass");
+                    $form = new LibsForm("login-forgetpass");
                     $form->setTitle(FORGET_PASSWORD_TITLE);
                     $form->setDescription(FORGET_PASSWORD_DESCRIPTION);
                     $form->addInputText("login", LOGIN);

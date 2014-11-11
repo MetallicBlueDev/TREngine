@@ -4,7 +4,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class Module_Management_Systeminfo extends Module_Model {
 
     public function setting() {
-        $accountTabs = new Libs_Tabs("systeminfotab");
+        $accountTabs = new LibsTabs("systeminfotab");
         $accountTabs->addTab(SYSTEMINFO_SYSTEM_INFO_TAB, $this->tabSystemInfo());
         $accountTabs->addTab(SYSTEMINFO_PHP_INFO_TAB, $this->tabPhpInfo());
 
@@ -20,7 +20,7 @@ class Module_Management_Systeminfo extends Module_Model {
                 70,
                 SYSTEMINFO_SYSTEM_INFO_VALUE)
         );
-        $rack = new Libs_Rack($firstLine);
+        $rack = new LibsRack($firstLine);
 
         $modeActivedContent = "";
         $coreCache = CoreCache::getInstance();

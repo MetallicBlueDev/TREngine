@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Libs_Block {
+class LibsBlock {
 
     /**
      * Nom du fichier cache de bannissement.
@@ -94,14 +94,14 @@ class Libs_Block {
     /**
      * Gestionnnaire de blocks.
      *
-     * @var Libs_Block
+     * @var LibsBlock
      */
     private static $libsBlock = null;
 
     /**
      * Blocks chargés.
      *
-     * @var Libs_BlockData[]
+     * @var LibsBlockData[]
      */
     private $blocksInfo = array();
 
@@ -112,11 +112,11 @@ class Libs_Block {
     /**
      * Instance du gestionnaire de block.
      *
-     * @return Libs_Block
+     * @return LibsBlock
      */
     public static function &getInstance() {
         if (self::$libsBlock === null) {
-            self::$libsBlock = new Libs_Block();
+            self::$libsBlock = new LibsBlock();
         }
         return self::$libsBlock;
     }
@@ -245,7 +245,7 @@ class Libs_Block {
      * Retourne les informations du block cible.
      *
      * @param int $blockId l'identifiant du block.
-     * @return Libs_BlockData Informations sur le block.
+     * @return LibsBlockData Informations sur le block.
      */
     public function &getInfoBlock($blockId) {
         $blockInfo = null;
@@ -286,7 +286,7 @@ class Libs_Block {
             }
 
             // Injection des informations du block
-            $blockInfo = new Libs_BlockData($blockData);
+            $blockInfo = new LibsBlockData($blockData);
             $blockInfo->setSideName(self::getSideAsLetters($blockInfo->getSide()));
             $this->blocksInfo[$blockId] = $blockInfo;
         }
@@ -379,7 +379,7 @@ class Libs_Block {
     /**
      * Récupère le block.
      *
-     * @param Libs_BlockData $blockInfo
+     * @param LibsBlockData $blockInfo
      */
     private function get(&$blockInfo) {
         $blockClassName = "Block" . ucfirst($blockInfo->getType());

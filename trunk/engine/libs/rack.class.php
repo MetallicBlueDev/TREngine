@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Libs_Rack {
+class LibsRack {
 
     /**
      * Première ligne définissant les colonnes.

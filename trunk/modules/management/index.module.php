@@ -24,9 +24,9 @@ class Module_Management_Index extends Module_Model {
         $managePage = CoreRequest::getString("manage");
 
         $pageList = self::getManagementList(); // Liste de pages de configuration
-        $moduleList = Libs_Module::getModuleList(); // Liste des modules
+        $moduleList = LibsModule::getModuleList(); // Liste des modules
         // Préparation de la mise en page
-        $libsMakeStyle = new Libs_MakeStyle();
+        $libsMakeStyle = new LibsMakeStyle();
         $libsMakeStyle->assign("pageList", $pageList);
         $libsMakeStyle->assign("moduleList", $moduleList);
 
@@ -59,7 +59,7 @@ class Module_Management_Index extends Module_Model {
 
                     // Ajout du repere au fil d'ariane
                     if (CoreMain::getInstance()->isDefaultLayout()) {
-                        Libs_Breadcrumb::getInstance()->addTrail(
+                        LibsBreadcrumb::getInstance()->addTrail(
                         $currentPageName, "?mod=management&manage=" . $pageSelected
                         );
                     }

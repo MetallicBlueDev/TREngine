@@ -12,7 +12,7 @@ abstract class Module_Model {
     /**
      * Informations sur le module.
      *
-     * @var Libs_ModuleData
+     * @var LibsModuleData
      */
     private $data = null;
 
@@ -61,7 +61,7 @@ abstract class Module_Model {
     /**
      * Affecte les données du module.
      *
-     * @param Libs_ModuleData $data
+     * @param LibsModuleData $data
      */
     public function setModuleData(&$data) {
         $this->data = $data;
@@ -70,12 +70,12 @@ abstract class Module_Model {
     /**
      * Retourne le données du module.
      *
-     * @return Libs_ModuleData
+     * @return LibsModuleData
      */
     public function &getModuleData() {
         if ($this->data === null) {
             $empty = array();
-            $this->data = new Libs_ModuleData($empty);
+            $this->data = new LibsModuleData($empty);
         }
         return $this->data;
     }

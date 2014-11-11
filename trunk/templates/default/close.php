@@ -23,7 +23,7 @@
                 <br /><?php echo $closeText; ?>
                 <br /><br /><?php echo CoreMain::getInstance()->getDefaultSiteCloseReason(); ?>
                 <br />
-                <?php echo Libs_Block::getInstance()->getBlock(); ?>
+                <?php echo LibsBlock::getInstance()->getBlock(); ?>
             </div>
         </div>
         <?php echo CoreHtml::getInstance()->getMetaFooters(); ?>

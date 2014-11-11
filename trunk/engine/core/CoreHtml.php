@@ -213,8 +213,8 @@ class CoreHtml {
      * @param string $options
      */
     public function addCssTemplateFile($fileName, $options = "") {
-        if (CoreLoader::isCallable("Libs_MakeStyle")) {
-            $this->addCssFile(Libs_MakeStyle::getTemplatesDir() . "/" . Libs_MakeStyle::getCurrentTemplate() . "/" . $fileName, $options);
+        if (CoreLoader::isCallable("LibsMakeStyle")) {
+            $this->addCssFile(LibsMakeStyle::getTemplatesDir() . "/" . LibsMakeStyle::getCurrentTemplate() . "/" . $fileName, $options);
         }
     }
 
@@ -234,8 +234,8 @@ class CoreHtml {
                 // Titre automatique
                 $title .= " - " . $coreMain->getDefaultSiteSlogan();
 
-                if (CoreLoader::isCallable("Libs_Module")) {
-                    $title .= " / " . Libs_Module::getInstance()->getInfoModule()->getName();
+                if (CoreLoader::isCallable("LibsModule")) {
+                    $title .= " / " . LibsModule::getInstance()->getInfoModule()->getName();
                 }
             } else {
                 // Titre manuel
@@ -258,7 +258,7 @@ class CoreHtml {
         . "<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n"
         . "<meta http-equiv=\"content-script-type\" content=\"text/javascript\" />\n"
         . "<meta http-equiv=\"content-style-type\" content=\"text/css\" />\n"
-        . "<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"" . Libs_MakeStyle::getTemplatesDir() . "/" . Libs_MakeStyle::getCurrentTemplate() . "/favicon.ico\" />\n"
+        . "<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"" . LibsMakeStyle::getTemplatesDir() . "/" . LibsMakeStyle::getCurrentTemplate() . "/favicon.ico\" />\n"
         . $this->getMetaIncludeJavascript()
         . $this->getMetaIncludeCss();
     }

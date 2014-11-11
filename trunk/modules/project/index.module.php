@@ -21,7 +21,7 @@ class Module_Project_Index extends Module_Model {
         );
 
         CoreHtml::getInstance()->addCssTemplateFile("module_project.css");
-        $libsMakeStyle = new Libs_MakeStyle("module_project_list");
+        $libsMakeStyle = new LibsMakeStyle("module_project_list");
         $libsMakeStyle->assign("title", PROJECTS_LIST_TITLE);
         $libsMakeStyle->assign("description", PROJECTS_LIST_DESCRIPTION);
 
@@ -64,12 +64,12 @@ class Module_Project_Index extends Module_Model {
                 CoreHtml::getInstance()->addCssTemplateFile("module_project.css");
 
                 // Création de la page
-                $form = new Libs_Form(
+                $form = new LibsForm(
                 "project_description", CoreUrlRewriting::getLink("?mod=project&view=download&&projectId=" . $projectInfo['projectid'])
                 );
                 $form->setTitle($projectInfo['name']);
 
-                $libsMakeStyle = new Libs_MakeStyle("module_project_description");
+                $libsMakeStyle = new LibsMakeStyle("module_project_description");
                 $libsMakeStyle->assign("projectInfo", $projectInfo);
 
                 $form->addHtmlInFieldset($libsMakeStyle->render());

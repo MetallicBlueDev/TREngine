@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Libs_Menu {
+class LibsMenu {
 
     /**
      * Identifiant du menu.
@@ -135,7 +135,7 @@ class Libs_Menu {
 
             // Ajoute et monte tout les items
             foreach ($menus as $key => $item) {
-                $newElement = new Libs_MenuElement($item, $this->items);
+                $newElement = new LibsMenuElement($item, $this->items);
                 $newElement->setRoute(array(
                     $key));
                 $this->items[$key] = $newElement;

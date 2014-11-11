@@ -6,12 +6,12 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Libs_Breadcrumb {
+class LibsBreadcrumb {
 
     /**
      * Instance de la classe.
      *
-     * @var Libs_Breadcrumb
+     * @var LibsBreadcrumb
      */
     private static $libsBreadcrumb = null;
 
@@ -28,13 +28,13 @@ class Libs_Breadcrumb {
     }
 
     /**
-     * Retoune l'instance Libs_Breadcrumb.
+     * Retoune l'instance LibsBreadcrumb.
      *
-     * @return Libs_Breadcrumb
+     * @return LibsBreadcrumb
      */
     public static function &getInstance() {
         if (self::$libsBreadcrumb === null) {
-            self::$libsBreadcrumb = new Libs_Breadcrumb();
+            self::$libsBreadcrumb = new LibsBreadcrumb();
         }
         return self::$libsBreadcrumb;
     }

@@ -435,7 +435,7 @@ class CoreSession {
             $mail = Exec_Mailer::protectedDisplay($mail, $coreMain->getDefaultSiteName());
             $reason = $coreSql->fetchArray()['reason'];
 
-            $libsMakeStyle = new Libs_MakeStyle();
+            $libsMakeStyle = new LibsMakeStyle();
             $libsMakeStyle->assign("mail", $mail);
             $libsMakeStyle->assign("reason", Exec_Entities::textDisplay($reason));
             $libsMakeStyle->assign("ip", $this->userIpBan);

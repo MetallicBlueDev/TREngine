@@ -7,7 +7,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Libs_Form {
+class LibsForm {
 
     /**
      * Nom du formulaire.

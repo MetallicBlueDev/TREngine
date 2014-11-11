@@ -375,28 +375,28 @@ class CoreMain {
                 // Affichage classique du site
                 if ($this->doDumb()) {
                     // Mode maintenance: possibilité de s'identifier
-                    Libs_Block::getInstance()->launchBlockType("login");
+                    LibsBlock::getInstance()->launchBlockType("login");
 
                     Exec_TimeMarker::stopMeasurement("main");
 
                     // Affichage des données de la page de maintenance (fermeture)
-                    $libsMakeStyle = new Libs_MakeStyle();
+                    $libsMakeStyle = new LibsMakeStyle();
                     $libsMakeStyle->assign("closeText", ERROR_DEBUG_CLOSE);
                     $libsMakeStyle->display("close");
                 } else {
                     // Mode normal: exécution général
-                    Libs_Module::getInstance()->launch();
-                    Libs_Block::getInstance()->launchAllBlock();
+                    LibsModule::getInstance()->launch();
+                    LibsBlock::getInstance()->launchAllBlock();
 
                     Exec_TimeMarker::stopMeasurement("main");
 
-                    $libsMakeStyle = new Libs_MakeStyle();
+                    $libsMakeStyle = new LibsMakeStyle();
                     $libsMakeStyle->display("index");
                 }
             } else {
                 // Affichage autonome des modules et blocks
                 if ($this->isModuleLayout()) {
-                    $libsModule = Libs_Module::getInstance();
+                    $libsModule = LibsModule::getInstance();
 
                     // Affichage du module uniquement
                     $libsModule->launch();
@@ -405,7 +405,7 @@ class CoreMain {
 
                     echo $libsModule->getModule();
                 } else if ($this->isBlockLayout()) {
-                    $libsBlock = Libs_Block::getInstance();
+                    $libsBlock = LibsBlock::getInstance();
 
                     // Affichage du block uniquement
                     $libsBlock->launchBlockRequested();
@@ -499,7 +499,7 @@ class CoreMain {
         $templateName = CoreSession::getInstance()->getUserInfos()->getTemplate();
 
         // Tentative d'utilisation du template du client
-        if (!Libs_MakeStyle::setCurrentTemplate($templateName)) {
+        if (!LibsMakeStyle::setCurrentTemplate($templateName)) {
             $templateName = null;
         }
 
@@ -507,7 +507,7 @@ class CoreMain {
             $templateName = $this->getDefaultTemplate();
 
             // Tentative d'utilisation du template du site
-            Libs_MakeStyle::setCurrentTemplate($templateName);
+            LibsMakeStyle::setCurrentTemplate($templateName);
         }
     }
 

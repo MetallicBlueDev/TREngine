@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Libs_Captcha {
+class LibsCaptcha {
 
     /**
      * Vérifie l'état initialisation de la classe.
@@ -53,7 +53,7 @@ class Libs_Captcha {
     /**
      * Configuration d'un nouveau captcha
      *
-     * @param object $object (Libs_Form object par exemple)
+     * @param object $object (LibsForm object par exemple)
      */
     public function __construct(&$object = null) {
         // Mode du captcha
@@ -114,7 +114,7 @@ class Libs_Captcha {
 
             if ($this->object !== null) {
                 // TODO A vérifier
-                if ($this->object instanceOf Libs_Form) {
+                if ($this->object instanceOf LibsForm) {
                     $this->object->addInputText("cles", $this->question, "", "", "input captcha");
                     $this->object->addInputHidden($this->inputRobotName, "");
                 }
@@ -131,7 +131,7 @@ class Libs_Captcha {
     /**
      * Vérifie la validité du captcha.
      *
-     * @param Libs_Captcha $object
+     * @param LibsCaptcha $object
      * @return boolean
      */
     public static function &check($object = null) {

@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Libs_MenuElement extends CoreDataStorage {
+class LibsMenuElement extends CoreDataStorage {
 
     /**
      * Attributs de l'élément.
@@ -208,9 +208,9 @@ class Libs_MenuElement extends CoreDataStorage {
     /**
      * Ajoute un enfant à l'item courant.
      *
-     * @param Libs_MenuElement  $child
+     * @param LibsMenuElement  $child
      */
-    public function addChild(Libs_MenuElement &$child) {
+    public function addChild(LibsMenuElement &$child) {
         // Ajout du tag UL si c'est un nouveau parent
         if (empty($this->child)) {
             $this->addTags("ul");
@@ -230,9 +230,9 @@ class Libs_MenuElement extends CoreDataStorage {
     /**
      * Supprime un enfant.
      *
-     * @param Libs_MenuElement $child
+     * @param LibsMenuElement $child
      */
-    public function removeChild(Libs_MenuElement &$child = null) {
+    public function removeChild(LibsMenuElement &$child = null) {
         if ($child === null) {
             foreach (array_keys($this->child) as $key) {
                 unset($this->child[$key]);
@@ -258,7 +258,7 @@ class Libs_MenuElement extends CoreDataStorage {
         // Ajout de la classe active
         if (isset($this->route) && Exec_Utils::inArray($this->getMenuId(), $this->route)) {
             $this->addAttributs("class", "active");
-            Libs_Breadcrumb::getInstance()->addTrail($text);
+            LibsBreadcrumb::getInstance()->addTrail($text);
         }
 
         // Préparation des données

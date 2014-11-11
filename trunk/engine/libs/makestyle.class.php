@@ -7,7 +7,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Libs_MakeStyle {
+class LibsMakeStyle {
 
     /**
      * Dossier contenant les templates.
@@ -65,7 +65,7 @@ class Libs_MakeStyle {
      * Assigne une valeur au template.
      *
      * @param string $key Nome de la variable
-     * @param string or Libs_MakeStyle $value Valeur de la variable
+     * @param string or LibsMakeStyle $value Valeur de la variable
      */
     public function assign($key, $value) {
         $this->fileVars[$key] = is_object($value) ? $value->display() : $value;

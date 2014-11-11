@@ -12,7 +12,7 @@ abstract class Block_Model {
     /**
      * Informations sur le block.
      *
-     * @var Libs_BlockData
+     * @var LibsBlockData
      */
     private $data = null;
 
@@ -40,7 +40,7 @@ abstract class Block_Model {
     /**
      * Affecte les données du block.
      *
-     * @param Libs_BlockData $data
+     * @param LibsBlockData $data
      */
     public function setBlockData(&$data) {
         $this->data = $data;
@@ -49,12 +49,12 @@ abstract class Block_Model {
     /**
      * Retourne le données du block.
      *
-     * @return Libs_BlockData
+     * @return LibsBlockData
      */
     public function &getBlockData() {
         if ($this->data === null) {
             $empty = array();
-            $this->data = new Libs_BlockData($empty);
+            $this->data = new LibsBlockData($empty);
         }
         return $this->data;
     }

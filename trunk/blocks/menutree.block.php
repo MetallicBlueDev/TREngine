@@ -13,7 +13,7 @@ class Block_Menutree extends Block_Menu {
         $menus = $this->getMenu();
         $menus->addAttributs("class", "treeview");
 
-        $libsMakeStyle = new Libs_MakeStyle();
+        $libsMakeStyle = new LibsMakeStyle();
         $libsMakeStyle->assign("blockTitle", $this->getBlockData()->getTitle());
         $libsMakeStyle->assign("blockContent", $menus->render());
         $libsMakeStyle->display($this->getBlockData()->getTemplateName());

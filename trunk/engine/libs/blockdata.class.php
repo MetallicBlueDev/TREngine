@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Libs_BlockData extends CoreDataStorage implements CoreAccessToken {
+class LibsBlockData extends CoreDataStorage implements CoreAccessToken {
 
     /**
      * Position du block en lettre.
@@ -192,9 +192,9 @@ class Libs_BlockData extends CoreDataStorage implements CoreAccessToken {
 
         if (CoreAccess::autorize(CoreAccessType::getTypeFromToken($this))) {
             if ($checkModule) {
-                if (CoreLoader::isCallable("Libs_Module")) {
+                if (CoreLoader::isCallable("LibsModule")) {
                     foreach ($this->getTargetModules() as $modSelected) {
-                        if ($modSelected === "all" || Libs_Module::isSelected($modSelected)) {
+                        if ($modSelected === "all" || LibsModule::isSelected($modSelected)) {
                             $rslt = true;
                             break;
                         }

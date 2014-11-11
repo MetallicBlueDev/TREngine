@@ -6,12 +6,12 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Libs_Module {
+class LibsModule {
 
     /**
      * Instance du gestionnaire de module.
      *
-     * @var Libs_Module
+     * @var LibsModule
      */
     private static $libsModule = null;
 
@@ -82,11 +82,11 @@ class Libs_Module {
      * @param string $module
      * @param string $page
      * @param string $view
-     * @return Libs_Module
+     * @return LibsModule
      */
     public static function &getInstance() {
         if (self::$libsModule === null) {
-            self::$libsModule = new Libs_Module();
+            self::$libsModule = new LibsModule();
         }
         return self::$libsModule;
     }
@@ -127,7 +127,7 @@ class Libs_Module {
      * Retourne les informations du module cible.
      *
      * @param string $moduleName Le nom du module, par défaut le module courant.
-     * @return Libs_ModuleData Informations sur le module.
+     * @return LibsModuleData Informations sur le module.
      */
     public function &getInfoModule($moduleName = "") {
         $moduleInfo = null;
@@ -171,7 +171,7 @@ class Libs_Module {
             }
 
             // Injection des informations du module
-            $moduleInfo = new Libs_ModuleData($moduleData);
+            $moduleInfo = new LibsModuleData($moduleData);
             $this->modulesInfo[$moduleName] = $moduleInfo;
         }
         return $moduleInfo;
@@ -187,8 +187,8 @@ class Libs_Module {
         if (($moduleInfo->installed() && CoreAccess::autorize(CoreAccessType::getTypeFromToken($moduleInfo))) || (!$moduleInfo->installed() && CoreSession::getInstance()->getUserInfos()->hasAdminRank())) {
             if ($moduleInfo->isValid($this->page)) {
 
-                if (CoreLoader::isCallable("Libs_Breadcrumb")) {
-                    $libsBreadcrumb = Libs_Breadcrumb::getInstance();
+                if (CoreLoader::isCallable("LibsBreadcrumb")) {
+                    $libsBreadcrumb = LibsBreadcrumb::getInstance();
                     $libsBreadcrumb->addTrail($moduleInfo->getName(), "?mod=" . $moduleInfo->getName());
 
                     // TODO A MODIFIER
@@ -230,7 +230,7 @@ class Libs_Module {
     /**
      * Récupère le module.
      *
-     * @param Libs_ModuleData $moduleInfo
+     * @param LibsModuleData $moduleInfo
      */
     private function get(&$moduleInfo) {
         $moduleClassName = "Module" . ucfirst($moduleInfo->getName()) . ucfirst($this->page);

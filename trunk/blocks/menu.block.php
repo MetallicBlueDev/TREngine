@@ -18,14 +18,14 @@ class Block_Menu extends Block_Model {
     public function display() {
         $menus = $this->getMenu();
 
-        $libsMakeStyle = new Libs_MakeStyle();
+        $libsMakeStyle = new LibsMakeStyle();
         $libsMakeStyle->assign("blockTitle", $this->getBlockData()->getTitle());
         $libsMakeStyle->assign("blockContent", "<div class=\"menu\">" . $menus->render() . "</div>");
         $libsMakeStyle->display($this->getBlockData()->getTemplateName());
     }
 
     protected function getMenu() {
-        $menus = new Libs_Menu(
+        $menus = new LibsMenu(
         "block" . $this->getBlockData()->getId(), array(
             "table" => CoreTable::MENUS_TABLES,
             "select" => array(

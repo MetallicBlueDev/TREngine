@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Libs_Tabs {
+class LibsTabs {
 
     /**
      * Vérifie si c'est la 1ère instance.

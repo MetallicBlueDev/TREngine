@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Libs_ModuleData extends CoreDataStorage implements CoreAccessToken {
+class LibsModuleData extends CoreDataStorage implements CoreAccessToken {
 
     /**
      * Les données compilées du module.
@@ -123,7 +123,7 @@ class Libs_ModuleData extends CoreDataStorage implements CoreAccessToken {
      * @return boolean
      */
     public function isValid($page = "") {
-        return Libs_Module::getInstance()->isModule($this->getName(), $page);
+        return LibsModule::getInstance()->isModule($this->getName(), $page);
     }
 
     /**
