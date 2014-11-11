@@ -29,7 +29,7 @@ abstract class CoreTransaction extends CoreDataStorage {
      * Paramètre la connexion, test la connexion puis engage une connexion.
      *
      * @param array $transaction
-     * @throws Fail_Engine
+     * @throws FailEngine
      */
     public function initialize(array &$transaction) {
         if (!$this->initialized()) {
@@ -57,10 +57,10 @@ abstract class CoreTransaction extends CoreDataStorage {
      * Lance une exception pour gérant ce type de transaction.
      *
      * @param string $message
-     * @throws Fail_Engine
+     * @throws FailEngine
      */
     protected function throwException($message) {
-        throw new Fail_Engine($message);
+        throw new FailEngine($message);
     }
 
     /**

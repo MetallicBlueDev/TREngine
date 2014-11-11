@@ -6,10 +6,10 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Fail_Engine extends Fail_Base {
+class FailEngine extends FailBase {
 
     public function __construct($message) {
-        parent::__construct($message, Fail_Base::FROM_ENGINE);
+        parent::__construct($message, FailBase::FROM_ENGINE);
     }
 
 }

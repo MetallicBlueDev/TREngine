@@ -6,10 +6,10 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Fail_Sql extends Fail_Base {
+class FailSql extends FailBase {
 
     public function __construct($message) {
-        parent::__construct($message, Fail_Base::FROM_SQL);
+        parent::__construct($message, FailBase::FROM_SQL);
     }
 
 }

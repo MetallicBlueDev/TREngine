@@ -59,7 +59,7 @@ class CoreLoader {
     public static function affectRegister() {
         try {
             if (!is_null(self::$loaded)) {
-                throw new Fail_Loader("Loader already registered");
+                throw new FailLoader("Loader already registered");
             }
 
             self::$loaded = array();
@@ -67,7 +67,7 @@ class CoreLoader {
             if (!spl_autoload_register(array(
                 'TREngine\Engine\Core\CoreLoader',
                 'classLoader'), true)) {
-                throw new Fail_Loader("spl_autoload_register fail");
+                throw new FailLoader("spl_autoload_register fail");
             }
         } catch (Exception $ex) {
             CoreSecure::getInstance()->throwException("loader", $ex);
@@ -195,7 +195,7 @@ class CoreLoader {
     private static function &load($name, $ext) {
         try {
             if (empty($name)) {
-                throw new Fail_Loader("loader");
+                throw new FailLoader("loader");
             }
 
             $loaded = self::isLoaded($name);
@@ -219,7 +219,7 @@ class CoreLoader {
                             // Aucune traduction disponible
                             break;
                         default:
-                            throw new Fail_Loader("loader");
+                            throw new FailLoader("loader");
                     }
                 }
             }
@@ -284,7 +284,7 @@ class CoreLoader {
                 $path = $name . "." . $ext;
                 break;
             default:
-                throw new Fail_Loader("loader");
+                throw new FailLoader("loader");
         }
 
         $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path . ".php";

@@ -112,7 +112,7 @@ class CoreSecure {
         $this->locked = true;
 
         if ($ex === null) {
-            $ex = new Fail_Engine($customMessage);
+            $ex = new FailEngine($customMessage);
         }
 
         // Préparation du template debug
@@ -163,7 +163,7 @@ class CoreSecure {
         // Analyse de l'exception
         if ($ex !== null) {
             if ($this->debuggingMode) {
-                if ($ex instanceof Fail_Base) {
+                if ($ex instanceof FailBase) {
                     $errorMessage[] = $ex->getFailInformation();
                 } else {
                     $errorMessage[] = "Exception PHP (" . $ex->getCode() . ") : " . $ex->getMessage();

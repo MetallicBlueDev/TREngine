@@ -285,7 +285,7 @@ class CoreSql extends BaseModel {
 
         // Création d'une exception si une réponse est négative (false)
         if ($this->getQueries() === false) {
-            throw new Fail_Sql("sqlReq");
+            throw new FailSql("sqlReq");
         }
     }
 

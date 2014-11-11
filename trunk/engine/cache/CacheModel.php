@@ -18,7 +18,7 @@ abstract class CacheModel extends CoreTransaction {
     protected $chmod = 0777;
 
     protected function throwException($message) {
-        throw new Fail_Cache("cache" . $message);
+        throw new FailCache("cache" . $message);
     }
 
     public function initialize(array &$transaction) {
