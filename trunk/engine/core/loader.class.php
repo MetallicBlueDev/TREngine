@@ -260,7 +260,7 @@ class Core_Loader {
                 break;
         }
 
-        require($path);
+        require $path;
         self::$loaded[$name] = $path;
         $loaded = true;
 

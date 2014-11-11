@@ -5,12 +5,12 @@ if (!defined("TR_ENGINE_INITIALIZED")) {
 
     // Vérification de la version PHP (en 1er)
     if (!class_exists("Core_Info", false)) {
-        require(DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "info.class.php");
+        require DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'info.class.php';
     }
 
     // Inclusion du chargeur si besoin
     if (!class_exists("Core_Loader", false)) {
-        require(DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "loader.class.php");
+        require DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'loader.class.php';
     }
 }
 

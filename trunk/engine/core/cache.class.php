@@ -496,7 +496,7 @@ class Core_Cache extends Cache_Model {
 
         // Capture du fichier
         if ($this->cached($path)) {
-            require($this->getCurrentSectionPath($path, true));
+            require $this->getCurrentSectionPath($path, true);
         }
         return ${$variableName};
     }

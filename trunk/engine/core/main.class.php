@@ -452,7 +452,7 @@ class Core_Main {
         // TODO installation a coder
 //        $installPath = TR_ENGINE_DIR . "/install/index.php";
 //        if (is_file($installPath)) {
-//            require($installPath);
+//            require $installPath;
 //        }
     }
 
