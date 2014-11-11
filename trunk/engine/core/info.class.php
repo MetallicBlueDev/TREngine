@@ -1,33 +1,14 @@
 <?php
-/*
- * NOTE IMPORTANTE : tout ce fichier doit être compatible PHP 4.
- */
 if (preg_match("/info.class.php/ie", $_SERVER['PHP_SELF'])) {
     exit();
 }
-
-/**
- * Version php sous forme x.x.x.x (exemple : 5.2.9.2).
- */
-define("TR_ENGINE_PHP_VERSION", preg_replace("/[^0-9.]/", "", (preg_replace("/(_|-|[+])/", ".", phpversion()))));
-
-// Si une version PHP OO moderne n'est pas détecté
-if (TR_ENGINE_PHP_VERSION < "5.0.0") {
-    echo"<b>Sorry, but the PHP version currently running is too old to understand TR ENGINE.</b>"
-    . "<br /><br />MINIMAL PHP VERSION : 5.0.0"
-    . "<br />YOUR PHP VERSION : " . TR_ENGINE_PHP_VERSION;
-    exit();
-}
-
-// Initalisation de toutes les autres informations de base
-Core_Info::initialize();
 
 /**
  * Recherche d'information rapide.
  *
  * @author Sébastien Villemain
  */
-class Core_Info {
+class CoreInfo {
 
     private static $initialized = false;
 
@@ -38,7 +19,7 @@ class Core_Info {
     public static function initialize() {
         if (!self::$initialized) {
             self::$initialized = true;
-            $info = new Core_Info();
+            $info = new CoreInfo();
 
             /**
              * Chemin jusqu'à la racine.

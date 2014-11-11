@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Core;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -27,7 +30,7 @@ class CoreLoader {
             self::$loaded = array();
 
             if (!spl_autoload_register(array(
-                'CoreLoader',
+                'TREngine\Engine\Core\CoreLoader',
                 'classLoader'), true)) {
                 throw new Fail_Loader("spl_autoload_register fail");
             }

@@ -41,7 +41,7 @@ class Core_Secure {
         $this->checkRequestReferer();
         $this->checkGPC();
 
-        // Attention: il ne faut pas définir l'index avant Core_Info mais avant CoreLoader
+        // Attention: il ne faut pas définir l'index avant CoreInfo mais avant CoreLoader
         if (!defined("TR_ENGINE_INDEX")) {
             $this->locked = true;
             define("TR_ENGINE_INDEX", true);
