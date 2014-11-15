@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Fail;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
