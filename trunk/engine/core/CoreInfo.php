@@ -20,10 +20,27 @@ class CoreInfo {
 
     }
 
+    /**
+     * Détermine si la version PHP actuelle est compatible.
+     *
+     * @return boolean
+     */
+    public static function compatibleVersion() {
+        return (TR_ENGINE_PHP_VERSION >= "5.0.0");
+    }
+
+    /**
+     * Initilisation des contantes d'informations.
+     */
     public static function initialize() {
         if (!self::$initialized) {
             self::$initialized = true;
             $info = new CoreInfo();
+
+            /**
+             * Version php sous forme x.x.x.x (exemple : 5.2.9.2).
+             */
+            define("TR_ENGINE_PHP_VERSION", $this->getPhpVersion());
 
             /**
              * Chemin jusqu'à la racine.
@@ -66,6 +83,15 @@ class CoreInfo {
              */
             define("TR_ENGINE_VERSION", "0.6.0.0");
         }
+    }
+
+    /**
+     * Retourne la version du PHP.
+     *
+     * @return String
+     */
+    private function getPhpVersion() {
+        return preg_replace("/[^0-9.]/", "", (preg_replace("/(_|-|[+])/", ".", phpversion())));
     }
 
     /**

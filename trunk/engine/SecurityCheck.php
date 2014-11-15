@@ -12,22 +12,17 @@ if (!defined("TR_ENGINE_INITIALIZED")) {
 
     // Vérification de la version PHP (en 1er)
     if (!class_exists("CoreInfo", false)) {
-        /**
-         * Version php sous forme x.x.x.x (exemple : 5.2.9.2).
-         */
-        define("TR_ENGINE_PHP_VERSION", preg_replace("/[^0-9.]/", "", (preg_replace("/(_|-|[+])/", ".", phpversion()))));
+        require DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'CoreInfo.php';
+
+        // Initalisation de toutes les autres informations de base
+        CoreInfo::initialize();
 
         // Si une version PHP OO moderne n'est pas détecté
-        if (TR_ENGINE_PHP_VERSION < "5.0.0") {
+        if (!CoreInfo::compatibleVersion()) {
             echo"<b>Sorry, but the PHP version currently running is too old to understand TR ENGINE.</b>"
-            . "<br /><br />MINIMAL PHP VERSION : 5.0.0"
             . "<br />YOUR PHP VERSION : " . TR_ENGINE_PHP_VERSION;
             exit();
         }
-
-        // Initalisation de toutes les autres informations de base
-        require DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'CoreInfo.php';
-        CoreInfo::initialize();
     }
 
     // Inclusion du chargeur si besoin
