@@ -1,4 +1,7 @@
 <?php
+
+namespace TREngine\Engine\Cache;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 // TODO il faut verifier entierement les paths de la classe
 
