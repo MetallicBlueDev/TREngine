@@ -88,7 +88,7 @@ class CoreInfo {
     /**
      * Retourne la version du PHP.
      *
-     * @return String
+     * @return string
      */
     private function getPhpVersion() {
         return preg_replace("/[^0-9.]/", "", (preg_replace("/(_|-|[+])/", ".", phpversion())));
