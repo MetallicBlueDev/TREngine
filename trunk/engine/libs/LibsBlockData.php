@@ -37,7 +37,7 @@ class LibsBlockData extends CoreDataStorage implements CoreAccessToken {
 
         $this->newStorage($data);
         $this->updateDataValue("mods", explode("|", $this->getDataValue("mods")));
-        $this->updateDataValue("title", Exec_Entities::textDisplay($this->getDataValue("title")));
+        $this->updateDataValue("title", ExecEntities::textDisplay($this->getDataValue("title")));
     }
 
     /**

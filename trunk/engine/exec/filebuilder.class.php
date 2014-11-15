@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Exec_FileBuilder {
+class ExecFileBuilder {
 
     /**
      * Génére un nouveau fichier de configuration générale

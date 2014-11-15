@@ -69,7 +69,7 @@ class Block_Login extends Block_Model {
                 $content .= WELCOME . " <b>" . $userInfos->getName() . "</b> !<br />";
             }
             if ($this->displayAvatar && !empty($userInfos->getAvatar())) {
-                $content .= CoreHtml::getLink("mod=connect&view=account", Exec_Image::resize($userInfos->getAvatar(), 80)) . "<br />";
+                $content .= CoreHtml::getLink("mod=connect&view=account", ExecImage::resize($userInfos->getAvatar(), 80)) . "<br />";
             }
             if ($this->displayIcons) {
                 $content .= CoreHtml::getLink("mod=connect&view=logout", LOGOUT) . "<br />"

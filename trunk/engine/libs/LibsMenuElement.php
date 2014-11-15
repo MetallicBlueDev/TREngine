@@ -112,7 +112,7 @@ class LibsMenuElement extends CoreDataStorage {
             }
 
             // Vérification des valeurs déjà enregistrées
-            if (!Exec_Utils::inArray($value, $this->attributs[$name])) {
+            if (!ExecUtils::inArray($value, $this->attributs[$name])) {
                 if ($value === "parent") {
                     array_unshift($this->attributs[$name], $value);
                 } else if ($value === "active") {
@@ -256,7 +256,7 @@ class LibsMenuElement extends CoreDataStorage {
         }
 
         // Ajout de la classe active
-        if (isset($this->route) && Exec_Utils::inArray($this->getMenuId(), $this->route)) {
+        if (isset($this->route) && ExecUtils::inArray($this->getMenuId(), $this->route)) {
             $this->addAttributs("class", "active");
             LibsBreadcrumb::getInstance()->addTrail($text);
         }

@@ -93,7 +93,7 @@ class CoreHtml {
         }
 
         // Composition du nom du cookie de test
-        $this->cookieTestName = Exec_Crypt::cryptData(
+        $this->cookieTestName = ExecCrypt::cryptData(
         $prefix . "_" . $this->cookieTestName, self::getSalt(), "md5+"
         );
 
@@ -252,7 +252,7 @@ class CoreHtml {
 
         // TODO ajouter un support RSS XML
 
-        return "<title>" . Exec_Entities::textDisplay($title) . "</title>\n"
+        return "<title>" . ExecEntities::textDisplay($title) . "</title>\n"
         . $this->getMetaKeywords()
         . "<meta name=\"generator\" content=\"TR ENGINE\" />\n"
         . "<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n"
@@ -428,7 +428,7 @@ class CoreHtml {
      */
     private function checkJavascriptEnabled() {
         // Récuperation du cookie en php
-        $cookieTest = Exec_Cookie::getCookie($this->cookieTestName);
+        $cookieTest = ExecCookie::getCookie($this->cookieTestName);
 
         // Vérification de l'existance du cookie
         $this->javaScriptEnabled = ($cookieTest === "1") ? true : false;
@@ -475,8 +475,8 @@ class CoreHtml {
         // 500 caractères maximum
         $keywords = (strlen($keywords) > 500) ? substr($keywords, 0, 500) : $keywords;
 
-        return "<meta name=\"description\" content=\"" . Exec_Entities::textDisplay($this->description) . "\" />\n"
-        . "<meta name=\"keywords\" content=\"" . Exec_Entities::textDisplay($keywords) . "\" />\n";
+        return "<meta name=\"description\" content=\"" . ExecEntities::textDisplay($this->description) . "\" />\n"
+        . "<meta name=\"keywords\" content=\"" . ExecEntities::textDisplay($keywords) . "\" />\n";
     }
 
     /**
@@ -507,7 +507,7 @@ class CoreHtml {
                 }
             }
 
-            if (CoreLoader::isCallable("Exec_Agent") && Exec_Agent::$userBrowserName === "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") {
+            if (CoreLoader::isCallable("ExecAgent") && ExecAgent::$userBrowserName === "Internet Explorer" && ExecAgent::$userBrowserVersion < "7") {
                 $this->addJavascriptFile("pngfix.js", "defer");
             }
         } else {

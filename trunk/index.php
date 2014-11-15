@@ -6,10 +6,10 @@ define("TR_ENGINE_INDEX", true);
 require 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 if (CoreSecure::debuggingMode()) {
-    Exec_TimeMarker::startMeasurement("all");
+    ExecTimeMarker::startMeasurement("all");
 }
 
-Exec_TimeMarker::startMeasurement("main");
+ExecTimeMarker::startMeasurement("main");
 
 // Préparation du moteur
 CoreMain::checkInstance();
@@ -24,6 +24,6 @@ if (CoreMain::getInstance()->newComponentDetected()) {
 }
 
 if (CoreSecure::debuggingMode()) {
-    Exec_TimeMarker::stopMeasurement("all");
+    ExecTimeMarker::stopMeasurement("all");
     CoreLogger::displayDebugInformations();
 }

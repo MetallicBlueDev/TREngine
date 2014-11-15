@@ -273,7 +273,7 @@ class CacheSocket extends CacheModel {
             $this->lastResponseMessage = $parts[0];
 
             // Verification du code recu
-            if (Exec_Utils::inArray($this->lastResponseCode, $expected)) {
+            if (ExecUtils::inArray($this->lastResponseCode, $expected)) {
                 $rslt = true;
             }
         } else {

@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Exec_Mailer {
+class ExecMailer {
 
     /**
      * Vérifie la validité du mail

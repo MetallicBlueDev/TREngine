@@ -258,7 +258,7 @@ class LibsForm {
         $this->addCacheVar($options);
         $options = $this->getLastCacheVar();
 
-        $defaultValue = Exec_Entities::stripSlashes($defaultValue);
+        $defaultValue = ExecEntities::stripSlashes($defaultValue);
         $this->addCacheVar($defaultValue);
         $defaultValue = $this->getLastCacheVar();
 
@@ -316,7 +316,7 @@ class LibsForm {
             $options = "selected=\"selected\"" . ((!empty($options)) ? " " . $options : "");
         }
 
-        $description = ((!empty($description)) ? Exec_Entities::textDisplay($description) : $value);
+        $description = ((!empty($description)) ? ExecEntities::textDisplay($description) : $value);
 
         $this->addCacheVar($value);
         $value = $this->getLastCacheVar();
@@ -435,7 +435,7 @@ class LibsForm {
      */
     private function &getLabel($name, $description) {
         $id = $this->getId($name, "input");
-        $description = Exec_Entities::textDisplay($description);
+        $description = ExecEntities::textDisplay($description);
         $this->addCacheVar($description);
 
         $rslt = "";
@@ -453,7 +453,7 @@ class LibsForm {
      * @return string
      */
     private function &getTitle($title) {
-        $title = Exec_Entities::textDisplay($title);
+        $title = ExecEntities::textDisplay($title);
         $this->addCacheVar($title);
 
         $rslt = "";
@@ -472,7 +472,7 @@ class LibsForm {
      */
     private function &getDescription($description) {
         $id = $this->getId("description");
-        $description = Exec_Entities::textDisplay($description);
+        $description = ExecEntities::textDisplay($description);
         $this->addCacheVar($description);
 
         $rslt = "";

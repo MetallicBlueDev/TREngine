@@ -450,8 +450,8 @@ class CoreTranslate {
      * @return string
      */
     private static function &entitiesTranslate($text) {
-        $text = Exec_Entities::entitiesUtf8($text);
-        //$text = Exec_Entities::addSlashes($text);
+        $text = ExecEntities::entitiesUtf8($text);
+        //$text = ExecEntities::addSlashes($text);
         return $text;
     }
 

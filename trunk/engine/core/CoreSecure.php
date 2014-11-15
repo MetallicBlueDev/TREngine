@@ -138,7 +138,7 @@ class CoreSecure {
         $errorMessageTitle = "ERROR_DEBUG_" . strtoupper($customMessage);
 
         if (defined($errorMessageTitle)) {
-            $errorMessageTitle = Exec_Entities::entitiesUtf8(constant($errorMessageTitle));
+            $errorMessageTitle = ExecEntities::entitiesUtf8(constant($errorMessageTitle));
         } else {
             $errorMessageTitle = "Stop loading";
 

@@ -3,7 +3,7 @@
     <head>
         <?php echo CoreHtml::getInstance()->getMetaHeaders(); ?>
         <link rel="stylesheet" href="templates/default/style.css" type="text/css" />
-        <?php if (CoreLoader::isCallable("Exec_Agent") && Exec_Agent::$userBrowserName == "Internet Explorer" && Exec_Agent::$userBrowserVersion < "7") { ?>
+        <?php if (CoreLoader::isCallable("ExecAgent") && ExecAgent::$userBrowserName == "Internet Explorer" && ExecAgent::$userBrowserVersion < "7") { ?>
             <link rel="stylesheet" href="templates/default/ie6.css" type="text/css" />
         <?php } ?>
     </head>
@@ -49,7 +49,7 @@
 
         <div id="footer">
             <div style="padding: 50px;">
-                Page g&eacute;n&eacute;r&eacute;e en <?php echo Exec_TimeMarker::getMeasurement("main"); ?> ms.
+                Page g&eacute;n&eacute;r&eacute;e en <?php echo ExecTimeMarker::getMeasurement("main"); ?> ms.
             </div>
         </div>
         <?php echo CoreHtml::getInstance()->getMetaFooters(); ?>

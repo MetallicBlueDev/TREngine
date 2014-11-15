@@ -246,7 +246,7 @@ class CoreSession {
      * @return string
      */
     public static function &cryptPass($pass) {
-        return Exec_Crypt::cryptData($pass, $pass, "md5+");
+        return ExecCrypt::cryptData($pass, $pass, "md5+");
     }
 
     /**
@@ -334,7 +334,7 @@ class CoreSession {
             );
         }
 
-        $userIp = Exec_Agent::$userIp;
+        $userIp = ExecAgent::$userIp;
 
         // Recherche de bannissement de session
         if ($this->bannedSession()) {
@@ -364,7 +364,7 @@ class CoreSession {
                 } else {
                     // Suppression du bannissement
                     $this->userIpBan = "";
-                    Exec_Cookie::destroyCookie(self::getCookieName($this->cookieName['BLACKBAN']));
+                    ExecCookie::destroyCookie(self::getCookieName($this->cookieName['BLACKBAN']));
                 }
             }
         } else {
@@ -432,12 +432,12 @@ class CoreSession {
         if ($coreSql->affectedRows() > 0) {
             $coreMain = CoreMain::getInstance();
             $mail = $coreMain->getDefaultAdministratorMail();
-            $mail = Exec_Mailer::protectedDisplay($mail, $coreMain->getDefaultSiteName());
+            $mail = ExecMailer::protectedDisplay($mail, $coreMain->getDefaultSiteName());
             $reason = $coreSql->fetchArray()['reason'];
 
             $libsMakeStyle = new LibsMakeStyle();
             $libsMakeStyle->assign("mail", $mail);
-            $libsMakeStyle->assign("reason", Exec_Entities::textDisplay($reason));
+            $libsMakeStyle->assign("reason", ExecEntities::textDisplay($reason));
             $libsMakeStyle->assign("ip", $this->userIpBan);
             $libsMakeStyle->display("banishment");
         }
@@ -533,7 +533,7 @@ class CoreSession {
                 continue;
             }
 
-            Exec_Cookie::destroyCookie(self::getCookieName($value));
+            ExecCookie::destroyCookie(self::getCookieName($value));
         }
     }
 
@@ -544,20 +544,20 @@ class CoreSession {
      */
     private function &openSession() {
         $rslt = false;
-        $this->sessionId = Exec_Crypt::createId(32);
+        $this->sessionId = ExecCrypt::createId(32);
 
         // Durée de connexion automatique via cookie
         $cookieTimeLimit = $this->timer + $this->cacheTimeLimit;
 
         // Creation des cookies
-        $cookieUser = Exec_Cookie::createCookie(
-        self::getCookieName($this->cookieName['USER']), Exec_Crypt::md5Encrypt(
+        $cookieUser = ExecCookie::createCookie(
+        self::getCookieName($this->cookieName['USER']), ExecCrypt::md5Encrypt(
         $this->userInfos->getId(), self::getSalt()
         ), $cookieTimeLimit
         );
 
-        $cookieSession = Exec_Cookie::createCookie(
-        self::getCookieName($this->cookieName['SESSION']), Exec_Crypt::md5Encrypt(
+        $cookieSession = ExecCookie::createCookie(
+        self::getCookieName($this->cookieName['SESSION']), ExecCrypt::md5Encrypt(
         $this->sessionId, self::getSalt()
         ), $cookieTimeLimit
         );
@@ -647,8 +647,8 @@ class CoreSession {
      */
     private static function &getCookie($cookieName) {
         $cookieName = self::getCookieName($cookieName);
-        $cookieContent = Exec_Cookie::getCookie($cookieName);
-        $cookieContent = Exec_Crypt::md5Decrypt($cookieContent, self::getSalt());
+        $cookieContent = ExecCookie::getCookie($cookieName);
+        $cookieContent = ExecCrypt::md5Decrypt($cookieContent, self::getSalt());
         return $cookieContent;
     }
 
@@ -659,7 +659,7 @@ class CoreSession {
      * @return string
      */
     private static function &getCookieName($cookieName) {
-        return Exec_Crypt::cryptData($cookieName, self::getSalt(), "md5+");
+        return ExecCrypt::cryptData($cookieName, self::getSalt(), "md5+");
     }
 
     /**
@@ -668,7 +668,7 @@ class CoreSession {
      * @return string
      */
     private static function getSalt() {
-        return CoreMain::getInstance()->getCryptKey() . Exec_Agent::$userBrowserName;
+        return CoreMain::getInstance()->getCryptKey() . ExecAgent::$userBrowserName;
     }
 
     /**

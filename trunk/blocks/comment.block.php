@@ -23,7 +23,7 @@ class Block_Comment extends Block_Model {
     public function display() {
         $this->configure();
         // Si le module courant fait partie de la liste des affichages
-        if (CoreLoader::isCallable("LibsModule") && Exec_Utils::inArray(LibsModule::getInstance()->getInfoModule()->getName(), $this->displayOnModule)) {
+        if (CoreLoader::isCallable("LibsModule") && ExecUtils::inArray(LibsModule::getInstance()->getInfoModule()->getName(), $this->displayOnModule)) {
             // Si la position est interieur au module (moduletop ou modulebottom)
             if ($this->getBlockData()->getSide() == 5 || $this->getBlockData()->getSide() == 6) {
                 echo $this->render();

@@ -55,14 +55,14 @@ class CoreMain {
     public static function checkInstance() {
         if (self::$coreMain === null) {
             if (CoreSecure::debuggingMode()) {
-                Exec_TimeMarker::startMeasurement("core");
+                ExecTimeMarker::startMeasurement("core");
             }
 
             self::$coreMain = new CoreMain();
             self::$coreMain->prepare();
 
             if (CoreSecure::debuggingMode()) {
-                Exec_TimeMarker::stopMeasurement("core");
+                ExecTimeMarker::stopMeasurement("core");
             }
         }
     }
@@ -77,7 +77,7 @@ class CoreMain {
             if (is_array($value)) {
                 $this->configs[$key] = $value;
             } else {
-                $this->configs[$key] = Exec_Entities::stripSlashes($value);
+                $this->configs[$key] = ExecEntities::stripSlashes($value);
             }
         }
     }
@@ -345,7 +345,7 @@ class CoreMain {
      */
     public function start() {
         if (CoreSecure::debuggingMode()) {
-            Exec_TimeMarker::startMeasurement("launcher");
+            ExecTimeMarker::startMeasurement("launcher");
         }
 
         CoreTranslate::checkInstance();
@@ -368,7 +368,7 @@ class CoreMain {
             // Isoloire du bannissement
             $coreSession->displayBanishment();
 
-            Exec_TimeMarker::stopMeasurement("main");
+            ExecTimeMarker::stopMeasurement("main");
         } else {
             // Vérification du type d'affichage
             if ($this->isDefaultLayout()) {
@@ -377,7 +377,7 @@ class CoreMain {
                     // Mode maintenance: possibilité de s'identifier
                     LibsBlock::getInstance()->launchBlockType("login");
 
-                    Exec_TimeMarker::stopMeasurement("main");
+                    ExecTimeMarker::stopMeasurement("main");
 
                     // Affichage des données de la page de maintenance (fermeture)
                     $libsMakeStyle = new LibsMakeStyle();
@@ -388,7 +388,7 @@ class CoreMain {
                     LibsModule::getInstance()->launch();
                     LibsBlock::getInstance()->launchAllBlock();
 
-                    Exec_TimeMarker::stopMeasurement("main");
+                    ExecTimeMarker::stopMeasurement("main");
 
                     $libsMakeStyle = new LibsMakeStyle();
                     $libsMakeStyle->display("index");
@@ -401,7 +401,7 @@ class CoreMain {
                     // Affichage du module uniquement
                     $libsModule->launch();
 
-                    Exec_TimeMarker::stopMeasurement("main");
+                    ExecTimeMarker::stopMeasurement("main");
 
                     echo $libsModule->getModule();
                 } else if ($this->isBlockLayout()) {
@@ -410,7 +410,7 @@ class CoreMain {
                     // Affichage du block uniquement
                     $libsBlock->launchBlockRequested();
 
-                    Exec_TimeMarker::stopMeasurement("main");
+                    ExecTimeMarker::stopMeasurement("main");
 
                     echo $libsBlock->getBlock();
                 }
@@ -432,7 +432,7 @@ class CoreMain {
         }
 
         if (CoreSecure::debuggingMode()) {
-            Exec_TimeMarker::stopMeasurement("launcher");
+            ExecTimeMarker::stopMeasurement("launcher");
         } else {
             $this->compressionClose();
         }
@@ -558,7 +558,7 @@ class CoreMain {
         }
 
         // Analyse pour les statistiques
-        Exec_Agent::executeAnalysis();
+        ExecAgent::executeAnalysis();
 
         // Chargement de la session
         CoreSession::checkInstance();
@@ -619,7 +619,7 @@ class CoreMain {
                 $newConfig = array();
 
                 // Vérification de l'adresse email du webmaster
-                if (!Exec_Mailer::validMail($rawConfig["TR_ENGINE_MAIL"])) {
+                if (!ExecMailer::validMail($rawConfig["TR_ENGINE_MAIL"])) {
                     CoreLogger::addException("Default mail isn't valide");
                 }
 
@@ -688,7 +688,7 @@ class CoreMain {
                     foreach ($coreSql->fetchArray() as $row) {
                         $content .= $coreCache->serializeData(array(
                             $row['name'] => $row['value']));
-                        $newConfig[$row['name']] = Exec_Entities::stripSlashes($row['value']);
+                        $newConfig[$row['name']] = ExecEntities::stripSlashes($row['value']);
                     }
 
                     // Mise en cache

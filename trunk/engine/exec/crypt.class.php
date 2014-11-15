@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Exec_Crypt {
+class ExecCrypt {
 
     const METHOD_MD5_POWER = "md5+";
 

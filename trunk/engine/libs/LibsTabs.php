@@ -60,7 +60,7 @@ class LibsTabs {
         $this->selected = CoreRequest::getString("selectedTab");
 
         if (self::$firstInstance) {
-            Exec_JQuery::getIdTabs();
+            ExecJQuery::getIdTabs();
             self::$firstInstance = false;
         }
 
@@ -91,8 +91,8 @@ class LibsTabs {
         $tabSelected = ($this->selected === $idTab);
 
         // TODO A Vérifier
-        $this->tabs .= CoreHtml::getLinkWithAjax($queryString, "#" . $idTab, $idTab, Exec_Entities::textDisplay($title), ($tabSelected ? "class=\"selected\"" : "display=\"none;\""));
-//        $this->tabs .= CoreHtml::getLink($queryString, false, Exec_Entities::textDisplay($title), "window.location=\"#" . $idTab . "\";", $tabSelected ? "class=\"selected\"" : "display=\"none;\""));
+        $this->tabs .= CoreHtml::getLinkWithAjax($queryString, "#" . $idTab, $idTab, ExecEntities::textDisplay($title), ($tabSelected ? "class=\"selected\"" : "display=\"none;\""));
+//        $this->tabs .= CoreHtml::getLink($queryString, false, ExecEntities::textDisplay($title), "window.location=\"#" . $idTab . "\";", $tabSelected ? "class=\"selected\"" : "display=\"none;\""));
 
         $this->tabs .= "</li>";
 

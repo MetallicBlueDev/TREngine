@@ -34,8 +34,8 @@ class Module_Management_Index extends Module_Model {
         $managementScreen = "module_management_index";
         $pageSelected = "";
         if (!empty($managePage)) { // Affichage d'une page de configuration spécial
-            $settingPage = Exec_Utils::inMultiArray($managePage, $pageList);
-            $moduleSettingPage = Exec_Utils::inMultiArray($managePage, $moduleList);
+            $settingPage = ExecUtils::inMultiArray($managePage, $pageList);
+            $moduleSettingPage = ExecUtils::inMultiArray($managePage, $moduleList);
 
             // Si c'est une page valide
             if ($settingPage || $moduleSettingPage) {

@@ -164,7 +164,7 @@ class Module_Management_Setting extends Module_Model {
         // Email du site
         $defaultAdministratorMail = CoreRequest::getString("defaultAdministratorMail", "", "POST");
         if ($coreMain->getDefaultAdministratorMail() != $defaultAdministratorMail) {
-            if (!empty($defaultAdministratorMail) && Exec_Mailer::validMail($defaultAdministratorMail)) {
+            if (!empty($defaultAdministratorMail) && ExecMailer::validMail($defaultAdministratorMail)) {
                 $this->updateTable("defaultAdministratorMail", $defaultAdministratorMail);
                 $deleteCache = true;
             } else {
@@ -175,7 +175,7 @@ class Module_Management_Setting extends Module_Model {
         $defaultLanguage = CoreRequest::getString("defaultLanguage", "", "POST");
         if ($coreMain->getDefaultLanguage() != $defaultLanguage) {
             $langues = CoreTranslate::getLangList();
-            if (!empty($defaultLanguage) && Exec_Utils::inArray($defaultLanguage, $langues)) {
+            if (!empty($defaultLanguage) && ExecUtils::inArray($defaultLanguage, $langues)) {
                 $this->updateTable("defaultLanguage", $defaultLanguage);
                 $deleteCache = true;
             } else {
@@ -186,7 +186,7 @@ class Module_Management_Setting extends Module_Model {
         $defaultTemplate = CoreRequest::getString("defaultTemplate", "", "POST");
         if ($coreMain->getDefaultTemplate() != $defaultTemplate) {
             $templates = LibsMakeStylegetTemplateListes();
-            if (!empty($defaultTemplate) && Exec_Utils::inArray($defaultTemplate, $templates)) {
+            if (!empty($defaultTemplate) && ExecUtils::inArray($defaultTemplate, $templates)) {
                 $this->updateTable("defaultTemplate", $defaultTemplate);
                 $deleteCache = true;
             } else {
@@ -327,7 +327,7 @@ class Module_Management_Setting extends Module_Model {
         }
 
         if ($updateConfigFile) {
-            Exec_FileBuilder::buildConfigFile($coreMain->getDefaultAdministratorMail(), TR_ENGINE_STATUT, $cacheTimeLimit, $cookiePrefix, $cryptKey);
+            ExecFileBuilder::buildConfigFile($coreMain->getDefaultAdministratorMail(), TR_ENGINE_STATUT, $cacheTimeLimit, $cookiePrefix, $cryptKey);
         }
 
         $ftp = $coreMain->getConfigCache();
@@ -382,7 +382,7 @@ class Module_Management_Setting extends Module_Model {
         }
 
         if ($updateFtpFile) {
-            Exec_FileBuilder::buildFtpFile($ftpHost, $ftpPort, $ftpUser, $ftpPass, $ftpRoot, $ftpType);
+            ExecFileBuilder::buildFtpFile($ftpHost, $ftpPort, $ftpUser, $ftpPass, $ftpRoot, $ftpType);
         }
 
         $coreSql = CoreSql::getInstance();
@@ -437,7 +437,7 @@ class Module_Management_Setting extends Module_Model {
         }
 
         if ($updateDatabaseFile) {
-            Exec_FileBuilder::buildDatabaseFile($dbHost, $dbUser, $dbPass, $dbName, $dbType, $dbPrefix);
+            ExecFileBuilder::buildDatabaseFile($dbHost, $dbUser, $dbPass, $dbName, $dbType, $dbPrefix);
         }
 
         if ($coreMain->isDefaultLayout()) {

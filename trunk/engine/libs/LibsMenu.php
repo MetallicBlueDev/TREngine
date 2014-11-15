@@ -104,7 +104,7 @@ class LibsMenu {
      */
     private function loadFromCache() {
         $data = CoreCache::getInstance(CoreCache::SECTION_MENUS)->readCache($this->identifier . ".php");
-        $this->items = unserialize(Exec_Entities::stripSlashes($data));
+        $this->items = unserialize(ExecEntities::stripSlashes($data));
     }
 
     /**

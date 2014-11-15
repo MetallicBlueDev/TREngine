@@ -387,7 +387,7 @@ abstract class BaseModel extends CoreTransaction {
      */
     protected function &addQuote($s, $isValue = false) {
         // Ne pas quoter les champs avec la notation avec les point
-        if (($isValue && !Exec_Utils::inArray($s, $this->quoted)) || (!$isValue && strpos($s, ".") === false && !isset($this->quoted[$s]))) {
+        if (($isValue && !ExecUtils::inArray($s, $this->quoted)) || (!$isValue && strpos($s, ".") === false && !isset($this->quoted[$s]))) {
             if ($isValue) {
                 $q = $this->quoteValue;
             } else {

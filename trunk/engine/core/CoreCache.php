@@ -596,7 +596,7 @@ class CoreCache extends CacheModel {
      * @return string
      */
     private function &serializeVariable($key, $value) {
-        $content = "$" . $this->getVariableName($key) . " = \"" . Exec_Entities::addSlashes($value) . "\"; ";
+        $content = "$" . $this->getVariableName($key) . " = \"" . ExecEntities::addSlashes($value) . "\"; ";
         return $content;
     }
 

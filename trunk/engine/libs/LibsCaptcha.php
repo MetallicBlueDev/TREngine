@@ -84,7 +84,7 @@ class LibsCaptcha {
         $rslt = "";
 
         if ($this->enabled) {
-            $this->inputRobotName = Exec_Crypt::createIdLettres($this->randInt(5, 9));
+            $this->inputRobotName = ExecCrypt::createIdLettres($this->randInt(5, 9));
             $mini = (extension_loaded('gd')) ? 0 : 1;
             $mode = $this->randInt($mini, 5);
 
@@ -124,7 +124,7 @@ class LibsCaptcha {
             }
         }
 
-        Exec_Cookie::createCookie("captcha", addslashes(serialize($this)));
+        ExecCookie::createCookie("captcha", addslashes(serialize($this)));
         return $rslt;
     }
 
@@ -138,7 +138,7 @@ class LibsCaptcha {
         $rslt = false;
 
         if ($object === null || !is_object($object)) {
-            $object = unserialize(stripslashes(Exec_Cookie::getCookie("captcha")));
+            $object = unserialize(stripslashes(ExecCookie::getCookie("captcha")));
         }
 
         if (is_object($object)) {
@@ -323,7 +323,7 @@ class LibsCaptcha {
      * Génére une image.
      */
     private function makePicture() {// TODO a vérifier
-        $this->response = Exec_Crypt::createId($this->randInt(3, 6));
+        $this->response = ExecCrypt::createId($this->randInt(3, 6));
         $this->question = CAPTCHA_MAKE_PICTURE_CODE . ": " . "<img src=\"engine/libs/imagegenerator.php?mode=code&amp;code=" . $this->response . "\" alt=\"\" />\n";
     }
 

@@ -9,7 +9,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class Block_Menujd extends Block_Menu {
 
     public function display() {
-        Exec_JQuery::getJdMenu();
+        ExecJQuery::getJdMenu();
 
         $menus = $this->getMenu();
         if (CoreHtml::getInstance()->javascriptEnabled()) {

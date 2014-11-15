@@ -52,7 +52,7 @@ class Module_Connect_Index extends Module_Model {
         $signature = CoreRequest::getString("signature", "", "POST");
 
         if (!empty($website)) {
-            $values['website'] = Exec_Url::cleanUrl($website);
+            $values['website'] = ExecUrl::cleanUrl($website);
         }
         if (!empty($signature)) {
             $values['signature'] = $signature;
@@ -139,7 +139,7 @@ class Module_Connect_Index extends Module_Model {
                 $validName = true;
 
                 if ($userInfos->getName() != $name) {
-                    $name = Exec_Entities::secureText($name);
+                    $name = ExecEntities::secureText($name);
 
                     CoreSql::getInstance()->select(
                     CoreTable::USERS_TABLE, array(
@@ -153,7 +153,7 @@ class Module_Connect_Index extends Module_Model {
                     }
                 }
                 if ($validName) {
-                    if (Exec_Mailer::validMail($mail)) {
+                    if (ExecMailer::validMail($mail)) {
                         $values = array();
                         if (!empty($pass) || !empty($pass2)) {
                             if ($pass == $pass2) {
@@ -326,7 +326,7 @@ class Module_Connect_Index extends Module_Model {
             $mail = CoreRequest::getString("mail", "", "POST");
 
             if (!empty($mail)) {
-                if (Exec_Mailer::validMail($mail)) {
+                if (ExecMailer::validMail($mail)) {
                     CoreSql::getInstance()->select(
                     CoreTable::USERS_TABLE, array(
                         "name"), array(
@@ -335,7 +335,7 @@ class Module_Connect_Index extends Module_Model {
 
                     if (CoreSql::getInstance()->affectedRows() == 1) {
                         list($login) = CoreSql::getInstance()->fetchArray();
-                        $ok = Exec_Mailer::sendMail(); // TODO envoyer un mail
+                        $ok = ExecMailer::sendMail(); // TODO envoyer un mail
                     }
                     if (!$ok)
                         CoreLogger::addWarningMessage(FORGET_LOGIN_INVALID_MAIL_ACCOUNT);
@@ -386,7 +386,7 @@ class Module_Connect_Index extends Module_Model {
                         list($name, $mail) = CoreSql::getInstance()->fetchArray();
                         if ($name == $login) {
                             // TODO Ajouter un générateur d'id
-                            $ok = Exec_Mailer::sendMail(); // TODO envoyer un mail
+                            $ok = ExecMailer::sendMail(); // TODO envoyer un mail
                         }
                     }
                     if (!$ok)

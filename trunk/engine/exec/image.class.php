@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Exec_Image {
+class ExecImage {
 
     /**
      * Type d'image autorisé
@@ -134,10 +134,10 @@ class Exec_Image {
 
                 function exif_imagetype($filename) {
                     if ((list($width, $height, $type, $attr) = getimagesize($filename)) !== false) {
-                        $key = Exec_Image::getKey($url);
-                        Exec_Image::$width[$key] = $width;
-                        Exec_Image::$height[$key] = $height;
-                        Exec_Image::$type[$key] = $type;
+                        $key = ExecImage::getKey($url);
+                        ExecImage::$width[$key] = $width;
+                        ExecImage::$height[$key] = $height;
+                        ExecImage::$type[$key] = $type;
                         return $type;
                     }
                 }

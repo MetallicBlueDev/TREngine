@@ -71,7 +71,7 @@ class Block_Menu extends Block_Model {
 
         if (preg_match("/(.+)" . self::$optionsTag . "(.*?)" . self::$optionsTag . "/", $line, $matches)) {
             // Conversion du texte
-            $text = Exec_Entities::textDisplay($matches[1]);
+            $text = ExecEntities::textDisplay($matches[1]);
 
             // Recherche des options et style
             $options = explode(".", $matches[2]);
@@ -123,7 +123,7 @@ class Block_Menu extends Block_Model {
         } else {
             // Aucun style appliquer
             // Conversion du texte
-            $outPut = Exec_Entities::textDisplay($line);
+            $outPut = ExecEntities::textDisplay($line);
         }
         return $outPut;
     }

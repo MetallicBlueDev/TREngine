@@ -25,10 +25,10 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
         }
 
         $this->newStorage($data);
-        $this->updateDataValue("name", Exec_Entities::stripSlashes($this->getDataValue("name")));
+        $this->updateDataValue("name", ExecEntities::stripSlashes($this->getDataValue("name")));
         $this->updateDataValue("rank", (int) $this->getDataValue("rank"));
-        $this->updateDataValue("signature", Exec_Entities::stripSlashes($this->getDataValue("signature")));
-        $this->updateDataValue("website", Exec_Entities::stripSlashes($this->getDataValue("website")));
+        $this->updateDataValue("signature", ExecEntities::stripSlashes($this->getDataValue("signature")));
+        $this->updateDataValue("website", ExecEntities::stripSlashes($this->getDataValue("website")));
     }
 
     /**

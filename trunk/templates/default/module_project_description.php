@@ -5,7 +5,7 @@
             if (!empty($projectInfo['img'])) {
                 ?>
                 <a href="<?php echo $projectInfo['img']; ?>">
-                    <?php echo Exec_Image::resize($projectInfo['img'], 128, 128); ?>
+                    <?php echo ExecImage::resize($projectInfo['img'], 128, 128); ?>
                 </a>
                 <?php
             } else {

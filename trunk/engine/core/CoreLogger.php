@@ -147,9 +147,9 @@ class CoreLogger {
                 }
 
                 echo "<br /><br />***********************BENCHMAKER :<br />"
-                . "Core : " . Exec_TimeMarker::getMeasurement("core") . " ms"
-                . "<br />Launcher : " . Exec_TimeMarker::getMeasurement("launcher") . " ms"
-                . "<br />All : " . Exec_TimeMarker::getMeasurement("all") . " ms"
+                . "Core : " . ExecTimeMarker::getMeasurement("core") . " ms"
+                . "<br />Launcher : " . ExecTimeMarker::getMeasurement("launcher") . " ms"
+                . "<br />All : " . ExecTimeMarker::getMeasurement("all") . " ms"
                 . "</div>";
             }
         }

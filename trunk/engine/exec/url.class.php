@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Exec_Url {
+class ExecUrl {
 
     /**
      * Nettoie l'adresse web (URL) du protocole
