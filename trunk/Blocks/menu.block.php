@@ -1,4 +1,14 @@
 <?php
+
+namespace TREngine\Blocks;
+
+use TREngine\Engine\Core\CoreHtml;
+use TREngine\Engine\Core\CoreCache;
+use TREngine\Engine\Core\CoreTable;
+use TREngine\Engine\Lib\LibMakeStyle;
+use TREngine\Engine\Lib\LibMenu;
+use TREngine\Engine\Exec\ExecEntities;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -6,7 +16,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Block_Menu extends BlockModel {
+class BlockMenu extends BlockModel {
 
     /**
      * TAG pour les options
@@ -95,7 +105,7 @@ class Block_Menu extends BlockModel {
                     $link = $options[$key + 1];
                 }
                 if ($value == "POPUP") {
-                    $popup = 1;
+//                    $popup = 1;
                 }
             }
 
@@ -175,5 +185,3 @@ class Block_Menu extends BlockModel {
     }
 
 }
-
-?>

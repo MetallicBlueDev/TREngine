@@ -78,7 +78,7 @@ class LibMenu {
      * @param string $callback
      * @return string
      */
-    public function &render($callback = "Block_Menu::getLine") {
+    public function &render($callback = "BlockMenu::getLine") {
         $route = array();
 
         // Creation du tableau route

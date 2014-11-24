@@ -1,4 +1,10 @@
 <?php
+
+namespace TREngine\Blocks;
+
+use TREngine\Engine\Lib\LibMakeStyle;
+use TREngine\Engine\Exec\ExecJQuery;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -6,7 +12,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Block_Menutree extends Block_Menu {
+class BlockMenutree extends BlockMenu {
 
     public function display() {
         $this->configure();
@@ -45,5 +51,3 @@ class Block_Menutree extends Block_Menu {
     }
 
 }
-
-?>
