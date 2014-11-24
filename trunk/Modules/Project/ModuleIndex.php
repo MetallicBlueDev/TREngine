@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Modules;
+namespace TREngine\Modules\Project;
 
 use TREngine\Engine\Core\CoreRequest;
 use TREngine\Engine\Core\CoreHtml;
@@ -12,7 +12,7 @@ use TREngine\Engine\Exec\ExecJQuery;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
-class ModuleProjectIndex extends ModuleModel {
+class ModuleIndex extends ModuleModel {
 
     const PROJECT_TABLE = "project";
 
