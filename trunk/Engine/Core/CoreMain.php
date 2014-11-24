@@ -2,8 +2,8 @@
 
 namespace TREngine\Engine\Core;
 
-use TREngine\Engine\Libs\LibsBlock;
-use TREngine\Engine\Libs\LibsModule;
+use TREngine\Engine\Lib\LibBlock;
+use TREngine\Engine\Lib\LibModule;
 use TREngine\Engine\Exec\ExecAgent;
 use TREngine\Engine\Exec\ExecMailer;
 use TREngine\Engine\Exec\ExecTimeMarker;
@@ -382,44 +382,44 @@ class CoreMain {
                 // Affichage classique du site
                 if ($this->doDumb()) {
                     // Mode maintenance: possibilité de s'identifier
-                    LibsBlock::getInstance()->launchBlockType("login");
+                    LibBlock::getInstance()->launchBlockType("login");
 
                     ExecTimeMarker::stopMeasurement("main");
 
                     // Affichage des données de la page de maintenance (fermeture)
-                    $libsMakeStyle = new LibsMakeStyle();
-                    $libsMakeStyle->assign("closeText", ERROR_DEBUG_CLOSE);
-                    $libsMakeStyle->display("close");
+                    $libMakeStyle = new LibMakeStyle();
+                    $libMakeStyle->assign("closeText", ERROR_DEBUG_CLOSE);
+                    $libMakeStyle->display("close");
                 } else {
                     // Mode normal: exécution général
-                    LibsModule::getInstance()->launch();
-                    LibsBlock::getInstance()->launchAllBlock();
+                    LibModule::getInstance()->launch();
+                    LibBlock::getInstance()->launchAllBlock();
 
                     ExecTimeMarker::stopMeasurement("main");
 
-                    $libsMakeStyle = new LibsMakeStyle();
-                    $libsMakeStyle->display("index");
+                    $libMakeStyle = new LibMakeStyle();
+                    $libMakeStyle->display("index");
                 }
             } else {
                 // Affichage autonome des modules et blocks
                 if ($this->isModuleLayout()) {
-                    $libsModule = LibsModule::getInstance();
+                    $libModule = LibModule::getInstance();
 
                     // Affichage du module uniquement
-                    $libsModule->launch();
+                    $libModule->launch();
 
                     ExecTimeMarker::stopMeasurement("main");
 
-                    echo $libsModule->getModule();
+                    echo $libModule->getModule();
                 } else if ($this->isBlockLayout()) {
-                    $libsBlock = LibsBlock::getInstance();
+                    $libBlock = LibBlock::getInstance();
 
                     // Affichage du block uniquement
-                    $libsBlock->launchBlockRequested();
+                    $libBlock->launchBlockRequested();
 
                     ExecTimeMarker::stopMeasurement("main");
 
-                    echo $libsBlock->getBlock();
+                    echo $libBlock->getBlock();
                 }
 
                 // Execute la commande de récupération d'erreur
@@ -506,7 +506,7 @@ class CoreMain {
         $templateName = CoreSession::getInstance()->getUserInfos()->getTemplate();
 
         // Tentative d'utilisation du template du client
-        if (!LibsMakeStyle::setCurrentTemplate($templateName)) {
+        if (!LibMakeStyle::setCurrentTemplate($templateName)) {
             $templateName = null;
         }
 
@@ -514,7 +514,7 @@ class CoreMain {
             $templateName = $this->getDefaultTemplate();
 
             // Tentative d'utilisation du template du site
-            LibsMakeStyle::setCurrentTemplate($templateName);
+            LibMakeStyle::setCurrentTemplate($templateName);
         }
     }
 

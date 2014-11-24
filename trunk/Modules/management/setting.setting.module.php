@@ -20,7 +20,7 @@ class Module_Management_Setting extends ModuleModel {
     }
 
     private function tabHome() {
-        $accountTabs = new LibsTabs("settingtab");
+        $accountTabs = new LibTabs("settingtab");
         $accountTabs->addTab(SETTING_GENERAL_TAB, $this->tabGeneral());
         $accountTabs->addTab(SETTING_SYSTEM_TAB, $this->tabSystem());
         return $accountTabs->render();
@@ -48,7 +48,7 @@ class Module_Management_Setting extends ModuleModel {
     }
 
     private function tabGeneral() {
-        $form = new LibsForm("management-setting-general");
+        $form = new LibForm("management-setting-general");
         $form->setTitle(SETTING_GENERAL_SITE_SETTING_TITLE);
         $form->setDescription(SETTING_GENERAL_SITE_SETTING_DESCRIPTION);
         $form->addSpace();
@@ -80,7 +80,7 @@ class Module_Management_Setting extends ModuleModel {
         $form->addSelectCloseTag();
 
         $form->addSelectOpenTag("defaultTemplate", SETTING_GENERAL_DEFAULT_TEMPLATE);
-        $templates = LibsMakeStyle::getTemplateList();
+        $templates = LibMakeStyle::getTemplateList();
         $currentTemplate = $coreMain->getDefaultTemplate();
         $form->addSelectItemTag($currentTemplate, "", true);
         foreach ($templates as $template) {
@@ -91,7 +91,7 @@ class Module_Management_Setting extends ModuleModel {
         $form->addSelectCloseTag();
 
         $form->addSelectOpenTag("defaultMod", SETTING_GENERAL_DEFAULT_MODULE);
-        $modules = LibsModule::getModuleList();
+        $modules = LibModule::getModuleList();
         $currentModule = $coreMain->getDefaultMod();
         $currentModuleName = "";
         foreach ($modules as $module) {
@@ -185,7 +185,7 @@ class Module_Management_Setting extends ModuleModel {
         // Template par défaut
         $defaultTemplate = CoreRequest::getString("defaultTemplate", "", "POST");
         if ($coreMain->getDefaultTemplate() != $defaultTemplate) {
-            $templates = LibsMakeStylegetTemplateListes();
+            $templates = LibMakeStylegetTemplateListes();
             if (!empty($defaultTemplate) && ExecUtils::inArray($defaultTemplate, $templates)) {
                 $this->updateTable("defaultTemplate", $defaultTemplate);
                 $deleteCache = true;
@@ -237,7 +237,7 @@ class Module_Management_Setting extends ModuleModel {
     private function tabSystem() {// TODO a finir de coder
         $coreMain = CoreMain::getInstance();
 
-        $form = new LibsForm("management-setting-system");
+        $form = new LibForm("management-setting-system");
         $form->setTitle(SETTING_SYSTEM_CACHE_SETTING_TITLE);
         $form->setDescription(SETTING_SYSTEM_CACHE_SETTING_DESCRIPTION);
         $form->addInputText("cacheTimeLimit", SETTING_SYSTEM_CACHE_SETTING_CACHE_LIMIT, $coreMain->getCacheTimeLimit());

@@ -42,10 +42,10 @@ class Block_Login extends BlockModel {
         if (!empty($this->localView)) {
             echo $this->render();
         } else {
-            $libsMakeStyle = new LibsMakeStyle();
-            $libsMakeStyle->assign("blockTitle", $this->getBlockData()->getTitle());
-            $libsMakeStyle->assign("blockContent", $this->render());
-            $libsMakeStyle->display($this->getBlockData()->getTemplateName());
+            $libMakeStyle = new LibMakeStyle();
+            $libMakeStyle->assign("blockTitle", $this->getBlockData()->getTitle());
+            $libMakeStyle->assign("blockContent", $this->render());
+            $libMakeStyle->display($this->getBlockData()->getTemplateName());
         }
     }
 
@@ -116,7 +116,7 @@ class Block_Login extends BlockModel {
      * @return string
      */
     private function &logon($moreLink) {
-        $form = new LibsForm("login-logonblock");
+        $form = new LibForm("login-logonblock");
         $form->addInputText("login", LOGIN, "", "maxlength=\"180\"");
         $form->addInputPassword("password", PASSWORD, "maxlength=\"180\"");
         $form->addInputHidden("referer", urlencode(base64_encode(CoreRequest::getString("QUERY_STRING", "", "SERVER"))));
@@ -136,7 +136,7 @@ class Block_Login extends BlockModel {
      * @return string
      */
     private function &forgetlogin($moreLink) {
-        $form = new LibsForm("login-forgetloginblock");
+        $form = new LibForm("login-forgetloginblock");
         $form->addInputText("mail", MAIL . " ");
         $form->addInputHidden("mod", "connect");
         $form->addInputHidden("view", "forgetlogin");
@@ -154,7 +154,7 @@ class Block_Login extends BlockModel {
      * @return string
      */
     private function &forgetpass($moreLink) {
-        $form = new LibsForm("login-forgetpassblock");
+        $form = new LibForm("login-forgetpassblock");
         $form->addInputText("login", LOGIN . " ");
         $form->addInputHidden("mod", "connect");
         $form->addInputHidden("view", "forgetpass");
@@ -166,7 +166,7 @@ class Block_Login extends BlockModel {
     }
 
     private function &registration($moreLink) { // TODO registration block a coder
-        $form = new LibsForm("login-registrationblock");
+        $form = new LibForm("login-registrationblock");
         $form->addInputText("login", LOGIN . " ");
         $form->addInputHidden("mod", "connect");
         $form->addInputHidden("view", "registration");

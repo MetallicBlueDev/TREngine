@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Libs;
+namespace TREngine\Engine\Lib;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -9,7 +9,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class LibsRack {
+class LibRack {
 
     /**
      * Première ligne définissant les colonnes.

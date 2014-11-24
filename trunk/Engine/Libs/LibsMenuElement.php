@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Libs;
+namespace TREngine\Engine\Lib;
 
 use TREngine\Engine\Core\CoreDataStorage;
 use TREngine\Engine\Core\CoreLoader;
@@ -13,7 +13,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class LibsMenuElement extends CoreDataStorage {
+class LibMenuElement extends CoreDataStorage {
 
     /**
      * Attributs de l'élément.
@@ -215,9 +215,9 @@ class LibsMenuElement extends CoreDataStorage {
     /**
      * Ajoute un enfant à l'item courant.
      *
-     * @param LibsMenuElement  $child
+     * @param LibMenuElement  $child
      */
-    public function addChild(LibsMenuElement &$child) {
+    public function addChild(LibMenuElement &$child) {
         // Ajout du tag UL si c'est un nouveau parent
         if (empty($this->child)) {
             $this->addTags("ul");
@@ -237,9 +237,9 @@ class LibsMenuElement extends CoreDataStorage {
     /**
      * Supprime un enfant.
      *
-     * @param LibsMenuElement $child
+     * @param LibMenuElement $child
      */
-    public function removeChild(LibsMenuElement &$child = null) {
+    public function removeChild(LibMenuElement &$child = null) {
         if ($child === null) {
             foreach (array_keys($this->child) as $key) {
                 unset($this->child[$key]);
@@ -265,7 +265,7 @@ class LibsMenuElement extends CoreDataStorage {
         // Ajout de la classe active
         if (isset($this->route) && ExecUtils::inArray($this->getMenuId(), $this->route)) {
             $this->addAttributs("class", "active");
-            LibsBreadcrumb::getInstance()->addTrail($text);
+            LibBreadcrumb::getInstance()->addTrail($text);
         }
 
         // Préparation des données

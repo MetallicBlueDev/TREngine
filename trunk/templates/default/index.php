@@ -24,7 +24,7 @@
         <div id="wrapper">
             <div id="left">
 
-                <?php echo LibsBlock::getInstance()->getBlocksBySideName("right"); ?>
+                <?php echo LibBlock::getInstance()->getBlocksBySideName("right"); ?>
 
             </div>
 
@@ -32,17 +32,17 @@
 
                 <?php echo CoreHtml::getInstance()->getLoader(); ?>
 
-                <div id="breadcrumb"><?php echo LibsBreadcrumb::getInstance()->getBreadcrumbTrail(" >> "); ?></div>
+                <div id="breadcrumb"><?php echo LibBreadcrumb::getInstance()->getBreadcrumbTrail(" >> "); ?></div>
 
                 <div class="cleaner"></div>
 
                 <?php CoreLogger::displayMessages(); ?>
 
-                <?php echo LibsBlock::getInstance()->getBlocksBySideName("top"); ?>
+                <?php echo LibBlock::getInstance()->getBlocksBySideName("top"); ?>
 
                 <?php include(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "default" . DIRECTORY_SEPARATOR . "module.php"); ?>
 
-                <?php echo LibsBlock::getInstance()->getBlocksBySideName("bottom"); ?>
+                <?php echo LibBlock::getInstance()->getBlocksBySideName("bottom"); ?>
 
             </div>
         </div>

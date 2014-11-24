@@ -21,19 +21,19 @@ class Module_Project_Index extends ModuleModel {
         );
 
         CoreHtml::getInstance()->addCssTemplateFile("module_project.css");
-        $libsMakeStyle = new LibsMakeStyle("module_project_list");
-        $libsMakeStyle->assign("title", PROJECTS_LIST_TITLE);
-        $libsMakeStyle->assign("description", PROJECTS_LIST_DESCRIPTION);
+        $libMakeStyle = new LibMakeStyle("module_project_list");
+        $libMakeStyle->assign("title", PROJECTS_LIST_TITLE);
+        $libMakeStyle->assign("description", PROJECTS_LIST_DESCRIPTION);
 
         if (CoreSql::getInstance()->affectedRows() > 0) {
             CoreSql::getInstance()->addArrayBuffer("projectList");
             $projects = CoreSql::getInstance()->getBuffer("projectList");
-            $libsMakeStyle->assign("projects", $projects);
-            $libsMakeStyle->assign("nbProjects", count($projects) . " " . NB_PROJECT);
+            $libMakeStyle->assign("projects", $projects);
+            $libMakeStyle->assign("nbProjects", count($projects) . " " . NB_PROJECT);
         } else {
-            $libsMakeStyle->assign("nbProjects", NO_PROJECT);
+            $libMakeStyle->assign("nbProjects", NO_PROJECT);
         }
-        $libsMakeStyle->display();
+        $libMakeStyle->display();
     }
 
     public function displayProject() {
@@ -64,15 +64,15 @@ class Module_Project_Index extends ModuleModel {
                 CoreHtml::getInstance()->addCssTemplateFile("module_project.css");
 
                 // Création de la page
-                $form = new LibsForm(
+                $form = new LibForm(
                 "project_description", CoreUrlRewriting::getLink("?mod=project&view=download&&projectId=" . $projectInfo['projectid'])
                 );
                 $form->setTitle($projectInfo['name']);
 
-                $libsMakeStyle = new LibsMakeStyle("module_project_description");
-                $libsMakeStyle->assign("projectInfo", $projectInfo);
+                $libMakeStyle = new LibMakeStyle("module_project_description");
+                $libMakeStyle->assign("projectInfo", $projectInfo);
 
-                $form->addHtmlInFieldset($libsMakeStyle->render());
+                $form->addHtmlInFieldset($libMakeStyle->render());
                 $form->addFieldset(PROJECT_DESCRIPTION);
 
                 if (!empty($projectInfo['description']))

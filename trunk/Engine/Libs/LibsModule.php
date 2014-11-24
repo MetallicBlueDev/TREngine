@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Libs;
+namespace TREngine\Engine\Lib;
 
 use TREngine\Engine\Core\CoreLogger;
 use TREngine\Engine\Core\CoreMain;
@@ -21,14 +21,14 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class LibsModule {
+class LibModule {
 
     /**
      * Instance du gestionnaire de module.
      *
-     * @var LibsModule
+     * @var LibModule
      */
-    private static $libsModule = null;
+    private static $libModule = null;
 
     /**
      * Nom du module courant.
@@ -97,13 +97,13 @@ class LibsModule {
      * @param string $module
      * @param string $page
      * @param string $view
-     * @return LibsModule
+     * @return LibModule
      */
     public static function &getInstance() {
-        if (self::$libsModule === null) {
-            self::$libsModule = new LibsModule();
+        if (self::$libModule === null) {
+            self::$libModule = new LibModule();
         }
-        return self::$libsModule;
+        return self::$libModule;
     }
 
     /**
@@ -132,8 +132,8 @@ class LibsModule {
     public static function &isSelected($moduleName) {
         $selected = false;
 
-        if (self::$libsModule !== null) {
-            $selected = self::$libsModule->module === $moduleName;
+        if (self::$libModule !== null) {
+            $selected = self::$libModule->module === $moduleName;
         }
         return $selected;
     }
@@ -142,7 +142,7 @@ class LibsModule {
      * Retourne les informations du module cible.
      *
      * @param string $moduleName Le nom du module, par défaut le module courant.
-     * @return LibsModuleData Informations sur le module.
+     * @return LibModuleData Informations sur le module.
      */
     public function &getInfoModule($moduleName = "") {
         $moduleInfo = null;
@@ -186,7 +186,7 @@ class LibsModule {
             }
 
             // Injection des informations du module
-            $moduleInfo = new LibsModuleData($moduleData);
+            $moduleInfo = new LibModuleData($moduleData);
             $this->modulesInfo[$moduleName] = $moduleInfo;
         }
         return $moduleInfo;
@@ -202,14 +202,14 @@ class LibsModule {
         if (($moduleInfo->installed() && CoreAccess::autorize(CoreAccessType::getTypeFromToken($moduleInfo))) || (!$moduleInfo->installed() && CoreSession::getInstance()->getUserInfos()->hasAdminRank())) {
             if ($moduleInfo->isValid($this->page)) {
 
-                if (CoreLoader::isCallable("LibsBreadcrumb")) {
-                    $libsBreadcrumb = LibsBreadcrumb::getInstance();
-                    $libsBreadcrumb->addTrail($moduleInfo->getName(), "?mod=" . $moduleInfo->getName());
+                if (CoreLoader::isCallable("LibBreadcrumb")) {
+                    $libBreadcrumb = LibBreadcrumb::getInstance();
+                    $libBreadcrumb->addTrail($moduleInfo->getName(), "?mod=" . $moduleInfo->getName());
 
                     // TODO A MODIFIER
                     // Juste une petite exception pour le module management qui est different
                     if ($moduleInfo->getName() !== "management") {
-                        $libsBreadcrumb->addTrail($this->view, "?mod=" . $moduleInfo->getName() . "&view=" . $this->view);
+                        $libBreadcrumb->addTrail($this->view, "?mod=" . $moduleInfo->getName() . "&view=" . $this->view);
                     }
                 }
 
@@ -245,7 +245,7 @@ class LibsModule {
     /**
      * Récupère le module.
      *
-     * @param LibsModuleData $moduleInfo
+     * @param LibModuleData $moduleInfo
      */
     private function get(&$moduleInfo) {
         $moduleClassName = "Module" . ucfirst($moduleInfo->getName()) . ucfirst($this->page);

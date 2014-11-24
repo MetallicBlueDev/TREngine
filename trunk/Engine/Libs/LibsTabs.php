@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Libs;
+namespace TREngine\Engine\Lib;
 
 use TREngine\Engine\Core\CoreRequest;
 use TREngine\Engine\Core\CoreHtml;
@@ -13,7 +13,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class LibsTabs {
+class LibTabs {
 
     /**
      * Vérifie si c'est la 1ère instance.

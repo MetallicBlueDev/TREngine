@@ -63,7 +63,7 @@ class Module_Management_Block extends ModuleModel {
                 20,
                 BLOCK_VIEW_MODULE_PAGE)
         );
-        $rack = new LibsRack($firstLine);
+        $rack = new LibRack($firstLine);
 
         CoreSql::getInstance()->select(
         CoreTable::BLOCKS_TABLE, array(
@@ -82,7 +82,7 @@ class Module_Management_Block extends ModuleModel {
                 // Parametre de la ligne
                 $title = CoreHtml::getLink("?mod=management&manage=block&localView=tabEdit&blockId=" . $row['block_id'], $row['title']);
                 $type = $row['type'];
-                $side = LibsBlock::getSideAsLitteral($row['side']);
+                $side = LibBlock::getSideAsLitteral($row['side']);
                 $position = CoreHtml::getLinkWithAjax("?mod=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'], "?mod=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'], "#block_main_setting", "^"
                 );
                 $position .= $row['position'];
@@ -228,9 +228,9 @@ class Module_Management_Block extends ModuleModel {
             );
             if (CoreSql::getInstance()->affectedRows() > 0) { // Si le block existe
                 $block = CoreSql::getInstance()->fetchArray();
-                LibsBreadcrumb::getInstance()->addTrail($block['title'], "?mod=management&manage=block&localView=tabEdit&blockId=" . $blockId);
+                LibBreadcrumb::getInstance()->addTrail($block['title'], "?mod=management&manage=block&localView=tabEdit&blockId=" . $blockId);
 
-                $form = new LibsForm("management-block-blockedit");
+                $form = new LibForm("management-block-blockedit");
                 $form->setTitle(BLOCK_EDIT_TITLE);
                 $form->setDescription(BLOCK_EDIT_DESCRIPTION);
                 $form->addSpace();
@@ -238,7 +238,7 @@ class Module_Management_Block extends ModuleModel {
                 $form->addHtmlInFieldset("ID : #" . $blockId);
                 $form->addInputText("blockTitle", BLOCK_TITLE, $block['title']);
 
-                $blockList = LibsBlock::getBlockList();
+                $blockList = LibBlock::getBlockList();
                 $form->addSelectOpenTag("blockType", BLOCK_TYPE);
                 $form->addSelectItemTag($block['type'], "", true);
                 foreach ($blockList as $blockType) {
@@ -248,7 +248,7 @@ class Module_Management_Block extends ModuleModel {
                 }
                 $form->addSelectCloseTag();
 
-                $sideList = LibsBlock::getSideList();
+                $sideList = LibBlock::getSideList();
                 $form->addSelectOpenTag("blockSide", BLOCK_SIDE);
                 $currentSideName = "";
                 foreach ($sideList as $blockSide) {
@@ -364,7 +364,7 @@ class Module_Management_Block extends ModuleModel {
     }
 
     private function tabAdd() {
-        LibsBreadcrumb::getInstance()->addTrail(ADD, "?mod=management&manage=block&localView=tabAdd");
+        LibBreadcrumb::getInstance()->addTrail(ADD, "?mod=management&manage=block&localView=tabAdd");
     }
 
     private function sendAdd() {

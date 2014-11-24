@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Libs;
+namespace TREngine\Engine\Lib;
 
 use TREngine\Engine\Core\CoreLoader;
 use TREngine\Engine\Core\CoreAccess;
@@ -16,7 +16,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class LibsBlockData extends CoreDataStorage implements CoreAccessToken {
+class LibBlockData extends CoreDataStorage implements CoreAccessToken {
 
     /**
      * Position du block en lettre.
@@ -202,9 +202,9 @@ class LibsBlockData extends CoreDataStorage implements CoreAccessToken {
 
         if (CoreAccess::autorize(CoreAccessType::getTypeFromToken($this))) {
             if ($checkModule) {
-                if (CoreLoader::isCallable("LibsModule")) {
+                if (CoreLoader::isCallable("LibModule")) {
                     foreach ($this->getTargetModules() as $modSelected) {
-                        if ($modSelected === "all" || LibsModule::isSelected($modSelected)) {
+                        if ($modSelected === "all" || LibModule::isSelected($modSelected)) {
                             $rslt = true;
                             break;
                         }

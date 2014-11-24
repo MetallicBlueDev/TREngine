@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Libs;
+namespace TREngine\Engine\Lib;
 
 use TREngine\Engine\Core\CoreCache;
 use TREngine\Engine\Exec\ExecEntities;
@@ -13,7 +13,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class LibsForm {
+class LibForm {
 
     /**
      * Nom du formulaire.

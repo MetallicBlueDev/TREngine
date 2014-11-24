@@ -2,7 +2,7 @@
 
 namespace TREngine\Engine\Core;
 
-use TREngine\Engine\Libs\LibsMakeStyle;
+use TREngine\Engine\Lib\LibMakeStyle;
 use TREngine\Engine\Exec\ExecEntities;
 use TREngine\Engine\Fail\FailBase;
 
@@ -120,12 +120,12 @@ class CoreSecure {
         }
 
         // Préparation du template debug
-        $libsMakeStyle = new LibsMakeStyle();
-        $libsMakeStyle->assign("errorMessageTitle", $this->getErrorMessageTitle($customMessage));
-        $libsMakeStyle->assign("errorMessage", $this->getDebugMessage($ex, $argv));
+        $libMakeStyle = new LibMakeStyle();
+        $libMakeStyle->assign("errorMessageTitle", $this->getErrorMessageTitle($customMessage));
+        $libMakeStyle->assign("errorMessage", $this->getDebugMessage($ex, $argv));
 
         // Affichage du template en debug si problème
-        $libsMakeStyle->display("debug", true);
+        $libMakeStyle->display("debug", true);
 
         // Arret du moteur
         exit();

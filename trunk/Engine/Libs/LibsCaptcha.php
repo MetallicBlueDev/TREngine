@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Libs;
+namespace TREngine\Engine\Lib;
 
 use TREngine\Engine\Core\CoreLogger;
 use TREngine\Engine\Core\CoreMain;
@@ -16,7 +16,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class LibsCaptcha {
+class LibCaptcha {
 
     /**
      * Vérifie l'état initialisation de la classe.
@@ -63,7 +63,7 @@ class LibsCaptcha {
     /**
      * Configuration d'un nouveau captcha
      *
-     * @param object $object (LibsForm object par exemple)
+     * @param object $object (LibForm object par exemple)
      */
     public function __construct(&$object = null) {
         // Mode du captcha
@@ -124,7 +124,7 @@ class LibsCaptcha {
 
             if ($this->object !== null) {
                 // TODO A vérifier
-                if ($this->object instanceOf LibsForm) {
+                if ($this->object instanceOf LibForm) {
                     $this->object->addInputText("cles", $this->question, "", "", "input captcha");
                     $this->object->addInputHidden($this->inputRobotName, "");
                 }
@@ -141,7 +141,7 @@ class LibsCaptcha {
     /**
      * Vérifie la validité du captcha.
      *
-     * @param LibsCaptcha $object
+     * @param LibCaptcha $object
      * @return boolean
      */
     public static function &check($object = null) {
@@ -334,7 +334,7 @@ class LibsCaptcha {
      */
     private function makePicture() {// TODO a vérifier
         $this->response = ExecCrypt::createId($this->randInt(3, 6));
-        $this->question = CAPTCHA_MAKE_PICTURE_CODE . ": " . "<img src=\"engine/libs/imagegenerator.php?mode=code&amp;code=" . $this->response . "\" alt=\"\" />\n";
+        $this->question = CAPTCHA_MAKE_PICTURE_CODE . ": " . "<img src=\"engine/lib/imagegenerator.php?mode=code&amp;code=" . $this->response . "\" alt=\"\" />\n";
     }
 
     /**

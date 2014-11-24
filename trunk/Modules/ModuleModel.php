@@ -8,7 +8,7 @@ use TREngine\Engine\Core\CoreTable;
 use TREngine\Engine\Core\CoreCache;
 use TREngine\Engine\Core\CoreTranslate;
 use TREngine\Engine\Core\CoreAccessType;
-use TREngine\Engine\Libs\LibsModuleData;
+use TREngine\Engine\Lib\LibModuleData;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -23,7 +23,7 @@ abstract class ModuleModel {
     /**
      * Informations sur le module.
      *
-     * @var LibsModuleData
+     * @var LibModuleData
      */
     private $data = null;
 
@@ -72,7 +72,7 @@ abstract class ModuleModel {
     /**
      * Affecte les données du module.
      *
-     * @param LibsModuleData $data
+     * @param LibModuleData $data
      */
     public function setModuleData(&$data) {
         $this->data = $data;
@@ -81,12 +81,12 @@ abstract class ModuleModel {
     /**
      * Retourne le données du module.
      *
-     * @return LibsModuleData
+     * @return LibModuleData
      */
     public function &getModuleData() {
         if ($this->data === null) {
             $empty = array();
-            $this->data = new LibsModuleData($empty);
+            $this->data = new LibModuleData($empty);
         }
         return $this->data;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Libs;
+namespace TREngine\Engine\Lib;
 
 use TREngine\Engine\Core\CoreLogger;
 use TREngine\Engine\Core\CoreSecure;
@@ -15,7 +15,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class LibsBlock {
+class LibBlock {
 
     /**
      * Nom du fichier cache de bannissement.
@@ -103,14 +103,14 @@ class LibsBlock {
     /**
      * Gestionnnaire de blocks.
      *
-     * @var LibsBlock
+     * @var LibBlock
      */
-    private static $libsBlock = null;
+    private static $libBlock = null;
 
     /**
      * Blocks chargés.
      *
-     * @var LibsBlockData[]
+     * @var LibBlockData[]
      */
     private $blocksInfo = array();
 
@@ -121,13 +121,13 @@ class LibsBlock {
     /**
      * Instance du gestionnaire de block.
      *
-     * @return LibsBlock
+     * @return LibBlock
      */
     public static function &getInstance() {
-        if (self::$libsBlock === null) {
-            self::$libsBlock = new LibsBlock();
+        if (self::$libBlock === null) {
+            self::$libBlock = new LibBlock();
         }
-        return self::$libsBlock;
+        return self::$libBlock;
     }
 
     /**
@@ -254,7 +254,7 @@ class LibsBlock {
      * Retourne les informations du block cible.
      *
      * @param int $blockId l'identifiant du block.
-     * @return LibsBlockData Informations sur le block.
+     * @return LibBlockData Informations sur le block.
      */
     public function &getInfoBlock($blockId) {
         $blockInfo = null;
@@ -295,7 +295,7 @@ class LibsBlock {
             }
 
             // Injection des informations du block
-            $blockInfo = new LibsBlockData($blockData);
+            $blockInfo = new LibBlockData($blockData);
             $blockInfo->setSideName(self::getSideAsLetters($blockInfo->getSide()));
             $this->blocksInfo[$blockId] = $blockInfo;
         }
@@ -388,7 +388,7 @@ class LibsBlock {
     /**
      * Récupère le block.
      *
-     * @param LibsBlockData $blockInfo
+     * @param LibBlockData $blockInfo
      */
     private function get(&$blockInfo) {
         $blockClassName = "Block" . ucfirst($blockInfo->getType());

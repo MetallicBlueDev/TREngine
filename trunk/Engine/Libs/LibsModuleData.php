@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Libs;
+namespace TREngine\Engine\Lib;
 
 use TREngine\Engine\Core\CoreDataStorage;
 use TREngine\Engine\Core\CoreAccessToken;
@@ -12,7 +12,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class LibsModuleData extends CoreDataStorage implements CoreAccessToken {
+class LibModuleData extends CoreDataStorage implements CoreAccessToken {
 
     /**
      * Les données compilées du module.
@@ -129,7 +129,7 @@ class LibsModuleData extends CoreDataStorage implements CoreAccessToken {
      * @return boolean
      */
     public function isValid($page = "") {
-        return LibsModule::getInstance()->isModule($this->getName(), $page);
+        return LibModule::getInstance()->isModule($this->getName(), $page);
     }
 
     /**

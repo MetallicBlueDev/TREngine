@@ -2,8 +2,8 @@
 
 namespace TREngine\Engine\Core;
 
-use TREngine\Engine\Libs\LibsMakeStyle;
-use TREngine\Engine\Libs\LibsModule;
+use TREngine\Engine\Lib\LibMakeStyle;
+use TREngine\Engine\Lib\LibModule;
 use TREngine\Engine\Exec\ExecEntities;
 use TREngine\Engine\Exec\ExecCookie;
 
@@ -218,8 +218,8 @@ class CoreHtml {
      * @param string $options
      */
     public function addCssTemplateFile($fileName, $options = "") {
-        if (CoreLoader::isCallable("LibsMakeStyle")) {
-            $this->addCssFile(LibsMakeStyle::getTemplatesDir() . "/" . LibsMakeStyle::getCurrentTemplate() . "/" . $fileName, $options);
+        if (CoreLoader::isCallable("LibMakeStyle")) {
+            $this->addCssFile(LibMakeStyle::getTemplatesDir() . "/" . LibMakeStyle::getCurrentTemplate() . "/" . $fileName, $options);
         }
     }
 
@@ -239,8 +239,8 @@ class CoreHtml {
                 // Titre automatique
                 $title .= " - " . $coreMain->getDefaultSiteSlogan();
 
-                if (CoreLoader::isCallable("LibsModule")) {
-                    $title .= " / " . LibsModule::getInstance()->getInfoModule()->getName();
+                if (CoreLoader::isCallable("LibModule")) {
+                    $title .= " / " . LibModule::getInstance()->getInfoModule()->getName();
                 }
             } else {
                 // Titre manuel
@@ -263,7 +263,7 @@ class CoreHtml {
         . "<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n"
         . "<meta http-equiv=\"content-script-type\" content=\"text/javascript\" />\n"
         . "<meta http-equiv=\"content-style-type\" content=\"text/css\" />\n"
-        . "<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"" . LibsMakeStyle::getTemplatesDir() . "/" . LibsMakeStyle::getCurrentTemplate() . "/favicon.ico\" />\n"
+        . "<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"" . LibMakeStyle::getTemplatesDir() . "/" . LibMakeStyle::getCurrentTemplate() . "/favicon.ico\" />\n"
         . $this->getMetaIncludeJavascript()
         . $this->getMetaIncludeCss();
     }

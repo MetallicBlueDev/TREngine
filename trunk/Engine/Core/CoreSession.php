@@ -2,7 +2,7 @@
 
 namespace TREngine\Engine\Core;
 
-use TREngine\Engine\Libs\LibsMakeStyle;
+use TREngine\Engine\Lib\LibMakeStyle;
 use TREngine\Engine\Exec\ExecMailer;
 use TREngine\Engine\Exec\ExecCrypt;
 use TREngine\Engine\Exec\ExecCookie;
@@ -440,11 +440,11 @@ class CoreSession {
             $mail = ExecMailer::protectedDisplay($mail, $coreMain->getDefaultSiteName());
             $reason = $coreSql->fetchArray()['reason'];
 
-            $libsMakeStyle = new LibsMakeStyle();
-            $libsMakeStyle->assign("mail", $mail);
-            $libsMakeStyle->assign("reason", ExecEntities::textDisplay($reason));
-            $libsMakeStyle->assign("ip", $this->userIpBan);
-            $libsMakeStyle->display("banishment");
+            $libMakeStyle = new LibMakeStyle();
+            $libMakeStyle->assign("mail", $mail);
+            $libMakeStyle->assign("reason", ExecEntities::textDisplay($reason));
+            $libMakeStyle->assign("ip", $this->userIpBan);
+            $libMakeStyle->display("banishment");
         }
     }
 

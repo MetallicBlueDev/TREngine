@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Libs;
+namespace TREngine\Engine\Lib;
 
 use TREngine\Engine\Core\CoreMain;
 use TREngine\Engine\Core\CoreHtml;
@@ -12,14 +12,14 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class LibsBreadcrumb {
+class LibBreadcrumb {
 
     /**
      * Instance de la classe.
      *
-     * @var LibsBreadcrumb
+     * @var LibBreadcrumb
      */
-    private static $libsBreadcrumb = null;
+    private static $libBreadcrumb = null;
 
     /**
      * Le fil d'Ariane.
@@ -34,15 +34,15 @@ class LibsBreadcrumb {
     }
 
     /**
-     * Retoune l'instance LibsBreadcrumb.
+     * Retoune l'instance LibBreadcrumb.
      *
-     * @return LibsBreadcrumb
+     * @return LibBreadcrumb
      */
     public static function &getInstance() {
-        if (self::$libsBreadcrumb === null) {
-            self::$libsBreadcrumb = new LibsBreadcrumb();
+        if (self::$libBreadcrumb === null) {
+            self::$libBreadcrumb = new LibBreadcrumb();
         }
-        return self::$libsBreadcrumb;
+        return self::$libBreadcrumb;
     }
 
     /**

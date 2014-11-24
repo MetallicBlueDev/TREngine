@@ -1,7 +1,7 @@
-<?php echo LibsBlock::getInstance()->getBlocksBySideName("moduletop"); ?>
+<?php echo LibBlock::getInstance()->getBlocksBySideName("moduletop"); ?>
 
 <?php
-$renderModule = LibsModule::getInstance()->getModule();
+$renderModule = LibModule::getInstance()->getModule();
 
 if (!empty($renderModule)) {
     ?>
@@ -16,4 +16,4 @@ if (!empty($renderModule)) {
 }
 ?>
 
-<?php echo LibsBlock::getInstance()->getBlocksBySideName("modulebottom"); ?>
+<?php echo LibBlock::getInstance()->getBlocksBySideName("modulebottom"); ?>

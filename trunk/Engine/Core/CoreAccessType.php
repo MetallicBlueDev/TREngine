@@ -216,15 +216,15 @@ class CoreAccessType implements CoreAccessToken {
             if (!empty($this->getId())) {
                 if ($this->isModuleZone()) {
                     if ($this->hasPageAccess()) {
-                        if (CoreLoader::isCallable("LibsModule") && LibsModule::getInstance()->isModule($this->getPage(), $this->getId())) {
+                        if (CoreLoader::isCallable("LibModule") && LibModule::getInstance()->isModule($this->getPage(), $this->getId())) {
                             $valid = true;
                         }
                     } else {
                         // Recherche d'informations sur le module
                         $moduleInfo = null;
 
-                        if (CoreLoader::isCallable("LibsModule")) {
-                            $moduleInfo = LibsModule::getInstance()->getInfoModule($this->getName());
+                        if (CoreLoader::isCallable("LibModule")) {
+                            $moduleInfo = LibModule::getInstance()->getInfoModule($this->getName());
                         }
 
                         if ($moduleInfo !== null && is_numeric($moduleInfo->getId())) {
@@ -237,8 +237,8 @@ class CoreAccessType implements CoreAccessToken {
                     // Recherche d'information sur le block
                     $blockInfo = null;
 
-                    if (CoreLoader::isCallable("LibsBlock")) {
-                        $blockInfo = LibsBlock::getInstance()->getInfoBlock($this->getId());
+                    if (CoreLoader::isCallable("LibBlock")) {
+                        $blockInfo = LibBlock::getInstance()->getInfoBlock($this->getId());
                     }
 
                     if ($blockInfo !== null && is_numeric($blockInfo->getId())) {

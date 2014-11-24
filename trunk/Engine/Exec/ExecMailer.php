@@ -35,7 +35,7 @@ class ExecMailer {
 
         // On utilise la librairie GD
         if (@extension_loaded('gd')) {
-            return "<img src=\"engine/libs/imagegenerator.get.php?mode=text&amp;text=" . urlencode(base64_encode($mail)) . "\" alt=\"\" title=\"" . $name . "\" />";
+            return "<img src=\"engine/lib/imagegenerator.get.php?mode=text&amp;text=" . urlencode(base64_encode($mail)) . "\" alt=\"\" title=\"" . $name . "\" />";
         } else {
             return $protected;
         }

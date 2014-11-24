@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Libs;
+namespace TREngine\Engine\Lib;
 
 use TREngine\Engine\Core\CoreAccessType;
 use TREngine\Engine\Core\CoreAccess;
@@ -15,7 +15,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class LibsMenu {
+class LibMenu {
 
     /**
      * Identifiant du menu.
@@ -144,7 +144,7 @@ class LibsMenu {
 
             // Ajoute et monte tout les items
             foreach ($menus as $key => $item) {
-                $newElement = new LibsMenuElement($item, $this->items);
+                $newElement = new LibMenuElement($item, $this->items);
                 $newElement->setRoute(array(
                     $key));
                 $this->items[$key] = $newElement;

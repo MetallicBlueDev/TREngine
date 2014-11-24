@@ -4,7 +4,7 @@ namespace TREngine\Blocks;
 
 use TREngine\Engine\Core\CoreLogger;
 use TREngine\Engine\Core\CoreAccessType;
-use TREngine\Engine\Libs\LibsBlockData;
+use TREngine\Engine\Lib\LibBlockData;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -19,7 +19,7 @@ abstract class BlockModel {
     /**
      * Informations sur le block.
      *
-     * @var LibsBlockData
+     * @var LibBlockData
      */
     private $data = null;
 
@@ -47,7 +47,7 @@ abstract class BlockModel {
     /**
      * Affecte les données du block.
      *
-     * @param LibsBlockData $data
+     * @param LibBlockData $data
      */
     public function setBlockData(&$data) {
         $this->data = $data;
@@ -56,12 +56,12 @@ abstract class BlockModel {
     /**
      * Retourne le données du block.
      *
-     * @return LibsBlockData
+     * @return LibBlockData
      */
     public function &getBlockData() {
         if ($this->data === null) {
             $empty = array();
-            $this->data = new LibsBlockData($empty);
+            $this->data = new LibBlockData($empty);
         }
         return $this->data;
     }

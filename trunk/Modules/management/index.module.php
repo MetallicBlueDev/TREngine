@@ -24,11 +24,11 @@ class Module_Management_Index extends ModuleModel {
         $managePage = CoreRequest::getString("manage");
 
         $pageList = self::getManagementList(); // Liste de pages de configuration
-        $moduleList = LibsModule::getModuleList(); // Liste des modules
+        $moduleList = LibModule::getModuleList(); // Liste des modules
         // Préparation de la mise en page
-        $libsMakeStyle = new LibsMakeStyle();
-        $libsMakeStyle->assign("pageList", $pageList);
-        $libsMakeStyle->assign("moduleList", $moduleList);
+        $libMakeStyle = new LibMakeStyle();
+        $libMakeStyle->assign("pageList", $pageList);
+        $libMakeStyle->assign("moduleList", $moduleList);
 
         // Affichage de la page d'administration
         $managementScreen = "module_management_index";
@@ -55,11 +55,11 @@ class Module_Management_Index extends ModuleModel {
                 if (CoreLoader::classLoader($moduleClassPage)) {
                     // Nom de la page courane
                     $currentPageName = self::getManagementPageName($pageSelected);
-                    $libsMakeStyle->assign("currentPageName", $currentPageName);
+                    $libMakeStyle->assign("currentPageName", $currentPageName);
 
                     // Ajout du repere au fil d'ariane
                     if (CoreMain::getInstance()->isDefaultLayout()) {
-                        LibsBreadcrumb::getInstance()->addTrail(
+                        LibBreadcrumb::getInstance()->addTrail(
                         $currentPageName, "?mod=management&manage=" . $pageSelected
                         );
                     }
@@ -70,13 +70,13 @@ class Module_Management_Index extends ModuleModel {
                         $content = $ModuleClass->setting();
                     }
 
-                    $libsMakeStyle->assign("content", $content);
+                    $libMakeStyle->assign("content", $content);
                 }
             }
         }
-        $libsMakeStyle->assign("toolbar", self::$toolbar);
-        $libsMakeStyle->assign("pageSelected", $pageSelected);
-        $libsMakeStyle->display($managementScreen);
+        $libMakeStyle->assign("toolbar", self::$toolbar);
+        $libMakeStyle->assign("pageSelected", $pageSelected);
+        $libMakeStyle->display($managementScreen);
     }
 
     public function install() {

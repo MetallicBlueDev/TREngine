@@ -13,10 +13,10 @@ class Block_Menutree extends Block_Menu {
         $menus = $this->getMenu();
         $menus->addAttributs("class", "treeview");
 
-        $libsMakeStyle = new LibsMakeStyle();
-        $libsMakeStyle->assign("blockTitle", $this->getBlockData()->getTitle());
-        $libsMakeStyle->assign("blockContent", $menus->render());
-        $libsMakeStyle->display($this->getBlockData()->getTemplateName());
+        $libMakeStyle = new LibMakeStyle();
+        $libMakeStyle->assign("blockTitle", $this->getBlockData()->getTitle());
+        $libMakeStyle->assign("blockContent", $menus->render());
+        $libMakeStyle->display($this->getBlockData()->getTemplateName());
     }
 
     private function configure() {
