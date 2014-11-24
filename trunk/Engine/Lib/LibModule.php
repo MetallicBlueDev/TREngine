@@ -39,20 +39,6 @@ class LibModule {
     private $module = "";
 
     /**
-     * Nom de la page courante.
-     *
-     * @var string
-     */
-    private $page = "";
-
-    /**
-     * Nom du viewer courant.
-     *
-     * @var string
-     */
-    private $view = "";
-
-    /**
      * Tableau d'information sur les modules.
      *
      * @var array
@@ -63,32 +49,66 @@ class LibModule {
      * Création du gestionnaire.
      */
     private function __construct() {
-        $this->module = CoreRequest::getWord("mod");
-        $this->page = CoreRequest::getWord("page");
-        $this->view = CoreRequest::getWord("view");
 
-        $defaultModule = CoreMain::getInstance()->getDefaultMod();
-        $defaultPage = "index";
-        $defaultView = "display";
+    }
 
-        if (!empty($this->module) && empty($this->page)) {
-            $this->page = $defaultPage;
-        }
+    /**
+     * Vérification de l'instance du gestionnaire des modules.
+     */
+    public static function checkInstance() {
+        if (self::$libModule === null) {
+            // Création d'un instance autonome
+            self::$libModule = new LibModule();
 
-        // Erreur dans la configuration
-        if (!$this->isModule()) {
-            if (!empty($this->module) || !empty($this->page)) {
-                // Afficher une erreur 404
-                CoreLogger::addInformationMessage(ERROR_404);
+            // Nom du module courant
+            $moduleName = CoreRequest::getWord("mod");
+            $defaultModuleName = CoreMain::getInstance()->getDefaultMod();
+
+            if (empty($moduleName)) {
+                $moduleName = $defaultModuleName;
             }
 
-            $this->module = $defaultModule;
-            $this->page = $defaultPage;
-            $this->view = $defaultView;
-        }
+            $moduleName = ucfirst($moduleName);
 
-        if (empty($this->view)) {
-            $this->view = $defaultView;
+            // Nom de la page courante
+            $page = CoreRequest::getWord("page");
+            $defaultPage = "index";
+
+            if (empty($page)) {
+                $page = $defaultPage;
+            }
+
+            $page = ucfirst($page);
+
+            // Nom du viewer courant
+            $view = CoreRequest::getWord("view");
+            $defaultView = "display";
+
+            if (empty($view)) {
+                $view = $defaultView;
+            }
+
+            $infoModule = self::$libModule->getInfoModule($moduleName);
+            $infoModule->setPage($page);
+            $infoModule->setView($view);
+
+            if (!$infoModule->isValid() && $moduleName !== $defaultModuleName) {
+                // Afficher une erreur 404
+                if (!empty($moduleName) || !empty($page)) {
+                    CoreLogger::addInformationMessage(ERROR_404);
+                }
+
+                // Utilisation du module par défaut
+                $moduleName = $defaultModuleName;
+                $page = $defaultPage;
+                $view = $defaultView;
+
+                $infoModule = self::$libModule->getInfoModule($moduleName);
+                $infoModule->setPage($page);
+                $infoModule->setView($view);
+            }
+
+            self::$libModule->module = $moduleName;
         }
     }
 
@@ -101,9 +121,7 @@ class LibModule {
      * @return LibModule
      */
     public static function &getInstance() {
-        if (self::$libModule === null) {
-            self::$libModule = new LibModule();
-        }
+        self::checkInstance();
         return self::$libModule;
     }
 
@@ -114,7 +132,7 @@ class LibModule {
      */
     public static function &getModuleList() {
         $moduleList = array();
-        $modules = CoreCache::getInstance()->getNameList("modules");
+        $modules = CoreCache::getInstance()->getNameList("Modules");
 
         foreach ($modules as $module) {
             $moduleList[] = array(
@@ -148,8 +166,9 @@ class LibModule {
     public function &getInfoModule($moduleName = "") {
         $moduleInfo = null;
 
-        // Nom du module cible
-        $moduleName = empty($moduleName) ? $this->module : $moduleName;
+        if (empty($moduleName)) {
+            $moduleName = $this->module;
+        }
 
         if (isset($this->modulesInfo[$moduleName])) {
             $moduleInfo = $this->modulesInfo[$moduleName];
@@ -201,7 +220,7 @@ class LibModule {
 
         // Vérification du niveau d'acces
         if (($moduleInfo->installed() && CoreAccess::autorize(CoreAccessType::getTypeFromToken($moduleInfo))) || (!$moduleInfo->installed() && CoreSession::getInstance()->getUserInfos()->hasAdminRank())) {
-            if ($moduleInfo->isValid($this->page)) {
+            if ($moduleInfo->isValid()) {
 
                 if (CoreLoader::isCallable("LibBreadcrumb")) {
                     $libBreadcrumb = LibBreadcrumb::getInstance();
@@ -210,7 +229,7 @@ class LibModule {
                     // TODO A MODIFIER
                     // Juste une petite exception pour le module management qui est different
                     if ($moduleInfo->getName() !== "management") {
-                        $libBreadcrumb->addTrail($this->view, "?mod=" . $moduleInfo->getName() . "&view=" . $this->view);
+                        $libBreadcrumb->addTrail($moduleInfo->getView(), "?mod=" . $moduleInfo->getName() . "&view=" . $moduleInfo->getView());
                     }
                 }
 
@@ -249,18 +268,18 @@ class LibModule {
      * @param LibModuleData $moduleInfo
      */
     private function get(&$moduleInfo) {
-        $moduleClassName = CoreLoader::getFullQualifiedClassName("Module" . ucfirst($moduleInfo->getName()) . ucfirst($this->page));
+        $moduleClassName = CoreLoader::getFullQualifiedClassName($moduleInfo->getClassName(), ucfirst($moduleInfo->getName()));
         $loaded = CoreLoader::classLoader($moduleClassName);
 
         if ($loaded) {
-            // Retourne un view valide sinon une chaine vide
-            $this->view = $this->viewPage(array(
+            // Vérification de la sous page
+            $moduleInfo->setView($this->getValidViewPage(array(
                 $moduleClassName,
-                ($moduleInfo->installed()) ? $this->view : "install"));
+                ($moduleInfo->installed()) ? $moduleInfo->getView() : "install")));
 
             // Affichage du module si possible
-            if (!empty($this->view)) {
-                CoreTranslate::getInstance()->translate("modules" . DIRECTORY_SEPARATOR . $moduleInfo->getName());
+            if (!empty($moduleInfo->getView())) {
+                CoreTranslate::getInstance()->translate("Modules" . DIRECTORY_SEPARATOR . $moduleInfo->getName());
 
                 $this->updateCount($moduleInfo->getId());
 
@@ -272,30 +291,13 @@ class LibModule {
 
                 // Capture des données d'affichage
                 ob_start();
-                echo $moduleClass->{$this->view}();
+                echo $moduleClass->{$moduleInfo->getView()}();
                 $moduleInfo->setBuffer(ob_get_contents());
                 ob_end_clean();
             } else {
                 CoreLogger::addErrorMessage(ERROR_MODULE_CODE . " (" . $moduleInfo->getName() . ")");
             }
         }
-    }
-
-    /**
-     * Vérifie si le module existe.
-     *
-     * @param string $moduleName
-     * @param string $page
-     * @return boolean true le module existe.
-     */
-    public function isModule($moduleName = "", $page = "") {
-        // Nom du module cible
-        $moduleName = empty($moduleName) ? $this->module : $moduleName;
-
-        // Nom de la page cible
-        $page = empty($page) ? $this->page : $page;
-
-        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . $page . ".module.php");
     }
 
     /**
@@ -319,7 +321,7 @@ class LibModule {
      * @param array $pageInfo
      * @return string
      */
-    private function &viewPage(array $pageInfo) {
+    private function &getValidViewPage(array $pageInfo) {
         $invalid = false;
 
         if (CoreLoader::isCallable($pageInfo[0], $pageInfo[1])) {
@@ -342,7 +344,7 @@ class LibModule {
             $default = "display";
 
             if ($pageInfo[1] !== $default) {
-                $rslt = $this->viewPage(array(
+                $rslt = $this->getValidViewPage(array(
                     $pageInfo[0],
                     $default));
             }
