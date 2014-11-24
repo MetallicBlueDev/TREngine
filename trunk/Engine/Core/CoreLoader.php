@@ -248,13 +248,25 @@ class CoreLoader {
     }
 
     /**
+     * Retourne le nom complet de la classe.
+     * 
+     * @param string $className
+     * @return string
+     */
+    public static function &getFullQualifiedClassName($className) {
+        $ext = null;
+        self::checkExtensionAndName($ext, $className);
+        return $className;
+    }
+
+    /**
      * Chargeur de fichier.
      *
      * @param string $keyName Nom de la classe ou du fichier.
      * @param string $ext Extension.
      * @return boolean true chargé.
      */
-    private static function &load($keyName, $ext) {
+    private static function &load(&$keyName, $ext) {
         try {
             if (empty($keyName)) {
                 throw new FailLoader("loader");
@@ -294,7 +306,7 @@ class CoreLoader {
     }
 
     /**
-     * Retourne le type d'extension de fichier.
+     * Vérifie l'emplacement et le type de fichier.
      *
      * @param string $ext
      * @param string $keyName

@@ -2,6 +2,8 @@
 
 namespace TREngine\Engine\Core;
 
+use TREngine\Engine\Base\BaseModel;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -37,7 +39,7 @@ class CoreSql extends BaseModel {
 
         if (!empty($databaseConfig) && isset($databaseConfig['type'])) {
             // Chargement des drivers pour la base
-            $baseClassName = "Base" . ucfirst($databaseConfig['type']);
+            $baseClassName = CoreLoader::getFullQualifiedClassName("Base" . ucfirst($databaseConfig['type']));
             $loaded = CoreLoader::classLoader($baseClassName);
         }
 

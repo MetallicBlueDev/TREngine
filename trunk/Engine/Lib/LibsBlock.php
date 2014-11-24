@@ -391,7 +391,7 @@ class LibBlock {
      * @param LibBlockData $blockInfo
      */
     private function get(&$blockInfo) {
-        $blockClassName = "Block" . ucfirst($blockInfo->getType());
+        $blockClassName = CoreLoader::getFullQualifiedClassName("Block" . ucfirst($blockInfo->getType()));
         $loaded = CoreLoader::classLoader($blockClassName);
 
         // Vérification du block

@@ -2,6 +2,9 @@
 
 namespace TREngine\Engine\Base;
 
+use PDO;
+use PDOException;
+use PDOStatement;
 use TREngine\Engine\Core\CoreLogger;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
@@ -162,7 +165,7 @@ class BasePdo extends BaseModel {
     /**
      * Retourne la connexion PDO.
      *
-     * @return \PDO
+     * @return PDO
      */
     private function &getPdo() {
         return $this->connId;
@@ -172,7 +175,7 @@ class BasePdo extends BaseModel {
      * Retourne le résultat de la dernière requête.
      *
      * @param resource $query
-     * @return \PDOStatement
+     * @return PDOStatement
      */
     private function &getPdoResult($query = null) {
         $object = null;

@@ -171,7 +171,7 @@ class CoreCache extends CacheModel {
         }
 
         // Chargement des drivers pour le cache
-        $cacheClassName = "Cache" . ucfirst($cacheConfig['type']);
+        $cacheClassName = CoreLoader::getFullQualifiedClassName("Cache" . ucfirst($cacheConfig['type']));
         $loaded = CoreLoader::classLoader($cacheClassName);
 
         if (!$loaded) {

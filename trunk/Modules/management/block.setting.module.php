@@ -308,7 +308,7 @@ class Module_Management_Block extends ModuleModel {
             if (CoreSql::getInstance()->affectedRows() > 0) { // Si le block existe
                 $block = CoreSql::getInstance()->fetchArray();
 
-                $blockClassName = "Block_" . ucfirst($block['type']);
+                $blockClassName = CoreLoader::getFullQualifiedClassName("Block" . ucfirst($block['type']));
                 $loaded = CoreLoader::classLoader($blockClassName);
 
                 if ($loaded) {
