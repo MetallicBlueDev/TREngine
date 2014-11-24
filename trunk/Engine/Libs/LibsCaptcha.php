@@ -2,6 +2,13 @@
 
 namespace TREngine\Engine\Libs;
 
+use TREngine\Engine\Core\CoreLogger;
+use TREngine\Engine\Core\CoreMain;
+use TREngine\Engine\Core\CoreSession;
+use TREngine\Engine\Core\CoreRequest;
+use TREngine\Engine\Exec\ExecCrypt;
+use TREngine\Engine\Exec\ExecCookie;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
