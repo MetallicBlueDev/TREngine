@@ -2,6 +2,7 @@
 
 namespace TREngine\Engine\Lib;
 
+use TREngine\Engine\Core\CoreLoader;
 use TREngine\Engine\Core\CoreLogger;
 use TREngine\Engine\Core\CoreSecure;
 use TREngine\Engine\Core\CoreTable;

@@ -7,6 +7,7 @@ use TREngine\Engine\Lib\LibModule;
 use TREngine\Engine\Exec\ExecEntities;
 use TREngine\Engine\Exec\ExecCookie;
 use TREngine\Engine\Exec\ExecCrypt;
+use TREngine\Engine\Exec\ExecAgent;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -323,8 +324,8 @@ class CoreHtml {
     public static function &getLink($link, $displayContent = "", $layout = false, $onclick = "", $addons = "") {
         $htmlLink = "<a href=\"" . CoreUrlRewriting::getLink($link, $layout) . "\"";
 
-        // TODO A vérifier
-        if (preg_match("/^[A-Za-z0-9.-\s]+$/ie", $displayContent)) {
+        // TODO A vérifier /^[A-Za-z0-9.-\s]+$/ie
+        if (preg_match("/^[A-Za-z0-9.\s]+$/ie", $displayContent)) {
             $htmlLink .= " title=\"" . $displayContent . "\"";
         }
 

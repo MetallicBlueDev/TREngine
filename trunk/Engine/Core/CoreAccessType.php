@@ -2,6 +2,9 @@
 
 namespace TREngine\Engine\Core;
 
+use TREngine\Engine\Lib\LibBlock;
+use TREngine\Engine\Lib\LibModule;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**

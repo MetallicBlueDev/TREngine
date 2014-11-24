@@ -198,6 +198,8 @@ class CoreLoader {
                 }
             }
         } else {
+            self::checkExtensionAndName($ext, $className);
+
             $rslt = self::isLoaded($className);
         }
         return $rslt;
