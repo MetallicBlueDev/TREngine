@@ -2,6 +2,11 @@
 
 namespace TREngine\Engine\Core;
 
+use TREngine\Engine\Libs\LibsMakeStyle;
+use TREngine\Engine\Exec\ExecMailer;
+use TREngine\Engine\Exec\ExecCrypt;
+use TREngine\Engine\Exec\ExecCookie;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**

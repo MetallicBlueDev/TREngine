@@ -35,12 +35,13 @@ class CoreInfo {
     public static function initialize() {
         if (!self::$initialized) {
             self::$initialized = true;
+
             $info = new CoreInfo();
 
             /**
              * Version php sous forme x.x.x.x (exemple : 5.2.9.2).
              */
-            define("TR_ENGINE_PHP_VERSION", $this->getPhpVersion());
+            define("TR_ENGINE_PHP_VERSION", $info->getPhpVersion());
 
             /**
              * Chemin jusqu'à la racine.

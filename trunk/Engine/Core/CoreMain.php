@@ -2,6 +2,13 @@
 
 namespace TREngine\Engine\Core;
 
+use TREngine\Engine\Libs\LibsBlock;
+use TREngine\Engine\Libs\LibsModule;
+use TREngine\Engine\Exec\ExecAgent;
+use TREngine\Engine\Exec\ExecMailer;
+use TREngine\Engine\Exec\ExecTimeMarker;
+use TREngine\Engine\Exec\ExecEntities;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
