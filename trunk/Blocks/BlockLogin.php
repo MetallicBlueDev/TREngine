@@ -12,7 +12,7 @@ use TREngine\Engine\Lib\LibForm;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Block login, acc�s rapide a une connexion, a une d�connexion et a son compte.
+ * Block login, accès rapide à une connexion, à une déconnexion et à son compte.
  *
  * @author Sébastien Villemain
  */
@@ -40,7 +40,7 @@ class BlockLogin extends BlockModel {
     private $displayIcons = false;
 
     /**
-     * Type d'affichage demand�.
+     * Type d'affichage demandé.
      *
      * @var string
      */
