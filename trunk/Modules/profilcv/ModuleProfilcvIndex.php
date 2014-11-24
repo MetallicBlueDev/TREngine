@@ -4,7 +4,7 @@ namespace TREngine\Modules;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
-class Module_Profilcv_Index extends ModuleModel {
+class ModuleProfilcvIndex extends ModuleModel {
 
     public function display() {
         ?>
@@ -130,4 +130,3 @@ class Module_Profilcv_Index extends ModuleModel {
     }
 
 }
-?>
