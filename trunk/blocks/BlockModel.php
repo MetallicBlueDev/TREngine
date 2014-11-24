@@ -1,4 +1,11 @@
 <?php
+
+namespace TREngine\Blocks;
+
+use TREngine\Engine\Core\CoreLogger;
+use TREngine\Engine\Core\CoreAccessType;
+use TREngine\Engine\Libs\LibsBlockData;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
