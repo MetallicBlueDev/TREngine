@@ -2,6 +2,13 @@
 
 namespace TREngine\Blocks;
 
+use TREngine\Engine\Core\CoreMain;
+use TREngine\Engine\Core\CoreRequest;
+use TREngine\Engine\Core\CoreSession;
+use TREngine\Engine\Core\CoreHtml;
+use TREngine\Engine\Lib\LibMakeStyle;
+use TREngine\Engine\Lib\LibForm;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -9,7 +16,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Block_Login extends BlockModel {
+class BlockLogin extends BlockModel {
 
     /**
      * Affiche le texte de bienvenue.
@@ -193,5 +200,3 @@ class Block_Login extends BlockModel {
     }
 
 }
-
-?>
