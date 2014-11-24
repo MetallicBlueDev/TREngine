@@ -2,6 +2,9 @@
 
 namespace TREngine\Engine\Exec;
 
+use TREngine\Engine\Core\CoreLoader;
+use TREngine\Engine\Core\CoreTextEditor;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**

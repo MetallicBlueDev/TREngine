@@ -6,6 +6,7 @@ use TREngine\Engine\Lib\LibMakeStyle;
 use TREngine\Engine\Lib\LibModule;
 use TREngine\Engine\Exec\ExecEntities;
 use TREngine\Engine\Exec\ExecCookie;
+use TREngine\Engine\Exec\ExecCrypt;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
