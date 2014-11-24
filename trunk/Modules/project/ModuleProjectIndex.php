@@ -2,6 +2,14 @@
 
 namespace TREngine\Modules;
 
+use TREngine\Engine\Core\CoreRequest;
+use TREngine\Engine\Core\CoreHtml;
+use TREngine\Engine\Core\CoreSql;
+use TREngine\Engine\Core\CoreUrlRewriting;
+use TREngine\Engine\Lib\LibMakeStyle;
+use TREngine\Engine\Lib\LibForm;
+use TREngine\Engine\Exec\ExecJQuery;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 class ModuleProjectIndex extends ModuleModel {
@@ -78,10 +86,11 @@ class ModuleProjectIndex extends ModuleModel {
                 $form->addHtmlInFieldset($libMakeStyle->render());
                 $form->addFieldset(PROJECT_DESCRIPTION);
 
-                if (!empty($projectInfo['description']))
+                if (!empty($projectInfo['description'])) {
                     $form->addHtmlInFieldset($projectInfo['description']);
-                else
+                } else {
                     $form->addHtmlInFieldset(NO_DESCRIPTION);
+                }
 
                 $form->addSpace();
                 $form->addFieldset(DOWNLOAD_DETAILS);
@@ -89,10 +98,11 @@ class ModuleProjectIndex extends ModuleModel {
                 $form->addInputSubmit("download_binaire", DOWNLOAD_BINAIRE, !empty($projectInfo['binairelink']) ? "" : "disabled=\"disabled\"");
                 $form->addInputSubmit("download_source", DOWNLOAD_SOURCE, !empty($projectInfo['sourcelink']) ? "" : "disabled=\"disabled\"");
 
-                if (empty($projectInfo['binairelink']) && empty($projectInfo['sourcelink']))
+                if (empty($projectInfo['binairelink']) && empty($projectInfo['sourcelink'])) {
                     $form->addHtmlInFieldset(NO_DOWNLOAD);
-                else
+                } else {
                     $form->addHtmlInFieldset("");
+                }
                 echo $form->render();
             } else {
                 $this->displayProjectList();
@@ -103,8 +113,8 @@ class ModuleProjectIndex extends ModuleModel {
     }
 
     public function download() {
-        $projectId = CoreRequest::getInteger("projectId", -1, "POST");
-        $type = CoreRequest::getInteger("type", -1, "POST");
+//        $projectId = CoreRequest::getInteger("projectId", -1, "POST");
+//        $type = CoreRequest::getInteger("type", -1, "POST");
     }
 
     public function setting() {
@@ -112,5 +122,3 @@ class ModuleProjectIndex extends ModuleModel {
     }
 
 }
-
-?>
