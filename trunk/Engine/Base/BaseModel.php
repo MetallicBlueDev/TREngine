@@ -5,6 +5,7 @@ namespace TREngine\Engine\Base;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 use TREngine\Engine\Core\CoreTransaction;
+use TREngine\Engine\Exec\ExecUtils;
 
 /**
  * Modèle de base de la communication SQL.
