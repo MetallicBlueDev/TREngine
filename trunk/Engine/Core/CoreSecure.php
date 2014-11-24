@@ -176,6 +176,8 @@ class CoreSecure {
                 }
             }
 
+            $errorMessage[] = "";
+
             foreach ($ex->getTrace() as $traceValue) {
                 $errorLine = "";
 
@@ -198,7 +200,7 @@ class CoreSecure {
 
         // Fusion des informations supplémentaires
         if (!empty($argv)) {
-            $errorMessage[] = " ";
+            $errorMessage[] = "";
             $errorMessage[] = "<b>Additional information about the error:</b>";
             $errorMessage = array_merge($errorMessage, $argv);
         }
@@ -209,7 +211,7 @@ class CoreSecure {
                     $sqlErrors = CoreSql::getInstance()->getLastError();
 
                     if (!empty($sqlErrors)) {
-                        $errorMessage[] = " ";
+                        $errorMessage[] = "";
                         $errorMessage[] = "<b>Last Sql error message:</b>";
                         $errorMessage = array_merge($errorMessage, $sqlErrors);
                     }
@@ -221,7 +223,7 @@ class CoreSecure {
             $loggerExceptions = CoreLogger::getExceptions();
 
             if (!empty($loggerExceptions)) {
-                $errorMessage[] = " ";
+                $errorMessage[] = "";
                 $errorMessage[] = "<b>Exceptions logged:</b>";
                 $errorMessage = array_merge($errorMessage, $loggerExceptions);
             }

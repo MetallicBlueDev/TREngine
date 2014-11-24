@@ -13,8 +13,14 @@
                 Error details:<br />
                 <ul>
                     <?php foreach ($errorMessage as $value) { ?>
-                        <li><?php echo $value; ?></li>
-                    <?php } ?>
+                        <?php if (empty($value)) { ?>
+                            <li><hr/></li>
+                        <?php } else { ?>
+                            <li><?php echo $value; ?></li>
+                            <?php
+                        }
+                    }
+                    ?>
                 </ul>
             <?php } ?>
 
