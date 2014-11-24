@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Modules;
+namespace TREngine\Modules\Connect;
 
 use TREngine\Engine\Core\CoreSession;
 use TREngine\Engine\Core\CoreMain;
@@ -24,7 +24,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class ModuleConnectIndex extends ModuleModel {
+class ModuleIndex extends ModuleModel {
 
     public function display() {
         if (CoreSession::hasConnection()) {
