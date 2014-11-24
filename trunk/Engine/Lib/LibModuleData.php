@@ -15,6 +15,20 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class LibModuleData extends CoreDataStorage implements CoreAccessToken {
 
     /**
+     * La page sélectionnée.
+     *
+     * @var string
+     */
+    private $page = null;
+
+    /**
+     * La sous page.
+     *
+     * @var string
+     */
+    private $view = null;
+
+    /**
      * Les données compilées du module.
      *
      * @var string
@@ -56,12 +70,57 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
     }
 
     /**
+     * Retourne la page sélectionnée.
+     *
+     * @return string
+     */
+    public function &getPage() {
+        return $this->page;
+    }
+
+    /**
+     * Affecte la page sélectionnée.
+     *
+     * @param string $page
+     */
+    public function setPage($page) {
+        $this->page = $page;
+    }
+
+    /**
+     * Retourne la sous-page sélectionnée.
+     *
+     * @return string
+     */
+    public function &getView() {
+        return $this->view;
+    }
+
+    /**
+     * Affecte la sous-page sélectionnée.
+     *
+     * @param string $view
+     */
+    public function setView($view) {
+        $this->view = $view;
+    }
+
+    /**
      * Retourne le nom du module.
      *
      * @return string Le nom du module.
      */
     public function &getName() {
         return $this->getDataValue("name");
+    }
+
+    /**
+     * Retourne le nom de classe.
+     *
+     * @return string
+     */
+    public function &getClassName() {
+        return "Module" . ucfirst($this->getPage());
     }
 
     /**
@@ -125,11 +184,10 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
     /**
      * Vérifie si le module est valide (si le module existe).
      *
-     * @param string $page
      * @return boolean
      */
-    public function isValid($page = "") {
-        return LibModule::getInstance()->isModule($this->getName(), $page);
+    public function isValid() {
+        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "Modules" . DIRECTORY_SEPARATOR . $this->getName() . DIRECTORY_SEPARATOR . "Module" . $this->getPage() . ".php");
     }
 
     /**
