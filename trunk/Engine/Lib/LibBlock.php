@@ -250,7 +250,7 @@ class LibBlock {
      * @return array
      */
     public static function &getBlockList() {
-        return CoreCache::getInstance()->getFileList("blocks", ".block");
+        return CoreCache::getInstance()->getFileList("Blocks", "Block");
     }
 
     /**
@@ -394,13 +394,13 @@ class LibBlock {
      * @param LibBlockData $blockInfo
      */
     private function get(&$blockInfo) {
-        $blockClassName = CoreLoader::getFullQualifiedClassName("Block" . ucfirst($blockInfo->getType()));
+        $blockClassName = CoreLoader::getFullQualifiedClassName($blockInfo->getClassName());
         $loaded = CoreLoader::classLoader($blockClassName);
 
         // Vérification du block
         if ($loaded) {
             if (CoreLoader::isCallable($blockClassName, "display")) {
-                CoreTranslate::getInstance()->translate("blocks" . DIRECTORY_SEPARATOR . $blockInfo->getType());
+                CoreTranslate::getInstance()->translate("Blocks" . DIRECTORY_SEPARATOR . $blockInfo->getType());
 
                 /**
                  * @var BlockModel
