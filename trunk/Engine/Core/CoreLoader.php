@@ -18,21 +18,63 @@ class CoreLoader {
      *
      * @var string
      */
-    const TYPE_CLASS = "class";
+    const TYPE_CLASS = "Class";
 
     /**
      * Fichier représentant un block.
      *
      * @var string
      */
-    const TYPE_BLOCK = "block";
+    const TYPE_BASE = "Base";
+
+    /**
+     * Fichier représentant un block.
+     *
+     * @var string
+     */
+    const TYPE_CACHE = "Cache";
+
+    /**
+     * Fichier représentant un block.
+     *
+     * @var string
+     */
+    const TYPE_CORE = "Core";
+
+    /**
+     * Fichier représentant un block.
+     *
+     * @var string
+     */
+    const TYPE_EXEC = "Exec";
+
+    /**
+     * Fichier représentant un block.
+     *
+     * @var string
+     */
+    const TYPE_FAIL = "Fail";
+
+    /**
+     * Fichier représentant un block.
+     *
+     * @var string
+     */
+    const TYPE_LIB = "Lib";
+
+    /**
+     * Fichier représentant un block.
+     *
+     * @var string
+     */
+    const TYPE_BLOCK = "Block";
 
     /**
      * Fichier représentant un module.
      *
      * @var string
      */
-    const TYPE_MODULE = "module";
+    const TYPE_MODULE = "Module";
 
     /**
      * Fichier représentant une traduction.
@@ -47,6 +89,22 @@ class CoreLoader {
      * @var string
      */
     const TYPE_INCLUDE = "inc";
+
+    /**
+     * Tableau des namespaces.
+     *
+     * @var array ("baseName" => "namespace")
+     */
+    const NAMESPACES_RULES = array(
+        self::TYPE_BASE => "TREngine\Engine\Base\\",
+        self::TYPE_CACHE => "TREngine\Engine\Cache\\",
+        self::TYPE_CORE => "TREngine\Engine\Core\\",
+        self::TYPE_EXEC => "TREngine\Engine\Exec\\",
+        self::TYPE_FAIL => "TREngine\Engine\Fail\\",
+        self::TYPE_LIB => "TREngine\Engine\Lib\\",
+        self::TYPE_BLOCK => "TREngine\Blocks\\",
+        self::TYPE_MODULE => "TREngine\Modules\\"
+    );
 
     /**
      * Tableau des classes chargées.
@@ -109,16 +167,18 @@ class CoreLoader {
     /**
      * Vérifie la disponibilité de la classe et de ca methode éventuellement.
      *
-     * @param string $className une chaine de caractère est recommandée.
-     * @param string $methodName
-     * @param boolean $static
-     * @return boolean
+     * @param string $className Nom de la classe
+     * @param string $methodName Nom de la méthode
+     * @param boolean $static Appel d'instance ou statique
+     * @return boolean true l'appel peut être effectué
      */
     public static function &isCallable($className, $methodName = "", $static = false) {
         $rslt = false;
 
         if (!empty($methodName)) {
-            // Utilisation du buffer si possible
+            self::checkExtensionAndName($ext, $className);
+
+            // Vérifie si la classe est en mémoire
             if (self::isLoaded($className)) {
                 // Pour les pages plus complexes comme le module management
                 $pos = strpos($className, ".");
@@ -165,14 +225,14 @@ class CoreLoader {
     /**
      * Retourne le chemin absolu.
      *
-     * @param string $name Fichier demandé.
+     * @param string $keyName Fichier demandé.
      * @return string chemin absolu ou nulle.
      */
-    public static function &getAbsolutePath($name) {
+    public static function &getAbsolutePath($keyName) {
         $rslt = null;
 
-        if (self::isLoaded($name)) {
-            $rslt = self::$loaded[$name];
+        if (self::isLoaded($keyName)) {
+            $rslt = self::$loaded[$keyName];
         }
         return $rslt;
     }
@@ -180,35 +240,35 @@ class CoreLoader {
     /**
      * Vérifie si le fichier demandé a été chargé.
      *
-     * @param string $name Fichier demandé.
+     * @param string $keyName Fichier demandé.
      * @return boolean true si c'est déjà chargé.
      */
-    public static function isLoaded($name) {
-        return isset(self::$loaded[$name]);
+    public static function isLoaded($keyName) {
+        return isset(self::$loaded[$keyName]);
     }
 
     /**
      * Chargeur de fichier.
      *
-     * @param string $name Nom de la classe ou du fichier.
+     * @param string $keyName Nom de la classe ou du fichier.
      * @param string $ext Extension.
      * @return boolean true chargé.
      */
-    private static function &load($name, $ext) {
+    private static function &load($keyName, $ext) {
         try {
-            if (empty($name)) {
+            if (empty($keyName)) {
                 throw new FailLoader("loader");
             }
 
-            $loaded = self::isLoaded($name);
+            self::checkExtensionAndName($ext, $keyName);
+            $loaded = self::isLoaded($keyName);
 
             // Si ce n'est pas déjà chargé
             if (!$loaded) {
-                $ext = self::getExtension($ext, $name);
-                $path = self::getFilePath($ext, $name);
+                $path = self::getFilePath($ext, $keyName);
 
                 if (is_file($path)) {
-                    $loaded = self::loadFilePath($ext, $name, $path);
+                    $loaded = self::loadFilePath($ext, $keyName, $path);
                 } else {
                     switch ($ext) {
                         case self::TYPE_BLOCK:
@@ -221,13 +281,13 @@ class CoreLoader {
                             // Aucune traduction disponible
                             break;
                         default:
-                            throw new FailLoader("loader: " . $name);
+                            throw new FailLoader("loader: " . $keyName);
                     }
                 }
             }
         } catch (Exception $ex) {
             CoreSecure::getInstance()->throwException($ex->getMessage(), $ex, array(
-                $name,
+                $keyName,
                 $ext));
         }
         return $loaded;
@@ -237,44 +297,62 @@ class CoreLoader {
      * Retourne le type d'extension de fichier.
      *
      * @param string $ext
+     * @param string $keyName
      * @return string
      */
-    private static function &getExtension(&$ext, $name) {
+    private static function checkExtensionAndName(&$ext, &$keyName) {
         if (empty($ext)) {
             // Retrouve l'extension
-            if (strpos($name, "\Blocks\Block") !== false) {
+            if (strpos($keyName, "\Blocks\Block") !== false) {
                 $ext = self::TYPE_BLOCK;
-            } else if (strpos($name, "Modules\Module") !== false) {
+            } else if (strpos($keyName, "Modules\Module") !== false) {
                 $ext = self::TYPE_MODULE;
             } else {
-                $ext = self::TYPE_CLASS;
+                if (strpos($keyName, "\\") === false) {
+                    foreach (self::NAMESPACES_RULES as $baseName => $baseNamespace) {
+                        if (strrpos($keyName, $baseName, -strlen($keyName)) !== false) {
+                            $ext = $baseName;
+                            $keyName = $baseNamespace . $keyName;
+                            break;
+                        }
+                    }
+                }
+
+                if (empty($ext)) {
+                    $ext = self::TYPE_CLASS;
+                }
             }
         }
-        return $ext;
     }
 
     /**
      * Détermine le chemin vers le fichier.
      *
-     * @param type $ext
-     * @param type $name
+     * @param string $ext
+     * @param string $keyName
      * @return string
      */
-    private static function &getFilePath($ext, $name) {
+    private static function &getFilePath($ext, $keyName) {
         $path = "";
 
         switch ($ext) {
+            case self::TYPE_BASE:
+            case self::TYPE_CACHE:
+            case self::TYPE_CORE:
+            case self::TYPE_EXEC:
+            case self::TYPE_FAIL:
+            case self::TYPE_LIB :
             case self::TYPE_CLASS:
             case self::TYPE_BLOCK:
             case self::TYPE_MODULE:
-                $path = self::getFilePathFromNamespace($name);
+                $path = self::getFilePathFromNamespace($keyName);
                 break;
             case self::TYPE_TRANSLATE:
                 if (self::isCallable("CoreTranslate")) {
-                    if ($name === DIRECTORY_SEPARATOR) {
+                    if ($keyName === DIRECTORY_SEPARATOR) {
                         $path = "lang" . DIRECTORY_SEPARATOR;
                     } else {
-                        $path = $name . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR;
+                        $path = $keyName . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR;
                     }
 
                     $path .= CoreTranslate::getInstance()->getCurrentLanguage();
@@ -283,7 +361,7 @@ class CoreLoader {
                 $path .= "." . $ext;
                 break;
             case self::TYPE_INCLUDE:
-                $path = str_replace("_", DIRECTORY_SEPARATOR, $name) . "." . $ext;
+                $path = str_replace("_", DIRECTORY_SEPARATOR, $keyName) . "." . $ext;
                 break;
             default:
                 throw new FailLoader("loader");
@@ -296,12 +374,12 @@ class CoreLoader {
     /**
      * Retourne le chemin vers le fichier contenant la classe.
      *
-     * @param string $name
+     * @param string $keyName
      * @return string
      */
-    private static function &getFilePathFromNamespace($name) {
+    private static function &getFilePathFromNamespace($keyName) {
         // Supprime le premier namespace
-        $path = str_replace("TREngine\\", "", $name);
+        $path = str_replace("TREngine\\", "", $keyName);
 
         // Conversion du namespace en dossier
         $path = str_replace("\\", DIRECTORY_SEPARATOR, $path);
@@ -312,11 +390,11 @@ class CoreLoader {
      * Charge le fichier suivant son type, son nom et son chemin.
      *
      * @param string $ext
-     * @param string $name
+     * @param string $keyName
      * @param string $path
      * @return boolean
      */
-    private static function &loadFilePath($ext, $name, $path) {
+    private static function &loadFilePath($ext, $keyName, $path) {
         $loaded = false;
 
         switch ($ext) {
@@ -329,7 +407,7 @@ class CoreLoader {
         }
 
         require $path;
-        self::$loaded[$name] = $path;
+        self::$loaded[$keyName] = $path;
         $loaded = true;
 
         switch ($ext) {
@@ -339,7 +417,7 @@ class CoreLoader {
                 }
                 break;
             case self::TYPE_INCLUDE:
-                CoreMain::getInstance()->addInclude($name, $inc);
+                CoreMain::getInstance()->addInclude($keyName, $inc);
                 break;
         }
         return $loaded;
