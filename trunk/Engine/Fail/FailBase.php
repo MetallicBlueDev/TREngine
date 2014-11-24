@@ -9,7 +9,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-abstract class FailBase extends Exception {
+abstract class FailBase extends \Exception {
 
     /**
      * Une erreur généré par une couche basse du moteur.

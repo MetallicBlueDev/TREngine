@@ -221,7 +221,7 @@ class CoreLoader {
                             // Aucune traduction disponible
                             break;
                         default:
-                            throw new FailLoader("loader");
+                            throw new FailLoader("loader: " . $name);
                     }
                 }
             }
@@ -283,7 +283,7 @@ class CoreLoader {
                 $path .= "." . $ext;
                 break;
             case self::TYPE_INCLUDE:
-                $path = $name . "." . $ext;
+                $path = str_replace("_", DIRECTORY_SEPARATOR, $name) . "." . $ext;
                 break;
             default:
                 throw new FailLoader("loader");

@@ -2,6 +2,8 @@
 
 namespace TREngine\Engine\Cache;
 
+use TREngine\Engine\Core\CoreTransaction;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
