@@ -189,7 +189,7 @@ abstract class CacheModel extends CoreTransaction {
             $content = "<?php\n"
             . "if (!defined(\"TR_ENGINE_INDEX\")){"
             . "if(!class_exists(\"CoreSecure\")){"
-            . "include(\"" . $dirBase . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php\");"
+            . "include(\"" . $dirBase . "Engine" . DIRECTORY_SEPARATOR . "Core" . DIRECTORY_SEPARATOR . "CoreSecure.php\");"
             . "}CoreSecure::checkInstance();}"
             . "// Generated on " . date('Y-m-d H:i:s') . "\n"
             . $content
