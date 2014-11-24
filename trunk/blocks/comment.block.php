@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Block_Comment extends Block_Model {
+class Block_Comment extends BlockModel {
 
     private $displayOnModule = array();
 

@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Block_Login extends Block_Model {
+class Block_Login extends BlockModel {
 
     /**
      * Affiche le texte de bienvenue.

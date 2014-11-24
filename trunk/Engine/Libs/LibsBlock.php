@@ -400,7 +400,7 @@ class LibsBlock {
                 CoreTranslate::getInstance()->translate("blocks" . DIRECTORY_SEPARATOR . $blockInfo->getType());
 
                 /**
-                 * @var Block_Model
+                 * @var BlockModel
                  */
                 $blockClass = new $blockClassName();
                 $blockClass->setBlockData($blockInfo);
