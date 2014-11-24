@@ -187,7 +187,7 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
      * @return boolean
      */
     public function isValid() {
-        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "Modules" . DIRECTORY_SEPARATOR . $this->getName() . DIRECTORY_SEPARATOR . "Module" . $this->getPage() . ".php");
+        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "Modules" . DIRECTORY_SEPARATOR . ucfirst($this->getName()) . DIRECTORY_SEPARATOR . "Module" . $this->getPage() . ".php");
     }
 
     /**
