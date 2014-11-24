@@ -1,9 +1,5 @@
 <?php
 $lang = array(
 // Chemin
-"TRAIL_PROFILCV" => "Mon profil",
-
+    "TRAIL_PROFILCV" => "Mon profil",
 );
-
-
-?>

@@ -1,9 +1,6 @@
 <?php
 $lang = array(
 // Chemin
-"TRAIL_CONTACT" => "Mes coordonnées",
-
+    "TRAIL_CONTACT" => "Mes coordonnées",
 );
 
-
-?>
