@@ -2,6 +2,7 @@
 
 namespace TREngine\Modules\Project;
 
+use TREngine\Modules\ModuleModel;
 use TREngine\Engine\Core\CoreRequest;
 use TREngine\Engine\Core\CoreHtml;
 use TREngine\Engine\Core\CoreSql;

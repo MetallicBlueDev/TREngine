@@ -2,6 +2,8 @@
 
 namespace TREngine\Modules\Contact;
 
+use TREngine\Modules\ModuleModel;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 class ModuleIndex extends ModuleModel {

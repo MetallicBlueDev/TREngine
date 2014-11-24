@@ -2,6 +2,7 @@
 
 namespace TREngine\Modules\Connect;
 
+use TREngine\Modules\ModuleModel;
 use TREngine\Engine\Core\CoreSession;
 use TREngine\Engine\Core\CoreMain;
 use TREngine\Engine\Core\CoreRequest;
