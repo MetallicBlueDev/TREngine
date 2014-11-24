@@ -12,6 +12,7 @@ use TREngine\Engine\Core\CoreAccessType;
 use TREngine\Engine\Core\CoreSession;
 use TREngine\Engine\Core\CoreTranslate;
 use TREngine\Engine\Core\CoreLoader;
+use TREngine\Engine\Core\CoreRequest;
 use TREngine\Engine\Exec\ExecUtils;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';

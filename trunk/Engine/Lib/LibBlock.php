@@ -7,6 +7,8 @@ use TREngine\Engine\Core\CoreSecure;
 use TREngine\Engine\Core\CoreTable;
 use TREngine\Engine\Core\CoreSql;
 use TREngine\Engine\Core\CoreTranslate;
+use TREngine\Engine\Core\CoreCache;
+use TREngine\Engine\Core\CoreAccess;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
