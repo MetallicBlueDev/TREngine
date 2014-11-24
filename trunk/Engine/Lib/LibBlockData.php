@@ -183,12 +183,21 @@ class LibBlockData extends CoreDataStorage implements CoreAccessToken {
     }
 
     /**
+     * Retourne le nom de classe.
+     *
+     * @return string
+     */
+    public function &getClassName() {
+        return "Block" . ucfirst($this->getType());
+    }
+
+    /**
      * Vérifie si le block est valide (si le block existe).
      *
      * @return boolean true block valide
      */
     public function isValid() {
-        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "blocks" . DIRECTORY_SEPARATOR . $this->getType() . ".block.php");
+        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "Blocks" . DIRECTORY_SEPARATOR . $this->getClassName() . ".php");
     }
 
     /**
