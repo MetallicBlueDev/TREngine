@@ -105,7 +105,7 @@ class CoreSql extends BaseModel {
      * @return array
      */
     public static function &getBaseList() {
-        return CoreCache::getInstance()->getFileList("engine/base");
+        return CoreCache::getInstance()->getFileList("Engine/Base", "Base");
     }
 
     /**
