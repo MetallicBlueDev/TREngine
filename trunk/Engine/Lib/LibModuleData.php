@@ -119,7 +119,7 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getClassName() {
+    public function getClassName() {
         return "Module" . ucfirst($this->getPage());
     }
 

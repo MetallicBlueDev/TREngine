@@ -187,7 +187,7 @@ class LibBlockData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getClassName() {
+    public function getClassName() {
         return "Block" . ucfirst($this->getType());
     }
 
