@@ -103,18 +103,16 @@ class Module_Connect_Index extends Module_Model {
         $form->addSelectCloseTag();
 
         // Liste des templates disponibles
-        if (CoreLoader::isCallable("LibsMakeStyle")) {
-            $form->addSelectOpenTag("template", ACCOUNT_PRIVATE_TEMPLATE);
-            $templates = LibsMakeStyle::getTemplateList();
-            $currentTemplate = LibsMakeStyle::getCurrentTemplate();
-            $form->addSelectItemTag($currentTemplate, "", true);
-            foreach ($templates as $template) {
-                if ($template == $currentTemplate)
-                    continue;
-                $form->addSelectItemTag($template);
-            }
-            $form->addSelectCloseTag();
+        $form->addSelectOpenTag("template", ACCOUNT_PRIVATE_TEMPLATE);
+        $templates = LibsMakeStyle::getTemplateList();
+        $currentTemplate = LibsMakeStyle::getCurrentTemplate();
+        $form->addSelectItemTag($currentTemplate, "", true);
+        foreach ($templates as $template) {
+            if ($template == $currentTemplate)
+                continue;
+            $form->addSelectItemTag($template);
         }
+        $form->addSelectCloseTag();
         $form->addSpace();
         $form->addInputHidden("mod", "connect");
         $form->addInputHidden("view", "sendAccount");
