@@ -4,7 +4,7 @@ namespace TREngine\Modules;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
-class Module_Home_Index extends ModuleModel {
+class ModuleHomeIndex extends ModuleModel {
 
     public function display() {
         ?>
@@ -25,4 +25,3 @@ class Module_Home_Index extends ModuleModel {
     }
 
 }
-?>
