@@ -1,7 +1,7 @@
-<?php echo LibBlock::getInstance()->getBlocksBySideName("moduletop"); ?>
+<?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("moduletop"); ?>
 
 <?php
-$renderModule = LibModule::getInstance()->getModule();
+$renderModule = TREngine\Engine\Lib\LibModule::getInstance()->getModule();
 
 if (!empty($renderModule)) {
     ?>
@@ -16,4 +16,4 @@ if (!empty($renderModule)) {
 }
 ?>
 
-<?php echo LibBlock::getInstance()->getBlocksBySideName("modulebottom"); ?>
+<?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("modulebottom"); ?>

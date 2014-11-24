@@ -15,7 +15,7 @@
             foreach ($toolbar as $button) {
                 ?>
                 <?php
-                echo CoreHtml::getLink("?mod=management&manage=" . $pageSelected . "&" . $button['link'], '
+                echo TREngine\Engine\Core\CoreHtml::getLink("?mod=management&manage=" . $pageSelected . "&" . $button['link'], '
                     <div class="management_setting_toolbar_button">
                         <div class="management_setting_toolbar_button_' . $button['name'] . '">'
                 . $button['description'] . '
