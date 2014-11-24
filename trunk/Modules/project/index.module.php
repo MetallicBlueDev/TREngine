@@ -1,7 +1,10 @@
 <?php
+
+namespace TREngine\Modules;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
-class Module_Project_Index extends ModuleModel {
+class ModuleProjectIndex extends ModuleModel {
 
     const PROJECT_TABLE = "project";
 
