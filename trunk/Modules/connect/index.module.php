@@ -2,6 +2,21 @@
 
 namespace TREngine\Modules;
 
+use TREngine\Engine\Core\CoreSession;
+use TREngine\Engine\Core\CoreMain;
+use TREngine\Engine\Core\CoreRequest;
+use TREngine\Engine\Core\CoreHtml;
+use TREngine\Engine\Core\CoreTable;
+use TREngine\Engine\Core\CoreTranslate;
+use TREngine\Engine\Core\CoreLogger;
+use TREngine\Engine\Core\CoreSql;
+use TREngine\Engine\Lib\LibMakeStyle;
+use TREngine\Engine\Lib\LibTabs;
+use TREngine\Engine\Lib\LibForm;
+use TREngine\Engine\Exec\ExecUrl;
+use TREngine\Engine\Exec\ExecEntities;
+use TREngine\Engine\Exec\ExecMailer;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -9,7 +24,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Module_Connect_Index extends ModuleModel {
+class ModuleConnectIndex extends ModuleModel {
 
     public function display() {
         if (CoreSession::hasConnection()) {
@@ -99,8 +114,9 @@ class Module_Connect_Index extends ModuleModel {
         $currentLanguage = CoreTranslate::getInstance()->getCurrentLanguage();
         $form->addSelectItemTag($currentLanguage, "", true);
         foreach ($langues as $langue) {
-            if ($langue == $currentLanguage)
+            if ($langue == $currentLanguage) {
                 continue;
+            }
             $form->addSelectItemTag($langue);
         }
         $form->addSelectCloseTag();
@@ -111,8 +127,9 @@ class Module_Connect_Index extends ModuleModel {
         $currentTemplate = LibMakeStyle::getCurrentTemplate();
         $form->addSelectItemTag($currentTemplate, "", true);
         foreach ($templates as $template) {
-            if ($template == $currentTemplate)
+            if ($template == $currentTemplate) {
                 continue;
+            }
             $form->addSelectItemTag($template);
         }
         $form->addSelectCloseTag();
@@ -338,8 +355,9 @@ class Module_Connect_Index extends ModuleModel {
                         list($login) = CoreSql::getInstance()->fetchArray();
                         $ok = ExecMailer::sendMail(); // TODO envoyer un mail
                     }
-                    if (!$ok)
+                    if (!$ok) {
                         CoreLogger::addWarningMessage(FORGET_LOGIN_INVALID_MAIL_ACCOUNT);
+                    }
                 } else {
                     CoreLogger::addWarningMessage(INVALID_MAIL);
                 }
@@ -390,8 +408,9 @@ class Module_Connect_Index extends ModuleModel {
                             $ok = ExecMailer::sendMail(); // TODO envoyer un mail
                         }
                     }
-                    if (!$ok)
+                    if (!$ok) {
                         CoreLogger::addWarningMessage(FORGET_PASSWORD_INVALID_LOGIN_ACCOUNT);
+                    }
                 } else {
                     $this->errorBox();
                 }
@@ -423,5 +442,3 @@ class Module_Connect_Index extends ModuleModel {
     }
 
 }
-
-?>
