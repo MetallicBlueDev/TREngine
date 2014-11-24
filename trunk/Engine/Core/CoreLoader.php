@@ -256,9 +256,14 @@ class CoreLoader {
      * @param string $className
      * @return string
      */
-    public static function &getFullQualifiedClassName($className) {
+    public static function &getFullQualifiedClassName($className, $prefixName = "") {
         $ext = null;
-        self::checkExtensionAndName($ext, $className);
+
+        if (!empty($prefixName)) {
+            $prefixName .= "\\";
+        }
+
+        self::checkExtensionAndName($ext, $className, $prefixName);
         return $className;
     }
 
@@ -315,7 +320,7 @@ class CoreLoader {
      * @param string $keyName
      * @return string
      */
-    private static function checkExtensionAndName(&$ext, &$keyName) {
+    private static function checkExtensionAndName(&$ext, &$keyName, $prefixName = "") {
         if (empty($ext)) {
             // Retrouve l'extension
             if (strpos($keyName, "\Blocks\Block") !== false) {
@@ -323,17 +328,19 @@ class CoreLoader {
             } else if (strpos($keyName, "Modules\Module") !== false) {
                 $ext = self::TYPE_MODULE;
             } else {
+                // Retrouve l'extension et le namespace
                 if (strpos($keyName, "\\") === false) {
                     foreach (self::NAMESPACES_RULES as $baseName => $baseNamespace) {
                         if (strrpos($keyName, $baseName, -strlen($keyName)) !== false) {
                             $ext = $baseName;
-                            $keyName = $baseNamespace . $keyName;
+                            $keyName = $baseNamespace . $prefixName . $keyName;
                             break;
                         }
                     }
                 }
 
                 if (empty($ext)) {
+                    // Extension par défaut
                     $ext = self::TYPE_CLASS;
                 }
             }
