@@ -2,9 +2,11 @@
 
 namespace TREngine\Engine\Core;
 
+use Exception;
 use TREngine\Engine\Lib\LibMakeStyle;
 use TREngine\Engine\Exec\ExecEntities;
 use TREngine\Engine\Fail\FailBase;
+use TREngine\Engine\Fail\FailEngine;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
