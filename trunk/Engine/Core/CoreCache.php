@@ -427,7 +427,7 @@ class CoreCache extends CacheModel {
      * @return array
      */
     public function &getCacheList() {
-        return $this->getFileList("engine/cache");
+        return $this->getFileList("Engine/Cache", "Cache");
     }
 
     /**
