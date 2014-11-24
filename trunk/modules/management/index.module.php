@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Module_Management_Index extends Module_Model {
+class Module_Management_Index extends ModuleModel {
 
     /**
      * Tableau contenant les boutons de la barre d'outil.

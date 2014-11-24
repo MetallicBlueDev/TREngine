@@ -1,4 +1,15 @@
 <?php
+
+namespace TREngine\Modules;
+
+use TREngine\Engine\Core\CoreLogger;
+use TREngine\Engine\Core\CoreSql;
+use TREngine\Engine\Core\CoreTable;
+use TREngine\Engine\Core\CoreCache;
+use TREngine\Engine\Core\CoreTranslate;
+use TREngine\Engine\Core\CoreAccessType;
+use TREngine\Engine\Libs\LibsModuleData;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -7,7 +18,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-abstract class Module_Model {
+abstract class ModuleModel {
 
     /**
      * Informations sur le module.

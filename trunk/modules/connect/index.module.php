@@ -6,7 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Module_Connect_Index extends Module_Model {
+class Module_Connect_Index extends ModuleModel {
 
     public function display() {
         if (CoreSession::hasConnection()) {

@@ -264,7 +264,7 @@ class LibsModule {
                 $this->updateCount($moduleInfo->getId());
 
                 /**
-                 * @var Module_Model
+                 * @var ModuleModel
                  */
                 $moduleClass = new $moduleClassName();
                 $moduleClass->setModuleData($moduleInfo);
