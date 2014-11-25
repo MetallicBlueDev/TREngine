@@ -1,4 +1,4 @@
-<?php include(TR_ENGINE_INDEXDIR . "/templates/default/module_management_bar.php"); ?>
+<?php include TR_ENGINE_INDEXDIR . "/templates/default/module_management_bar.php"; ?>
 
 <div id="management_index_page">
     <?php

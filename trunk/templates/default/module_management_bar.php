@@ -37,6 +37,6 @@ if (CoreMain::getInstance()->isDefaultLayout()) {
         </div>
     </div>
     <?php
-    include(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "default" . DIRECTORY_SEPARATOR . "module_management_title.php");
+    include TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "default" . DIRECTORY_SEPARATOR . "module_management_title.php";
 }
 ?>
