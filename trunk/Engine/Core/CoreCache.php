@@ -327,8 +327,11 @@ class CoreCache extends CacheModel {
      * @param string $path chemin vers le fichier cache
      * @param string $content contenu du fichier cache
      * @param boolean $overwrite écrasement du fichier
+     * @param string $cacheVariableName
+     * @param array $cacheVariables
+     * @return string
      */
-    public function writeCache($path, $content, $overwrite = true) {
+    public function &writeCache($path, $content, $overwrite = true, $cacheVariableName = "", $cacheVariables = array()) {
         if (is_array($content)) {
             $content = $this->serializeData($content);
         }
@@ -342,6 +345,43 @@ class CoreCache extends CacheModel {
         } else {
             $this->writeCache[$key] = $content;
         }
+
+        $variableName = $this->getVariableName();
+
+        // Supprime la déclaration de la variable $tmp = "myData"; = > myData
+        $pos = strpos($content, "$" . $variableName . " = \"");
+
+        if ($pos !== false && $pos === 0) {
+            $content = str_replace("$" . $variableName . " = \"", "", $content);
+            $pos = strrpos($content, "\";");
+
+            if ($pos !== false && $pos > 0) {
+                $content = substr($content, 0, $pos);
+            }
+        }
+
+        if (!empty($cacheVariableName)) {
+            $matches = array();
+
+            if (preg_match_all("/[$]" . $cacheVariableName . "([[]([A-Za-z0-9]+)[]]|)/", $content, $matches, PREG_PATTERN_ORDER) !== false) {
+                ${$cacheVariableName} = $cacheVariables;
+                $hasEmpty = false;
+
+                foreach ($matches[2] as $value) {
+                    if ($value === "") {
+                        $hasEmpty = true;
+                        continue;
+                    }
+
+                    $content = str_replace("\$" . $cacheVariableName . "[" . $value . "]", ${$cacheVariableName}[$value], $content);
+                }
+
+                if ($hasEmpty) {
+                    $content = str_replace($cacheVariableName, ${$cacheVariableName}, $content);
+                }
+            }
+        }
+        return $content;
     }
 
     /**
@@ -490,14 +530,19 @@ class CoreCache extends CacheModel {
     /**
      * Lecture du cache ciblé dans un tableau.
      *
-     * @param $path Chemin du cache
-     * @param $vars array tableau supplementaire contenant des variables pour résoudre les problèmes de visiblilité (par exemple)
+     * @param type $path chemin du cache
+     * @param type $cacheVariableName
+     * @param type $cacheVariables
      * @return string
      */
-    public function &readCache($path, $vars = array()) {
-        $variableName = $this->getVariableName();
+    public function &readCache($path, $cacheVariableName = "", $cacheVariables = array()) {
+        // Ajout des valeurs en cache
+        if (!empty($cacheVariableName)) {
+            ${$cacheVariableName} = &$cacheVariables;
+        }
 
-        // Rend la variable global a la fonction
+        // Rend la variable global à la fonction
+        $variableName = $this->getVariableName();
         ${$variableName} = "";
 
         // Capture du fichier
@@ -511,7 +556,11 @@ class CoreCache extends CacheModel {
      * Parcours récursivement le dossier du cache actuel afin de supprimer les fichiers trop vieux.
      * (Nettoie le dossier courant du cache).
      *
-     * @param $timeLimit la limite de temps
+     * @param $timeLimit
+
+
+
+      la limite de temps
      */
     public function cleanCache($timeLimit) {
         $exist = $this->cached(self::CHECKER_FILENAME);
@@ -537,7 +586,8 @@ class CoreCache extends CacheModel {
             }
 
             // Suppression du cache périmé
-            $this->removeCache("", $timeLimit);
+            $this->removeCache("", $timeLimit
+            );
         }
     }
 
@@ -580,6 +630,10 @@ class CoreCache extends CacheModel {
      *
      * @param string $dir
      * @param boolean $includeRoot
+
+
+
+
      * @return string
      */
     private function &getCurrentSectionPath($dir, $includeRoot = false) {

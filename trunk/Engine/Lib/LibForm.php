@@ -16,6 +16,11 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class LibForm {
 
     /**
+     * Nom de la variable en cache.
+     */
+    const CACHE_VARIABLE_NAME = "vars";
+
+    /**
      * Nom du formulaire.
      *
      * @var string
@@ -416,7 +421,7 @@ class LibForm {
         $content = "";
 
         if ($this->cached) { // Récupèration des données mise en cache
-            $content = $coreCache->readCache($this->name . ".php", $this->cacheVars);
+            $content = $coreCache->readCache($this->name . ".php", self::CACHE_VARIABLE_NAME, $this->cacheVars);
         } else { // Préparation puis mise en cache
             $data = "<form action=\"" . $url . "\" method=\"post\" id=\"form-" . $name . "\" name=\"" . $name . "\""
             . " class=\"" . $class . "\"><fieldset>" . $title . $description . $this->inputData
@@ -424,10 +429,7 @@ class LibForm {
 
             // Enregistrement dans le cache
             $data = $coreCache->serializeData($data);
-            $coreCache->writeCache($this->name . ".php", $data);
-
-            // Lecture pour l'affichage
-            eval(" \$content = $data; "); // Ne pas ajouter de quote : les données sont déjà serialisées
+            $content = $coreCache->writeCache($this->name . ".php", $data, true, self::CACHE_VARIABLE_NAME, $this->cacheVars);
         }
         return $content;
     }
@@ -575,7 +577,7 @@ class LibForm {
 
         if (!$this->cached) {
             // Le nom de la "vars" est relatif a CoreCache::getInstance()->getCache()
-            $rslt = "$" . "vars[" . ($this->cacheVarsIndex - 1) . "]";
+            $rslt = "$" . self::CACHE_VARIABLE_NAME . "[" . ($this->cacheVarsIndex - 1) . "]";
         }
         return $rslt;
     }
