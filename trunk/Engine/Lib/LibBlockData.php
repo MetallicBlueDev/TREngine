@@ -119,7 +119,8 @@ class LibBlockData extends CoreDataStorage implements CoreAccessToken {
      * @return string
      */
     public function &getTemplateName() {
-        return "block_" . $this->sideName;
+        $templateName = "block_" . $this->sideName;
+        return $templateName;
     }
 
     /**
