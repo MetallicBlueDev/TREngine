@@ -207,23 +207,27 @@ class CoreLoader {
     }
 
     /**
-     * Appel une methode ou un object ou une classe statique callback.
+     * Appel une methode d'un objet ou une méthode statique d'une classe.
      *
-     * @param string $callback Nom de la callback.
-     * @return callback resultat.
+     * @param string $className Nom de la classe.
+     * @param string $methodName Nom de la méthode.
+     * @param boolean $static Type d'accès: true statique, false par instance.
+     * @return mixed resultat.
      */
     public static function &callback($callback) {
-        if (TR_ENGINE_PHP_VERSION < "5.2.3") {
-            if (is_string($callback)) {
-                if (strpos($callback, "::") !== false) {
-                    $callback = explode("::", $callback);
-                }
-            }
-        }
+        $ext = null;
+        self::checkExtensionAndName($ext, $callback);
 
+        // Récupère un seul paramètre supplémentaire
         $args = func_get_args();
         $args = array_splice($args, 1, 1);
+
+        // Appel de la méthode
         $rslt = call_user_func_array($callback, $args);
+
+        if ($rslt === false) {
+            CoreLogger::addException("Failed to execute callback '" . $callback . "'. Extension: " . $ext);
+        }
         return $rslt;
     }
 
