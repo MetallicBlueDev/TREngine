@@ -363,16 +363,23 @@ class CoreCache extends CacheModel {
         if (!empty($cacheVariableName)) {
             $matches = array();
 
+            // Recherche la variable à remplacer
             if (preg_match_all("/[$]" . $cacheVariableName . "([[]([A-Za-z0-9]+)[]]|)/", $content, $matches, PREG_PATTERN_ORDER) !== false) {
+                // Suppression des caractères d'échappements
+                $content = str_replace("\\\"", "\"", $content);
+
+                // Utilisation des variables en cache
                 ${$cacheVariableName} = $cacheVariables;
                 $hasEmpty = false;
 
+                // Remplacement de toutes les variables
                 foreach ($matches[2] as $value) {
                     if ($value === "") {
                         $hasEmpty = true;
                         continue;
                     }
 
+                    // Remplace la variable par sa valeur
                     $content = str_replace("\$" . $cacheVariableName . "[" . $value . "]", ${$cacheVariableName}[$value], $content);
                 }
 
