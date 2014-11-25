@@ -129,7 +129,7 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
      * @return int
      */
     public function &getId() {
-        return (int) $this->getDataValue("mod_id");
+        return $this->getIntValue("mod_id");
     }
 
     /**
@@ -138,7 +138,7 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
      * @return int
      */
     public function &getRank() {
-        return (int) $this->getDataValue("rank");
+        return $this->getIntValue("rank");
     }
 
     /**

@@ -69,6 +69,16 @@ abstract class CoreDataStorage {
     }
 
     /**
+     * Retourne la valeur de la clé.
+     *
+     * @return int
+     */
+    protected function &getIntValue($keyName, $defaultValue = null) {
+        $value = (int) $this->getDataValue($keyName, $defaultValue);
+        return $value;
+    }
+
+    /**
      * Détermine si la clé existe.
      *
      * @param string $keyName

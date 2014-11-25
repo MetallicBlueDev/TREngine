@@ -74,7 +74,7 @@ class LibBlockData extends CoreDataStorage implements CoreAccessToken {
      * @return int
      */
     public function &getId() {
-        return (int) $this->getDataValue("block_id");
+        return $this->getIntValue("block_id");
     }
 
     /**
@@ -92,7 +92,7 @@ class LibBlockData extends CoreDataStorage implements CoreAccessToken {
      * @return int
      */
     public function &getSide() {
-        return (int) $this->getDataValue("side");
+        return $this->getIntValue("side");
     }
 
     /**
@@ -155,7 +155,7 @@ class LibBlockData extends CoreDataStorage implements CoreAccessToken {
      * @return int
      */
     public function &getRank() {
-        return (int) $this->getDataValue("rank");
+        return $this->getIntValue("rank");
     }
 
     /**
