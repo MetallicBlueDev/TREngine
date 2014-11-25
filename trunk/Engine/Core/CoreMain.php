@@ -525,8 +525,8 @@ class CoreMain {
      */
     private function compressionOpen() {
         header("Vary: Cookie, Accept-Encoding");
-
-        if (extension_loaded('zlib') && !ini_get('zlib.output_compression') && function_exists("ob_gzhandler") && !$this->doUrlRewriting()) {
+// HTTP_ACCEPT_ENCODING => gzip
+        if (extension_loaded('zlib') && ini_get('zlib.output_compression') !== "1" && function_exists("ob_gzhandler") && !$this->doUrlRewriting()) {
             ob_start("ob_gzhandler");
         } else {
             ob_start();
