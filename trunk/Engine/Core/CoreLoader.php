@@ -177,6 +177,7 @@ class CoreLoader {
         $rslt = false;
 
         if (!empty($methodName)) {
+            $ext = null;
             self::checkExtensionAndName($ext, $className);
 
             // Vérifie si la classe est en mémoire
@@ -222,7 +223,8 @@ class CoreLoader {
 
         $args = func_get_args();
         $args = array_splice($args, 1, 1);
-        return call_user_func_array($callback, $args);
+        $rslt = call_user_func_array($callback, $args);
+        return $rslt;
     }
 
     /**
