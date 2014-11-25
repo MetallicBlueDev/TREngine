@@ -74,13 +74,13 @@ class LibBlockData extends CoreDataStorage implements CoreAccessToken {
      * @return int
      */
     public function &getId() {
-        return $this->getDataValue("block_id");
+        return (int) $this->getDataValue("block_id");
     }
 
     /**
      * Retourne la position du block en lettre.
      *
-     * @return int
+     * @return string
      */
     public function &getName() {
         return $this->getSideName();
@@ -92,7 +92,7 @@ class LibBlockData extends CoreDataStorage implements CoreAccessToken {
      * @return int
      */
     public function &getSide() {
-        return $this->getDataValue("side");
+        return (int) $this->getDataValue("side");
     }
 
     /**
@@ -155,7 +155,7 @@ class LibBlockData extends CoreDataStorage implements CoreAccessToken {
      * @return int
      */
     public function &getRank() {
-        return $this->getDataValue("rank");
+        return (int) $this->getDataValue("rank");
     }
 
     /**
