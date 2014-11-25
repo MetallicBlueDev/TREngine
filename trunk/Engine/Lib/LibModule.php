@@ -168,6 +168,8 @@ class LibModule {
 
         if (empty($moduleName)) {
             $moduleName = $this->module;
+        } else {
+            $moduleName = ucfirst($moduleName);
         }
 
         if (isset($this->modulesInfo[$moduleName])) {
