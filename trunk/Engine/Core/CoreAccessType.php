@@ -92,7 +92,7 @@ class CoreAccessType implements CoreAccessToken {
      * @return int
      */
     public function &getRank() {
-        $rank = isset($this->rights['rank']) ? $this->rights['rank'] : CoreAccess::RANK_NONE;
+        $rank = isset($this->rights['rank']) ? (int) $this->rights['rank'] : CoreAccess::RANK_NONE;
         return $rank;
     }
 
