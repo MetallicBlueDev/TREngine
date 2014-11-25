@@ -2,6 +2,9 @@
 
 namespace TREngine\Blocks;
 
+use TREngine\Engine\Lib\LibModule;
+use TREngine\Engine\Exec\ExecUtils;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -9,7 +12,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class Block_Comment extends BlockModel {
+class BlockComment extends BlockModel {
 
     private $displayOnModule = array();
 
@@ -25,6 +28,7 @@ class Block_Comment extends BlockModel {
 
     public function display() {
         $this->configure();
+
         // Si le module courant fait partie de la liste des affichages
         if (ExecUtils::inArray(LibModule::getInstance()->getInfoModule()->getName(), $this->displayOnModule)) {
             // Si la position est interieur au module (moduletop ou modulebottom)
