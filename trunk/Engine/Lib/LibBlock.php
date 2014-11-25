@@ -11,6 +11,7 @@ use TREngine\Engine\Core\CoreSql;
 use TREngine\Engine\Core\CoreTranslate;
 use TREngine\Engine\Core\CoreCache;
 use TREngine\Engine\Core\CoreAccess;
+use TREngine\Engine\Core\CoreUrlRewriting;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
