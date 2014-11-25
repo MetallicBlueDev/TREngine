@@ -2,6 +2,7 @@
 
 namespace TREngine\Engine\Lib;
 
+use TREngine\Blocks\BlockModel;
 use TREngine\Engine\Core\CoreLoader;
 use TREngine\Engine\Core\CoreLogger;
 use TREngine\Engine\Core\CoreSecure;
@@ -411,8 +412,7 @@ class LibBlock {
                 // Capture des données d'affichage
                 ob_start();
                 $blockClass->display();
-                $blockInfo->setBuffer(ob_get_contents());
-                ob_end_clean();
+                $blockInfo->setBuffer(ob_get_clean());
             } else {
                 CoreLogger::addErrorMessage(ERROR_BLOCK_CODE);
             }

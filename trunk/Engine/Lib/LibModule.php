@@ -2,6 +2,7 @@
 
 namespace TREngine\Engine\Lib;
 
+use TREngine\Modules\ModuleModel;
 use TREngine\Engine\Core\CoreLogger;
 use TREngine\Engine\Core\CoreMain;
 use TREngine\Engine\Core\CoreTable;
@@ -294,8 +295,7 @@ class LibModule {
                 // Capture des données d'affichage
                 ob_start();
                 echo $moduleClass->{$moduleInfo->getView()}();
-                $moduleInfo->setBuffer(ob_get_contents());
-                ob_end_clean();
+                $moduleInfo->setBuffer(ob_get_clean());
             } else {
                 CoreLogger::addErrorMessage(ERROR_MODULE_CODE . " (" . $moduleInfo->getName() . ")");
             }

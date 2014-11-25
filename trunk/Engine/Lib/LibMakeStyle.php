@@ -118,9 +118,8 @@ class LibMakeStyle {
 
         // Traitement du template
         ob_start();
-        include($this->getTemplatePath());
-        $output = ob_get_contents();
-        ob_end_clean();
+        include $this->getTemplatePath();
+        $output = ob_get_clean();
         return $output;
     }
 
