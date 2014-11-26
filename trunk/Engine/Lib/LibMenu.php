@@ -82,7 +82,7 @@ class LibMenu {
         $route = array();
 
         // Creation du tableau route
-        if (is_object($this->items[$this->itemActive])) {
+        if (isset($this->items[$this->itemActive]) && is_object($this->items[$this->itemActive])) {
             $route = $this->items[$this->itemActive]->getRoute();
         }
 
@@ -96,7 +96,7 @@ class LibMenu {
 
             if ($item->getParentId() == 0 && CoreAccess::autorize(CoreAccessType::getTypeFromDatabase($infos))) {
                 // Ajout du tableau route dans l'élément principal
-                if ($key === $route[0]) {
+                if (isset($route[0]) && $key === $route[0]) {
                     $item->setRoute($route);
                 }
 
