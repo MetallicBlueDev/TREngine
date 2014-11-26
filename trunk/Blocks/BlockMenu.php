@@ -83,30 +83,37 @@ class BlockMenu extends BlockModel {
             // Conversion du texte
             $text = ExecEntities::textDisplay($matches[1]);
 
+            $bold = false;
+            $italic = false;
+            $underline = false;
+            $big = false;
+            $small = false;
+            $link = "";
+
             // Recherche des options et style
             $options = explode(".", $matches[2]);
             foreach ($options as $key => $value) {
                 if ($value == "B") {
-                    $bold = 1;
+                    $bold = true;
                 }
                 if ($value == "I") {
-                    $italic = 1;
+                    $italic = true;
                 }
                 if ($value == "U") {
-                    $underline = 1;
+                    $underline = true;
                 }
                 if ($value == "BIG") {
-                    $big = 1;
+                    $big = true;
                 }
                 if ($value == "SMALL") {
-                    $small = 1;
+                    $small = true;
                 }
                 if ($value == "A") {
                     $link = $options[$key + 1];
                 }
-                if ($value == "POPUP") {
+//                if ($value == "POPUP") {
 //                    $popup = 1;
-                }
+//                }
             }
 
             // Application des options et styles
