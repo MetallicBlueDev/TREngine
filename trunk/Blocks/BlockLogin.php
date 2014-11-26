@@ -60,10 +60,23 @@ class BlockLogin extends BlockModel {
     }
 
     private function configure() {
-        list($activeText, $activeAvatar, $activeIcons) = explode('|', $this->getBlockData()->getContent());
-        $this->displayText = ($activeText == 1) ? true : false;
-        $this->displayAvatar = ($activeAvatar == 1) ? true : false;
-        $this->displayIcons = ($activeIcons == 1) ? true : false;
+        $options = explode('|', $this->getBlockData()->getContent());
+
+        foreach ($options as $key => $value) {
+            switch ($key) {
+                case 0:
+                    $this->displayText = ($value == 1) ? true : false;
+                    break;
+                case 1:
+                    $this->displayAvatar = ($value == 1) ? true : false;
+                    ;
+                    break;
+                case 2:
+                    $this->displayIcons = ($value == 1) ? true : false;
+                    ;
+                    break;
+            }
+        }
 
         if (CoreMain::getInstance()->isBlockLayout()) { // Si nous sommes dans un affichage type block
             $this->localView = CoreRequest::getString("localView", "", "GET");
