@@ -7,7 +7,6 @@ use TREngine\Engine\Core\CoreAccess;
 use TREngine\Engine\Core\CoreRequest;
 use TREngine\Engine\Core\CoreSql;
 use TREngine\Engine\Core\CoreCache;
-use TREngine\Engine\Exec\ExecEntities;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -113,8 +112,7 @@ class LibMenu {
      * Chargement du menu via le cache.
      */
     private function loadFromCache() {
-        $data = CoreCache::getInstance(CoreCache::SECTION_MENUS)->readCache($this->identifier . ".php");
-        $this->items = unserialize(ExecEntities::stripSlashes($data));
+        $this->items = CoreCache::getInstance(CoreCache::SECTION_MENUS)->readCacheAndUnserialize($this->identifier . ".php");
     }
 
     /**
@@ -158,10 +156,7 @@ class LibMenu {
                 }
             }
 
-            $coreCache = CoreCache::getInstance(CoreCache::SECTION_MENUS);
-            $coreCache->writeCache(
-            $this->identifier . ".php", $coreCache->serializeData(serialize($this->items))
-            );
+            CoreCache::getInstance(CoreCache::SECTION_MENUS)->writeCacheAndSerialize($this->identifier . ".php", $this->items);
         }
     }
 

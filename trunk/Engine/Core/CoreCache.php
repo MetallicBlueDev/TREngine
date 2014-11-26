@@ -392,6 +392,59 @@ class CoreCache extends CacheModel {
     }
 
     /**
+     * Ecriture d'un objet dans un fichier cache.
+     *
+     * @param string $path
+     * @param string $content
+     * @return string
+     */
+    public function &writeCacheAndSerialize($path, $content) {
+        $content = serialize($content);
+        // Préserve les données (protection utilisateur et protection des quotes)
+        $content = base64_encode($content);
+        $content = $this->serializeData($content);
+        return $this->writeCache($path, $content);
+    }
+
+    /**
+     * Lecture du cache ciblé.
+     *
+     * @param string $path chemin du cache
+     * @param string $cacheVariableName
+     * @param array $cacheVariables
+     * @return string
+     */
+    public function &readCache($path, $cacheVariableName = "", $cacheVariables = array()) {
+        // Ajout des valeurs en cache
+        if (!empty($cacheVariableName)) {
+            ${$cacheVariableName} = &$cacheVariables;
+        }
+
+        // Rend la variable global à la fonction
+        $variableName = $this->getVariableName();
+        ${$variableName} = "";
+
+        // Capture du fichier
+        if ($this->cached($path)) {
+            require $this->getCurrentSectionPath($path, true);
+        }
+        return ${$variableName};
+    }
+
+    /**
+     * Lecture du cache ciblé.
+     *
+     * @param string $path
+     * @return mixed
+     */
+    public function &readCacheAndUnserialize($path) {
+        $content = $this->readCache($path);
+        $content = base64_decode($content);
+        $content = unserialize($content);
+        return $content;
+    }
+
+    /**
      * Mise à jour de la date de dernière modification.
      *
      * @param string $path chemin vers le fichier cache
@@ -535,39 +588,10 @@ class CoreCache extends CacheModel {
     }
 
     /**
-     * Lecture du cache ciblé dans un tableau.
-     *
-     * @param type $path chemin du cache
-     * @param type $cacheVariableName
-     * @param type $cacheVariables
-     * @return string
-     */
-    public function &readCache($path, $cacheVariableName = "", $cacheVariables = array()) {
-        // Ajout des valeurs en cache
-        if (!empty($cacheVariableName)) {
-            ${$cacheVariableName} = &$cacheVariables;
-        }
-
-        // Rend la variable global à la fonction
-        $variableName = $this->getVariableName();
-        ${$variableName} = "";
-
-        // Capture du fichier
-        if ($this->cached($path)) {
-            require $this->getCurrentSectionPath($path, true);
-        }
-        return ${$variableName};
-    }
-
-    /**
      * Parcours récursivement le dossier du cache actuel afin de supprimer les fichiers trop vieux.
      * (Nettoie le dossier courant du cache).
      *
-     * @param $timeLimit
-
-
-
-      la limite de temps
+     * @param $timeLimit la limite de temps
      */
     public function cleanCache($timeLimit) {
         $exist = $this->cached(self::CHECKER_FILENAME);
@@ -637,10 +661,6 @@ class CoreCache extends CacheModel {
      *
      * @param string $dir
      * @param boolean $includeRoot
-
-
-
-
      * @return string
      */
     private function &getCurrentSectionPath($dir, $includeRoot = false) {
