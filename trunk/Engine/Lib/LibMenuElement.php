@@ -103,7 +103,7 @@ class LibMenuElement extends CoreDataStorage {
      *
      * @param array $tree
      */
-    public function &setTree(array &$tree) {
+    public function setTree(array &$tree) {
         $this->tree = $tree;
     }
 
