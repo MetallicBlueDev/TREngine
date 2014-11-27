@@ -76,7 +76,7 @@ class BlockMenu extends BlockModel {
      * @return string
      */
     public static function getLine($line) {
-        $outPut = "";
+        $output = "";
         $matches = null;
 
         if (preg_match("/(.+)" . self::$optionsTag . "(.*?)" . self::$optionsTag . "/", $line, $matches)) {
@@ -88,32 +88,35 @@ class BlockMenu extends BlockModel {
             $underline = false;
             $big = false;
             $small = false;
+            $popup = false;
             $link = "";
 
             // Recherche des options et style
             $options = explode(".", $matches[2]);
             foreach ($options as $key => $value) {
-                if ($value == "B") {
-                    $bold = true;
+                switch ($value) {
+                    case "B":
+                        $bold = true;
+                        break;
+                    case "I":
+                        $italic = true;
+                        break;
+                    case "U":
+                        $underline = true;
+                        break;
+                    case "BIG":
+                        $big = true;
+                        break;
+                    case "SMALL":
+                        $small = true;
+                        break;
+                    case "A":
+                        $link = $options[$key + 1];
+                        break;
+                    case "POPUP":
+                        $popup = true;
+                        break;
                 }
-                if ($value == "I") {
-                    $italic = true;
-                }
-                if ($value == "U") {
-                    $underline = true;
-                }
-                if ($value == "BIG") {
-                    $big = true;
-                }
-                if ($value == "SMALL") {
-                    $small = true;
-                }
-                if ($value == "A") {
-                    $link = $options[$key + 1];
-                }
-//                if ($value == "POPUP") {
-//                    $popup = 1;
-//                }
             }
 
             // Application des options et styles
@@ -133,16 +136,16 @@ class BlockMenu extends BlockModel {
                 $text = "<small>" . $text . "</small>";
             }
             if (!empty($link)) {
-                $text = CoreHtml::getLink($link, $text, false, "window.open('" . $link . "');return false;");
+                $text = CoreHtml::getLink($link, $text, false, ($popup ? "window.open('" . $link . "');return false;" : ""));
             }
 
-            $outPut = $text;
+            $output = $text;
         } else {
             // Aucun style appliquer
             // Conversion du texte
-            $outPut = ExecEntities::textDisplay($line);
+            $output = ExecEntities::textDisplay($line);
         }
-        return $outPut;
+        return $output;
     }
 
     /**
