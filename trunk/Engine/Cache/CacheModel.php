@@ -179,7 +179,14 @@ abstract class CacheModel extends CoreTransaction {
         if ($ext === "php") {
             // Recherche du dossier parent
             $dirBase = "";
-            $nbDir = count(explode(DIRECTORY_SEPARATOR, str_replace(TR_ENGINE_INDEXDIR, "", $pathFile)));
+
+            $localDir = str_replace(TR_ENGINE_INDEXDIR, "", $pathFile);
+
+            if ($localDir[0] === DIRECTORY_SEPARATOR) {
+                $localDir = substr($localDir, 1);
+            }
+
+            $nbDir = count(explode(DIRECTORY_SEPARATOR, $localDir));
 
             for ($i = 1; $i < $nbDir; $i++) {
                 $dirBase .= ".." . DIRECTORY_SEPARATOR;
@@ -187,7 +194,7 @@ abstract class CacheModel extends CoreTransaction {
 
             // Ecriture de l'entête
             $content = "<?php\n"
-            . "if (!defined(\"TR_ENGINE_INDEX\")){"//SecurityCheck
+            . "if (!defined(\"TR_ENGINE_INDEX\")){"
             . "require '" . $dirBase . "Engine" . DIRECTORY_SEPARATOR . "SecurityCheck.php';"
             . "}"
             . "// Generated on " . date('Y-m-d H:i:s') . "\n"
