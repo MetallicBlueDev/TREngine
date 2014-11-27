@@ -140,54 +140,58 @@ class LibMenu {
             $big = false;
             $small = false;
             $popup = false;
-            $link = "";
+            $link = false;
 
             // Recherche des options et style
             $options = explode(".", $matches[2]);
+
+            // Application des options et styles
             foreach ($options as $key => $value) {
                 switch ($value) {
                     case "B":
-                        $bold = true;
+                        if (!$bold) {
+                            $text = "<b>" . $text . "</b>";
+                            $bold = true;
+                        }
                         break;
                     case "I":
-                        $italic = true;
+                        if (!$italic) {
+                            $text = "<i>" . $text . "</i>";
+                            $italic = true;
+                        }
                         break;
                     case "U":
-                        $underline = true;
+                        if (!$underline) {
+                            $text = "<u>" . $text . "</u>";
+                            $underline = true;
+                        }
                         break;
                     case "BIG":
-                        $big = true;
+                        if (!$big) {
+                            $text = "<big>" . $text . "</big>";
+                            $big = true;
+                        }
                         break;
                     case "SMALL":
-                        $small = true;
+                        if (!$small) {
+                            $text = "<small>" . $text . "</small>";
+                            $small = true;
+                        }
                         break;
                     case "A":
-                        $link = $options[$key + 1];
+                        if (!$link) {
+                            $linkValue = (isset($options[$key + 1]) ? $options[$key + 1] : null);
+
+                            if (!empty($linkValue)) {
+                                $text = CoreHtml::getLink($linkValue, $text, false, ($popup ? "window.open('" . $linkValue . "');return false;" : ""));
+                            }
+                            $link = true;
+                        }
                         break;
                     case "POPUP":
                         $popup = true;
                         break;
                 }
-            }
-
-            // Application des options et styles
-            if ($bold) {
-                $text = "<b>" . $text . "</b>";
-            }
-            if ($italic) {
-                $text = "<i>" . $text . "</i>";
-            }
-            if ($underline) {
-                $text = "<u>" . $text . "</u>";
-            }
-            if ($big) {
-                $text = "<big>" . $text . "</big>";
-            }
-            if ($small) {
-                $text = "<small>" . $text . "</small>";
-            }
-            if (!empty($link)) {
-                $text = CoreHtml::getLink($link, $text, false, ($popup ? "window.open('" . $link . "');return false;" : ""));
             }
 
             $output = $text;
