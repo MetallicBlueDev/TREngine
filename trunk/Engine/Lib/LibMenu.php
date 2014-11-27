@@ -9,6 +9,7 @@ use TREngine\Engine\Core\CoreRequest;
 use TREngine\Engine\Core\CoreSql;
 use TREngine\Engine\Core\CoreCache;
 use TREngine\Engine\Exec\ExecEntities;
+use TREngine\Engine\Exec\ExecUtils;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -41,11 +42,11 @@ class LibMenu {
     private $items = array();
 
     /**
-     * Clès de l'élément actuellement actif.
+     * Identifiant de l'élément actuellement actif.
      *
      * @var int
      */
-    private $itemActive = 0;
+    private $activeItemId = 0;
 
     /**
      * Attributs de l'élément principal.
@@ -62,7 +63,7 @@ class LibMenu {
      */
     public function __construct($identifier, array $sql = array()) {
         $this->identifier = $identifier;
-        $this->itemActive = CoreRequest::getInteger("item", 0);
+        $this->activeItemId = CoreRequest::getInteger("item", 0);
 
         if ($this->isCached()) {
             $this->loadFromCache();
@@ -88,29 +89,31 @@ class LibMenu {
      * @return string
      */
     public function &render($callback = "LibMenu::getLine") {
-        $route = array();
+        $activeTree = array();
+        $activeItem = $this->getActiveItem();
 
-        // Creation du tableau route
-        if (isset($this->items[$this->itemActive]) && is_object($this->items[$this->itemActive])) {
-            $route = $this->items[$this->itemActive]->getRoute();
+        if ($activeItem !== null) {
+            $activeTree = $activeItem->getTree();
+        }
+
+        foreach ($this->items as $key => $item) {
+            $item->setActive(ExecUtils::inArray($key, $activeTree));
         }
 
         // Début de rendu
         $out = "<ul id=\"" . $this->identifier . "\"" . $this->attribtus . ">";
+
+        // Rendu des branches principaux
         foreach ($this->items as $key => $item) {
-            $infos = array(
-                "zone" => "MENU",
-                "rank" => $item->getRank(),
-                "identifiant" => $this->identifier);
+            if ($item->getParentId() == 0) {
+                $infos = array(
+                    "zone" => "MENU",
+                    "rank" => $item->getRank(),
+                    "identifiant" => $this->identifier);
 
-            if ($item->getParentId() == 0 && CoreAccess::autorize(CoreAccessType::getTypeFromDatabase($infos))) {
-                // Ajout du tableau route dans l'élément principal
-                if (isset($route[0]) && $key === $route[0]) {
-                    $item->setRoute($route);
+                if (CoreAccess::autorize(CoreAccessType::getTypeFromDatabase($infos))) {
+                    $out .= $this->items[$key]->toString($callback);
                 }
-
-                // Création du rendu
-                $out .= $this->items[$key]->toString($callback);
             }
         }
         $out .= "</ul>";
@@ -250,6 +253,20 @@ class LibMenu {
     }
 
     /**
+     * Retourne l'élément actif.
+     *
+     * @return LibMenuElement
+     */
+    private function getActiveItem() {
+        $item = null;
+
+        if (isset($this->items[$this->activeItemId]) && is_object($this->items[$this->activeItemId])) {
+            $item = $this->items[$this->activeItemId];
+        }
+        return $item;
+    }
+
+    /**
      * Chargement du menu via le cache.
      */
     private function loadFromCache() {
@@ -278,23 +295,31 @@ class LibMenu {
         );
 
         if ($coreSql->affectedRows() > 0) {
-            // Création d'un buffer
+            // Création d'un buffer pour les menus
             $coreSql->addArrayBuffer($this->identifier, "menu_id");
             $menus = $coreSql->getBuffer($this->identifier);
 
-            // Ajoute et monte tout les items
+            // Création de tous les menus
             foreach ($menus as $key => $item) {
-                $newElement = new LibMenuElement($item, $this->items);
-                $newElement->setRoute(array(
-                    $key));
-                $this->items[$key] = $newElement;
+                $this->items[$key] = new LibMenuElement($item);
             }
 
-            // Création du chemin
-            foreach ($this->items as $key => $item) {
+            // Création du chemin des menus
+            foreach ($this->items as $item) {
+                // Détermine le type de branche
                 if ($item->getParentId() > 0) {
-                    $item->setRoute($this->items[$item->getParentId()]->getRoute());
+                    // Enfant d'une branche
+                    $item->addAttributs("class", "item" . $item->getMenuId());
+                    $this->items[$item->getParentId()]->addChild($item);
+                } else if ($item->getParentId() == 0) {
+                    // Branche principal
+                    $item->addAttributs("class", "parent");
                 }
+
+                // Termine le chemin du menu avec son propre identifiant
+                $tree = $item->getTree();
+                $tree[] = $item->getMenuId();
+                $item->setTree($tree);
             }
 
             CoreCache::getInstance(CoreCache::SECTION_MENUS)->writeCacheAndSerialize($this->identifier . ".php", $this->items);

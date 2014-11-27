@@ -37,32 +37,29 @@ class LibMenuElement extends CoreDataStorage {
     private $tags = array();
 
     /**
-     * Tableau route.
+     * Chemin complet de l'élément.
      *
      * @var array
      */
-    private $route = array();
+    private $tree = array();
+
+    /**
+     * Détermine si l'élément est actif.
+     *
+     * @var boolean
+     */
+    private $active = false;
 
     /**
      * Construction de l'élément du menu
      *
      * @param array $item
-     * @param array $items
      */
-    public function __construct(array $item, array &$items) {
+    public function __construct(array $item) {
         parent::__construct();
 
         $this->newStorage($item);
         $this->addTags("li");
-
-        // Enfant trouvé
-        if ($this->getParentId() > 0) {
-            // Ajout de l'enfant
-            $this->addAttributs("class", "item" . $this->getMenuId());
-            $items[$this->getParentId()]->addChild($this);
-        } else if ($this->getParentId() == 0) {
-            $this->addAttributs("class", "parent");
-        }
     }
 
     /**
@@ -99,6 +96,24 @@ class LibMenuElement extends CoreDataStorage {
      */
     public function &getRank() {
         return $this->getDataValue("rank");
+    }
+
+    /**
+     * Affecte le chemin vers cet élément.
+     *
+     * @param array $tree
+     */
+    public function &setTree(array &$tree) {
+        $this->tree = $tree;
+    }
+
+    /**
+     * Retourne le chemin vers cet élément.
+     *
+     * @return array
+     */
+    public function &getTree() {
+        return $this->tree;
     }
 
     /**
@@ -164,25 +179,36 @@ class LibMenuElement extends CoreDataStorage {
         $attributs = empty($attributs) ? $this->attributs : $attributs;
 
         foreach ($attributs as $attributsName => $value) {
-            if (!is_int($attributsName)) {
+            $isInt = is_int($attributsName);
+
+            if (!$isInt) {
                 $rslt .= " " . $attributsName . "=\"";
             }
 
             if (is_array($value)) {
                 $rslt .= $this->getAttributs($value);
             } else {
-                if (!empty($rslt) && is_int($attributsName)) {
+                if (!empty($rslt) && $isInt) {
                     $rslt .= " ";
                 }
 
                 $rslt .= htmlspecialchars($value);
             }
 
-            if (!is_int($attributsName)) {
+            if (!$isInt) {
                 $rslt .= "\"";
             }
         }
         return $rslt;
+    }
+
+    /**
+     * Détermine si l'élément est actif.
+     *
+     * @param boolean $active
+     */
+    public function setActive($active) {
+        $this->active = $active;
     }
 
     /**
@@ -192,24 +218,6 @@ class LibMenuElement extends CoreDataStorage {
      */
     public function addTags($tag) {
         $this->tags[] = $tag;
-    }
-
-    /**
-     * Retourne le tableau de routage.
-     *
-     * @return array
-     */
-    public function &getRoute() {
-        return $this->route;
-    }
-
-    /**
-     * Mise en place du tableau route.
-     *
-     * @param array $route
-     */
-    public function setRoute(array $route) {
-        $this->route = $route;
     }
 
     /**
@@ -232,6 +240,10 @@ class LibMenuElement extends CoreDataStorage {
         }
 
         $this->child[$child->getMenuId()] = &$child;
+
+        $tree = $child->getTree();
+        $tree[] = $this->getMenuId();
+        $child->setTree($tree);
     }
 
     /**
@@ -263,7 +275,7 @@ class LibMenuElement extends CoreDataStorage {
         }
 
         // Ajout de la classe active
-        if (isset($this->route) && ExecUtils::inArray($this->getMenuId(), $this->route)) {
+        if ($this->active) {
             $this->addAttributs("class", "active");
             LibBreadcrumb::getInstance()->addTrail($text);
         }
@@ -284,7 +296,6 @@ class LibMenuElement extends CoreDataStorage {
         // Constuction des branches
         if (!empty($this->child)) {
             foreach ($this->child as $child) {
-                $child->route = $this->route;
                 $out .= $child->toString($callback);
             }
         }

@@ -224,16 +224,13 @@ class LibModule {
         // Vérification du niveau d'acces
         if (($moduleInfo->installed() && CoreAccess::autorize(CoreAccessType::getTypeFromToken($moduleInfo))) || (!$moduleInfo->installed() && CoreSession::getInstance()->getUserInfos()->hasAdminRank())) {
             if ($moduleInfo->isValid()) {
+                $libBreadcrumb = LibBreadcrumb::getInstance();
+                $libBreadcrumb->addTrail($moduleInfo->getName(), "?mod=" . $moduleInfo->getName());
 
-                if (CoreLoader::isCallable("LibBreadcrumb")) {
-                    $libBreadcrumb = LibBreadcrumb::getInstance();
-                    $libBreadcrumb->addTrail($moduleInfo->getName(), "?mod=" . $moduleInfo->getName());
-
-                    // TODO A MODIFIER
-                    // Juste une petite exception pour le module management qui est different
-                    if ($moduleInfo->getName() !== "management") {
-                        $libBreadcrumb->addTrail($moduleInfo->getView(), "?mod=" . $moduleInfo->getName() . "&view=" . $moduleInfo->getView());
-                    }
+                // TODO A MODIFIER
+                // Juste une petite exception pour le module management qui est different
+                if ($moduleInfo->getName() !== "management") {
+                    $libBreadcrumb->addTrail($moduleInfo->getView(), "?mod=" . $moduleInfo->getName() . "&view=" . $moduleInfo->getView());
                 }
 
                 $this->get($moduleInfo);
