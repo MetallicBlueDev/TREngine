@@ -2,6 +2,9 @@
 
 namespace TREngine\Engine\Base;
 
+use mysqli;
+use mysqli_sql_exception;
+use mysqli_result;
 use TREngine\Engine\Core\CoreLogger;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
@@ -24,10 +27,12 @@ class BaseMysqli extends BaseModel {
     }
 
     public function netConnect() {
-        $this->connId = new mysqli($this->getTransactionHost(), $this->getTransactionUser(), $this->getTransactionPass());
-
-        if ($this->getMysqli()->connect_error) {
-            CoreLogger::addException("MySqli connect_error: " . $this->getMysqli()->connect_error);
+        try {
+            // Permet de générer une exception à la place des avertissements qui spam
+            mysqli_report(MYSQLI_REPORT_STRICT);
+            $this->connId = new mysqli($this->getTransactionHost(), $this->getTransactionUser(), $this->getTransactionPass());
+        } catch (mysqli_sql_exception $ex) {
+            CoreLogger::addException("MySqli connect_error: " . $ex->getMessage());
             $this->connId = null;
         }
     }
@@ -155,7 +160,7 @@ class BaseMysqli extends BaseModel {
     /**
      * Retourne la connexion mysqli.
      *
-     * @return \mysqli
+     * @return mysqli
      */
     private function &getMysqli() {
         return $this->connId;
@@ -165,7 +170,7 @@ class BaseMysqli extends BaseModel {
      * Retourne le résultat de la dernière requête.
      *
      * @param resource $query
-     * @return \mysqli_result
+     * @return mysqli_result
      */
     private function &getMysqliResult($query = null) {
         $object = null;
