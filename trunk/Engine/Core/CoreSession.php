@@ -701,7 +701,7 @@ class CoreSession {
         );
 
         if ($coreSql->affectedRows() === 1) {
-            $info = $coreSql->fetchArray();
+            $info = $coreSql->fetchArray()[0];
         }
         return $info;
     }
