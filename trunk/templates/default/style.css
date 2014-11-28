@@ -143,6 +143,9 @@ a:hover {
 #module_middle_content {
     padding: 10px 13px 10px 13px;
 }
+#module_middle_content li {
+    list-style-type: none;
+}
 #module_bottom {
     width: 645px;
     height: 60px;
