@@ -5,7 +5,7 @@
         <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaHeaders(); ?>
     </head>
     <body>
-        <div class="error">
+        <div class="debugerror">
             <b><?php echo $errorMessageTitle; ?></b>
             <br /><br />
 
@@ -23,8 +23,7 @@
                     ?>
                 </ul>
             <?php } ?>
-
-            <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaFooters(); ?>
         </div>
+        <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaFooters(); ?>
     </body>
 </html>

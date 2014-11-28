@@ -69,13 +69,6 @@ a:hover {
     background-color: #de9da1;
     border-left: 0px solid #de9da1;
     border-right: 0px solid #de9da1;
-    padding: 30px;
-    margin: 30px;
-}
-
-.error hr {
-    margin: 10px;
-    border: 1px dashed red;
 }
 
 /* Menu et contenu des onglets (idTabs) */
@@ -256,4 +249,18 @@ a:hover {
 .description span {
     background: url(images/description.png) no-repeat 0 2px;
     padding-left: 16px;
+}
+
+/* Boite d'erreur du fichier debug.php */
+.debugerror {
+    background-color: #de9da1;
+    border-left: 0px solid #de9da1;
+    border-right: 0px solid #de9da1;
+    padding: 30px;
+    margin: 30px;
+    border: 2px solid red;
+}
+.debugerror hr {
+    margin: 10px;
+    border: 1px dashed red;
 }
