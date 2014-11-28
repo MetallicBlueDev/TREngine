@@ -309,7 +309,16 @@ class ModuleIndex extends ModuleModel {
                 $form->addInputHidden("view", "logon");
                 $form->addInputHidden("layout", "module");
                 $form->addInputSubmit("submit", CONNECT);
+
+                $moreLink = "<ul>";
+                if (CoreMain::getInstance()->registrationAllowed()) {
+                    $moreLink .= "<li><b>" . CoreHtml::getLink("mod=connect&view=registration", LINK_TO_NEW_ACCOUNT) . "</b></li>";
+                }
+                $moreLink .= "<li>" . CoreHtml::getLink("mod=connect&view=forgetlogin", LINK_TO_FORGET_LOGIN) . "</li>"
+                . "<li>" . CoreHtml::getLink("mod=connect&view=forgetpass", LINK_TO_FORGET_PASS) . "</li></ul>";
+
                 $form->addHtmlInFieldset($moreLink);
+
                 echo $form->render();
                 CoreHtml::getInstance()->addJavascript("validLogon('#form-login-logon', '#form-login-logon-login-input', '#form-login-logon-password-input');");
             }
@@ -376,6 +385,16 @@ class ModuleIndex extends ModuleModel {
                     $form->addInputHidden("view", "forgetlogin");
                     $form->addInputHidden("layout", "module");
                     $form->addInputSubmit("submit", FORGET_LOGIN_SUBMIT);
+
+                    $moreLink = "<ul>";
+                    if (CoreMain::getInstance()->registrationAllowed()) {
+                        $moreLink .= "<li><b>" . CoreHtml::getLink("mod=connect&view=registration", LINK_TO_NEW_ACCOUNT) . "</b></li>";
+                    }
+                    $moreLink .= "<li>" . CoreHtml::getLink("mod=connect&view=logon", LINK_TO_LOGON) . "</li>"
+                    . "<li>" . CoreHtml::getLink("mod=connect&view=forgetpass", LINK_TO_FORGET_PASS) . "</li></ul>";
+
+                    $form->addHtmlInFieldset($moreLink);
+
                     echo $form->render();
                     CoreHtml::getInstance()->addJavascript("validForgetLogin('#form-login-forgetlogin', '#form-login-forgetlogin-mail-input');");
                 }
@@ -429,6 +448,16 @@ class ModuleIndex extends ModuleModel {
                     $form->addInputHidden("view", "forgetpass");
                     $form->addInputHidden("layout", "module");
                     $form->addInputSubmit("submit", FORGET_PASSWORD_SUBMIT);
+
+                    $moreLink = "<ul>";
+                    if (CoreMain::getInstance()->registrationAllowed()) {
+                        $moreLink .= "<li><b>" . CoreHtml::getLink("mod=connect&view=registration", LINK_TO_NEW_ACCOUNT) . "</b></li>";
+                    }
+                    $moreLink .= "<li>" . CoreHtml::getLink("mod=connect&view=logon", LINK_TO_LOGON) . "</li>"
+                    . "<li>" . CoreHtml::getLink("mod=connect&view=forgetlogin", LINK_TO_FORGET_LOGIN) . "</li></ul>";
+
+                    $form->addHtmlInFieldset($moreLink);
+
                     echo $form->render();
                     CoreHtml::getInstance()->addJavascript("validForgetPass('#form-login-forgetpass', '#form-login-forgetpass-login-input');");
                 }

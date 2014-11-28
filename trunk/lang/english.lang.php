@@ -31,4 +31,3 @@ $lang = array(
 //
     "WELCOME" => "Welcome"
 );
-?>
