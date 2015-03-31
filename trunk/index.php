@@ -5,10 +5,10 @@ use TREngine\Engine\Core\CoreMain;
 use TREngine\Engine\Core\CoreLogger;
 use TREngine\Engine\Exec\ExecTimeMarker;
 
-// Définition de l'index
+// Marque le passage dans l'index
 define("TR_ENGINE_INDEX", true);
 
-// Import de base
+// Chargement et exécution de la sécurité
 require 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 if (CoreSecure::debuggingMode()) {
