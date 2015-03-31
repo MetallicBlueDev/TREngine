@@ -82,7 +82,7 @@ class CoreInfo {
              *
              * @var string
              */
-            define("TR_ENGINE_VERSION", "0.6.0.0");
+            define("TR_ENGINE_VERSION", "0.6.1.0");
         }
     }
 
@@ -114,18 +114,18 @@ class CoreInfo {
             $workingDirectory = getcwd();
 
             if (!empty($workingDirectory)) {
-                // On isole le chemin en plus jusqu'au fichier
+                // Nous isolons le chemin en plus jusqu'au fichier
                 $path = str_replace($baseName, "", $workingDirectory);
 
                 if (!empty($path)) {
-                    // Suppression du slash
+                    // Suppression du slash supplémentaire
                     if ($path[0] === DIRECTORY_SEPARATOR) {
                         $path = substr($path, 1);
                     }
 
-                    // Vérification en se reperant sur l'emplacement du fichier de configuration
+                    // Vérification en se repérant sur l'emplacement du fichier de configuration
                     while (!is_file($baseName . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "configs" . DIRECTORY_SEPARATOR . "config.inc.php")) {
-                        // On remonte d'un cran
+                        // Nous remontons d'un cran
                         $path = dirname($path);
 
                         // La recherche n'aboutira pas
