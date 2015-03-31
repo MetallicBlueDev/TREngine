@@ -6,6 +6,13 @@ use TREngine\Engine\Core\CoreLoader;
 use TREngine\Engine\Core\CoreInfo;
 use TREngine\Engine\Core\CoreSecure;
 
+/**
+ * Attention, ce fichier va être inclus dans tous les fichiers PHP.
+ * Le code doit être impérativement léger et rapide à exécuter.
+ * 
+ * A utiliser avec l'instruction suivante :
+ * require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
+ */
 // Initialisation principal
 if (!defined("TR_ENGINE_INITIALIZED")) {
     define("TR_ENGINE_INITIALIZED", true);
