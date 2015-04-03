@@ -15,8 +15,6 @@ if (CoreSecure::debuggingMode()) {
     ExecTimeMarker::startMeasurement("all");
 }
 
-ExecTimeMarker::startMeasurement("main");
-
 // Préparation du moteur
 CoreMain::checkInstance();
 

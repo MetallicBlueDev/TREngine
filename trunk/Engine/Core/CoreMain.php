@@ -375,8 +375,6 @@ class CoreMain {
         if ($coreSession->bannedSession()) {
             // Isoloire du bannissement
             $coreSession->displayBanishment();
-
-            ExecTimeMarker::stopMeasurement("main");
         } else {
             // Vérification du type d'affichage
             if ($this->isDefaultLayout()) {
@@ -384,8 +382,6 @@ class CoreMain {
                 if ($this->doDumb()) {
                     // Mode maintenance: possibilité de s'identifier
                     LibBlock::getInstance()->launchBlockType("login");
-
-                    ExecTimeMarker::stopMeasurement("main");
 
                     // Affichage des données de la page de maintenance (fermeture)
                     $libMakeStyle = new LibMakeStyle();
@@ -395,8 +391,6 @@ class CoreMain {
                     // Mode normal: exécution général
                     LibModule::getInstance()->launch();
                     LibBlock::getInstance()->launchAllBlock();
-
-                    ExecTimeMarker::stopMeasurement("main");
 
                     $libMakeStyle = new LibMakeStyle();
                     $libMakeStyle->display("index");
@@ -409,16 +403,12 @@ class CoreMain {
                     // Affichage du module uniquement
                     $libModule->launch();
 
-                    ExecTimeMarker::stopMeasurement("main");
-
                     echo $libModule->getModule();
                 } else if ($this->isBlockLayout()) {
                     $libBlock = LibBlock::getInstance();
 
                     // Affichage du block uniquement
                     $libBlock->launchBlockRequested();
-
-                    ExecTimeMarker::stopMeasurement("main");
 
                     echo $libBlock->getBlock();
                 }
