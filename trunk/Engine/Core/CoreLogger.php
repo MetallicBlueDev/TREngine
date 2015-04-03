@@ -2,6 +2,8 @@
 
 namespace TREngine\Engine\Core;
 
+use TREngine\Engine\Exec\ExecTimeMarker;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -131,7 +133,7 @@ class CoreLogger {
                 . "***********************SQL REQUESTS (" . count(self::$sqlRequest) . ") :<br />";
 
                 if (!empty(self::$sqlRequest)) {
-                    echo str_replace("\n", "<br />", $this->serializeData(self::$sqlRequest));
+                    echo str_replace("\n", "<br />", self::serializeData(self::$sqlRequest));
                 } else {
                     echo "<span style=\"color: green;\">No sql request registred.</span>";
                 }
@@ -140,7 +142,7 @@ class CoreLogger {
 
                 if (self::hasExceptions()) {
                     echo "<span style=\"color: red;\">"
-                    . str_replace("\n", "<br />", $this->serializeData(self::$exceptions))
+                    . str_replace("\n", "<br />", self::serializeData(self::$exceptions))
                     . "</span>";
                 } else {
                     echo "<span style=\"color: green;\">No exception registred.</span>";
