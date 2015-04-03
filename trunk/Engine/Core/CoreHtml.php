@@ -513,8 +513,12 @@ class CoreHtml {
                 }
             }
 
-            if (CoreLoader::isCallable("CoreMain") && CoreMain::getAgentInfos()->getBrowserName() === "Internet Explorer" && CoreMain::getAgentInfos()->getBrowserVersion() < "7") {
-                $this->addJavascriptFile("pngfix.js", "defer");
+            if (CoreLoader::isCallable("CoreMain")) {
+                $coreMain = CoreMain::getInstance();
+
+                if ($coreMain->getAgentInfos()->getBrowserName() === "Internet Explorer" && $coreMain->getAgentInfos()->getBrowserVersion() < "7") {
+                    $this->addJavascriptFile("pngfix.js", "defer");
+                }
             }
         } else {
             $this->resetJavascript();
