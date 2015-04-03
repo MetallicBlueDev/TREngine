@@ -7,7 +7,7 @@ use TREngine\Engine\Core\CoreRequest;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Analyseur de protocole User agent.
+ * Outil d'analyse des informations contenu dans le User agent.
  *
  * @author Sébastien Villemain
  */
