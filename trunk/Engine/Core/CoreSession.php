@@ -275,7 +275,7 @@ class CoreSession {
     }
 
     /**
-     * Retourne les données relatives à la session de l'utilisateur actuel.
+     * Retourne les données de session de l'utilisateur actuel.
      *
      * @return CoreSessionData
      */
