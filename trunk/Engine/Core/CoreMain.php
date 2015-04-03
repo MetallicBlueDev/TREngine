@@ -5,7 +5,6 @@ namespace TREngine\Engine\Core;
 use TREngine\Engine\Lib\LibBlock;
 use TREngine\Engine\Lib\LibModule;
 use TREngine\Engine\Lib\LibMakeStyle;
-use TREngine\Engine\Exec\ExecAgent;
 use TREngine\Engine\Exec\ExecMailer;
 use TREngine\Engine\Exec\ExecTimeMarker;
 use TREngine\Engine\Exec\ExecEntities;
