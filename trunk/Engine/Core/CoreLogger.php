@@ -135,7 +135,7 @@ class CoreLogger {
                 if (!empty(self::$sqlRequest)) {
                     echo str_replace("\n", "<br />", self::serializeData(self::$sqlRequest));
                 } else {
-                    echo "<span style=\"color: green;\">No sql request registred.</span>";
+                    echo "<span style=\"color: #2EFE2E;\">No sql request registred.</span>";
                 }
 
                 echo "<br /><br />***********************EXCEPTIONS (" . count(self::$exceptions) . ") :<br />";
@@ -145,13 +145,14 @@ class CoreLogger {
                     . str_replace("\n", "<br />", self::serializeData(self::$exceptions))
                     . "</span>";
                 } else {
-                    echo "<span style=\"color: green;\">No exception registred.</span>";
+                    echo "<span style=\"color: #2EFE2E;\">No exception registred.</span>";
                 }
 
                 echo "<br /><br />***********************BENCHMAKER :<br />"
                 . "Core : " . ExecTimeMarker::getMeasurement("core") . " ms"
                 . "<br />Launcher : " . ExecTimeMarker::getMeasurement("launcher") . " ms"
-                . "<br />All : " . ExecTimeMarker::getMeasurement("all") . " ms"
+                . "<br />Main : " . ExecTimeMarker::getMeasurement("main") . " ms"
+                . "<br /><b>All : " . ExecTimeMarker::getMeasurement("all") . " ms</b>"
                 . "</div>";
             }
         }
