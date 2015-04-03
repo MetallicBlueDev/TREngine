@@ -157,10 +157,10 @@ class CoreSession {
                 "&& pass = '" . $userPass . "'"));
 
             if (count($userInfos) > 1) {
-                $newSession = self::getInstance(false);
+                $newSession = self::getInstance();
 
                 // Injection des informations du client
-                $newSession->setUser($userInfos);
+                $newSession->setUser($userInfos, true);
 
                 // Tentative d'ouverture de session
                 $rslt = $newSession->openSession();
