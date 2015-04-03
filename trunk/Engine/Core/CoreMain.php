@@ -43,6 +43,13 @@ class CoreMain {
      */
     private $layout = "default";
 
+    /**
+     * Informations sur l'agent.
+     *
+     * @var CoreAgentData
+     */
+    private $agentInfos = null;
+
     private function __construct() {
         // NE RIEN FAIRE
     }
@@ -73,6 +80,18 @@ class CoreMain {
                 ExecTimeMarker::stopMeasurement("core");
             }
         }
+    }
+
+    /**
+     * Retourne les données de l'agent.
+     *
+     * @return CoreAgentData
+     */
+    public function getAgentInfos() {
+        if ($this->agentInfos === null) {
+            $this->agentInfos = new CoreAgentData();
+        }
+        return $this->agentInfos;
     }
 
     /**
@@ -556,9 +575,6 @@ class CoreMain {
             CoreSecure::getInstance()->throwException("configPath", null, array(
                 CoreLoader::getAbsolutePath("configs_config")));
         }
-
-        // Analyse pour les statistiques
-        ExecAgent::executeAnalysis();
 
         // Chargement de la session
         CoreSession::checkInstance();
