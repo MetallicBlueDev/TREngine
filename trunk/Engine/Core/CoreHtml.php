@@ -7,7 +7,6 @@ use TREngine\Engine\Lib\LibModule;
 use TREngine\Engine\Exec\ExecEntities;
 use TREngine\Engine\Exec\ExecCookie;
 use TREngine\Engine\Exec\ExecCrypt;
-use TREngine\Engine\Exec\ExecAgent;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -514,7 +513,7 @@ class CoreHtml {
                 }
             }
 
-            if (CoreLoader::isCallable("ExecAgent") && ExecAgent::$userBrowserName === "Internet Explorer" && ExecAgent::$userBrowserVersion < "7") {
+            if (CoreLoader::isCallable("CoreMain") && CoreMain::getAgentInfos()->getBrowserName() === "Internet Explorer" && CoreMain::getAgentInfos()->getBrowserVersion() < "7") {
                 $this->addJavascriptFile("pngfix.js", "defer");
             }
         } else {
