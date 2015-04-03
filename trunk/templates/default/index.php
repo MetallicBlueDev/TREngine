@@ -3,7 +3,7 @@
     <head>
         <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaHeaders(); ?>
         <link rel="stylesheet" href="templates/default/style.css" type="text/css" />
-        <?php if (TREngine\Engine\Core\CoreLoader::isCallable("ExecAgent") && TREngine\Engine\Exec\ExecAgent::$userBrowserName == "Internet Explorer" && TREngine\Engine\Exec\ExecAgent::$userBrowserVersion < "7") { ?>
+        <?php if (TREngine\Engine\Core\CoreLoader::isCallable("CoreMain") && TREngine\Engine\Core\CoreMain::getInstance()->getAgentInfos()->getBrowserName() == "Internet Explorer" && TREngine\Engine\Core\CoreMain::getInstance()->getAgentInfos()->getBrowserVersion() < "7") { ?>
             <link rel="stylesheet" href="templates/default/ie6.css" type="text/css" />
         <?php } ?>
     </head>

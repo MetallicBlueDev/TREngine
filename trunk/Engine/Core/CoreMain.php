@@ -82,7 +82,7 @@ class CoreMain {
     }
 
     /**
-     * Retourne les données de l'agent.
+     * Retourne les données de l'agent actuel.
      *
      * @return CoreAgentData
      */

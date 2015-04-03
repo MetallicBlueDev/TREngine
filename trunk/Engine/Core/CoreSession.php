@@ -674,7 +674,7 @@ class CoreSession {
      * @return string
      */
     private static function getSalt() {
-        return CoreMain::getInstance()->getCryptKey() . ExecAgent::$userBrowserName;
+        return CoreMain::getInstance()->getCryptKey() . CoreMain::getInstance()->getAgentInfos()->getBrowserName();
     }
 
     /**
