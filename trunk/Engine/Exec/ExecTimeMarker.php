@@ -60,7 +60,11 @@ class ExecTimeMarker {
     public static function &getMeasurement($name) {
         $rslt = 0;
 
-        if (isset(self::$startTime[$name]) && isset(self::$finishTime[$name])) {
+        if (isset(self::$startTime[$name])) {
+            if (!isset(self::$finishTime[$name])) {
+                self::stopMeasurement($name);
+            }
+
             $rslt = self::$finishTime[$name] - self::$startTime[$name];
             $rslt = round($rslt, 4) * 1000;
         }

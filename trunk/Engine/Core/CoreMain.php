@@ -429,6 +429,8 @@ class CoreMain {
             }
         }
 
+        ExecTimeMarker::stopMeasurement("main");
+
         if (CoreSecure::debuggingMode()) {
             ExecTimeMarker::stopMeasurement("launcher");
         } else {
