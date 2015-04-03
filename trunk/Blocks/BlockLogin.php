@@ -59,6 +59,18 @@ class BlockLogin extends BlockModel {
         }
     }
 
+    public function install() {
+
+    }
+
+    public function uninstall() {
+        $coreCache = CoreCache::getInstance(CoreCache::SECTION_FORMS);
+        $coreCache->removeCache("login-logonblock.php");
+        $coreCache->removeCache("login-forgetloginblock.php");
+        $coreCache->removeCache("login-forgetpassblock.php");
+        $coreCache->removeCache("login-registrationblock.php");
+    }
+
     private function configure() {
         $options = explode('|', $this->getBlockData()->getContent());
 
@@ -69,11 +81,9 @@ class BlockLogin extends BlockModel {
                     break;
                 case 1:
                     $this->displayAvatar = ($value == 1) ? true : false;
-                    ;
                     break;
                 case 2:
                     $this->displayIcons = ($value == 1) ? true : false;
-                    ;
                     break;
             }
         }
@@ -85,15 +95,18 @@ class BlockLogin extends BlockModel {
 
     private function &render() {
         $content = "";
+
         if (CoreSession::hasConnection()) {
             $userInfos = CoreSession::getInstance()->getUserInfos();
 
             if ($this->displayText) {
                 $content .= WELCOME . " <b>" . $userInfos->getName() . "</b> !<br />";
             }
+
             if ($this->displayAvatar && !empty($userInfos->getAvatar())) {
                 $content .= CoreHtml::getLink("mod=connect&view=account", ExecImage::resize($userInfos->getAvatar(), 80)) . "<br />";
             }
+
             if ($this->displayIcons) {
                 $content .= CoreHtml::getLink("mod=connect&view=logout", BLOCKLOGIN_LOGOUT) . "<br />"
                 . CoreHtml::getLink("mod=connect&view=account", BLOCKLOGIN_MY_ACCOUNT) . "<br />"
@@ -101,9 +114,11 @@ class BlockLogin extends BlockModel {
             }
         } else {
             $moreLink = "<ul>";
+
             if (CoreMain::getInstance()->registrationAllowed()) {
                 $moreLink .= "<li><b>" . CoreHtml::getLinkWithAjax("mod=connect&view=registration", "blockId=" . $this->getBlockData()->getId() . "&localView=registration", "#login-logonblock", BLOCKLOGIN_GET_ACCOUNT) . "</b></li>";
             }
+
             $moreLink .= "<li>" . CoreHtml::getLinkWithAjax("mod=connect&view=logon", "blockId=" . $this->getBlockData()->getId() . "&localView=logon", "#login-logonblock", BLOCKLOGIN_GET_LOGON) . "</li>"
             . "<li>" . CoreHtml::getLinkWithAjax("mod=connect&view=forgetlogin", "blockId=" . $this->getBlockData()->getId() . "&localView=forgetlogin", "#login-logonblock", BLOCKLOGIN_GET_FORGET_LOGIN) . "</li>"
             . "<li>" . CoreHtml::getLinkWithAjax("mod=connect&view=forgetpass", "blockId=" . $this->getBlockData()->getId() . "&localView=forgetpass", "#login-logonblock", BLOCKLOGIN_GET_FORGET_PASS) . "</li></ul>";
@@ -198,18 +213,6 @@ class BlockLogin extends BlockModel {
         $form->addHtmlInFieldset($moreLink);
         //CoreHtml::getInstance()->addJavascript("validForgetPass('#form-login-registrationblock', '#form-login-registrationblock-login-input');");
         return $form->render("login-registrationblock");
-    }
-
-    public function install() {
-
-    }
-
-    public function uninstall() {
-        $coreCache = CoreCache::getInstance(CoreCache::SECTION_FORMS);
-        $coreCache->removeCache("login-logonblock.php");
-        $coreCache->removeCache("login-forgetloginblock.php");
-        $coreCache->removeCache("login-forgetpassblock.php");
-        $coreCache->removeCache("login-registrationblock.php");
     }
 
 }

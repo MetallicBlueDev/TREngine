@@ -25,6 +25,14 @@ class BlockMenu extends BlockModel {
         $libMakeStyle->display($this->getBlockData()->getTemplateName());
     }
 
+    public function install() {
+
+    }
+
+    public function uninstall() {
+        CoreCache::getInstance(CoreCache::SECTION_MENUS)->removeCache("block" . $this->getBlockData()->getId() . ".php");
+    }
+
     protected function getMenu() {
         $menus = new LibMenu(
         "block" . $this->getBlockData()->getId(), array(
@@ -47,14 +55,6 @@ class BlockMenu extends BlockModel {
         )
         );
         return $menus;
-    }
-
-    public function install() {
-
-    }
-
-    public function uninstall() {
-        CoreCache::getInstance(CoreCache::SECTION_MENUS)->removeCache("block" . $this->getBlockData()->getId() . ".php");
     }
 
 }
