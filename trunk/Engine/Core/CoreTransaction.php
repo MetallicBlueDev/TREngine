@@ -54,29 +54,10 @@ abstract class CoreTransaction extends CoreDataStorage {
     }
 
     /**
-     * Lance une exception pour gérant ce type de transaction.
-     *
-     * @param string $message
-     * @throws FailEngine
-     */
-    protected function throwException($message) {
-        throw new FailEngine($message);
-    }
-
-    /**
      * Destruction de la communication.
      */
     public function __destruct() {
         $this->netDeconnect();
-    }
-
-    /**
-     * Détermine si le gestionnaire est utilisable.
-     *
-     * @return boolean
-     */
-    protected function canUse() {
-        return false;
     }
 
     /**
@@ -146,6 +127,25 @@ abstract class CoreTransaction extends CoreDataStorage {
      */
     public function &getTransactionType() {
         return $this->getDataValue("type");
+    }
+
+    /**
+     * Détermine si le gestionnaire est utilisable.
+     *
+     * @return boolean
+     */
+    protected function canUse() {
+        return false;
+    }
+
+    /**
+     * Lance une exception pour gérant ce type de transaction.
+     *
+     * @param string $message
+     * @throws FailEngine
+     */
+    protected function throwException($message) {
+        throw new FailEngine($message);
     }
 
 }

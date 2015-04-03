@@ -243,6 +243,21 @@ class LibModule {
     }
 
     /**
+     * Retourne le module compilé.
+     *
+     * @return string
+     */
+    public function &getModule() {
+        $buffer = $this->getInfoModule()->getBuffer();
+
+        // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
+        if (ExecUtils::inArray("rewriteBuffer", $this->getInfoModule()->getConfigs())) {
+            $buffer = CoreUrlRewriting::getInstance()->rewriteBuffer($buffer);
+        }
+        return $buffer;
+    }
+
+    /**
      * Retourne le jeu de configuration du module.
      *
      * @param string $moduleConfigs
@@ -297,21 +312,6 @@ class LibModule {
                 CoreLogger::addErrorMessage(ERROR_MODULE_CODE . " (" . $moduleInfo->getName() . ")");
             }
         }
-    }
-
-    /**
-     * Retourne le module compilé.
-     *
-     * @return string
-     */
-    public function &getModule() {
-        $buffer = $this->getInfoModule()->getBuffer();
-
-        // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
-        if (ExecUtils::inArray("rewriteBuffer", $this->getInfoModule()->getConfigs())) {
-            $buffer = CoreUrlRewriting::getInstance()->rewriteBuffer($buffer);
-        }
-        return $buffer;
     }
 
     /**

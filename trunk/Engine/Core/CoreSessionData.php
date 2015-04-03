@@ -219,6 +219,16 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
     }
 
     /**
+     * Retourne le zone d'échange.
+     *
+     * @return string
+     */
+    public function &getZone() {
+        $zone = "SESSION";
+        return $zone;
+    }
+
+    /**
      * Routine de vérification des droits du client.
      */
     private function checkRights() {
@@ -252,16 +262,6 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      */
     private function hasRights() {
         return $this->hasValue("rights");
-    }
-
-    /**
-     * Retourne le zone d'échange.
-     *
-     * @return string
-     */
-    public function &getZone() {
-        $zone = "SESSION";
-        return $zone;
     }
 
 }
