@@ -7,7 +7,7 @@ use TREngine\Engine\Exec\ExecEntities;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Description of sessiondata
+ * Information de base sur une session d'un utilisateur.
  *
  * @author Sébastien Villemain
  */
