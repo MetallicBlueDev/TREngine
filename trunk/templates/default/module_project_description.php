@@ -10,7 +10,7 @@
                 <?php
             } else {
                 ?>
-                <img alt="" src="templatestest/default/project/<?php echo $projectInfo['language']; ?>.png" />
+                <img alt="" src="templates/default/project/<?php echo $projectInfo['language']; ?>.png" />
                 <?php
             }
             ?>

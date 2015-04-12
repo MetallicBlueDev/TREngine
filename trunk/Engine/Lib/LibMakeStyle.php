@@ -20,7 +20,7 @@ class LibMakeStyle {
      *
      * @var string
      */
-    private static $templatesDir = "templatestest";
+    private static $templatesDir = "templates";
 
     /**
      * Nom du dossier du template utilisé.

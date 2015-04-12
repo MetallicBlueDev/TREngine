@@ -2,9 +2,9 @@
     <div id="management_setting_title">
         <div id="management_setting_title_icon">
             <?php
-            $pictureName = is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "templatestest" . DIRECTORY_SEPARATOR . "default" . DIRECTORY_SEPARATOR . "management" . DIRECTORY_SEPARATOR . "icon_" . $pageSelected . ".png") ? $pageSelected : "no_picture";
+            $pictureName = is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "default" . DIRECTORY_SEPARATOR . "management" . DIRECTORY_SEPARATOR . "icon_" . $pageSelected . ".png") ? $pageSelected : "no_picture";
             ?>
-            <img src="templatestest/default/management/icon_<?php echo $pictureName; ?>.png" />
+            <img src="templates/default/management/icon_<?php echo $pictureName; ?>.png" />
         </div>
         <div id="management_setting_title_text"><?php echo $currentPageName; ?></div>
     </div>
