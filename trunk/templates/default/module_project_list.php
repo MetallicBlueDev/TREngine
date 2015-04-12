@@ -17,7 +17,7 @@ foreach ($projects as $key => $projectItem) {
     <?php echo CoreHtml::getLink('?mod=project&view=displayProject&projectId=' . $projectItem['projectid'], '
         <div class="project_body' . $progress . '">
             <div>
-                <div class="project_img"><img alt="" src="templates/default/project/' . strtolower($projectItem['language']) . '.png" /></div>
+                <div class="project_img"><img alt="" src="templatestest/default/project/' . strtolower($projectItem['language']) . '.png" /></div>
                 <div class="project_text">
                     <b>' . $projectItem['name'] . '</b> (' . $projectItem['language'] . ')
                     <br /><i>' . PERCENT_COMPLETE . ': " ' . $projectItem['progress'] . '%</i>

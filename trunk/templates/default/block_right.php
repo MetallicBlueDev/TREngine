@@ -1,6 +1,6 @@
 <div class="block_top">
-<object type="application/x-shockwave-flash" data="templates/default/images/block_top.swf" width="174px" height="57px">
-	<param name="movie" value="templates/default/images/block_top.swf" /> 
+<object type="application/x-shockwave-flash" data="templatestest/default/images/block_top.swf" width="174px" height="57px">
+	<param name="movie" value="templatestest/default/images/block_top.swf" /> 
 	<param name="pluginurl" value="http://www.macromedia.com/go/getflashplayer" />
 	<param name="wmode" value="transparent" /> 
 	<param name="menu" value="false" /> 
