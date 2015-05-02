@@ -198,7 +198,8 @@ class LibBlockData extends CoreDataStorage implements CoreAccessToken {
      * @return boolean true block valide
      */
     public function isValid() {
-        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "Blocks" . DIRECTORY_SEPARATOR . $this->getClassName() . ".php");
+        $blockClassName = CoreLoader::getFullQualifiedClassName($this->getClassName());
+        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . CoreLoader::getFilePathFromNamespace($blockClassName) . ".php");
     }
 
     /**

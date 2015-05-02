@@ -220,7 +220,7 @@ class CoreTranslate {
     public static function checkInstance() {
         if (self::$coreTranslate === null) {
             self::$coreTranslate = new CoreTranslate();
-            self::$coreTranslate->translate(DIRECTORY_SEPARATOR);
+            self::$coreTranslate->translate("Engine" . DIRECTORY_SEPARATOR);
         }
     }
 

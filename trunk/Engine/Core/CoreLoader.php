@@ -363,7 +363,7 @@ class CoreLoader {
     private static function buildExtensionAndName(&$ext, &$keyName, $prefixName = "") {
         if (empty($ext)) {
             // Retrouve l'extension
-            if (strpos($keyName, "\Blocks\Block") !== false) {
+            if (strpos($keyName, "\Block\Block") !== false) {
                 $ext = self::TYPE_BLOCK;
             } else if (strpos($keyName, "Module\Module") !== false) {
                 $ext = self::TYPE_MODULE;
