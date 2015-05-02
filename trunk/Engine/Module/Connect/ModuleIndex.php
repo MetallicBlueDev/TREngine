@@ -18,7 +18,7 @@ use TREngine\Engine\Exec\ExecUrl;
 use TREngine\Engine\Exec\ExecEntities;
 use TREngine\Engine\Exec\ExecMailer;
 
-require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
  * Module d'interface et de traitement entre le site et le client

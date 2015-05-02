@@ -112,7 +112,8 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
      * @return string Le nom du module.
      */
     public function &getName() {
-        return ucfirst($this->getDataValue("name"));
+        $dataValue = ucfirst($this->getDataValue("name"));
+        return $dataValue;
     }
 
     /**
