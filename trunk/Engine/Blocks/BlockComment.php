@@ -1,11 +1,11 @@
 <?php
 
-namespace TREngine\Blocks;
+namespace TREngine\Engine\Block;
 
 use TREngine\Engine\Lib\LibModule;
 use TREngine\Engine\Exec\ExecUtils;
 
-require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
  * Block login, accès rapide à une connexion, à une déconnexion et à son compte.

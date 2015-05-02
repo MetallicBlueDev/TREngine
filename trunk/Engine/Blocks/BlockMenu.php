@@ -1,13 +1,13 @@
 <?php
 
-namespace TREngine\Blocks;
+namespace TREngine\Engine\Block;
 
 use TREngine\Engine\Core\CoreCache;
 use TREngine\Engine\Core\CoreTable;
 use TREngine\Engine\Lib\LibMakeStyle;
 use TREngine\Engine\Lib\LibMenu;
 
-require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
  * Block de menu.

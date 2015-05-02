@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Blocks;
+namespace TREngine\Engine\Block;
 
 use TREngine\Engine\Core\CoreMain;
 use TREngine\Engine\Core\CoreRequest;
@@ -9,7 +9,7 @@ use TREngine\Engine\Core\CoreHtml;
 use TREngine\Engine\Lib\LibMakeStyle;
 use TREngine\Engine\Lib\LibForm;
 
-require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
  * Block login, accès rapide à une connexion, à une déconnexion et à son compte.

@@ -2,7 +2,7 @@
 
 namespace TREngine\Engine\Lib;
 
-use TREngine\Blocks\BlockModel;
+use TREngine\Engine\Block\BlockModel;
 use TREngine\Engine\Core\CoreLoader;
 use TREngine\Engine\Core\CoreLogger;
 use TREngine\Engine\Core\CoreSecure;

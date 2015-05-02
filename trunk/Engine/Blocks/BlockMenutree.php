@@ -1,11 +1,11 @@
 <?php
 
-namespace TREngine\Blocks;
+namespace TREngine\Engine\Block;
 
 use TREngine\Engine\Lib\LibMakeStyle;
 use TREngine\Engine\Exec\ExecJQuery;
 
-require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
  * Block de menu style Menu treeview by

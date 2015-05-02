@@ -1,12 +1,12 @@
 <?php
 
-namespace TREngine\Blocks;
+namespace TREngine\Engine\Block;
 
 use TREngine\Engine\Core\CoreLogger;
 use TREngine\Engine\Core\CoreAccessType;
 use TREngine\Engine\Lib\LibBlockData;
 
-require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
  * Block de base, hérité par tous les autres blocks.
