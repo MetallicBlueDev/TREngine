@@ -293,6 +293,21 @@ class CoreLoader {
     }
 
     /**
+     * Retourne le chemin vers le fichier contenant la classe.
+     *
+     * @param string $keyName
+     * @return string
+     */
+    public static function &getFilePathFromNamespace($keyName) {
+        // Supprime le premier namespace
+        $path = str_replace("TREngine\\", "", $keyName);
+
+        // Conversion du namespace en dossier
+        $path = str_replace("\\", DIRECTORY_SEPARATOR, $path);
+        return $path;
+    }
+
+    /**
      * Chargeur de fichier.
      *
      * @param string $keyName Nom de la classe ou du fichier.
@@ -420,21 +435,6 @@ class CoreLoader {
         }
 
         $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path . ".php";
-        return $path;
-    }
-
-    /**
-     * Retourne le chemin vers le fichier contenant la classe.
-     *
-     * @param string $keyName
-     * @return string
-     */
-    private static function &getFilePathFromNamespace($keyName) {
-        // Supprime le premier namespace
-        $path = str_replace("TREngine\\", "", $keyName);
-
-        // Conversion du namespace en dossier
-        $path = str_replace("\\", DIRECTORY_SEPARATOR, $path);
         return $path;
     }
 

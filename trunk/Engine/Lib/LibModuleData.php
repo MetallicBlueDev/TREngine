@@ -2,6 +2,7 @@
 
 namespace TREngine\Engine\Lib;
 
+use TREngine\Engine\Core\CoreLoader;
 use TREngine\Engine\Core\CoreDataStorage;
 use TREngine\Engine\Core\CoreAccessToken;
 
@@ -111,7 +112,7 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
      * @return string Le nom du module.
      */
     public function &getName() {
-        return $this->getDataValue("name");
+        return ucfirst($this->getDataValue("name"));
     }
 
     /**
@@ -187,7 +188,8 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
      * @return boolean
      */
     public function isValid() {
-        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "Modules" . DIRECTORY_SEPARATOR . ucfirst($this->getName()) . DIRECTORY_SEPARATOR . "Module" . $this->getPage() . ".php");
+        $moduleClassName = CoreLoader::getFullQualifiedClassName($this->getClassName(), $this->getName());
+        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . CoreLoader::getFilePathFromNamespace($moduleClassName) . ".php");
     }
 
     /**

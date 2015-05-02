@@ -69,8 +69,6 @@ class LibModule {
                 $moduleName = $defaultModuleName;
             }
 
-            $moduleName = ucfirst($moduleName);
-
             // Nom de la page courante
             $page = CoreRequest::getWord("page");
             $defaultPage = "index";
@@ -78,8 +76,6 @@ class LibModule {
             if (empty($page)) {
                 $page = $defaultPage;
             }
-
-            $page = ucfirst($page);
 
             // Nom du viewer courant
             $view = CoreRequest::getWord("view");
@@ -109,7 +105,7 @@ class LibModule {
                 $infoModule->setView($view);
             }
 
-            self::$libModule->module = $moduleName;
+            self::$libModule->module = $infoModule->getName();
         }
     }
 
