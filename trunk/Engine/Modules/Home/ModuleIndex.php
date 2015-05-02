@@ -1,8 +1,8 @@
 <?php
 
-namespace TREngine\Modules\Home;
+namespace TREngine\Engine\Modules\Home;
 
-use TREngine\Modules\ModuleModel;
+use TREngine\Engine\Modules\ModuleModel;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 

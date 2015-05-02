@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Modules;
+namespace TREngine\Engine\Modules;
 
 use TREngine\Engine\Core\CoreLogger;
 use TREngine\Engine\Core\CoreSql;
