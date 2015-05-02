@@ -403,7 +403,7 @@ class LibBlock {
         // Vérification du block
         if ($loaded) {
             if (CoreLoader::isCallable($blockClassName, "display")) {
-                CoreTranslate::getInstance()->translate("Block" . DIRECTORY_SEPARATOR . $blockInfo->getType());
+                CoreTranslate::getInstance()->translate($blockInfo->getClassName());
 
                 /**
                  * @var BlockModel

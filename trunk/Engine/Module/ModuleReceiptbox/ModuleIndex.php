@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Module\Receiptbox;
+namespace TREngine\Engine\Module\ModuleReceiptbox;
 
 use TREngine\Engine\Module\ModuleModel;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Module\Contact;
+namespace TREngine\Engine\Module\ModuleContact;
 
 use TREngine\Engine\Module\ModuleModel;
 

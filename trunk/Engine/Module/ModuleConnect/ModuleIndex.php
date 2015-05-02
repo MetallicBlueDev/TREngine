@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Module\Connect;
+namespace TREngine\Engine\Module\ModuleConnect;
 
 use TREngine\Engine\Module\ModuleModel;
 use TREngine\Engine\Core\CoreSession;

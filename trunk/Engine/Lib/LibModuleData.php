@@ -117,11 +117,20 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
     }
 
     /**
-     * Retourne le nom de classe.
+     * Retourne le nom de classe pour le module.
+     *
+     * @return string Le nom du module.
+     */
+    public function getModuleClassName() {
+        return "Module" . $this->getName();
+    }
+
+    /**
+     * Retourne le nom de classe pour la page courante.
      *
      * @return string
      */
-    public function getClassName() {
+    public function getPageClassName() {
         return "Module" . ucfirst($this->getPage());
     }
 
@@ -189,7 +198,7 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
      * @return boolean
      */
     public function isValid() {
-        $moduleClassName = CoreLoader::getFullQualifiedClassName($this->getClassName(), $this->getName());
+        $moduleClassName = CoreLoader::getFullQualifiedClassName($this->getPageClassName(), $this->getModuleClassName());
         return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . CoreLoader::getFilePathFromNamespace($moduleClassName) . ".php");
     }
 

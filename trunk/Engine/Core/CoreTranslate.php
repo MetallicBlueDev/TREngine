@@ -220,7 +220,7 @@ class CoreTranslate {
     public static function checkInstance() {
         if (self::$coreTranslate === null) {
             self::$coreTranslate = new CoreTranslate();
-            self::$coreTranslate->translate("Engine" . DIRECTORY_SEPARATOR);
+            self::$coreTranslate->translate("Engine");
         }
     }
 
@@ -250,7 +250,7 @@ class CoreTranslate {
      * @param string $pathLang chemin du fichier de traduction.
      */
     public function translate($pathLang) {
-        $loaded = CoreLoader::isLoaded($pathLang);
+        $loaded = !empty(CoreLoader::getTranslateAbsolutePath($pathLang));
 
         // Traduction uniquement si besoin
         if (!$loaded) {
@@ -259,7 +259,7 @@ class CoreTranslate {
 
             if ($loaded && !empty($this->cache)) {
                 $langCacheFileName = self::getLangCacheFileName($pathLang) . $this->languageUsed . ".php";
-                $langOriginalPath = CoreLoader::getAbsolutePath($pathLang);
+                $langOriginalPath = CoreLoader::getTranslateAbsolutePath($pathLang);
                 $content = "";
 
                 // Pour la sélection dans le cache
@@ -304,7 +304,7 @@ class CoreTranslate {
      * @return array
      */
     public static function &getLangList() {
-        return CoreCache::getInstance()->getFileList("lang", ".lang");
+        return CoreCache::getInstance()->getFileList("Engine\Translate", ".lang");
     }
 
     /**
@@ -420,7 +420,13 @@ class CoreTranslate {
      * @return boolean true langue disponible.
      */
     private static function isValid($language) {
-        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR . $language . ".lang.php");
+        $rslt = false;
+
+        if (!empty($language)) {
+            $translatePath = CoreLoader::getFilePathFromTranslate("Engine", $language);
+            $rslt = is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $translatePath . ".php");
+        }
+        return $rslt;
     }
 
     /**

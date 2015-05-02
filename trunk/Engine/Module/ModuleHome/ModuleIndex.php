@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Engine\Module\Home;
+namespace TREngine\Engine\Module\ModuleHome;
 
 use TREngine\Engine\Module\ModuleModel;
 

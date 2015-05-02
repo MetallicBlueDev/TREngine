@@ -562,17 +562,17 @@ class CoreMain {
     private function prepare() {
         if (!$this->loadCache()) {
             CoreSecure::getInstance()->throwException("cachePath", null, array(
-                CoreLoader::getAbsolutePath("configs_cache")));
+                CoreLoader::getIncludeAbsolutePath("configs_cache")));
         }
 
         if (!$this->loadSql()) {
             CoreSecure::getInstance()->throwException("sqlPath", null, array(
-                CoreLoader::getAbsolutePath("configs_database")));
+                CoreLoader::getIncludeAbsolutePath("configs_database")));
         }
 
         if (!$this->loadConfig()) {
             CoreSecure::getInstance()->throwException("configPath", null, array(
-                CoreLoader::getAbsolutePath("configs_config")));
+                CoreLoader::getIncludeAbsolutePath("configs_config")));
         }
 
         // Chargement de la session
