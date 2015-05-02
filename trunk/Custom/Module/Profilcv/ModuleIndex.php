@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Custom\Module\Profilcv;
+namespace TREngine\Custom\Module\ModuleCustomProfilcv;
 
 use TREngine\Engine\Module\ModuleModel;
 

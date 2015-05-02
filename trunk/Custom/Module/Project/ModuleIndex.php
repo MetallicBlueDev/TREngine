@@ -1,6 +1,6 @@
 <?php
 
-namespace TREngine\Custom\Module\Project;
+namespace TREngine\Custom\Module\ModuleCustomProject;
 
 use TREngine\Engine\Module\ModuleModel;
 use TREngine\Engine\Core\CoreRequest;

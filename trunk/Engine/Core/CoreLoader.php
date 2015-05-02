@@ -450,11 +450,12 @@ class CoreLoader {
             foreach (self::NAMESPACE_TYPES as $namespaceType) {
                 if (strrpos($keyName, $namespaceType, -strlen($keyName)) !== false) {
                     $ext = $namespaceType;
+
                     $keyName = str_replace("{KEYNAME}", $keyName, self::NAMESPACE_BASE);
                     $keyName = str_replace("{PREFIX}", $prefixName, $keyName);
                     $keyName = str_replace("{TYPE}", $namespaceType, $keyName);
 
-                    $namespaceSubtype = (strrpos($keyName, $namespaceType . self::SUBTYPE_CUSTOM, -strlen($keyName)) !== false) ? self::SUBTYPE_CUSTOM : self::SUBTYPE_ENGINE;
+                    $namespaceSubtype = (strrpos($keyName, $namespaceType . self::SUBTYPE_CUSTOM) !== false) ? self::SUBTYPE_CUSTOM : self::SUBTYPE_ENGINE;
                     $keyName = str_replace("{ORIGIN}", $namespaceSubtype, $keyName);
                     break;
                 }
