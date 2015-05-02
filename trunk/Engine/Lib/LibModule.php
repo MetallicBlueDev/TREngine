@@ -281,7 +281,7 @@ class LibModule {
      * @param LibModuleData $moduleInfo
      */
     private function get(&$moduleInfo) {
-        $moduleClassName = CoreLoader::getFullQualifiedClassName($moduleInfo->getClassName(), ucfirst($moduleInfo->getName()));
+        $moduleClassName = CoreLoader::getFullQualifiedClassName($moduleInfo->getClassName(), $moduleInfo->getName());
         $loaded = CoreLoader::classLoader($moduleClassName);
 
         if ($loaded) {
