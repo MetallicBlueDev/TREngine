@@ -22,42 +22,42 @@ class CoreLoader {
     const TYPE_CLASS = "Class";
 
     /**
-     * Fichier représentant un block.
+     * Fichier de pilotage de base de données.
      *
      * @var string
      */
     const TYPE_BASE = "Base";
 
     /**
-     * Fichier représentant un block.
+     * Fichier de gestion du cache.
      *
      * @var string
      */
     const TYPE_CACHE = "Cache";
 
     /**
-     * Fichier représentant un block.
+     * Fichier du base du moteur.
      *
      * @var string
      */
     const TYPE_CORE = "Core";
 
     /**
-     * Fichier représentant un block.
+     * Fichier d'aide à la manipulation.
      *
      * @var string
      */
     const TYPE_EXEC = "Exec";
 
     /**
-     * Fichier représentant un block.
+     * Fichier d'erreur.
      *
      * @var string
      */
     const TYPE_FAIL = "Fail";
 
     /**
-     * Fichier représentant un block.
+     * Fichier de bibliothèque.
      *
      * @var string
      */
@@ -92,19 +92,38 @@ class CoreLoader {
     const TYPE_INCLUDE = "inc";
 
     /**
-     * Tableau des namespaces.
+     * Fichier attaché au moteur.
      *
-     * @var array ("baseName" => "namespace")
+     * @var string
      */
-    const NAMESPACES_RULES = array(
-        self::TYPE_BASE => "TREngine\Engine\Base\\",
-        self::TYPE_CACHE => "TREngine\Engine\Cache\\",
-        self::TYPE_CORE => "TREngine\Engine\Core\\",
-        self::TYPE_EXEC => "TREngine\Engine\Exec\\",
-        self::TYPE_FAIL => "TREngine\Engine\Fail\\",
-        self::TYPE_LIB => "TREngine\Engine\Lib\\",
-        self::TYPE_BLOCK => "TREngine\Blocks\\",
-        self::TYPE_MODULE => "TREngine\Modules\\"
+    const SUBTYPE_ENGINE = "Engine";
+
+    /**
+     * Fichier détaché du moteur.
+     *
+     * @var string
+     */
+    const SUBTYPE_CUSTOM = "Custom";
+
+    /**
+     * Namespace de base.
+     *
+     * @var string
+     */
+    const NAMESPACE_BASE = "TREngine\{ORIGIN}\{TYPE}\{PREFIX}{KEYNAME}";
+
+    /**
+     * Les types de namespace possible.
+     */
+    const NAMESPACE_TYPES = array(
+        self::TYPE_BASE,
+        self::TYPE_CACHE,
+        self::TYPE_CORE,
+        self::TYPE_EXEC,
+        self::TYPE_FAIL,
+        self::TYPE_LIB,
+        self::TYPE_BLOCK,
+        self::TYPE_MODULE
     );
 
     /**
@@ -178,7 +197,7 @@ class CoreLoader {
 
         if (!empty($methodName)) {
             $ext = null;
-            self::checkExtensionAndName($ext, $className);
+            self::buildExtensionAndName($ext, $className);
 
             // Vérifie si la classe est en mémoire
             if (self::isLoaded($className)) {
@@ -199,7 +218,7 @@ class CoreLoader {
                 }
             }
         } else {
-            self::checkExtensionAndName($ext, $className);
+            self::buildExtensionAndName($ext, $className);
 
             $rslt = self::isLoaded($className);
         }
@@ -216,7 +235,7 @@ class CoreLoader {
      */
     public static function &callback($callback) {
         $ext = null;
-        self::checkExtensionAndName($ext, $callback);
+        self::buildExtensionAndName($ext, $callback);
 
         // Récupère un seul paramètre supplémentaire
         $args = func_get_args();
@@ -269,7 +288,7 @@ class CoreLoader {
             $prefixName .= "\\";
         }
 
-        self::checkExtensionAndName($ext, $className, $prefixName);
+        self::buildExtensionAndName($ext, $className, $prefixName);
         return $className;
     }
 
@@ -286,7 +305,7 @@ class CoreLoader {
                 throw new FailLoader("loader");
             }
 
-            self::checkExtensionAndName($ext, $keyName);
+            self::buildExtensionAndName($ext, $keyName);
             $loaded = self::isLoaded($keyName);
 
             // Si ce n'est pas déjà chargé
@@ -320,13 +339,13 @@ class CoreLoader {
     }
 
     /**
-     * Vérifie l'emplacement et le type de fichier.
+     * Construction du chemin et du type de fichier.
      *
      * @param string $ext
      * @param string $keyName
      * @return string
      */
-    private static function checkExtensionAndName(&$ext, &$keyName, $prefixName = "") {
+    private static function buildExtensionAndName(&$ext, &$keyName, $prefixName = "") {
         if (empty($ext)) {
             // Retrouve l'extension
             if (strpos($keyName, "\Blocks\Block") !== false) {
@@ -336,10 +355,15 @@ class CoreLoader {
             } else {
                 // Retrouve l'extension et le namespace
                 if (strpos($keyName, "\\") === false) {
-                    foreach (self::NAMESPACES_RULES as $baseName => $baseNamespace) {
-                        if (strrpos($keyName, $baseName, -strlen($keyName)) !== false) {
-                            $ext = $baseName;
-                            $keyName = $baseNamespace . $prefixName . $keyName;
+                    foreach (self::NAMESPACE_TYPES as $namespaceType) {
+                        if (strrpos($keyName, $namespaceType, -strlen($keyName)) !== false) {
+                            $ext = $namespaceType;
+                            $keyName = str_replace("{KEYNAME}", $keyName, self::NAMESPACE_BASE);
+                            $keyName = str_replace("{PREFIX}", $prefixName, $keyName);
+                            $keyName = str_replace("{TYPE}", $namespaceType, $keyName);
+
+                            $namespaceSubtype = (strrpos($keyName, $namespaceType . self::SUBTYPE_CUSTOM, -strlen($keyName)) !== false) ? self::SUBTYPE_CUSTOM : self::SUBTYPE_ENGINE;
+                            $keyName = str_replace("{ORIGIN}", $namespaceSubtype, $keyName);
                             break;
                         }
                     }
