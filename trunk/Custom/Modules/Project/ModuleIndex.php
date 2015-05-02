@@ -1,8 +1,8 @@
 <?php
 
-namespace TREngine\Custom\Modules\Project;
+namespace TREngine\Custom\Module\Project;
 
-use TREngine\Engine\Modules\ModuleModel;
+use TREngine\Engine\Module\ModuleModel;
 use TREngine\Engine\Core\CoreRequest;
 use TREngine\Engine\Core\CoreHtml;
 use TREngine\Engine\Core\CoreSql;

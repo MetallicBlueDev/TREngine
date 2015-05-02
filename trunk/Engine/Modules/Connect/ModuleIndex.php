@@ -1,8 +1,8 @@
 <?php
 
-namespace TREngine\Engine\Modules\Connect;
+namespace TREngine\Engine\Module\Connect;
 
-use TREngine\Engine\Modules\ModuleModel;
+use TREngine\Engine\Module\ModuleModel;
 use TREngine\Engine\Core\CoreSession;
 use TREngine\Engine\Core\CoreMain;
 use TREngine\Engine\Core\CoreRequest;

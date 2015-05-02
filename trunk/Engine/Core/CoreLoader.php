@@ -365,7 +365,7 @@ class CoreLoader {
             // Retrouve l'extension
             if (strpos($keyName, "\Blocks\Block") !== false) {
                 $ext = self::TYPE_BLOCK;
-            } else if (strpos($keyName, "Modules\Module") !== false) {
+            } else if (strpos($keyName, "Module\Module") !== false) {
                 $ext = self::TYPE_MODULE;
             } else {
                 // Retrouve l'extension et le namespace

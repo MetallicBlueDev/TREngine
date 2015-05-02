@@ -2,7 +2,7 @@
 
 namespace TREngine\Engine\Lib;
 
-use TREngine\Engine\Modules\ModuleModel;
+use TREngine\Engine\Module\ModuleModel;
 use TREngine\Engine\Core\CoreLogger;
 use TREngine\Engine\Core\CoreMain;
 use TREngine\Engine\Core\CoreTable;

@@ -1,8 +1,8 @@
 <?php
 
-namespace TREngine\Custom\Modules\Profilcv;
+namespace TREngine\Custom\Module\Profilcv;
 
-use TREngine\Engine\Modules\ModuleModel;
+use TREngine\Engine\Module\ModuleModel;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
