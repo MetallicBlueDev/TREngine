@@ -51,26 +51,26 @@ abstract class LibEntityData extends CoreDataStorage implements CoreAccessToken 
      *
      * @return string
      */
-    public function getFolderName();
+    abstract public function getFolderName();
 
     /**
      * Retourne le nom de classe représentant l'entité.
      *
      * @return string
      */
-    public function getClassName();
+    abstract public function getClassName();
 
     /**
      * Détermine si l'entité est valide.
      *
      * @return boolean
      */
-    public function isValid();
+    abstract public function isValid();
 
     /**
      * Détermine si l'entité est installée.
      *
      * @return boolean
      */
-    public function installed();
+    abstract public function installed();
 }

@@ -397,13 +397,13 @@ class LibBlock {
      * @param LibBlockData $blockInfo
      */
     private function get(&$blockInfo) {
-        $blockClassName = CoreLoader::getFullQualifiedClassName($blockInfo->getClassName());
+        $blockClassName = CoreLoader::getFullQualifiedClassName($blockInfo->getClassName(), $blockInfo->getFolderName());
         $loaded = CoreLoader::classLoader($blockClassName);
 
         // Vérification du block
         if ($loaded) {
             if (CoreLoader::isCallable($blockClassName, "display")) {
-                CoreTranslate::getInstance()->translate($blockInfo->getClassName());
+                CoreTranslate::getInstance()->translate($blockInfo->getFolderName());
 
                 /**
                  * @var BlockModel
