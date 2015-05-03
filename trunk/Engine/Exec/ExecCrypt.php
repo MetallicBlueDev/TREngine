@@ -2,6 +2,9 @@
 
 namespace TREngine\Engine\Exec;
 
+use TREngine\Engine\Core\CoreLoader;
+use TREngine\Engine\Core\CoreLogger;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -10,8 +13,6 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  * @author Sébastien Villemain
  */
 class ExecCrypt {
-
-    const METHOD_MD5_POWER = "md5+";
 
     /**
      * Création d'une clé unique.
@@ -92,64 +93,125 @@ class ExecCrypt {
     }
 
     /**
-     * Crypteur de donnée
+     * Cryptage MD5 classique sans salt.
+     * Cryptage de faible qualité.
      *
-     * @param $data string donnée
-     * @param $salt string clès
-     * @param $method string méthode de cryptage
+     * @param string $data
      * @return string
      */
-    public static function &cryptData($data, $salt = "", $method = "") {
-        // Réglage de la méthode utilisé
-        if (empty($method))
-            $method = "smd5";
-        $method = strtolower($method);
-        $cryptData = "";
+    public static function cryptByMd5($data) {
+        return md5($data);
+    }
 
-        // Préparation du salt
-        if (empty($salt))
-            $salt = self::makeIdentifier(16);
+    /**
+     * Cryptage MD5 via la fonction crypt() avec salt.
+     * Cryptage qui nécessite l'activation d'une clé serveur.
+     *
+     * @param string $data
+     * @param string $salt
+     * @return string
+     */
+    public static function &cryptByMd5Alternative($data, $salt = "") {
+        $cryptData = null;
 
-        switch ($method) {
-            case 'smd5':
-                // Si le crypt md5 est activé
-                if (defined("CRYPT_MD5") && CRYPT_MD5) {
-                    $cryptData = crypt($data, "$1$" . substr($salt, 0, 8) . "$");
-                    break;
-                }
-                // Sinon utilisation du simple md5
-                $cryptData = self::cryptData($data, $salt, "md5");
-                break;
-            case 'md5':
-                $cryptData = md5($data);
-                break;
-            case 'jmd5': // Joomla md5 :)
-                $cryptData = md5($data . $salt) . ":" . $salt;
-                break;
-            case 'md5+': // TR ENGINE md5 !
-                $cryptData = "TR" . md5($data . substr($salt, 0, 8));
-                break;
-            case 'crypt':
-                $cryptData = crypt($data, substr($salt, 0, 2));
-                break;
-            case 'sha1':
-                $cryptData = sha1($data);
-                break;
-            case 'ssha':
-                $salt = substr($salt, 0, 4);
-                $cryptData = "{SSHA}" . base64_encode(pack("H*", sha1($data . $salt)) . $salt);
-                break;
-            case 'my411':
-                $cryptData = "*" . sha1(pack("H*", sha1($data)));
-                break;
-            default:
-                if (CoreLoader::isCallable("CoreLogger")) {
-                    CoreLogger::addException("Unsupported crypt method. Method : " . $method);
-                }
-                $cryptData = self::cryptData($data, $salt);
-                break;
+        if (defined("CRYPT_MD5") && CRYPT_MD5) {
+            if (empty($salt)) {
+                $salt = self::makeIdentifier(8);
+            }
+
+            $salt = substr($salt, 0, 8);
+            $cryptData = crypt($data, "$1$" . $salt . "$");
+        } else {
+            if (CoreLoader::isCallable("CoreLogger")) {
+                CoreLogger::addException("Unsupported crypt method: CRYPT_MD5");
+            }
+            $cryptData = self::cryptByMd5($data);
         }
         return $cryptData;
+    }
+
+    /**
+     * Cryptage MD5 amélioré spécialement pour le moteur.
+     * Cryptage équilibré (suffisant pour la plus part du temps).
+     *
+     * @param string $data
+     * @param string $salt
+     * @return string
+     */
+    public static function cryptByMd5TrEngine($data, $salt = "") {
+        if (empty($salt)) {
+            $salt = self::makeIdentifier(8);
+        }
+
+        $salt = substr($salt, 0, 8);
+        return "TR" . md5($data . $salt);
+    }
+
+    /**
+     * Cryptage standard DES.
+     * Cryptage moyen qui nécessite l'activation d'une clé serveur.
+     *
+     * @param string $data
+     * @param string $salt
+     * @return string
+     */
+    public static function &cryptByDes($data, $salt = "") {
+        $cryptData = null;
+
+        if (defined("CRYPT_STD_DES") && CRYPT_STD_DES) {
+            if (empty($salt)) {
+                $salt = self::makeIdentifier(2);
+            }
+
+            $salt = substr($salt, 0, 2);
+            $cryptData = crypt($data, $salt);
+        } else {
+            if (CoreLoader::isCallable("CoreLogger")) {
+                CoreLogger::addException("Unsupported crypt method: CRYPT_STD_DES");
+            }
+            $cryptData = self::cryptData($data);
+        }
+        return $cryptData;
+    }
+
+    /**
+     * Cryptage SHA1.
+     * Cryptage de moyen et sans salt.
+     *
+     * @param string $data
+     * @return string
+     */
+    public static function cryptBySha1($data) {
+        return sha1($data);
+    }
+
+    /**
+     * Cryptage SSHA.
+     * Cryptage de bonne qualité mais lent.
+     *
+     * @param string $data
+     * @param string $salt
+     * @return string
+     */
+    public static function cryptBySsha($data, $salt = "") {
+        if (empty($salt)) {
+            $salt = self::makeIdentifier(4);
+        }
+
+        $salt = substr($salt, 0, 4);
+        return "{SSHA}" . base64_encode(pack("H*", sha1($data . $salt)) . $salt);
+    }
+
+    /**
+     * Cryptage my411.
+     * Cryptage de bonne qualité mais lent et sans salt.
+     *
+     * @param string $data
+     * @param string $salt
+     * @return string
+     */
+    public static function cryptByMy411($data) {
+        return "*" . sha1(pack("H*", sha1($data)));
     }
 
     /**

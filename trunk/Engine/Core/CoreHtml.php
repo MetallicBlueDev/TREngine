@@ -99,8 +99,8 @@ class CoreHtml {
         }
 
         // Composition du nom du cookie de test
-        $this->cookieTestName = ExecCrypt::cryptData(
-        $prefix . "_" . $this->cookieTestName, self::getSalt(), "md5+"
+        $this->cookieTestName = ExecCrypt::cryptByMd5TrEngine(
+        $prefix . "_" . $this->cookieTestName, self::getSalt()
         );
 
         // Vérification du javascript du client

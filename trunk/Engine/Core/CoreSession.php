@@ -251,7 +251,7 @@ class CoreSession {
      * @return string
      */
     public static function &cryptPass($pass) {
-        return ExecCrypt::cryptData($pass, $pass, "md5+");
+        return ExecCrypt::cryptByMd5TrEngine($pass, $pass);
     }
 
     /**
@@ -665,7 +665,7 @@ class CoreSession {
      * @return string
      */
     private static function &getCookieName($cookieName) {
-        return ExecCrypt::cryptData($cookieName, self::getSalt(), "md5+");
+        return ExecCrypt::cryptByMd5TrEngine($cookieName, self::getSalt());
     }
 
     /**
