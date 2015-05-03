@@ -401,23 +401,21 @@ class LibBlock {
         $loaded = CoreLoader::classLoader($blockClassName);
 
         // Vérification du block
-        if ($loaded) {
-            if (CoreLoader::isCallable($blockClassName, "display")) {
-                CoreTranslate::getInstance()->translate($blockInfo->getFolderName());
+        if ($loaded && CoreLoader::isCallable($blockClassName, "display")) {
+            CoreTranslate::getInstance()->translate($blockInfo->getFolderName());
 
-                /**
-                 * @var BlockModel
-                 */
-                $blockClass = new $blockClassName();
-                $blockClass->setBlockData($blockInfo);
+            /**
+             * @var BlockModel
+             */
+            $blockClass = new $blockClassName();
+            $blockClass->setBlockData($blockInfo);
 
-                // Capture des données d'affichage
-                ob_start();
-                $blockClass->display();
-                $blockInfo->setBuffer(ob_get_clean());
-            } else {
-                CoreLogger::addErrorMessage(ERROR_BLOCK_CODE);
-            }
+            // Capture des données d'affichage
+            ob_start();
+            $blockClass->display();
+            $blockInfo->setBuffer(ob_get_clean());
+        } else {
+            CoreLogger::addErrorMessage(ERROR_BLOCK_CODE . " (" . $blockInfo->getType() . ")");
         }
     }
 

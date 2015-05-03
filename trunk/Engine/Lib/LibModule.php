@@ -284,29 +284,27 @@ class LibModule {
         $moduleClassName = CoreLoader::getFullQualifiedClassName($moduleInfo->getClassName(), $moduleInfo->getFolderName());
         $loaded = CoreLoader::classLoader($moduleClassName);
 
-        if ($loaded) {
-            // Vérification de la sous page
-            $moduleInfo->setView($this->getValidViewPage(array(
-                $moduleClassName,
-                ($moduleInfo->installed()) ? $moduleInfo->getView() : "install")));
+        // Vérification de la sous page
+        $moduleInfo->setView($this->getValidViewPage(array(
+            $moduleClassName,
+            ($moduleInfo->installed()) ? $moduleInfo->getView() : "install")));
 
-            // Affichage du module si possible
-            if (!empty($moduleInfo->getView())) {
-                $this->updateCount($moduleInfo->getId());
+        // Affichage du module si possible
+        if ($loaded && !empty($moduleInfo->getView())) {
+            $this->updateCount($moduleInfo->getId());
 
-                /**
-                 * @var ModuleModel
-                 */
-                $moduleClass = new $moduleClassName();
-                $moduleClass->setModuleData($moduleInfo);
+            /**
+             * @var ModuleModel
+             */
+            $moduleClass = new $moduleClassName();
+            $moduleClass->setModuleData($moduleInfo);
 
-                // Capture des données d'affichage
-                ob_start();
-                echo $moduleClass->{$moduleInfo->getView()}();
-                $moduleInfo->setBuffer(ob_get_clean());
-            } else {
-                CoreLogger::addErrorMessage(ERROR_MODULE_CODE . " (" . $moduleInfo->getName() . ")");
-            }
+            // Capture des données d'affichage
+            ob_start();
+            echo $moduleClass->{$moduleInfo->getView()}();
+            $moduleInfo->setBuffer(ob_get_clean());
+        } else {
+            CoreLogger::addErrorMessage(ERROR_MODULE_CODE . " (" . $moduleInfo->getName() . ")");
         }
     }
 

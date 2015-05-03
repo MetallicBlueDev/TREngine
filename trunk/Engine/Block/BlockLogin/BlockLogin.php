@@ -1,7 +1,8 @@
 <?php
 
-namespace TREngine\Engine\Block;
+namespace TREngine\Engine\Block\BlockLogin;
 
+use TREngine\Engine\Block\BlockModel;
 use TREngine\Engine\Core\CoreMain;
 use TREngine\Engine\Core\CoreRequest;
 use TREngine\Engine\Core\CoreSession;
