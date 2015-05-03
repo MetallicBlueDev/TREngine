@@ -220,7 +220,7 @@ class LibModule {
         // Vérification du niveau d'acces
         if (($moduleInfo->installed() && CoreAccess::autorize(CoreAccessType::getTypeFromToken($moduleInfo))) || (!$moduleInfo->installed() && CoreSession::getInstance()->getUserInfos()->hasAdminRank())) {
             if ($moduleInfo->isValid()) {
-                CoreTranslate::getInstance()->translate($moduleInfo->getModuleClassName());
+                CoreTranslate::getInstance()->translate($moduleInfo->getFolderName());
 
                 $libBreadcrumb = LibBreadcrumb::getInstance();
                 $libBreadcrumb->addTrail($moduleInfo->getName(), "?mod=" . $moduleInfo->getName());
@@ -281,7 +281,7 @@ class LibModule {
      * @param LibModuleData $moduleInfo
      */
     private function get(&$moduleInfo) {
-        $moduleClassName = CoreLoader::getFullQualifiedClassName($moduleInfo->getPageClassName(), $moduleInfo->getModuleClassName());
+        $moduleClassName = CoreLoader::getFullQualifiedClassName($moduleInfo->getClassName(), $moduleInfo->getFolderName());
         $loaded = CoreLoader::classLoader($moduleClassName);
 
         if ($loaded) {

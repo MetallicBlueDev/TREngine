@@ -3,8 +3,6 @@
 namespace TREngine\Engine\Lib;
 
 use TREngine\Engine\Core\CoreLoader;
-use TREngine\Engine\Core\CoreDataStorage;
-use TREngine\Engine\Core\CoreAccessToken;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -13,7 +11,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class LibModuleData extends CoreDataStorage implements CoreAccessToken {
+class LibModuleData extends LibEntityData {
 
     /**
      * La page sélectionnée.
@@ -28,13 +26,6 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
      * @var string
      */
     private $view = null;
-
-    /**
-     * Les données compilées du module.
-     *
-     * @var string
-     */
-    private $buffer = "";
 
     /**
      * Nouvelle information de module.
@@ -53,24 +44,6 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
     }
 
     /**
-     * Retourne les données compilées du module.
-     *
-     * @return string
-     */
-    public function &getBuffer() {
-        return $this->buffer;
-    }
-
-    /**
-     * Affecte les données compilées du module.
-     *
-     * @param string $buffer
-     */
-    public function setBuffer($buffer) {
-        $this->buffer = $buffer;
-    }
-
-    /**
      * Retourne la page sélectionnée.
      *
      * @return string
@@ -85,7 +58,7 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
      * @param string $page
      */
     public function setPage($page) {
-        $this->page = $page;
+        $this->page = ucfirst($page);
     }
 
     /**
@@ -117,21 +90,21 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
     }
 
     /**
-     * Retourne le nom de classe pour le module.
+     * Retourne le nom du dossier contenant le module.
      *
-     * @return string Le nom du module.
+     * @return string
      */
-    public function getModuleClassName() {
+    public function getFolderName() {
         return "Module" . $this->getName();
     }
 
     /**
-     * Retourne le nom de classe pour la page courante.
+     * Retourne le nom de classe représentant le module.
      *
      * @return string
      */
-    public function getPageClassName() {
-        return "Module" . ucfirst($this->getPage());
+    public function getClassName() {
+        return "Module" . $this->getPage();
     }
 
     /**
@@ -184,22 +157,22 @@ class LibModuleData extends CoreDataStorage implements CoreAccessToken {
     }
 
     /**
-     * Vérifie que le module est installé.
+     * Détermine si le module est valide.
+     *
+     * @return boolean
+     */
+    public function isValid() {
+        $moduleClassName = CoreLoader::getFullQualifiedClassName($this->getClassName(), $this->getFolderName());
+        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . CoreLoader::getFilePathFromNamespace($moduleClassName) . ".php");
+    }
+
+    /**
+     * Détermine si le module est installé.
      *
      * @return boolean
      */
     public function installed() {
         return $this->hasValue("mod_id");
-    }
-
-    /**
-     * Vérifie si le module est valide (si le module existe).
-     *
-     * @return boolean
-     */
-    public function isValid() {
-        $moduleClassName = CoreLoader::getFullQualifiedClassName($this->getPageClassName(), $this->getModuleClassName());
-        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . CoreLoader::getFilePathFromNamespace($moduleClassName) . ".php");
     }
 
     /**

@@ -4,8 +4,6 @@ namespace TREngine\Engine\Lib;
 
 use TREngine\Engine\Core\CoreLoader;
 use TREngine\Engine\Core\CoreAccess;
-use TREngine\Engine\Core\CoreDataStorage;
-use TREngine\Engine\Core\CoreAccessToken;
 use TREngine\Engine\Core\CoreAccessType;
 use TREngine\Engine\Exec\ExecEntities;
 
@@ -16,7 +14,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class LibBlockData extends CoreDataStorage implements CoreAccessToken {
+class LibBlockData extends LibEntityData {
 
     /**
      * Position du block en lettre.
@@ -24,13 +22,6 @@ class LibBlockData extends CoreDataStorage implements CoreAccessToken {
      * @var string
      */
     private $sideName = "";
-
-    /**
-     * Les données compilées du block.
-     *
-     * @var string
-     */
-    private $buffer = "";
 
     /**
      * Nouvelle information de block.
@@ -48,24 +39,6 @@ class LibBlockData extends CoreDataStorage implements CoreAccessToken {
         $this->newStorage($data);
         $this->updateDataValue("mods", explode("|", $this->getDataValue("mods")));
         $this->updateDataValue("title", ExecEntities::textDisplay($this->getDataValue("title")));
-    }
-
-    /**
-     * Retourne les données compilées du block.
-     *
-     * @return string
-     */
-    public function &getBuffer() {
-        return $this->buffer;
-    }
-
-    /**
-     * Affecte les données compilées du block.
-     *
-     * @param string $buffer
-     */
-    public function setBuffer($buffer) {
-        $this->buffer = $buffer;
     }
 
     /**
@@ -180,26 +153,45 @@ class LibBlockData extends CoreDataStorage implements CoreAccessToken {
      * @return string
      */
     public function &getType() {
-        return $this->getDataValue("type");
+        $dataValue = ucfirst($this->getDataValue("type"));
+        return $dataValue;
     }
 
     /**
-     * Retourne le nom de classe.
+     * Retourne le nom du dossier contenant le block.
+     *
+     * @return string
+     */
+    public function getFolderName() {
+        return "Block" . $this->getType();
+    }
+
+    /**
+     * Retourne le nom de classe représentant le block.
      *
      * @return string
      */
     public function getClassName() {
-        return "Block" . ucfirst($this->getType());
+        return "Block" . $this->getType();
     }
 
     /**
-     * Vérifie si le block est valide (si le block existe).
+     * Détermine si le block est valide.
      *
      * @return boolean true block valide
      */
     public function isValid() {
         $blockClassName = CoreLoader::getFullQualifiedClassName($this->getClassName());
         return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . CoreLoader::getFilePathFromNamespace($blockClassName) . ".php");
+    }
+
+    /**
+     * Détermine si le block est installé.
+     *
+     * @return boolean
+     */
+    public function installed() {
+        return $this->hasValue("block_id");
     }
 
     /**
