@@ -176,16 +176,6 @@ class LibBlockData extends LibEntityData {
     }
 
     /**
-     * Détermine si le block est valide.
-     *
-     * @return boolean true block valide
-     */
-    public function isValid() {
-        $blockClassName = CoreLoader::getFullQualifiedClassName($this->getClassName());
-        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . CoreLoader::getFilePathFromNamespace($blockClassName) . ".php");
-    }
-
-    /**
      * Détermine si le block est installé.
      *
      * @return boolean

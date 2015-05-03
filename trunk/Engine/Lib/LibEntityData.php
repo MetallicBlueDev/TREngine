@@ -2,6 +2,7 @@
 
 namespace TREngine\Engine\Lib;
 
+use TREngine\Engine\Core\CoreLoader;
 use TREngine\Engine\Core\CoreDataStorage;
 use TREngine\Engine\Core\CoreAccessToken;
 
@@ -65,7 +66,10 @@ abstract class LibEntityData extends CoreDataStorage implements CoreAccessToken 
      *
      * @return boolean
      */
-    abstract public function isValid();
+    public function isValid() {
+        $qualifiedClassName = CoreLoader::getFullQualifiedClassName($this->getClassName(), $this->getFolderName());
+        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . CoreLoader::getFilePathFromNamespace($qualifiedClassName) . ".php");
+    }
 
     /**
      * Détermine si l'entité est installée.

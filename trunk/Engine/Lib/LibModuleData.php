@@ -2,8 +2,6 @@
 
 namespace TREngine\Engine\Lib;
 
-use TREngine\Engine\Core\CoreLoader;
-
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -154,16 +152,6 @@ class LibModuleData extends LibEntityData {
             $value = $defaultValue;
         }
         return $value;
-    }
-
-    /**
-     * Détermine si le module est valide.
-     *
-     * @return boolean
-     */
-    public function isValid() {
-        $moduleClassName = CoreLoader::getFullQualifiedClassName($this->getClassName(), $this->getFolderName());
-        return is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . CoreLoader::getFilePathFromNamespace($moduleClassName) . ".php");
     }
 
     /**
