@@ -94,7 +94,7 @@ class LibCaptcha {
         $rslt = "";
 
         if ($this->enabled) {
-            $this->inputRobotName = ExecCrypt::createLetterIdentifier($this->randInt(5, 9));
+            $this->inputRobotName = ExecCrypt::makeLetterIdentifier($this->randInt(5, 9));
             $mini = (extension_loaded('gd')) ? 0 : 1;
             $mode = $this->randInt($mini, 5);
 

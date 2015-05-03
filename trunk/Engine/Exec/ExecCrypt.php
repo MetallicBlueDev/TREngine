@@ -76,7 +76,7 @@ class ExecCrypt {
      * @param int $size
      * @return string
      */
-    public static function &createLetterIdentifier($size = 32) {
+    public static function &makeLetterIdentifier($size = 32) {
         $key = self::makeNewKey($size, true, false, false);
         return $key;
     }
@@ -87,7 +87,7 @@ class ExecCrypt {
      * @param int $size
      * @return string
      */
-    public static function &createLetterCaseSensitiveIdentifier($size = 32) {
+    public static function &makeLetterCaseSensitiveIdentifier($size = 32) {
         $key = self::makeNewKey($size, true, false, true);
         return $key;
     }
@@ -215,77 +215,80 @@ class ExecCrypt {
     }
 
     /**
-     * Encodeur de chaine
+     * Encodeur de chaine.
      * Thanks Alexander Valyalkin @ 30-Jun-2004 08:41
      * http://fr2.php.net/manual/fr/function.md5.php
      *
-     * @param $plain_text
-     * @param $password
-     * @param $iv_len
+     * @param string $plainText
+     * @param string $password
+     * @param int $ivLen
      * @return string
      */
-    public static function &md5Encrypt($plain_text, $password, $iv_len = 16) {
-        $plain_text .= "\x13";
-        $n = strlen($plain_text);
-        if ($n % 16)
-            $plain_text .= str_repeat("\0", 16 - ($n % 16));
+    public static function &md5Encrypt($plainText, $password, $ivLen = 16) {
+        $plainText .= "\x13";
+        $n = strlen($plainText);
+
+        if ($n % 16) {
+            $plainText .= str_repeat("\0", 16 - ($n % 16));
+        }
 
         $i = 0;
-        $enc_text = self::getRandIv($iv_len);
-        $iv = substr($password ^ $enc_text, 0, 512);
+        $encText = self::getRandIv($ivLen);
+        $iv = substr($password ^ $encText, 0, 512);
+
         while ($i < $n) {
-            $block = substr($plain_text, $i, 16) ^ pack('H*', md5($iv));
-            $enc_text .= $block;
+            $block = substr($plainText, $i, 16) ^ pack('H*', md5($iv));
+            $encText .= $block;
             $iv = substr($block . $iv, 0, 512) ^ $password;
             $i += 16;
         }
-        $enc_text = base64_encode($enc_text);
-        return $enc_text;
+        $encText = base64_encode($encText);
+        return $encText;
     }
 
     /**
-     * Décodeur de chaine
+     * Décodeur de chaine.
      * Thanks Alexander Valyalkin @ 30-Jun-2004 08:41
      * http://fr2.php.net/manual/fr/function.md5.php
      *
-     * @param $enc_text
-     * @param $password
-     * @param $iv_len
+     * @param string $encText
+     * @param string $password
+     * @param int $ivLen
      * @return string
      */
-    public static function &md5Decrypt($enc_text, $password, $iv_len = 16) {
-        $enc_text = base64_decode($enc_text);
-        $n = strlen($enc_text);
+    public static function &md5Decrypt($encText, $password, $ivLen = 16) {
+        $encText = base64_decode($encText);
+        $n = strlen($encText);
 
-        $i = $iv_len;
-        $plain_text = '';
-        $iv = substr($password ^ substr($enc_text, 0, $iv_len), 0, 512);
+        $i = $ivLen;
+        $plainText = '';
+        $iv = substr($password ^ substr($encText, 0, $ivLen), 0, 512);
+
         while ($i < $n) {
-            $block = substr($enc_text, $i, 16);
-            $plain_text .= $block ^ pack('H*', md5($iv));
+            $block = substr($encText, $i, 16);
+            $plainText .= $block ^ pack('H*', md5($iv));
             $iv = substr($block . $iv, 0, 512) ^ $password;
             $i += 16;
         }
-        $plain_text = preg_replace('/\\x13\\x00*$/', '', $plain_text);
-        return $plain_text;
+        $plainText = preg_replace('/\\x13\\x00*$/', '', $plainText);
+        return $plainText;
     }
 
     /**
-     * Genere une valeur
+     * Génère une valeur.
      * Thanks Alexander Valyalkin @ 30-Jun-2004 08:41
      * http://fr2.php.net/manual/fr/function.md5.php
      *
-     * @param $iv_len
+     * @param $ivLen
      * @return string
      */
-    private static function &getRandIv($iv_len) {
+    private static function &getRandIv($ivLen) {
         $iv = "";
-        while ($iv_len-- > 0) {
+
+        while ($ivLen-- > 0) {
             $iv .= chr(mt_rand() & 0xff);
         }
         return $iv;
     }
 
 }
-
-?>
