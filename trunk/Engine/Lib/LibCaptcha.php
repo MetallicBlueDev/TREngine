@@ -94,7 +94,7 @@ class LibCaptcha {
         $rslt = "";
 
         if ($this->enabled) {
-            $this->inputRobotName = ExecCrypt::createIdLettres($this->randInt(5, 9));
+            $this->inputRobotName = ExecCrypt::createLetterIdentifier($this->randInt(5, 9));
             $mini = (extension_loaded('gd')) ? 0 : 1;
             $mode = $this->randInt($mini, 5);
 
@@ -333,7 +333,7 @@ class LibCaptcha {
      * Génére une image.
      */
     private function makePicture() {// TODO a vérifier
-        $this->response = ExecCrypt::createId($this->randInt(3, 6));
+        $this->response = ExecCrypt::makeIdentifier($this->randInt(3, 6));
         $this->question = CAPTCHA_MAKE_PICTURE_CODE . ": " . "<img src=\"engine/lib/imagegenerator.php?mode=code&amp;code=" . $this->response . "\" alt=\"\" />\n";
     }
 

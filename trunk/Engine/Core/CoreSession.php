@@ -550,7 +550,7 @@ class CoreSession {
      */
     private function &openSession() {
         $rslt = false;
-        $this->sessionId = ExecCrypt::createId(32);
+        $this->sessionId = ExecCrypt::makeIdentifier(32);
 
         // Durée de connexion automatique via cookie
         $cookieTimeLimit = $this->timer + $this->cacheTimeLimit;

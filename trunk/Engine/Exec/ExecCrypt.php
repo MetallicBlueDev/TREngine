@@ -5,7 +5,7 @@ namespace TREngine\Engine\Exec;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Outil de cryptage
+ * Outil de manipulation de données pour le cryptage.
  *
  * @author Sébastien Villemain
  */
@@ -14,12 +14,12 @@ class ExecCrypt {
     const METHOD_MD5_POWER = "md5+";
 
     /**
-     * Creation d'un ID unique
+     * Création d'une clé unique.
      *
-     * @param $taille int
+     * @param int $size
      * @return string
      */
-    public static function &createKey($taille = 32, $letter = true, $number = true, $caseSensitive = true) {
+    public static function &makeNewKey($size = 32, $letter = true, $number = true, $caseSensitive = true) {
         $randKey = "";
         $string = "";
         $letters = "abcdefghijklmnopqrstuvwxyz";
@@ -36,8 +36,9 @@ class ExecCrypt {
         // Initialisation
         srand(time());
 
-        for ($i = 0; $i < $taille; $i++) {
+        for ($i = 0; $i < $size; $i++) {
             $key = substr($string, (rand() % (strlen($string))), 1);
+
             if ($caseSensitive) {
                 $key = (rand(0, 1) == 1) ? strtoupper($key) : strtolower($key);
             }
@@ -47,46 +48,46 @@ class ExecCrypt {
     }
 
     /**
-     * Creation d'un ID unique avec des chiffres, lettres et sensible à la case
+     * Création d'un identifiant unique avec des chiffres, lettres et sensible à la case.
      *
-     * @param $taille int
+     * @param int $size
      * @return string
      */
-    public static function &createId($taille = 32) {
-        $key = self::createKey($taille, true, true, true);
+    public static function &makeIdentifier($size = 32) {
+        $key = self::makeNewKey($size, true, true, true);
         return $key;
     }
 
     /**
-     * Creation d'un ID unique avec des chiffres
+     * Création d'un identifiant unique avec des chiffres.
      *
-     * @param $taille int
+     * @param int $size
      * @return string
      */
-    public static function &createIdNumbers($taille = 32) {
-        $key = self::createKey($taille, false, true, false);
+    public static function &makeNumericIdentifier($size = 32) {
+        $key = self::makeNewKey($size, false, true, false);
         return $key;
     }
 
     /**
-     * Creation d'un ID unique avec des lettres
+     * Création d'un identifiant unique avec des lettres.
      *
-     * @param $taille int
+     * @param int $size
      * @return string
      */
-    public static function &createIdLettres($taille = 32) {
-        $key = self::createKey($taille, true, false, false);
+    public static function &createLetterIdentifier($size = 32) {
+        $key = self::makeNewKey($size, true, false, false);
         return $key;
     }
 
     /**
-     * Creation d'un ID unique avec des lettres et sensible à la case
+     * Création d'un identifiant unique avec des lettres sensible à la case.
      *
-     * @param $taille int
+     * @param int $size
      * @return string
      */
-    public static function &createIdLettresCaseSensitive($taille = 32) {
-        $key = self::createKey($taille, true, false, true);
+    public static function &createLetterCaseSensitiveIdentifier($size = 32) {
+        $key = self::makeNewKey($size, true, false, true);
         return $key;
     }
 
@@ -107,7 +108,7 @@ class ExecCrypt {
 
         // Préparation du salt
         if (empty($salt))
-            $salt = self::createId(16);
+            $salt = self::makeIdentifier(16);
 
         switch ($method) {
             case 'smd5':
