@@ -1,0 +1,269 @@
+/* element de base */
+body {
+    background-color: #6b737b;
+    font-family: verdana, Arial, Sans-serif;
+    font-size: 11px;
+    color: #000;
+}
+* {
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+}
+a:link, a:visited, a:active {
+    color: #404040;
+    text-decoration: none;
+}
+a:hover {
+    color: #e6eaeb;
+    text-decoration: underline;
+}
+
+/* Style graphique pour mettre en valeur quelques elements dans un texte */
+/* Classe écritent en dur dans le code */
+.input, .textarea, .select, select {
+    background-color: #d0dfe6;
+    border-top: 2px solid #7194a4;
+    border-bottom: 2px solid #7194a4;
+    color: #05587b;
+}
+.input[disabled='disabled'] {
+    background-color: #80878f;
+    text-decoration: line-through;
+}
+.input:hover, .textarea:hover {
+    background-color: #fff;
+}
+.input[type='text'], .input[type='password'], input[type='text'], input[type='password'] {
+    width: 130px;
+}
+
+/* Style générale des formulaires */
+.form {
+    padding: 8px;
+    width: 90%;
+    position: relative;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto;
+    background-image: url(images/background_form.png);
+}
+
+/* Style additionnel pour les formulaires standard */
+.form fieldset {
+    border-top: 1px solid #05587b;
+}
+.form label {
+    font-weight: normal;
+}
+.form legend {
+    color: #05587b;
+    font-size: 14px;
+    padding: 5px;
+}
+
+/* Classe d'erreur utilisé par l'AJAX (input incomplet par exemple) */
+/* Classe écrite en dur dans le code */
+.error {
+    background-color: #de9da1;
+    border-left: 0px solid #de9da1;
+    border-right: 0px solid #de9da1;
+}
+
+/* Menu et contenu des onglets (idTabs) */
+.tabs ul a {
+    background-color: #848e97;
+}
+.tabs ul a:hover { background: #6f8592; }
+.tabs ul a.selected {
+    background-color: #848e97;
+    border-bottom: 1px solid #848e97;
+}
+.tabs div {
+    background-color: #848e97;
+}
+
+/* Mise en forme des tableaux */
+.table {
+    text-align: left;
+}
+.table .first {
+    background-color: #848e97;
+    text-align: center;
+    font-weight: bolder;
+}
+.table tr:hover {
+    background-color: #848e97;
+}
+.table td {
+    border-bottom: 1px solid #6b737b;
+    border-left: 1px solid #6b737b;
+    padding: 5px;
+}
+
+/* Style additionnel du thème */
+/* Entête */
+#header {
+    position: relative;
+    width: 900px;
+    min-height: 100%;
+    height: 130px;
+    margin: 0 auto;
+}
+/* Contenu du milieu */
+#wrapper {
+    position: relative;
+    width: 900px;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto;
+    background-image: url(images/background_middle.jpg);
+    overflow: hidden;
+}
+/* Pieds de page */
+#footer {
+    width: 900px;
+    height: 130px;
+    margin: 0 auto;
+    background-image: url(images/footer.jpg);
+}
+/* Cadre des modules */
+#module_top {
+    margin-top: 5px;
+    width: 645px;
+    height: 60px;
+    background-image: url(images/module_top.jpg);
+}
+#module_middle {
+    width: 645px;
+    background: url(images/module_middle.jpg);
+}
+#module_middle_content {
+    padding: 10px 13px 10px 13px;
+}
+#module_middle_content li {
+    list-style-type: none;
+}
+#module_bottom {
+    width: 645px;
+    height: 60px;
+    background-image: url(images/module_bottom.jpg);
+}
+/* Cadre des blocks */
+.block_top {
+    margin: 10px 10px 0px 30px;
+    width: 174px;
+    height: 57px;
+}
+.block_middle {
+    margin: 0px 10px 0px 30px;
+    width: 174px;
+    background-image: url(images/block_middle.png);
+}
+.block_bottom {
+    margin: 0px 10px 0px 30px;
+    width: 174px;
+    height: 35px;
+    background-image: url(images/block_bottom.png);
+}
+.block_content {
+    padding: 0px 12px 0px 10px;
+}
+.block_content ul {
+    padding-top: 5px;
+    list-style-type: none;
+}
+/* Block de message (ajax et autre) */
+#block_message {
+    padding: 5px;
+}
+/* Liste d'erreur rencontrée */
+#block_message .exception {
+    margin: 5px;
+}
+#block_message .exception li {
+    margin-top: 10px;
+    list-style-type: none;
+    padding-left: 25px;
+    font-size: 13px;
+}
+/* Texte de l'erreur */
+#block_message .exception li div {
+    padding: 2px;
+}
+#block_message .exception .alert {
+    background: #efaaa9 url(images/block_error_alert.png) no-repeat 2px 2px;
+}
+#block_message .exception .note {
+    background: #f7c259 url(images/block_error_note.png) no-repeat 2px 2px;
+}
+#block_message .exception .info {
+    background: #98c3f1 url(images/block_error_info.png) no-repeat 2px 2px;
+}
+/* Partie gauche */
+#left {
+    width: 214px;
+    float: left;
+    position: relative;
+}
+/* Interieur */
+#middle {
+    width: 645px;
+    float: left;
+    position: relative;
+}
+/* Fil ariane */
+#breadcrumb {
+    float: left;
+    position: relative;
+    height: 11px; /* pour être correctement aligné avec le loader */
+}
+#breadcrumb a:hover {
+    color: #05587b;
+}
+/* Chargeur annimé */
+#loader {
+    float: left;
+    position: relative;
+    background: url(images/loader.gif) no-repeat 0 0;
+}
+/* Cleaner */
+.cleaner {
+    clear: both;
+}
+/* Titre classique */
+.title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+.title span {
+    background: url(images/title.png) no-repeat 0 4px;
+    padding-left: 16px;
+}
+/* Texte de description classique */
+.description {
+    font-size: 15px;
+    margin: 0 auto;
+    text-align: justify;
+}
+.description span {
+    background: url(images/description.png) no-repeat 0 2px;
+    padding-left: 16px;
+}
+
+/* Boite d'erreur du fichier debug.php */
+.debugerror {
+    background-color: #de9da1;
+    border-left: 0px solid #de9da1;
+    border-right: 0px solid #de9da1;
+    padding: 30px;
+    margin: 30px;
+    border: 2px solid red;
+}
+.debugerror hr {
+    margin: 10px;
+    border: 1px dashed red;
+}
