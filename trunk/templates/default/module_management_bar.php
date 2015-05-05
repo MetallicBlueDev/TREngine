@@ -3,10 +3,10 @@ if (CoreMain::getInstance()->isDefaultLayout()) {
     ?>
     <div id="management_bar">
         <div>
-            <?php echo TREngine\Engine\Core\CoreHtml::getLink('?mod=management', '<img alt="" src="templates/default/management/bar_home.png" />'); ?>
+            <?php echo TREngine\Engine\Core\CoreHtml::getLink('?mod=management', '<img alt="" src="template/default/management/bar_home.png" />'); ?>
         </div>
         <div>
-            <?php echo TREngine\Engine\Core\CoreHtml::getLink('?mod=management&manage=update', '<img alt=""  src="templates/default/management/bar_update.png" />'); ?>
+            <?php echo TREngine\Engine\Core\CoreHtml::getLink('?mod=management&manage=update', '<img alt=""  src="template/default/management/bar_update.png" />'); ?>
         </div>
         <div id="management_bar_setting_page">
             <select onchange="document.location = '<?php echo CoreUrlRewriting::getLink('?mod=management&manage='); ?>' + this.options[this.selectedIndex].value;">
