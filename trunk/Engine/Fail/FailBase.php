@@ -44,7 +44,13 @@ abstract class FailBase extends Exception {
      */
     public function getFailSourceName() {
         $sourceName = get_called_class();
-        $pos = strpos($sourceName, "_");
+        $pos = strripos($sourceName, '\\');
+
+        if ($pos > 1) {
+            $sourceName = substr($sourceName, $pos + 1, strlen($sourceName) - $pos - 1);
+        }
+
+        $pos = strcspn($sourceName, 'ABCDEFGHJIJKLMNOPQRSTUVWXYZ', 1);
 
         if ($pos > 1) {
             $sourceName = substr($sourceName, $pos + 1, strlen($sourceName) - $pos - 1);

@@ -109,8 +109,12 @@ class LibMakeStyle {
 
         // Vérification du template
         if (!$this->isTemplate()) {
-            CoreSecure::getInstance()->throwException("makeStyle", null, array(
-                $this->getTemplatePath()));
+            if ($this->debugMode) {
+                exit("CRITICAL ERROR: DEBUG TEMPLATE NOT FOUND.");
+            } else {
+                CoreSecure::getInstance()->throwException("makeStyle", null, array(
+                    $this->getTemplatePath()));
+            }
         }
 
         // Extrait les variables en local

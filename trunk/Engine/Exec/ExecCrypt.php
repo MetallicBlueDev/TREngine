@@ -99,8 +99,9 @@ class ExecCrypt {
      * @param string $data
      * @return string
      */
-    public static function cryptByMd5($data) {
-        return md5($data);
+    public static function &cryptByMd5($data) {
+        $cryptData = md5($data);
+        return $cryptData;
     }
 
     /**
@@ -138,13 +139,14 @@ class ExecCrypt {
      * @param string $salt
      * @return string
      */
-    public static function cryptByMd5TrEngine($data, $salt = "") {
+    public static function &cryptByMd5TrEngine($data, $salt = "") {
         if (empty($salt)) {
             $salt = self::makeIdentifier(8);
         }
 
         $salt = substr($salt, 0, 8);
-        return "TR" . md5($data . $salt);
+        $cryptData = "TR" . md5($data . $salt);
+        return $cryptData;
     }
 
     /**
@@ -181,8 +183,9 @@ class ExecCrypt {
      * @param string $data
      * @return string
      */
-    public static function cryptBySha1($data) {
-        return sha1($data);
+    public static function &cryptBySha1($data) {
+        $cryptData = sha1($data);
+        return $cryptData;
     }
 
     /**
@@ -193,13 +196,14 @@ class ExecCrypt {
      * @param string $salt
      * @return string
      */
-    public static function cryptBySsha($data, $salt = "") {
+    public static function &cryptBySsha($data, $salt = "") {
         if (empty($salt)) {
             $salt = self::makeIdentifier(4);
         }
 
         $salt = substr($salt, 0, 4);
-        return "{SSHA}" . base64_encode(pack("H*", sha1($data . $salt)) . $salt);
+        $cryptData = "{SSHA}" . base64_encode(pack("H*", sha1($data . $salt)) . $salt);
+        return $cryptData;
     }
 
     /**
@@ -210,8 +214,9 @@ class ExecCrypt {
      * @param string $salt
      * @return string
      */
-    public static function cryptByMy411($data) {
-        return "*" . sha1(pack("H*", sha1($data)));
+    public static function &cryptByMy411($data) {
+        $cryptData = "*" . sha1(pack("H*", sha1($data)));
+        return $cryptData;
     }
 
     /**
