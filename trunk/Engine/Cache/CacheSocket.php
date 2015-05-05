@@ -324,7 +324,7 @@ class CacheSocket extends CacheModel {
                     }
 
                     // On verifie si c'est bon et on arrete si c'est trouvé
-                    if (!empty($pathFound) && is_file(DIRECTORY_SEPARATOR . $pathRebuild . DIRECTORY_SEPARATOR . $pathFound . DIRECTORY_SEPARATOR . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php")) {
+                    if (!empty($pathFound) && is_file(DIRECTORY_SEPARATOR . $pathRebuild . DIRECTORY_SEPARATOR . $pathFound . DIRECTORY_SEPARATOR . "Engine" . DIRECTORY_SEPARATOR . "SecurityCheck.php")) {
                         break;
                     } else {
                         // Resets
@@ -335,7 +335,7 @@ class CacheSocket extends CacheModel {
         }
 
         // Vérification du root path
-        if (is_file(DIRECTORY_SEPARATOR . $pathRebuild . DIRECTORY_SEPARATOR . $pathFound . DIRECTORY_SEPARATOR . "engine" . DIRECTORY_SEPARATOR . "core" . DIRECTORY_SEPARATOR . "secure.class.php")) {
+        if (is_file(DIRECTORY_SEPARATOR . $pathRebuild . DIRECTORY_SEPARATOR . $pathFound . DIRECTORY_SEPARATOR . "Engine" . DIRECTORY_SEPARATOR . "SecurityCheck.php")) {
             $this->setServerRoot($pathFound);
         } else if (empty($this->getServerRoot())) {
             CoreLogger::addException("Unable to configure root path.");

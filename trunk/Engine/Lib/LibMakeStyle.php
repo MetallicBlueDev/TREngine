@@ -20,14 +20,14 @@ class LibMakeStyle {
      *
      * @var string
      */
-    private static $templatesDir = "templates";
+    private static $templatesDir = "Template";
 
     /**
      * Nom du dossier du template utilisé.
      *
      * @var string
      */
-    private static $currentTemplate = "default";
+    private static $currentTemplate = "Default";
 
     /**
      * Nom du fichier template.
@@ -212,7 +212,7 @@ class LibMakeStyle {
         $path = "";
 
         if ($this->debugMode) {
-            $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "engine" . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "makestyle.debug";
+            $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "Engine" . DIRECTORY_SEPARATOR . "Lib" . DIRECTORY_SEPARATOR . "makestyle.debug.php";
         } else {
             $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . self::$templatesDir . DIRECTORY_SEPARATOR . self::$currentTemplate . DIRECTORY_SEPARATOR . $this->fileName;
         }
