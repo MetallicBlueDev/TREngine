@@ -2,17 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
     <head>
         <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaHeaders(); ?>
-        <link rel="stylesheet" href="template/default/style.css" type="text/css" />
+        <link rel="stylesheet" href="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/style.css" type="text/css" />
         <?php if (TREngine\Engine\Core\CoreLoader::isCallable("CoreMain") && TREngine\Engine\Core\CoreMain::getInstance()->getAgentInfos()->getBrowserName() == "Internet Explorer" && TREngine\Engine\Core\CoreMain::getInstance()->getAgentInfos()->getBrowserVersion() < "7") { ?>
-            <link rel="stylesheet" href="template/default/ie6.css" type="text/css" />
+            <link rel="stylesheet" href="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/ie6.css" type="text/css" />
         <?php } ?>
     </head>
     <body>
 
         <div id="header">
             <div style="display: none;"><h2><?php echo TREngine\Engine\Core\CoreMain::getInstance()->getDefaultSiteName() . " - " . TREngine\Engine\Core\CoreMain::getInstance()->getDefaultSiteSlogan(); ?></h2></div>
-            <object type="application/x-shockwave-flash" data="template/default/images/header.swf" width="900px" height="130px">
-                <param name="movie" value="template/default/images/header.swf" />
+            <object type="application/x-shockwave-flash" data="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/images/header.swf" width="900px" height="130px">
+                <param name="movie" value="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/images/header.swf" />
                 <param name="pluginurl" value="http://www.macromedia.com/go/getflashplayer" />
                 <param name="wmode" value="transparent" />
                 <param name="menu" value="false" />
@@ -40,7 +40,7 @@
 
                 <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("top"); ?>
 
-                <?php include TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "default" . DIRECTORY_SEPARATOR . "module.php"; ?>
+                <?php include TREngine\Engine\Lib\LibMakeStyle::getTemplateDir() . DIRECTORY_SEPARATOR . "module.php"; ?>
 
                 <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("bottom"); ?>
 

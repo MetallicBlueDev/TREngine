@@ -156,13 +156,13 @@ class LibMakeStyle {
     }
 
     /**
-     * Détermine si le dossier contenant les templates est valide.
+     * Détermine si le dossier contenant le template est valide.
      *
-     * @param string $templatesDir
+     * @param string $templateDir
      * @return boolean
      */
-    public static function isTemplateDir($templatesDir) {
-        return !empty($templatesDir) && is_dir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $templatesDir);
+    public static function isTemplateDir($templateDir) {
+        return !empty($templateDir) && is_dir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $templateDir);
     }
 
     /**
