@@ -5,7 +5,7 @@ namespace TREngine\Engine\Exec;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Fonction optimisé et utilitaire.
+ * Fonction optimisée et utilitaire.
  *
  * @author Sébastien Villemain
  */

@@ -5,14 +5,14 @@ namespace TREngine\Engine\Exec;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Gestionnaire d'adresse URL
+ * Outil de manipulation d'adresse URL.
  *
  * @author Sébastien Villemain
  */
 class ExecUrl {
 
     /**
-     * Nettoie l'adresse web (URL) du protocole
+     * Nettoie l'adresse web du protocole.
      *
      * @param string $url
      * @return string
@@ -25,5 +25,3 @@ class ExecUrl {
     }
 
 }
-
-?>
