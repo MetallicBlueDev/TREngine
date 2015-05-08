@@ -125,7 +125,7 @@ class ModuleIndex extends ModuleModel {
         // Liste des templates disponibles
         $form->addSelectOpenTag("template", ACCOUNT_PRIVATE_TEMPLATE);
         $templates = LibMakeStyle::getTemplateList();
-        $currentTemplate = LibMakeStyle::getCurrentTemplate();
+        $currentTemplate = LibMakeStyle::getTemplateDir();
         $form->addSelectItemTag($currentTemplate, "", true);
         foreach ($templates as $template) {
             if ($template == $currentTemplate) {

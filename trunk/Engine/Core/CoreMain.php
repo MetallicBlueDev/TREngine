@@ -517,16 +517,16 @@ class CoreMain {
         $templateName = CoreSession::getInstance()->getUserInfos()->getTemplate();
 
         // Tentative d'utilisation du template du client
-        if (!LibMakeStyle::setCurrentTemplate($templateName)) {
+        if (!LibMakeStyle::isTemplateDir($templateName)) {
             $templateName = null;
         }
 
+        // Tentative d'utilisation du template du site
         if (empty($templateName)) {
             $templateName = $this->getDefaultTemplate();
-
-            // Tentative d'utilisation du template du site
-            LibMakeStyle::setCurrentTemplate($templateName);
         }
+
+        LibMakeStyle::setTemplateDir($templateName);
     }
 
     /**

@@ -16,18 +16,11 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class LibMakeStyle {
 
     /**
-     * Dossier contenant les templates.
+     * Dossier contenant le template.
      *
      * @var string
      */
-    private static $templatesDir = "Template";
-
-    /**
-     * Nom du dossier du template utilisé.
-     *
-     * @var string
-     */
-    private static $currentTemplate = "Default";
+    private static $templateDir = "Engine/Template/Default";
 
     /**
      * Nom du fichier template.
@@ -58,13 +51,6 @@ class LibMakeStyle {
     public function __construct($fileName = "") {
         $this->debugMode = false;
         $this->setFileName($fileName);
-
-        // TODO si $templatesDir ou $currentTemplate est vide, le moteur plante !
-        if (empty(self::$templatesDir) || empty(self::$currentTemplate)) {
-            CoreSecure::getInstance()->throwException("makeStyleConfig", null, array(
-                "templatesDir = " . self::$templatesDir,
-                "currentTemplate = " . self::$currentTemplate));
-        }
     }
 
     /**
@@ -88,7 +74,7 @@ class LibMakeStyle {
         if ($debugMode) {
             $this->setFileName($fileName);
 
-            // Si le template ne contient pas le fichier debug
+            // Le template ne contient pas le fichier debug
             if (!$this->isTemplate()) {
                 // Activation du mode debug
                 $this->debugMode = true;
@@ -130,11 +116,14 @@ class LibMakeStyle {
     /**
      * Configure le dossier contenant les templates.
      *
-     * @param string $templatesDir
+     * @param string $templateDir
      */
-    public static function setTemplatesDir($templatesDir) {
-        if (is_dir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $templatesDir)) {
-            self::$templatesDir = $templatesDir;
+    public static function setTemplateDir($templateDir) {
+        if (!self::isTemplateDir($templateDir)) {
+            CoreSecure::getInstance()->throwException("makeStyleConfig", null, array(
+                "templateDir = " . $templateDir));
+        } else {
+            self::$templateDir = $templateDir;
         }
     }
 
@@ -143,33 +132,8 @@ class LibMakeStyle {
      *
      * @return string
      */
-    public static function &getTemplatesDir() {
-        return self::$templatesDir;
-    }
-
-    /**
-     * Configure le dossier du template courament utilisé.
-     *
-     * @param string $currentTemplate
-     * @return boolean
-     */
-    public static function setCurrentTemplate($currentTemplate) {
-        $rslt = false;
-
-        if (!empty($currentTemplate) && is_dir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . self::$templatesDir . DIRECTORY_SEPARATOR . $currentTemplate)) {
-            self::$currentTemplate = $currentTemplate;
-            $rslt = true;
-        }
-        return $rslt;
-    }
-
-    /**
-     * Retourne le dossier du template utilisé.
-     *
-     * @return string
-     */
-    public static function &getCurrentTemplate() {
-        return self::$currentTemplate;
+    public static function &getTemplateDir() {
+        return self::$templateDir;
     }
 
     /**
@@ -179,12 +143,26 @@ class LibMakeStyle {
      */
     public static function &getTemplateList() {
         $templates = array();
+        $templatesDir = array(
+            "Custom" . DIRECTORY_SEPARATOR . "Template",
+            "Engine" . DIRECTORY_SEPARATOR . "Template");
 
-        // Vérification du dossier template
-        if (is_dir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . self::$templatesDir)) {
-            $templates = CoreCache::getInstance()->getNameList(self::$templatesDir);
+        foreach ($templatesDir as $templateDir) {
+            if (self::isTemplateDir($templateDir)) {
+                $templates = array_merge($templatesDir, CoreCache::getInstance()->getNameList($templateDir));
+            }
         }
         return $templates;
+    }
+
+    /**
+     * Détermine si le dossier contenant les templates est valide.
+     *
+     * @param string $templatesDir
+     * @return boolean
+     */
+    public static function isTemplateDir($templatesDir) {
+        return !empty($templatesDir) && is_dir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $templatesDir);
     }
 
     /**
@@ -214,7 +192,7 @@ class LibMakeStyle {
         if ($this->debugMode) {
             $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "Engine" . DIRECTORY_SEPARATOR . "Lib" . DIRECTORY_SEPARATOR . "makestyle.debug.php";
         } else {
-            $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . self::$templatesDir . DIRECTORY_SEPARATOR . self::$currentTemplate . DIRECTORY_SEPARATOR . $this->fileName;
+            $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . self::$templateDir . DIRECTORY_SEPARATOR . $this->fileName;
         }
         return $path;
     }

@@ -220,7 +220,7 @@ class CoreHtml {
      */
     public function addCssTemplateFile($fileName, $options = "") {
         if (CoreLoader::isCallable("LibMakeStyle")) {
-            $this->addCssFile(LibMakeStyle::getTemplatesDir() . "/" . LibMakeStyle::getCurrentTemplate() . "/" . $fileName, $options);
+            $this->addCssFile(LibMakeStyle::getTemplateDir() . "/" . $fileName, $options);
         }
     }
 
@@ -264,7 +264,7 @@ class CoreHtml {
         . "<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n"
         . "<meta http-equiv=\"content-script-type\" content=\"text/javascript\" />\n"
         . "<meta http-equiv=\"content-style-type\" content=\"text/css\" />\n"
-        . "<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"" . LibMakeStyle::getTemplatesDir() . "/" . LibMakeStyle::getCurrentTemplate() . "/favicon.ico\" />\n"
+        . "<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"" . LibMakeStyle::getTemplateDir() . "/favicon.ico\" />\n"
         . $this->getMetaIncludeJavascript()
         . $this->getMetaIncludeCss();
     }
