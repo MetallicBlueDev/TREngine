@@ -205,7 +205,7 @@ class LibMakeStyle {
 
         if ($this->debugMode) {
             // En debug mode, on utilise le fichier par défaut
-            $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "Engine" . DIRECTORY_SEPARATOR . "Lib" . DIRECTORY_SEPARATOR . "makestyle.debug.php";
+            $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "Engine" . DIRECTORY_SEPARATOR . "Template" . DIRECTORY_SEPARATOR . "makestyle.debug.php";
         } else {
             $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . self::$templateDir . DIRECTORY_SEPARATOR . $this->fileName;
         }
