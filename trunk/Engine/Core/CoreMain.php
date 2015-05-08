@@ -457,7 +457,7 @@ class CoreMain {
     private function displayDefaultLayout() {
         if ($this->doDumb()) {
             // Mode maintenance: possibilité de s'identifier
-            LibBlock::getInstance()->launchBlockType("login");
+            LibBlock::getInstance()->launchBlockType("Login");
 
             // Affichage des données de la page de maintenance (fermeture)
             $libMakeStyle = new LibMakeStyle();
