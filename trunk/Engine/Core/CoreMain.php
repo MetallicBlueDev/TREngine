@@ -396,39 +396,13 @@ class CoreMain {
         } else {
             // Vérification du type d'affichage
             if ($this->isDefaultLayout()) {
-                // Affichage classique du site
-                if ($this->doDumb()) {
-                    // Mode maintenance: possibilité de s'identifier
-                    LibBlock::getInstance()->launchBlockType("login");
-
-                    // Affichage des données de la page de maintenance (fermeture)
-                    $libMakeStyle = new LibMakeStyle();
-                    $libMakeStyle->assign("closeText", ERROR_DEBUG_CLOSE);
-                    $libMakeStyle->display("close");
-                } else {
-                    // Mode normal: exécution général
-                    LibModule::getInstance()->launch();
-                    LibBlock::getInstance()->launchAllBlock();
-
-                    $libMakeStyle = new LibMakeStyle();
-                    $libMakeStyle->display("index");
-                }
+                $this->displayDefaultLayout();
             } else {
                 // Affichage autonome des modules et blocks
                 if ($this->isModuleLayout()) {
-                    $libModule = LibModule::getInstance();
-
-                    // Affichage du module uniquement
-                    $libModule->launch();
-
-                    echo $libModule->getModule();
+                    $this->displayModuleLayout();
                 } else if ($this->isBlockLayout()) {
-                    $libBlock = LibBlock::getInstance();
-
-                    // Affichage du block uniquement
-                    $libBlock->launchBlockRequested();
-
-                    echo $libBlock->getBlock();
+                    $this->displayBlockLayout();
                 }
 
                 // Execute la commande de récupération d'erreur
@@ -475,6 +449,48 @@ class CoreMain {
 //        if (is_file($installPath)) {
 //            require $installPath;
 //        }
+    }
+
+    /**
+     * Affichage classique du site.
+     */
+    private function displayDefaultLayout() {
+        if ($this->doDumb()) {
+            // Mode maintenance: possibilité de s'identifier
+            LibBlock::getInstance()->launchBlockType("login");
+
+            // Affichage des données de la page de maintenance (fermeture)
+            $libMakeStyle = new LibMakeStyle();
+            $libMakeStyle->assign("closeText", ERROR_DEBUG_CLOSE);
+            $libMakeStyle->display("close");
+        } else {
+            // Mode normal: exécution général
+            LibModule::getInstance()->launch();
+            LibBlock::getInstance()->launchAllBlock();
+
+            $libMakeStyle = new LibMakeStyle();
+            $libMakeStyle->display("index");
+        }
+    }
+
+    /**
+     * Affichage du module uniquement.
+     */
+    private function displayModuleLayout() {
+        $libModule = LibModule::getInstance();
+        $libModule->launch();
+
+        echo $libModule->getModule();
+    }
+
+    /**
+     * Affichage du block uniquement.
+     */
+    private function displayBlockLayout() {
+        $libBlock = LibBlock::getInstance();
+        $libBlock->launchBlockRequested();
+
+        echo $libBlock->getBlock();
     }
 
     /**
@@ -535,7 +551,7 @@ class CoreMain {
      */
     private function compressionOpen() {
         header("Vary: Cookie, Accept-Encoding");
-// HTTP_ACCEPT_ENCODING => gzip
+        // HTTP_ACCEPT_ENCODING => gzip
         if (extension_loaded('zlib') && ini_get('zlib.output_compression') !== "1" && function_exists("ob_gzhandler") && !$this->doUrlRewriting()) {
             ob_start("ob_gzhandler");
         } else {
