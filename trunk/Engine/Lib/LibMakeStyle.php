@@ -44,12 +44,18 @@ class LibMakeStyle {
     private $debugMode = false;
 
     /**
+     * Détermine si le template est valide.
+     *
+     * @var boolean
+     */
+    private $valid = null;
+
+    /**
      * Nouveau template.
      *
      * @param string $fileName nom du template
      */
     public function __construct($fileName = "") {
-        $this->debugMode = false;
         $this->setFileName($fileName);
     }
 
@@ -77,7 +83,7 @@ class LibMakeStyle {
             // Le template ne contient pas le fichier debug
             if (!$this->isTemplate()) {
                 // Activation du mode debug
-                $this->debugMode = true;
+                $this->setDebugMode();
             }
         }
 
@@ -177,7 +183,16 @@ class LibMakeStyle {
             }
 
             $this->fileName = $fileName;
+            $this->valid = null;
         }
+    }
+
+    /**
+     * Activation du mode debug.
+     */
+    private function setDebugMode() {
+        $this->debugMode = true;
+        $this->valid = null;
     }
 
     /**
@@ -186,10 +201,10 @@ class LibMakeStyle {
      * @return string path
      */
     private function &getTemplatePath() {
-        // Si le mode debug est activé, on utilise le fichier par défaut
         $path = "";
 
         if ($this->debugMode) {
+            // En debug mode, on utilise le fichier par défaut
             $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . "Engine" . DIRECTORY_SEPARATOR . "Lib" . DIRECTORY_SEPARATOR . "makestyle.debug.php";
         } else {
             $path = TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . self::$templateDir . DIRECTORY_SEPARATOR . $this->fileName;
@@ -203,7 +218,10 @@ class LibMakeStyle {
      * @return boolean true si le chemin du template est valide
      */
     private function isTemplate() {
-        return is_file($this->getTemplatePath());
+        if ($this->valid === null) {
+            $this->valid = is_file($this->getTemplatePath());
+        }
+        return $this->valid;
     }
 
 }
