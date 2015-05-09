@@ -42,6 +42,7 @@ class ModuleIndex extends ModuleModel {
             $accountTabs->addTab(ACCOUNT_PROFILE, $this->tabProfile());
             $accountTabs->addTab(ACCOUNT_PRIVATE, $this->tabAccount());
             $accountTabs->addTab(ACCOUNT_AVATAR, $this->tabAvatar());
+
             if (CoreSession::getInstance()->getUserInfos()->hasAdminRank()) {
                 $accountTabs->addTab(ACCOUNT_ADMIN, $this->tabAdmin());
             }
@@ -108,25 +109,29 @@ class ModuleIndex extends ModuleModel {
         $form->addInputPassword("pass2", ACCOUNT_PRIVATE_PASSWORD_CONFIRME);
         $form->addInputText("mail", MAIL, $userInfos->getMail());
 
-        // Liste des langages disponibles
         $form->addSpace();
         $form->addSelectOpenTag("langue", ACCOUNT_PRIVATE_LANGUE);
+
         $langues = CoreTranslate::getLangList();
         $currentLanguage = CoreTranslate::getInstance()->getCurrentLanguage();
         $form->addSelectItemTag($currentLanguage, "", true);
+
+        // Liste des langages disponibles
         foreach ($langues as $langue) {
             if ($langue == $currentLanguage) {
                 continue;
             }
             $form->addSelectItemTag($langue);
         }
-        $form->addSelectCloseTag();
 
-        // Liste des templates disponibles
-        $form->addSelectOpenTag("template", ACCOUNT_PRIVATE_TEMPLATE);
+        $form->addSelectCloseTag();
+        $form->addSelectOpenTag("template", ACCOUNT_PRIVATE_TEMPLATE)
+        ;
         $templates = LibMakeStyle::getTemplateList();
         $currentTemplate = LibMakeStyle::getTemplateDir();
         $form->addSelectItemTag($currentTemplate, "", true);
+
+        // Liste des templates disponibles
         foreach ($templates as $template) {
             if ($template == $currentTemplate) {
                 continue;
