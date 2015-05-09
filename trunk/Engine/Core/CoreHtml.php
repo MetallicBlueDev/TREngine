@@ -528,7 +528,7 @@ class CoreHtml {
 
         // Conception de l'entête
         foreach ($this->javaScriptFile as $fileName => $options) {
-            $meta .= "<script" . ((!empty($options)) ? " " . $options : "") . " type=\"text/javascript\" src=\"includes/js/" . $fileName . "\"></script>\n";
+            $meta .= "<script" . ((!empty($options)) ? " " . $options : "") . " type=\"text/javascript\" src=\"Resources/Js/" . $fileName . "\"></script>\n";
         }
         return $meta;
     }
