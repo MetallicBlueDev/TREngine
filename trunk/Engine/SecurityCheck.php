@@ -9,7 +9,7 @@ use TREngine\Engine\Core\CoreSecure;
 /**
  * Attention, ce fichier va être inclus dans tous les fichiers PHP.
  * Le code doit être impérativement léger et rapide à exécuter.
- * 
+ *
  * A utiliser avec l'instruction suivante :
  * require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
  */
@@ -19,7 +19,7 @@ if (!defined("TR_ENGINE_INITIALIZED")) {
 
     // Vérification du serveur et de la version PHP
     if (!class_exists("CoreInfo", false)) {
-        require DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'CoreInfo.php';
+        require DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . 'CoreInfo.php';
         CoreInfo::initialize();
 
         // Si une version PHP OO moderne n'est pas détectée, c'est la fin
@@ -32,7 +32,7 @@ if (!defined("TR_ENGINE_INITIALIZED")) {
 
     // Vérification de l'inclusion du chargeur
     if (!class_exists("CoreLoader", false)) {
-        require DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'CoreLoader.php';
+        require DIRECTORY_SEPARATOR . 'Core' . DIRECTORY_SEPARATOR . 'CoreLoader.php';
     }
 }
 
