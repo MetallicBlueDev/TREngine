@@ -120,8 +120,16 @@ class LibBlock {
      */
     private $blocksInfo = array();
 
-    private function __construct() {
+    /**
+     * Liste des blocks qui peuvent être appelés en standalone.
+     *
+     * @var array
+     */
+    private $standaloneBlocksType = array();
 
+    private function __construct() {
+        $this->addStandaloneBlockType("Login");
+        $this->addStandaloneBlockType("ImageGenerator");
     }
 
     /**
@@ -134,6 +142,25 @@ class LibBlock {
             self::$libBlock = new LibBlock();
         }
         return self::$libBlock;
+    }
+
+    /**
+     * Ajout d'un type de block qui peut être appelé en standalone.
+     *
+     * @param string $blockType
+     */
+    public function addStandaloneBlockType($blockType) {
+        $this->standaloneBlocksType[] = $blockType;
+    }
+
+    /**
+     * Détermine si le block est utilisable en standalone.
+     *
+     * @param string $blockType
+     * @return boolean
+     */
+    public function isStandaloneBlockType($blockType) {
+        return (array_search($blockType, $this->standaloneBlocksType) !== false);
     }
 
     /**
@@ -156,20 +183,31 @@ class LibBlock {
      * Démarrage du block demandé depuis une requête.
      */
     public function launchBlockRequested() {
-        $blockId = CoreRequest::getInteger("blockId");
-        $this->launchBlockById($blockId, false);
+        $blockId = CoreRequest::getInteger("blockId", -1);
+
+        if ($blockId >= 0) {
+            $this->launchBlockById($blockId, false);
+        } else {
+            $blockType = CoreRequest::getString("blockType");
+            $this->launchBlockByType($blockType);
+        }
     }
 
     /**
-     * Démarrage du block Login.
+     * Démarrage d'un block via son type.
      */
-    public function launchBlockLogin() {
+    public function launchBlockByType($blockType) {
+        if (empty($blockType) || !$this->isStandaloneBlockType($blockType)) {
+            CoreSecure::getInstance()->throwException("blockType", null, array(
+                "Invalid type value: " . $blockType));
+        }
+
         $empty = array(
             "block_id" => 1,
-            "type" => "Login",
+            "type" => $blockType,
             "side" => self::SIDE_RIGHT,
             "mods" => "all",
-            "title" => "Login");
+            "title" => $blockType);
         $blockInfo = new LibBlockData($empty);
         $this->setBlocksInfo($blockInfo);
         $this->launchBlock($blockInfo, false);

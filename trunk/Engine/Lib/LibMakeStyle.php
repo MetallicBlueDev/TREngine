@@ -103,10 +103,10 @@ class LibMakeStyle {
         if (!$this->isTemplate()) {
             if ($this->debugMode) {
                 exit("CRITICAL ERROR: DEBUG TEMPLATE NOT FOUND.");
-            } else {
-                CoreSecure::getInstance()->throwException("makeStyle", null, array(
-                    $this->getTemplatePath()));
             }
+
+            CoreSecure::getInstance()->throwException("makeStyle", null, array(
+                $this->getTemplatePath()));
         }
 
         // Extrait les variables en local
@@ -128,9 +128,9 @@ class LibMakeStyle {
         if (!self::isTemplateDir($templateDir)) {
             CoreSecure::getInstance()->throwException("makeStyleConfig", null, array(
                 "templateDir = " . $templateDir));
-        } else {
-            self::$templateDir = $templateDir;
         }
+
+        self::$templateDir = $templateDir;
     }
 
     /**
