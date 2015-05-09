@@ -137,7 +137,7 @@ class LibBlock {
     }
 
     /**
-     * Charge les blocks.
+     * Démarrage des blocks.
      */
     public function launchAllBlock() {
         // Recherche dans l'indexeur
@@ -146,51 +146,33 @@ class LibBlock {
         foreach ($blocksIndexer as $blockRawInfo) {
             if ($blockRawInfo['side'] > self::SIDE_NONE) {
                 if ($blockRawInfo['rank'] >= CoreAccess::RANK_NONE) {
-                    $this->launchBlock($blockRawInfo['block_id'], true);
+                    $this->launchBlockById($blockRawInfo['block_id'], true);
                 }
             }
         }
     }
 
     /**
-     * Charge le block requêté.
+     * Démarrage du block demandé depuis une requête.
      */
     public function launchBlockRequested() {
         $blockId = CoreRequest::getInteger("blockId");
-        $this->launchBlock($blockId, false);
+        $this->launchBlockById($blockId, false);
     }
 
     /**
-     * Charge un block par son type.
-     *
-     * @param string $type
+     * Démarrage du block Login.
      */
-    public function launchBlockType($type) {
-        $blockId = -1;
-
-        // Recherche dans le cache local
-        foreach ($this->blocksInfo as $blockRawInfo) {
-            if ($blockRawInfo->getType() === $type) {
-                $blockId = $blockRawInfo->getId();
-                break;
-            }
-        }
-
-        if ($blockId === -1) {
-            // Recherche dans l'indexeur
-            $blocksIndexer = $this->getBlocksIndexer();
-
-            foreach ($blocksIndexer as $blockRawInfo) {
-                if ($blockRawInfo['type'] === $type) {
-                    $blockId = $blockRawInfo['block_id'];
-                    break;
-                }
-            }
-        }
-
-        if ($blockId >= 0) {
-            $this->launchBlock($blockId, false);
-        }
+    public function launchBlockLogin() {
+        $empty = array(
+            "block_id" => 1,
+            "type" => "Login",
+            "side" => self::SIDE_RIGHT,
+            "mods" => "all",
+            "title" => "Login");
+        $blockInfo = new LibBlockData($empty);
+        $this->setBlocksInfo($blockInfo);
+        $this->launchBlock($blockInfo, false);
     }
 
     /**
@@ -248,6 +230,27 @@ class LibBlock {
     }
 
     /**
+     * Retourne le type d'orientation/postion en lettres.
+     *
+     * @param int $side
+     * @return string identifiant de la position (right, left...).
+     */
+    public static function &getSideAsLetters($side) {
+        if (!is_numeric($side)) {
+            CoreSecure::getInstance()->throwException("blockSide", null, array(
+                "Invalid side value: " . $side));
+        }
+
+        $sideLetters = array_search($side, self::$sideRegistred);
+
+        if ($sideLetters === false) {
+            CoreSecure::getInstance()->throwException("blockSide", null, array(
+                "Numeric side: " . $side));
+        }
+        return $sideLetters;
+    }
+
+    /**
      * Retourne la liste des blocks disponibles.
      *
      * @return array
@@ -302,10 +305,18 @@ class LibBlock {
 
             // Injection des informations du block
             $blockInfo = new LibBlockData($blockData);
-            $blockInfo->setSideName(self::getSideAsLetters($blockInfo->getSide()));
-            $this->blocksInfo[$blockId] = $blockInfo;
+            $this->setBlocksInfo($blockInfo);
         }
         return $blockInfo;
+    }
+
+    /**
+     * Alimente le cache des blocks.
+     *
+     * @param LibBlockData $blockInfo
+     */
+    private function setBlocksInfo(LibBlockData $blockInfo) {
+        $this->blocksInfo[$blockInfo->getId()] = $blockInfo;
     }
 
     /**
@@ -376,14 +387,23 @@ class LibBlock {
     }
 
     /**
-     * Chargement d'un block.
+     * Démarrage d'un block via son identifiant.
      *
      * @param int $blockId
      * @param boolean $checkModule
      */
-    private function launchBlock($blockId, $checkModule) {
+    private function launchBlockById($blockId, $checkModule) {
         $blockInfo = $this->getInfoBlock($blockId);
+        $this->launchBlock($blockInfo, $checkModule);
+    }
 
+    /**
+     * Démarrage d'un block.
+     *
+     * @param LibBlockData $blockInfo
+     * @param boolean $checkModule
+     */
+    private function launchBlock(LibBlockData $blockInfo, $checkModule) {
         if ($blockInfo->isValid()) {
             if ($blockInfo->canActive($checkModule)) {
                 $this->get($blockInfo);
@@ -417,27 +437,6 @@ class LibBlock {
         } else {
             CoreLogger::addErrorMessage(ERROR_BLOCK_CODE . " (" . $blockInfo->getType() . ")");
         }
-    }
-
-    /**
-     * Retourne le type d'orientation/postion en lettres.
-     *
-     * @param int $side
-     * @return string identifiant de la position (right, left...).
-     */
-    private static function &getSideAsLetters($side) {
-        if (!is_numeric($side)) {
-            CoreSecure::getInstance()->throwException("blockSide", null, array(
-                "Invalid side value: " . $side));
-        }
-
-        $sideLetters = array_search($side, self::$sideRegistred);
-
-        if ($sideLetters === false) {
-            CoreSecure::getInstance()->throwException("blockSide", null, array(
-                "Numeric side: " . $side));
-        }
-        return $sideLetters;
     }
 
     /**

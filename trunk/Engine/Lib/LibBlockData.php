@@ -39,6 +39,9 @@ class LibBlockData extends LibEntityData {
         $this->newStorage($data);
         $this->updateDataValue("mods", explode("|", $this->getDataValue("mods")));
         $this->updateDataValue("title", ExecEntities::textDisplay($this->getDataValue("title")));
+
+        // Affecte la position du block en lettre.
+        $this->sideName = LibBlock::getSideAsLetters($this->getSide());
     }
 
     /**
@@ -75,15 +78,6 @@ class LibBlockData extends LibEntityData {
      */
     public function &getSideName() {
         return $this->sideName;
-    }
-
-    /**
-     * Affecte la position du block en lettre.
-     *
-     * @param string $sideName
-     */
-    public function setSideName($sideName) {
-        $this->sideName = $sideName;
     }
 
     /**

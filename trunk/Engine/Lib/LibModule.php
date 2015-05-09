@@ -212,7 +212,7 @@ class LibModule {
     }
 
     /**
-     * Charge le module courant.
+     * Démarrage du module courant.
      */
     public function launch() {
         $moduleInfo = $this->getInfoModule();
