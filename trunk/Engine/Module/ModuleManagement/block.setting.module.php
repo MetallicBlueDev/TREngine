@@ -80,13 +80,13 @@ class Module_Management_Block extends ModuleModel {
         if (CoreSql::getInstance()->affectedRows() > 0) {
             while ($row = CoreSql::getInstance()->fetchArray()) {
                 // Parametre de la ligne
-                $title = CoreHtml::getLink("?mod=management&manage=block&localView=tabEdit&blockId=" . $row['block_id'], $row['title']);
+                $title = CoreHtml::getLink("?module=management&manage=block&localView=tabEdit&blockId=" . $row['block_id'], $row['title']);
                 $type = $row['type'];
                 $side = LibBlock::getSideAsLitteral($row['side']);
-                $position = CoreHtml::getLinkWithAjax("?mod=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'], "?mod=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'], "#block_main_setting", "^"
+                $position = CoreHtml::getLinkWithAjax("?module=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'], "?module=management&manage=block&localView=sendMoveUp&blockId=" . $row['block_id'], "#block_main_setting", "^"
                 );
                 $position .= $row['position'];
-                $position .= CoreHtml::getLinkWithAjax("?mod=management&manage=block&localView=sendMoveDown&blockId=" . $row['block_id'], "?mod=management&manage=block&localView=sendMoveDown&blockId=" . $row['block_id'], "#block_main_setting", "v"
+                $position .= CoreHtml::getLinkWithAjax("?module=management&manage=block&localView=sendMoveDown&blockId=" . $row['block_id'], "?module=management&manage=block&localView=sendMoveDown&blockId=" . $row['block_id'], "#block_main_setting", "v"
                 );
                 $rank = CoreAccess::getRankAsLitteral($row['rank']);
                 $mods = ($row['mods'] == "all") ? BLOCK_ALL_PAGE : BLOCK_VARIES_PAGE;
@@ -228,7 +228,7 @@ class Module_Management_Block extends ModuleModel {
             );
             if (CoreSql::getInstance()->affectedRows() > 0) { // Si le block existe
                 $block = CoreSql::getInstance()->fetchArray();
-                LibBreadcrumb::getInstance()->addTrail($block['title'], "?mod=management&manage=block&localView=tabEdit&blockId=" . $blockId);
+                LibBreadcrumb::getInstance()->addTrail($block['title'], "?module=management&manage=block&localView=tabEdit&blockId=" . $blockId);
 
                 $form = new LibForm("management-block-blockedit");
                 $form->setTitle(BLOCK_EDIT_TITLE);
@@ -280,7 +280,7 @@ class Module_Management_Block extends ModuleModel {
 
                 $form->addInputText("blockTitle", "content", $block['content']);
 
-                $position .= CoreHtml::getLinkWithAjax("?mod=management&manage=block&localView=movedown&blockId=" . $row['block_id'], "?mod=management&manage=block&localView=movedown&blockId=" . $row['block_id'], "#block_main_setting", "v"
+                $position .= CoreHtml::getLinkWithAjax("?module=management&manage=block&localView=movedown&blockId=" . $row['block_id'], "?module=management&manage=block&localView=movedown&blockId=" . $row['block_id'], "#block_main_setting", "v"
                 );
                 Module_Management_Index::addDeleteButtonInToolbar("localView=sendDelete&blockId=" . $blockId);
                 Module_Management_Index::addCopyButtonInToolbar("localView=sendCopy&blockId=" . $blockId);
@@ -364,7 +364,7 @@ class Module_Management_Block extends ModuleModel {
     }
 
     private function tabAdd() {
-        LibBreadcrumb::getInstance()->addTrail(ADD, "?mod=management&manage=block&localView=tabAdd");
+        LibBreadcrumb::getInstance()->addTrail(ADD, "?module=management&manage=block&localView=tabAdd");
     }
 
     private function sendAdd() {

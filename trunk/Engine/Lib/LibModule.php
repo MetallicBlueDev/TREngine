@@ -62,7 +62,7 @@ class LibModule {
             self::$libModule = new LibModule();
 
             // Nom du module courant
-            $moduleName = CoreRequest::getWord("mod");
+            $moduleName = CoreRequest::getWord("module");
             $defaultModuleName = CoreMain::getInstance()->getDefaultMod();
 
             if (empty($moduleName)) {
@@ -223,12 +223,12 @@ class LibModule {
                 CoreTranslate::getInstance()->translate($moduleInfo->getFolderName());
 
                 $libBreadcrumb = LibBreadcrumb::getInstance();
-                $libBreadcrumb->addTrail($moduleInfo->getName(), "?mod=" . $moduleInfo->getName());
+                $libBreadcrumb->addTrail($moduleInfo->getName(), "?module=" . $moduleInfo->getName());
 
                 // TODO A MODIFIER
                 // Juste une petite exception pour le module management qui est different
                 if ($moduleInfo->getName() !== "management") {
-                    $libBreadcrumb->addTrail($moduleInfo->getView(), "?mod=" . $moduleInfo->getName() . "&view=" . $moduleInfo->getView());
+                    $libBreadcrumb->addTrail($moduleInfo->getView(), "?module=" . $moduleInfo->getName() . "&view=" . $moduleInfo->getView());
                 }
 
                 $this->get($moduleInfo);

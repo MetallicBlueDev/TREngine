@@ -124,7 +124,7 @@ class LibMenu {
      * Retourne une ligne de menu propre sous forme HTML
      *
      * Exemple :
-     * Link example__OPTIONS__B.I.U.A.?mod=home__OPTIONS__
+     * Link example__OPTIONS__B.I.U.A.?module=home__OPTIONS__
      *
      * @param $line string
      * @return string

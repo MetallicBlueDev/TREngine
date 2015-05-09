@@ -6,7 +6,7 @@
         $pictureName = is_file(TREngine\Engine\Lib\LibMakeStyle::getTemplateDir() . DIRECTORY_SEPARATOR . "management" . DIRECTORY_SEPARATOR . "icon_" . $page['value'] . ".png") ? $page['value'] : "no_picture";
         ?>
         <div class="management_index_block">
-            <?php echo TREngine\Engine\Core\CoreHtml::getLink('?mod=management&manage=' . $page['value'], '<img alt="" src="' . TREngine\Engine\Lib\LibMakeStyle::getTemplateDir() . '/management/icon_' . $pictureName . '.png" style="border: 0;" /><div><b>' . $page['name'] . '</b></div>'); ?>
+            <?php echo TREngine\Engine\Core\CoreHtml::getLink('?module=management&manage=' . $page['value'], '<img alt="" src="' . TREngine\Engine\Lib\LibMakeStyle::getTemplateDir() . '/management/icon_' . $pictureName . '.png" style="border: 0;" /><div><b>' . $page['name'] . '</b></div>'); ?>
         </div>
         <?php
     }

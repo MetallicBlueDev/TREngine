@@ -15,7 +15,7 @@ foreach ($projects as $key => $projectItem) {
     }
     ?>
 
-    <?php echo CoreHtml::getLink('?mod=project&view=displayProject&projectId=' . $projectItem['projectid'], '
+    <?php echo CoreHtml::getLink('?module=project&view=displayProject&projectId=' . $projectItem['projectid'], '
         <div class="project_body' . $progress . '">
             <div>
                 <div class="project_img"><img alt="" src="' . TREngine\Engine\Lib\LibMakeStyle::getTemplateDir() . '/project/' . strtolower($projectItem['language']) . '.png" /></div>

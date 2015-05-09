@@ -105,24 +105,24 @@ class BlockLogin extends BlockModel {
             }
 
             if ($this->displayAvatar && !empty($userInfos->getAvatar())) {
-                $content .= CoreHtml::getLink("mod=connect&view=account", ExecImage::resize($userInfos->getAvatar(), 80)) . "<br />";
+                $content .= CoreHtml::getLink("module=connect&view=account", ExecImage::resize($userInfos->getAvatar(), 80)) . "<br />";
             }
 
             if ($this->displayIcons) {
-                $content .= CoreHtml::getLink("mod=connect&view=logout", BLOCKLOGIN_LOGOUT) . "<br />"
-                . CoreHtml::getLink("mod=connect&view=account", BLOCKLOGIN_MY_ACCOUNT) . "<br />"
-                . CoreHtml::getLink("mod=receiptbox", BLOCKLOGIN_MY_RECEIPTBOX . " (?)") . "<br />";
+                $content .= CoreHtml::getLink("module=connect&view=logout", BLOCKLOGIN_LOGOUT) . "<br />"
+                . CoreHtml::getLink("module=connect&view=account", BLOCKLOGIN_MY_ACCOUNT) . "<br />"
+                . CoreHtml::getLink("module=receiptbox", BLOCKLOGIN_MY_RECEIPTBOX . " (?)") . "<br />";
             }
         } else {
             $moreLink = "<ul>";
 
             if (CoreMain::getInstance()->registrationAllowed()) {
-                $moreLink .= "<li><b>" . CoreHtml::getLinkWithAjax("mod=connect&view=registration", "blockId=" . $this->getBlockData()->getId() . "&localView=registration", "#login-logonblock", BLOCKLOGIN_GET_ACCOUNT) . "</b></li>";
+                $moreLink .= "<li><b>" . CoreHtml::getLinkWithAjax("module=connect&view=registration", "blockType=" . $this->getBlockData()->getType() . "&localView=registration", "#login-logonblock", BLOCKLOGIN_GET_ACCOUNT) . "</b></li>";
             }
 
-            $moreLink .= "<li>" . CoreHtml::getLinkWithAjax("mod=connect&view=logon", "blockId=" . $this->getBlockData()->getId() . "&localView=logon", "#login-logonblock", BLOCKLOGIN_GET_LOGON) . "</li>"
-            . "<li>" . CoreHtml::getLinkWithAjax("mod=connect&view=forgetlogin", "blockId=" . $this->getBlockData()->getId() . "&localView=forgetlogin", "#login-logonblock", BLOCKLOGIN_GET_FORGET_LOGIN) . "</li>"
-            . "<li>" . CoreHtml::getLinkWithAjax("mod=connect&view=forgetpass", "blockId=" . $this->getBlockData()->getId() . "&localView=forgetpass", "#login-logonblock", BLOCKLOGIN_GET_FORGET_PASS) . "</li></ul>";
+            $moreLink .= "<li>" . CoreHtml::getLinkWithAjax("module=connect&view=logon", "blockType=" . $this->getBlockData()->getType() . "&localView=logon", "#login-logonblock", BLOCKLOGIN_GET_LOGON) . "</li>"
+            . "<li>" . CoreHtml::getLinkWithAjax("module=connect&view=forgetlogin", "blockType=" . $this->getBlockData()->getType() . "&localView=forgetlogin", "#login-logonblock", BLOCKLOGIN_GET_FORGET_LOGIN) . "</li>"
+            . "<li>" . CoreHtml::getLinkWithAjax("module=connect&view=forgetpass", "blockType=" . $this->getBlockData()->getType() . "&localView=forgetpass", "#login-logonblock", BLOCKLOGIN_GET_FORGET_PASS) . "</li></ul>";
 
             $content .= "<div id=\"login-logonblock\">";
 
@@ -159,7 +159,7 @@ class BlockLogin extends BlockModel {
         $form->addInputText("login", LOGIN, "", "maxlength=\"180\"");
         $form->addInputPassword("password", PASSWORD, "maxlength=\"180\"");
         $form->addInputHidden("referer", urlencode(base64_encode(CoreRequest::getString("QUERY_STRING", "", "SERVER"))));
-        $form->addInputHidden("mod", "connect");
+        $form->addInputHidden("module", "connect");
         $form->addInputHidden("view", "logon");
         $form->addInputHidden("layout", "module");
         $form->addInputSubmit("submit", BLOCKLOGIN_GET_LOGON);
@@ -177,7 +177,7 @@ class BlockLogin extends BlockModel {
     private function &forgetlogin($moreLink) {
         $form = new LibForm("login-forgetloginblock");
         $form->addInputText("mail", MAIL . " ");
-        $form->addInputHidden("mod", "connect");
+        $form->addInputHidden("module", "connect");
         $form->addInputHidden("view", "forgetlogin");
         $form->addInputHidden("layout", "module");
         $form->addInputSubmit("submit", VALID);
@@ -195,7 +195,7 @@ class BlockLogin extends BlockModel {
     private function &forgetpass($moreLink) {
         $form = new LibForm("login-forgetpassblock");
         $form->addInputText("login", LOGIN . " ");
-        $form->addInputHidden("mod", "connect");
+        $form->addInputHidden("module", "connect");
         $form->addInputHidden("view", "forgetpass");
         $form->addInputHidden("layout", "module");
         $form->addInputSubmit("submit", VALID);
@@ -207,7 +207,7 @@ class BlockLogin extends BlockModel {
     private function &registration($moreLink) { // TODO registration block a coder
         $form = new LibForm("login-registrationblock");
         $form->addInputText("login", LOGIN . " ");
-        $form->addInputHidden("mod", "connect");
+        $form->addInputHidden("module", "connect");
         $form->addInputHidden("view", "registration");
         //$form->addInputHidden("layout", "module");
         $form->addInputSubmit("submit", VALID);

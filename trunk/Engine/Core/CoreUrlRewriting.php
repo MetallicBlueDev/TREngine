@@ -72,9 +72,9 @@ class CoreUrlRewriting {
         if ($layout) {
             $layout = "&amp;layout=";
 
-            if (strpos($link, "blockId=") !== false) {
+            if (strpos($link, "blockId=") !== false || strpos($link, "blockType=") !== false) {
                 $layout .= "block";
-            } else if (strpos($link, "mod=") !== false) {
+            } else if (strpos($link, "module=") !== false) {
                 $layout .= "module";
             } else {
                 $layout .= "default";

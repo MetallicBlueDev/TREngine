@@ -60,7 +60,7 @@ class Module_Management_Index extends ModuleModel {
                     // Ajout du repere au fil d'ariane
                     if (CoreMain::getInstance()->isDefaultLayout()) {
                         LibBreadcrumb::getInstance()->addTrail(
-                        $currentPageName, "?mod=management&manage=" . $pageSelected
+                        $currentPageName, "?module=management&manage=" . $pageSelected
                         );
                     }
 

@@ -119,7 +119,7 @@ class Module_Management_Setting extends ModuleModel {
         $form->addInputRadio("urlRewriting2", "urlRewriting", SETTING_GENERAL_METADATA_URLREWRITING_OFF, !$rewriting, "0");
         $form->addSpace();
 
-        $form->addInputHidden("mod", "management");
+        $form->addInputHidden("module", "management");
         $form->addInputHidden("layout", "module");
         $form->addInputHidden("manage", "setting");
         $form->addInputHidden("localView", "sendGeneral");
@@ -230,7 +230,7 @@ class Module_Management_Setting extends ModuleModel {
         }
 
         if ($coreMain->isDefaultLayout()) {
-            CoreHtml::getInstance()->redirect("index.php?mod=management&manage=setting&selectedTab=settingtabidTab0", 1);
+            CoreHtml::getInstance()->redirect("index.php?module=management&manage=setting&selectedTab=settingtabidTab0", 1);
         }
     }
 
@@ -289,7 +289,7 @@ class Module_Management_Setting extends ModuleModel {
         $form->addSelectCloseTag();
 
         $form->addSpace();
-        $form->addInputHidden("mod", "management");
+        $form->addInputHidden("module", "management");
         $form->addInputHidden("layout", "module");
         $form->addInputHidden("manage", "setting");
         $form->addInputHidden("localView", "sendSystem");
@@ -441,7 +441,7 @@ class Module_Management_Setting extends ModuleModel {
         }
 
         if ($coreMain->isDefaultLayout()) {
-            CoreHtml::getInstance()->redirect("index.php?mod=management&manage=setting&selectedTab=settingtabidTab1", 1);
+            CoreHtml::getInstance()->redirect("index.php?module=management&manage=setting&selectedTab=settingtabidTab1", 1);
         }
     }
 
