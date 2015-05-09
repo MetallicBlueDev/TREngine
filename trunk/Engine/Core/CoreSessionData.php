@@ -141,7 +141,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
         $avatar = $this->getDataValue("avatar");
 
         if (empty($avatar)) {
-            $avatar = "includes/avatars/nopic.png";
+            $avatar = "Resources/Avatars/NoPic.png";
         }
         return $avatar;
     }
