@@ -14,7 +14,7 @@ class ExecJQuery {
 
     public static function getTreeView($identifier) {
         $coreHtml = CoreHtml::getInstance();
-        $coreHtml->addCssInculdeFile("jquery.treeview.css");
+        $coreHtml->addCssResourceFile("jquery.treeview.css");
         $coreHtml->addJavascriptFile("jquery.treeview.js");
         $coreHtml->addJavascriptJquery("$('" . $identifier . "').treeview({animated: 'fast', collapsed: true, unique: true, persist: 'location'});");
     }
@@ -22,7 +22,7 @@ class ExecJQuery {
     public static function getJdMenu() {
         $coreHtml = CoreHtml::getInstance();
         // Ajout du fichier de style
-        $coreHtml->addCssInculdeFile("jquery.jdMenu.css");
+        $coreHtml->addCssResourceFile("jquery.jdMenu.css");
 
         // Ajout des fichier javascript
         $coreHtml->addJavascriptFile("jquery.dimensions.js");
@@ -37,13 +37,13 @@ class ExecJQuery {
     public static function getIdTabs() {
         $coreHtml = CoreHtml::getInstance();
         $coreHtml->addJavascriptFile("jquery.idTabs.js");
-        $coreHtml->addCssInculdeFile("jquery.idTabs.css");
+        $coreHtml->addCssResourceFile("jquery.idTabs.css");
     }
 
     public static function getSlimbox() {
         $coreHtml = CoreHtml::getInstance();
         $coreHtml->addJavascriptFile("jquery.slimbox.js");
-        $coreHtml->addCssInculdeFile("jquery.slimbox.css");
+        $coreHtml->addCssResourceFile("jquery.slimbox.css");
     }
 
 }

@@ -203,13 +203,13 @@ class CoreHtml {
     }
 
     /**
-     * Ajoute un fichier de style .CSS provenant du dossier includes/css à l'entête.
+     * Ajoute une feuille de style CSS provenant du dossier ressource/css à l'entête.
      *
      * @param string $fileName
      * @param string $options
      */
-    public function addCssInculdeFile($fileName, $options = "") {
-        $this->addCssFile("includes/css/" . $fileName, $options);
+    public function addCssResourceFile($fileName, $options = "") {
+        $this->addCssFile("Resources" . DIRECTORY_SEPARATOR . "Css" . DIRECTORY_SEPARATOR . $fileName, $options);
     }
 
     /**
@@ -220,7 +220,7 @@ class CoreHtml {
      */
     public function addCssTemplateFile($fileName, $options = "") {
         if (CoreLoader::isCallable("LibMakeStyle")) {
-            $this->addCssFile(LibMakeStyle::getTemplateDir() . "/" . $fileName, $options);
+            $this->addCssFile(LibMakeStyle::getTemplateDir() . DIRECTORY_SEPARATOR . $fileName, $options);
         }
     }
 
@@ -548,7 +548,7 @@ class CoreHtml {
      * @return string
      */
     private function &getMetaIncludeCss() {
-        $this->addCssInculdeFile("default.css");
+        $this->addCssResourceFile("default.css");
 
         $meta = "";
 
