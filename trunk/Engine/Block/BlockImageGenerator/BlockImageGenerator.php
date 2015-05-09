@@ -62,11 +62,11 @@ class BlockImageGenerator extends BlockModel {
         $text = substr($text, 2, 5);
 
         header("Content-type: image/png");
-        $im = imagecreatefromjpeg("../includes/imagegenerator/captcha.jpg");
-        $id = imagecreatefromjpeg("../includes/imagegenerator/captcha.jpg");
+        $im = imagecreatefromjpeg("Resources/ImageGenerator/captcha.jpg");
+        $id = imagecreatefromjpeg("Resources/ImageGenerator/captcha.jpg");
         $grey = imagecolorallocate($im, 128, 128, 128);
         $black = imagecolorallocate($im, 0, 0, 0);
-        $font = "../includes/imagegenerator/Alanden_.ttf";
+        $font = "Resources/ImageGenerator/Alanden_.ttf";
 
         for ($i = 0; $i < 5; $i++) {
             $angle = mt_rand(10, 30);
@@ -130,7 +130,7 @@ class BlockImageGenerator extends BlockModel {
         // $textColor = imagecolorallocate($image, 128, 255, 255); // couleur rouge / red color
         // $textColor = imagecolorallocate($image, 85, 255, 128); // couleur verte / green color
 
-        imagettftext($image, $textSize, 0, 2, 12, $textColor, "includes/imagegenerator/nokiafc22.ttf", $text);
+        imagettftext($image, $textSize, 0, 2, 12, $textColor, "Resources/ImageGenerator/nokiafc22.ttf", $text);
         imagecolortransparent($image, $font); // implication de la transparence
         imagepng($image);
         imagedestroy($image);
