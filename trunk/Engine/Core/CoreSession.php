@@ -438,7 +438,7 @@ class CoreSession {
         if ($coreSql->affectedRows() > 0) {
             $coreMain = CoreMain::getInstance();
             $mail = $coreMain->getDefaultAdministratorMail();
-            $mail = ExecMailer::protectedDisplay($mail, $coreMain->getDefaultSiteName());
+            $mail = ExecMailer::displayMail($mail, $coreMain->getDefaultSiteName());
             $reason = $coreSql->fetchArray()['reason'];
 
             $libMakeStyle = new LibMakeStyle();

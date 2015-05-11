@@ -177,7 +177,7 @@ class ModuleIndex extends ModuleModel {
                     }
                 }
                 if ($validName) {
-                    if (ExecMailer::validMail($mail)) {
+                    if (ExecMailer::isValidMail($mail)) {
                         $values = array();
                         if (!empty($pass) || !empty($pass2)) {
                             if ($pass == $pass2) {
@@ -359,7 +359,7 @@ class ModuleIndex extends ModuleModel {
             $mail = CoreRequest::getString("mail", "", "POST");
 
             if (!empty($mail)) {
-                if (ExecMailer::validMail($mail)) {
+                if (ExecMailer::isValidMail($mail)) {
                     CoreSql::getInstance()->select(
                     CoreTable::USERS_TABLE, array(
                         "name"), array(

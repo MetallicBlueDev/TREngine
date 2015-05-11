@@ -17,7 +17,7 @@ class ExecMailer {
      * @param string $address L'adresse email à vérifier
      * @return boolean true L'adresse email est valide
      */
-    public static function validMail($address) {
+    public static function isValidMail($address) {
         return (preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $address)) ? true : false;
     }
 
@@ -28,7 +28,7 @@ class ExecMailer {
      * @param string $name
      * @return string
      */
-    public static function &protectedDisplay($mail, $name = "mail") {
+    public static function &displayMail($mail, $name = "mail") {
         $rslt = null;
         $mail = str_replace("@", "_AT_", $mail);
         $mail = str_replace(".", "_DOT_", $mail);
@@ -47,5 +47,3 @@ class ExecMailer {
     }
 
 }
-
-?>

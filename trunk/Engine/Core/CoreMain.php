@@ -650,7 +650,7 @@ class CoreMain {
                 $newConfig = array();
 
                 // Vérification de l'adresse email du webmaster
-                if (!ExecMailer::validMail($rawConfig["TR_ENGINE_MAIL"])) {
+                if (!ExecMailer::isValidMail($rawConfig["TR_ENGINE_MAIL"])) {
                     CoreLogger::addException("Default mail isn't valide");
                 }
 
