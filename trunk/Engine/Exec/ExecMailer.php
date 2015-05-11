@@ -35,7 +35,7 @@ class ExecMailer {
         $protected = "<a href=\"mailto:" . $mail . "\">" . $name . "</a>";
 
         if (extension_loaded('gd')) {
-            $rslt = "<img src=\"index.php??mode=text&amp;text=" . urlencode(base64_encode($mail)) . "\" alt=\"\" title=\"" . $name . "\" />";
+            $rslt = "<img src=\"index.php?layout=block&amp;blockType=ImageGenerator&amp;mode=text&amp;text=" . urlencode(base64_encode($mail)) . "\" alt=\"\" title=\"" . $name . "\" />";
         } else {
             $rslt = $protected;
         }

@@ -334,7 +334,7 @@ class LibCaptcha {
      */
     private function makePicture() {// TODO a vérifier
         $this->response = ExecCrypt::makeIdentifier($this->randInt(3, 6));
-        $this->question = CAPTCHA_MAKE_PICTURE_CODE . ": " . "<img src=\"engine/lib/imagegenerator.php?mode=code&amp;code=" . $this->response . "\" alt=\"\" />\n";
+        $this->question = CAPTCHA_MAKE_PICTURE_CODE . ": " . "<img src=\"index.php?layout=block&amp;blockType=ImageGenerator&amp;mode=code&amp;code=" . $this->response . "\" alt=\"\" />\n";
     }
 
     /**
