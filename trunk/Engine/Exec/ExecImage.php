@@ -5,18 +5,18 @@ namespace TREngine\Engine\Exec;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Outil de cryptage
+ * Outil de manipulation des images.
  *
  * @author Sébastien Villemain
  */
 class ExecImage {
 
     /**
-     * Type d'image autorisé
+     * Type d'image autorisé.
      *
      * @var array
      */
-    private static $allowed = array(
+    private static $typesAllowed = array(
         "IMAGETYPE_GIF",
         "IMAGETYPE_JPEG",
         "IMAGETYPE_JPG",
@@ -25,73 +25,38 @@ class ExecImage {
     );
 
     /**
-     * Buffer de largeur
+     * Retourne la balise complète de l'image avec redimension.
      *
-     * @var array
+     * @param string $url
+     * @param int $widthDefault
+     * @param int $heightDefault
+     * @return string
      */
-    public static $width = array();
-
-    /**
-     * Buffer de hauteur
-     *
-     * @var array
-     */
-    public static $height = array();
-
-    /**
-     * Buffer de type
-     *
-     * @var array
-     */
-    public static $type = array();
-
-    /**
-     * Redimension une image
-     *
-     * @param $url string
-     * @param $widthDefault int
-     * @param $heightDefault int
-     * @return string balise img complete
-     */
-    public static function &resize($url, $widthDefault = 350, $heightDefault = "") {
+    public static function &getTag($url, $widthDefault = 350, $heightDefault = -1) {
         $img = "";
-        if (self::isValid($url)) {
-            // Reset des variables
-            $width = "";
-            $height = "";
 
-            // Recherche dans le buffer
-            $key = self::getKey($url);
-            if (isset(self::$width[$key]) && isset(self::$height[$key])) {
-                $width = self::$width[$key];
-                $height = self::$height[$key];
-            } else {
-                if ((list($widthImg, $heightImg) = @getimagesize($url)) !== false) {
-                    self::$width[$key] = $width;
-                    self::$height[$key] = $height;
-                    $width = $widthImg;
-                    $height = $heightImg;
+        $infos = self::getInfos($url);
+
+        if (!empty($infos)) {
+            $width = $infos[0];
+            $height = $infos[1];
+
+            foreach (array(
+                'width',
+                'height') as $original) {
+                $default = $original . "Default";
+
+                if (${$original} > ${$default} && ${$default}) {
+                    $originalInverse = ($original == 'width') ? 'height' : 'width';
+                    $resize = ${$default} / ${$original};
+                    ${$original} = ${$default};
+                    ${$originalInverse} = ceil(${$originalInverse} * $resize);
                 }
-            }
 
-            // Redimension si possible
-            if ($width && $height) {
-                foreach (array(
-                    'width',
-                    'height') as $original) {
-                    $default = $original . "Default";
-
-                    if (${$original} > ${$default} && ${$default}) {
-                        $originalInverse = ($original == 'width') ? 'height' : 'width';
-                        $resize = ${$default} / ${$original};
-                        ${$original} = ${$default};
-                        ${$originalInverse} = ceil(${$originalInverse} * $resize);
-                    }
-                }
                 $img = "<img src=\"" . $url . "\" width=\"" . $width . "\" height=\"" . $height . "\" alt=\"\" style=\"border: 0;\" />";
             }
-            // Si aucune redimension réalisable
-            if (empty($img) && $heightDefault) {
+
+            if (empty($img) && $heightDefault > 0) {
                 $img = "<img src=\"" . $url . "\" width=\"" . $widthDefault . "\" height=\"" . $heightDefault . "\" alt=\"\" style=\"border: 0;\" />";
             } else if (empty($img)) {
                 $img = "<img src=\"" . $url . "\" width=\"" . $widthDefault . "\" alt=\"\" style=\"border: 0;\" />";
@@ -101,67 +66,25 @@ class ExecImage {
     }
 
     /**
-     * Vérifie si l'image est valide
+     * Retourne un tableau contenant les informations sur l'image.
+     * Si l'image n'est pas valide, retourne un tableau vide.
      *
-     * @param $url string
-     * @return boolean true image valide
+     * @param string $url
+     * @return array
      */
-    public static function &isValid($url) {
+    public static function getInfos($url) {
+        $type = array();
+
         if (is_file($url)) {
-            $type = self::getType($url);
-            if (isset(self::$allowed[$type])) {
-                $ext = strrchr($url, ".");
-                $ext = substr($ext, 1);
-                $ext = "IMAGETYPE_" . strtoupper($ext);
-                if (self::$allowed[$type] == $ext) {
-                    return true;
-                }
+            $infos = getimagesize($url);
+
+            if ($infos !== false && isset($infos[2]) && ExecUtils::inArray($infos[2], self::$typesAllowed)) {
+                $type[] = isset($infos[0]) ? $infos[0] : 0;
+                $type[] = isset($infos[1]) ? $infos[1] : 0;
+                $type[] = $infos[2];
             }
-        }
-        return false;
-    }
-
-    /**
-     * Retourne le type de l'image
-     *
-     * @param $url string
-     * @return Constante IMAGETYPE_xxx
-     */
-    public static function &getType($url) {
-        $key = self::getKey($url);
-        if (isset(self::$type[$key])) {
-            $type = self::$type[$key];
-        } else {
-            // Fonction de substitution pour exif_imagetype
-            if (!function_exists("exif_imagetype")) {
-
-                function exif_imagetype($filename) {
-                    if ((list($width, $height, $type, $attr) = getimagesize($filename)) !== false) {
-                        $key = ExecImage::getKey($url);
-                        ExecImage::$width[$key] = $width;
-                        ExecImage::$height[$key] = $height;
-                        ExecImage::$type[$key] = $type;
-                        return $type;
-                    }
-                }
-
-            }
-            $type = exif_imagetype($url);
-            self::$type[$key] = $type;
         }
         return $type;
     }
 
-    /**
-     * Retourne la clé codé pour le buffer
-     *
-     * @param $url string
-     * @return string
-     */
-    public static function &getKey($url) {
-        return urlencode($url);
-    }
-
 }
-
-?>
