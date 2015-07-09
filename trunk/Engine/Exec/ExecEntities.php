@@ -8,7 +8,7 @@ use TREngine\Engine\Core\CoreTextEditor;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Convertiseur de chaine de caractère en entities
+ * Outil de manipulation des chaine de caractères.
  *
  * @author Sébastien Villemain
  */
@@ -114,7 +114,7 @@ class ExecEntities {
     }
 
     /**
-     * Ajout de slashes dans le texte
+     * Ajout de slashes dans le texte.
      *
      * @param $text string
      * @return string
@@ -125,9 +125,9 @@ class ExecEntities {
     }
 
     /**
-     * Supprime les slashes ajouté par addSlashes
+     * Supprime les slashes ajouté dans le texte.
      *
-     * @param $text
+     * @param string $text
      * @return string
      */
     public static function &stripSlashes($text) {
@@ -136,9 +136,9 @@ class ExecEntities {
     }
 
     /**
-     * Prépare le texte pour un affichage
+     * Prépare le texte pour un affichage.
      *
-     * @param $text
+     * @param string $text
      * @return string
      */
     public static function &textDisplay($text) {
@@ -153,12 +153,12 @@ class ExecEntities {
     }
 
     /**
-     * Sécurise le texte
+     * Sécurise le texte.
      *
-     * @param $string
+     * @param string $text
      * @return string
      */
-    public static function &secureText($string) {
+    public static function &secureText($text) {
         $secure = array(
             "content-disposition:" => "&#99;&#111;&#110;&#116;&#101;&#110;&#116;&#45;&#100;&#105;&#115;&#112;&#111;&#115;&#105;&#116;&#105;&#111;&#110;&#58;",
             "content-type:" => "&#99;&#111;&#110;&#116;&#101;&#110;&#116;&#45;&#116;&#121;&#112;&#101;&#58;",
@@ -208,11 +208,9 @@ class ExecEntities {
         );
 
         foreach ($secure as $search => $replace) {
-            $string = str_ireplace($search, $replace, $string);
+            $text = str_ireplace($search, $replace, $text);
         }
-        return $string;
+        return $text;
     }
 
 }
-
-?>

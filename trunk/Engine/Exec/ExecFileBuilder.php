@@ -2,6 +2,8 @@
 
 namespace TREngine\Engine\Exec;
 
+use TREngine\Engine\Core\CoreCache;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -12,48 +14,50 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class ExecFileBuilder {
 
     /**
-     * Génére un nouveau fichier de configuration générale
+     * Génére un nouveau fichier de configuration.
      *
-     * @param $TR_ENGINE_MAIL string
-     * @param $TR_ENGINE_STATUT string
-     * @param $cacheTimeLimit int
-     * @param $cookiePrefix string
-     * @param $cryptKey string
+     * @param string $mail
+     * @param string $statut
+     * @param int $cacheTimeLimit
+     * @param string $cookiePrefix
+     * @param string $cryptKey
      */
-    public static function buildConfigFile($TR_ENGINE_MAIL, $TR_ENGINE_STATUT, $cacheTimeLimit, $cookiePrefix, $cryptKey) {
+    public static function buildConfigFile($mail, $statut, $cacheTimeLimit, $cookiePrefix, $cryptKey) {
         // Vérification du mail
-        if (empty($TR_ENGINE_MAIL) && define(TR_ENGINE_MAIL))
-            $TR_ENGINE_MAIL = TR_ENGINE_MAIL;
+        if (empty($mail) && define(TR_ENGINE_MAIL)) {
+            $mail = TR_ENGINE_MAIL;
+        }
 
         // Vérification de la durée du cache
-        if (!is_int($cacheTimeLimit) || $cacheTimeLimit < 0)
+        if (!is_int($cacheTimeLimit) || $cacheTimeLimit < 0) {
             $cacheTimeLimit = 7;
+        }
 
         $content = "<?php \n"
         . "// ----------------------------------------------------------------------- //\n"
-        . "// Generals informations\n"
+        . "// Informations générales\n"
         . "//\n"
-        . "// Webmaster mail\n"
-        . "$" . "config['TR_ENGINE_MAIL'] = \"" . $TR_ENGINE_MAIL . "\";\n"
+        . "// Webmaster email address\n"
+        . "$" . "inc['TR_ENGINE_MAIL'] = \"" . $mail . "\";\n"
         . "//\n"
-        . "// Site states (open | close)\n"
-        . "$" . "config['TR_ENGINE_STATUT'] = \"" . (($TR_ENGINE_STATUT == "close") ? "close" : "open") . "\";\n"
+        . "// Status of the site (open | close)\n"
+        . "$" . "inc['TR_ENGINE_STATUT'] = \"" . (($statut == "close") ? "close" : "open") . "\";\n"
         . "// ----------------------------------------------------------------------- //\n"
-        . "// Sessions settings\n"
-        . "// Duration in days of validity of session files caching\n"
-        . "$" . "config['cacheTimeLimit'] = " . $cacheTimeLimit . ";\n"
+        . "// -------------------------------------------------------------------------//\n"
+        . "// Data sessions\n"
         . "//\n"
-        . "// Prefix the names of cookies\n"
-        . "$" . "config['cookiePrefix'] = \"" . $cookiePrefix . "\";\n"
+        . "// Duration in days of the validity of sessions files cached.\n"
+        . "$" . "inc['cacheTimeLimit'] = \"" . $cacheTimeLimit . "\";\n"
+        . "//\n"
+        . "// Cookies names prefix\n"
+        . "$" . "inc['cookiePrefix'] = \"" . $cookiePrefix . "\";\n"
         . "//\n"
         . "// Unique decryption key (generated randomly during installation)\n"
-        . "$" . "config['cryptKey'] = \"" . $cryptKey . "\";\n"
+        . "$" . "inc['cryptKey'] = \"" . $cryptKey . "\";\n"
         . "// -------------------------------------------------------------------------//\n"
         . "?>\n";
 
-        if (CoreLoader::isCallable("CoreCache")) {
-            CoreCache::getInstance(CoreCache::SECTION_CONFIGS)->writeCache("config.inc.php", $content);
-        }
+        CoreCache::getInstance(CoreCache::SECTION_CONFIGS)->writeCache("config.inc.php", $content);
     }
 
     /**
@@ -152,5 +156,3 @@ class ExecFileBuilder {
     }
 
 }
-
-?>

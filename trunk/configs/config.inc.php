@@ -8,21 +8,21 @@
 // ----------------------------------------------------------------------- //
 // Informations générales
 //
-// Adresse email du webmaster
-$inc["TR_ENGINE_MAIL"] = "villemain.sebastien@trancer-studio.net";
+// Webmaster email address
+$inc['TR_ENGINE_MAIL'] = "villemain.sebastien@trancer-studio.net";
 //
-// Statut du site ("open" = ouvert | "close" = fermé)
-$inc["TR_ENGINE_STATUT"] = "open";
+// Status of the site (open | close)
+$inc['TR_ENGINE_STATUT'] = "open";
 // ----------------------------------------------------------------------- //
 // -------------------------------------------------------------------------//
-// Données des sessions
+// Data sessions
 //
-// Durée en jours de validité des fichiers de sessions mise en cache
+// Duration in days of the validity of sessions files cached
 $inc['cacheTimeLimit'] = 7;
 //
-// Préfixe des noms des cookies
+// Cookies names prefix
 $inc['cookiePrefix'] = "tr";
 //
-// Clé de cryptage unique (généré aléatoirement à l'installation)
+// Unique decryption key (generated randomly during installation)
 $inc['cryptKey'] = "A4bT9D4V";
 // -------------------------------------------------------------------------//
