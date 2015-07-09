@@ -134,7 +134,7 @@ class LibMenuElement extends CoreDataStorage {
             }
 
             // Vérification des valeurs déjà enregistrées
-            if (!ExecUtils::inArray($value, $this->attributs[$name])) {
+            if (!ExecUtils::inArray($value, $this->attributs[$name], true)) {
                 if ($value === "parent") {
                     array_unshift($this->attributs[$name], $value);
                 } else if ($value === "active") {

@@ -97,7 +97,7 @@ class LibMenu {
         }
 
         foreach ($this->items as $key => $item) {
-            $item->setActive(ExecUtils::inArray($key, $activeTree));
+            $item->setActive(ExecUtils::inArray($key, $activeTree, true));
         }
 
         // Début de rendu

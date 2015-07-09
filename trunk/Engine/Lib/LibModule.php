@@ -247,7 +247,7 @@ class LibModule {
         $buffer = $this->getInfoModule()->getBuffer();
 
         // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
-        if (ExecUtils::inArray("rewriteBuffer", $this->getInfoModule()->getConfigs())) {
+        if (ExecUtils::inArray("rewriteBuffer", $this->getInfoModule()->getConfigs(), false)) {
             $buffer = CoreUrlRewriting::getInstance()->rewriteBuffer($buffer);
         }
         return $buffer;

@@ -78,7 +78,7 @@ class ExecImage {
         if (is_file($url)) {
             $infos = getimagesize($url);
 
-            if ($infos !== false && isset($infos[2]) && ExecUtils::inArray($infos[2], self::$typesAllowed)) {
+            if ($infos !== false && isset($infos[2]) && ExecUtils::inArray($infos[2], self::$typesAllowed, true)) {
                 $type[] = isset($infos[0]) ? $infos[0] : 0;
                 $type[] = isset($infos[1]) ? $infos[1] : 0;
                 $type[] = $infos[2];

@@ -17,13 +17,14 @@ class ExecUtils {
      *
      * @param string $needle
      * @param array $haystack
+     * @param boolean $strict
      * @return boolean
      */
-    public static function inArray($needle, array $haystack) {
+    public static function inArray($needle, array $haystack, $strict = false) {
         $rslt = false;
 
         foreach ($haystack as $value) {
-            if ($needle == $value) {
+            if ((!$strict && $needle == $value) || ($strict && $needle === $value)) {
                 $rslt = true;
                 break;
             }
@@ -38,9 +39,10 @@ class ExecUtils {
      *
      * @param string $needle
      * @param array $haystack
+     * @param boolean $strict
      * @return boolean
      */
-    public static function inMultiArray($needle, array $haystack) {
+    public static function inMultiArray($needle, array $haystack, $strict = false) {
         $rslt = false;
 
         foreach ($haystack as $value) {
@@ -50,7 +52,7 @@ class ExecUtils {
                     break;
                 }
             } else {
-                if ($value === $needle) {
+                if ((!$strict && $needle == $value) || ($strict && $needle === $value)) {
                     $rslt = true;
                     break;
                 }
