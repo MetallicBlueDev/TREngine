@@ -39,7 +39,7 @@ class BlockMenutree extends BlockMenu {
                 $this->getBlockData()->setContent("");
         }
 
-        ExecJQuery::getTreeView("#block" . $this->getBlockData()->getId());
+        ExecJQuery::checkTreeView("#block" . $this->getBlockData()->getId());
     }
 
     public function install() {

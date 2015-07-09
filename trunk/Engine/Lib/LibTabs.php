@@ -5,6 +5,7 @@ namespace TREngine\Engine\Lib;
 use TREngine\Engine\Core\CoreRequest;
 use TREngine\Engine\Core\CoreHtml;
 use TREngine\Engine\Exec\ExecEntities;
+use TREngine\Engine\Exec\ExecJQuery;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -67,7 +68,7 @@ class LibTabs {
         $this->selected = CoreRequest::getString("selectedTab");
 
         if (self::$firstInstance) {
-            ExecJQuery::getIdTabs();
+            ExecJQuery::checkIdTabs();
             self::$firstInstance = false;
         }
 

@@ -71,7 +71,7 @@ class ModuleIndex extends ModuleModel {
                 $projectInfo = CoreSql::getInstance()->fetchArray();
 
                 // Préparation de l'entête
-                ExecJQuery::getSlimbox();
+                ExecJQuery::checkSlimbox();
                 CoreHtml::getInstance()->addJavascriptJquery("$('.project_description_img a').slimbox();");
                 CoreHtml::getInstance()->addCssTemplateFile("module_project.css");
 

@@ -16,7 +16,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class BlockMenujd extends BlockMenu {
 
     public function display() {
-        ExecJQuery::getJdMenu();
+        ExecJQuery::checkJdMenu();
 
         $menus = $this->getMenu();
         if (CoreHtml::getInstance()->javascriptEnabled()) {
