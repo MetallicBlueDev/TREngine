@@ -14,7 +14,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class ExecFileBuilder {
 
     /**
-     * Génére un nouveau fichier de configuration.
+     * Génére un nouveau fichier de configuration du moteur.
      *
      * @param string $mail
      * @param string $statut
@@ -71,7 +71,7 @@ class ExecFileBuilder {
     }
 
     /**
-     * Génére un nouveau fichier de configuration FTP
+     * Génére un nouveau fichier de configuration du cache.
      *
      * @param string $type
      * @param string $host
@@ -129,14 +129,14 @@ class ExecFileBuilder {
     }
 
     /**
-     * Génére un nouveau fichier de configuration pour la base de données
+     * Génére un nouveau fichier de configuration pour la base de données.
      *
-     * @param $host string
-     * @param $user string
-     * @param $pass string
-     * @param $name string
-     * @param $type string
-     * @param $prefix string
+     * @param string $host
+     * @param string $user
+     * @param string $pass
+     * @param string $name
+     * @param string $type
+     * @param string $prefix
      */
     public static function buildDatabaseFile($host, $user, $pass, $name, $type, $prefix) {
         // Vérification du type de base de données
