@@ -1,22 +1,22 @@
 <?php
 // -------------------------------------------------------------------------//
-// Informations sur le cache
+// Cache settings
 //
-// Type de transaction à utiliser (php / ftp / sftp /  socket)
+// Transaction type to use (php | ftp | sftp | socket)
 $inc['type'] = "php";
 //
-// Adresse de l'hôte
+// Host address
 $inc['host'] = "127.0.0.1";
 //
-// Numéro de port d'écoute
-$inc['port'] = "21";
+// Listening port number
+$inc['port'] = 21;
 //
-// Nom d'utilisateur
+// Username
 $inc['user'] = "root";
 //
-// Mot de passe de l'utilisateur
+// User Password
 $inc['pass'] = "";
 //
-// Chemin racine
+// Root Path
 $inc['root'] = "";
 // -------------------------------------------------------------------------//

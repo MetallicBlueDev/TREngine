@@ -24,13 +24,23 @@ class ExecFileBuilder {
      */
     public static function buildConfigFile($mail, $statut, $cacheTimeLimit, $cookiePrefix, $cryptKey) {
         // Vérification du mail
-        if (empty($mail) && define(TR_ENGINE_MAIL)) {
+        if (empty($mail) && defined("TR_ENGINE_MAIL")) {
             $mail = TR_ENGINE_MAIL;
         }
+
+        $statut = ($statut === "close") ? "close" : "open";
 
         // Vérification de la durée du cache
         if (!is_int($cacheTimeLimit) || $cacheTimeLimit < 0) {
             $cacheTimeLimit = 7;
+        }
+
+        if (empty($cookiePrefix)) {
+            $cookiePrefix = "tr";
+        }
+
+        if (empty($cryptKey)) {
+            $cryptKey = ExecCrypt::makeIdentifier(8);
         }
 
         $content = "<?php \n"
@@ -41,7 +51,7 @@ class ExecFileBuilder {
         . "$" . "inc['TR_ENGINE_MAIL'] = \"" . $mail . "\";\n"
         . "//\n"
         . "// Status of the site (open | close)\n"
-        . "$" . "inc['TR_ENGINE_STATUT'] = \"" . (($statut == "close") ? "close" : "open") . "\";\n"
+        . "$" . "inc['TR_ENGINE_STATUT'] = \"" . $statut . "\";\n"
         . "// ----------------------------------------------------------------------- //\n"
         . "// -------------------------------------------------------------------------//\n"
         . "// Data sessions\n"
@@ -63,50 +73,59 @@ class ExecFileBuilder {
     /**
      * Génére un nouveau fichier de configuration FTP
      *
-     * @param $host string
+     * @param string $type
+     * @param string $host
      * @param $port int
-     * @param $user string
-     * @param $pass string
-     * @param $root string
-     * @param $type string
+     * @param string $user
+     * @param string $pass
+     * @param string $root
      */
-    public static function buildFtpFile($host, $port, $user, $pass, $root, $type) {
-        // Vérification du port
-        if (!is_int($port))
-            $port = 21;
+    public static function buildCacheFile($type, $host, $port, $user, $pass, $root) {
+        $coreCache = CoreCache::getInstance(CoreCache::SECTION_CONFIGS);
 
         // Vérification du mode de ftp
-        if (CoreLoader::isCallable("CoreCache")) {
-            $type = CoreCache::getInstance(CoreCache::SECTION_CONFIGS)->getTransactionType();
+        if (empty($type) || !ExecUtils::inArray($type, $coreCache->getCacheList())) {
+            $type = $coreCache->getTransactionType();
+        }
+
+        if (empty($host)) {
+            $host = "127.0.0.1";
+        }
+
+        // Vérification du port
+        if (!is_int($port)) {
+            $port = 21;
+        }
+
+        if (empty($user)) {
+            $user = "root";
         }
 
         $content = "<?php \n"
         . "// -------------------------------------------------------------------------//\n"
-        . "// FTP settings\n"
+        . "// Cache settings\n"
         . "//\n"
-        . "// Address of the FTP host\n"
-        . "$" . "ftp['host'] = \"" . $host . "\";\n"
+        . "// Transaction type to use (php | ftp | sftp | socket)\n"
+        . "$" . "inc['type'] = \"" . $type . "\";\n"
         . "//\n"
-        . "// Port number of host\n"
-        . "$" . "ftp['port'] = " . $port . ";\n"
+        . "// Host address\n"
+        . "$" . "inc['host'] = \"" . $host . "\";\n"
+        . "//\n"
+        . "// Listening port number\n"
+        . "$" . "inc['port'] = " . $port . ";\n"
         . "//\n"
         . "// Username FTP\n"
-        . "$" . "ftp['user'] = \"" . $user . "\";\n"
+        . "$" . "inc['user'] = \"" . $user . "\";\n"
         . "//\n"
-        . "// Password User FTP\n"
-        . "$" . "ftp['pass'] = \"" . $pass . "\";\n"
+        . "// User Password\n"
+        . "$" . "inc['pass'] = \"" . $pass . "\";\n"
         . "//\n"
-        . "// FTP Root Path\n"
-        . "$" . "ftp['root'] = \"" . $root . "\";\n"
-        . "//\n"
-        . "// FTP mode (native = php | ftp | sftp)\n"
-        . "$" . "ftp['type'] = \"" . $type . "\";\n"
+        . "// Root Path\n"
+        . "$" . "inc['root'] = \"" . $root . "\";\n"
         . "// -------------------------------------------------------------------------//\n"
         . "?>\n";
 
-        if (CoreLoader::isCallable("CoreCache")) {
-            CoreCache::getInstance(CoreCache::SECTION_CONFIGS)->writeCache("cache.inc.php", $content);
-        }
+        $coreCache->writeCache("cache.inc.php", $content);
     }
 
     /**
