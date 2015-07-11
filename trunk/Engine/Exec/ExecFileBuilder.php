@@ -3,6 +3,7 @@
 namespace TREngine\Engine\Exec;
 
 use TREngine\Engine\Core\CoreCache;
+use TREngine\Engine\Core\CoreSql;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -23,14 +24,12 @@ class ExecFileBuilder {
      * @param string $cryptKey
      */
     public static function buildConfigFile($mail, $statut, $cacheTimeLimit, $cookiePrefix, $cryptKey) {
-        // Vérification du mail
         if (empty($mail) && defined("TR_ENGINE_MAIL")) {
             $mail = TR_ENGINE_MAIL;
         }
 
         $statut = ($statut === "close") ? "close" : "open";
 
-        // Vérification de la durée du cache
         if (!is_int($cacheTimeLimit) || $cacheTimeLimit < 0) {
             $cacheTimeLimit = 7;
         }
@@ -44,15 +43,14 @@ class ExecFileBuilder {
         }
 
         $content = "<?php \n"
-        . "// ----------------------------------------------------------------------- //\n"
-        . "// Informations générales\n"
+        . "// -------------------------------------------------------------------------//\n"
+        . "// Engine settings\n"
         . "//\n"
         . "// Webmaster email address\n"
         . "$" . "inc['TR_ENGINE_MAIL'] = \"" . $mail . "\";\n"
         . "//\n"
         . "// Status of the site (open | close)\n"
         . "$" . "inc['TR_ENGINE_STATUT'] = \"" . $statut . "\";\n"
-        . "// ----------------------------------------------------------------------- //\n"
         . "// -------------------------------------------------------------------------//\n"
         . "// Data sessions\n"
         . "//\n"
@@ -83,8 +81,7 @@ class ExecFileBuilder {
     public static function buildCacheFile($type, $host, $port, $user, $pass, $root) {
         $coreCache = CoreCache::getInstance(CoreCache::SECTION_CONFIGS);
 
-        // Vérification du mode de ftp
-        if (empty($type) || !ExecUtils::inArray($type, $coreCache->getCacheList())) {
+        if (empty($type) || !ExecUtils::inArray($type, CoreCache::getCacheList())) {
             $type = $coreCache->getTransactionType();
         }
 
@@ -92,7 +89,6 @@ class ExecFileBuilder {
             $host = "127.0.0.1";
         }
 
-        // Vérification du port
         if (!is_int($port)) {
             $port = 21;
         }
@@ -117,7 +113,7 @@ class ExecFileBuilder {
         . "// Username FTP\n"
         . "$" . "inc['user'] = \"" . $user . "\";\n"
         . "//\n"
-        . "// User Password\n"
+        . "// Password\n"
         . "$" . "inc['pass'] = \"" . $pass . "\";\n"
         . "//\n"
         . "// Root Path\n"
@@ -131,47 +127,56 @@ class ExecFileBuilder {
     /**
      * Génére un nouveau fichier de configuration pour la base de données.
      *
+     * @param string $type
      * @param string $host
      * @param string $user
      * @param string $pass
      * @param string $name
-     * @param string $type
      * @param string $prefix
      */
-    public static function buildDatabaseFile($host, $user, $pass, $name, $type, $prefix) {
-        // Vérification du type de base de données
-        if (CoreLoader::isCallable("CoreSql")) {
-            $bases = CoreSql::getBaseList();
-            $type = (isset($bases[$type])) ? $type : "mysql";
+    public static function buildDatabaseFile($type, $host, $user, $pass, $name, $prefix) {
+        if (empty($type) || !ExecUtils::inArray($type, CoreSql::getBaseList())) {
+            $type = CoreSql::getInstance()->getTransactionType();
+        }
+
+        if (empty($host)) {
+            $host = "mysql:host=127.0.0.1";
+        }
+
+        if (empty($user)) {
+            $user = "root";
+        }
+
+        if (empty($prefix)) {
+            $prefix = "tr";
         }
 
         $content = "<?php \n"
         . "// -------------------------------------------------------------------------//\n"
         . "// Database settings\n"
         . "//\n"
-        . "// Address of the host base\n"
-        . "$" . "db['host'] = \"" . $host . "\";\n"
+        . "// Transaction type to use (mysql / mysqli / pdo)\n"
+        . "$" . "inc['type'] = \"" . $type . "\";\n"
         . "//\n"
-        . "// Name of database user\n"
-        . "$" . "db['user'] = \"" . $user . "\";\n"
+        . "// Host address of the base or the complete chain of DSN (Data Source Name)\n"
+        . "// Example for PDO DSN : mysql:host=127.0.0.1\n"
+        . "$" . "inc['host'] = \"" . $host . "\";\n"
         . "//\n"
-        . "// Password of the database\n"
-        . "$" . "db['pass'] = \"" . $pass . "\";\n"
+        . "// Username\n"
+        . "$" . "inc['user'] = \"" . $user . "\";\n"
+        . "//\n"
+        . "// Password\n"
+        . "$" . "inc['pass'] = \"" . $pass . "\";\n"
         . "//\n"
         . "// Database name\n"
-        . "$" . "db['name'] = \"" . $name . "\";\n"
+        . "$" . "inc['name'] = \"" . $name . "\";\n"
         . "//\n"
-        . "// Database type\n"
-        . "$" . "db['type'] = \"" . $type . "\";\n"
-        . "//\n"
-        . "// Prefix tables\n"
-        . "$" . "db['prefix'] = \"" . $prefix . "\";\n"
+        . "// Table prefix\n"
+        . "$" . "inc['prefix'] = \"" . $prefix . "\";\n"
         . "// -------------------------------------------------------------------------//\n"
         . "?>\n";
 
-        if (CoreLoader::isCallable("CoreCache")) {
-            CoreCache::getInstance(CoreCache::SECTION_CONFIGS)->writeCache("database.inc.php", $content);
-        }
+        CoreCache::getInstance(CoreCache::SECTION_CONFIGS)->writeCache("database.inc.php", $content);
     }
 
 }

@@ -1,6 +1,8 @@
 <?php
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
+use TREngine\Engine\Core\CoreCache;
+
 class Module_Management_Systeminfo extends ModuleModel {
 
     public function setting() {
@@ -23,9 +25,8 @@ class Module_Management_Systeminfo extends ModuleModel {
         $rack = new LibRack($firstLine);
 
         $modeActivedContent = "";
-        $coreCache = CoreCache::getInstance();
-        $modeActived = $coreCache->getCacheList();
-        $currentMode = $coreCache->getTransactionType();
+        $modeActived = CoreCache::getCacheList();
+        $currentMode = CoreCache::getInstance()->getTransactionType();
         foreach ($modeActived as $mode) {
             $actived = ($currentMode === $mode);
             $modeActivedContent .= " " . $mode . "="

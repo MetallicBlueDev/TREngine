@@ -14,7 +14,7 @@ $inc['port'] = 21;
 // Username
 $inc['user'] = "root";
 //
-// User Password
+// Password
 $inc['pass'] = "";
 //
 // Root Path

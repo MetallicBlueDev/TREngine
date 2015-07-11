@@ -1,5 +1,12 @@
 <?php
 
+// ----------------------------------------------------------------------- //
+// -- TR ENGINE = PUISSANCE + SIMPLICITE + EVOLUTIVITE					-- //
+// -- Puissance par un codage efficace									-- //
+// -- Simplicité par une interface intuitive							-- //
+// -- Evolutivité par une grande souplesse d'adaptation du moteur		-- //
+// ----------------------------------------------------------------------- //
+
 use TREngine\Engine\Core\CoreSecure;
 use TREngine\Engine\Core\CoreMain;
 use TREngine\Engine\Core\CoreLogger;

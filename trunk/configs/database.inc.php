@@ -1,23 +1,23 @@
 <?php
 // -------------------------------------------------------------------------//
-// Informations sur la base de données
+// Database settings
 //
-// Type de transaction à utiliser (mysql / mysqli / pdo)
+// Transaction type to use (mysql / mysqli / pdo)
 $inc['type'] = "pdo";
 //
-// Adresse de l'hôte de la base ou la chaine complète du DSN (Data Source Name)
-// Exemple de DSN pour PDO : mysql:host=127.0.0.1
+// Host address of the base or the complete chain of DSN (Data Source Name)
+// Example for PDO DSN : mysql:host=127.0.0.1
 $inc['host'] = "mysql:host=127.0.0.1";
 //
-// Nom d'utilisateur de la base
+// Username
 $inc['user'] = "root";
 //
-// Mot de passe de la base
+// Password
 $inc['pass'] = "";
 //
-// Nom de la base
+// Database name
 $inc['name'] = "trancers_db";
 //
-// Préfixe des tables
+// Table prefix
 $inc['prefix'] = "tr";
 // -------------------------------------------------------------------------//

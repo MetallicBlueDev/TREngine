@@ -1,6 +1,8 @@
 <?php
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
+use TREngine\Engine\Core\CoreCache;
+
 class Module_Management_Setting extends ModuleModel {
 
     public function setting() {
@@ -254,9 +256,8 @@ class Module_Management_Setting extends ModuleModel {
 
         $form->addSelectOpenTag("ftpType", SETTING_SYSTEM_FTP_SETTING_TYPE);
 
-        $coreCache = CoreCache::getInstance();
-        $modeFtp = $coreCache->getCacheList();
-        $currentMode = $coreCache->getTransactionType();
+        $modeFtp = CoreCache::getCacheList();
+        $currentMode = CoreCache::getInstance()->getTransactionType();
         foreach ($modeFtp as $mode) {
             $actived = ($currentMode === $mode);
             $form->addSelectItemTag($mode, "", $actived);

@@ -227,6 +227,15 @@ class CoreCache extends CacheModel {
     }
 
     /**
+     * Retourne la liste des types de cache supporté.
+     *
+     * @return array
+     */
+    public static function &getCacheList() {
+        return self::getInstance()->getFileList("Engine/Cache", "Cache");
+    }
+
+    /**
      * Etablie une connexion au serveur.
      */
     public function netConnect() {
@@ -519,15 +528,6 @@ class CoreCache extends CacheModel {
             }
         }
         return $names;
-    }
-
-    /**
-     * Retourne la liste des types de cache supporté.
-     *
-     * @return array
-     */
-    public function &getCacheList() {
-        return $this->getFileList("Engine/Cache", "Cache");
     }
 
     /**
