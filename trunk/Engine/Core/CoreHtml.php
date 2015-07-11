@@ -225,11 +225,11 @@ class CoreHtml {
     }
 
     /**
-     * Retourne les métas données de l'entête HTML.
+     * Retourne le titre à inclure dans les métas données de l'entête HTML.
      *
      * @return string
      */
-    public function getMetaHeaders() {
+    public function getMetaTitle() {
         $title = "";
 
         if (CoreLoader::isCallable("CoreMain")) {
@@ -255,11 +255,17 @@ class CoreHtml {
                 $title .= " - " . $this->title;
             }
         }
+        return ExecEntities::textDisplay($title);
+    }
 
+    /**
+     * Retourne les métas données de l'entête HTML.
+     *
+     * @return string
+     */
+    public function getMetaHeaders() {
         // TODO ajouter un support RSS XML
-
-        return "<title>" . ExecEntities::textDisplay($title) . "</title>\n"
-        . $this->getMetaKeywords()
+        return $this->getMetaKeywords()
         . "<meta name=\"generator\" content=\"TR ENGINE\" />\n"
         . "<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n"
         . "<meta http-equiv=\"content-script-type\" content=\"text/javascript\" />\n"

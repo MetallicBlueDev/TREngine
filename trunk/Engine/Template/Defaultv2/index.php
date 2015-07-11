@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
     <head>
+        <title><?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaTitle(); ?></title>
         <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaHeaders(); ?>
         <link rel="stylesheet" href="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/style.css" type="text/css" />
         <?php if (TREngine\Engine\Core\CoreLoader::isCallable("CoreMain") && TREngine\Engine\Core\CoreMain::getInstance()->getAgentInfos()->getBrowserName() == "Internet Explorer" && TREngine\Engine\Core\CoreMain::getInstance()->getAgentInfos()->getBrowserVersion() < "7") { ?>
@@ -8,50 +9,48 @@
         <?php } ?>
     </head>
     <body>
-
-        <div id="header">
-            <div style="display: none;"><h2><?php echo TREngine\Engine\Core\CoreMain::getInstance()->getDefaultSiteName() . " - " . TREngine\Engine\Core\CoreMain::getInstance()->getDefaultSiteSlogan(); ?></h2></div>
-            <object type="application/x-shockwave-flash" data="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/images/header.swf" width="900px" height="130px">
-                <param name="movie" value="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/images/header.swf" />
-                <param name="pluginurl" value="http://www.macromedia.com/go/getflashplayer" />
-                <param name="wmode" value="transparent" />
-                <param name="menu" value="false" />
-                <param name="quality" value="best" />
-                <param name="scale" value="exactfit" />
-            </object>
-        </div>
-
-        <div id="wrapper">
-            <div id="left">
-
-                <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("right"); ?>
-
+        <div id="global">
+            <div id="header">
+                <div style="display: none;"><h2><?php echo TREngine\Engine\Core\CoreMain::getInstance()->getDefaultSiteName() . " - " . TREngine\Engine\Core\CoreMain::getInstance()->getDefaultSiteSlogan(); ?></h2></div>
+                <div id="header_left"></div>
+                <div id="header_middle"></div>
+                <div id="header_right"></div>
             </div>
 
-            <div id="middle">
+            <div id="wrapper">
+                <div id="left">
 
-                <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getLoader(); ?>
+                    <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("right"); ?>
 
-                <div id="breadcrumb"><?php echo TREngine\Engine\Lib\LibBreadcrumb::getInstance()->getBreadcrumbTrail(" >> "); ?></div>
+                </div>
 
-                <div class="cleaner"></div>
+                <div id="middle">
 
-                <?php TREngine\Engine\Core\CoreLogger::displayMessages(); ?>
+                    <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getLoader(); ?>
 
-                <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("top"); ?>
+                    <div id="breadcrumb"><?php echo TREngine\Engine\Lib\LibBreadcrumb::getInstance()->getBreadcrumbTrail(" >> "); ?></div>
 
-                <?php include TREngine\Engine\Lib\LibMakeStyle::getTemplateDir() . DIRECTORY_SEPARATOR . "module.php"; ?>
+                    <div class="cleaner"></div>
 
-                <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("bottom"); ?>
+                    <?php TREngine\Engine\Core\CoreLogger::displayMessages(); ?>
 
+                    <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("top"); ?>
+
+                    <?php include TREngine\Engine\Lib\LibMakeStyle::getTemplateDir() . DIRECTORY_SEPARATOR . "module.php"; ?>
+
+                    <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("bottom"); ?>
+
+                </div>
             </div>
+
+            <div id="footer">
+                <div style="padding: 50px;">
+                    Page g&eacute;n&eacute;r&eacute;e en <?php echo TREngine\Engine\Exec\ExecTimeMarker::getMeasurement("main"); ?> ms.
+                </div>
+            </div>
+
         </div>
 
-        <div id="footer">
-            <div style="padding: 50px;">
-                Page g&eacute;n&eacute;r&eacute;e en <?php echo TREngine\Engine\Exec\ExecTimeMarker::getMeasurement("main"); ?> ms.
-            </div>
-        </div>
         <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaFooters(); ?>
     </body>
 </html>
