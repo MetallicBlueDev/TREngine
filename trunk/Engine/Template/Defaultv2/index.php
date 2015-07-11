@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+<!DOCTYPE html>
+<html lang="fr">
     <head>
         <title><?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaTitle(); ?></title>
         <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaHeaders(); ?>
@@ -11,7 +11,7 @@
     <body>
         <div id="global">
             <div id="header">
-                <div style="display: none;"><h2><?php echo TREngine\Engine\Core\CoreMain::getInstance()->getDefaultSiteName(); ?></h2></div>
+                <div style="display: none;"><?php echo TREngine\Engine\Core\CoreMain::getInstance()->getDefaultSiteName(); ?></div>
                 <div id="header_left">
                     <a href="index.php" title="<?php echo TREngine\Engine\Core\CoreMain::getInstance()->getDefaultSiteName(); ?>"></a>
                     <h3><?php echo TREngine\Engine\Core\CoreMain::getInstance()->getDefaultSiteSlogan(); ?></h3>
