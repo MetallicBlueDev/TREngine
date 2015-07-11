@@ -11,7 +11,7 @@ $inc['TR_ENGINE_STATUT'] = "open";
 // Data sessions
 //
 // Duration in days of the validity of sessions files cached
-$inc['cacheTimeLimit'] = 7;
+$inc['sessionTimeLimit'] = 7;
 //
 // Cookies names prefix
 $inc['cookiePrefix'] = "tr";

@@ -203,12 +203,12 @@ class CoreMain {
     }
 
     /**
-     * Retourne la durée de validité du cache.
+     * Retourne la durée de validité du cache des sessions.
      *
      * @return int
      */
-    public function &getCacheTimeLimit() {
-        return $this->getConfigValue("cacheTimeLimit");
+    public function &getSessionTimeLimit() {
+        return $this->getConfigValue("sessionTimeLimit");
     }
 
     /**
@@ -670,11 +670,11 @@ class CoreMain {
                 }
 
                 // Vérification de la durée de validité du cache
-                if (!is_int($rawConfig['cacheTimeLimit']) || $rawConfig['cacheTimeLimit'] < 1) {
-                    $rawConfig['cacheTimeLimit'] = 7;
+                if (!is_int($rawConfig['sessionTimeLimit']) || $rawConfig['sessionTimeLimit'] < 1) {
+                    $rawConfig['sessionTimeLimit'] = 7;
                 }
 
-                $newConfig['cacheTimeLimit'] = (int) $rawConfig['cacheTimeLimit'];
+                $newConfig['sessionTimeLimit'] = (int) $rawConfig['sessionTimeLimit'];
 
                 // Vérification du préfixage des cookies
                 if (empty($rawConfig['cookiePrefix'])) {

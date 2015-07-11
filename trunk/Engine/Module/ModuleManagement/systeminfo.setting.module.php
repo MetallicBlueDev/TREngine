@@ -42,7 +42,7 @@ class Module_Management_Systeminfo extends ModuleModel {
             "TR ENGINE DIR" => TR_ENGINE_INDEXDIR,
             "TR ENGINE URL" => TR_ENGINE_URL,
             "TR ENGINE MAIL" => TR_ENGINE_MAIL,
-            "TR ENGINE valid cache time" => $coreMain->getCacheTimeLimit() . " days",
+            "TR ENGINE valid session cache time" => $coreMain->getSessionTimeLimit() . " days",
             "TR ENGINE UrlRewriting" => (($coreMain->doUrlRewriting()) ? "on" : "off"),
             "PHP built on" => php_uname(),
             "PHP version" => phpversion(),

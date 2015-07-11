@@ -19,17 +19,17 @@ function validGeneralSetting(formId, siteNameId, mailId) {
 	});
 }
 
-function validSystemSetting(formId, cacheTimeLimitId, cryptKeyId, cookiePrefixId, ftpTypeId, ftpHostId, ftpPortId, ftpUserId, ftpPassId, ftpRootId, dbHostId, dbNameId, dbPrefixId, dbUserId, dbPassId, dbTypeId) {
+function validSystemSetting(formId, sessionTimeLimitId, cryptKeyId, cookiePrefixId, ftpTypeId, ftpHostId, ftpPortId, ftpUserId, ftpPassId, ftpRootId, dbHostId, dbNameId, dbPrefixId, dbUserId, dbPassId, dbTypeId) {
 	$(formId).submit(function(){
 		var isValidSystem = true;
 		var isValidFtp = false;
 		var isValidDatabase = false;
 		var integer = new RegExp("[0-9]+");
 		
-		if ($(cacheTimeLimitId).val().length > 0 && integer.test($(cacheTimeLimitId).val())) {
-			$(cacheTimeLimitId).removeClass('error');
+		if ($(sessionTimeLimitId).val().length > 0 && integer.test($(sessionTimeLimitId).val())) {
+			$(sessionTimeLimitId).removeClass('error');
 		} else {
-			$(cacheTimeLimitId).addClass('error');
+			$(sessionTimeLimitId).addClass('error');
 			isValidSystem = false;
 		}
 		if ($(cryptKeyId).val().length > 0) {

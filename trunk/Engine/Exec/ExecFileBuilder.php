@@ -19,19 +19,19 @@ class ExecFileBuilder {
      *
      * @param string $mail
      * @param string $statut
-     * @param int $cacheTimeLimit
+     * @param int $sessionTimeLimit
      * @param string $cookiePrefix
      * @param string $cryptKey
      */
-    public static function buildConfigFile($mail, $statut, $cacheTimeLimit, $cookiePrefix, $cryptKey) {
+    public static function buildConfigFile($mail, $statut, $sessionTimeLimit, $cookiePrefix, $cryptKey) {
         if (empty($mail) && defined("TR_ENGINE_MAIL")) {
             $mail = TR_ENGINE_MAIL;
         }
 
         $statut = ($statut === "close") ? "close" : "open";
 
-        if (!is_int($cacheTimeLimit) || $cacheTimeLimit < 0) {
-            $cacheTimeLimit = 7;
+        if (!is_int($sessionTimeLimit) || $sessionTimeLimit < 0) {
+            $sessionTimeLimit = 7;
         }
 
         if (empty($cookiePrefix)) {
@@ -55,7 +55,7 @@ class ExecFileBuilder {
         . "// Data sessions\n"
         . "//\n"
         . "// Duration in days of the validity of sessions files cached.\n"
-        . "$" . "inc['cacheTimeLimit'] = \"" . $cacheTimeLimit . "\";\n"
+        . "$" . "inc['sessionTimeLimit'] = " . $sessionTimeLimit . ";\n"
         . "//\n"
         . "// Cookies names prefix\n"
         . "$" . "inc['cookiePrefix'] = \"" . $cookiePrefix . "\";\n"

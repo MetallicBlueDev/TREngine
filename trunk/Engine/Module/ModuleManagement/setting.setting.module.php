@@ -242,7 +242,7 @@ class Module_Management_Setting extends ModuleModel {
         $form = new LibForm("management-setting-system");
         $form->setTitle(SETTING_SYSTEM_CACHE_SETTING_TITLE);
         $form->setDescription(SETTING_SYSTEM_CACHE_SETTING_DESCRIPTION);
-        $form->addInputText("cacheTimeLimit", SETTING_SYSTEM_CACHE_SETTING_CACHE_LIMIT, $coreMain->getCacheTimeLimit());
+        $form->addInputText("sessionTimeLimit", SETTING_SYSTEM_CACHE_SETTING_CACHE_LIMIT, $coreMain->getSessionTimeLimit());
         $form->addInputText("cryptKey", SETTING_SYSTEM_CACHE_SETTING_CRYPT_KEY, $coreMain->getCryptKey());
         $form->addSpace();
 
@@ -303,12 +303,12 @@ class Module_Management_Setting extends ModuleModel {
         $updateConfigFile = false;
         $coreMain = CoreMain::getInstance();
 
-        $cacheTimeLimit = CoreRequest::getInteger("cacheTimeLimit", 7, "POST");
-        if ($cacheTimeLimit != $coreMain->getCacheTimeLimit()) {
-            if ($cacheTimeLimit >= 1)
+        $sessionTimeLimit = CoreRequest::getInteger("sessionTimeLimit", 7, "POST");
+        if ($sessionTimeLimit != $coreMain->getSessionTimeLimit()) {
+            if ($sessionTimeLimit >= 1)
                 $updateConfigFile = true;
             else
-                $cacheTimeLimit = $coreMain->getCacheTimeLimit();
+                $sessionTimeLimit = $coreMain->getSessionTimeLimit();
         }
 
         $cryptKey = CoreRequest::getString("cryptKey", $coreMain->getCryptKey(), "POST");
@@ -328,7 +328,7 @@ class Module_Management_Setting extends ModuleModel {
         }
 
         if ($updateConfigFile) {
-            ExecFileBuilder::buildConfigFile($coreMain->getDefaultAdministratorMail(), TR_ENGINE_STATUT, $cacheTimeLimit, $cookiePrefix, $cryptKey);
+            ExecFileBuilder::buildConfigFile($coreMain->getDefaultAdministratorMail(), TR_ENGINE_STATUT, $sessionTimeLimit, $cookiePrefix, $cryptKey);
         }
 
         $ftp = $coreMain->getConfigCache();

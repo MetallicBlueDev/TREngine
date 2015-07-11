@@ -52,7 +52,7 @@ class CoreSession {
      *
      * @var int
      */
-    private $cacheTimeLimit = 0;
+    private $sessionTimeLimit = 0;
 
     /**
      * Adresse Ip du client bannis.
@@ -98,7 +98,7 @@ class CoreSession {
         $coreMain = CoreMain::getInstance();
 
         // Durée de validité du cache en jours
-        $this->cacheTimeLimit = $coreMain->getCacheTimeLimit() * 86400;
+        $this->sessionTimeLimit = $coreMain->getSessionTimeLimit() * 86400;
 
         // Complète le nom des cookies
         foreach ($this->cookieName as $key => $name) {
@@ -453,7 +453,7 @@ class CoreSession {
      * Nettoyage du cache de session utilisateur.
      */
     private function cleanCache() {
-        CoreCache::getInstance(CoreCache::SECTION_SESSIONS)->cleanCache($this->timer - $this->cacheTimeLimit);
+        CoreCache::getInstance(CoreCache::SECTION_SESSIONS)->cleanCache($this->timer - $this->sessionTimeLimit);
     }
 
     /**
@@ -553,7 +553,7 @@ class CoreSession {
         $this->sessionId = ExecCrypt::makeIdentifier(32);
 
         // Durée de connexion automatique via cookie
-        $cookieTimeLimit = $this->timer + $this->cacheTimeLimit;
+        $cookieTimeLimit = $this->timer + $this->sessionTimeLimit;
 
         // Creation des cookies
         $cookieUser = ExecCookie::createCookie(
