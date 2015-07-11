@@ -5,7 +5,7 @@ namespace TREngine\Engine\Exec;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Mesure de durée.
+ * Outil de mesure de durée.
  *
  * @author Sébastien Villemain
  */
