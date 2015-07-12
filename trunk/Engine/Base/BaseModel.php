@@ -6,6 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 
 use TREngine\Engine\Core\CoreTransaction;
 use TREngine\Engine\Exec\ExecUtils;
+use TREngine\Engine\Fail\FailSql;
 
 /**
  * Modèle de base de la communication SQL.

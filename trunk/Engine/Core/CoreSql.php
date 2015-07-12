@@ -3,6 +3,7 @@
 namespace TREngine\Engine\Core;
 
 use TREngine\Engine\Base\BaseModel;
+use Exception;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
