@@ -1,0 +1,1 @@
+This folder and its subfolders contain custom behavior of your website.
