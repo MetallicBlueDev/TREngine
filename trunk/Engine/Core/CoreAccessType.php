@@ -98,6 +98,7 @@ class CoreAccessType implements CoreAccessToken {
 
     /**
      * Nom du type d'accès (par exemple BLOCK/MODULE).
+     * Valeur nulle possible, notamment en base de données.
      *
      * @return string
      */
@@ -107,6 +108,7 @@ class CoreAccessType implements CoreAccessToken {
 
     /**
      * Formule de la page (exemple le nom d'un module).
+     * Valeur nulle possible, notamment en base de données.
      *
      * @return string
      */
@@ -126,6 +128,7 @@ class CoreAccessType implements CoreAccessToken {
 
     /**
      * Identifiant du type d'accès (par exemple 01 ou une page précise).
+     * Valeur nulle possible, notamment en base de données.
      *
      * @return string
      */

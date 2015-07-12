@@ -64,6 +64,7 @@ class LibMenuElement extends CoreDataStorage {
 
     /**
      * Retourne l'identifiant du menu parent.
+     * Valeur nulle possible, notamment en base de données.
      *
      * @return int
      */
@@ -82,6 +83,7 @@ class LibMenuElement extends CoreDataStorage {
 
     /**
      * Retourne le contenu du menu.
+     * Valeur nulle possible, notamment en base de données.
      *
      * @return string
      */

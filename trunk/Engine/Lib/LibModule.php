@@ -172,6 +172,7 @@ class LibModule {
         if (isset($this->modulesInfo[$moduleName])) {
             $moduleInfo = $this->modulesInfo[$moduleName];
         } else {
+            $dataFromDb = false;
             $moduleData = array();
 
             // Recherche dans le cache
@@ -191,22 +192,21 @@ class LibModule {
 
                 if ($coreSql->affectedRows() > 0) {
                     $moduleData = $coreSql->fetchArray()[0];
-
-                    if (isset($moduleData['configs'])) {
-                        $moduleData['configs'] = self::getModuleConfigs($moduleData['configs']);
-                    }
-
-                    // Mise en cache
-                    $content = $coreCache->serializeData($moduleData);
-                    $coreCache->writeCache($moduleName . ".php", $content);
+                    $dataFromDb = true;
                 }
             } else {
                 $moduleData = $coreCache->readCache($moduleName . ".php");
             }
 
             // Injection des informations du module
-            $moduleInfo = new LibModuleData($moduleData);
+            $moduleInfo = new LibModuleData($moduleData, $dataFromDb);
             $this->modulesInfo[$moduleName] = $moduleInfo;
+
+            if ($dataFromDb) {
+                // Mise en cache
+                $content = $coreCache->serializeData($moduleData);
+                $coreCache->writeCache($moduleName . ".php", $content);
+            }
         }
         return $moduleInfo;
     }
@@ -245,34 +245,13 @@ class LibModule {
      */
     public function &getModule() {
         $buffer = $this->getInfoModule()->getBuffer();
+        $configs = $this->getInfoModule()->getConfigs();
 
         // Recherche le parametre indiquant qu'il doit y avoir une réécriture du buffer
-        if (ExecUtils::inArray("rewriteBuffer", $this->getInfoModule()->getConfigs(), false)) {
+        if ($configs !== null && ExecUtils::inArray("rewriteBuffer", $configs, false)) {
             $buffer = CoreUrlRewriting::getInstance()->rewriteBuffer($buffer);
         }
         return $buffer;
-    }
-
-    /**
-     * Retourne le jeu de configuration du module.
-     *
-     * @param string $moduleConfigs
-     * @return array
-     */
-    private static function getModuleConfigs(&$moduleConfigs) {
-        $moduleConfigs = explode("|", $moduleConfigs);
-
-        foreach ($moduleConfigs as $config) {
-            if (!empty($config)) {
-                $values = explode("=", $config);
-
-                if (count($values) > 1) {
-                    // Chaine encodé avec urlencode
-                    $moduleConfigs[$values[0]] = urldecode($values[1]);
-                }
-            }
-        }
-        return $moduleConfigs;
     }
 
     /**

@@ -101,7 +101,8 @@ class LibBlockData extends LibEntityData {
 
     /**
      * Retourne le contenu du block.
-     *
+     * Valeur nulle possible, notamment en base de données.
+     * 
      * @return string
      */
     public function &getContent() {

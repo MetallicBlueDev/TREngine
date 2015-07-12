@@ -30,12 +30,21 @@ class LibModuleData extends LibEntityData {
      *
      * @param array $data
      */
-    public function __construct(array &$data) {
+    public function __construct(array &$data, $initializeConfig = false) {
         parent::__construct();
 
         // Vérification des informations
         if (count($data) < 3) {
             $data = array();
+        }
+
+        if ($initializeConfig) {
+            $rawConfigs = null;
+
+            if (isset($data['configs'])) {
+                $rawConfigs = $data['configs'];
+            }
+            $data['configs'] = self::getModuleConfigs($rawConfigs);
         }
 
         $this->newStorage($data);
@@ -125,6 +134,7 @@ class LibModuleData extends LibEntityData {
 
     /**
      * Retourne la configuration du module.
+     * Valeur nulle possible, notamment en base de données.
      *
      * @return string
      */
@@ -171,6 +181,32 @@ class LibModuleData extends LibEntityData {
     public function &getZone() {
         $zone = "MODULE";
         return $zone;
+    }
+
+    /**
+     * Retourne le jeu de configuration du module.
+     *
+     * @param string $moduleConfigs
+     * @return array
+     */
+    private static function getModuleConfigs(&$moduleConfigs) {
+        $moduleConfigs = explode("|", $moduleConfigs);
+
+        foreach ($moduleConfigs as $config) {
+            if (!empty($config)) {
+                $values = explode("=", $config);
+
+                if (count($values) > 1) {
+                    // Chaine encodé avec urlencode
+                    $moduleConfigs[$values[0]] = urldecode($values[1]);
+                }
+            }
+        }
+
+        if ($moduleConfigs === null) {
+            $moduleConfigs = array();
+        }
+        return $moduleConfigs;
     }
 
 }

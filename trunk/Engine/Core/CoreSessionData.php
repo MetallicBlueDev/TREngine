@@ -71,6 +71,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
 
     /**
      * Type de compte lié au client.
+     * Valeur nulle possible, notamment en base de données.
      *
      * @return int
      */
@@ -134,6 +135,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
 
     /**
      * URL de l'avatar de l'utilisateur.
+     * Valeur nulle possible, notamment en base de données.
      *
      * @return string
      */
@@ -148,6 +150,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
 
     /**
      * Site internet du client.
+     * Valeur nulle possible, notamment en base de données.
      *
      * @return string
      */
@@ -157,6 +160,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
 
     /**
      * Signature du client.
+     * Valeur nulle possible, notamment en base de données.
      *
      * @return string
      */
@@ -166,6 +170,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
 
     /**
      * Template du client.
+     * Valeur nulle possible, notamment en base de données.
      *
      * @return string
      */
@@ -187,6 +192,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
 
     /**
      * Langue du client.
+     * Valeur nulle possible, notamment en base de données.
      *
      * @return string
      */
