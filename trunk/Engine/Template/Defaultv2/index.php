@@ -4,9 +4,6 @@
         <title><?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaTitle(); ?></title>
         <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaHeaders(); ?>
         <link rel="stylesheet" href="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/style.css" type="text/css" />
-        <?php if (TREngine\Engine\Core\CoreLoader::isCallable("CoreMain") && TREngine\Engine\Core\CoreMain::getInstance()->getAgentInfos()->getBrowserName() == "Internet Explorer" && TREngine\Engine\Core\CoreMain::getInstance()->getAgentInfos()->getBrowserVersion() < "7") { ?>
-            <link rel="stylesheet" href="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/ie6.css" type="text/css" />
-        <?php } ?>
     </head>
     <body>
         <div id="global">
@@ -19,24 +16,33 @@
                 <div id="header_middle"></div>
                 <div id="header_right"></div>
             </div>
-            <div id="wrapper">
-                <div id="left">
-                    <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("right"); ?>
-                </div>
-                <div id="middle">
-                    <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getLoader(); ?>
-                    <div id="breadcrumb"><?php echo TREngine\Engine\Lib\LibBreadcrumb::getInstance()->getBreadcrumbTrail(" >> "); ?></div>
-                    <div class="cleaner"></div>
-                    <?php TREngine\Engine\Core\CoreLogger::displayMessages(); ?>
-                    <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("top"); ?>
-                    <?php include TREngine\Engine\Lib\LibMakeStyle::getTemplateDir() . DIRECTORY_SEPARATOR . "module.php"; ?>
-                    <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("bottom"); ?>
+            <div id="wrapper_leftfix">
+                <div id="wrapper_rightfix">
+                    <div id="wrapper_left">
+                        <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("right"); ?>
+                    </div>
+                    <div id="wrapper_middlefix">
+                        <div id="wrapper_middle">
+                            <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getLoader(); ?>
+                            <div id="breadcrumb"><?php echo TREngine\Engine\Lib\LibBreadcrumb::getInstance()->getBreadcrumbTrail(" > "); ?></div>
+                            <div class="cleaner"></div>
+                            <?php TREngine\Engine\Core\CoreLogger::displayMessages(); ?>
+                            <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("top"); ?>
+                            <?php include TREngine\Engine\Lib\LibMakeStyle::getTemplateDir() . DIRECTORY_SEPARATOR . "module.php"; ?>
+                            <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("bottom"); ?>
+                        </div>
+                        <div id="wrapper_right"></div>
+                    </div>
                 </div>
             </div>
             <div id="footer">
-                <div style="padding: 50px;">
-                    Page g&eacute;n&eacute;r&eacute;e en <?php echo TREngine\Engine\Exec\ExecTimeMarker::getMeasurement("main"); ?> ms.
+                <div id="footer_left"></div>
+                <div id="footer_middle">
+                    <div style="padding: 50px;">
+                        Page g&eacute;n&eacute;r&eacute;e en <?php echo TREngine\Engine\Exec\ExecTimeMarker::getMeasurement("main"); ?> ms.
+                    </div>
                 </div>
+                <div id="footer_right"></div>
             </div>
         </div>
         <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaFooters(); ?>

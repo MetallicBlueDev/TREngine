@@ -114,7 +114,6 @@ a:hover {
 /* Style additionnel du thème */
 #global {
     width: 90%;
-    overflow: hidden;
     min-width: 900px;
     max-width: 1400px;
     margin-left: auto;
@@ -160,22 +159,66 @@ a:hover {
     background-image: url(images/header_right.png);
 }
 /* Contenu du milieu */
-#wrapper {
-    position: relative;
-    width: 900px;
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
-    margin: 0 auto;
-    background-image: url(images/background_middle.jpg);
+#wrapper_leftfix {
+    width: 100%;
     overflow: hidden;
+    background: url(images/wrapper_left.png) repeat-y left top;
+}
+#wrapper_rightfix {
+    width: 100%;
+    overflow: hidden;
+    background: url(images/wrapper_right.png) repeat-y right top;
+}
+#wrapper_left {
+    float: left;
+    width: 100%;
+    overflow: hidden;
+    width: 224px;
+}
+#wrapper_middlefix {
+    overflow: hidden;
+    margin-right: 51px;
+    background-image: url(images/wrapper_middle.png);
+}
+#wrapper_middle {
+    width: 100%;
+    overflow: hidden;
+    width: 100%;
+    background-image: url(images/wrapper_middle.png);
+}
+#wrapper_right {
+    width: 100%;
+    overflow: hidden;
+    float: right;
+    width: 51px;
 }
 /* Pieds de page */
 #footer {
-    width: 900px;
+    position: relative;
+    width: 100%;
     height: 130px;
-    margin: 0 auto;
-    background-image: url(images/footer.jpg);
+}
+#footer_left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 270px;
+    height: 130px;
+    background-image: url(images/footer_left.png);
+}
+#footer_middle {
+    height: 130px;
+    margin-left: 270px;
+    margin-right: 100px;
+    background-image: url(images/footer_middle.png);
+}
+#footer_right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 130px;
+    background-image: url(images/footer_right.png);
 }
 /* Cadre des modules */
 #module_top {
@@ -249,18 +292,6 @@ a:hover {
 }
 #block_message .exception .info {
     background: #98c3f1 url(images/block_error_info.png) no-repeat 2px 2px;
-}
-/* Partie gauche */
-#left {
-    width: 214px;
-    float: left;
-    position: relative;
-}
-/* Interieur */
-#middle {
-    width: 645px;
-    float: left;
-    position: relative;
 }
 /* Fil ariane */
 #breadcrumb {
