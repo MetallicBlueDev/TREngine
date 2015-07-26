@@ -3,7 +3,7 @@
     <head>
         <title><?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaTitle(); ?></title>
         <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaHeaders(); ?>
-        <link rel="stylesheet" href="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/style.css" type="text/css" />
+        <link rel="stylesheet" href="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/index.css" type="text/css" />
     </head>
     <body>
         <div id="global">
@@ -19,19 +19,55 @@
             <div id="wrapper_leftfix">
                 <div id="wrapper_rightfix">
                     <div id="wrapper_left">
-                        <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("right"); ?>
+                        <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("left"); ?>
                     </div>
                     <div id="wrapper_middlefix">
                         <div id="wrapper_middle">
                             <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getLoader(); ?>
-                            <div id="breadcrumb"><?php echo TREngine\Engine\Lib\LibBreadcrumb::getInstance()->getBreadcrumbTrail(" > "); ?></div>
+                            <div id="breadcrumb">
+                                <?php echo TREngine\Engine\Lib\LibBreadcrumb::getInstance()->getBreadcrumbTrail(" > "); ?>
+                            </div>
                             <div class="cleaner"></div>
                             <?php TREngine\Engine\Core\CoreLogger::displayMessages(); ?>
                             <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("top"); ?>
-                            <?php include TREngine\Engine\Lib\LibMakeStyle::getTemplateDir() . DIRECTORY_SEPARATOR . "module.php"; ?>
+                            <div>
+                                <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("moduleleft"); ?>
+                            </div>
+                            <div>
+                                <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("moduletop"); ?>
+                            </div>
+                            <?php
+                            $renderModule = TREngine\Engine\Lib\LibModule::getInstance()->getModule();
+
+                            if (!empty($renderModule)) {
+                                ?>
+                                <div id="module_top">
+                                    <div id="module_top_left"></div>
+                                    <div id="module_top_middle"></div>
+                                    <div id="module_top_right"></div>
+                                </div>
+                                <div id="module_content_leftfix">
+                                    <div id="module_content_rightfix">
+                                        <div id="module_content_middle">
+                                            <?php echo $renderModule; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="module_bottom"></div>
+                                <?php
+                            }
+                            ?>
+                            <div>
+                                <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("modulebottom"); ?>
+                            </div>
+                            <div>
+                                <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("moduleright"); ?>
+                            </div>
                             <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("bottom"); ?>
                         </div>
-                        <div id="wrapper_right"></div>
+                    </div>
+                    <div id="wrapper_right">
+                        <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("right"); ?>
                     </div>
                 </div>
             </div>

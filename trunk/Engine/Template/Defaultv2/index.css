@@ -1,9 +1,14 @@
 /* element de base */
+* {
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+}
 html {
     font-size: 100%; /* inutile; pour éviter un bug de redimensionnement du texte dans Internet Explorer */
 }
 body {
-    margin: 0;
+    margin: 0px;
     padding-top: 25px;
     font-family: Verdana, "Bitstream Vera Sans", "Lucida Grande", sans-serif;
     font-size: .8em;
@@ -13,11 +18,6 @@ body {
     background-image: url(images/background_body.png);
     background-attachment: fixed;
     background-repeat: repeat;
-}
-* {
-    padding: 0px;
-    margin: 0px;
-    border: 0px;
 }
 a:link, a:visited, a:active {
     color: #404040;
@@ -44,7 +44,9 @@ a:hover {
     background-color: #fff;
 }
 .input[type='text'], .input[type='password'], input[type='text'], input[type='password'] {
-    width: 130px;
+    width: 100%;
+    min-width: 100px;
+    max-width: 200px;
 }
 
 /* Style générale des formulaires */
@@ -52,9 +54,6 @@ a:hover {
     padding: 8px;
     width: 90%;
     position: relative;
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
     margin: 0 auto;
     background-image: url(images/background_form.png);
 }
@@ -160,37 +159,33 @@ a:hover {
 }
 /* Contenu du milieu */
 #wrapper_leftfix {
+    display: flex;
     width: 100%;
-    overflow: hidden;
+    overflow: auto;
     background: url(images/wrapper_left.png) repeat-y left top;
 }
 #wrapper_rightfix {
+    display: flex;
     width: 100%;
-    overflow: hidden;
+    overflow: auto;
     background: url(images/wrapper_right.png) repeat-y right top;
 }
 #wrapper_left {
     float: left;
-    width: 100%;
     overflow: hidden;
-    width: 224px;
+    width: 279px;
+}
+#wrapper_right {
 }
 #wrapper_middlefix {
-    overflow: hidden;
+    display: flex;
+    width: 100%;
     margin-right: 51px;
     background-image: url(images/wrapper_middle.png);
 }
 #wrapper_middle {
     width: 100%;
     overflow: hidden;
-    width: 100%;
-    background-image: url(images/wrapper_middle.png);
-}
-#wrapper_right {
-    width: 100%;
-    overflow: hidden;
-    float: right;
-    width: 51px;
 }
 /* Pieds de page */
 #footer {
@@ -222,25 +217,55 @@ a:hover {
 }
 /* Cadre des modules */
 #module_top {
-    margin-top: 5px;
-    width: 645px;
+    position: relative;
+    margin: 10px 10px 0px 10px;
+    width: 100%;
     height: 60px;
-    background-image: url(images/module_top.jpg);
 }
-#module_middle {
-    width: 645px;
-    background: url(images/module_middle.jpg);
+#module_top_left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 46px;
+    height: 60px;
+    background-image: url(images/module_top_left.png);
 }
-#module_middle_content {
-    padding: 10px 13px 10px 13px;
+#module_top_middle {
+    width: 100%;
+    height: 60px;
+    margin-left: 46px;
+    margin-right: 46px;
+    background-image: url(images/module_top_middle.png);
 }
-#module_middle_content li {
+#module_top_right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 46px;
+    height: 60px;
+    background-image: url(images/module_top_right.png);
+}
+#module_content_leftfix {
+    display: flex;
+    width: 100%;
+    overflow: auto;
+    margin-left: 10px;
+    background: url(images/module_content_left.png) repeat-y left top;
+}
+#module_content_rightfix {
+    display: flex;
+    width: 100%;
+    overflow: auto;
+    margin-right: 10px;
+    background: url(images/module_content_right.png) repeat-y right top;
+}
+/*#module_middle_content li {
     list-style-type: none;
-}
+}*/
 #module_bottom {
     width: 645px;
     height: 60px;
-    background-image: url(images/module_bottom.jpg);
+    background-image: url(images/module_bottom.png);
 }
 /* Cadre des blocks */
 .block_top {
@@ -319,7 +344,7 @@ a:hover {
     text-align: center;
 }
 .title span {
-    background: url(images/title.png) no-repeat 0 4px;
+    background: url(images/list_title.png) no-repeat 0 4px;
     padding-left: 16px;
 }
 /* Texte de description classique */
@@ -329,7 +354,7 @@ a:hover {
     text-align: justify;
 }
 .description span {
-    background: url(images/description.png) no-repeat 0 2px;
+    background: url(images/list_description.png) no-repeat 0 2px;
     padding-left: 16px;
 }
 

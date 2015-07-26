@@ -462,6 +462,7 @@ class CoreMain {
             // Affichage des données de la page de maintenance (fermeture)
             $libMakeStyle = new LibMakeStyle();
             $libMakeStyle->assign("closeText", ERROR_DEBUG_CLOSE);
+            $libMakeStyle->assign("closeReason", $this->getDefaultSiteCloseReason());
             $libMakeStyle->display("close");
         } else {
             // Mode normal: exécution général
