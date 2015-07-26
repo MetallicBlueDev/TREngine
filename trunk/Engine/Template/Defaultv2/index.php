@@ -53,7 +53,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="module_bottom"></div>
+                                <div id="module_bottom">
+                                    <div id="module_bottom_left"></div>
+                                    <div id="module_bottom_middle"></div>
+                                    <div id="module_bottom_right"></div>
+                                </div>
                                 <?php
                             }
                             ?>
