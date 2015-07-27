@@ -14,5 +14,9 @@
             </div>
         </div>
     </div>
-    <!--<div class="block_bottom"></div>-->
+    <div class="block_bottom">
+        <div class="block_bottom_left"></div>
+        <div class="block_bottom_middle"></div>
+        <div class="block_bottom_right"></div>
+    </div>
 </aside>
