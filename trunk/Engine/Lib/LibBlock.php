@@ -2,6 +2,7 @@
 
 namespace TREngine\Engine\Lib;
 
+use Exception;
 use TREngine\Engine\Block\BlockModel;
 use TREngine\Engine\Core\CoreLoader;
 use TREngine\Engine\Core\CoreLogger;
@@ -462,16 +463,21 @@ class LibBlock {
         if ($loaded && CoreLoader::isCallable($blockClassName, "display")) {
             CoreTranslate::getInstance()->translate($blockInfo->getFolderName());
 
-            /**
-             * @var BlockModel
-             */
-            $blockClass = new $blockClassName();
-            $blockClass->setBlockData($blockInfo);
+            try {
+                /**
+                 * @var BlockModel
+                 */
+                $blockClass = new $blockClassName();
+                $blockClass->setBlockData($blockInfo);
 
-            // Capture des données d'affichage
-            ob_start();
-            $blockClass->display();
-            $blockInfo->setBuffer(ob_get_clean());
+                // Capture des données d'affichage
+                ob_start();
+                $blockClass->display();
+                $blockInfo->setBuffer(ob_get_clean());
+            } catch (Exception $ex) {
+                // PHP 7
+                CoreSecure::getInstance()->throwException($ex->getMessage(), $ex);
+            }
         } else {
             CoreLogger::addErrorMessage(ERROR_BLOCK_CODE . " (" . $blockInfo->getType() . ")");
         }

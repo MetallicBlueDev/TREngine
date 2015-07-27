@@ -2,6 +2,7 @@
 
 namespace TREngine\Engine\Lib;
 
+use Exception;
 use TREngine\Engine\Module\ModuleModel;
 use TREngine\Engine\Core\CoreLogger;
 use TREngine\Engine\Core\CoreMain;
@@ -14,6 +15,7 @@ use TREngine\Engine\Core\CoreSession;
 use TREngine\Engine\Core\CoreTranslate;
 use TREngine\Engine\Core\CoreLoader;
 use TREngine\Engine\Core\CoreRequest;
+use TREngine\Engine\Core\CoreSecure;
 use TREngine\Engine\Exec\ExecUtils;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
@@ -272,16 +274,21 @@ class LibModule {
         if ($loaded && !empty($moduleInfo->getView())) {
             $this->updateCount($moduleInfo->getId());
 
-            /**
-             * @var ModuleModel
-             */
-            $moduleClass = new $moduleClassName();
-            $moduleClass->setModuleData($moduleInfo);
+            try {
+                /**
+                 * @var ModuleModel
+                 */
+                $moduleClass = new $moduleClassName();
+                $moduleClass->setModuleData($moduleInfo);
 
-            // Capture des données d'affichage
-            ob_start();
-            echo $moduleClass->{$moduleInfo->getView()}();
-            $moduleInfo->setBuffer(ob_get_clean());
+                // Capture des données d'affichage
+                ob_start();
+                echo $moduleClass->{$moduleInfo->getView()}();
+                $moduleInfo->setBuffer(ob_get_clean());
+            } catch (Exception $ex) {
+                // PHP 7
+                CoreSecure::getInstance()->throwException($ex->getMessage(), $ex);
+            }
         } else {
             CoreLogger::addErrorMessage(ERROR_MODULE_CODE . " (" . $moduleInfo->getName() . ")");
         }
