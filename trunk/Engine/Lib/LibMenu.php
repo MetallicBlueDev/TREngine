@@ -124,7 +124,7 @@ class LibMenu {
      * Retourne une ligne de menu propre sous forme HTML
      *
      * Exemple :
-     * Link example__OPTIONS__B.I.U.A.?module=home__OPTIONS__
+     * Link example__OPTIONS__BOLD.ITALIC.UNDERLINE.A.?module=home__OPTIONS__
      *
      * @param $line string
      * @return string
@@ -151,33 +151,33 @@ class LibMenu {
             // Application des options et styles
             foreach ($options as $key => $value) {
                 switch ($value) {
-                    case "B":
+                    case "BOLD":
                         if (!$bold) {
-                            $text = "<b>" . $text . "</b>";
+                            $text = "<span class=\"text_bold\">" . $text . "</span>";
                             $bold = true;
                         }
                         break;
-                    case "I":
+                    case "ITALIC":
                         if (!$italic) {
-                            $text = "<i>" . $text . "</i>";
+                            $text = "<span class=\"text_italic\">" . $text . "</span>";
                             $italic = true;
                         }
                         break;
-                    case "U":
+                    case "UNDERLINE":
                         if (!$underline) {
-                            $text = "<u>" . $text . "</u>";
+                            $text = "<span class=\"text_underline\">" . $text . "</span>";
                             $underline = true;
                         }
                         break;
                     case "BIG":
                         if (!$big) {
-                            $text = "<big>" . $text . "</big>";
+                            $text = "<span class=\"text_big\">" . $text . "</span>";
                             $big = true;
                         }
                         break;
                     case "SMALL":
                         if (!$small) {
-                            $text = "<small>" . $text . "</small>";
+                            $text = "<span class=\"text_small\">" . $text . "</span>";
                             $small = true;
                         }
                         break;
@@ -221,14 +221,14 @@ class LibMenu {
             // Les options sont uniquement en majuscule
             $key = strtoupper($key);
 
-            if ($key == "B") {
-                $optionsString .= "B";
+            if ($key == "BOLD") {
+                $optionsString .= "BOLD";
             }
-            if ($key == "I") {
-                $optionsString .= "I";
+            if ($key == "ITALIC") {
+                $optionsString .= "ITALIC";
             }
-            if ($key == "I") {
-                $optionsString .= "U";
+            if ($key == "UNDERLINE") {
+                $optionsString .= "UNDERLINE";
             }
             if ($key == "BIG") {
                 $optionsString .= "BIG";
@@ -236,7 +236,7 @@ class LibMenu {
             if ($key == "SMALL") {
                 $optionsString .= "SMALL";
             }
-            if ($key == "I") {
+            if ($key == "A") {
                 $optionsString .= "A." . $value;
             }
             if ($key == "POPUP") {
