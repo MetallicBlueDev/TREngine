@@ -251,7 +251,7 @@ class ModuleIndex extends ModuleModel {
 
         // Liste des droits
         $form->addSpace();
-        $form->addHtmlInFieldset("<u>" . ACCOUNT_ADMIN_RIGHT . ":</u>");
+        $form->addHtmlInFieldset("<span class=\"text_underline\">" . ACCOUNT_ADMIN_RIGHT . ":</span>");
 
         if ($userInfos->hasSuperAdminRank()) {
             $form->addHtmlInFieldset(ADMIN_RIGHT_ALL);

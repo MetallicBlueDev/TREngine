@@ -3,11 +3,12 @@
     <head>
         <title><?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaTitle(); ?></title>
         <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaHeaders(); ?>
-        <link rel="stylesheet" href="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/index.css" type="text/css" />
+        <link rel="stylesheet" href="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/index_engine.css" type="text/css" />
+        <link rel="stylesheet" href="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/index_template.css" type="text/css" />
     </head>
     <body>
         <div id="global">
-            <div id="header">
+            <header id="header">
                 <div style="display: none;"><?php echo TREngine\Engine\Core\CoreMain::getInstance()->getDefaultSiteName(); ?></div>
                 <div id="header_left">
                     <a href="index.php" title="<?php echo TREngine\Engine\Core\CoreMain::getInstance()->getDefaultSiteName(); ?>"></a>
@@ -15,7 +16,7 @@
                 </div>
                 <div id="header_middle"></div>
                 <div id="header_right"></div>
-            </div>
+            </header>
             <div id="wrapper_leftfix">
                 <div id="wrapper_rightfix">
                     <div id="wrapper_left">
@@ -36,31 +37,23 @@
                             <div>
                                 <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("moduletop"); ?>
                             </div>
-                            <?php
-                            $renderModule = TREngine\Engine\Lib\LibModule::getInstance()->getModule();
-
-                            if (!empty($renderModule)) {
-                                ?>
-                                <div id="module_top">
-                                    <div id="module_top_left"></div>
-                                    <div id="module_top_middle"></div>
-                                    <div id="module_top_right"></div>
-                                </div>
-                                <div id="module_content_leftfix">
-                                    <div id="module_content_rightfix">
-                                        <div id="module_content_middle">
-                                            <?php echo $renderModule; ?>
-                                        </div>
+                            <div id="module_top">
+                                <div id="module_top_left"></div>
+                                <div id="module_top_middle"></div>
+                                <div id="module_top_right"></div>
+                            </div>
+                            <div id="module_content_leftfix">
+                                <div id="module_content_rightfix">
+                                    <div id="module_content_middle">
+                                        <?php echo TREngine\Engine\Lib\LibModule::getInstance()->getModule(); ?>
                                     </div>
                                 </div>
-                                <div id="module_bottom">
-                                    <div id="module_bottom_left"></div>
-                                    <div id="module_bottom_middle"></div>
-                                    <div id="module_bottom_right"></div>
-                                </div>
-                                <?php
-                            }
-                            ?>
+                            </div>
+                            <div id="module_bottom">
+                                <div id="module_bottom_left"></div>
+                                <div id="module_bottom_middle"></div>
+                                <div id="module_bottom_right"></div>
+                            </div>
                             <div>
                                 <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("modulebottom"); ?>
                             </div>
@@ -75,7 +68,7 @@
                     </div>
                 </div>
             </div>
-            <div id="footer">
+            <footer id="footer">
                 <div id="footer_left"></div>
                 <div id="footer_middle">
                     <div style="padding: 50px;">
@@ -83,7 +76,7 @@
                     </div>
                 </div>
                 <div id="footer_right"></div>
-            </div>
+            </footer>
         </div>
         <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaFooters(); ?>
     </body>

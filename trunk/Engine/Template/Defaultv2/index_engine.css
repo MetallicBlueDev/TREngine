@@ -1,0 +1,164 @@
+/* Élément de base */
+* {
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+}
+html {
+    font-size: 100%; /* Normalement inutile; pour éviter un bug de redimensionnement du texte dans Internet Explorer */
+}
+body {
+    margin: 0px;
+    padding-top: 25px;
+    font-family: Verdana, "Bitstream Vera Sans", "Lucida Grande", sans-serif;
+    font-size: .8em;
+    line-height: 1.25;
+    color: #000;
+    background-color: #6b737b;
+    background-image: url(images/background_body.png);
+    background-attachment: fixed;
+    background-repeat: repeat;
+}
+a:link, a:visited, a:active {
+    color: #404040;
+    text-decoration: none;
+}
+a:hover {
+    color: #e6eaeb;
+    text-decoration: underline;
+}
+
+/* Style graphique généré par le moteur */
+/* Fomulaire et zone de saisie utilisateur */
+.input, .textarea, .select, select {
+    background-color: #d0dfe6;
+    border-top: 2px solid #7194a4;
+    border-bottom: 2px solid #7194a4;
+    color: #05587b;
+}
+.input[disabled='disabled'] {
+    background-color: #80878f;
+    text-decoration: line-through;
+}
+.input:hover, .textarea:hover {
+    background-color: #fff;
+}
+.input[type='text'], .input[type='password'], input[type='text'], input[type='password'] {
+    width: 100%;
+    min-width: 100px;
+    max-width: 200px;
+}
+.form {
+    padding: 8px;
+    width: 90%;
+    position: relative;
+    margin: 0 auto;
+    background-image: url(images/background_form.png);
+}
+.form fieldset {
+    border-top: 1px solid #05587b;
+}
+.form label {
+    font-weight: normal;
+}
+.form legend {
+    color: #05587b;
+    font-size: 14px;
+    padding: 5px;
+}
+
+/* Erreur de saisie */
+.error {
+    background-color: #de9da1;
+    border-left: 0px solid #de9da1;
+    border-right: 0px solid #de9da1;
+}
+
+/* Naviguation par onglet */
+.tabs ul a {
+    background-color: #848e97;
+}
+.tabs ul a:hover { background: #6f8592; }
+.tabs ul a.selected {
+    background-color: #848e97;
+    border-bottom: 1px solid #848e97;
+}
+.tabs div {
+    background-color: #848e97;
+}
+.table {
+    text-align: left;
+}
+.table .first {
+    background-color: #848e97;
+    text-align: center;
+    font-weight: bolder;
+}
+.table tr:hover {
+    background-color: #848e97;
+}
+.table td {
+    border-bottom: 1px solid #6b737b;
+    border-left: 1px solid #6b737b;
+    padding: 5px;
+}
+
+/* Panneau de message */
+#block_message {
+    padding: 5px;
+}
+#block_message .exception {
+    margin: 5px;
+}
+#block_message .exception li {
+    margin-top: 10px;
+    list-style-type: none;
+    padding-left: 25px;
+    font-size: 13px;
+}
+#block_message .exception li div {
+    padding: 2px;
+}
+#block_message .exception .alert {
+    background: #efaaa9 url(images/block_error_alert.png) no-repeat 2px 2px;
+}
+#block_message .exception .note {
+    background: #f7c259 url(images/block_error_note.png) no-repeat 2px 2px;
+}
+#block_message .exception .info {
+    background: #98c3f1 url(images/block_error_info.png) no-repeat 2px 2px;
+}
+
+/* Fil d'ariane */
+#breadcrumb {
+    float: left;
+    position: relative;
+    height: 11px; /* pour être correctement aligné avec le loader */
+}
+#breadcrumb a:hover {
+    color: #05587b;
+}
+
+/* Chargeur animé */
+#loader {
+    float: left;
+    position: relative;
+    background: url(images/loader.gif) no-repeat 0 0;
+}
+
+/* Indication additionnelle du moteur */
+.text_bold {
+    font-weight: bold;
+}
+.text_italic {
+    font-style: italic;
+}
+.text_underline {
+    text-decoration: underline;
+}
+.text_big {
+    font-size: 25px;
+}
+.text_small {
+    font-size: 12px;
+}

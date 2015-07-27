@@ -20,7 +20,7 @@ class ModuleIndex extends ModuleModel {
         </div>
 
         <br /><br />
-        <div class="title"><span><b><u>CONNAISSANCES  EN  INFORMATIQUE</u></b></span></div><br /><br />
+        <div class="title"><span class="text_bold"><span class="text_underline">CONNAISSANCES  EN  INFORMATIQUE</span></span></div><br /><br />
         <div class="description" style="width: 80%;">
             <span><b>Technologies Java</b><br /></span>
 
@@ -70,7 +70,7 @@ class ModuleIndex extends ModuleModel {
         <br />
         <br /><br />
 
-        <div class="title"><span><b><u>FORMATION</u></b></span></div><br /><br />
+        <div class="title"><span class="text_bold"><span class="text_underline">FORMATION</span></span></div><br /><br />
         <div class="description" style="width: 80%;">
             <span><b>2008 - 2010</b></span><br />
 
@@ -87,32 +87,32 @@ class ModuleIndex extends ModuleModel {
 
         <br /><br /><br />
 
-        <div class="title"><span><b><u>EXPERIENCE  PROFESSIONNELLE</u></b></span></div><br /><br />
+        <div class="title"><span class="text_bold"><span class="text_underline">EXPERIENCE  PROFESSIONNELLE</span></span></div><br /><br />
         <div class="description" style="width: 80%;">
-            <span><b><u><i>Mai &#224; Juin 2009</i></u></b> - Soci&eacute;t&eacute; Daoditu - D&eacute;velopement de site web.</span><br />
+            <span class="text_bold"><span class="text_underline"><span class="text_italic">Mai &#224; Juin 2009</span></span> - Soci&eacute;t&eacute; Daoditu - D&eacute;velopement de site web.</span><br />
 
             <br />
-            <i><b>Finalisation de sites Internet, cr&eacute;ation d'une maquette fonctionnelle et d'un site Internet.</b></i><br /><br />
+            <span class="text_underline"><b>Finalisation de sites Internet, cr&eacute;ation d'une maquette fonctionnelle et d'un site Internet.</b></span><br /><br />
             D&eacute;veloppement sous Eclipse.
             <br /><br />
-            <i>Environnement  : PHP OO, MySql, HTML/XHTML, CSS, WAMP, Eclipse.</i>
+            <span class="text_underline">Environnement  : PHP OO, MySql, HTML/XHTML, CSS, WAMP, Eclipse.</span>
             <br /><br /><br />
 
-            <span><b><u><i>Depuis Septembre 2007</i></u></b> - Gendarme Ajoint de R&eacute;serve.</span><br />
+            <span class="text_bold"><span class="text_underline"><span class="text_italic">Depuis Septembre 2007</span></span> - Gendarme Ajoint de R&eacute;serve.</span><br />
 
             <br />
-            <i><b>Employ&eacute; r&eacute;guli&#232;rement en qualit&eacute; de r&eacute;serviste &#224; la compagnie de gendarmerie d&eacute;partementale de Beaune.</b></i><br /><br />
+            <span class="text_underline"><b>Employ&eacute; r&eacute;guli&#232;rement en qualit&eacute; de r&eacute;serviste &#224; la compagnie de gendarmerie d&eacute;partementale de Beaune.</b></span><br /><br />
             <br />
 
-            <span><b><u><i>Juillet 2007</i></u></b> - Pr&eacute;paration militaire.</span><br />
+            <span class="text_bold"><span class="text_underline"><span class="text_italic">Juillet 2007</span></span> - Pr&eacute;paration militaire.</span><br />
 
             <br />
-            <i><b>Formation &#224; la pr&eacute;paration militaire de la gendarmerie.</b></i><br />
+            <span class="text_underline"><b>Formation &#224; la pr&eacute;paration militaire de la gendarmerie.</b></span><br />
         </div>
 
         <br /><br />
 
-        <div class="title"><span><b><u>DIVERS</u></b></span></div><br /><br />
+        <div class="title"><span class="text_bold"><span class="text_underline">DIVERS</span></span></div><br /><br />
         <div class="description" style="width: 80%;">
             Langue : Anglais technique,<br />
             Permis de conduire cat&eacute;gorie B,<br />
