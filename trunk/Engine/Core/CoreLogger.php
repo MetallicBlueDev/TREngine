@@ -107,7 +107,7 @@ class CoreLogger {
 
             // Réaction différente en fonction du type d'affichage demandée
             if (CoreMain::getInstance()->isDefaultLayout()) {
-                echo "<div id=\"block_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
+                echo "<div id=\"panel_message\" style=\"display: " . $display . ";\">" . $rslt . "</div>";
             } else if ($hasMessages) {
                 if (CoreLoader::isCallable("CoreHtml")) {
                     if (CoreHtml::getInstance()->javascriptEnabled()) {

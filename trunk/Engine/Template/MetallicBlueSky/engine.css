@@ -145,27 +145,27 @@ h3 {
 }
 
 /* Panneau de message */
-#block_message {
+#panel_message {
     padding: 5px;
 }
-#block_message .exception {
+#panel_message .exception {
     margin: 5px;
 }
-#block_message .exception li {
+#panel_message .exception li {
     margin-top: 10px;
     padding-left: 25px;
 }
-#block_message .exception li div {
+#panel_message .exception li div {
     padding: 2px;
 }
-#block_message .exception .alert {
-    background: #efaaa9 url(images/block_error_alert.png) no-repeat 5px 5px;
+#panel_message .exception .alert {
+    background: #efaaa9 url(images/panel_message_alert.png) no-repeat 5px 5px;
 }
-#block_message .exception .note {
-    background: #f7c259 url(images/block_error_note.png) no-repeat 5px 5px;
+#panel_message .exception .note {
+    background: #f7c259 url(images/panel_message_note.png) no-repeat 5px 5px;
 }
-#block_message .exception .info {
-    background: #98c3f1 url(images/block_error_info.png) no-repeat 5px 5px;
+#panel_message .exception .info {
+    background: #98c3f1 url(images/panel_message_info.png) no-repeat 5px 5px;
 }
 
 /* Indication additionnelle du moteur */
