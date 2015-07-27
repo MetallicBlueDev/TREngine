@@ -56,6 +56,9 @@ h3 {
     min-width: 100px;
     max-width: 200px;
 }
+.checkbox {
+    margin-left: 5px;
+}
 .form {
     padding: 8px;
     width: 98%;
@@ -81,6 +84,14 @@ h3 {
 /* Erreur de saisie */
 .error {
     background-color: #de9da1;
+}
+
+/* Menu basique */
+.menu ul {
+    padding: 5px;
+}
+.menu ul li a:link, .menu ul li a:visited {
+    font-weight: bold;
 }
 
 /* Naviguation par onglet */
@@ -112,6 +123,27 @@ h3 {
     padding: 5px;
 }
 
+/* Chargeur de contenu */
+#loader {
+    float: left;
+    display: none;
+    background: url(images/loader.gif) no-repeat 0 0;
+    width: 16px;
+    height: 11px;
+    margin-left: 10px;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+/* Fil d'ariane */
+#breadcrumb {
+    float: left;
+    margin-left: 5px;
+}
+#breadcrumb a {
+    color: #05587b;
+}
+
 /* Panneau de message */
 #block_message {
     padding: 5px;
@@ -134,23 +166,6 @@ h3 {
 }
 #block_message .exception .info {
     background: #98c3f1 url(images/block_error_info.png) no-repeat 5px 5px;
-}
-
-/* Fil d'ariane */
-#breadcrumb {
-    float: left;
-    position: relative;
-    height: 11px; /* pour être correctement aligné avec le loader */
-}
-#breadcrumb a {
-    color: #05587b;
-}
-
-/* Chargeur animé */
-#loader {
-    float: left;
-    position: relative;
-    background: url(images/loader.gif) no-repeat 0 0;
 }
 
 /* Indication additionnelle du moteur */

@@ -556,7 +556,8 @@ class CoreHtml {
      * @return string
      */
     private function &getMetaIncludeCss() {
-        $this->addCssResourceFile("default.css");
+        $this->addCssTemplateFile("engine.css");
+        $this->addCssTemplateFile("main.css");
 
         $meta = "";
 

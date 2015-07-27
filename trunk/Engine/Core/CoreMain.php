@@ -470,7 +470,7 @@ class CoreMain {
             LibBlock::getInstance()->launchAllBlock();
 
             $libMakeStyle = new LibMakeStyle();
-            $libMakeStyle->display("index");
+            $libMakeStyle->display("main");
         }
     }
 
