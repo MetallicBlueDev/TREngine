@@ -1,36 +1,3 @@
-.error {
-    background-color: #de9da1;
-    border-left: 0px solid #de9da1;
-    border-right: 0px solid #de9da1;
-}
-.tabs ul a {
-    background-color: #848e97;
-}
-.tabs ul a:hover { background: #6f8592; }
-.tabs ul a.selected {
-    background-color: #848e97;
-    border-bottom: 1px solid #848e97;
-}
-.tabs div {
-    background-color: #848e97;
-}
-.table {
-    text-align: left;
-}
-.table .first {
-    background-color: #848e97;
-    text-align: center;
-    font-weight: bolder;
-}
-.table tr:hover {
-    background-color: #848e97;
-}
-.table td {
-    border-bottom: 1px solid #6b737b;
-    border-left: 1px solid #6b737b;
-    padding: 5px;
-}
-
 /* Style additionnel du thème */
 #global {
     width: 90%;
@@ -239,52 +206,12 @@
     padding-top: 5px;
     list-style-type: none;
 }
-/* Block de message (ajax et autre) */
-#block_message {
-    padding: 5px;
-}
-/* Liste d'erreur rencontrée */
-#block_message .exception {
-    margin: 5px;
-}
-#block_message .exception li {
-    margin-top: 10px;
-    list-style-type: none;
-    padding-left: 25px;
-    font-size: 13px;
-}
-/* Texte de l'erreur */
-#block_message .exception li div {
-    padding: 2px;
-}
-#block_message .exception .alert {
-    background: #efaaa9 url(images/block_error_alert.png) no-repeat 2px 2px;
-}
-#block_message .exception .note {
-    background: #f7c259 url(images/block_error_note.png) no-repeat 2px 2px;
-}
-#block_message .exception .info {
-    background: #98c3f1 url(images/block_error_info.png) no-repeat 2px 2px;
-}
-/* Fil ariane */
-#breadcrumb {
-    float: left;
-    position: relative;
-    height: 11px; /* pour être correctement aligné avec le loader */
-}
-#breadcrumb a:hover {
-    color: #05587b;
-}
-/* Chargeur annimé */
-#loader {
-    float: left;
-    position: relative;
-    background: url(images/loader.gif) no-repeat 0 0;
-}
+
 /* Cleaner */
 .cleaner {
     clear: both;
 }
+
 /* Titre classique */
 .title {
     font-size: 20px;

@@ -3,16 +3,14 @@
     padding: 0px;
     margin: 0px;
     border: 0px;
-}
-html {
-    font-size: 100%; /* Normalement inutile; pour éviter un bug de redimensionnement du texte dans Internet Explorer */
+    font-family: Verdana, "Bitstream Vera Sans", "Lucida Grande", sans-serif;
+    list-style-type: none;
 }
 body {
     margin: 0px;
     padding-top: 25px;
-    font-family: Verdana, "Bitstream Vera Sans", "Lucida Grande", sans-serif;
-    font-size: .8em;
-    line-height: 1.25;
+    font-size: 14px;
+    line-height: 20px;
     color: #000;
     background-color: #6b737b;
     background-image: url(images/background_body.png);
@@ -27,10 +25,20 @@ a:hover {
     color: #e6eaeb;
     text-decoration: underline;
 }
+h1 {
+    font-size: 20px;
+}
+h2 {
+    font-size: 18px;
+}
+h3 {
+    font-size: 16px;
+}
 
 /* Style graphique généré par le moteur */
 /* Fomulaire et zone de saisie utilisateur */
 .input, .textarea, .select, select {
+    font-size: 14px;
     background-color: #d0dfe6;
     border-top: 2px solid #7194a4;
     border-bottom: 2px solid #7194a4;
@@ -59,19 +67,20 @@ a:hover {
     border-top: 1px solid #05587b;
 }
 .form label {
+    line-height: 30px;
     font-weight: normal;
 }
 .form legend {
     color: #05587b;
-    font-size: 14px;
-    padding: 5px;
+    font-size: 20px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    margin-left: 10px;
 }
 
 /* Erreur de saisie */
 .error {
     background-color: #de9da1;
-    border-left: 0px solid #de9da1;
-    border-right: 0px solid #de9da1;
 }
 
 /* Naviguation par onglet */
@@ -112,21 +121,19 @@ a:hover {
 }
 #block_message .exception li {
     margin-top: 10px;
-    list-style-type: none;
     padding-left: 25px;
-    font-size: 13px;
 }
 #block_message .exception li div {
     padding: 2px;
 }
 #block_message .exception .alert {
-    background: #efaaa9 url(images/block_error_alert.png) no-repeat 2px 2px;
+    background: #efaaa9 url(images/block_error_alert.png) no-repeat 5px 5px;
 }
 #block_message .exception .note {
-    background: #f7c259 url(images/block_error_note.png) no-repeat 2px 2px;
+    background: #f7c259 url(images/block_error_note.png) no-repeat 5px 5px;
 }
 #block_message .exception .info {
-    background: #98c3f1 url(images/block_error_info.png) no-repeat 2px 2px;
+    background: #98c3f1 url(images/block_error_info.png) no-repeat 5px 5px;
 }
 
 /* Fil d'ariane */
@@ -135,7 +142,7 @@ a:hover {
     position: relative;
     height: 11px; /* pour être correctement aligné avec le loader */
 }
-#breadcrumb a:hover {
+#breadcrumb a {
     color: #05587b;
 }
 
