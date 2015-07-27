@@ -24,7 +24,7 @@ if (!defined("TR_ENGINE_INITIALIZED")) {
 
         // Si une version PHP OO moderne n'est pas détectée, c'est la fin
         if (!CoreInfo::compatibleVersion()) {
-            echo"<span class=\"text_bold\">Sorry, but the PHP version currently running is too old to understand TR ENGINE.</span>"
+            echo"<h1>Sorry, but the PHP version currently running is too old to understand TR ENGINE.</h1>"
             . "<br />YOUR PHP VERSION : " . TR_ENGINE_PHP_VERSION;
             exit();
         }
