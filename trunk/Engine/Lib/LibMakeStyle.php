@@ -20,7 +20,7 @@ class LibMakeStyle {
      *
      * @var string
      */
-    private static $templateDir = "Engine/Template/Default";
+    private static $templateDir = "Engine/Template/MetallicBlueSky";
 
     /**
      * Nom du fichier template.
