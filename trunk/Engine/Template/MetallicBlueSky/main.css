@@ -60,7 +60,8 @@
 }
 #wrapper_left {
     display: block;
-    max-width: 224px;
+    min-width: 174px;
+    max-width: 200px;
     margin-left: 22px;
 }
 #wrapper_right {
