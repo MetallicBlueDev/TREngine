@@ -454,6 +454,8 @@ class CoreHtml {
      */
     private function addCssFile($filePath, $options = "") {
         if (is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . str_replace("/", DIRECTORY_SEPARATOR, $filePath))) {
+            $filePath = str_replace(DIRECTORY_SEPARATOR, "/", $filePath);
+
             if (!array_key_exists($filePath, $this->cssFile)) {
                 $this->cssFile[$filePath] = $options;
             }
