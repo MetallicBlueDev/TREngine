@@ -117,7 +117,7 @@ class BasePdo extends BaseModel {
 
     public function &getLastError() {
         $error = parent::getLastError();
-        $error[] = "<b>Pdo response</b> : " . $this->getPdoErrorMessage();
+        $error[] = "<span class=\"text_bold\">Pdo response</span> : " . $this->getPdoErrorMessage();
         return $error;
     }
 

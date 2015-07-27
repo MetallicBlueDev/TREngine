@@ -7,7 +7,7 @@
     </head>
     <body>
         <div class="debugerror">
-            <b><?php echo $errorMessageTitle; ?></b>
+            <span class="text_bold"><?php echo $errorMessageTitle; ?></span>
             <br /><br />
 
             <?php if (!empty($errorMessage)) { ?>

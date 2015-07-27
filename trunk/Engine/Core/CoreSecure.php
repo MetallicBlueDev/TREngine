@@ -184,10 +184,10 @@ class CoreSecure {
                 if (is_array($traceValue)) {
                     foreach ($traceValue as $key => $value) {
                         if ($key === "file" || $key === "function") {
-                            $value = preg_replace("/([a-zA-Z0-9._]+).php/", "<b>\\1</b>.php", $value);
-                            $errorLine .= " <b>" . $key . "</b> " . $value;
+                            $value = preg_replace("/([a-zA-Z0-9._]+).php/", "<span class=\"text_bold\">\\1</span>.php", $value);
+                            $errorLine .= " <span class=\"text_bold\">" . $key . "</span> " . $value;
                         } else if ($key === "line" || $key == "class") {
-                            $errorLine .= " in <b>" . $key . "</b> " . $value;
+                            $errorLine .= " in <span class=\"text_bold\">" . $key . "</span> " . $value;
                         }
                     }
                 }
@@ -201,7 +201,7 @@ class CoreSecure {
         // Fusion des informations supplémentaires
         if (!empty($argv)) {
             $errorMessage[] = "";
-            $errorMessage[] = "<b>Additional information about the error:</b>";
+            $errorMessage[] = "<span class=\"text_bold\">Additional information about the error:</span>";
             $errorMessage = array_merge($errorMessage, $argv);
         }
 
@@ -212,7 +212,7 @@ class CoreSecure {
 
                     if (!empty($sqlErrors)) {
                         $errorMessage[] = "";
-                        $errorMessage[] = "<b>Last Sql error message:</b>";
+                        $errorMessage[] = "<span class=\"text_bold\">Last Sql error message:</span>";
                         $errorMessage = array_merge($errorMessage, $sqlErrors);
                     }
                 }
@@ -224,7 +224,7 @@ class CoreSecure {
 
             if (!empty($loggerExceptions)) {
                 $errorMessage[] = "";
-                $errorMessage[] = "<b>Exceptions logged:</b>";
+                $errorMessage[] = "<span class=\"text_bold\">Exceptions logged:</span>";
                 $errorMessage = array_merge($errorMessage, $loggerExceptions);
             }
         }

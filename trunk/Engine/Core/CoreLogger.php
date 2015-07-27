@@ -152,7 +152,7 @@ class CoreLogger {
                 . "Core : " . ExecTimeMarker::getMeasurement("core") . " ms"
                 . "<br />Launcher : " . ExecTimeMarker::getMeasurement("launcher") . " ms"
                 . "<br />Main : " . ExecTimeMarker::getMeasurement("main") . " ms"
-                . "<br /><b>All : " . ExecTimeMarker::getMeasurement("all") . " ms</b>"
+                . "<br /><span class=\"text_bold\">All : " . ExecTimeMarker::getMeasurement("all") . " ms</span>"
                 . "</div>";
             }
         }

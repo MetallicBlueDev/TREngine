@@ -334,7 +334,7 @@ abstract class BaseModel extends CoreTransaction {
      */
     public function &getLastError() {
         $rslt = array(
-            "<b>Last Sql query</b> : " . $this->getSql());
+            "<span class=\"text_bold\">Last Sql query</span> : " . $this->getSql());
         return $rslt;
     }
 

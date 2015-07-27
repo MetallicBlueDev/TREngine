@@ -101,7 +101,7 @@ class BlockLogin extends BlockModel {
             $userInfos = CoreSession::getInstance()->getUserInfos();
 
             if ($this->displayText) {
-                $content .= WELCOME . " <b>" . $userInfos->getName() . "</b> !<br />";
+                $content .= WELCOME . " <span class=\"text_bold\">" . $userInfos->getName() . "</span> !<br />";
             }
 
             if ($this->displayAvatar && !empty($userInfos->getAvatar())) {
@@ -117,7 +117,7 @@ class BlockLogin extends BlockModel {
             $moreLink = "<ul>";
 
             if (CoreMain::getInstance()->registrationAllowed()) {
-                $moreLink .= "<li><b>" . CoreHtml::getLinkWithAjax("module=connect&view=registration", "blockType=" . $this->getBlockData()->getType() . "&localView=registration", "#login-logonblock", BLOCKLOGIN_GET_ACCOUNT) . "</b></li>";
+                $moreLink .= "<li><span class=\"text_bold\">" . CoreHtml::getLinkWithAjax("module=connect&view=registration", "blockType=" . $this->getBlockData()->getType() . "&localView=registration", "#login-logonblock", BLOCKLOGIN_GET_ACCOUNT) . "</span></li>";
             }
 
             $moreLink .= "<li>" . CoreHtml::getLinkWithAjax("module=connect&view=logon", "blockType=" . $this->getBlockData()->getType() . "&localView=logon", "#login-logonblock", BLOCKLOGIN_GET_LOGON) . "</li>"

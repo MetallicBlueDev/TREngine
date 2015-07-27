@@ -130,7 +130,7 @@ class LibForm {
                 $this->inputData .= "</fieldset>";
             }
 
-            $this->inputData .= "<fieldset>"
+            $this->inputData .= "<fieldset class=\"fieldset\">"
             . $title . $description;
         }
     }
@@ -424,7 +424,7 @@ class LibForm {
             $content = $coreCache->readCache($this->name . ".php", self::CACHE_VARIABLE_NAME, $this->cacheVars);
         } else { // Préparation puis mise en cache
             $data = "<form action=\"" . $url . "\" method=\"post\" id=\"form-" . $name . "\" name=\"" . $name . "\""
-            . " class=\"" . $class . "\"><fieldset>" . $title . $description . $this->inputData
+            . " class=\"" . $class . "\"><fieldset class=\"fieldset\">" . $title . $description . $this->inputData
             . (($this->doFieldset) ? "</fieldset>" : "") . "</form>";
 
             // Enregistrement dans le cache
@@ -449,7 +449,7 @@ class LibForm {
         $rslt = "";
 
         if (!$this->cached) {
-            $rslt = "<label for=\"" . $id . "\">" . $this->getLastCacheVar() . "</label>";
+            $rslt = "<label class=\"label\" for=\"" . $id . "\">" . $this->getLastCacheVar() . "</label>";
         }
         return $rslt;
     }
@@ -467,7 +467,7 @@ class LibForm {
         $rslt = "";
 
         if (!$this->cached) {
-            $rslt = "<legend><b>" . $this->getLastCacheVar() . "</b></legend>";
+            $rslt = "<legend class=\"legend\"><span class=\"text_bold\">" . $this->getLastCacheVar() . "</span></legend>";
         }
         return $rslt;
     }

@@ -237,7 +237,7 @@ class ModuleIndex extends ModuleModel {
 
         // Type de compte admin
         $form->addSpace();
-        $form->addHtmlInFieldset("<b>");
+        $form->addHtmlInFieldset("<span class=\"text_bold\">");
 
         if ($userInfos->hasSuperAdminRank()) {
             $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_MAX);
@@ -247,7 +247,7 @@ class ModuleIndex extends ModuleModel {
             $form->addHtmlInFieldset(ACCOUNT_ADMIN_RIGHT_MED);
         }
 
-        $form->addHtmlInFieldset("</b>");
+        $form->addHtmlInFieldset("</span>");
 
         // Liste des droits
         $form->addSpace();
@@ -269,7 +269,7 @@ class ModuleIndex extends ModuleModel {
                     $text = ADMIN_RIGHT_BLOCK;
                 }
 
-                $form->addHtmlInFieldset($text . " <b>" . $userAccessType->getPage() . "</b> (#" . $userAccessType->getId() . ")");
+                $form->addHtmlInFieldset($text . " <span class=\"text_bold\">" . $userAccessType->getPage() . "</span> (#" . $userAccessType->getId() . ")");
             }
         }
 
@@ -317,7 +317,7 @@ class ModuleIndex extends ModuleModel {
 
                 $moreLink = "<ul>";
                 if (CoreMain::getInstance()->registrationAllowed()) {
-                    $moreLink .= "<li><b>" . CoreHtml::getLink("module=connect&view=registration", LINK_TO_NEW_ACCOUNT) . "</b></li>";
+                    $moreLink .= "<li><span class=\"text_bold\">" . CoreHtml::getLink("module=connect&view=registration", LINK_TO_NEW_ACCOUNT) . "</span></li>";
                 }
                 $moreLink .= "<li>" . CoreHtml::getLink("module=connect&view=forgetlogin", LINK_TO_FORGET_LOGIN) . "</li>"
                 . "<li>" . CoreHtml::getLink("module=connect&view=forgetpass", LINK_TO_FORGET_PASS) . "</li></ul>";
@@ -393,7 +393,7 @@ class ModuleIndex extends ModuleModel {
 
                     $moreLink = "<ul>";
                     if (CoreMain::getInstance()->registrationAllowed()) {
-                        $moreLink .= "<li><b>" . CoreHtml::getLink("module=connect&view=registration", LINK_TO_NEW_ACCOUNT) . "</b></li>";
+                        $moreLink .= "<li><span class=\"text_bold\">" . CoreHtml::getLink("module=connect&view=registration", LINK_TO_NEW_ACCOUNT) . "</span></li>";
                     }
                     $moreLink .= "<li>" . CoreHtml::getLink("module=connect&view=logon", LINK_TO_LOGON) . "</li>"
                     . "<li>" . CoreHtml::getLink("module=connect&view=forgetpass", LINK_TO_FORGET_PASS) . "</li></ul>";
@@ -456,7 +456,7 @@ class ModuleIndex extends ModuleModel {
 
                     $moreLink = "<ul>";
                     if (CoreMain::getInstance()->registrationAllowed()) {
-                        $moreLink .= "<li><b>" . CoreHtml::getLink("module=connect&view=registration", LINK_TO_NEW_ACCOUNT) . "</b></li>";
+                        $moreLink .= "<li><span class=\"text_bold\">" . CoreHtml::getLink("module=connect&view=registration", LINK_TO_NEW_ACCOUNT) . "</span></li>";
                     }
                     $moreLink .= "<li>" . CoreHtml::getLink("module=connect&view=logon", LINK_TO_LOGON) . "</li>"
                     . "<li>" . CoreHtml::getLink("module=connect&view=forgetlogin", LINK_TO_FORGET_LOGIN) . "</li></ul>";

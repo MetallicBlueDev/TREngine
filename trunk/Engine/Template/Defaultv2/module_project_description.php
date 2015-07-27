@@ -16,11 +16,11 @@
             ?>
         </div>
         <div class="project_text, description">
-            <span><?php echo "<b>" . LANGUAGE_TYPE . "</b>: " . $projectInfo['language']; ?></span>
+            <span><?php echo "<span class=\"text_bold\">" . LANGUAGE_TYPE . "</span>: " . $projectInfo['language']; ?></span>
             <br />
-            <br /><?php echo "<b>" . RECORDED_DATE . "</b>: " . $projectInfo['date']; ?>
-            <br /><?php echo "<b>" . PERCENT_COMPLETE . "</b>: " . $projectInfo['progress']; ?>%
-            <br /><?php echo "<b>" . OFFICIAL_WEBSITE . "</b>: " . (!empty($projectInfo['website']) ? $projectInfo['website'] : TR_ENGINE_URL); ?>
+            <br /><?php echo "<span class=\"text_bold\">" . RECORDED_DATE . "</span>: " . $projectInfo['date']; ?>
+            <br /><?php echo "<span class=\"text_bold\">" . PERCENT_COMPLETE . "</span>: " . $projectInfo['progress']; ?>%
+            <br /><?php echo "<span class=\"text_bold\">" . OFFICIAL_WEBSITE . "</span>: " . (!empty($projectInfo['website']) ? $projectInfo['website'] : TR_ENGINE_URL); ?>
         </div>
     </div>
 </div>

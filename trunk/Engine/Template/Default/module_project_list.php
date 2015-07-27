@@ -20,7 +20,7 @@ foreach ($projects as $key => $projectItem) {
             <div>
                 <div class="project_img"><img alt="" src="' . TREngine\Engine\Lib\LibMakeStyle::getTemplateDir() . '/project/' . strtolower($projectItem['language']) . '.png" /></div>
                 <div class="project_text">
-                    <b>' . $projectItem['name'] . '</b> (' . $projectItem['language'] . ')
+                    <span class=\"text_bold\">' . $projectItem['name'] . '</span> (' . $projectItem['language'] . ')
                     <br /><span class=\"text_underline\">' . PERCENT_COMPLETE . ': " ' . $projectItem['progress'] . '%</span>
                 </div>
             </div>

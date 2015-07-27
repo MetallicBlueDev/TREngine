@@ -127,7 +127,7 @@ class BaseMysqli extends BaseModel {
 
     public function &getLastError() {
         $error = parent::getLastError();
-        $error[] = "<b>MySqli response</b> : " . $this->getMysqli()->error;
+        $error[] = "<span class=\"text_bold\">MySqli response</span> : " . $this->getMysqli()->error;
         return $error;
     }
 

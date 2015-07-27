@@ -126,7 +126,7 @@ class BaseMysql extends BaseModel {
 
     public function &getLastError() {
         $error = parent::getLastError();
-        $error[] = "<b>MySql response</b> : " . mysql_error();
+        $error[] = "<span class=\"text_bold\">MySql response</span> : " . mysql_error();
         return $error;
     }
 
