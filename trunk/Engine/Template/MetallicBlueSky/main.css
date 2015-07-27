@@ -64,10 +64,10 @@
     margin-left: 22px;
 }
 #wrapper_right {
-    display: flex;
-    width: 100%;
+    display: block;
     min-width: 174px;
     max-width: 300px;
+    margin-right: 22px;
 }
 #wrapper_middlefix {
     display: flex;
