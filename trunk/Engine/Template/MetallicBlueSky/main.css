@@ -70,8 +70,6 @@
     max-width: 300px;
     margin-right: 51px;
     background-image: url(images/wrapper_middle.png);
-    /*    margin-right: 22px;
-        background-image: url(images/wrapper_middle.png);*/
 }
 #wrapper_middlefix {
     display: flex;

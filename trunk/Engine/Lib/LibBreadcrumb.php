@@ -70,19 +70,15 @@ class LibBreadcrumb {
     /**
      * Retourne le fil d'Ariane complet.
      *
-     * @param string $separator séparateur de tracé
      * @return string
      */
-    public function &getBreadcrumbTrail($separator = " >> ") {
-        $rslt = "";
+    public function &getBreadcrumbTrail() {
+        $rslt = "<aside class=\"breadcrumbtrail\"><ul>";
 
         foreach ($this->breadcrumbTrail as $trail) {
-            if (!empty($rslt)) {
-                $rslt .= $separator;
-            }
-
-            $rslt .= $trail;
+            $rslt .= "<li>" . $trail . "</li>";
         }
+        $rslt.= "</ul></aside>";
         return $rslt;
     }
 
