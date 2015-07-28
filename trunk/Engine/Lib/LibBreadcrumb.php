@@ -73,12 +73,12 @@ class LibBreadcrumb {
      * @return string
      */
     public function &getBreadcrumbTrail() {
-        $rslt = "<aside class=\"breadcrumbtrail\"><ul>";
+        $rslt = "<nav class=\"breadcrumbtrail\"><ul>";
 
         foreach ($this->breadcrumbTrail as $trail) {
             $rslt .= "<li>" . $trail . "</li>";
         }
-        $rslt.= "</ul></aside>";
+        $rslt.= "</ul></nav>";
         return $rslt;
     }
 
