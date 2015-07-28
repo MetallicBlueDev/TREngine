@@ -26,7 +26,7 @@ class CoreInfo {
      * @return boolean
      */
     public static function compatibleVersion() {
-        return (TR_ENGINE_PHP_VERSION >= "5.4.0");
+        return (TR_ENGINE_PHP_VERSION >= "5.6.0");
     }
 
     /**
