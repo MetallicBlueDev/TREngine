@@ -12,4 +12,4 @@
     }
     ?>
 </div>
-<div class="cleaner"></div>
+<div class="spacer"></div>

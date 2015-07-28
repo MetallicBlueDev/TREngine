@@ -111,7 +111,6 @@
 /* Cadre des modules */
 #module_top {
     position: relative;
-    margin: 10px 10px 0px 10px;
     width: 100%;
     height: 60px;
 }
@@ -142,14 +141,12 @@
     display: flex;
     width: 100%;
     overflow: auto;
-    margin-left: 10px;
     background: url(images/module_content_left.png) repeat-y left top;
 }
 #module_content_rightfix {
     display: flex;
     width: 100%;
     overflow: auto;
-    margin-right: 10px;
     background: url(images/module_content_right.png) repeat-y right top;
 }
 #module_content_middle {
@@ -160,7 +157,6 @@
 }
 #module_bottom {
     position: relative;
-    margin: 0px 10px 10px 10px;
     width: 100%;
     height: 60px;
 }
@@ -189,6 +185,7 @@
 }
 /* Cadre des blocks */
 .block {
+    display: block;
 }
 .block_top {
     position: relative;
@@ -263,9 +260,10 @@
     background-image: url(images/block_bottom_right.png);
 }
 
-/* Cleaner */
-.cleaner {
+/* Espace supplémentaire */
+.spacer {
     clear: both;
+    padding: 5px;
 }
 
 /* Titre classique */

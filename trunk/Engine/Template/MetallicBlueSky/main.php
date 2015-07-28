@@ -24,7 +24,7 @@
                         <div id="wrapper_middle">
                             <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getLoader(); ?>
                             <?php echo TREngine\Engine\Lib\LibBreadcrumb::getInstance()->getBreadcrumbTrail(); ?>
-                            <div class="cleaner"></div>
+                            <div class="spacer"></div>
                             <?php TREngine\Engine\Core\CoreLogger::displayMessages(); ?>
                             <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("top"); ?>
                             <div>
