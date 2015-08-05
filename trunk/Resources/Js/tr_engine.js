@@ -1,6 +1,6 @@
 $().ajaxSend(function(r,s){$("#loader").show();});
 $().ajaxStop(function(r,s){$("#loader").fadeOut('fast');});
-function displayMessage(message) {$('#block_message').empty().append(message).show();}
+function displayMessage(message) {$('#panel_message').empty().append(message).show();}
 function validLogon(formId, loginId, passwordId) {
 	$(formId).submit(function(){
 		var isLogin = false;
