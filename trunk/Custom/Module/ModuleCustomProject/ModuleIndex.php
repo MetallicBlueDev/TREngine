@@ -11,7 +11,7 @@ use TREngine\Engine\Lib\LibMakeStyle;
 use TREngine\Engine\Lib\LibForm;
 use TREngine\Engine\Exec\ExecJQuery;
 
-require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 class ModuleIndex extends ModuleModel {
 

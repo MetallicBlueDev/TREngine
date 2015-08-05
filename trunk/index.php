@@ -16,7 +16,7 @@ use TREngine\Engine\Exec\ExecTimeMarker;
 define("TR_ENGINE_INDEX", true);
 
 // Chargement et exécution de la sécurité
-require 'engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
+require 'Engine' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 if (CoreSecure::debuggingMode()) {
     ExecTimeMarker::startMeasurement("all");
