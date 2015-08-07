@@ -13,7 +13,7 @@ body {
     line-height: 20px;
     color: #000;
     background-color: #6b737b;
-    background-image: url(images/background_body.png);
+    background-image: url("images/background_body.png");
     background-attachment: fixed;
     background-repeat: repeat;
 }
@@ -64,7 +64,7 @@ h3 {
     width: 98%;
     position: relative;
     margin: 0 auto;
-    background-image: url(images/background_form.png);
+    background-image: url("images/background_form.png");
 }
 .form fieldset {
     border-top: 1px solid #05587b;
@@ -127,7 +127,7 @@ h3 {
 #loader {
     float: left;
     display: none;
-    background: url(images/loader.gif) no-repeat 0 0;
+    background: url("images/loader.gif") no-repeat 0 0;
     width: 16px;
     height: 11px;
     margin-left: 10px;
@@ -141,12 +141,12 @@ h3 {
     margin-left: 5px;
 }
 .breadcrumbtrail ul > :first-child {
-    background: url(images/list_title.png) no-repeat 0 4px;
+    background: url("images/list_title.png") no-repeat 0 4px;
 }
 .breadcrumbtrail li {
     position:relative;
     float: left;
-    background: url(images/list_description.png) no-repeat 0 4px;
+    background: url("images/list_description.png") no-repeat 0 4px;
     padding-left: 16px;
 }
 .breadcrumbtrail a {
@@ -168,13 +168,13 @@ h3 {
     padding: 2px;
 }
 #panel_message .exception .alert {
-    background: #efaaa9 url(images/panel_message_alert.png) no-repeat 5px 5px;
+    background: #efaaa9 url("images/panel_message_alert.png") no-repeat 5px 5px;
 }
 #panel_message .exception .note {
-    background: #f7c259 url(images/panel_message_note.png) no-repeat 5px 5px;
+    background: #f7c259 url("images/panel_message_note.png") no-repeat 5px 5px;
 }
 #panel_message .exception .info {
-    background: #98c3f1 url(images/panel_message_info.png) no-repeat 5px 5px;
+    background: #98c3f1 url("images/panel_message_info.png") no-repeat 5px 5px;
 }
 
 /* Indication additionnelle du moteur */
