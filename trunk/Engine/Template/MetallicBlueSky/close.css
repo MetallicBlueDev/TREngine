@@ -1,7 +1,7 @@
 /* element de base */
 body {
     padding-top: 100px;
-    background-image: url(images/background_form.png);
+    background-image: url("images/background_form.png");
 }
 /* Style additionnel du thème */
 #close_block {
@@ -11,7 +11,7 @@ body {
     margin: 0 auto;
     width: 900px;
     height: 238px;
-    background-image: url(images/tr_studio.png);
+    background-image: url("images/tr_studio.png");
 }
 #close_image a {
     display: block;
