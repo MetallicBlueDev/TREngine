@@ -18,7 +18,7 @@
     left: 0;
     width: 714px;
     height: 130px;
-    background-image: url(images/header_left.png);
+    background-image: url("images/header_left.png");
 }
 #header_left a {
     display: block;
@@ -35,7 +35,7 @@
     height: 130px;
     margin-left: 714px;
     margin-right: 180px;
-    background-image: url(images/header_middle.png);
+    background-image: url("images/header_middle.png");
 }
 #header_right {
     position: absolute;
@@ -43,20 +43,20 @@
     right: 0;
     width: 180px;
     height: 130px;
-    background-image: url(images/header_right.png);
+    background-image: url("images/header_right.png");
 }
 /* Contenu du milieu */
 #wrapper_leftfix {
     display: flex;
     width: 100%;
     overflow: auto;
-    background: url(images/wrapper_left.png) repeat-y left top;
+    background: url("images/wrapper_left.png") repeat-y left top;
 }
 #wrapper_rightfix {
     display: flex;
     width: 100%;
     overflow: auto;
-    background: url(images/wrapper_right.png) repeat-y right top;
+    background: url("images/wrapper_right.png") repeat-y right top;
 }
 #wrapper_left {
     display: block;
@@ -69,12 +69,12 @@
     min-width: 174px;
     max-width: 300px;
     margin-right: 51px;
-    background-image: url(images/wrapper_middle.png);
+    background-image: url("images/wrapper_middle.png");
 }
 #wrapper_middlefix {
     display: flex;
     width: 100%;
-    background-image: url(images/wrapper_middle.png);
+    background-image: url("images/wrapper_middle.png");
 }
 #wrapper_middle {
     width: 100%;
@@ -92,13 +92,13 @@
     left: 0;
     width: 270px;
     height: 130px;
-    background-image: url(images/footer_left.png);
+    background-image: url("images/footer_left.png");
 }
 #footer_middle {
     height: 130px;
     margin-left: 270px;
     margin-right: 100px;
-    background-image: url(images/footer_middle.png);
+    background-image: url("images/footer_middle.png");
 }
 #footer_right {
     position: absolute;
@@ -106,7 +106,7 @@
     right: 0;
     width: 100px;
     height: 130px;
-    background-image: url(images/footer_right.png);
+    background-image: url("images/footer_right.png");
 }
 /* Cadre des modules */
 #module_top {
@@ -120,13 +120,13 @@
     left: 0;
     width: 46px;
     height: 60px;
-    background-image: url(images/module_top_left.png);
+    background-image: url("images/module_top_left.png");
 }
 #module_top_middle {
     height: 60px;
     margin-left: 46px;
     margin-right: 46px;
-    background-image: url(images/module_top_middle.png);
+    background-image: url("images/module_top_middle.png");
 }
 #module_top_right {
     position: absolute;
@@ -134,25 +134,25 @@
     right: 0;
     width: 46px;
     height: 60px;
-    background-image: url(images/module_top_right.png);
+    background-image: url("images/module_top_right.png");
 }
 #module_content_leftfix {
     display: flex;
     width: 100%;
     overflow: auto;
-    background: url(images/module_content_left.png) repeat-y left top;
+    background: url("images/module_content_left.png") repeat-y left top;
 }
 #module_content_rightfix {
     display: flex;
     width: 100%;
     overflow: auto;
-    background: url(images/module_content_right.png) repeat-y right top;
+    background: url("images/module_content_right.png") repeat-y right top;
 }
 #module_content_middle {
     margin-left: 20px;
     margin-right: 20px;
     width: 100%;
-    background-image: url(images/module_content_middle.png);
+    background-image: url("images/module_content_middle.png");
 }
 #module_bottom {
     position: relative;
@@ -165,13 +165,13 @@
     left: 0;
     width: 46px;
     height: 60px;
-    background-image: url(images/module_bottom_left.png);
+    background-image: url("images/module_bottom_left.png");
 }
 #module_bottom_middle {
     height: 60px;
     margin-left: 46px;
     margin-right: 46px;
-    background-image: url(images/module_bottom_middle.png);
+    background-image: url("images/module_bottom_middle.png");
 }
 #module_bottom_right {
     position: absolute;
@@ -179,7 +179,7 @@
     right: 0;
     width: 46px;
     height: 60px;
-    background-image: url(images/module_bottom_right.png);
+    background-image: url("images/module_bottom_right.png");
 }
 /* Cadre des blocks */
 .block {
@@ -195,13 +195,13 @@
     left: 0;
     width: 45px;
     height: 57px;
-    background-image: url(images/block_top_left.png);
+    background-image: url("images/block_top_left.png");
 }
 .block_top_middle {
     height: 57px;
     margin-left: 45px;
     margin-right: 128px;
-    background-image: url(images/block_top_middle.png);
+    background-image: url("images/block_top_middle.png");
 }
 .block_top_right {
     position: absolute;
@@ -209,7 +209,7 @@
     right: 0;
     width: 128px;
     height: 57px;
-    background-image: url(images/block_top_right.png);
+    background-image: url("images/block_top_right.png");
 }
 .block_title {
     position: absolute;
@@ -220,16 +220,16 @@
 }
 .block_content_leftfix {
     width: 100%;
-    background: url(images/block_content_left.png) repeat-y left top;
+    background: url("images/block_content_left.png") repeat-y left top;
 }
 .block_content_rightfix {
     width: 100%;
-    background: url(images/block_content_right.png) repeat-y right top;
+    background: url("images/block_content_right.png") repeat-y right top;
 }
 .block_content_middle {
     margin-left: 8px;
     margin-right: 7px;
-    background-image: url(images/block_content_middle.png);
+    background-image: url("images/block_content_middle.png");
 }
 .block_bottom {
     position: relative;
@@ -241,13 +241,13 @@
     left: 0;
     width: 45px;
     height: 32px;
-    background-image: url(images/block_bottom_left.png);
+    background-image: url("images/block_bottom_left.png");
 }
 .block_bottom_middle {
     height: 32px;
     margin-left: 45px;
     margin-right: 45px;
-    background-image: url(images/block_bottom_middle.png);
+    background-image: url("images/block_bottom_middle.png");
 }
 .block_bottom_right {
     position: absolute;
@@ -255,7 +255,7 @@
     right: 0;
     width: 45px;
     height: 32px;
-    background-image: url(images/block_bottom_right.png);
+    background-image: url("images/block_bottom_right.png");
 }
 
 /* Espace supplémentaire */
@@ -271,7 +271,7 @@
     text-align: center;
 }
 .title span {
-    background: url(images/list_title.png) no-repeat 0 4px;
+    background: url("images/list_title.png") no-repeat 0 4px;
     padding-left: 16px;
 }
 /* Texte de description classique */
@@ -281,7 +281,7 @@
     text-align: justify;
 }
 .description span {
-    background: url(images/list_description.png) no-repeat 0 2px;
+    background: url("images/list_description.png") no-repeat 0 2px;
     padding-left: 16px;
 }
 
