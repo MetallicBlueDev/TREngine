@@ -4,7 +4,7 @@
             <?php
             $pictureName = is_file(TREngine\Engine\Lib\LibMakeStyle::getTemplateDir() . DIRECTORY_SEPARATOR . "management" . DIRECTORY_SEPARATOR . "icon_" . $pageSelected . ".png") ? $pageSelected : "no_picture";
             ?>
-            <img src="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/management/icon_<?php echo $pictureName; ?>.png" />
+            <img src="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/management/icon_<?php echo $pictureName; ?>.png" alt="" />
         </div>
         <div id="management_setting_title_text"><?php echo $currentPageName; ?></div>
     </div>

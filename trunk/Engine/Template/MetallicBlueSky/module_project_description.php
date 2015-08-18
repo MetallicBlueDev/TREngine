@@ -10,7 +10,7 @@
                 <?php
             } else {
                 ?>
-                <img alt="" src="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/project/<?php echo $projectInfo['language']; ?>.png" />
+                <img alt="" src="<?php echo TREngine\Engine\Lib\LibMakeStyle::getTemplateDir(); ?>/project/<?php echo $projectInfo['language']; ?>.png" alt="" />
                 <?php
             }
             ?>
