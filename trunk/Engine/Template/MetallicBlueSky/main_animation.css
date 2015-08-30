@@ -1,0 +1,17 @@
+#header_animation_right_wire_harness {
+    display: block;
+    float: right;
+    margin-top: 36px;
+    margin-right: 20px;
+    width: 10px;
+    height: 60px;
+    animation: wire_harness 1s infinite;
+}
+@keyframes wire_harness {
+    0% {
+        background-color: blue;
+    }
+    100%{
+        background-color: papayawhip;
+    }
+}

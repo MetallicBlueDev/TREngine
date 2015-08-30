@@ -2,6 +2,7 @@
 <html lang="fr">
     <head>
         <title><?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaTitle(); ?></title>
+        <?php TREngine\Engine\Core\CoreHtml::getInstance()->addCssTemplateFile("main_animation.css"); ?>
         <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaHeaders(); ?>
     </head>
     <body>
@@ -13,7 +14,9 @@
                     <h3><?php echo TREngine\Engine\Core\CoreMain::getInstance()->getDefaultSiteSlogan(); ?></h3>
                 </div>
                 <div id="header_middle"></div>
-                <div id="header_right"></div>
+                <div id="header_right">
+                    <div id="header_animation_right_wire_harness"></div>
+                </div>
             </header>
             <div id="wrapper_leftfix">
                 <div id="wrapper_rightfix">
