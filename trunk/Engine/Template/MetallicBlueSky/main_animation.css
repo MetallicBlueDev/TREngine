@@ -1,3 +1,15 @@
+#metallic_blue_sky_screen {
+    background-position: top left;
+    animation: metallic_blue_sky_screen_mouvement 500ms ease-in;
+}
+@keyframes metallic_blue_sky_screen_mouvement {
+    0% {
+        background-position: top right;
+    }
+    100% {
+        background-position: top left;
+    }
+}
 .header_wire_harness {
     display: block;
     width: 10px;

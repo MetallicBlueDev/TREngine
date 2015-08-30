@@ -8,7 +8,6 @@
 }
 body {
     margin: 0px;
-    padding-top: 25px;
     font-size: 14px;
     line-height: 20px;
     color: #000;
@@ -16,6 +15,7 @@ body {
     background-image: url("images/background_body.png");
     background-attachment: fixed;
     background-repeat: repeat;
+    background-position: top left;
 }
 a:link, a:visited, a:active {
     color: #404040;

@@ -1,18 +1,16 @@
 body {
     background-position: top left;
-    animation: cloud_movement 120s infinite linear;
+    animation: cloud_movement 30s infinite linear;
     opacity: 1;
 }
 @keyframes cloud_movement {
     0% {
-        background-position: top right;
         opacity: 1;
     }
     25%, 75% {
-        opacity: 0.90;
+        opacity: 0.9;
     }
     100% {
-        background-position: top left;
         opacity: 1;
     }
 }
