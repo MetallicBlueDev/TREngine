@@ -1,17 +1,75 @@
-#header_animation_right_wire_harness {
+.header_wire_harness {
     display: block;
-    float: right;
-    margin-top: 36px;
-    margin-right: 20px;
     width: 10px;
-    height: 60px;
+    height: 58px;
+    margin-top: 36px;
+}
+.wire_harness_left {
+    float: left;
+    margin-left: 18px;
+}
+.wire_harness_right {
+    float: right;
+    margin-right: 18px;
+}
+.wire_harness_object {
+    float: right;
+    position: relative;
+    width: 1px;
+    height: 5px;
+    margin-left: 1px;
+    margin-right: 1px;
+    background-color: #fff;
+    opacity: 0;
+    top: 30px;
+}
+.wire_harness_anim1 {
     animation: wire_harness 1s infinite;
 }
+.wire_harness_anim2 {
+    animation: wire_harness_reverse 1s infinite;
+}
 @keyframes wire_harness {
+    0%, 100% {
+        opacity: 0;
+    }
+    25%, 75% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.1;
+    }
     0% {
-        background-color: blue;
+        top: 53px;
     }
-    100%{
-        background-color: papayawhip;
+    100% {
+        top: 0px;
     }
+}
+@keyframes wire_harness_reverse {
+    0%, 100% {
+        opacity: 0;
+    }
+    25%, 75% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.1;
+    }
+    0% {
+        top: 0px;
+    }
+    100% {
+        top: 53px;
+    }
+}
+.wrapper_quick_lighting {
+    position: relative;
+    float: right;
+    width: 25px;
+    height: 50px;
+    margin-right: 22px;
+    background-color: #05587B;
+}
+@keyframes quick_lighting {
 }
