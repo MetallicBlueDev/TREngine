@@ -43,6 +43,8 @@ h3 {
     border-top: 2px solid #7194a4;
     border-bottom: 2px solid #7194a4;
     color: #05587b;
+    box-shadow: 0 0 6px #fff;
+    margin: 5px;
 }
 .input[disabled='disabled'] {
     background-color: #80878f;
@@ -55,6 +57,10 @@ h3 {
     width: 100%;
     min-width: 100px;
     max-width: 200px;
+}
+.input[type='submit']:active {
+    position: relative;
+    top: 1px;
 }
 .checkbox {
     margin-left: 5px;
@@ -159,6 +165,8 @@ h3 {
 }
 #panel_message .exception {
     margin: 5px;
+    box-shadow: 0 0 5px #05587b;
+    border-radius: 5px;
 }
 #panel_message .exception li {
     margin-top: 10px;
@@ -166,6 +174,9 @@ h3 {
 }
 #panel_message .exception li div {
     padding: 2px;
+}
+#panel_message .exception .alert, .note, .info {
+    border-radius: 5px;
 }
 #panel_message .exception .alert {
     background: #efaaa9 url("images/panel_message_alert.png") no-repeat 5px 5px;

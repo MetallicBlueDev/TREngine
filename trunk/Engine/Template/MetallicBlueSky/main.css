@@ -29,7 +29,8 @@
 #header_left h3 {
     margin-top: 95px;
     margin-left: 150px;
-    color: white;
+    color: #05587b;
+    text-shadow: 0 0 8px #fff;
 }
 #header_middle {
     height: 130px;
@@ -230,6 +231,14 @@
     margin-left: 8px;
     margin-right: 7px;
     background-image: url("images/block_content_middle.png");
+}
+.block_content_middle a {
+    transition-property: padding-left;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in;
+}
+.block_content_middle a:hover, a:focus {
+    padding-left: 5px;
 }
 .block_bottom {
     position: relative;
