@@ -77,8 +77,12 @@
     display: block;
     min-width: 174px;
     max-width: 300px;
+    height: 100%;
     margin-right: 51px;
     background-image: url("images/wrapper_middle.png");
+}
+#wrapper_right_compatibility {
+    position: relative;
 }
 #wrapper_middlefix {
     display: flex;

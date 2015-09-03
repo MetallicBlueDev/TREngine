@@ -30,8 +30,6 @@
                     </div>
                 </header>
                 <div id="wrapper">
-                    <div class="wrapper_quick_lighting">
-                    </div>
                     <div id="wrapper_leftfix">
                         <div id="wrapper_rightfix">
                             <div id="wrapper_left">
@@ -76,8 +74,11 @@
                                     <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("bottom"); ?>
                                 </div>
                             </div>
-                            <div id="wrapper_right">
-                                <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("right"); ?>
+                            <div id="wrapper_right_compatibility">
+                                <div class="wrapper_quick_lighting"></div>
+                                <div id="wrapper_right">
+                                    <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("right"); ?>
+                                </div>
                             </div>
                         </div>
                     </div>

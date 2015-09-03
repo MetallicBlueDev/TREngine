@@ -31,7 +31,7 @@
     height: 5px;
     margin-left: 1px;
     margin-right: 1px;
-    background-color: #fff;
+    background-color: #05587B;
     opacity: 0;
     top: 30px;
 }
@@ -45,11 +45,8 @@
     0%, 100% {
         opacity: 0;
     }
-    25%, 75% {
-        opacity: 1;
-    }
     50% {
-        opacity: 0.1;
+        opacity: 1;
     }
     0% {
         top: 53px;
@@ -76,10 +73,12 @@
     }
 }
 .wrapper_quick_lighting {
-    position: relative;
-    float: right;
+    display: block;
+    position: absolute;
+    right: 0;
     width: 25px;
     height: 50px;
+    height: 100%;
     margin-right: 22px;
     background-color: #05587B;
 }
