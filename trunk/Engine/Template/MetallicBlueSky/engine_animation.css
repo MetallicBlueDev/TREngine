@@ -1,9 +1,9 @@
 body {
     background-position: top left;
-    animation: cloud_movement 30s infinite linear;
+    animation: body_opacity 30s infinite linear;
     opacity: 1;
 }
-@keyframes cloud_movement {
+@keyframes body_opacity {
     0% {
         opacity: 1;
     }

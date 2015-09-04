@@ -1,3 +1,20 @@
+#metallic_blue_sky_background {
+    background: url("images/background_cloud1.png") 5% 5%, url("images/background_cloud2.png") 50% 50%, url("images/background_cloud3.png") 90% 110%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    transition: left 300s linear;
+    z-index: -1;
+}
+#metallic_blue_sky:target #metallic_blue_sky_background {
+    left: -5000px;
+}
+#metallic_blue_sky:hover #metallic_blue_sky_background {
+    left: -9999px;
+}
+
 #metallic_blue_sky_screen {
     background-position: top left;
     animation: metallic_blue_sky_screen_mouvement 500ms ease-in;
