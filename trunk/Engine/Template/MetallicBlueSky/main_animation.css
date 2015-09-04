@@ -1,3 +1,4 @@
+/* Animation des nuages */
 #metallic_blue_sky_background {
     background: url("images/background_cloud1.png") 5% 5%, url("images/background_cloud2.png") 50% 50%, url("images/background_cloud3.png") 90% 110%;
     top: 0;
@@ -15,18 +16,24 @@
     left: -9999px;
 }
 
+/* Animation de l'opacité de l'écran */
 #metallic_blue_sky_screen {
-    background-position: top left;
-    animation: metallic_blue_sky_screen_mouvement 500ms ease-in;
+    animation: screen_opacity 10s infinite linear;
+    opacity: 1;
 }
-@keyframes metallic_blue_sky_screen_mouvement {
+@keyframes screen_opacity {
     0% {
-        background-position: top right;
+        opacity: 1;
+    }
+    25%, 75% {
+        opacity: 0.9;
     }
     100% {
-        background-position: top left;
+        opacity: 1;
     }
 }
+
+/* Animation des faisceaux de l'entête */
 .header_wire_harness {
     display: block;
     width: 10px;
@@ -89,6 +96,8 @@
         top: 53px;
     }
 }
+
+/* test */
 .wrapper_quick_lighting {
     display: block;
     position: absolute;

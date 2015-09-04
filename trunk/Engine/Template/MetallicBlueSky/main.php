@@ -2,7 +2,6 @@
 <html lang="fr">
     <head>
         <title><?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaTitle(); ?></title>
-        <?php TREngine\Engine\Core\CoreHtml::getInstance()->addCssTemplateFile("engine_animation.css"); ?>
         <?php TREngine\Engine\Core\CoreHtml::getInstance()->addCssTemplateFile("main_animation.css"); ?>
         <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaHeaders(); ?>
     </head>
