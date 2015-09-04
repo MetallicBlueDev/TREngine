@@ -93,7 +93,7 @@
                     <div id="footer_right"></div>
                 </footer>
             </div>
-            <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaFooters(); ?>
         </div>
+        <?php echo TREngine\Engine\Core\CoreHtml::getInstance()->getMetaFooters(); ?>
     </body>
 </html>
