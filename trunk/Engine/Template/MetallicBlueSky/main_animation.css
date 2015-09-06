@@ -97,32 +97,51 @@
     }
 }
 
-/* test */
-.wrapper_quick_lighting {
+/* Animation flux lumineux */
+.wrapper_quick_lighting_container {
     display: block;
     position: absolute;
+    top: 0;
     right: 0;
-    width: 25px;
-    height: 10px;
-    /*height: 100%;*/
-    margin-right: 22px;
-    /*animation: quick_lighting 1s infinite;*/
-    background-color: #05587B;
-    transform: translate(0px, 100px);
+    width: 10px;
+    height: 100%;
+    margin-right: 25px;
+    background-image: url("images/quick_lighting.png");
+    animation: quick_lighting_move 1.5s infinite;
 }
-@keyframes quick_lighting {
+#wrapper_quick_lighting_container2, #wrapper_quick_lighting_container4 {
+    animation-name: quick_lighting_move_reverse;
+}
+#wrapper_quick_lighting_container3, #wrapper_quick_lighting_container4 {
+    margin-right: 35px;
+}
+@keyframes quick_lighting_move {
     0% {
-        transform: translate(0px, 100px);
-        /*opacity: 0;*/
+        transform: translateY(100px);
+        transform: translateX(10px);
+        opacity: 0;
     }
-    25%, 75% {
-        /*opacity: 0.9;*/
-    }
-    60% {
-        /*opacity: 0.5;*/
+    50% {
+        opacity: 1;
+        transform: rotate(1deg);
     }
     100% {
-        transform: translate(0px, 0px);
-        /*opacity: 0;*/
+        opacity: 0;
+        transform: translateY(0px);
+    }
+}
+@keyframes quick_lighting_move_reverse {
+    0% {
+        transform: translateY(0px);
+        transform: translateX(1px);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+        transform: rotate(-1deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100px);
     }
 }

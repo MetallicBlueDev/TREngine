@@ -76,7 +76,10 @@
                                 </div>
                             </div>
                             <div id="wrapper_right_compatibility">
-                                <div class="wrapper_quick_lighting"></div>
+                                <div id="wrapper_quick_lighting_container1" class="wrapper_quick_lighting_container"></div>
+                                <div id="wrapper_quick_lighting_container2" class="wrapper_quick_lighting_container"></div>
+                                <div id="wrapper_quick_lighting_container3" class="wrapper_quick_lighting_container"></div>
+                                <div id="wrapper_quick_lighting_container4" class="wrapper_quick_lighting_container"></div>
                                 <div id="wrapper_right">
                                     <?php echo TREngine\Engine\Lib\LibBlock::getInstance()->getBlocksBySideName("right"); ?>
                                 </div>

@@ -76,6 +76,7 @@
 }
 #wrapper_right_compatibility {
     position: relative;
+    overflow: hidden;
 }
 #wrapper_middlefix {
     display: flex;
