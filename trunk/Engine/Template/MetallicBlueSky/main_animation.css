@@ -103,10 +103,26 @@
     position: absolute;
     right: 0;
     width: 25px;
-    height: 50px;
-    height: 100%;
+    height: 10px;
+    /*height: 100%;*/
     margin-right: 22px;
+    /*animation: quick_lighting 1s infinite;*/
     background-color: #05587B;
+    transform: translate(0px, 100px);
 }
 @keyframes quick_lighting {
+    0% {
+        transform: translate(0px, 100px);
+        /*opacity: 0;*/
+    }
+    25%, 75% {
+        /*opacity: 0.9;*/
+    }
+    60% {
+        /*opacity: 0.5;*/
+    }
+    100% {
+        transform: translate(0px, 0px);
+        /*opacity: 0;*/
+    }
 }

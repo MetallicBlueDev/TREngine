@@ -415,7 +415,8 @@ class CoreHtml {
         $rslt = "";
 
         if ($this->javascriptEnabled()) {
-            $rslt = "<div id=\"loader\"></div>";
+            $libMakeStyle = new LibMakeStyle("loader");
+            $rslt = "<div id=\"loader\">" . $libMakeStyle->render() . "</div>";
         }
         return $rslt;
     }

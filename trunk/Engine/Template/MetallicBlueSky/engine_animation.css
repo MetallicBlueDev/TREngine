@@ -1,0 +1,26 @@
+.loader_metallic_sky {
+    float: left;
+    width: 9px;
+    height: 9px;
+    margin-top: 7px;
+    margin-left: 3px;
+    border-radius: 3px;
+    background-color: transparent;
+    animation: loader_metallic_sky_bounce 2.2s infinite normal;
+}
+#loader_metallic_sky1 {
+    animation-delay: 0.4s;
+}
+#loader_metallic_sky2 {
+    animation-delay: 0.8s;
+}
+#loader_metallic_sky3 {
+    animation-delay: 1.2s;
+}
+@keyframes loader_metallic_sky_bounce {
+    0%{}
+    50%{
+        background-color: #05587b;
+    }
+    100%{}
+}

@@ -131,14 +131,8 @@ h3 {
 
 /* Chargeur de contenu */
 #loader {
-    float: left;
     display: none;
-    background: url("images/loader.gif") no-repeat 0 0;
-    width: 16px;
-    height: 11px;
-    margin-left: 10px;
-    margin-right: 5px;
-    margin-top: 5px;
+    width: 42px;
 }
 
 /* Fil d'Ariane */
