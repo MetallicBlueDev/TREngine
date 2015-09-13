@@ -105,7 +105,7 @@
     right: 0;
     width: 10px;
     height: 100%;
-    margin-right: 25px;
+    margin-right: 28px;
     background-image: url("images/quick_lighting.png");
     animation: quick_lighting_move 1.5s infinite;
 }
@@ -113,7 +113,7 @@
     animation-name: quick_lighting_move_reverse;
 }
 #wrapper_quick_lighting_container3, #wrapper_quick_lighting_container4 {
-    margin-right: 35px;
+    margin-right: 38px;
 }
 @keyframes quick_lighting_move {
     0% {
@@ -123,7 +123,6 @@
     }
     50% {
         opacity: 1;
-        transform: rotate(1deg);
     }
     100% {
         opacity: 0;
@@ -138,7 +137,6 @@
     }
     50% {
         opacity: 1;
-        transform: rotate(-1deg);
     }
     100% {
         opacity: 0;
