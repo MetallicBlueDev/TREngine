@@ -1,4 +1,12 @@
 /* Style additionnel du thème */
+#metallic_blue_sky {
+    position: relative;
+    min-height: 100vh;
+    height: 100%;
+}
+#metallic_blue_sky_background {
+    height: 100%;
+}
 #metallic_blue_sky_screen {
     width: 90%;
     padding-top: 25px;
