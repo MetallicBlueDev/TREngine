@@ -10,6 +10,7 @@
 #metallic_blue_sky_screen {
     width: 90%;
     padding-top: 25px;
+    padding-bottom: 25px;
     min-width: 900px;
     max-width: 1600px;
     margin-left: auto;
