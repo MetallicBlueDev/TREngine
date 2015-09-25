@@ -94,7 +94,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      * @return boolean
      */
     public function hasRegisteredRank() {
-        return $this->getRank() >= CoreAccess::RANK_REGITRED;
+        return $this->getRank() >= CoreAccess::RANK_REGISTRED;
     }
 
     /**

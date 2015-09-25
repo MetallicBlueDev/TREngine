@@ -30,7 +30,7 @@ class CoreAccess {
      *
      * @var int
      */
-    const RANK_REGITRED = 2;
+    const RANK_REGISTRED = 2;
 
     /**
      * Accès aux administrateurs.
@@ -54,7 +54,7 @@ class CoreAccess {
     private static $rankRegistred = array(
         "ACCESS_NONE" => self::RANK_NONE,
         "ACCESS_PUBLIC" => self::RANK_PUBLIC,
-        "ACCESS_REGISTRED" => self::RANK_REGITRED,
+        "ACCESS_REGISTRED" => self::RANK_REGISTRED,
         "ACCESS_ADMIN" => self::RANK_ADMIN,
         "ACCESS_SPECIFIC_RIGHT" => self::RANK_SPECIFIC_RIGHT);
 
