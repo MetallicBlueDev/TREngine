@@ -68,30 +68,31 @@ class CoreUrlRewriting {
      * @return string
      */
     public static function &getLink($link, $layout = false) {
-        // Configuration du layout
-        if ($layout) {
-            $layout = "&amp;layout=";
+        if ($link[0] !== "#") {
+            // Configuration du layout
+            if ($layout) {
+                $layout = "&amp;layout=";
 
-            if (strpos($link, "blockId=") !== false || strpos($link, "blockType=") !== false) {
-                $layout .= "block";
-            } else if (strpos($link, "module=") !== false) {
-                $layout .= "module";
-            } else {
-                $layout .= "default";
+                if (strpos($link, "blockId=") !== false || strpos($link, "blockType=") !== false) {
+                    $layout .= "block";
+                } else if (strpos($link, "module=") !== false) {
+                    $layout .= "module";
+                } else {
+                    $layout .= "default";
+                }
+
+                $link .= $layout;
             }
 
-            $link .= $layout;
-        }
-
-        // Recherche de la page principal
-        if (strpos($link, "index.php") === false) {
-            if ($link[0] === "?") {
-                $link = "index.php" . $link;
-            } else {
-                $link = "index.php?" . $link;
+            // Recherche de la page principal
+            if (strpos($link, "index.php") === false) {
+                if ($link[0] === "?") {
+                    $link = "index.php" . $link;
+                } else {
+                    $link = "index.php?" . $link;
+                }
             }
         }
-
         // Finalise la réécriture du lien
         return self::getInstance()->rewriteLink($link);
     }

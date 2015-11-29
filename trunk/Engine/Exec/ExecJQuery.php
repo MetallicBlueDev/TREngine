@@ -35,12 +35,6 @@ class ExecJQuery {
         $coreHtml->addJavascriptJquery("$('ul.jd_menu').jdMenu();");
     }
 
-    public static function checkIdTabs() {
-        $coreHtml = CoreHtml::getInstance();
-        $coreHtml->addJavascriptFile("jquery.idTabs.js");
-        $coreHtml->addCssResourceFile("jquery.idTabs.css");
-    }
-
     public static function checkSlimbox() {
         $coreHtml = CoreHtml::getInstance();
         $coreHtml->addJavascriptFile("jquery.slimbox.js");

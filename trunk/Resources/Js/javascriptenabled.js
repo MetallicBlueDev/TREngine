@@ -1,5 +1,5 @@
 /**
- * Détection du javascript via cookie
+ * Détection du javascript via cookie.
  *
  * @author Sébastien Villemain
  */

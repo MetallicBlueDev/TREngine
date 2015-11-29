@@ -101,16 +101,47 @@ h3 {
 }
 
 /* Naviguation par onglet */
-.tabs ul a {
+.tabs {
+    /*position: relative;*/
+    height: 100%;
+}
+.tabs ul {
+    padding: 5px 10px;
+    height: 100%;
+}
+.tabs li {
+    float: left;
+}
+.tabs input[type='radio'] {
+    display: none;
+}
+.tabs label[for^='tab_'] {
+    display: block;
+    padding: 10px 20px;
+    border-radius: 2px 2px 0 0;
+    cursor: pointer;
+    position: relative;
+    top: 3px;
+    transition: all 0.2s ease-in-out;
+}
+.tabs label[for^='tab_']:hover {
+    background: rgba(255, 255, 255, 0.3);
+    top: 0;
+}
+.tabs [id^='tab_']:checked + label[for^='tab_'] {
+    background: #848e97;
+    color: #fff;
+    top: 0;
+}
+.tabs [id^='tab_content_'] {
+    display: none;
+    width: 100%;
+    position: absolute;
+    left: 0;
     background-color: #848e97;
 }
-.tabs ul a:hover { background: #6f8592; }
-.tabs ul a.selected {
-    background-color: #848e97;
-    border-bottom: 1px solid #848e97;
-}
-.tabs div {
-    background-color: #848e97;
+.tabs [id^='tab_']:checked ~ [id^='tab_content_'] {
+    display: block;
 }
 .table {
     text-align: left;
