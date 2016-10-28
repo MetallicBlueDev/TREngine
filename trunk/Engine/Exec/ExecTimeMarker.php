@@ -48,7 +48,7 @@ class ExecTimeMarker {
      *
      * @return float
      */
-    private static function getMaker() {
+    private static function getMaker(): float {
         return microtime(true);
     }
 
@@ -57,7 +57,7 @@ class ExecTimeMarker {
      *
      * @return int le temps de génération en milliseconde.
      */
-    public static function &getMeasurement($name) {
+    public static function &getMeasurement($name): float {
         $rslt = 0;
 
         if (isset(self::$startTime[$name])) {
