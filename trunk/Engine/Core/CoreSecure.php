@@ -289,14 +289,9 @@ class CoreSecure {
     }
 
     /**
-     * Fonction de substitution pour MAGIC_QUOTES_GPC.
+     * Fonction de substitution pour MAGIC_QUOTES_GPC (supprimée depuis PHP 7.0).
      */
     private function checkGPC() {
-        // Désactivation de MAGIC_QUOTES_GPC
-        if (function_exists("set_magic_quotes_runtime") && function_exists("get_magic_quotes_gpc") && get_magic_quotes_gpc()) {
-            set_magic_quotes_runtime(false);
-        }
-
         $this->addSlashesForQuotes($_GET);
         $this->addSlashesForQuotes($_POST);
         $this->addSlashesForQuotes($_COOKIE);

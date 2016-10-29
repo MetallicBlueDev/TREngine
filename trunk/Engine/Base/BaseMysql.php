@@ -10,6 +10,8 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  * Gestionnaire de transaction utilisant l'extension MySql (ancienne version obselète).
  * Ne supporte que les bases de données MySql.
  *
+ * Supprimé depuis la version 7.0 : http://php.net/manual/fr/migration70.incompatible.php#migration70.incompatible.removed-functions.mysql
+ * A remplacer par un support de PostgreSQL  et de SQLite3 
  * @author Sébastien Villemain
  */
 class BaseMysql extends BaseModel {

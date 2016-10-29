@@ -11,7 +11,15 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 
 /**
  * Gestionnaire de transaction utilisant l'extension PHP Data Objects.
- * Supporte de nombreuse type base de données.
+ * Supporte de nombreuse type base de données :
+ * Firebird,
+ * Informix,
+ * Microsoft SQL Server (MSSQL),
+ * MySQL,
+ * Oracle Call Interface (OCI),
+ * Open Database Connectivity (ODBC),
+ * PostgreSQL (pgSQL),
+ * SQLite.
  *
  * @author Sébastien Villemain
  */

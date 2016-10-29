@@ -11,7 +11,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 
 /**
  * Gestionnaire de transaction utilisant l'extension MySqli (nouvelle version de MySql).
- * Ne supporte que les bases de données MySql.
+ * Ne supporte que les bases de données MySQL 4.1 et supérieur.
  *
  * @author Sébastien Villemain
  */

@@ -558,7 +558,7 @@ class CacheSocket extends CacheModel {
                     $rslt = true;
                 } else {
                     CoreLogger::addException("Could not connect to host " . $this->passiveIp . " on port " . $this->passivePort
-                    . ". Socket error number " . $$socket_error_number . " and error message: " . $socket_error_message);
+                    . ". Socket error number " . $socket_error_number . " and error message: " . $socket_error_message);
                 }
             }
         }

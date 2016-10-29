@@ -2,7 +2,7 @@
 // -------------------------------------------------------------------------//
 // Database settings
 //
-// Transaction type to use (mysql / mysqli / pdo)
+// Transaction type to use (mysqli / pdo)
 $inc['type'] = "pdo";
 //
 // Host address of the base or the complete chain of DSN (Data Source Name)
