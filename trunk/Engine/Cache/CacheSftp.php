@@ -11,7 +11,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  */
 class CacheSftp extends CacheModel {
 
-    protected function canUse() {
+    protected function canUse(): bool {
         // TODO classe a coder..
         return false;
     }

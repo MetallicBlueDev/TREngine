@@ -25,7 +25,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  */
 class BasePdo extends BaseModel {
 
-    protected function canUse() {
+    protected function canUse(): bool {
         $rslt = false;
 
         $driverName = $this->getTransactionHost();
@@ -58,7 +58,7 @@ class BasePdo extends BaseModel {
         }
     }
 
-    public function &netSelect() {
+    public function &netSelect(): bool {
         $rslt = false;
 
         if ($this->netConnected()) {
@@ -79,7 +79,7 @@ class BasePdo extends BaseModel {
         }
     }
 
-    public function &fetchArray() {
+    public function &fetchArray(): array {
         $values = array();
         $rslt = $this->getPdoResult();
 
@@ -89,7 +89,7 @@ class BasePdo extends BaseModel {
         return $values;
     }
 
-    public function &fetchObject($className = null) {
+    public function &fetchObject($className = null): array {
         $values = array();
         $rslt = $this->getPdoResult();
 
@@ -103,13 +103,13 @@ class BasePdo extends BaseModel {
         return $values;
     }
 
-    public function &freeResult($query) {
+    public function &freeResult($query): bool {
         unset($query);
         $success = true;
         return $success;
     }
 
-    public function &affectedRows() {
+    public function &affectedRows(): int {
         $value = -1;
         $rslt = $this->getPdoResult();
 
@@ -119,17 +119,17 @@ class BasePdo extends BaseModel {
         return $value;
     }
 
-    public function &insertId() {
+    public function &insertId(): string {
         return $this->getPdo()->lastInsertId();
     }
 
-    public function &getLastError() {
+    public function &getLastError(): array {
         $error = parent::getLastError();
         $error[] = "<span class=\"text_bold\">Pdo response</span> : " . $this->getPdoErrorMessage();
         return $error;
     }
 
-    public function &getVersion() {
+    public function &getVersion(): string {
         // Exemple : 5.6.15-log
         $version = $this->getPdo()->getAttribute(PDO::ATTR_SERVER_VERSION);
         return $version;
@@ -151,7 +151,7 @@ class BasePdo extends BaseModel {
         parent::delete($table, $where, $like, $limit);
     }
 
-    protected function converEscapeString($str) {
+    protected function converEscapeString($str): string {
         // Impossible d'utiliser $this->getPdo()->quote($str) car incompatible avec la méthode interne addQuote()
         return str_replace(array(
             '\\',
@@ -175,7 +175,7 @@ class BasePdo extends BaseModel {
      *
      * @return PDO
      */
-    private function &getPdo() {
+    private function &getPdo(): PDO {
         return $this->connId;
     }
 
@@ -185,7 +185,7 @@ class BasePdo extends BaseModel {
      * @param resource $query
      * @return PDOStatement
      */
-    private function &getPdoResult($query = null) {
+    private function &getPdoResult($query = null): PDOStatement {
         $object = null;
 
         if ($query === null) {
@@ -203,7 +203,7 @@ class BasePdo extends BaseModel {
      *
      * @return string
      */
-    private function &getPdoErrorMessage() {
+    private function &getPdoErrorMessage(): string {
         $message = "";
         $error = $this->getPdo()->errorInfo();
 

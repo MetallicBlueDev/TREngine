@@ -21,7 +21,7 @@ class CacheFtp extends CacheModel {
      */
     private $timeOut = 10;
 
-    public function canUse() {
+    public function canUse(): bool {
         $rslt = extension_loaded("ftp") && function_exists('ftp_connect');
 
         if (!$rslt) {
@@ -54,7 +54,7 @@ class CacheFtp extends CacheModel {
         }
     }
 
-    public function &netSelect() {
+    public function &netSelect(): bool {
         $rslt = false;
 
         // Envoi de l'identifiant
@@ -94,7 +94,7 @@ class CacheFtp extends CacheModel {
         }
     }
 
-    public function &getNameList($path) {
+    public function &getNameList($path): array {
         $dirList = array();
 
         if ($this->netConnected()) {
@@ -126,7 +126,7 @@ class CacheFtp extends CacheModel {
         return $dirList;
     }
 
-    public function &getCacheMTime($path) {
+    public function &getCacheMTime($path): int {
         $mTime = 0;
 
         if ($this->netConnected()) {
@@ -145,7 +145,7 @@ class CacheFtp extends CacheModel {
      *
      * @return boolean true le timeout a été configuré sur le serveur
      */
-    private function &setTimeOut() {
+    private function &setTimeOut(): bool {
         $rslt = ftp_set_option($this->connId, FTP_TIMEOUT_SEC, $this->timeout);
         return $rslt;
     }
@@ -156,7 +156,7 @@ class CacheFtp extends CacheModel {
      * @param string $path chemin local
      * @return string
      */
-    private function &getRootPath($path) {
+    private function &getRootPath($path): string {
         // TODO mettre en place le root path !!
         return $path;
     }
@@ -373,7 +373,7 @@ class CacheFtp extends CacheModel {
      *
      * @return boolean true si aucune erreur
      */
-    private function &setPassiveMode() {
+    private function &setPassiveMode(): bool {
         $rslt = false;
 
         if ($this->netConnected()) {

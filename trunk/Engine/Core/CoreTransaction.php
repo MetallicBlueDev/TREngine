@@ -72,7 +72,7 @@ abstract class CoreTransaction extends CoreDataStorage {
      *
      * @return boolean
      */
-    public function netConnected() {
+    public function netConnected(): bool {
         return ($this->connId !== null) ? true : false;
     }
 
@@ -88,7 +88,7 @@ abstract class CoreTransaction extends CoreDataStorage {
      *
      * @return boolean true succès
      */
-    public function &netSelect() {
+    public function &netSelect(): bool {
         $rslt = false;
         return $rslt;
     }
@@ -98,7 +98,7 @@ abstract class CoreTransaction extends CoreDataStorage {
      *
      * @return string
      */
-    public function &getTransactionHost() {
+    public function &getTransactionHost(): string {
         return $this->getDataValue("host");
     }
 
@@ -107,7 +107,7 @@ abstract class CoreTransaction extends CoreDataStorage {
      *
      * @return string
      */
-    public function &getTransactionUser() {
+    public function &getTransactionUser(): string {
         return $this->getDataValue("user");
     }
 
@@ -116,7 +116,7 @@ abstract class CoreTransaction extends CoreDataStorage {
      *
      * @return string
      */
-    public function &getTransactionPass() {
+    public function &getTransactionPass(): string {
         return $this->getDataValue("pass");
     }
 
@@ -125,7 +125,7 @@ abstract class CoreTransaction extends CoreDataStorage {
      *
      * @return string
      */
-    public function &getTransactionType() {
+    public function &getTransactionType(): string {
         return $this->getDataValue("type");
     }
 
@@ -134,7 +134,7 @@ abstract class CoreTransaction extends CoreDataStorage {
      *
      * @return boolean
      */
-    protected function canUse() {
+    protected function canUse(): bool {
         return false;
     }
 

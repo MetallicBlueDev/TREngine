@@ -56,7 +56,7 @@ class CacheSocket extends CacheModel {
      */
     private $passiveData = "";
 
-    public function canUse() {
+    public function canUse(): bool {
         $rslt = function_exists("fsockopen");
 
         if (!$rslt) {
@@ -94,7 +94,7 @@ class CacheSocket extends CacheModel {
         }
     }
 
-    public function &netSelect() {
+    public function &netSelect(): bool {
         $rslt = false;
 
         // Envoi de l'identifiant
@@ -148,7 +148,7 @@ class CacheSocket extends CacheModel {
         }
     }
 
-    public function &getNameList($path) {
+    public function &getNameList($path): array {
         $dirList = array();
 
         if ($this->netConnected()) {
@@ -199,7 +199,7 @@ class CacheSocket extends CacheModel {
         return $dirList;
     }
 
-    public function &getCacheMTime($path) {
+    public function &getCacheMTime($path): int {
         $mTime = 0;
 
         if ($this->netConnected()) {
@@ -218,7 +218,7 @@ class CacheSocket extends CacheModel {
      *
      * @return boolean true le timeout a été configuré sur le serveur
      */
-    private function &setTimeOut() {
+    private function &setTimeOut(): bool {
         $rslt = stream_set_timeout($this->connId, $this->timeout);
         return $rslt;
     }
@@ -230,7 +230,7 @@ class CacheSocket extends CacheModel {
      * @param array $expectedResponse : code de réponse attendu
      * @return boolean true si aucune erreur
      */
-    private function &sendCommandAndCheckResponse($cmd, array $expectedResponse) {
+    private function &sendCommandAndCheckResponse($cmd, array $expectedResponse): bool {
         $rslt = false;
 
         if ($this->netConnected()) {
@@ -244,7 +244,6 @@ class CacheSocket extends CacheModel {
      * Envoi une commande sur le serveur.
      *
      * @param string $cmd : la commande à executer
-     * @return boolean true si aucune erreur
      */
     private function sendCommand($cmd) {
         if (!fwrite($this->connId, $cmd . TR_ENGINE_CRLF)) {
@@ -258,7 +257,7 @@ class CacheSocket extends CacheModel {
      * @param array $expected code de réponse attendu
      * @return boolean true si aucune erreur
      */
-    private function &receiveResponseCode(array $expected) {
+    private function &receiveResponseCode(array $expected): bool {
         $rslt = false;
 
         // Attente du serveur
@@ -293,7 +292,7 @@ class CacheSocket extends CacheModel {
      * @param string $path chemin local
      * @return string
      */
-    private function &getRootPath($path) {
+    private function &getRootPath($path): string {
         // TODO mettre en place le root path !!
         return $path;
     }
@@ -537,7 +536,7 @@ class CacheSocket extends CacheModel {
      *
      * @return boolean true si aucune erreur
      */
-    private function &setPassiveMode() {
+    private function &setPassiveMode(): bool {
         $rslt = false;
 
         // Envoi de la requête

@@ -55,7 +55,7 @@ abstract class CacheModel extends CoreTransaction {
      *
      * @return int
      */
-    public function &getServerPort() {
+    public function &getServerPort(): int {
         return $this->getDataValue("port");
     }
 
@@ -64,7 +64,7 @@ abstract class CacheModel extends CoreTransaction {
      *
      * @return string
      */
-    public function &getServerRoot() {
+    public function &getServerRoot(): string {
         return $this->getDataValue("root");
     }
 
@@ -118,7 +118,7 @@ abstract class CacheModel extends CoreTransaction {
      * @param string $path
      * @return array
      */
-    public function &getNameList($path) {
+    public function &getNameList($path): array {
         unset($path);
         $names = array();
         return $names;
@@ -130,7 +130,7 @@ abstract class CacheModel extends CoreTransaction {
      * @param string $path
      * @return int
      */
-    public function &getCacheMTime($path) {
+    public function &getCacheMTime($path): int {
         unset($path);
         $time = 0;
         return $time;
@@ -142,7 +142,7 @@ abstract class CacheModel extends CoreTransaction {
      * @param $path
      * @return boolean true c'est un dossier
      */
-    protected static function &isDirectoryPath($path) {
+    protected static function &isDirectoryPath($path): bool {
         $pathIsDir = false;
 
         if (substr($path, -1) === DIRECTORY_SEPARATOR) {
@@ -173,7 +173,7 @@ abstract class CacheModel extends CoreTransaction {
      * @param $content
      * @return string $content
      */
-    protected static function &getFileHeader($pathFile, $content) {
+    protected static function &getFileHeader($pathFile, $content): string {
         $ext = substr($pathFile, -3);
 
         // Entête des fichier PHP

@@ -66,7 +66,7 @@ abstract class BaseModel extends CoreTransaction {
      *
      * @return int
      */
-    public function &affectedRows() {
+    public function &affectedRows(): int {
         $rslt = -1;
         return $rslt;
     }
@@ -76,7 +76,7 @@ abstract class BaseModel extends CoreTransaction {
      *
      * @return string
      */
-    public function &getDatabaseName() {
+    public function &getDatabaseName(): string {
         return $this->getDataValue("name");
     }
 
@@ -85,7 +85,7 @@ abstract class BaseModel extends CoreTransaction {
      *
      * @return string
      */
-    public function &getDatabasePrefix() {
+    public function &getDatabasePrefix(): string {
         return $this->getDataValue("prefix");
     }
 
@@ -122,7 +122,7 @@ abstract class BaseModel extends CoreTransaction {
      *
      * @return array
      */
-    public function &fetchArray() {
+    public function &fetchArray(): array {
         $rslt = array();
         return $rslt;
     }
@@ -133,7 +133,7 @@ abstract class BaseModel extends CoreTransaction {
      * @param string $className Nom de la classe
      * @return object[]
      */
-    public function &fetchObject($className = null) {
+    public function &fetchObject($className = null): array {
         unset($className);
         $rslt = array();
         return $rslt;
@@ -160,7 +160,7 @@ abstract class BaseModel extends CoreTransaction {
      *
      * @return string
      */
-    public function &insertId() {
+    public function &insertId(): string {
         $rslt = "0";
         return $rslt;
     }
@@ -248,7 +248,7 @@ abstract class BaseModel extends CoreTransaction {
      *
      * @return string
      */
-    public function &getSql() {
+    public function &getSql(): string {
         return $this->sql;
     }
 
@@ -258,7 +258,7 @@ abstract class BaseModel extends CoreTransaction {
      * @param resource $query
      * @return boolean
      */
-    public function &freeResult($query) {
+    public function &freeResult($query): bool {
         unset($query);
         $rslt = false;
         return $rslt;
@@ -332,7 +332,7 @@ abstract class BaseModel extends CoreTransaction {
      *
      * @return array
      */
-    public function &getLastError() {
+    public function &getLastError(): array {
         $rslt = array(
             "<span class=\"text_bold\">Last Sql query</span> : " . $this->getSql());
         return $rslt;
@@ -372,7 +372,7 @@ abstract class BaseModel extends CoreTransaction {
      *
      * @return string
      */
-    public function &getVersion() {
+    public function &getVersion(): string {
         return "?";
     }
 
@@ -381,7 +381,7 @@ abstract class BaseModel extends CoreTransaction {
      *
      * @return string
      */
-    public function &getCollation() {
+    public function &getCollation(): string {
         $this->query("SHOW FULL COLUMNS FROM " . $this->getTableName(CoreTable::CONFIG_TABLE));
         $info = $this->fetchArray();
         return !empty($info['Collation']) ? $info['Collation'] : "?";
@@ -393,7 +393,7 @@ abstract class BaseModel extends CoreTransaction {
      * @param string $s
      * @return string
      */
-    protected function &addQuote($s, $isValue = false) {
+    protected function &addQuote($s, $isValue = false): string {
         // Ne pas quoter les champs avec la notation avec les point
         if (($isValue && !ExecUtils::inArray($s, $this->quoted, true)) || (!$isValue && strpos($s, ".") === false && !isset($this->quoted[$s]))) {
             if ($isValue) {
@@ -460,7 +460,7 @@ abstract class BaseModel extends CoreTransaction {
      * @param string $str
      * @return string
      */
-    protected function converEscapeString($str) {
+    protected function converEscapeString($str): string {
         return addslashes($str);
     }
 
@@ -469,7 +469,7 @@ abstract class BaseModel extends CoreTransaction {
      *
      * @param string
      */
-    protected function getTableName($table) {
+    protected function getTableName($table): string {
         return $this->getDatabasePrefix() . "_" . $table;
     }
 

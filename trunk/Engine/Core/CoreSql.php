@@ -77,7 +77,7 @@ class CoreSql extends BaseModel {
      *
      * @return CoreSql
      */
-    public static function &getInstance() {
+    public static function &getInstance(): CoreSql {
         self::checkInstance();
         return self::$coreSql;
     }
@@ -96,7 +96,7 @@ class CoreSql extends BaseModel {
      *
      * @return boolean
      */
-    public static function hasConnection() {
+    public static function hasConnection(): bool {
         return self::$coreSql !== null && self::$coreSql->selectedBase !== null;
     }
 
@@ -105,14 +105,14 @@ class CoreSql extends BaseModel {
      *
      * @return array
      */
-    public static function &getBaseList() {
+    public static function &getBaseList(): array {
         return CoreCache::getInstance()->getFileList("Engine/Base", "Base");
     }
 
     /**
      * Etablie une connexion à la base de données.
      */
-    public function netConnect() {
+    public function netConnect(): bool {
         $this->selectedBase->netConnect();
     }
 
@@ -121,7 +121,7 @@ class CoreSql extends BaseModel {
      *
      * @return boolean
      */
-    public function netConnected() {
+    public function netConnected(): bool {
         return $this->selectedBase !== null && $this->selectedBase->netConnected();
     }
 
@@ -139,7 +139,7 @@ class CoreSql extends BaseModel {
      *
      * @return boolean
      */
-    public function &netSelect() {
+    public function &netSelect(): bool {
         return $this->selectedBase->netSelect();
     }
 
@@ -149,7 +149,7 @@ class CoreSql extends BaseModel {
      *
      * @return int
      */
-    public function &affectedRows() {
+    public function &affectedRows(): int {
         return $this->selectedBase->affectedRows();
     }
 
@@ -158,7 +158,7 @@ class CoreSql extends BaseModel {
      *
      * @return string
      */
-    public function &getTransactionHost() {
+    public function &getTransactionHost(): string {
         return $this->selectedBase->getTransactionHost();
     }
 
@@ -167,7 +167,7 @@ class CoreSql extends BaseModel {
      *
      * @return string
      */
-    public function &getTransactionUser() {
+    public function &getTransactionUser(): string {
         return $this->selectedBase->getTransactionUser();
     }
 
@@ -176,7 +176,7 @@ class CoreSql extends BaseModel {
      *
      * @return string
      */
-    public function &getTransactionPass() {
+    public function &getTransactionPass(): string {
         return $this->selectedBase->getTransactionPass();
     }
 
@@ -185,7 +185,7 @@ class CoreSql extends BaseModel {
      *
      * @return string
      */
-    public function &getDatabaseName() {
+    public function &getDatabaseName(): string {
         return $this->selectedBase->getDatabaseName();
     }
 
@@ -194,7 +194,7 @@ class CoreSql extends BaseModel {
      *
      * @return string
      */
-    public function &getTransactionType() {
+    public function &getTransactionType(): string {
         return $this->selectedBase->getTransactionType();
     }
 
@@ -203,7 +203,7 @@ class CoreSql extends BaseModel {
      *
      * @return string
      */
-    public function &getDatabasePrefix() {
+    public function &getDatabasePrefix(): string {
         return $this->selectedBase->getDatabasePrefix();
     }
 
@@ -230,7 +230,7 @@ class CoreSql extends BaseModel {
      *
      * @return array
      */
-    public function &fetchArray() {
+    public function &fetchArray(): array {
         return $this->selectedBase->fetchArray();
     }
 
@@ -239,7 +239,7 @@ class CoreSql extends BaseModel {
      *
      * @return object[]
      */
-    public function &fetchObject($className = null) {
+    public function &fetchObject($className = null): array {
         return $this->selectedBase->fetchObject($className);
     }
 
@@ -265,7 +265,7 @@ class CoreSql extends BaseModel {
      *
      * @return string
      */
-    public function &insertId() {
+    public function &insertId(): string {
         return $this->selectedBase->insertId();
     }
 
@@ -344,7 +344,7 @@ class CoreSql extends BaseModel {
      *
      * @return string
      */
-    public function &getSql() {
+    public function &getSql(): string {
         return $this->selectedBase->getSql();
     }
 
@@ -354,7 +354,7 @@ class CoreSql extends BaseModel {
      * @param resource $query
      * @return boolean
      */
-    public function &freeResult($query = null) {
+    public function &freeResult($query = null): bool {
         $query = (!empty($query)) ? $query : $this->getQueries();
         return $this->selectedBase->freeResult($query);
     }
@@ -406,7 +406,7 @@ class CoreSql extends BaseModel {
      *
      * @return array
      */
-    public function &getLastError() {
+    public function &getLastError(): array {
         return $this->selectedBase->getLastError();
     }
 
@@ -437,7 +437,7 @@ class CoreSql extends BaseModel {
      *
      * @return string
      */
-    public function &getVersion() {
+    public function &getVersion(): string {
         return $this->selectedBase->getVersion();
     }
 
@@ -446,7 +446,7 @@ class CoreSql extends BaseModel {
      *
      * @return string
      */
-    public function &getCollation() {
+    public function &getCollation(): string {
         return $this->selectedBase->getCollation();
     }
 

@@ -11,7 +11,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  * Ne supporte que les bases de données MySql.
  *
  * Supprimé depuis la version 7.0 : http://php.net/manual/fr/migration70.incompatible.php#migration70.incompatible.removed-functions.mysql
- * A remplacer par un support de PostgreSQL  et de SQLite3 
+ * A remplacer par un support de PostgreSQL  et de SQLite3
  * @author Sébastien Villemain
  */
 class BaseMysql extends BaseModel {
@@ -24,7 +24,7 @@ class BaseMysql extends BaseModel {
      */
     private $lastSqlCommand = "";
 
-    protected function canUse() {
+    protected function canUse(): bool {
         $rslt = function_exists("mysql_connect");
 
         if (!$rslt) {
@@ -43,7 +43,7 @@ class BaseMysql extends BaseModel {
         }
     }
 
-    public function &netSelect() {
+    public function &netSelect(): bool {
         $rslt = false;
 
         if ($this->netConnected()) {
@@ -68,7 +68,7 @@ class BaseMysql extends BaseModel {
         }
     }
 
-    public function &fetchArray() {
+    public function &fetchArray(): array {
         $values = array();
 
         if (is_resource($this->queries)) {
@@ -81,7 +81,7 @@ class BaseMysql extends BaseModel {
         return $values;
     }
 
-    public function &fetchObject($className = null) {
+    public function &fetchObject($className = null): array {
         $values = array();
 
         if (is_resource($this->queries)) {
@@ -101,7 +101,7 @@ class BaseMysql extends BaseModel {
         return $values;
     }
 
-    public function &freeResult($query) {
+    public function &freeResult($query): bool {
         $rslt = false;
 
         if (is_resource($query)) {
@@ -110,7 +110,7 @@ class BaseMysql extends BaseModel {
         return $rslt;
     }
 
-    public function &affectedRows() {
+    public function &affectedRows(): int {
         $rslt = -1;
 
         if ($this->lastSqlCommand === "SELECT" || $this->lastSqlCommand === "SHOW") {
@@ -121,18 +121,18 @@ class BaseMysql extends BaseModel {
         return $rslt;
     }
 
-    public function &insertId() {
+    public function &insertId(): string {
         $lastId = mysql_insert_id($this->connId);
         return $lastId;
     }
 
-    public function &getLastError() {
+    public function &getLastError(): array {
         $error = parent::getLastError();
         $error[] = "<span class=\"text_bold\">MySql response</span> : " . mysql_error();
         return $error;
     }
 
-    public function &getVersion() {
+    public function &getVersion(): string {
         // Exemple : 5.6.15-log
         $version = mysql_get_server_info($this->connId);
         $version = ($version !== false) ? $version : "?";
@@ -159,7 +159,7 @@ class BaseMysql extends BaseModel {
         parent::delete($table, $where, $like, $limit);
     }
 
-    protected function converEscapeString($str) {
+    protected function converEscapeString($str): string {
         if (function_exists("mysql_real_escape_string") && is_resource($this->connId)) {
             $str = mysql_real_escape_string($str, $this->connId);
         } else if (function_exists("mysql_escape_string")) {// WARNING: DEPRECATED

@@ -13,17 +13,17 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  */
 class CachePhp extends CacheModel {
 
-    protected function canUse() {
+    protected function canUse(): bool {
         // Gestionnaire natif; toujours diponible
         return true;
     }
 
-    public function netConnected() {
+    public function netConnected(): bool {
         // Gestionnaire natif; toujours diponible
         return true;
     }
 
-    public function &netSelect() {
+    public function &netSelect(): bool {
         $rslt = true;
         return $rslt;
     }
@@ -55,12 +55,12 @@ class CachePhp extends CacheModel {
         }
     }
 
-    public function &getCacheMTime($path) {
+    public function &getCacheMTime($path): int {
         $mTime = filemtime(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path);
         return $mTime;
     }
 
-    public function &getNameList($path) {
+    public function &getNameList($path): array {
         $dirList = array();
 
         // Si le dossier est vide, on prend le dossier par défaut

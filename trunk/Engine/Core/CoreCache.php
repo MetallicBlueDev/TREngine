@@ -248,7 +248,7 @@ class CoreCache extends CacheModel {
      *
      * @return boolean
      */
-    public function netConnected() {
+    public function netConnected(): bool {
         return $this->selectedCache !== null && $this->selectedCache->netConnected();
     }
 
@@ -273,7 +273,7 @@ class CoreCache extends CacheModel {
      *
      * @return string
      */
-    public function &getTransactionHost() {
+    public function &getTransactionHost(): string {
         return $this->selectedCache->getTransactionHost();
     }
 
@@ -282,7 +282,7 @@ class CoreCache extends CacheModel {
      *
      * @return string
      */
-    public function &getTransactionUser() {
+    public function &getTransactionUser(): string {
         return $this->selectedCache->getTransactionUser();
     }
 
@@ -291,7 +291,7 @@ class CoreCache extends CacheModel {
      *
      * @return string
      */
-    public function &getTransactionPass() {
+    public function &getTransactionPass(): string {
         return $this->selectedCache->getTransactionPass();
     }
 
@@ -300,7 +300,7 @@ class CoreCache extends CacheModel {
      *
      * @return string
      */
-    public function &getTransactionType() {
+    public function &getTransactionType(): string {
         return $this->selectedCache->getTransactionType();
     }
 

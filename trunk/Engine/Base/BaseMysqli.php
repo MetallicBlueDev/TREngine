@@ -17,7 +17,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  */
 class BaseMysqli extends BaseModel {
 
-    protected function canUse() {
+    protected function canUse(): bool {
         $rslt = function_exists("mysqli_connect");
 
         if (!$rslt) {
@@ -37,7 +37,7 @@ class BaseMysqli extends BaseModel {
         }
     }
 
-    public function &netSelect() {
+    public function &netSelect(): bool {
         $rslt = false;
 
         if ($this->netConnected()) {
@@ -62,7 +62,7 @@ class BaseMysqli extends BaseModel {
         }
     }
 
-    public function &fetchArray() {
+    public function &fetchArray(): array {
         $values = array();
         $rslt = $this->getMysqliResult();
 
@@ -76,7 +76,7 @@ class BaseMysqli extends BaseModel {
         return $values;
     }
 
-    public function &fetchObject($className = null) {
+    public function &fetchObject($className = null): array {
         $values = array();
         $rslt = $this->getMysqliResult();
 
@@ -97,7 +97,7 @@ class BaseMysqli extends BaseModel {
         return $values;
     }
 
-    public function &freeResult($query) {
+    public function &freeResult($query): bool {
         $success = false;
         $rslt = $this->getMysqliResult($query);
 
@@ -108,7 +108,7 @@ class BaseMysqli extends BaseModel {
         return $success;
     }
 
-    public function &affectedRows() {
+    public function &affectedRows(): int {
         $nbRows = $this->getMysqli()->affected_rows;
 
         if ($nbRows < 0) {
@@ -121,17 +121,17 @@ class BaseMysqli extends BaseModel {
         return $nbRows;
     }
 
-    public function &insertId() {
+    public function &insertId(): string {
         return $this->getMysqli()->insert_id;
     }
 
-    public function &getLastError() {
+    public function &getLastError(): array {
         $error = parent::getLastError();
         $error[] = "<span class=\"text_bold\">MySqli response</span> : " . $this->getMysqli()->error;
         return $error;
     }
 
-    public function &getVersion() {
+    public function &getVersion(): string {
         // Exemple : 5.6.15-log
         $version = $this->getMysqli()->server_info;
         return $version;
@@ -153,7 +153,7 @@ class BaseMysqli extends BaseModel {
         parent::delete($table, $where, $like, $limit);
     }
 
-    protected function converEscapeString($str) {
+    protected function converEscapeString($str): string {
         return $this->getMysqli()->escape_string($str);
     }
 
@@ -162,7 +162,7 @@ class BaseMysqli extends BaseModel {
      *
      * @return mysqli
      */
-    private function &getMysqli() {
+    private function &getMysqli(): mysqli {
         return $this->connId;
     }
 
@@ -172,7 +172,7 @@ class BaseMysqli extends BaseModel {
      * @param resource $query
      * @return mysqli_result
      */
-    private function &getMysqliResult($query = null) {
+    private function &getMysqliResult($query = null): mysqli_result {
         $object = null;
 
         if ($query === null) {
