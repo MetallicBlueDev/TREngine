@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <div>
-        <span><h1><?php echo $errorMessageTitle; ?></h1></span>
+        <h1><?php echo $errorMessageTitle; ?></h1>
         <div>
             <br /><br />
             Error details:
