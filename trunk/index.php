@@ -2,7 +2,7 @@
 
 // ----------------------------------------------------------------------- //
 // -- TR ENGINE = PUISSANCE + SIMPLICITE + EVOLUTIVITE					-- //
-// -- Puissance par un codage efficace									-- //
+// -- Puissance par une quantité d'énergie fournie au meilleur de PHP   -- //
 // -- Simplicité par une interface intuitive							-- //
 // -- Evolutivité par une grande souplesse d'adaptation du moteur		-- //
 // ----------------------------------------------------------------------- //
