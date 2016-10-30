@@ -141,7 +141,7 @@ class CoreSession {
      *
      * @param string $userName Nom du compte (identifiant)
      * @param string $userPass Mot de passe du compte
-     * @return boolean true succès
+     * @return bool true succès
      */
     public static function &startConnection($userName, $userPass) {
         $rslt = false;
@@ -177,7 +177,7 @@ class CoreSession {
     /**
      * Détermine si une session existe.
      *
-     * @return boolean
+     * @return bool
      */
     public static function hasConnection() {
         return (self::$coreSession !== null && self::$coreSession->userLogged());
@@ -200,7 +200,7 @@ class CoreSession {
      * Vérification du nom du compte.
      *
      * @param string $login
-     * @return boolean true login valide
+     * @return bool true login valide
      */
     public static function &validLogin($login) {
         $rslt = false;
@@ -227,7 +227,7 @@ class CoreSession {
      * Vérification du mot de passe.
      *
      * @param string $password
-     * @return boolean true password valide
+     * @return bool true password valide
      */
     public static function &validPassword($password) {
         $rslt = false;
@@ -304,7 +304,7 @@ class CoreSession {
     /**
      * Détermine si l'utilisateur a été banni.
      *
-     * @return boolean true le client est banni
+     * @return bool true le client est banni
      */
     public function bannedSession() {
         return empty($this->userIpBan) ? false : true;
@@ -459,7 +459,7 @@ class CoreSession {
     /**
      * Récupèration d'une session ouverte.
      *
-     * @return boolean false session corrompue
+     * @return bool false session corrompue
      */
     private function searchSession() {
         // Par défaut, la session actuel est valide
@@ -546,7 +546,7 @@ class CoreSession {
     /**
      * Ouvre une nouvelle session.
      *
-     * @return boolean ture succès
+     * @return bool ture succès
      */
     private function &openSession() {
         $rslt = false;
@@ -593,7 +593,7 @@ class CoreSession {
     /**
      * Détermine si l'utilisateur est identifié.
      *
-     * @return boolean true c'est un client valide
+     * @return bool true c'est un client valide
      */
     private function userLogged() {
         return (!empty($this->sessionId) && $this->userInfos !== null);
@@ -611,7 +611,7 @@ class CoreSession {
      * Injection des informations du client.
      *
      * @param array $session
-     * @param boolean $refreshAll
+     * @param bool $refreshAll
      */
     private function setUser($session, $refreshAll = false) {
         if ($this->userInfos === null || $refreshAll) {
@@ -631,7 +631,7 @@ class CoreSession {
      * Mise à jour de la dernière connexion.
      *
      * @param string $userId
-     * @return boolean true succès de la mise à jour
+     * @return bool true succès de la mise à jour
      */
     private function updateLastConnect($userId) {
         $coreSql = CoreSql::getInstance();

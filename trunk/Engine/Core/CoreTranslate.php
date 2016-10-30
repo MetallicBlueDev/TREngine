@@ -417,7 +417,7 @@ class CoreTranslate {
      * Vérifie si le langage est disponible.
      *
      * @param string $language
-     * @return boolean true langue disponible.
+     * @return bool true langue disponible.
      */
     private static function isValid($language) {
         $rslt = false;

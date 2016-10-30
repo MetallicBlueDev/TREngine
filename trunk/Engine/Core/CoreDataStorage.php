@@ -39,16 +39,16 @@ abstract class CoreDataStorage {
      *
      * @return array
      */
-    protected function &getStorage() {
+    protected function &getStorage(): array {
         return $this->data;
     }
 
     /**
      * Détermine si instance a été réalisée.
      *
-     * @return boolean
+     * @return bool
      */
-    protected function initialized() {
+    protected function initialized(): bool {
         return $this->data !== null;
     }
 
@@ -69,11 +69,25 @@ abstract class CoreDataStorage {
     }
 
     /**
-     * Retourne la valeur de la clé.
+     * Retourne la valeur de la clé sous forme de chaine de caractères.
      *
+     * @param string $keyName
+     * @param string $defaultValue
+     * @return string
+     */
+    protected function &getStringValue(string $keyName, string $defaultValue = null): string {
+        $value = (string) $this->getDataValue($keyName, $defaultValue);
+        return $value;
+    }
+
+    /**
+     * Retourne la valeur de la clé sous forme d'entier.
+     *
+     * @param string $keyName
+     * @param int $defaultValue
      * @return int
      */
-    protected function &getIntValue($keyName, $defaultValue = null) {
+    protected function &getIntValue(string $keyName, int $defaultValue = null): int {
         $value = (int) $this->getDataValue($keyName, $defaultValue);
         return $value;
     }
@@ -82,9 +96,9 @@ abstract class CoreDataStorage {
      * Détermine si la clé existe.
      *
      * @param string $keyName
-     * @return boolean
+     * @return bool
      */
-    protected function exist($keyName) {
+    protected function exist(string $keyName): bool {
         return isset($this->data[$keyName]);
     }
 
@@ -92,9 +106,9 @@ abstract class CoreDataStorage {
      * Détermine si une valeur a été affectée.
      *
      * @param string $keyName
-     * @return boolean
+     * @return bool
      */
-    protected function hasValue($keyName) {
+    protected function hasValue(string $keyName): bool {
         return $this->exist($keyName) && !empty($this->data[$keyName]);
     }
 
@@ -104,7 +118,7 @@ abstract class CoreDataStorage {
      * @param string $keyName
      * @param mixed $value
      */
-    protected function setDataValue($keyName, $value) {
+    protected function setDataValue(string $keyName, $value) {
         $this->data[$keyName] = $value;
     }
 
@@ -114,7 +128,7 @@ abstract class CoreDataStorage {
      * @param string $keyName
      * @param mixed $value
      */
-    protected function updateDataValue($keyName, $value) {
+    protected function updateDataValue(string $keyName, $value) {
         if ($this->exist($keyName)) {
             $this->setDataValue($keyName, $value);
         }

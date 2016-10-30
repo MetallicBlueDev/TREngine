@@ -148,7 +148,7 @@ class CoreAccessType implements CoreAccessToken {
     /**
      * Détermine si c'est un accès à un module.
      *
-     * @return boolean
+     * @return bool
      */
     public function isModuleZone() {
         return ($this->getZone() === "MODULE");
@@ -157,7 +157,7 @@ class CoreAccessType implements CoreAccessToken {
     /**
      * Détermine si c'est un accès à un block.
      *
-     * @return boolean
+     * @return bool
      */
     public function isBlockZone() {
         return ($this->getZone() === "BLOCK");
@@ -166,7 +166,7 @@ class CoreAccessType implements CoreAccessToken {
     /**
      * Détermine si c'est un accès personnalisé.
      *
-     * @return boolean
+     * @return bool
      */
     public function isCustomZone() {
         return !empty($this->getZone()) && !$this->isBlockZone() && !$this->isModuleZone();
@@ -175,7 +175,7 @@ class CoreAccessType implements CoreAccessToken {
     /**
      * Détermine si c'est un accès à une page spécifique.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPageAccess() {
         return !empty($this->getPage());
@@ -184,7 +184,7 @@ class CoreAccessType implements CoreAccessToken {
     /**
      * Détermine si le type d'accès est valide.
      *
-     * @return boolean
+     * @return bool
      */
     public function &valid() {
         if (!$this->alreadyChecked()) {
@@ -197,7 +197,7 @@ class CoreAccessType implements CoreAccessToken {
      * Détermine si accès sont semblables.
      *
      * @param CoreAccessType $otherAccessType
-     * @return boolean
+     * @return bool
      */
     public function isAssignableFrom(CoreAccessType $otherAccessType) {
         $rslt = false;
@@ -264,7 +264,7 @@ class CoreAccessType implements CoreAccessToken {
     /**
      * Détermine si l'accès a été vérifié.
      *
-     * @return boolean
+     * @return bool
      */
     private function alreadyChecked() {
         return isset($this->rights['validity']);

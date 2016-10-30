@@ -23,7 +23,7 @@ class CoreInfo {
     /**
      * Détermine si la version PHP actuelle est compatible.
      *
-     * @return boolean
+     * @return bool
      */
     public static function compatibleVersion() {
         return (TR_ENGINE_PHP_VERSION >= "7.0.0");

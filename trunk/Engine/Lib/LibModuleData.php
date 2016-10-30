@@ -92,7 +92,7 @@ class LibModuleData extends LibEntityData {
      * @return string Le nom du module.
      */
     public function &getName() {
-        $dataValue = ucfirst($this->getDataValue("name"));
+        $dataValue = ucfirst($this->getStringValue("name"));
         return $dataValue;
     }
 
@@ -136,7 +136,7 @@ class LibModuleData extends LibEntityData {
      * Retourne la configuration du module.
      * Valeur nulle possible, notamment en base de données.
      *
-     * @return string
+     * @return array
      */
     public function &getConfigs() {
         return $this->getDataValue("configs");
@@ -167,7 +167,7 @@ class LibModuleData extends LibEntityData {
     /**
      * Détermine si le module est installé.
      *
-     * @return boolean
+     * @return bool
      */
     public function installed() {
         return $this->hasValue("mod_id");

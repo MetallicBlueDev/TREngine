@@ -201,7 +201,7 @@ class CoreLogger {
     /**
      * Vérifie si une exception est détectée.
      *
-     * @return boolean
+     * @return bool
      */
     private static function hasExceptions() {
         return (!empty(self::$exceptions));

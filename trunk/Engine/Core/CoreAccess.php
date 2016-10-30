@@ -85,8 +85,8 @@ class CoreAccess {
      * Autorise ou refuse l'accès à la ressource cible.
      *
      * @param CoreAccessType $accessType
-     * @param boolean $forceSpecificRank
-     * @return boolean
+     * @param bool $forceSpecificRank
+     * @return bool
      */
     public static function &autorize(CoreAccessType &$accessType, $forceSpecificRank = false) {
         $rslt = false;

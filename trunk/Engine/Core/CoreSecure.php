@@ -86,7 +86,7 @@ class CoreSecure {
     /**
      * Vérifie si le mode de statistique et de debug est actif.
      *
-     * @return boolean
+     * @return bool
      */
     public static function &debuggingMode() {
         $rslt = false;
@@ -100,7 +100,7 @@ class CoreSecure {
     /**
      * Détermine si il y a verrouillage de la sécurité (risque potentiel).
      *
-     * @return boolean
+     * @return bool
      */
     public function &locked() {
         return $this->locked;

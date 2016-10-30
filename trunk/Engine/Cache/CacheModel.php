@@ -23,7 +23,7 @@ abstract class CacheModel extends CoreTransaction {
      */
     protected $chmod = 0777;
 
-    protected function throwException($message) {
+    protected function throwException(string $message) {
         throw new FailCache("cache" . $message);
     }
 
@@ -56,7 +56,7 @@ abstract class CacheModel extends CoreTransaction {
      * @return int
      */
     public function &getServerPort(): int {
-        return $this->getDataValue("port");
+        return $this->getIntValue("port");
     }
 
     /**
@@ -65,7 +65,7 @@ abstract class CacheModel extends CoreTransaction {
      * @return string
      */
     public function &getServerRoot(): string {
-        return $this->getDataValue("root");
+        return $this->getStringValue("root");
     }
 
     /**
@@ -73,7 +73,7 @@ abstract class CacheModel extends CoreTransaction {
      *
      * @param string $newRoot
      */
-    public function setServerRoot(&$newRoot) {
+    public function setServerRoot(string &$newRoot) {
         $this->setDataValue("root", $newRoot);
     }
 
@@ -82,9 +82,9 @@ abstract class CacheModel extends CoreTransaction {
      *
      * @param string $path chemin vers le fichier cache
      * @param string $content contenu du fichier cache
-     * @param boolean $overwrite écrasement du fichier
+     * @param bool $overwrite écrasement du fichier
      */
-    public function writeCache($path, $content, $overwrite = true) {
+    public function writeCache(string $path, string $content, bool $overwrite = true) {
         unset($path);
         unset($content);
         unset($overwrite);
@@ -96,7 +96,7 @@ abstract class CacheModel extends CoreTransaction {
      * @param string $path chemin vers le fichier cache
      * @param int $updateTime
      */
-    public function touchCache($path, $updateTime = 0) {
+    public function touchCache(string $path, int $updateTime = 0) {
         unset($path);
         unset($updateTime);
     }
@@ -105,9 +105,9 @@ abstract class CacheModel extends CoreTransaction {
      * Supprime tous fichiers trop vieux.
      *
      * @param string $path chemin vers le fichier ou le dossier
-     * @param string $timeLimit limite de temps
+     * @param int $timeLimit limite de temps
      */
-    public function removeCache($path, $timeLimit = 0) {
+    public function removeCache(string $path, int $timeLimit = 0) {
         unset($path);
         unset($timeLimit);
     }
@@ -118,7 +118,7 @@ abstract class CacheModel extends CoreTransaction {
      * @param string $path
      * @return array
      */
-    public function &getNameList($path): array {
+    public function &getNameList(string $path): array {
         unset($path);
         $names = array();
         return $names;
@@ -130,7 +130,7 @@ abstract class CacheModel extends CoreTransaction {
      * @param string $path
      * @return int
      */
-    public function &getCacheMTime($path): int {
+    public function &getCacheMTime(string $path): int {
         unset($path);
         $time = 0;
         return $time;
@@ -139,10 +139,10 @@ abstract class CacheModel extends CoreTransaction {
     /**
      * Détermine si le chemin est celui d'un dossier.
      *
-     * @param $path
-     * @return boolean true c'est un dossier
+     * @param string $path
+     * @return bool true c'est un dossier
      */
-    protected static function &isDirectoryPath($path): bool {
+    protected static function &isDirectoryPath(string $path): bool {
         $pathIsDir = false;
 
         if (substr($path, -1) === DIRECTORY_SEPARATOR) {
@@ -169,19 +169,19 @@ abstract class CacheModel extends CoreTransaction {
     /**
      * Ecriture de l'entête du fichier.
      *
-     * @param $pathFile
-     * @param $content
+     * @param string $filePath
+     * @param string $content
      * @return string $content
      */
-    protected static function &getFileHeader($pathFile, $content): string {
-        $ext = substr($pathFile, -3);
+    protected static function &getFileHeader(string $filePath, string $content): string {
+        $ext = substr($filePath, -3);
 
         // Entête des fichier PHP
         if ($ext === "php") {
             // Recherche du dossier parent
             $dirBase = "";
 
-            $localDir = str_replace(TR_ENGINE_INDEXDIR, "", $pathFile);
+            $localDir = str_replace(TR_ENGINE_INDEXDIR, "", $filePath);
 
             if ($localDir[0] === DIRECTORY_SEPARATOR) {
                 $localDir = substr($localDir, 1);

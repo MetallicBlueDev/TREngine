@@ -177,7 +177,7 @@ class LibForm {
      * @param string $id
      * @param string $name
      * @param string $description
-     * @param boolean $checked
+     * @param bool $checked
      * @param string $defaultValue
      * @param string $options
      * @param string $class
@@ -200,7 +200,7 @@ class LibForm {
      * @param string $id
      * @param string $name
      * @param string $description
-     * @param boolean $checked
+     * @param bool $checked
      * @param string $defaultValue
      * @param string $options
      * @param string $class
@@ -319,7 +319,7 @@ class LibForm {
      *
      * @param string $value
      * @param string $description
-     * @param boolean $selected
+     * @param bool $selected
      * @param string $options
      */
     public function addSelectItemTag($value, $description = "", $selected = false, $options = "") {

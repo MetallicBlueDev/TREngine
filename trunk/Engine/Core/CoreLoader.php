@@ -158,7 +158,7 @@ class CoreLoader {
      * Chargeur de classe.
      *
      * @param string $class Nom de la classe.
-     * @return boolean true chargé.
+     * @return bool true chargé.
      */
     public static function &classLoader($class) {
         return self::load($class, ""); // Type indéterminé
@@ -168,7 +168,7 @@ class CoreLoader {
      * Chargeur de fichier de traduction.
      *
      * @param string $plugin Module de traduction.
-     * @return boolean true chargé.
+     * @return bool true chargé.
      */
     public static function &translateLoader($plugin) {
         return self::load($plugin, self::TYPE_TRANSLATE);
@@ -178,7 +178,7 @@ class CoreLoader {
      * Chargeur de fichier include.
      *
      * @param string $include Nom de l'include.
-     * @return boolean true chargé.
+     * @return bool true chargé.
      */
     public static function &includeLoader($include) {
         return self::load($include, self::TYPE_INCLUDE);
@@ -189,8 +189,8 @@ class CoreLoader {
      *
      * @param string $className Nom de la classe
      * @param string $methodName Nom de la méthode
-     * @param boolean $static Appel d'instance ou statique
-     * @return boolean true l'appel peut être effectué
+     * @param bool $static Appel d'instance ou statique
+     * @return bool true l'appel peut être effectué
      */
     public static function &isCallable($className, $methodName = "", $static = false) {
         $rslt = false;
@@ -229,7 +229,7 @@ class CoreLoader {
      *
      * @param string $className Nom de la classe.
      * @param string $methodName Nom de la méthode.
-     * @param boolean $static Type d'accès: true statique, false par instance.
+     * @param bool $static Type d'accès: true statique, false par instance.
      * @return mixed resultat.
      */
     public static function &callback($callback) {
@@ -360,7 +360,7 @@ class CoreLoader {
      *
      * @param string $keyName Fichier demandé.
      * @param string $ext Extension.
-     * @return boolean true si c'est déjà chargé.
+     * @return bool true si c'est déjà chargé.
      */
     private static function isLoaded($keyName, $ext) {
         return isset(self::$loadedFiles[self::getLoadedFileKey($keyName, $ext)]);
@@ -371,7 +371,7 @@ class CoreLoader {
      *
      * @param string $keyName Nom de la classe ou du fichier.
      * @param string $ext Extension.
-     * @return boolean true chargé.
+     * @return bool true chargé.
      */
     private static function &load(&$keyName, $ext) {
         try {
@@ -510,7 +510,7 @@ class CoreLoader {
      * @param string $keyName
      * @param string $ext
      * @param string $path
-     * @return boolean
+     * @return bool
      */
     private static function &loadFilePath($keyName, $ext, $path) {
         $loaded = false;

@@ -27,10 +27,10 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
         }
 
         $this->newStorage($data);
-        $this->updateDataValue("name", ExecEntities::stripSlashes($this->getDataValue("name")));
+        $this->updateDataValue("name", ExecEntities::stripSlashes($this->getStringValue("name")));
         $this->updateDataValue("rank", $this->getIntValue("rank"));
-        $this->updateDataValue("signature", ExecEntities::stripSlashes($this->getDataValue("signature")));
-        $this->updateDataValue("website", ExecEntities::stripSlashes($this->getDataValue("website")));
+        $this->updateDataValue("signature", ExecEntities::stripSlashes($this->getStringValue("signature")));
+        $this->updateDataValue("website", ExecEntities::stripSlashes($this->getStringValue("website")));
     }
 
     /**
@@ -48,7 +48,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      * @return string
      */
     public function &getId() {
-        return $this->getDataValue("user_id");
+        return $this->getStringValue("user_id");
     }
 
     /**
@@ -57,7 +57,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      * @return string
      */
     public function &getName() {
-        return $this->getDataValue("name");
+        return $this->getStringValue("name");
     }
 
     /**
@@ -66,7 +66,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      * @return string
      */
     public function &getMail() {
-        return $this->getDataValue("mail");
+        return $this->getStringValue("mail");
     }
 
     /**
@@ -76,13 +76,13 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      * @return int
      */
     public function &getRank() {
-        return $this->getDataValue("rank", 0);
+        return $this->getIntValue("rank", 0);
     }
 
     /**
      * Détermine si l'utilisateur a des droits.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasRank() {
         return $this->getRank() > CoreAccess::RANK_PUBLIC;
@@ -91,7 +91,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
     /**
      * Détermine si l'utilisateur est membre.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasRegisteredRank() {
         return $this->getRank() >= CoreAccess::RANK_REGISTRED;
@@ -100,7 +100,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
     /**
      * Détermine si l'utilisateur est administrateur.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasAdminRank() {
         return $this->getRank() >= CoreAccess::RANK_ADMIN;
@@ -109,7 +109,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
     /**
      * Détermine si l'utilisateur est administrateur.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasAdminWithRightsRank() {
         return $this->hasAdminRank() && count($this->getRights()) > 0;
@@ -118,7 +118,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
     /**
      * Détermine si l'utilisateur est super administrateur.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasSuperAdminRank() {
         return $this->hasAdminRank() && CoreAccess::autorize(CoreAccessType::getTypeFromAdmin());
@@ -140,7 +140,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      * @return string
      */
     public function &getAvatar() {
-        $avatar = $this->getDataValue("avatar");
+        $avatar = $this->getStringValue("avatar");
 
         if (empty($avatar)) {
             $avatar = "Resources/Avatars/NoPic.png";
@@ -155,7 +155,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      * @return string
      */
     public function &getWebsite() {
-        return $this->getDataValue("website");
+        return $this->getStringValue("website");
     }
 
     /**
@@ -165,7 +165,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      * @return string
      */
     public function &getSignature() {
-        return $this->getDataValue("signature");
+        return $this->getStringValue("signature");
     }
 
     /**
@@ -175,14 +175,14 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      * @return string
      */
     public function &getTemplate() {
-        return $this->getDataValue("template");
+        return $this->getStringValue("template");
     }
 
     /**
      * Affecte le template du client.
      *
      * @param string $template
-     * @param boolean $force
+     * @param bool $force
      */
     public function setTemplate($template, $force = false) {
         if (!$this->hasValue("template") || $force) {
@@ -197,14 +197,14 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      * @return string
      */
     public function &getLangue() {
-        return $this->getDataValue("langue");
+        return $this->getStringValue("langue");
     }
 
     /**
      * Affecte la langue du client.
      *
      * @param string $langue
-     * @param boolean $force
+     * @param bool $force
      */
     public function setLangue($langue, $force = false) {
         if (!$this->hasValue("langue") || $force) {
@@ -264,7 +264,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
     /**
      * Détermine si les droits du client ont été vérifiés.
      *
-     * @return boolean
+     * @return bool
      */
     private function hasRights() {
         return $this->hasValue("rights");

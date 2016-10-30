@@ -71,7 +71,7 @@ class BasePdo extends BaseModel {
         $this->connId = null;
     }
 
-    public function query($sql) {
+    public function query(string $sql) {
         $this->queries = $this->getPdo()->query($sql);
 
         if ($this->queries === false) {
@@ -89,7 +89,7 @@ class BasePdo extends BaseModel {
         return $values;
     }
 
-    public function &fetchObject($className = null): array {
+    public function &fetchObject(string $className = null): array {
         $values = array();
         $rslt = $this->getPdoResult();
 
@@ -135,23 +135,23 @@ class BasePdo extends BaseModel {
         return $version;
     }
 
-    public function update($table, array $values, array $where, array $orderby = array(), $limit = "") {
+    public function update(string $table, array $values, array $where, array $orderby = array(), string $limit = "") {
         parent::update($table, $values, $where, $orderby, $limit);
     }
 
-    public function select($table, array $values, array $where = array(), array $orderby = array(), $limit = "") {
+    public function select(string $table, array $values, array $where = array(), array $orderby = array(), string $limit = "") {
         parent::select($table, $values, $where, $orderby, $limit);
     }
 
-    public function insert($table, array $keys, array $values) {
+    public function insert(string $table, array $keys, array $values) {
         parent::insert($table, $keys, $values);
     }
 
-    public function delete($table, array $where = array(), array $like = array(), $limit = "") {
+    public function delete(string $table, array $where = array(), array $like = array(), string $limit = "") {
         parent::delete($table, $where, $like, $limit);
     }
 
-    protected function converEscapeString($str): string {
+    protected function converEscapeString(string $str): string {
         // Impossible d'utiliser $this->getPdo()->quote($str) car incompatible avec la méthode interne addQuote()
         return str_replace(array(
             '\\',

@@ -64,7 +64,7 @@ abstract class LibEntityData extends CoreDataStorage implements CoreAccessToken 
     /**
      * Détermine si l'entité est valide.
      *
-     * @return boolean
+     * @return bool
      */
     public function isValid() {
         $qualifiedClassName = CoreLoader::getFullQualifiedClassName($this->getClassName(), $this->getFolderName());
@@ -74,7 +74,7 @@ abstract class LibEntityData extends CoreDataStorage implements CoreAccessToken 
     /**
      * Détermine si l'entité est installée.
      *
-     * @return boolean
+     * @return bool
      */
     abstract public function installed();
 }

@@ -142,7 +142,7 @@ class LibCaptcha {
      * Vérifie la validité du captcha.
      *
      * @param LibCaptcha $object
-     * @return boolean
+     * @return bool
      */
     public static function &check($object = null) {
         $rslt = false;
@@ -164,7 +164,7 @@ class LibCaptcha {
     /**
      * Vérifie la validité du captcha.
      *
-     * @return boolean
+     * @return bool
      */
     private function &internalCheck() {
         $rslt = false;

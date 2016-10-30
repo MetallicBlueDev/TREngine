@@ -60,7 +60,7 @@ class BaseMysql extends BaseModel {
         $this->connId = null;
     }
 
-    public function query($sql) {
+    public function query(string $sql) {
         $this->queries = mysql_query($sql, $this->connId);
 
         if ($this->queries === false) {
@@ -81,7 +81,7 @@ class BaseMysql extends BaseModel {
         return $values;
     }
 
-    public function &fetchObject($className = null): array {
+    public function &fetchObject(string $className = null): array {
         $values = array();
 
         if (is_resource($this->queries)) {
@@ -139,27 +139,27 @@ class BaseMysql extends BaseModel {
         return $version;
     }
 
-    public function update($table, array $values, array $where, array $orderby = array(), $limit = "") {
+    public function update(string $table, array $values, array $where, array $orderby = array(), string $limit = "") {
         $this->lastSqlCommand = "UPDATE";
         parent::update($table, $values, $where, $orderby, $limit);
     }
 
-    public function select($table, array $values, array $where = array(), array $orderby = array(), $limit = "") {
+    public function select(string $table, array $values, array $where = array(), array $orderby = array(), string $limit = "") {
         $this->lastSqlCommand = "SELECT";
         parent::select($table, $values, $where, $orderby, $limit);
     }
 
-    public function insert($table, array $keys, array $values) {
+    public function insert(string $table, array $keys, array $values) {
         $this->lastSqlCommand = "INSERT";
         parent::insert($table, $keys, $values);
     }
 
-    public function delete($table, array $where = array(), array $like = array(), $limit = "") {
+    public function delete(string $table, array $where = array(), array $like = array(), string $limit = "") {
         $this->lastSqlCommand = "DELETE";
         parent::delete($table, $where, $like, $limit);
     }
 
-    protected function converEscapeString($str): string {
+    protected function converEscapeString(string $str): string {
         if (function_exists("mysql_real_escape_string") && is_resource($this->connId)) {
             $str = mysql_real_escape_string($str, $this->connId);
         } else if (function_exists("mysql_escape_string")) {// WARNING: DEPRECATED

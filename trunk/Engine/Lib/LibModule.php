@@ -145,7 +145,7 @@ class LibModule {
      * Détermine si le module est en cours d'utilisation.
      *
      * @param string $moduleName
-     * @return boolean true le module est actuellement sélectionné
+     * @return bool true le module est actuellement sélectionné
      */
     public static function &isSelected($moduleName) {
         $selected = false;

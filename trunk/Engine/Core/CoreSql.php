@@ -94,7 +94,7 @@ class CoreSql extends BaseModel {
     /**
      * Détermine si une connexion est disponible.
      *
-     * @return boolean
+     * @return bool
      */
     public static function hasConnection(): bool {
         return self::$coreSql !== null && self::$coreSql->selectedBase !== null;
@@ -119,7 +119,7 @@ class CoreSql extends BaseModel {
     /**
      * Retourne l'état de la connexion.
      *
-     * @return boolean
+     * @return bool
      */
     public function netConnected(): bool {
         return $this->selectedBase !== null && $this->selectedBase->netConnected();
@@ -137,7 +137,7 @@ class CoreSql extends BaseModel {
     /**
      * Sélectionne la base de données.
      *
-     * @return boolean
+     * @return bool
      */
     public function &netSelect(): bool {
         return $this->selectedBase->netSelect();
@@ -352,7 +352,7 @@ class CoreSql extends BaseModel {
      * Libère la mémoire du résultat.
      *
      * @param resource $query
-     * @return boolean
+     * @return bool
      */
     public function &freeResult($query = null): bool {
         $query = (!empty($query)) ? $query : $this->getQueries();
@@ -385,9 +385,9 @@ class CoreSql extends BaseModel {
      * Retourne le buffer courant puis l'incremente.
      *
      * @param string $name
-     * @return array or object
+     * @return array
      */
-    public function &fetchBuffer($name) {
+    public function &fetchBuffer(string $name): array {
         return $this->selectedBase->fetchBuffer($name);
     }
 
@@ -395,9 +395,9 @@ class CoreSql extends BaseModel {
      * Retourne le buffer complet choisi.
      *
      * @param string $name
-     * @return array or object
+     * @return mixed
      */
-    public function &getBuffer($name) {
+    public function &getBuffer(string $name) {
         return $this->selectedBase->getBuffer($name);
     }
 

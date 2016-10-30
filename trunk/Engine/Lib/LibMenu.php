@@ -276,7 +276,7 @@ class LibMenu {
     /**
      * Vérifie la présence du cache.
      *
-     * @return boolean
+     * @return bool
      */
     private function isCached() {
         return (CoreCache::getInstance(CoreCache::SECTION_MENUS)->cached($this->identifier . ".php"));

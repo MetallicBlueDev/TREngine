@@ -73,7 +73,7 @@ class LibMakeStyle {
      * Exécute et affiche le template.
      *
      * @param string $fileName
-     * @param boolean $debugMode Si le fichier de template debug n'est pas trouvé, le fichier debug par défaut est utilisé.
+     * @param bool $debugMode Si le fichier de template debug n'est pas trouvé, le fichier debug par défaut est utilisé.
      * @return $output L'affichage finale du template
      */
     public function display($fileName = "", $debugMode = false) {
@@ -165,7 +165,7 @@ class LibMakeStyle {
      * Détermine si le dossier contenant le template est valide.
      *
      * @param string $templateDir
-     * @return boolean
+     * @return bool
      */
     public static function isTemplateDir($templateDir) {
         return !empty($templateDir) && is_dir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $templateDir);
@@ -215,7 +215,7 @@ class LibMakeStyle {
     /**
      * Vérifie la validité du template
      *
-     * @return boolean true si le chemin du template est valide
+     * @return bool true si le chemin du template est valide
      */
     private function isTemplate() {
         if ($this->valid === null) {

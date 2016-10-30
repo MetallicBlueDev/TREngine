@@ -158,7 +158,7 @@ class LibBlock {
      * Détermine si le block est utilisable en standalone.
      *
      * @param string $blockType
-     * @return boolean
+     * @return bool
      */
     public function isStandaloneBlockType($blockType) {
         return (array_search($blockType, $this->standaloneBlocksType) !== false);
@@ -429,7 +429,7 @@ class LibBlock {
      * Démarrage d'un block via son identifiant.
      *
      * @param int $blockId
-     * @param boolean $checkModule
+     * @param bool $checkModule
      */
     private function launchBlockById($blockId, $checkModule) {
         $blockInfo = $this->getInfoBlock($blockId);
@@ -440,7 +440,7 @@ class LibBlock {
      * Démarrage d'un block.
      *
      * @param LibBlockData $blockInfo
-     * @param boolean $checkModule
+     * @param bool $checkModule
      */
     private function launchBlock(LibBlockData $blockInfo, $checkModule) {
         if ($blockInfo->isValid()) {

@@ -70,7 +70,7 @@ abstract class CoreTransaction extends CoreDataStorage {
     /**
      * Retourne l'état de la connexion.
      *
-     * @return boolean
+     * @return bool
      */
     public function netConnected(): bool {
         return ($this->connId !== null) ? true : false;
@@ -86,7 +86,7 @@ abstract class CoreTransaction extends CoreDataStorage {
     /**
      * Sélectionne un noeud dans la transaction.
      *
-     * @return boolean true succès
+     * @return bool true succès
      */
     public function &netSelect(): bool {
         $rslt = false;
@@ -99,7 +99,7 @@ abstract class CoreTransaction extends CoreDataStorage {
      * @return string
      */
     public function &getTransactionHost(): string {
-        return $this->getDataValue("host");
+        return $this->getStringValue("host");
     }
 
     /**
@@ -108,7 +108,7 @@ abstract class CoreTransaction extends CoreDataStorage {
      * @return string
      */
     public function &getTransactionUser(): string {
-        return $this->getDataValue("user");
+        return $this->getStringValue("user");
     }
 
     /**
@@ -117,7 +117,7 @@ abstract class CoreTransaction extends CoreDataStorage {
      * @return string
      */
     public function &getTransactionPass(): string {
-        return $this->getDataValue("pass");
+        return $this->getStringValue("pass");
     }
 
     /**
@@ -126,13 +126,13 @@ abstract class CoreTransaction extends CoreDataStorage {
      * @return string
      */
     public function &getTransactionType(): string {
-        return $this->getDataValue("type");
+        return $this->getStringValue("type");
     }
 
     /**
      * Détermine si le gestionnaire est utilisable.
      *
-     * @return boolean
+     * @return bool
      */
     protected function canUse(): bool {
         return false;
@@ -144,7 +144,7 @@ abstract class CoreTransaction extends CoreDataStorage {
      * @param string $message
      * @throws FailEngine
      */
-    protected function throwException($message) {
+    protected function throwException(string $message) {
         throw new FailEngine($message);
     }
 

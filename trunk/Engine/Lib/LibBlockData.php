@@ -37,8 +37,8 @@ class LibBlockData extends LibEntityData {
         }
 
         $this->newStorage($data);
-        $this->updateDataValue("mods", explode("|", $this->getDataValue("mods")));
-        $this->updateDataValue("title", ExecEntities::textDisplay($this->getDataValue("title")));
+        $this->updateDataValue("mods", explode("|", $this->getStringValue("mods")));
+        $this->updateDataValue("title", ExecEntities::textDisplay($this->getStringValue("title")));
 
         // Affecte la position du block en lettre.
         $this->sideName = LibBlock::getSideAsLetters($this->getSide());
@@ -96,17 +96,17 @@ class LibBlockData extends LibEntityData {
      * @return string
      */
     public function &getTitle() {
-        return $this->getDataValue("title");
+        return $this->getStringValue("title");
     }
 
     /**
      * Retourne le contenu du block.
      * Valeur nulle possible, notamment en base de données.
-     * 
+     *
      * @return string
      */
     public function &getContent() {
-        return $this->getDataValue("content");
+        return $this->getStringValue("content");
     }
 
     /**
@@ -148,7 +148,7 @@ class LibBlockData extends LibEntityData {
      * @return string
      */
     public function &getType() {
-        $dataValue = ucfirst($this->getDataValue("type"));
+        $dataValue = ucfirst($this->getStringValue("type"));
         return $dataValue;
     }
 
@@ -173,7 +173,7 @@ class LibBlockData extends LibEntityData {
     /**
      * Détermine si le block est installé.
      *
-     * @return boolean
+     * @return bool
      */
     public function installed() {
         return $this->hasValue("block_id");
@@ -182,8 +182,8 @@ class LibBlockData extends LibEntityData {
     /**
      * Vérifie si le block doit être activé.
      *
-     * @param boolean $checkModule
-     * @return boolean true le block doit être actif.
+     * @param bool $checkModule
+     * @return bool true le block doit être actif.
      */
     public function &canActive($checkModule = true) {
         $rslt = false;

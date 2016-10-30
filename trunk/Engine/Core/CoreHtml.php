@@ -168,7 +168,7 @@ class CoreHtml {
     /**
      * Retourne l'état du javascript du client.
      *
-     * @return boolean
+     * @return bool
      */
     public function &javascriptEnabled() {
         return $this->javaScriptEnabled;
@@ -321,7 +321,7 @@ class CoreHtml {
      *
      * @param string $link Adresse URL de base.
      * @param string $displayContent Données à afficher (texte simple ou code html)
-     * @param boolean $layout true ajouter le layout.
+     * @param bool $layout true ajouter le layout.
      * @param string $onclick Données à exécuter lors du clique
      * @param string $addons Code additionnel
      * @return string
@@ -497,7 +497,7 @@ class CoreHtml {
     /**
      * Retourne les scripts à inclure.
      *
-     * @param boolean $forceIncludes Pour forcer l'inclusion des fichiers javascript.
+     * @param bool $forceIncludes Pour forcer l'inclusion des fichiers javascript.
      * @return string
      */
     private function &getMetaIncludeJavascript($forceIncludes = false) {

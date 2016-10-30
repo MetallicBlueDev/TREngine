@@ -246,7 +246,7 @@ class CoreCache extends CacheModel {
     /**
      * Retourne l'état de la connexion.
      *
-     * @return boolean
+     * @return bool
      */
     public function netConnected(): bool {
         return $this->selectedCache !== null && $this->selectedCache->netConnected();
@@ -262,7 +262,7 @@ class CoreCache extends CacheModel {
     /**
      * Sélectionne l'utilisateur.
      *
-     * @return boolean
+     * @return bool
      */
     public function &netSelect() {
         return $this->selectedCache->netSelect();
@@ -336,7 +336,7 @@ class CoreCache extends CacheModel {
      *
      * @param string $path chemin vers le fichier cache
      * @param string $content contenu du fichier cache
-     * @param boolean $overwrite écrasement du fichier
+     * @param bool $overwrite écrasement du fichier
      * @param string $cacheVariableName
      * @param array $cacheVariables
      * @return string
@@ -582,7 +582,7 @@ class CoreCache extends CacheModel {
      * Détermine si le fichier est en cache.
      *
      * @param $path chemin vers le fichier cache
-     * @return boolean true le fichier est en cache
+     * @return bool true le fichier est en cache
      */
     public function cached($path) {
         return is_file($this->getCurrentSectionPath($path, true));
@@ -661,7 +661,7 @@ class CoreCache extends CacheModel {
      * Retourne le chemin de la section courante
      *
      * @param string $dir
-     * @param boolean $includeRoot
+     * @param bool $includeRoot
      * @return string
      */
     private function &getCurrentSectionPath($dir, $includeRoot = false) {

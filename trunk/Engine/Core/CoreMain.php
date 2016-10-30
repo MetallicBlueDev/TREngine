@@ -160,7 +160,7 @@ class CoreMain {
     /**
      * Détermine si l'url rewriting est activé.
      *
-     * @return boolean
+     * @return bool
      */
     public function doUrlRewriting() {
         return ($this->getConfigValue("urlRewriting") === "1") ? true : false;
@@ -169,7 +169,7 @@ class CoreMain {
     /**
      * Vérifie l'état de maintenance.
      *
-     * @return boolean
+     * @return bool
      */
     public function doDumb() {
         return (!$this->doOpening() && !CoreSession::getInstance()->getUserInfos()->hasAdminRank());
@@ -178,7 +178,7 @@ class CoreMain {
     /**
      * Vérifie l'état du site (ouvert/fermé).
      *
-     * @return boolean
+     * @return bool
      */
     public function doOpening() {
         return ($this->getDefaultSiteStatut() === "open");
@@ -187,7 +187,7 @@ class CoreMain {
     /**
      * Détermine l'état des inscriptions au site.
      *
-     * @return boolean
+     * @return bool
      */
     public function registrationAllowed() {
         return ($this->getConfigValue("registrationAllowed") === "1") ? true : false;
@@ -342,7 +342,7 @@ class CoreMain {
     /**
      * Détermine si l'affichage se fait en écran complet (affichage classique).
      *
-     * @return boolean true c'est en plein écran.
+     * @return bool true c'est en plein écran.
      */
     public function isDefaultLayout() {
         return (($this->layout === "default") ? true : false);
@@ -351,7 +351,7 @@ class CoreMain {
     /**
      * Détermine si l'affichage se fait en écran minimal ciblé module.
      *
-     * @return boolean true c'est un affichage de module uniquement.
+     * @return bool true c'est un affichage de module uniquement.
      */
     public function isModuleLayout() {
         return (($this->layout === "module" || $this->layout === "modulepage") ? true : false);
@@ -360,7 +360,7 @@ class CoreMain {
     /**
      * Détermine si l'affichage se fait en écran minimal ciblé block.
      *
-     * @return boolean true c'est un affichage de block uniquement.
+     * @return bool true c'est un affichage de block uniquement.
      */
     public function isBlockLayout() {
         return (($this->layout === "block" || $this->layout == "blockpage") ? true : false);
@@ -433,7 +433,7 @@ class CoreMain {
     /**
      * Recherche de nouveau composant.
      *
-     * @return boolean true nouveau composant détecté.
+     * @return bool true nouveau composant détecté.
      */
     public function newComponentDetected() {
         // TODO détection de nouveau module a coder
@@ -599,7 +599,7 @@ class CoreMain {
     /**
      * Charge le gestionnaire de cache.
      *
-     * @return boolean true chargé
+     * @return bool true chargé
      */
     private function loadCache() {
         $canUse = CoreLoader::isCallable("CoreCache");
@@ -619,7 +619,7 @@ class CoreMain {
     /**
      * Charge le gestionnaire Sql.
      *
-     * @return boolean true chargé
+     * @return bool true chargé
      */
     private function loadSql() {
         $canUse = CoreLoader::isCallable("CoreSql");

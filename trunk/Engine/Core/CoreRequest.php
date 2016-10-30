@@ -24,7 +24,7 @@ class CoreRequest {
      * @param string $name Nom de la variable
      * @param bool $default Donnée par défaut
      * @param string $hash Provenance de la variable
-     * @return boolean
+     * @return bool
      */
     public static function &getBoolean($name, $default = false, $hash = "default") {
         return self::getVars($name, "BOOL", $default, $hash);

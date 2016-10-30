@@ -69,7 +69,7 @@ class LibMenuElement extends CoreDataStorage {
      * @return int
      */
     public function &getParentId() {
-        return $this->getDataValue("parent_id");
+        return $this->getIntValue("parent_id");
     }
 
     /**
@@ -78,7 +78,7 @@ class LibMenuElement extends CoreDataStorage {
      * @return int
      */
     public function &getMenuId() {
-        return $this->getDataValue("menu_id");
+        return $this->getIntValue("menu_id");
     }
 
     /**
@@ -88,7 +88,7 @@ class LibMenuElement extends CoreDataStorage {
      * @return string
      */
     public function &getContent() {
-        return $this->getDataValue("content");
+        return $this->getStringValue("content");
     }
 
     /**
@@ -97,7 +97,7 @@ class LibMenuElement extends CoreDataStorage {
      * @return int
      */
     public function &getRank() {
-        return $this->getDataValue("rank");
+        return $this->getIntValue("rank");
     }
 
     /**
@@ -207,7 +207,7 @@ class LibMenuElement extends CoreDataStorage {
     /**
      * Détermine si l'élément est actif.
      *
-     * @param boolean $active
+     * @param bool $active
      */
     public function setActive($active) {
         $this->active = $active;

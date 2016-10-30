@@ -68,7 +68,7 @@ class CacheFtp extends CacheModel {
         return $rslt;
     }
 
-    public function writeCache($path, $content, $overwrite = true) {
+    public function writeCache(string $path, string $content, bool $overwrite = true) {
         if (!is_file($this->getRootPath($path))) {
             // Soit le fichier n'exite pas, soit tout le dossier n'existe pas
             // On commence par vérifier et si besoin écrire le dossier
@@ -79,12 +79,12 @@ class CacheFtp extends CacheModel {
         $this->writeFile($path, $content, $overwrite);
     }
 
-    public function touchCache($path, $updateTime = 0) {
+    public function touchCache(string $path, int $updateTime = 0) {
         // TODO mise a jour de la date de modif a coder
         parent::touchCache($path, $updateTime);
     }
 
-    public function removeCache($path, $timeLimit = 0) {
+    public function removeCache(string $path, int $timeLimit = 0) {
         if (!empty($path) && is_file($this->getRootPath($path))) {
             // C'est un fichier a supprimer
             $this->removeFile($path, $timeLimit);
@@ -94,7 +94,7 @@ class CacheFtp extends CacheModel {
         }
     }
 
-    public function &getNameList($path): array {
+    public function &getNameList(string $path): array {
         $dirList = array();
 
         if ($this->netConnected()) {
@@ -126,7 +126,7 @@ class CacheFtp extends CacheModel {
         return $dirList;
     }
 
-    public function &getCacheMTime($path): int {
+    public function &getCacheMTime(string $path): int {
         $mTime = 0;
 
         if ($this->netConnected()) {
@@ -143,7 +143,7 @@ class CacheFtp extends CacheModel {
     /**
      * Configure le timeout sur le serveur.
      *
-     * @return boolean true le timeout a été configuré sur le serveur
+     * @return bool true le timeout a été configuré sur le serveur
      */
     private function &setTimeOut(): bool {
         $rslt = ftp_set_option($this->connId, FTP_TIMEOUT_SEC, $this->timeout);
@@ -156,7 +156,7 @@ class CacheFtp extends CacheModel {
      * @param string $path chemin local
      * @return string
      */
-    private function &getRootPath($path): string {
+    private function &getRootPath(string $path): string {
         // TODO mettre en place le root path !!
         return $path;
     }
@@ -209,9 +209,9 @@ class CacheFtp extends CacheModel {
      * Modification des droits CHMOD.
      *
      * @param string $path : chemin du dossier
-     * @param octal $mode : droit à attribuer en OCTAL (en octal: 0777 -> 777)
+     * @param int $mode : droit à attribuer en OCTAL (en octal: 0777 -> 777)
      */
-    private function chmod($path, $mode) {
+    private function chmod(string $path, int $mode) {
         if (ftp_site($this->connId, "CHMOD " . $mode . " " . $this->getRootPath($path))) {
             CoreLogger::addException("Bad response for ftp_site CHMOD command. Path : " . $path);
         }
@@ -222,9 +222,9 @@ class CacheFtp extends CacheModel {
      *
      * @param string $path
      * @param string $content
-     * @param boolean $overwrite
+     * @param bool $overwrite
      */
-    private function writeFile($path, $content, $overwrite = true) {
+    private function writeFile(string $path, string $content, bool $overwrite = true) {
         $content = ($overwrite) ? self::getFileHeader($path, $content) : $content;
 //$path : local => chemin valide local jusqu'au fichier, remote => chemin valide FTP (avec le root donc) jusqu'au fichier
         if ($this->netConnected()) {
@@ -250,7 +250,7 @@ class CacheFtp extends CacheModel {
      *
      * @param string $path : chemin valide à créer
      */
-    private function writeDirectory($path) {
+    private function writeDirectory(string $path) {
         // Savoir si le path est un dossier ou un fichier
         $pathIsDir = self::isDirectoryPath($path);
 
@@ -300,7 +300,7 @@ class CacheFtp extends CacheModel {
      * @param string $path : chemin valide à supprimer
      * @param int $timeLimit
      */
-    private function removeFile($path, $timeLimit) {
+    private function removeFile(string $path, int $timeLimit) {
         // Vérification de la date d'expiration
         $deleteFile = false;
 
@@ -330,7 +330,7 @@ class CacheFtp extends CacheModel {
      * @param string $path : chemin valide à supprimer
      * @param int $timeLimit
      */
-    private function removeDirectory($path, $timeLimit) {
+    private function removeDirectory(string $path, int $timeLimit) {
         // Récuperation des éléments présents
         $dirList = $this->getNameList($path);
 
@@ -371,7 +371,7 @@ class CacheFtp extends CacheModel {
     /**
      * Démarre le mode passif du serveur FTP.
      *
-     * @return boolean true si aucune erreur
+     * @return bool true si aucune erreur
      */
     private function &setPassiveMode(): bool {
         $rslt = false;

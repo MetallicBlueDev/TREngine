@@ -64,7 +64,7 @@ class CoreUrlRewriting {
      * Obtention d'une adresse URL complète.
      *
      * @param string $link Adresse URL à réécrire.
-     * @param boolean $layout true ajouter le layout.
+     * @param bool $layout true ajouter le layout.
      * @return string
      */
     public static function &getLink($link, $layout = false) {
@@ -100,7 +100,7 @@ class CoreUrlRewriting {
     /**
      * Vérifie si les tests ont été passés avec succès.
      *
-     * @return boolean
+     * @return bool
      */
     private function &testPassed() {
         $rslt = false;

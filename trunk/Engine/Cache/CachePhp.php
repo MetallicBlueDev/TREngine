@@ -28,7 +28,7 @@ class CachePhp extends CacheModel {
         return $rslt;
     }
 
-    public function writeCache($path, $content, $overwrite = true) {
+    public function writeCache(string $path, string $content, bool $overwrite = true) {
         if (!is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path)) {
             // Soit le fichier n'exite pas soit tout le dossier n'existe pas
             // On commence par vérifier et si besoin écrire le dossier
@@ -39,13 +39,13 @@ class CachePhp extends CacheModel {
         $this->writeFile($path, $content, $overwrite);
     }
 
-    public function touchCache($path, $updateTime = 0) {
+    public function touchCache(string $path, int $updateTime = 0) {
         if (!touch(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path, $updateTime)) {
             CoreLogger::addException("Touch error on " . $path);
         }
     }
 
-    public function removeCache($path, $timeLimit = 0) {
+    public function removeCache(string $path, int $timeLimit = 0) {
         if (!empty($path) && is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path)) {
             // C'est un fichier a supprimer
             $this->removeFile($path, $timeLimit);
@@ -55,12 +55,12 @@ class CachePhp extends CacheModel {
         }
     }
 
-    public function &getCacheMTime($path): int {
+    public function &getCacheMTime(string $path): int {
         $mTime = filemtime(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path);
         return $mTime;
     }
 
-    public function &getNameList($path): array {
+    public function &getNameList(string $path): array {
         $dirList = array();
 
         // Si le dossier est vide, on prend le dossier par défaut
@@ -95,9 +95,9 @@ class CachePhp extends CacheModel {
      *
      * @param string $pathFile chemin vers le fichier cache
      * @param string $content contenu du fichier cache
-     * @param boolean $overwrite écrasement du fichier
+     * @param bool $overwrite écrasement du fichier
      */
-    private function writeFile($pathFile, $content, $overwrite = true) {
+    private function writeFile(string $pathFile, string $content, bool $overwrite = true) {
         $content = ($overwrite) ? self::getFileHeader($pathFile, $content) : $content;
 
         // Tentative d'écriture du fichier
@@ -152,7 +152,7 @@ class CachePhp extends CacheModel {
      *
      * @param string $path chemin voulu
      */
-    private function writeDirectory($path) {
+    private function writeDirectory(string $path) {
         // Savoir si le path est un dossier ou un fichier
         $pathIsDir = self::isDirectoryPath($path);
 
@@ -202,7 +202,7 @@ class CachePhp extends CacheModel {
      * @param string $path
      * @param int $timeLimit
      */
-    private function removeFile($path, $timeLimit) {
+    private function removeFile(string $path, int $timeLimit) {
         // Vérification de la date d'expiration
         $deleteFile = false;
 
@@ -246,7 +246,7 @@ class CachePhp extends CacheModel {
      * @param string $dirPath
      * @param int $timeLimit
      */
-    private function removeDirectory($dirPath, $timeLimit) {
+    private function removeDirectory(string $dirPath, int $timeLimit) {
         // Ouverture du dossier
         $handle = opendir(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $dirPath);
 

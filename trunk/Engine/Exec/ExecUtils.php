@@ -17,8 +17,8 @@ class ExecUtils {
      *
      * @param string $needle
      * @param array $haystack
-     * @param boolean $strict
-     * @return boolean
+     * @param bool $strict
+     * @return bool
      */
     public static function inArray($needle, array $haystack, $strict = false): bool {
         $rslt = false;
@@ -39,8 +39,8 @@ class ExecUtils {
      *
      * @param string $needle
      * @param array $haystack
-     * @param boolean $strict
-     * @return boolean
+     * @param bool $strict
+     * @return bool
      */
     public static function inMultiArray($needle, array $haystack, $strict = false): bool {
         $rslt = false;
