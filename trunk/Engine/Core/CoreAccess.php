@@ -64,7 +64,7 @@ class CoreAccess {
      * @param CoreAccessToken $token
      * @return string
      */
-    public static function &getAccessErrorMessage(CoreAccessToken $token) {
+    public static function &getAccessErrorMessage(CoreAccessToken $token): string {
         $error = ERROR_ACCES_FORBIDDEN;
 
         if ($token->getRank() === -1) {
@@ -88,7 +88,7 @@ class CoreAccess {
      * @param bool $forceSpecificRank
      * @return bool
      */
-    public static function &autorize(CoreAccessType &$accessType, $forceSpecificRank = false) {
+    public static function &autorize(CoreAccessType &$accessType, bool $forceSpecificRank = false): bool {
         $rslt = false;
 
         if ($accessType->valid()) {
@@ -120,7 +120,7 @@ class CoreAccess {
      * @param int $rank
      * @return string accès traduit (si possible).
      */
-    public static function &getRankAsLitteral($rank) {
+    public static function &getRankAsLitteral(int $rank): string {
         if (!is_numeric($rank)) {
             CoreSecure::getInstance()->throwException("accessRank", null, array(
                 "Invalid rank value: " . $rank));
@@ -142,7 +142,7 @@ class CoreAccess {
      *
      * @return array array("numeric" => identifiant int, "letters" => nom du niveau)
      */
-    public static function &getRankList() {
+    public static function &getRankList(): array {
         $rankList = array();
 
         foreach (self::$rankRegistred as $rank) {

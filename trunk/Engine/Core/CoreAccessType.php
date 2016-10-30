@@ -50,7 +50,7 @@ class CoreAccessType implements CoreAccessToken {
      * @param array $rights
      * @return CoreAccessType
      */
-    public static function &getTypeFromDatabase(array &$rights) {
+    public static function &getTypeFromDatabase(array &$rights): CoreAccessType {
         $newAccess = new CoreAccessType($rights);
         return $newAccess;
     }
@@ -61,7 +61,7 @@ class CoreAccessType implements CoreAccessToken {
      * @param CoreAccessToken $data
      * @return CoreAccessType
      */
-    public static function &getTypeFromToken(CoreAccessToken $data) {
+    public static function &getTypeFromToken(CoreAccessToken $data): CoreAccessType {
         $infos = array(
             "zone" => $data->getZone(),
             "rank" => $data->getRank(),
@@ -75,7 +75,7 @@ class CoreAccessType implements CoreAccessToken {
      *
      * @return CoreAccessType
      */
-    public static function &getTypeFromAdmin() {
+    public static function &getTypeFromAdmin(): CoreAccessType {
         if (!isset(self::$cache[self::MAGIC_ACCESS])) {
             $infos = array(
                 "zone" => self::MAGIC_ACCESS,
@@ -91,7 +91,7 @@ class CoreAccessType implements CoreAccessToken {
      *
      * @return int
      */
-    public function &getRank() {
+    public function &getRank(): int {
         $rank = isset($this->rights['rank']) ? (int) $this->rights['rank'] : CoreAccess::RANK_NONE;
         return $rank;
     }
@@ -102,7 +102,7 @@ class CoreAccessType implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getZone() {
+    public function &getZone(): string {
         return $this->rights['zone'];
     }
 
@@ -112,7 +112,7 @@ class CoreAccessType implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getPage() {
+    public function &getPage(): string {
         return $this->rights['page'];
     }
 
@@ -121,7 +121,7 @@ class CoreAccessType implements CoreAccessToken {
      *
      * @param string $newPage
      */
-    public function &setPage($newPage) {
+    public function &setPage(string $newPage) {
         $this->rights['page'] = $newPage;
         unset($this->rights['validity']);
     }
@@ -132,7 +132,7 @@ class CoreAccessType implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getId() {
+    public function &getId(): string {
         return $this->rights['identifiant'];
     }
 
@@ -141,7 +141,7 @@ class CoreAccessType implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getName() {
+    public function &getName(): string {
         return $this->rights['name'];
     }
 
@@ -150,7 +150,7 @@ class CoreAccessType implements CoreAccessToken {
      *
      * @return bool
      */
-    public function isModuleZone() {
+    public function isModuleZone(): bool {
         return ($this->getZone() === "MODULE");
     }
 
@@ -159,7 +159,7 @@ class CoreAccessType implements CoreAccessToken {
      *
      * @return bool
      */
-    public function isBlockZone() {
+    public function isBlockZone(): bool {
         return ($this->getZone() === "BLOCK");
     }
 
@@ -168,7 +168,7 @@ class CoreAccessType implements CoreAccessToken {
      *
      * @return bool
      */
-    public function isCustomZone() {
+    public function isCustomZone(): bool {
         return !empty($this->getZone()) && !$this->isBlockZone() && !$this->isModuleZone();
     }
 
@@ -177,7 +177,7 @@ class CoreAccessType implements CoreAccessToken {
      *
      * @return bool
      */
-    public function hasPageAccess() {
+    public function hasPageAccess(): bool {
         return !empty($this->getPage());
     }
 
@@ -186,7 +186,7 @@ class CoreAccessType implements CoreAccessToken {
      *
      * @return bool
      */
-    public function &valid() {
+    public function &valid(): bool {
         if (!$this->alreadyChecked()) {
             $this->checkValidity();
         }
@@ -199,7 +199,7 @@ class CoreAccessType implements CoreAccessToken {
      * @param CoreAccessType $otherAccessType
      * @return bool
      */
-    public function isAssignableFrom(CoreAccessType $otherAccessType) {
+    public function isAssignableFrom(CoreAccessType $otherAccessType): bool {
         $rslt = false;
 
         if ($otherAccessType->getZone() === $this->getZone() || $otherAccessType->getZone() === self::MAGIC_ACCESS) {
@@ -266,7 +266,7 @@ class CoreAccessType implements CoreAccessToken {
      *
      * @return bool
      */
-    private function alreadyChecked() {
+    private function alreadyChecked(): bool {
         return isset($this->rights['validity']);
     }
 

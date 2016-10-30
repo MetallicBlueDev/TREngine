@@ -16,26 +16,26 @@ interface CoreAccessToken {
      *
      * @return string
      */
-    public function &getZone();
+    public function &getZone(): string;
 
     /**
      * Retourne l'identifiant de la zone d'échange.
      *
      * @return string
      */
-    public function &getId();
+    public function &getId(): string;
 
     /**
      * Retourne le nom spécifique de la zone d'échange.
      *
      * @return string
      */
-    public function &getName();
+    public function &getName(): string;
 
     /**
      * Retourne le rang de la zone d'échange.
      *
      * @return int
      */
-    public function &getRank();
+    public function &getRank(): int;
 }

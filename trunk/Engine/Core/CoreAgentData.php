@@ -23,7 +23,7 @@ class CoreAgentData extends CoreDataStorage {
      *
      * @return string
      */
-    public function &getAddressIp() {
+    public function &getAddressIp(): string {
         if (!$this->exist("agentIp")) {
             $this->searchAddressIp();
         }
@@ -35,7 +35,7 @@ class CoreAgentData extends CoreDataStorage {
      *
      * @return string
      */
-    public function &getHost() {
+    public function &getHost(): string {
         if (!$this->exist("agentHost")) {
             $this->searchHost();
         }
@@ -47,7 +47,7 @@ class CoreAgentData extends CoreDataStorage {
      *
      * @return string
      */
-    public function &getUserAgent() {
+    public function &getUserAgent(): string {
         if (!$this->exist("userAgent")) {
             $this->searchUserAgent();
         }
@@ -59,7 +59,7 @@ class CoreAgentData extends CoreDataStorage {
      *
      * @return string
      */
-    public function &getOs() {
+    public function &getOs(): string {
         if (!$this->exist("agentOsName")) {
             $this->searchOs();
         }
@@ -69,9 +69,9 @@ class CoreAgentData extends CoreDataStorage {
     /**
      * Nom du navigateur du client.
      *
-     * string string
+     * @return string
      */
-    public function &getBrowserName() {
+    public function &getBrowserName(): string {
         if (!$this->exist("agentBrowserName")) {
             $this->searchBrowserData();
         }
@@ -83,7 +83,7 @@ class CoreAgentData extends CoreDataStorage {
      *
      * string string
      */
-    public function &getBrowserVersion() {
+    public function &getBrowserVersion(): string {
         if (!$this->exist("agentBrowserVersion")) {
             $this->searchBrowserData();
         }
@@ -95,7 +95,7 @@ class CoreAgentData extends CoreDataStorage {
      *
      * @var string
      */
-    public function &getReferer() {
+    public function &getReferer(): string {
         if (!$this->exist("agentReferer")) {
             $this->searchReferer();
         }
