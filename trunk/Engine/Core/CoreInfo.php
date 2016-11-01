@@ -9,6 +9,7 @@ if (preg_match("/CoreInfo.php/ie", $_SERVER['PHP_SELF'])) {
 
 /**
  * Recherche d'information rapide.
+ * Attention, il faut faire en sorte que cette classe soit compatible PHP 5.6 (date minimale 08/2014).
  *
  * @author Sébastien Villemain
  */

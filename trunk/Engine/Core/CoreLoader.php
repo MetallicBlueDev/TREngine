@@ -160,7 +160,7 @@ class CoreLoader {
      * @param string $class Nom de la classe.
      * @return bool true chargé.
      */
-    public static function &classLoader($class) {
+    public static function &classLoader(string $class): bool {
         return self::load($class, ""); // Type indéterminé
     }
 
@@ -170,7 +170,7 @@ class CoreLoader {
      * @param string $plugin Module de traduction.
      * @return bool true chargé.
      */
-    public static function &translateLoader($plugin) {
+    public static function &translateLoader(string $plugin): bool {
         return self::load($plugin, self::TYPE_TRANSLATE);
     }
 
@@ -180,7 +180,7 @@ class CoreLoader {
      * @param string $include Nom de l'include.
      * @return bool true chargé.
      */
-    public static function &includeLoader($include) {
+    public static function &includeLoader(string $include): bool {
         return self::load($include, self::TYPE_INCLUDE);
     }
 
@@ -192,7 +192,7 @@ class CoreLoader {
      * @param bool $static Appel d'instance ou statique
      * @return bool true l'appel peut être effectué
      */
-    public static function &isCallable($className, $methodName = "", $static = false) {
+    public static function &isCallable(string $className, string $methodName = "", bool $static = false): bool {
         $rslt = false;
 
         if (!empty($methodName)) {
@@ -227,12 +227,10 @@ class CoreLoader {
     /**
      * Appel une methode d'un objet ou une méthode statique d'une classe.
      *
-     * @param string $className Nom de la classe.
-     * @param string $methodName Nom de la méthode.
-     * @param bool $static Type d'accès: true statique, false par instance.
-     * @return mixed resultat.
+     * @param string $callback
+     * @return mixed
      */
-    public static function &callback($callback) {
+    public static function &callback(string $callback) {
         $ext = null;
         self::buildExtensionAndKeyName($callback, $ext);
 
@@ -255,7 +253,7 @@ class CoreLoader {
      * @param string $keyName Fichier demandé.
      * @return string chemin absolu ou nulle.
      */
-    public static function &getIncludeAbsolutePath($keyName) {
+    public static function &getIncludeAbsolutePath(string $keyName): string {
         return self::getAbsolutePath($keyName, CoreLoader::TYPE_INCLUDE);
     }
 
@@ -265,7 +263,7 @@ class CoreLoader {
      * @param string $keyName Fichier demandé.
      * @return string chemin absolu ou nulle.
      */
-    public static function &getTranslateAbsolutePath($keyName) {
+    public static function &getTranslateAbsolutePath(string $keyName): string {
         return self::getAbsolutePath($keyName, CoreLoader::TYPE_TRANSLATE);
     }
 
@@ -273,9 +271,10 @@ class CoreLoader {
      * Retourne le nom complet de la classe.
      *
      * @param string $className
+     * @param string $prefixName
      * @return string
      */
-    public static function &getFullQualifiedClassName($className, $prefixName = "") {
+    public static function &getFullQualifiedClassName(string $className, string $prefixName = ""): string {
         $ext = null;
 
         if (!empty($prefixName)) {
@@ -292,7 +291,7 @@ class CoreLoader {
      * @param string $keyName
      * @return string
      */
-    public static function &getFilePathFromNamespace($keyName) {
+    public static function &getFilePathFromNamespace(string $keyName): string {
         // Supprime le premier namespace
         $path = str_replace("TREngine\\", "", $keyName);
 
@@ -305,9 +304,10 @@ class CoreLoader {
      * Retourne le chemin vers le fichier contenant la tranduction.
      *
      * @param string $keyName
+     * @param string $currentLanguage
      * @return string
      */
-    public static function &getFilePathFromTranslate($keyName, $currentLanguage = "") {
+    public static function &getFilePathFromTranslate(string $keyName, string $currentLanguage = ""): string {
         $path = $keyName . DIRECTORY_SEPARATOR . self::TYPE_TRANSLATE . DIRECTORY_SEPARATOR;
 
         if (!empty($currentLanguage)) {
@@ -327,7 +327,7 @@ class CoreLoader {
      * @param string $ext
      * @return string chemin absolu ou nulle.
      */
-    private static function &getAbsolutePath($keyName, $ext) {
+    private static function &getAbsolutePath(string $keyName, string $ext): string {
         $rslt = null;
 
         if (self::isLoaded($keyName, $ext)) {
@@ -343,7 +343,7 @@ class CoreLoader {
      * @param string $ext
      * @return string
      */
-    private static function &getLoadedFileKey($keyName, $ext) {
+    private static function &getLoadedFileKey(string $keyName, string $ext): string {
         $loadKeyName = $keyName;
 
         switch ($ext) {
@@ -362,7 +362,7 @@ class CoreLoader {
      * @param string $ext Extension.
      * @return bool true si c'est déjà chargé.
      */
-    private static function isLoaded($keyName, $ext) {
+    private static function isLoaded(string $keyName, string $ext): bool {
         return isset(self::$loadedFiles[self::getLoadedFileKey($keyName, $ext)]);
     }
 
@@ -373,7 +373,7 @@ class CoreLoader {
      * @param string $ext Extension.
      * @return bool true chargé.
      */
-    private static function &load(&$keyName, $ext) {
+    private static function &load(string &$keyName, string $ext): bool {
         try {
             if (empty($keyName)) {
                 throw new FailLoader("loader");
@@ -417,9 +417,10 @@ class CoreLoader {
      *
      * @param string $keyName
      * @param string $ext
+     * @param string $prefixName
      * @return string
      */
-    private static function buildExtensionAndKeyName(&$keyName, &$ext, $prefixName = "") {
+    private static function buildExtensionAndKeyName(string &$keyName, string &$ext, string $prefixName = ""): string {
         if (empty($ext)) {
             self::buildGenericExtensionAndKeyName($keyName, $ext, $prefixName);
         }
@@ -441,7 +442,7 @@ class CoreLoader {
      * @param string $ext
      * @param string $prefixName
      */
-    private static function buildGenericExtensionAndKeyName(&$keyName, &$ext, $prefixName) {
+    private static function buildGenericExtensionAndKeyName(string &$keyName, string &$ext, string $prefixName) {
         if (strpos($keyName, "\Block\Block") !== false) {
             $ext = self::TYPE_BLOCK;
         } else if (strpos($keyName, "Module\Module") !== false) {
@@ -475,7 +476,7 @@ class CoreLoader {
      * @param string $ext
      * @return string
      */
-    private static function &getFilePath($keyName, $ext) {
+    private static function &getFilePath(string $keyName, string $ext): string {
         $path = "";
 
         switch ($ext) {
@@ -512,7 +513,7 @@ class CoreLoader {
      * @param string $path
      * @return bool
      */
-    private static function &loadFilePath($keyName, $ext, $path) {
+    private static function &loadFilePath(string $keyName, string $ext, string $path): bool {
         $loaded = false;
 
         switch ($ext) {
