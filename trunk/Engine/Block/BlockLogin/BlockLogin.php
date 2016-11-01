@@ -22,21 +22,21 @@ class BlockLogin extends BlockModel {
     /**
      * Affiche le texte de bienvenue.
      *
-     * @var boolean
+     * @var bool
      */
     private $displayText = false;
 
     /**
      * Affiche l'avatar.
      *
-     * @var boolean
+     * @var bool
      */
     private $displayAvatar = false;
 
     /**
      * Affiche les icons rapides.
      *
-     * @var boolean
+     * @var bool
      */
     private $displayIcons = false;
 

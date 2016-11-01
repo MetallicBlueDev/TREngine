@@ -21,14 +21,14 @@ class LibCaptcha {
     /**
      * Vérifie l'état initialisation de la classe.
      *
-     * @var boolean
+     * @var bool
      */
     private static $iniRand = false;
 
     /**
      * Active le script captcha.
      *
-     * @var boolean
+     * @var bool
      */
     private $enabled = false;
 

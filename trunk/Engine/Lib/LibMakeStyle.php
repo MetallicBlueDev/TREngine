@@ -39,14 +39,14 @@ class LibMakeStyle {
     /**
      * Indique si l'instance courante est en mode debug.
      *
-     * @var boolean
+     * @var bool
      */
     private $debugMode = false;
 
     /**
      * Détermine si le template est valide.
      *
-     * @var boolean
+     * @var bool
      */
     private $valid = null;
 

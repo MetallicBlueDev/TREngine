@@ -58,14 +58,14 @@ class LibForm {
     /**
      * Fermeture de la balise fieldset.
      *
-     * @var boolean
+     * @var bool
      */
     private $doFieldset = true;
 
     /**
      * Formulaire présent dans le cache.
      *
-     * @var boolean
+     * @var bool
      */
     private $cached = false;
 

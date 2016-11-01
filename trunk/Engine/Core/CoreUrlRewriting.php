@@ -21,7 +21,7 @@ class CoreUrlRewriting {
     /**
      * Vérifie si l'url rewriting a été activée.
      *
-     * @var boolean
+     * @var bool
      */
     private $canUse = false;
 

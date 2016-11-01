@@ -30,14 +30,14 @@ class CoreSecure {
     /**
      * Verrouillage de la sécurité (exception, erreur critique).
      *
-     * @var boolean
+     * @var bool
      */
     private $locked = false;
 
     /**
      * Stats et debug mode.
      *
-     * @var boolean
+     * @var bool
      */
     private $debuggingMode = false;
 

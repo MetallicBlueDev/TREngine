@@ -46,7 +46,7 @@ class LibMenuElement extends CoreDataStorage {
     /**
      * Détermine si l'élément est actif.
      *
-     * @var boolean
+     * @var bool
      */
     private $active = false;
 
