@@ -37,9 +37,9 @@ class CoreLogger {
     /**
      * Ajoute une nouvelle exception.
      *
-     * @param $msg
+     * @param string $msg
      */
-    public static function addException($msg) {
+    public static function addException(string $msg) {
         $msg = strtolower($msg);
         $msg[0] = strtoupper($msg[0]);
         self::$exceptions[] = date('Y-m-d H:i:s') . " : " . $msg . ".";
@@ -48,9 +48,9 @@ class CoreLogger {
     /**
      * Ajoute une requête sql.
      *
-     * @param $sql string
+     * @param string $sql
      */
-    public static function addSqlRequest($sql) {
+    public static function addSqlRequest(string $sql) {
         self::$sqlRequest[] = $sql;
     }
 
@@ -59,7 +59,7 @@ class CoreLogger {
      *
      * @param string $msg
      */
-    public static function addErrorMessage($msg) {
+    public static function addErrorMessage(string $msg) {
         self::addMessage($msg, "alert");
     }
 
@@ -68,7 +68,7 @@ class CoreLogger {
      *
      * @param string $msg
      */
-    public static function addWarningMessage($msg) {
+    public static function addWarningMessage(string $msg) {
         self::addMessage($msg, "note");
     }
 
@@ -77,14 +77,12 @@ class CoreLogger {
      *
      * @param string $msg
      */
-    public static function addInformationMessage($msg) {
+    public static function addInformationMessage(string $msg) {
         self::addMessage($msg, "info");
     }
 
     /**
      * Retourne les messages pré-formatées.
-     *
-     * @return string
      */
     public static function displayMessages() {
         if (CoreLoader::isCallable("CoreMain")) {
@@ -163,7 +161,7 @@ class CoreLogger {
      *
      * @return array
      */
-    public static function &getExceptions() {
+    public static function &getExceptions(): array {
         return self::$exceptions;
     }
 
@@ -185,7 +183,7 @@ class CoreLogger {
      * @param string $msg
      * @param string $type Le type d'erreur (alert / note / info)
      */
-    private static function addMessage($msg, $type = "alert") {
+    private static function addMessage(string $msg, string $type = "alert") {
         switch ($type) {
             case 'alert':
             case 'note':
@@ -203,17 +201,17 @@ class CoreLogger {
      *
      * @return bool
      */
-    private static function hasExceptions() {
+    private static function hasExceptions(): bool {
         return (!empty(self::$exceptions));
     }
 
     /**
      * Capture les exceptions en chaine de caractères.
      *
-     * @param $var array
+     * @param array $var
      * @return string
      */
-    private static function &serializeData($var) {
+    private static function &serializeData(array $var): string {
         $content = "";
 
         foreach ($var as $msg) {

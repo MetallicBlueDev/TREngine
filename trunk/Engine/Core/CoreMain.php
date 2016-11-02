@@ -58,7 +58,7 @@ class CoreMain {
      *
      * @return CoreMain
      */
-    public static function &getInstance() {
+    public static function &getInstance(): CoreMain {
         self::checkInstance();
         return self::$coreMain;
     }
@@ -86,7 +86,7 @@ class CoreMain {
      *
      * @return CoreAgentData
      */
-    public function getAgentInfos() {
+    public function getAgentInfos(): CoreAgentData {
         if ($this->agentInfos === null) {
             $this->agentInfos = new CoreAgentData();
         }
@@ -114,7 +114,7 @@ class CoreMain {
      * @param string $name
      * @param array $include
      */
-    public function addInclude($name, array $include) {
+    public function addInclude(string $name, array $include) {
         $this->addConfig(array(
             $name => $include));
     }
@@ -126,7 +126,7 @@ class CoreMain {
      * @param string $subKey
      * @return string
      */
-    public function &getConfigValue($key, $subKey = "") {
+    public function &getConfigValue(string $key, string $subKey = ""): string {
         $rslt = null;
 
         if (isset($this->configs[$key])) {
@@ -144,7 +144,7 @@ class CoreMain {
      *
      * @return array
      */
-    public function &getConfigCache() {
+    public function &getConfigCache(): array {
         return $this->getConfigValue("configs_cache");
     }
 
@@ -153,7 +153,7 @@ class CoreMain {
      *
      * @return array
      */
-    public function &getConfigDatabase() {
+    public function &getConfigDatabase(): array {
         return $this->getConfigValue("configs_database");
     }
 
@@ -162,7 +162,7 @@ class CoreMain {
      *
      * @return bool
      */
-    public function doUrlRewriting() {
+    public function doUrlRewriting(): bool {
         return ($this->getConfigValue("urlRewriting") === "1") ? true : false;
     }
 
@@ -171,7 +171,7 @@ class CoreMain {
      *
      * @return bool
      */
-    public function doDumb() {
+    public function doDumb(): bool {
         return (!$this->doOpening() && !CoreSession::getInstance()->getUserInfos()->hasAdminRank());
     }
 
@@ -180,7 +180,7 @@ class CoreMain {
      *
      * @return bool
      */
-    public function doOpening() {
+    public function doOpening(): bool {
         return ($this->getDefaultSiteStatut() === "open");
     }
 
@@ -189,7 +189,7 @@ class CoreMain {
      *
      * @return bool
      */
-    public function registrationAllowed() {
+    public function registrationAllowed(): bool {
         return ($this->getConfigValue("registrationAllowed") === "1") ? true : false;
     }
 
@@ -198,7 +198,7 @@ class CoreMain {
      *
      * @return string
      */
-    public function &getCookiePrefix() {
+    public function &getCookiePrefix(): string {
         return $this->getConfigValue("cookiePrefix");
     }
 
@@ -207,8 +207,8 @@ class CoreMain {
      *
      * @return int
      */
-    public function &getSessionTimeLimit() {
-        return $this->getConfigValue("sessionTimeLimit");
+    public function &getSessionTimeLimit(): int {
+        return (int) $this->getConfigValue("sessionTimeLimit");
     }
 
     /**
@@ -216,7 +216,7 @@ class CoreMain {
      *
      * @return string
      */
-    public function &getCryptKey() {
+    public function &getCryptKey(): string {
         return $this->getConfigValue("cryptKey");
     }
 
@@ -225,7 +225,7 @@ class CoreMain {
      *
      * @return string
      */
-    public function &getCaptchaMode() {
+    public function &getCaptchaMode(): string {
         return $this->getConfigValue("captchaMode");
     }
 
@@ -234,7 +234,7 @@ class CoreMain {
      *
      * @return string
      */
-    public function &getDefaultAdministratorMail() {
+    public function &getDefaultAdministratorMail(): string {
         return $this->getDefaultConfigValue("defaultAdministratorMail", function() {
             return TR_ENGINE_MAIL;
         });
@@ -245,7 +245,7 @@ class CoreMain {
      *
      * @return string
      */
-    public function &getDefaultSiteName() {
+    public function &getDefaultSiteName(): string {
         return $this->getDefaultConfigValue("defaultSiteName", function() {
             return CoreRequest::getString("SERVER_NAME", "", "SERVER");
         });
@@ -256,7 +256,7 @@ class CoreMain {
      *
      * @return string
      */
-    public function &getDefaultSiteSlogan() {
+    public function &getDefaultSiteSlogan(): string {
         return $this->getDefaultConfigValue("defaultSiteSlogan", function() {
             return "TR ENGINE";
         });
@@ -267,7 +267,7 @@ class CoreMain {
      *
      * @return string
      */
-    public function &getDefaultSiteStatut() {
+    public function &getDefaultSiteStatut(): string {
         return $this->getDefaultConfigValue("defaultSiteStatut", function() {
             return "open";
         });
@@ -278,7 +278,7 @@ class CoreMain {
      *
      * @return string
      */
-    public function &getDefaultSiteCloseReason() {
+    public function &getDefaultSiteCloseReason(): string {
         return $this->getDefaultConfigValue("defaultSiteCloseReason", function() {
             return " ";
         });
@@ -289,7 +289,7 @@ class CoreMain {
      *
      * @return string
      */
-    public function &getDefaultDescription() {
+    public function &getDefaultDescription(): string {
         return $this->getDefaultConfigValue("defaultDescription", function() {
             return "TR ENGINE";
         });
@@ -300,7 +300,7 @@ class CoreMain {
      *
      * @return string
      */
-    public function &getDefaultKeyWords() {
+    public function &getDefaultKeyWords(): string {
         return $this->getDefaultConfigValue("defaultKeyWords", function() {
             return "TR ENGINE";
         });
@@ -311,7 +311,7 @@ class CoreMain {
      *
      * @return string
      */
-    public function &getDefaultLanguage() {
+    public function &getDefaultLanguage(): string {
         return $this->getDefaultConfigValue("defaultLanguage", function() {
             return "english";
         });
@@ -322,7 +322,7 @@ class CoreMain {
      *
      * @return string
      */
-    public function &getDefaultTemplate() {
+    public function &getDefaultTemplate(): string {
         return $this->getDefaultConfigValue("defaultTemplate", function() {
             return " ";
         });
@@ -333,7 +333,7 @@ class CoreMain {
      *
      * @return string
      */
-    public function &getDefaultMod() {
+    public function &getDefaultMod(): string {
         return $this->getDefaultConfigValue("defaultMod", function() {
             return "home";
         });
@@ -344,7 +344,7 @@ class CoreMain {
      *
      * @return bool true c'est en plein écran.
      */
-    public function isDefaultLayout() {
+    public function isDefaultLayout(): bool {
         return (($this->layout === "default") ? true : false);
     }
 
@@ -353,7 +353,7 @@ class CoreMain {
      *
      * @return bool true c'est un affichage de module uniquement.
      */
-    public function isModuleLayout() {
+    public function isModuleLayout(): bool {
         return (($this->layout === "module" || $this->layout === "modulepage") ? true : false);
     }
 
@@ -362,7 +362,7 @@ class CoreMain {
      *
      * @return bool true c'est un affichage de block uniquement.
      */
-    public function isBlockLayout() {
+    public function isBlockLayout(): bool {
         return (($this->layout === "block" || $this->layout == "blockpage") ? true : false);
     }
 
@@ -435,7 +435,7 @@ class CoreMain {
      *
      * @return bool true nouveau composant détecté.
      */
-    public function newComponentDetected() {
+    public function newComponentDetected(): bool {
         // TODO détection de nouveau module a coder
         return false;
     }
@@ -501,7 +501,7 @@ class CoreMain {
      * @param string $callback
      * @return string
      */
-    private function &getDefaultConfigValue($keyName, $callback) {
+    private function &getDefaultConfigValue(string $keyName, string $callback): string {
         $value = $this->getConfigValue($keyName);
 
         if (empty($value)) {
@@ -601,7 +601,7 @@ class CoreMain {
      *
      * @return bool true chargé
      */
-    private function loadCache() {
+    private function loadCache(): bool {
         $canUse = CoreLoader::isCallable("CoreCache");
 
         if (!$canUse) {
@@ -621,7 +621,7 @@ class CoreMain {
      *
      * @return bool true chargé
      */
-    private function loadSql() {
+    private function loadSql(): bool {
         $canUse = CoreLoader::isCallable("CoreSql");
 
         if (!$canUse) {
@@ -638,8 +638,10 @@ class CoreMain {
 
     /**
      * Charge la configuration générale.
+     *
+     * @return bool
      */
-    private function loadConfig() {
+    private function loadConfig(): bool {
         // Chemin vers le fichier de configuration du moteur
         $canUse = CoreLoader::includeLoader("configs_config");
 
