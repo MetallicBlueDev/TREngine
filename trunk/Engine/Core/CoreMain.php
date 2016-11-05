@@ -393,7 +393,7 @@ class CoreMain {
             }
 
             // Validation et routine du cache
-            CoreCache::getInstance()->workspaceCache();
+            CoreCache::getInstance()->runJobs();
 
             if (CoreSecure::debuggingMode()) {
                 // Assemble tous les messages d'erreurs dans un fichier log

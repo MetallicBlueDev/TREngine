@@ -91,10 +91,10 @@ abstract class CacheModel extends CoreTransaction {
      * Ecriture du fichier cache.
      *
      * @param string $path chemin vers le fichier cache
-     * @param string $content contenu du fichier cache
+     * @param mixed $content contenu du fichier cache
      * @param bool $overwrite écrasement du fichier
      */
-    public function writeCache(string $path, string $content, bool $overwrite = true) {
+    public function writeCache(string $path, $content, bool $overwrite = true) {
         unset($path);
         unset($content);
         unset($overwrite);

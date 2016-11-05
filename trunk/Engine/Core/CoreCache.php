@@ -346,10 +346,10 @@ class CoreCache extends CacheModel {
      * {@inheritDoc}
      *
      * @param string $path
-     * @param string $content
+     * @param mixed $content
      * @param bool $overwrite
      */
-    public function writeCache(string $path, string $content, bool $overwrite = true) {
+    public function writeCache(string $path, $content, bool $overwrite = true) {
         $this->writeCacheWithReturn($path, $content, $overwrite);
     }
 
@@ -358,11 +358,11 @@ class CoreCache extends CacheModel {
      * Prépare les données pour la soumission dans le cache et retourne les données telles qu’elles seront écrites.
      *
      * @param string $path
-     * @param string $content
+     * @param mixed $content
      * @param bool $overwrite
      * @return string
      */
-    public function &writeCacheWithReturn(string $path, string $content, bool $overwrite = true): string {
+    public function &writeCacheWithReturn(string $path, $content, bool $overwrite = true): string {
         if (is_array($content)) {
             $content = $this->serializeData($content);
         }
@@ -590,11 +590,11 @@ class CoreCache extends CacheModel {
     /**
      * Serialise la variable en chaine de caractères pour une mise en cache.
      *
-     * @param string $data ($data = "data") or array $data ($data = array("name" => "data"))
+     * @param mixed $data ($data = "data") or array $data ($data = array("name" => "data"))
      * @param string $lastKey clé supplémentaire
      * @return string
      */
-    public function &serializeData($data, $lastKey = "") {
+    public function &serializeData($data, string $lastKey = ""): string {
         $content = "";
 
         if (is_array($data)) {
@@ -619,10 +619,10 @@ class CoreCache extends CacheModel {
     /**
      * Détermine si le fichier est en cache.
      *
-     * @param $path chemin vers le fichier cache
+     * @param string $path chemin vers le fichier cache
      * @return bool true le fichier est en cache
      */
-    public function cached($path) {
+    public function cached(string $path): bool {
         return is_file($this->getCurrentSectionPath($path, true));
     }
 
@@ -630,9 +630,9 @@ class CoreCache extends CacheModel {
      * Parcours récursivement le dossier du cache actuel afin de supprimer les fichiers trop vieux.
      * (Nettoie le dossier courant du cache).
      *
-     * @param $timeLimit la limite de temps
+     * @param int $timeLimit la limite de temps
      */
-    public function cleanCache($timeLimit) {
+    public function cleanCache(int $timeLimit) {
         $exist = $this->cached(self::CHECKER_FILENAME);
         $valid = false;
 
@@ -656,16 +656,14 @@ class CoreCache extends CacheModel {
             }
 
             // Suppression du cache périmé
-            $this->removeCache("", $timeLimit
-            );
+            $this->removeCache("", $timeLimit);
         }
     }
 
     /**
      * Exécute la routine du cache.
      */
-    public function workspaceCache() {
-        // Si le cache a besoin de générer une action
+    public function runJobs() {
         if (!empty($this->removeCache)) {
             // Suppression de cache demandée
             foreach ($this->removeCache as $path => $timeLimit) {
@@ -696,13 +694,13 @@ class CoreCache extends CacheModel {
     }
 
     /**
-     * Retourne le chemin de la section courante
+     * Retourne le chemin de la section courante.
      *
      * @param string $dir
      * @param bool $includeRoot
      * @return string
      */
-    private function &getCurrentSectionPath($dir, $includeRoot = false) {
+    private function &getCurrentSectionPath(string $dir, bool $includeRoot = false): string {
         $dir = $this->currentSection . DIRECTORY_SEPARATOR . $dir;
 
         if ($includeRoot) {
@@ -718,7 +716,7 @@ class CoreCache extends CacheModel {
      * @param string $value
      * @return string
      */
-    private function &serializeVariable($key, $value) {
+    private function &serializeVariable(string $key, string $value): string {
         $content = "$" . $this->getVariableName($key) . " = \"" . ExecEntities::addSlashes($value) . "\"; ";
         return $content;
     }
@@ -729,7 +727,7 @@ class CoreCache extends CacheModel {
      * @param string $key
      * @return string
      */
-    private function &getVariableName($key = "") {
+    private function &getVariableName(string $key = ""): string {
         if (empty($this->currentSection)) {
             $this->changeCurrentSection();
         }

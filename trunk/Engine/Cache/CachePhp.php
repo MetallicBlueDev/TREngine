@@ -43,10 +43,10 @@ class CachePhp extends CacheModel {
     /**
      * {@inheritDoc}
      * @param string $path
-     * @param string $content
+     * @param mixed $content
      * @param bool $overwrite
      */
-    public function writeCache(string $path, string $content, bool $overwrite = true) {
+    public function writeCache(string $path, $content, bool $overwrite = true) {
         if (!is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path)) {
             // Soit le fichier n'exite pas soit tout le dossier n'existe pas
             // On commence par vérifier et si besoin écrire le dossier
