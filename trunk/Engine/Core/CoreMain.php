@@ -120,26 +120,6 @@ class CoreMain {
     }
 
     /**
-     * Retourne le contenu de la configuration.
-     *
-     * @param string $key
-     * @param string $subKey
-     * @return string
-     */
-    public function &getConfigValue(string $key, string $subKey = ""): string {
-        $rslt = null;
-
-        if (isset($this->configs[$key])) {
-            $rslt = $this->configs[$key];
-
-            if (isset($rslt[$subKey])) {
-                $rslt = $rslt[$subKey];
-            }
-        }
-        return $rslt;
-    }
-
-    /**
      * Retourne la configuration du cache.
      *
      * @return array
@@ -449,6 +429,26 @@ class CoreMain {
 //        if (is_file($installPath)) {
 //            require $installPath;
 //        }
+    }
+
+    /**
+     * Retourne le contenu de la configuration.
+     *
+     * @param string $key
+     * @param string $subKey
+     * @return string
+     */
+    private function &getConfigValue(string $key, string $subKey = ""): string {
+        $rslt = null;
+
+        if (isset($this->configs[$key])) {
+            $rslt = $this->configs[$key];
+
+            if (isset($rslt[$subKey])) {
+                $rslt = $rslt[$subKey];
+            }
+        }
+        return $rslt;
     }
 
     /**
