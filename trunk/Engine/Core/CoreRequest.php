@@ -105,7 +105,7 @@ class CoreRequest {
      * @param string $hash
      * @return array
      */
-    private static function &getRequest($hash = "default") {
+    private static function &getRequest(string $hash = "default"): array {
         $hash = strtoupper($hash);
         $input = array();
 
@@ -147,7 +147,7 @@ class CoreRequest {
      * @param string $hash Provenance de la variable
      * @return mixed
      */
-    private static function &getVars($name, $type, $default = "", $hash = "default") {
+    private static function &getVars(string $name, string $type, $default = "", string $hash = "default") {
         $rslt = null;
 
         if (isset(self::$buffer[$name])) {
@@ -173,7 +173,7 @@ class CoreRequest {
      * @param string $type
      * @return object
      */
-    private static function &protect($content, $type) {
+    private static function &protect($content, string $type) {
         $type = strtoupper($type);
 
         switch ($type) {
