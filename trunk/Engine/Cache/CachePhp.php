@@ -13,21 +13,39 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  */
 class CachePhp extends CacheModel {
 
+    /**
+     * {@inheritDoc}
+     * @return bool
+     */
     protected function canUse(): bool {
         // Gestionnaire natif; toujours diponible
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return bool
+     */
     public function netConnected(): bool {
         // Gestionnaire natif; toujours diponible
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return bool
+     */
     public function &netSelect(): bool {
         $rslt = true;
         return $rslt;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $path
+     * @param string $content
+     * @param bool $overwrite
+     */
     public function writeCache(string $path, string $content, bool $overwrite = true) {
         if (!is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path)) {
             // Soit le fichier n'exite pas soit tout le dossier n'existe pas
@@ -39,12 +57,22 @@ class CachePhp extends CacheModel {
         $this->writeFile($path, $content, $overwrite);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $path
+     * @param int $updateTime
+     */
     public function touchCache(string $path, int $updateTime = 0) {
         if (!touch(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path, $updateTime)) {
             CoreLogger::addException("Touch error on " . $path);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $path
+     * @param int $timeLimit
+     */
     public function removeCache(string $path, int $timeLimit = 0) {
         if (!empty($path) && is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path)) {
             // C'est un fichier a supprimer
@@ -55,11 +83,21 @@ class CachePhp extends CacheModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $path
+     * @return int
+     */
     public function &getCacheMTime(string $path): int {
         $mTime = filemtime(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path);
         return $mTime;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $path
+     * @return array
+     */
     public function &getNameList(string $path): array {
         $dirList = array();
 

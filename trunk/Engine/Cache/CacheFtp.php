@@ -21,6 +21,10 @@ class CacheFtp extends CacheModel {
      */
     private $timeOut = 10;
 
+    /**
+     * {@inheritDoc}
+     * @return bool
+     */
     public function canUse(): bool {
         $rslt = extension_loaded("ftp") && function_exists('ftp_connect');
 
@@ -30,6 +34,9 @@ class CacheFtp extends CacheModel {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function netConnect() {
         // Si aucune connexion engagé
         if ($this->connId === null) {
@@ -46,6 +53,9 @@ class CacheFtp extends CacheModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function netDeconnect() {
         if ($this->netConnected()) {
             if (ftp_close($this->connId)) {
@@ -54,6 +64,10 @@ class CacheFtp extends CacheModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @return bool
+     */
     public function &netSelect(): bool {
         $rslt = false;
 
@@ -68,6 +82,12 @@ class CacheFtp extends CacheModel {
         return $rslt;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $path
+     * @param string $content
+     * @param bool $overwrite
+     */
     public function writeCache(string $path, string $content, bool $overwrite = true) {
         if (!is_file($this->getRootPath($path))) {
             // Soit le fichier n'exite pas, soit tout le dossier n'existe pas
@@ -79,11 +99,21 @@ class CacheFtp extends CacheModel {
         $this->writeFile($path, $content, $overwrite);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $path
+     * @param int $updateTime
+     */
     public function touchCache(string $path, int $updateTime = 0) {
         // TODO mise a jour de la date de modif a coder
         parent::touchCache($path, $updateTime);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $path
+     * @param int $timeLimit
+     */
     public function removeCache(string $path, int $timeLimit = 0) {
         if (!empty($path) && is_file($this->getRootPath($path))) {
             // C'est un fichier a supprimer
@@ -94,6 +124,11 @@ class CacheFtp extends CacheModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $path
+     * @return array
+     */
     public function &getNameList(string $path): array {
         $dirList = array();
 
@@ -126,6 +161,11 @@ class CacheFtp extends CacheModel {
         return $dirList;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $path
+     * @return int
+     */
     public function &getCacheMTime(string $path): int {
         $mTime = 0;
 
