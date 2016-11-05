@@ -300,7 +300,7 @@ class CoreSecure {
     /**
      * Ajoute un antislash pour chaque quote.
      *
-     * @param array $key objet sans antislash
+     * @param mixed $key objet sans antislash
      */
     private function addSlashesForQuotes(&$key) {
         if (is_array($key)) {

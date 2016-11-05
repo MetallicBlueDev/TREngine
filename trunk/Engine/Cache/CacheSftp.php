@@ -13,6 +13,7 @@ class CacheSftp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     * 
      * @return bool
      */
     protected function canUse(): bool {

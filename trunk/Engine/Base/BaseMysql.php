@@ -26,6 +26,7 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return bool
      */
     protected function canUse(): bool {
@@ -52,6 +53,7 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return bool
      */
     public function &netSelect(): bool {
@@ -76,9 +78,10 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $sql
      */
-    public function query(string $sql) {
+    public function query(string $sql = "") {
         $this->queries = mysql_query($sql, $this->connId);
 
         if ($this->queries === false) {
@@ -88,6 +91,7 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return array
      */
     public function &fetchArray(): array {
@@ -105,6 +109,7 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $className
      * @return array
      */
@@ -130,13 +135,14 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
-     * @param type $query
+     *
+     * @param mixed $query
      * @return bool
      */
-    public function &freeResult($query): bool {
+    public function &freeResult($query = null): bool {
         $rslt = false;
 
-        if (is_resource($query)) {
+        if ($query !== null && is_resource($query)) {
             $rslt = mysql_free_result($query);
         }
         return $rslt;
@@ -144,6 +150,7 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return int
      */
     public function &affectedRows(): int {
@@ -159,6 +166,7 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return string
      */
     public function &insertId(): string {
@@ -168,6 +176,7 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return array
      */
     public function &getLastError(): array {
@@ -178,6 +187,7 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return string
      */
     public function &getVersion(): string {
@@ -189,6 +199,7 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $table
      * @param array $values
      * @param array $where
@@ -202,6 +213,7 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $table
      * @param array $values
      * @param array $where
@@ -215,6 +227,7 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $table
      * @param array $keys
      * @param array $values
@@ -226,6 +239,7 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $table
      * @param array $where
      * @param array $like
@@ -238,6 +252,7 @@ class BaseMysql extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $str
      * @return string
      */

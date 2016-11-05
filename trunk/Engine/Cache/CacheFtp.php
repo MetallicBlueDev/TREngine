@@ -23,6 +23,7 @@ class CacheFtp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return bool
      */
     public function canUse(): bool {
@@ -66,6 +67,7 @@ class CacheFtp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return bool
      */
     public function &netSelect(): bool {
@@ -84,6 +86,7 @@ class CacheFtp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $path
      * @param mixed $content
      * @param bool $overwrite
@@ -101,6 +104,7 @@ class CacheFtp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $path
      * @param int $updateTime
      */
@@ -111,6 +115,7 @@ class CacheFtp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $path
      * @param int $timeLimit
      */
@@ -126,6 +131,7 @@ class CacheFtp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $path
      * @return array
      */
@@ -163,6 +169,7 @@ class CacheFtp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $path
      * @return int
      */

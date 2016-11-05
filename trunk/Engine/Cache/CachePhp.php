@@ -15,6 +15,7 @@ class CachePhp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return bool
      */
     protected function canUse(): bool {
@@ -24,6 +25,7 @@ class CachePhp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return bool
      */
     public function netConnected(): bool {
@@ -33,6 +35,7 @@ class CachePhp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return bool
      */
     public function &netSelect(): bool {
@@ -42,6 +45,7 @@ class CachePhp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $path
      * @param mixed $content
      * @param bool $overwrite
@@ -59,6 +63,7 @@ class CachePhp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $path
      * @param int $updateTime
      */
@@ -70,6 +75,7 @@ class CachePhp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $path
      * @param int $timeLimit
      */
@@ -85,6 +91,7 @@ class CachePhp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $path
      * @return int
      */
@@ -95,6 +102,7 @@ class CachePhp extends CacheModel {
 
     /**
      * {@inheritDoc}
+     * 
      * @param string $path
      * @return array
      */

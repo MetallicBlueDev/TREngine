@@ -25,6 +25,7 @@ abstract class CacheModel extends CoreTransaction {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $message
      * @throws FailCache
      */
@@ -34,6 +35,7 @@ abstract class CacheModel extends CoreTransaction {
 
     /**
      * {@inheritDoc}
+     * 
      * @param array $transaction
      * @throws FailCache
      */

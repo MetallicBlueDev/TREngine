@@ -58,6 +58,7 @@ class CacheSocket extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return bool
      */
     public function canUse(): bool {
@@ -106,6 +107,7 @@ class CacheSocket extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return bool
      */
     public function &netSelect(): bool {
@@ -138,6 +140,7 @@ class CacheSocket extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $path
      * @param mixed $content
      * @param bool $overwrite
@@ -155,6 +158,7 @@ class CacheSocket extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $path
      * @param int $updateTime
      */
@@ -165,6 +169,7 @@ class CacheSocket extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $path
      * @param int $timeLimit
      */
@@ -180,6 +185,7 @@ class CacheSocket extends CacheModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $path
      * @return array
      */
@@ -236,6 +242,7 @@ class CacheSocket extends CacheModel {
 
     /**
      * {@inheritDoc}
+     * 
      * @param string $path
      * @return int
      */

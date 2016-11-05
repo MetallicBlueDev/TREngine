@@ -111,7 +111,7 @@ class CoreSession {
      *
      * @return CoreSession
      */
-    public static function &getInstance() {
+    public static function &getInstance(): CoreSession {
         self::checkInstance();
         return self::$coreSession;
     }
@@ -143,7 +143,7 @@ class CoreSession {
      * @param string $userPass Mot de passe du compte
      * @return bool true succès
      */
-    public static function &startConnection($userName, $userPass) {
+    public static function &startConnection(string $userName, string $userPass): bool {
         $rslt = false;
 
         // Arrête de la session courante si besoin

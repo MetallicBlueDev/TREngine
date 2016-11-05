@@ -18,7 +18,7 @@ abstract class BaseModel extends CoreTransaction {
     /**
      * Dernier resultat de la dernière requête SQL.
      *
-     * @var resource
+     * @var mixed
      */
     protected $queries = "";
 
@@ -59,6 +59,7 @@ abstract class BaseModel extends CoreTransaction {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $message
      * @throws FailSql
      */
@@ -175,7 +176,7 @@ abstract class BaseModel extends CoreTransaction {
      *
      * @param string $sql
      */
-    public function query(string $sql) {
+    public function query(string $sql = "") {
         unset($sql);
     }
 
@@ -242,7 +243,7 @@ abstract class BaseModel extends CoreTransaction {
     /**
      * Retourne le dernier résultat de la dernière requête executée.
      *
-     * @return resource
+     * @return mixed
      */
     public function &getQueries() {
         return $this->queries;
@@ -260,11 +261,13 @@ abstract class BaseModel extends CoreTransaction {
     /**
      * Libère la mémoire du resultat.
      *
-     * @param resource $query
+     * @param mixed $query
      * @return bool
      */
-    public function &freeResult($query): bool {
-        unset($query);
+    public function &freeResult($query = null): bool {
+        if ($query !== null) {
+            unset($query);
+        }
         $rslt = false;
         return $rslt;
     }
@@ -275,7 +278,7 @@ abstract class BaseModel extends CoreTransaction {
      * @param string $name
      * @param string $key clé à utiliser
      */
-    public function addArrayBuffer(string $name, string $key) {
+    public function addArrayBuffer(string $name, string $key = "") {
         if (!isset($this->buffer[$name])) {
             foreach ($this->fetchArray() as $row) {
                 if (!empty($key)) {
@@ -295,7 +298,7 @@ abstract class BaseModel extends CoreTransaction {
      * @param string $name
      * @param string $key clé à utiliser
      */
-    public function addObjectBuffer(string $name, string $key) {
+    public function addObjectBuffer(string $name, string $key = "") {
         if (!isset($this->buffer[$name])) {
             foreach ($this->fetchObject() as $row) {
                 if (!empty($key)) {

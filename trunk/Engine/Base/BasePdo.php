@@ -27,6 +27,7 @@ class BasePdo extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return bool
      */
     protected function canUse(): bool {
@@ -67,6 +68,7 @@ class BasePdo extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return bool
      */
     public function &netSelect(): bool {
@@ -87,9 +89,10 @@ class BasePdo extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $sql
      */
-    public function query(string $sql) {
+    public function query(string $sql = "") {
         $this->queries = $this->getPdo()->query($sql);
 
         if ($this->queries === false) {
@@ -99,6 +102,7 @@ class BasePdo extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return array
      */
     public function &fetchArray(): array {
@@ -113,6 +117,7 @@ class BasePdo extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $className
      * @return array
      */
@@ -132,17 +137,21 @@ class BasePdo extends BaseModel {
 
     /**
      * {@inheritDoc}
-     * @param type $query
+     *
+     * @param mixed $query
      * @return bool
      */
-    public function &freeResult($query): bool {
-        unset($query);
+    public function &freeResult($query = null): bool {
+        if ($query !== null) {
+            unset($query);
+        }
         $success = true;
         return $success;
     }
 
     /**
      * {@inheritDoc}
+     *
      * @return int
      */
     public function &affectedRows(): int {
@@ -157,6 +166,7 @@ class BasePdo extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return string
      */
     public function &insertId(): string {
@@ -165,6 +175,7 @@ class BasePdo extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return array
      */
     public function &getLastError(): array {
@@ -175,6 +186,7 @@ class BasePdo extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @return string
      */
     public function &getVersion(): string {
@@ -185,6 +197,7 @@ class BasePdo extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $table
      * @param array $values
      * @param array $where
@@ -197,6 +210,7 @@ class BasePdo extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $table
      * @param array $values
      * @param array $where
@@ -209,6 +223,7 @@ class BasePdo extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $table
      * @param array $keys
      * @param array $values
@@ -219,6 +234,7 @@ class BasePdo extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $table
      * @param array $where
      * @param array $like
@@ -230,6 +246,7 @@ class BasePdo extends BaseModel {
 
     /**
      * {@inheritDoc}
+     *
      * @param string $str
      * @return string
      */
@@ -264,7 +281,7 @@ class BasePdo extends BaseModel {
     /**
      * Retourne le résultat de la dernière requête.
      *
-     * @param resource $query
+     * @param mixed $query
      * @return PDOStatement
      */
     private function &getPdoResult($query = null): PDOStatement {

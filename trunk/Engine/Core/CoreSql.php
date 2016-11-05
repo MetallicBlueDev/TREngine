@@ -63,11 +63,19 @@ class CoreSql extends BaseModel {
         }
     }
 
+    /**
+     * Aucune action réalisée dans ce contexte.
+     *
+     * @param array $database
+     */
     public function initialize(array &$database) {
         // NE RIEN FAIRE
         unset($database);
     }
 
+    /**
+     * Destruction du gestionnaire.
+     */
     public function __destruct() {
         $this->selectedBase = null;
     }
@@ -110,14 +118,14 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Etablie une connexion à la base de données.
+     * {@inheritDoc}
      */
-    public function netConnect(): bool {
+    public function netConnect() {
         $this->selectedBase->netConnect();
     }
 
     /**
-     * Retourne l'état de la connexion.
+     * {@inheritDoc}
      *
      * @return bool
      */
@@ -126,7 +134,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Déconnexion de la base de données.
+     * {@inheritDoc}
      */
     public function netDeconnect() {
         if (self::hasConnection()) {
@@ -144,8 +152,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne le nombre de ligne affectées par la dernière commande.
-     * (SELECT, SHOW, DELETE, INSERT, REPLACE and UPDATE).
+     * {@inheritDoc}
      *
      * @return int
      */
@@ -154,7 +161,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne le nom de l'hôte.
+     * {@inheritDoc}
      *
      * @return string
      */
@@ -163,7 +170,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne le nom d'utilisateur.
+     * {@inheritDoc}
      *
      * @return string
      */
@@ -172,7 +179,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne le mot de passe.
+     * {@inheritDoc}
      *
      * @return string
      */
@@ -181,7 +188,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne le nom de la base de données.
+     * {@inheritDoc}
      *
      * @return string
      */
@@ -190,7 +197,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne le type de base (exemple mysqli).
+     * {@inheritDoc}
      *
      * @return string
      */
@@ -199,7 +206,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne le préfixe à utiliser sur les tables.
+     * {@inheritDoc}
      *
      * @return string
      */
@@ -208,14 +215,14 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Supprime des informations.
+     * {@inheritDoc}
      *
      * @param string $table Nom de la table
      * @param array $where
      * @param array $like
      * @param string $limit
      */
-    public function delete($table, array $where = array(), array $like = array(), $limit = "") {
+    public function delete(string $table, array $where = array(), array $like = array(), string $limit = "") {
         $this->selectedBase->delete($table, $where, $like, $limit);
 
         try {
@@ -226,7 +233,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne un tableau contenant toutes les lignes demandées.
+     * {@inheritDoc}
      *
      * @return array
      */
@@ -235,22 +242,23 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne un tableau contenant tous les objets demandés.
+     * {@inheritDoc}
      *
-     * @return object[]
+     * @param string $className
+     * @return array
      */
-    public function &fetchObject($className = null): array {
+    public function &fetchObject(string $className = null): array {
         return $this->selectedBase->fetchObject($className);
     }
 
     /**
-     * Insère une ou des valeurs dans une table.
+     * {@inheritDoc}
      *
      * @param string $table Nom de la table
      * @param array $keys
      * @param array $values
      */
-    public function insert($table, array $keys, array $values) {
+    public function insert(string $table, array $keys, array $values) {
         $this->selectedBase->insert($table, $keys, $values);
 
         try {
@@ -261,7 +269,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne l'identifiant de la dernière ligne inserée.
+     * {@inheritDoc}
      *
      * @return string
      */
@@ -270,12 +278,12 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Envoi une requête Sql.
+     * {@inheritDoc}
      *
      * @param string $sql
      * @throws Exception
      */
-    public function query($sql = "") {
+    public function query(string $sql = "") {
         $sql = (!empty($sql)) ? $sql : $this->getSql();
 
         $this->selectedBase->query($sql);
@@ -293,7 +301,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Sélection des informations d'une table.
+     * {@inheritDoc}
      *
      * @param string $table
      * @param array $values
@@ -301,7 +309,7 @@ class CoreSql extends BaseModel {
      * @param array $orderby
      * @param string $limit
      */
-    public function select($table, array $values, array $where = array(), array $orderby = array(), $limit = "") {
+    public function select(string $table, array $values, array $where = array(), array $orderby = array(), string $limit = "") {
         $this->selectedBase->select($table, $values, $where, $orderby, $limit);
 
         try {
@@ -312,7 +320,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Mise à jour des données d'une table.
+     * {@inheritDoc}
      *
      * @param string $table Nom de la table
      * @param array $values Sous la forme array("keyName" => "newValue")
@@ -320,7 +328,7 @@ class CoreSql extends BaseModel {
      * @param array $orderby
      * @param string $limit
      */
-    public function update($table, array $values, array $where, array $orderby = array(), $limit = "") {
+    public function update(string $table, array $values, array $where, array $orderby = array(), string $limit = "") {
         $this->selectedBase->update($table, $values, $where, $orderby, $limit);
 
         try {
@@ -331,16 +339,16 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne le dernier résultat de la dernière requête executée.
+     * {@inheritDoc}
      *
-     * @return resource
+     * @return mixed
      */
     public function &getQueries() {
         return $this->selectedBase->getQueries();
     }
 
     /**
-     * Retourne la dernière requête sql.
+     * {@inheritDoc}
      *
      * @return string
      */
@@ -349,9 +357,9 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Libère la mémoire du résultat.
+     * {@inheritDoc}
      *
-     * @param resource $query
+     * @param mixed $query
      * @return bool
      */
     public function &freeResult($query = null): bool {
@@ -360,28 +368,29 @@ class CoreSql extends BaseModel {
     }
 
     /**
+     * {@inheritDoc}
      *
-     * @param type $name
-     * @param type $key
+     * @param string $name
+     * @param string $key
      */
-    public function addArrayBuffer($name, $key = "") {
+    public function addArrayBuffer(string $name, string $key = "") {
         $this->selectedBase->addArrayBuffer($name, $key);
         $this->freeResult();
     }
 
     /**
-     * Ajoute le dernier résultat dans la mémoire tampon typé en object.
+     * {@inheritDoc}
      *
      * @param string $name
      * @param string $key clé à utiliser
      */
-    public function addObjectBuffer($name, $key = "") {
+    public function addObjectBuffer(string $name, string $key = "") {
         $this->selectedBase->addObjectBuffer($name, $key);
         $this->freeResult();
     }
 
     /**
-     * Retourne la mémoire tampon courant puis incrémente le pointeur interne.
+     * {@inheritDoc}
      *
      * @param string $name
      * @return array
@@ -391,7 +400,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne la mémoire tampon complète.
+     * {@inheritDoc}
      *
      * @param string $name
      * @return mixed
@@ -401,7 +410,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne les dernières erreurs.
+     * {@inheritDoc}
      *
      * @return array
      */
@@ -410,29 +419,32 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Marquer une clé comme déjà protégée.
+     * {@inheritDoc}
      *
      * @param string $key
      */
-    public function addQuotedKey($key) {
+    public function addQuotedKey(string $key) {
         $this->selectedBase->addQuotedKey($key);
     }
 
     /**
-     * Marquer une valeur comme déjà protégée.
+     * {@inheritDoc}
      *
      * @param string $value
      */
-    public function addQuotedValue($value) {
+    public function addQuotedValue(string $value) {
         $this->selectedBase->addQuotedValue($value);
     }
 
+    /**
+     * Aucune action réalisée dans ce contexte.
+     */
     public function resetQuoted() {
         // NE RIEN FAIRE
     }
 
     /**
-     * Retourne la version de la base de données.
+     * {@inheritDoc}
      *
      * @return string
      */
@@ -441,7 +453,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne le type d'encodage de la base de données.
+     * {@inheritDoc}
      *
      * @return string
      */
