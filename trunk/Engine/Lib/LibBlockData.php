@@ -206,7 +206,7 @@ class LibBlockData extends LibEntityData {
     }
 
     /**
-     * Retourne le zone d'échange.
+     * {@inheritDoc}
      *
      * @return string
      */

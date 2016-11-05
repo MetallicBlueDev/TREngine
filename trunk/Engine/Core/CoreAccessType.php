@@ -137,7 +137,7 @@ class CoreAccessType implements CoreAccessToken {
     }
 
     /**
-     * Name du type d'accès (par exemple home pour un module).
+     * Nom du type d'accès (par exemple home pour un module).
      *
      * @return string
      */

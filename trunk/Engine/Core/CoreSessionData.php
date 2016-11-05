@@ -225,7 +225,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
     }
 
     /**
-     * Retourne le zone d'échange.
+     * {@inheritDoc}
      *
      * @return string
      */

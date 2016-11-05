@@ -174,7 +174,7 @@ class LibModuleData extends LibEntityData {
     }
 
     /**
-     * Retourne le zone d'échange.
+     * {@inheritDoc}
      *
      * @return string
      */
