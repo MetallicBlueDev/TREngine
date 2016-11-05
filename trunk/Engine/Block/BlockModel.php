@@ -49,7 +49,7 @@ abstract class BlockModel {
      *
      * @param LibBlockData $data
      */
-    public function setBlockData(&$data) {
+    public function setBlockData(LibBlockData &$data) {
         $this->data = $data;
     }
 
@@ -58,7 +58,7 @@ abstract class BlockModel {
      *
      * @return LibBlockData
      */
-    public function &getBlockData() {
+    public function &getBlockData(): LibBlockData {
         if ($this->data === null) {
             $empty = array();
             $this->data = new LibBlockData($empty);
@@ -71,7 +71,7 @@ abstract class BlockModel {
      *
      * @return CoreAccessType
      */
-    public function &getAccessType() {
+    public function &getAccessType(): CoreAccessType {
         return CoreAccessType::getTypeFromToken($this->getBlockData());
     }
 

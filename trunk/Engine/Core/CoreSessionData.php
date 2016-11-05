@@ -38,7 +38,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return array
      */
-    public function &getData() {
+    public function &getData(): array {
         return $this->getStorage();
     }
 
@@ -47,7 +47,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getId() {
+    public function &getId(): string {
         return $this->getStringValue("user_id");
     }
 
@@ -56,7 +56,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getName() {
+    public function &getName(): string {
         return $this->getStringValue("name");
     }
 
@@ -65,7 +65,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getMail() {
+    public function &getMail(): string {
         return $this->getStringValue("mail");
     }
 
@@ -75,7 +75,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return int
      */
-    public function &getRank() {
+    public function &getRank(): int {
         return $this->getIntValue("rank", 0);
     }
 
@@ -84,7 +84,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return bool
      */
-    public function hasRank() {
+    public function hasRank(): bool {
         return $this->getRank() > CoreAccess::RANK_PUBLIC;
     }
 
@@ -93,7 +93,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return bool
      */
-    public function hasRegisteredRank() {
+    public function hasRegisteredRank(): bool {
         return $this->getRank() >= CoreAccess::RANK_REGISTRED;
     }
 
@@ -102,7 +102,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return bool
      */
-    public function hasAdminRank() {
+    public function hasAdminRank(): bool {
         return $this->getRank() >= CoreAccess::RANK_ADMIN;
     }
 
@@ -111,7 +111,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return bool
      */
-    public function hasAdminWithRightsRank() {
+    public function hasAdminWithRightsRank(): bool {
         return $this->hasAdminRank() && count($this->getRights()) > 0;
     }
 
@@ -120,7 +120,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return bool
      */
-    public function hasSuperAdminRank() {
+    public function hasSuperAdminRank(): bool {
         return $this->hasAdminRank() && CoreAccess::autorize(CoreAccessType::getTypeFromAdmin());
     }
 
@@ -139,7 +139,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getAvatar() {
+    public function &getAvatar(): string {
         $avatar = $this->getStringValue("avatar");
 
         if (empty($avatar)) {
@@ -154,7 +154,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getWebsite() {
+    public function &getWebsite(): string {
         return $this->getStringValue("website");
     }
 
@@ -164,7 +164,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getSignature() {
+    public function &getSignature(): string {
         return $this->getStringValue("signature");
     }
 
@@ -174,7 +174,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getTemplate() {
+    public function &getTemplate(): string {
         return $this->getStringValue("template");
     }
 
@@ -184,7 +184,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      * @param string $template
      * @param bool $force
      */
-    public function setTemplate($template, $force = false) {
+    public function setTemplate(string $template, bool $force = false) {
         if (!$this->hasValue("template") || $force) {
             $this->setDataValue("template", $template);
         }
@@ -196,7 +196,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getLangue() {
+    public function &getLangue(): string {
         return $this->getStringValue("langue");
     }
 
@@ -206,7 +206,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      * @param string $langue
      * @param bool $force
      */
-    public function setLangue($langue, $force = false) {
+    public function setLangue(string $langue, bool $force = false) {
         if (!$this->hasValue("langue") || $force) {
             $this->setDataValue("langue", $langue);
         }
@@ -217,7 +217,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return CoreAccessType[] array(0 => CoreAccessType)
      */
-    public function &getRights() {
+    public function &getRights(): array {
         if (!$this->hasRights()) {
             $this->checkRights();
         }
@@ -229,7 +229,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return string
      */
-    public function &getZone() {
+    public function &getZone(): string {
         $zone = "SESSION";
         return $zone;
     }
@@ -266,7 +266,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return bool
      */
-    private function hasRights() {
+    private function hasRights(): bool {
         return $this->hasValue("rights");
     }
 
