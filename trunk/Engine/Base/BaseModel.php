@@ -30,7 +30,7 @@ abstract class BaseModel extends CoreTransaction {
     protected $sql = "";
 
     /**
-     * Buffer sous forme de tableau array contenant des objets standards.
+     * Mémoire tampon: tableau array contenant des objets standards.
      *
      * @var array
      */
@@ -265,7 +265,7 @@ abstract class BaseModel extends CoreTransaction {
     }
 
     /**
-     * Ajoute le dernier résultat dans le buffer typé en tableau.
+     * Ajoute le dernier résultat dans la mémoire tampon typé en tableau.
      *
      * @param string $name
      * @param string $key clé à utiliser
@@ -285,7 +285,7 @@ abstract class BaseModel extends CoreTransaction {
     }
 
     /**
-     * Ajoute le dernier résultat dans le buffer typé en object.
+     * Ajoute le dernier résultat dans la mémoire tampon typé en object.
      *
      * @param string $name
      * @param string $key clé à utiliser
@@ -305,7 +305,7 @@ abstract class BaseModel extends CoreTransaction {
     }
 
     /**
-     * Retourne le buffer courant puis l'incrémente.
+     * Retourne la mémoire tampon courant puis incrémente le pointeur interne.
      *
      * @param string $name
      * @return array
@@ -318,7 +318,7 @@ abstract class BaseModel extends CoreTransaction {
     }
 
     /**
-     * Retourne le buffer complet demandé.
+     * Retourne la mémoire tampon complète.
      *
      * @param string $name
      * @return mixed

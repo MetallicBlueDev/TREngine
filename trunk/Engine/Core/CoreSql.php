@@ -360,10 +360,9 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Ajoute le dernier résultat dans le buffer typé en tableau.
      *
-     * @param string $name
-     * @param string $key clé à utiliser
+     * @param type $name
+     * @param type $key
      */
     public function addArrayBuffer($name, $key = "") {
         $this->selectedBase->addArrayBuffer($name, $key);
@@ -371,7 +370,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Ajoute le dernier résultat dans le buffer typé en object.
+     * Ajoute le dernier résultat dans la mémoire tampon typé en object.
      *
      * @param string $name
      * @param string $key clé à utiliser
@@ -382,7 +381,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne le buffer courant puis l'incremente.
+     * Retourne la mémoire tampon courant puis incrémente le pointeur interne.
      *
      * @param string $name
      * @return array
@@ -392,7 +391,7 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * Retourne le buffer complet choisi.
+     * Retourne la mémoire tampon complète.
      *
      * @param string $name
      * @return mixed

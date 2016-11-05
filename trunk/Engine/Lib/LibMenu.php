@@ -295,7 +295,7 @@ class LibMenu {
         );
 
         if ($coreSql->affectedRows() > 0) {
-            // Création d'un buffer pour les menus
+            // Création d'une mémoire tampon pour les menus
             $coreSql->addArrayBuffer($this->identifier, "menu_id");
             $menus = $coreSql->getBuffer($this->identifier);
 

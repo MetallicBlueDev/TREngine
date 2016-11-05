@@ -12,7 +12,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class CoreRequest {
 
     /**
-     * Tableau buffer des requêtes.
+     * Mémoire tampon: tableau array des requêtes.
      *
      * @var array
      */
@@ -26,19 +26,19 @@ class CoreRequest {
      * @param string $hash Provenance de la variable
      * @return bool
      */
-    public static function &getBoolean($name, $default = false, $hash = "default") {
+    public static function &getBoolean(string $name, bool $default = false, string $hash = "default"): bool {
         return self::getVars($name, "BOOL", $default, $hash);
     }
 
     /**
-     * Retourne la variable demandée de type int.
+     * Retourne la variable demandée de type entier.
      *
      * @param string $name Nom de la variable
      * @param int $default Donnée par défaut
      * @param string $hash Provenance de la variable
      * @return int
      */
-    public static function &getInteger($name, $default = 0, $hash = "default") {
+    public static function &getInteger(string $name, int $default = 0, string $hash = "default"): int {
         return self::getVars($name, "INT", $default, $hash);
     }
 
@@ -50,20 +50,8 @@ class CoreRequest {
      * @param string $hash Provenance de la variable
      * @return float
      */
-    public static function &getFloat($name, $default = 0.0, $hash = "default") {
+    public static function &getFloat(string $name, float $default = 0.0, string $hash = "default"): float {
         return self::getVars($name, "FLOAT", $default, $hash);
-    }
-
-    /**
-     * Retourne la variable demandée de type double.
-     *
-     * @param string $name Nom de la variable
-     * @param double $default Donnée par défaut
-     * @param string $hash Provenance de la variable
-     * @return double
-     */
-    public static function &getDouble($name, $default = 0.0, $hash = "default") {
-        return self::getVars($name, "DOUBLE", $default, $hash);
     }
 
     /**
@@ -74,19 +62,19 @@ class CoreRequest {
      * @param string $hash Provenance de la variable
      * @return string
      */
-    public static function &getBase64($name, $default = "", $hash = "default") {
+    public static function &getBase64(string $name, string $default = "", string $hash = "default"): string {
         return self::getVars($name, "BASE64", $default, $hash);
     }
 
     /**
      * Retourne la variable demandée de type string.
      *
-     * @param string$name Nom de la variable
+     * @param string $name Nom de la variable
      * @param string $default Donnée par défaut
      * @param string $hash Provenance de la variable
      * @return string
      */
-    public static function &getWord($name, $default = "", $hash = "default") {
+    public static function &getWord(string $name, string $default = "", string $hash = "default"): string {
         return self::getVars($name, "WORD", $default, $hash);
     }
 
@@ -98,7 +86,7 @@ class CoreRequest {
      * @param string $hash Provenance de la variable
      * @return string
      */
-    public static function &getString($name, $default = "", $hash = "default") {
+    public static function &getString(string $name, string $default = "", string $hash = "default"): string {
         return self::getVars($name, "STRING", $default, $hash);
     }
 
@@ -107,7 +95,7 @@ class CoreRequest {
      *
      * @return string
      */
-    public static function &getRequestMethod() {
+    public static function &getRequestMethod(): string {
         return self::getRequest();
     }
 
