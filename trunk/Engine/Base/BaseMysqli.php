@@ -17,6 +17,10 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  */
 class BaseMysqli extends BaseModel {
 
+    /**
+     * {@inheritDoc}
+     * @return bool
+     */
     protected function canUse(): bool {
         $rslt = function_exists("mysqli_connect");
 
@@ -26,6 +30,9 @@ class BaseMysqli extends BaseModel {
         return $rslt;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function netConnect() {
         try {
             // Permet de générer une exception à la place des avertissements qui spam
@@ -37,6 +44,10 @@ class BaseMysqli extends BaseModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @return bool
+     */
     public function &netSelect(): bool {
         $rslt = false;
 
@@ -46,6 +57,9 @@ class BaseMysqli extends BaseModel {
         return $rslt;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function netDeconnect() {
         if ($this->netConnected()) {
             $this->getMysqli()->close();
@@ -54,6 +68,10 @@ class BaseMysqli extends BaseModel {
         $this->connId = null;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $sql
+     */
     public function query(string $sql) {
         $this->queries = $this->getMysqli()->query($sql);
 
@@ -62,6 +80,10 @@ class BaseMysqli extends BaseModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @return array
+     */
     public function &fetchArray(): array {
         $values = array();
         $rslt = $this->getMysqliResult();
@@ -76,6 +98,11 @@ class BaseMysqli extends BaseModel {
         return $values;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $className
+     * @return array
+     */
     public function &fetchObject(string $className = null): array {
         $values = array();
         $rslt = $this->getMysqliResult();
@@ -97,6 +124,11 @@ class BaseMysqli extends BaseModel {
         return $values;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param type $query
+     * @return bool
+     */
     public function &freeResult($query): bool {
         $success = false;
         $rslt = $this->getMysqliResult($query);
@@ -108,6 +140,10 @@ class BaseMysqli extends BaseModel {
         return $success;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return int
+     */
     public function &affectedRows(): int {
         $nbRows = $this->getMysqli()->affected_rows;
 
@@ -121,38 +157,84 @@ class BaseMysqli extends BaseModel {
         return $nbRows;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return string
+     */
     public function &insertId(): string {
         return $this->getMysqli()->insert_id;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return array
+     */
     public function &getLastError(): array {
         $error = parent::getLastError();
         $error[] = "<span class=\"text_bold\">MySqli response</span> : " . $this->getMysqli()->error;
         return $error;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return string
+     */
     public function &getVersion(): string {
         // Exemple : 5.6.15-log
         $version = $this->getMysqli()->server_info;
         return $version;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $table
+     * @param array $values
+     * @param array $where
+     * @param array $orderby
+     * @param string $limit
+     */
     public function update(string $table, array $values, array $where, array $orderby = array(), string $limit = "") {
         parent::update($table, $values, $where, $orderby, $limit);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $table
+     * @param array $values
+     * @param array $where
+     * @param array $orderby
+     * @param string $limit
+     */
     public function select(string $table, array $values, array $where = array(), array $orderby = array(), string $limit = "") {
         parent::select($table, $values, $where, $orderby, $limit);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $table
+     * @param array $keys
+     * @param array $values
+     */
     public function insert(string $table, array $keys, array $values) {
         parent::insert($table, $keys, $values);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $table
+     * @param array $where
+     * @param array $like
+     * @param string $limit
+     */
     public function delete(string $table, array $where = array(), array $like = array(), string $limit = "") {
         parent::delete($table, $where, $like, $limit);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $str
+     * @return string
+     */
     protected function converEscapeString(string $str): string {
         return $this->getMysqli()->escape_string($str);
     }

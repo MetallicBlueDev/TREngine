@@ -135,6 +135,8 @@ class CoreLoader {
 
     /**
      * Inscription du chargeur de classe.
+     *
+     * @throws FailLoader
      */
     public static function affectRegister() {
         try {
@@ -372,6 +374,7 @@ class CoreLoader {
      * @param string $keyName Nom de la classe ou du fichier.
      * @param string $ext Extension.
      * @return bool true chargé.
+     * @throws FailLoader
      */
     private static function &load(string &$keyName, string $ext): bool {
         try {

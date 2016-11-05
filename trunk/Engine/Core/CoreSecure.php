@@ -64,7 +64,7 @@ class CoreSecure {
      *
      * @return CoreSecure
      */
-    public static function &getInstance() {
+    public static function &getInstance(): CoreSecure {
         self::checkInstance();
         return self::$secure;
     }
@@ -88,7 +88,7 @@ class CoreSecure {
      *
      * @return bool
      */
-    public static function &debuggingMode() {
+    public static function &debuggingMode(): bool {
         $rslt = false;
 
         if (self::$secure !== null) {
@@ -102,7 +102,7 @@ class CoreSecure {
      *
      * @return bool
      */
-    public function &locked() {
+    public function &locked(): bool {
         return $this->locked;
     }
 
@@ -114,7 +114,7 @@ class CoreSecure {
      * @param Exception $ex L'exception interne levée.
      * @param array $argv Argument suplementaire d'information sur l'erreur.
      */
-    public function throwException($customMessage, Exception $ex = null, array $argv = array()) {
+    public function throwException(string $customMessage, Exception $ex = null, array $argv = array()) {
         $this->locked = true;
 
         if ($ex === null) {
@@ -137,9 +137,9 @@ class CoreSecure {
      * Retourne le type d'erreur courant sous forme de message.
      *
      * @param string $customMessage
-     * @return string $errorMessageTitle
+     * @return string
      */
-    private function &getErrorMessageTitle($customMessage) {
+    private function &getErrorMessageTitle(string $customMessage): string {
         // Message d'erreur depuis une constante
         $errorMessageTitle = "ERROR_DEBUG_" . strtoupper($customMessage);
 
@@ -160,9 +160,9 @@ class CoreSecure {
      *
      * @param Exception $ex L'exception interne levée.
      * @param array $argv Argument supplémentaire d'information sur l'erreur.
-     * @return array $errorMessage
+     * @return array
      */
-    private function &getDebugMessage(Exception $ex = null, array $argv = array()) {
+    private function &getDebugMessage(Exception $ex = null, array $argv = array()): array {
         // Tableau avec les lignes d'erreurs
         $errorMessage = array();
 

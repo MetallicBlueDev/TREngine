@@ -24,6 +24,10 @@ class BaseMysql extends BaseModel {
      */
     private $lastSqlCommand = "";
 
+    /**
+     * {@inheritDoc}
+     * @return bool
+     */
     protected function canUse(): bool {
         $rslt = function_exists("mysql_connect");
 
@@ -33,6 +37,9 @@ class BaseMysql extends BaseModel {
         return $rslt;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function netConnect() {
         $link = mysql_connect($this->getTransactionHost(), $this->getTransactionUser(), $this->getTransactionPass());
 
@@ -43,6 +50,10 @@ class BaseMysql extends BaseModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @return bool
+     */
     public function &netSelect(): bool {
         $rslt = false;
 
@@ -52,6 +63,9 @@ class BaseMysql extends BaseModel {
         return $rslt;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function netDeconnect() {
         if ($this->netConnected()) {
             mysql_close($this->connId);
@@ -60,6 +74,10 @@ class BaseMysql extends BaseModel {
         $this->connId = null;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $sql
+     */
     public function query(string $sql) {
         $this->queries = mysql_query($sql, $this->connId);
 
@@ -68,6 +86,10 @@ class BaseMysql extends BaseModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @return array
+     */
     public function &fetchArray(): array {
         $values = array();
 
@@ -81,6 +103,11 @@ class BaseMysql extends BaseModel {
         return $values;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $className
+     * @return array
+     */
     public function &fetchObject(string $className = null): array {
         $values = array();
 
@@ -101,6 +128,11 @@ class BaseMysql extends BaseModel {
         return $values;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param type $query
+     * @return bool
+     */
     public function &freeResult($query): bool {
         $rslt = false;
 
@@ -110,6 +142,10 @@ class BaseMysql extends BaseModel {
         return $rslt;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return int
+     */
     public function &affectedRows(): int {
         $rslt = -1;
 
@@ -121,17 +157,29 @@ class BaseMysql extends BaseModel {
         return $rslt;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return string
+     */
     public function &insertId(): string {
         $lastId = mysql_insert_id($this->connId);
         return $lastId;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return array
+     */
     public function &getLastError(): array {
         $error = parent::getLastError();
         $error[] = "<span class=\"text_bold\">MySql response</span> : " . mysql_error();
         return $error;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return string
+     */
     public function &getVersion(): string {
         // Exemple : 5.6.15-log
         $version = mysql_get_server_info($this->connId);
@@ -139,26 +187,60 @@ class BaseMysql extends BaseModel {
         return $version;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $table
+     * @param array $values
+     * @param array $where
+     * @param array $orderby
+     * @param string $limit
+     */
     public function update(string $table, array $values, array $where, array $orderby = array(), string $limit = "") {
         $this->lastSqlCommand = "UPDATE";
         parent::update($table, $values, $where, $orderby, $limit);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $table
+     * @param array $values
+     * @param array $where
+     * @param array $orderby
+     * @param string $limit
+     */
     public function select(string $table, array $values, array $where = array(), array $orderby = array(), string $limit = "") {
         $this->lastSqlCommand = "SELECT";
         parent::select($table, $values, $where, $orderby, $limit);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $table
+     * @param array $keys
+     * @param array $values
+     */
     public function insert(string $table, array $keys, array $values) {
         $this->lastSqlCommand = "INSERT";
         parent::insert($table, $keys, $values);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $table
+     * @param array $where
+     * @param array $like
+     * @param string $limit
+     */
     public function delete(string $table, array $where = array(), array $like = array(), string $limit = "") {
         $this->lastSqlCommand = "DELETE";
         parent::delete($table, $where, $like, $limit);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $str
+     * @return string
+     */
     protected function converEscapeString(string $str): string {
         if (function_exists("mysql_real_escape_string") && is_resource($this->connId)) {
             $str = mysql_real_escape_string($str, $this->connId);

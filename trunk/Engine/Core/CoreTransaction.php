@@ -139,7 +139,7 @@ abstract class CoreTransaction extends CoreDataStorage {
     }
 
     /**
-     * Lance une exception pour gérant ce type de transaction.
+     * Lance une exception gérant ce type de transaction.
      *
      * @param string $message
      * @throws FailEngine

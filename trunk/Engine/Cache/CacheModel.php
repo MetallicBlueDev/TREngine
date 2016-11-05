@@ -23,10 +23,20 @@ abstract class CacheModel extends CoreTransaction {
      */
     protected $chmod = 0777;
 
+    /**
+     * {@inheritDoc}
+     * @param string $message
+     * @throws FailCache
+     */
     protected function throwException(string $message) {
         throw new FailCache("cache" . $message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param array $transaction
+     * @throws FailCache
+     */
     public function initialize(array &$transaction) {
         if (!empty($transaction)) {
             if (preg_match("/(ftp:\/\/)(.+)/", $transaction['host'], $matches)) {

@@ -169,9 +169,9 @@ class CoreRequest {
     /**
      * Vérifie le contenu des données importées.
      *
-     * @param object $content
+     * @param mixed $content
      * @param string $type
-     * @return object
+     * @return mixed
      */
     private static function &protect($content, string $type) {
         $type = strtoupper($type);

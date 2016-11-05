@@ -25,6 +25,10 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  */
 class BasePdo extends BaseModel {
 
+    /**
+     * {@inheritDoc}
+     * @return bool
+     */
     protected function canUse(): bool {
         $rslt = false;
 
@@ -48,6 +52,9 @@ class BasePdo extends BaseModel {
         return $rslt;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function netConnect() {
         try {
             // Host = mysql:host=127.0.0.1
@@ -58,6 +65,10 @@ class BasePdo extends BaseModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @return bool
+     */
     public function &netSelect(): bool {
         $rslt = false;
 
@@ -67,10 +78,17 @@ class BasePdo extends BaseModel {
         return $rslt;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function netDeconnect() {
         $this->connId = null;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $sql
+     */
     public function query(string $sql) {
         $this->queries = $this->getPdo()->query($sql);
 
@@ -79,6 +97,10 @@ class BasePdo extends BaseModel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @return array
+     */
     public function &fetchArray(): array {
         $values = array();
         $rslt = $this->getPdoResult();
@@ -89,6 +111,11 @@ class BasePdo extends BaseModel {
         return $values;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $className
+     * @return array
+     */
     public function &fetchObject(string $className = null): array {
         $values = array();
         $rslt = $this->getPdoResult();
@@ -103,12 +130,21 @@ class BasePdo extends BaseModel {
         return $values;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param type $query
+     * @return bool
+     */
     public function &freeResult($query): bool {
         unset($query);
         $success = true;
         return $success;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return int
+     */
     public function &affectedRows(): int {
         $value = -1;
         $rslt = $this->getPdoResult();
@@ -119,38 +155,84 @@ class BasePdo extends BaseModel {
         return $value;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return string
+     */
     public function &insertId(): string {
         return $this->getPdo()->lastInsertId();
     }
 
+    /**
+     * {@inheritDoc}
+     * @return array
+     */
     public function &getLastError(): array {
         $error = parent::getLastError();
         $error[] = "<span class=\"text_bold\">Pdo response</span> : " . $this->getPdoErrorMessage();
         return $error;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return string
+     */
     public function &getVersion(): string {
         // Exemple : 5.6.15-log
         $version = $this->getPdo()->getAttribute(PDO::ATTR_SERVER_VERSION);
         return $version;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $table
+     * @param array $values
+     * @param array $where
+     * @param array $orderby
+     * @param string $limit
+     */
     public function update(string $table, array $values, array $where, array $orderby = array(), string $limit = "") {
         parent::update($table, $values, $where, $orderby, $limit);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $table
+     * @param array $values
+     * @param array $where
+     * @param array $orderby
+     * @param string $limit
+     */
     public function select(string $table, array $values, array $where = array(), array $orderby = array(), string $limit = "") {
         parent::select($table, $values, $where, $orderby, $limit);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $table
+     * @param array $keys
+     * @param array $values
+     */
     public function insert(string $table, array $keys, array $values) {
         parent::insert($table, $keys, $values);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $table
+     * @param array $where
+     * @param array $like
+     * @param string $limit
+     */
     public function delete(string $table, array $where = array(), array $like = array(), string $limit = "") {
         parent::delete($table, $where, $like, $limit);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param string $str
+     * @return string
+     */
     protected function converEscapeString(string $str): string {
         // Impossible d'utiliser $this->getPdo()->quote($str) car incompatible avec la méthode interne addQuote()
         return str_replace(array(
