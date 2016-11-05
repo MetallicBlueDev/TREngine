@@ -121,7 +121,7 @@ abstract class CoreTransaction extends CoreDataStorage {
     }
 
     /**
-     * Retourne le type de base (exemple mysqli).
+     * Retourne le type de transaction (exemple mysqli, php, ftp, etc.).
      *
      * @return string
      */

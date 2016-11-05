@@ -429,7 +429,7 @@ class LibForm {
 
             // Enregistrement dans le cache
             $data = $coreCache->serializeData($data);
-            $content = $coreCache->writeCache($this->name . ".php", $data, true, self::CACHE_VARIABLE_NAME, $this->cacheVars);
+            $content = $coreCache->writeCacheWithVariable($this->name . ".php", $data, true, self::CACHE_VARIABLE_NAME, $this->cacheVars);
         }
         return $content;
     }

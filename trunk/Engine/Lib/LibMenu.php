@@ -270,7 +270,7 @@ class LibMenu {
      * Chargement du menu via le cache.
      */
     private function loadFromCache() {
-        $this->items = CoreCache::getInstance(CoreCache::SECTION_MENUS)->readCacheAndUnserialize($this->identifier . ".php");
+        $this->items = CoreCache::getInstance(CoreCache::SECTION_MENUS)->readCacheWithUnserialize($this->identifier . ".php");
     }
 
     /**
@@ -322,7 +322,7 @@ class LibMenu {
                 $item->setTree($tree);
             }
 
-            CoreCache::getInstance(CoreCache::SECTION_MENUS)->writeCacheAndSerialize($this->identifier . ".php", $this->items);
+            CoreCache::getInstance(CoreCache::SECTION_MENUS)->writeCacheWithSerialize($this->identifier . ".php", $this->items);
         }
     }
 

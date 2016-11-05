@@ -160,6 +160,9 @@ class CoreCache extends CacheModel {
      */
     private $touchCache = array();
 
+    /**
+     * Nouveau gestionnaire de cache.
+     */
     protected function __construct() {
         parent::__construct();
 
@@ -195,11 +198,19 @@ class CoreCache extends CacheModel {
         }
     }
 
+    /**
+     * Ne réalise aucune action dans ce contexte.
+     *
+     * @param array $cache
+     */
     public function initialize(array &$cache) {
         // NE RIEN FAIRE
         unset($cache);
     }
 
+    /**
+     * Destruction du gestionnaire de cache.
+     */
     public function __destruct() {
         $this->selectedCache = null;
     }
@@ -209,7 +220,7 @@ class CoreCache extends CacheModel {
      *
      * @return CoreCache
      */
-    public static function &getInstance($newSectionPath = null) {
+    public static function &getInstance($newSectionPath = null): CoreCache {
         self::checkInstance();
 
         if ($newSectionPath !== null) {
@@ -232,19 +243,19 @@ class CoreCache extends CacheModel {
      *
      * @return array
      */
-    public static function &getCacheList() {
+    public static function &getCacheList(): array {
         return self::getInstance()->getFileList("Engine/Cache", "Cache");
     }
 
     /**
-     * Etablie une connexion au serveur.
+     * {@inheritDoc}
      */
     public function netConnect() {
         $this->selectedCache->netConnect();
     }
 
     /**
-     * Retourne l'état de la connexion.
+     * {@inheritDoc}
      *
      * @return bool
      */
@@ -253,23 +264,23 @@ class CoreCache extends CacheModel {
     }
 
     /**
-     * Déconnexion du serveur.
+     * {@inheritDoc}
      */
     public function netDeconnect() {
         $this->selectedCache->netDeconnect();
     }
 
     /**
-     * Sélectionne l'utilisateur.
+     * {@inheritDoc}
      *
      * @return bool
      */
-    public function &netSelect() {
+    public function &netSelect(): bool {
         return $this->selectedCache->netSelect();
     }
 
     /**
-     * Retourne le nom de l'hôte.
+     * {@inheritDoc}
      *
      * @return string
      */
@@ -278,7 +289,7 @@ class CoreCache extends CacheModel {
     }
 
     /**
-     * Retourne le nom d'utilisateur.
+     * {@inheritDoc}
      *
      * @return string
      */
@@ -287,7 +298,7 @@ class CoreCache extends CacheModel {
     }
 
     /**
-     * Retourne le mot de passe.
+     * {@inheritDoc}
      *
      * @return string
      */
@@ -296,7 +307,7 @@ class CoreCache extends CacheModel {
     }
 
     /**
-     * Retourne le type de base (exemple ftp).
+     * {@inheritDoc}
      *
      * @return string
      */
@@ -305,43 +316,53 @@ class CoreCache extends CacheModel {
     }
 
     /**
-     * Retourne le port.
+     * {@inheritDoc}
      *
      * @return int
      */
-    public function &getServerPort() {
+    public function &getServerPort(): int {
         return $this->selectedCache->getServerPort();
     }
 
     /**
-     * Retourne le chemin racine.
+     * {@inheritDoc}
      *
      * @return string
      */
-    public function &getServerRoot() {
+    public function &getServerRoot(): string {
         return $this->selectedCache->getServerRoot();
     }
 
     /**
-     * Affecte le chemin racine.
+     * {@inheritDoc}
      *
      * @param string $newRoot
      */
-    public function setServerRoot(&$newRoot) {
+    public function setServerRoot(string &$newRoot) {
         $this->selectedCache->setServerRoot($newRoot);
     }
 
     /**
-     * Ecriture du fichier cache.
+     * {@inheritDoc}
      *
-     * @param string $path chemin vers le fichier cache
-     * @param string $content contenu du fichier cache
-     * @param bool $overwrite écrasement du fichier
-     * @param string $cacheVariableName
-     * @param array $cacheVariables
+     * @param string $path
+     * @param string $content
+     * @param bool $overwrite
+     */
+    public function writeCache(string $path, string $content, bool $overwrite = true) {
+        $this->writeCacheWithReturn($path, $content, $overwrite);
+    }
+
+    /**
+     * Demande une écriture dans le cache d'une chaine classique.
+     * Prépare les données pour la soumission dans le cache et retourne les données telles qu’elles seront écrites.
+     *
+     * @param string $path
+     * @param string $content
+     * @param bool $overwrite
      * @return string
      */
-    public function &writeCache($path, $content, $overwrite = true, $cacheVariableName = "", $cacheVariables = array()) {
+    public function &writeCacheWithReturn(string $path, string $content, bool $overwrite = true): string {
         if (is_array($content)) {
             $content = $this->serializeData($content);
         }
@@ -369,6 +390,22 @@ class CoreCache extends CacheModel {
                 $content = substr($content, 0, $pos);
             }
         }
+        return $content;
+    }
+
+    /**
+     * Demande une écriture dans le cache d'une chaine contenant des variables à remplacer.
+     * Prépare les données pour la soumission dans le cache en tenant compte des variables et retourne les données telles qu’elles seront écrites.
+     *
+     * @param string $path
+     * @param string $content
+     * @param bool $overwrite
+     * @param string $cacheVariableName
+     * @param array $cacheVariables
+     * @return string
+     */
+    public function &writeCacheWithVariable(string $path, string $content, bool $overwrite = true, string $cacheVariableName = "", array $cacheVariables = array()): string {
+        $content = $this->writeCacheWithReturn($path, $content, $overwrite);
 
         if (!empty($cacheVariableName)) {
             $matches = array();
@@ -402,18 +439,19 @@ class CoreCache extends CacheModel {
     }
 
     /**
-     * Ecriture d'un objet dans un fichier cache.
+     * Demande d'écriture dans le cache d'un objet.
+     * Prépare l'objet pour la soumission dans le cache et retourne les données telles qu’elles seront écrites.
      *
      * @param string $path
-     * @param string $content
+     * @param mixed $content
      * @return string
      */
-    public function &writeCacheAndSerialize($path, $content) {
+    public function &writeCacheWithSerialize(string $path, $content): string {
         $content = serialize($content);
         // Préserve les données (protection utilisateur et protection des quotes)
         $content = base64_encode($content);
         $content = $this->serializeData($content);
-        return $this->writeCache($path, $content);
+        return $this->writeCacheWithReturn($path, $content);
     }
 
     /**
@@ -424,7 +462,7 @@ class CoreCache extends CacheModel {
      * @param array $cacheVariables
      * @return string
      */
-    public function &readCache($path, $cacheVariableName = "", $cacheVariables = array()) {
+    public function &readCache(string $path, string $cacheVariableName = "", string $cacheVariables = array()): string {
         // Ajout des valeurs en cache
         if (!empty($cacheVariableName)) {
             ${$cacheVariableName} = &$cacheVariables;
@@ -447,7 +485,7 @@ class CoreCache extends CacheModel {
      * @param string $path
      * @return mixed
      */
-    public function &readCacheAndUnserialize($path) {
+    public function &readCacheWithUnserialize(string $path) {
         $content = $this->readCache($path);
         $content = base64_decode($content);
         $content = unserialize($content);
@@ -460,7 +498,7 @@ class CoreCache extends CacheModel {
      * @param string $path chemin vers le fichier cache
      * @param int $updateTime
      */
-    public function touchCache($path, $updateTime = 0) {
+    public function touchCache(string $path, int $updateTime = 0) {
         if ($updateTime <= 0) {
             $updateTime = time();
         }
@@ -472,9 +510,9 @@ class CoreCache extends CacheModel {
      * Supprime tous fichiers trop vieux.
      *
      * @param string $path chemin vers le fichier ou le dossier
-     * @param string $timeLimit limite de temps
+     * @param int $timeLimit limite de temps
      */
-    public function removeCache($path, $timeLimit = 0) {
+    public function removeCache(string $path, int $timeLimit = 0) {
         $this->removeCache[$this->getCurrentSectionPath($path)] = $timeLimit;
     }
 
@@ -485,7 +523,7 @@ class CoreCache extends CacheModel {
      * @param string $path
      * @return array
      */
-    public function &getNameList($path) {
+    public function &getNameList(string $path): array {
         $dirList = array();
 
         $this->changeCurrentSection(self::SECTION_FILELISTER);
@@ -506,7 +544,7 @@ class CoreCache extends CacheModel {
      * @param string $path
      * @return int
      */
-    public function &getCacheMTime($path) {
+    public function &getCacheMTime(string $path): int {
         return $this->selectedCache->getCacheMTime($this->getCurrentSectionPath($path));
     }
 
@@ -517,7 +555,7 @@ class CoreCache extends CacheModel {
      * @param string $extension
      * @return array
      */
-    public function &getFileList($dirPath, $extension = ".class") {
+    public function &getFileList(string $dirPath, string $extension = ".class"): array {
         $names = array();
         $files = $this->getNameList($dirPath);
 
@@ -536,7 +574,7 @@ class CoreCache extends CacheModel {
      *
      * @param string $newSectionPath
      */
-    public function changeCurrentSection($newSectionPath = self::SECTION_TMP) {
+    public function changeCurrentSection(string $newSectionPath = self::SECTION_TMP) {
         $newSectionPath = empty($newSectionPath) ? self::SECTION_TMP : $newSectionPath;
         $newSectionPath = str_replace("/", DIRECTORY_SEPARATOR, $newSectionPath);
 

@@ -11,6 +11,9 @@ use TREngine\Engine\Exec\ExecAgent;
  */
 class CoreAgentData extends CoreDataStorage {
 
+    /**
+     * Nouvel agent de stockage.
+     */
     public function __construct() {
         parent::__construct();
 
