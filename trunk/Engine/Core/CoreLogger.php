@@ -14,6 +14,27 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class CoreLogger {
 
     /**
+     * Message de très haute importance (erreur).
+     *
+     * @var string
+     */
+    const TYPE_ALERT = "alert";
+
+    /**
+     * Message d'avertissement ou note d'information demandant une action.
+     *
+     * @var string
+     */
+    const TYPE_NOTE = "note";
+
+    /**
+     * Message d'information sans action attendue.
+     *
+     * @var string
+     */
+    const TYPE_INFO = "info";
+
+    /**
      * Exceptions destinées au développeur.
      *
      * @var array
@@ -60,7 +81,7 @@ class CoreLogger {
      * @param string $msg
      */
     public static function addErrorMessage(string $msg) {
-        self::addMessage($msg, "alert");
+        self::addMessage($msg, self::TYPE_ALERT);
     }
 
     /**
@@ -69,7 +90,7 @@ class CoreLogger {
      * @param string $msg
      */
     public static function addWarningMessage(string $msg) {
-        self::addMessage($msg, "note");
+        self::addMessage($msg, self::TYPE_INFO);
     }
 
     /**
@@ -78,7 +99,7 @@ class CoreLogger {
      * @param string $msg
      */
     public static function addInformationMessage(string $msg) {
-        self::addMessage($msg, "info");
+        self::addMessage($msg, self::TYPE_NOTE);
     }
 
     /**
@@ -181,17 +202,17 @@ class CoreLogger {
      * Ajoute un nouveau message.
      *
      * @param string $msg
-     * @param string $type Le type d'erreur (alert / note / info)
+     * @param string $type Le type d'erreur (alert / note / info).
      */
-    private static function addMessage(string $msg, string $type = "alert") {
+    private static function addMessage(string $msg, string $type) {
         switch ($type) {
-            case 'alert':
-            case 'note':
-            case 'info':
+            case self::TYPE_ALERT:
+            case self::TYPE_INFO:
+            case self::TYPE_NOTE:
                 self::$messages[$type][] = $msg;
                 break;
             default:
-                self::addMessage($msg);
+                self::addMessage($msg, self::TYPE_ALERT);
                 break;
         }
     }
