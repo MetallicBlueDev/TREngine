@@ -6,6 +6,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 
 /**
  * Gestionnaire de requêtes URL.
+ * Classe autorisée à manipuler les Superglobals.
  *
  * @author Sébastien Villemain
  */

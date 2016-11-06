@@ -193,35 +193,7 @@ class CacheSocket extends CacheModel {
         $dirList = array();
 
         if ($this->netConnected()) {
-            // Demarrage du mode passif
-            if ($this->setPassiveMode()) {
-                // Si un chemin est précisé, on ajoute un espace pour la commande
-                $path = (!empty($path)) ? " " . $this->getRootPath($path) : "";
-
-                // Chaine contenant tous les dossiers
-                $dirListString = "";
-
-                // Envoi de la requete
-                if ($this->sendCommandAndCheckResponse("NLST" . $path, array(
-                    150,
-                    125))) {
-                    // On évite la boucle infinie
-                    if ($this->passiveData !== false) {
-                        while (!feof($this->passiveData)) {
-                            $dirListString .= fread($this->passiveData, 4096);
-                        }
-                    }
-                }
-
-                fclose($this->passiveData);
-
-                // Verification du résultat
-                if ($this->receiveResponseCode(array(
-                    226))) {
-                    $dirList = preg_split("/[" . TR_ENGINE_CRLF . "]+/", $dirListString, -1, PREG_SPLIT_NO_EMPTY);
-                    $dirList = preg_replace('#^' . preg_quote(substr($path, 1), '#') . '[/\\\\]?#', '', $dirList);
-                }
-            }
+            $dirList = $this->getNameListInPassiveMode($path);
         }
 
         // On supprime les mauvaises clés
@@ -242,7 +214,7 @@ class CacheSocket extends CacheModel {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param string $path
      * @return int
      */
@@ -258,6 +230,46 @@ class CacheSocket extends CacheModel {
             $mTime = $this->lastResponseMessage;
         }
         return $mTime;
+    }
+
+    /**
+     * Retourne la liste des fichiers et dossiers via le mode passif.
+     *
+     * @param string $path
+     * @return array
+     */
+    public function &getNameListInPassiveMode(string $path): array {
+        $dirList = array();
+
+        if ($this->setPassiveMode()) {
+            // Si un chemin est précisé, on ajoute un espace pour la commande
+            $path = (!empty($path)) ? " " . $this->getRootPath($path) : "";
+
+            // Chaine contenant tous les dossiers
+            $dirListString = "";
+
+            // Envoi de la requete
+            if ($this->sendCommandAndCheckResponse("NLST" . $path, array(
+                150,
+                125))) {
+                // On évite la boucle infinie
+                if ($this->passiveData !== false) {
+                    while (!feof($this->passiveData)) {
+                        $dirListString .= fread($this->passiveData, 4096);
+                    }
+                }
+            }
+
+            fclose($this->passiveData);
+
+            // Verification du résultat
+            if ($this->receiveResponseCode(array(
+                226))) {
+                $dirList = preg_split("/[" . TR_ENGINE_CRLF . "]+/", $dirListString, -1, PREG_SPLIT_NO_EMPTY);
+                $dirList = preg_replace('#^' . preg_quote(substr($path, 1), '#') . '[/\\\\]?#', '', $dirList);
+            }
+        }
+        return $dirList;
     }
 
     /**

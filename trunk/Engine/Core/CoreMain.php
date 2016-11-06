@@ -374,31 +374,7 @@ class CoreMain {
             // Isoloire du bannissement
             $coreSession->displayBanishment();
         } else {
-            // Vérification du type d'affichage
-            if ($this->isDefaultLayout()) {
-                $this->displayDefaultLayout();
-            } else {
-                // Affichage autonome des modules et blocks
-                if ($this->isModuleLayout()) {
-                    $this->displayModuleLayout();
-                } else if ($this->isBlockLayout()) {
-                    $this->displayBlockLayout();
-                }
-
-                // Execute la commande de récupération d'erreur
-                CoreLogger::displayMessages();
-
-                // Javascript autonome
-                CoreHtml::getInstance()->selfJavascript();
-            }
-
-            // Validation et routine du cache
-            CoreCache::getInstance()->runJobs();
-
-            if (CoreSecure::debuggingMode()) {
-                // Assemble tous les messages d'erreurs dans un fichier log
-                CoreLogger::logException();
-            }
+            $this->runJobs();
         }
 
         ExecTimeMarker::stopMeasurement("main");
@@ -429,6 +405,37 @@ class CoreMain {
 //        if (is_file($installPath)) {
 //            require $installPath;
 //        }
+    }
+
+    /**
+     * Routine d'exécution principal.
+     */
+    private function runJobs() {
+        // Vérification du type d'affichage
+        if ($this->isDefaultLayout()) {
+            $this->displayDefaultLayout();
+        } else {
+            // Affichage autonome des modules et blocks
+            if ($this->isModuleLayout()) {
+                $this->displayModuleLayout();
+            } else if ($this->isBlockLayout()) {
+                $this->displayBlockLayout();
+            }
+
+            // Execute la commande de récupération d'erreur
+            CoreLogger::displayMessages();
+
+            // Javascript autonome
+            CoreHtml::getInstance()->selfJavascript();
+        }
+
+        // Validation et routine du cache
+        CoreCache::getInstance()->runJobs();
+
+        if (CoreSecure::debuggingMode()) {
+            // Assemble tous les messages d'erreurs dans un fichier log
+            CoreLogger::logException();
+        }
     }
 
     /**
@@ -650,49 +657,7 @@ class CoreMain {
             $rawConfig = $this->getConfigValue("configs_config");
 
             if (!empty($rawConfig)) {
-                $newConfig = array();
-
-                // Vérification de l'adresse email du webmaster
-                if (!ExecMailer::isValidMail($rawConfig["TR_ENGINE_MAIL"])) {
-                    CoreLogger::addException("Default mail isn't valide");
-                }
-
-                define("TR_ENGINE_MAIL", $rawConfig["TR_ENGINE_MAIL"]);
-
-                // Vérification du statut
-                $rawConfig["TR_ENGINE_STATUT"] = strtolower($rawConfig["TR_ENGINE_STATUT"]);
-
-                if ($rawConfig["TR_ENGINE_STATUT"] !== "close" && $rawConfig["TR_ENGINE_STATUT"] !== "open") {
-                    $rawConfig["TR_ENGINE_STATUT"] = "open";
-                }
-
-                define("TR_ENGINE_STATUT", $rawConfig["TR_ENGINE_STATUT"]);
-
-                if (TR_ENGINE_STATUT == "close") {
-                    CoreSecure::getInstance()->throwException("close");
-                }
-
-                // Vérification de la durée de validité du cache
-                if (!is_int($rawConfig['sessionTimeLimit']) || $rawConfig['sessionTimeLimit'] < 1) {
-                    $rawConfig['sessionTimeLimit'] = 7;
-                }
-
-                $newConfig['sessionTimeLimit'] = (int) $rawConfig['sessionTimeLimit'];
-
-                // Vérification du préfixage des cookies
-                if (empty($rawConfig['cookiePrefix'])) {
-                    $rawConfig['cookiePrefix'] = "tr";
-                }
-
-                $newConfig['cookiePrefix'] = $rawConfig['cookiePrefix'];
-
-                // Vérification de la clé de cryptage
-                if (!empty($rawConfig['cryptKey'])) {
-                    $newConfig['cryptKey'] = $rawConfig['cryptKey'];
-                }
-
-                // Ajout à la configuration courante
-                $this->addConfig($newConfig);
+                $this->loadSpecificConfig($rawConfig);
             } else {
                 // Il n'est pas normale de n'avoir aucune information
                 $canUse = false;
@@ -703,37 +668,95 @@ class CoreMain {
 
             // Si tout semble en ordre, nous continuons le chargement
             if ($canUse) {
-                // Chargement de la configuration via la cache
-                $newConfig = array();
-                $coreCache = CoreCache::getInstance(CoreCache::SECTION_TMP);
-
-                // Si le cache est disponible
-                if ($coreCache->cached("configs.php")) {
-                    $newConfig = $coreCache->readCache("configs.php");
-                } else {
-                    $content = "";
-                    $coreSql = CoreSql::getInstance();
-
-                    // Requête vers la base de données de configs
-                    $coreSql->select(CoreTable::CONFIG_TABLE, array(
-                        "name",
-                        "value"));
-
-                    foreach ($coreSql->fetchArray() as $row) {
-                        $content .= $coreCache->serializeData(array(
-                            $row['name'] => $row['value']));
-                        $newConfig[$row['name']] = ExecEntities::stripSlashes($row['value']);
-                    }
-
-                    // Mise en cache
-                    $coreCache->writeCache("configs.php", $content);
-                }
-
-                // Ajout a la configuration courante
-                $this->addConfig($newConfig);
+                $this->loadGenericConfig();
             }
         }
         return $canUse;
+    }
+
+    /**
+     * Chargement de la configuration spécifique (via fichier).
+     * 
+     * @param array $rawConfig
+     */
+    private function loadSpecificConfig(array $rawConfig) {
+        $newConfig = array();
+
+        // Vérification de l'adresse email du webmaster
+        if (!ExecMailer::isValidMail($rawConfig["TR_ENGINE_MAIL"])) {
+            CoreLogger::addException("Default mail isn't valide");
+        }
+
+        define("TR_ENGINE_MAIL", $rawConfig["TR_ENGINE_MAIL"]);
+
+        // Vérification du statut
+        $rawConfig["TR_ENGINE_STATUT"] = strtolower($rawConfig["TR_ENGINE_STATUT"]);
+
+        if ($rawConfig["TR_ENGINE_STATUT"] !== "close" && $rawConfig["TR_ENGINE_STATUT"] !== "open") {
+            $rawConfig["TR_ENGINE_STATUT"] = "open";
+        }
+
+        define("TR_ENGINE_STATUT", $rawConfig["TR_ENGINE_STATUT"]);
+
+        if (TR_ENGINE_STATUT == "close") {
+            CoreSecure::getInstance()->throwException("close");
+        }
+
+        // Vérification de la durée de validité du cache
+        if (!is_int($rawConfig['sessionTimeLimit']) || $rawConfig['sessionTimeLimit'] < 1) {
+            $rawConfig['sessionTimeLimit'] = 7;
+        }
+
+        $newConfig['sessionTimeLimit'] = (int) $rawConfig['sessionTimeLimit'];
+
+        // Vérification du préfixage des cookies
+        if (empty($rawConfig['cookiePrefix'])) {
+            $rawConfig['cookiePrefix'] = "tr";
+        }
+
+        $newConfig['cookiePrefix'] = $rawConfig['cookiePrefix'];
+
+        // Vérification de la clé de cryptage
+        if (!empty($rawConfig['cryptKey'])) {
+            $newConfig['cryptKey'] = $rawConfig['cryptKey'];
+        }
+
+        // Ajout à la configuration courante
+        $this->addConfig($newConfig);
+    }
+
+    /**
+     * Chargement de la configuration générique (via table de données).
+     */
+    private function loadGenericConfig() {
+        $newConfig = array();
+        $coreCache = CoreCache::getInstance(CoreCache::SECTION_TMP);
+
+        // Si le cache est disponible
+        if ($coreCache->cached("configs.php")) {
+            // Chargement de la configuration via la cache
+            $newConfig = $coreCache->readCache("configs.php");
+        } else {
+            $content = "";
+            $coreSql = CoreSql::getInstance();
+
+            // Requête vers la base de données de configs
+            $coreSql->select(CoreTable::CONFIG_TABLE, array(
+                "name",
+                "value"));
+
+            foreach ($coreSql->fetchArray() as $row) {
+                $content .= $coreCache->serializeData(array(
+                    $row['name'] => $row['value']));
+                $newConfig[$row['name']] = ExecEntities::stripSlashes($row['value']);
+            }
+
+            // Mise en cache
+            $coreCache->writeCache("configs.php", $content);
+        }
+
+        // Ajout a la configuration courante
+        $this->addConfig($newConfig);
     }
 
 }

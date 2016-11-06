@@ -16,6 +16,8 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  * Configure les erreurs.
  * Capture la configuration.
  *
+ * Classe autorisée à manipuler les Superglobals.
+ *
  * @author Sébastien Villemain
  */
 class CoreSecure {

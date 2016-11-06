@@ -218,47 +218,68 @@ class CoreAccessType implements CoreAccessToken {
     private function checkValidity() {
         $valid = false;
 
-        if (!empty($this->getZone())) {
-            if (!empty($this->getId())) {
-                if ($this->isModuleZone()) {
-                    if ($this->hasPageAccess()) {
-                        if (CoreLoader::isCallable("LibModule") && LibModule::getInstance()->isModule($this->getPage(), $this->getId())) {
-                            $valid = true;
-                        }
-                    } else {
-                        // Recherche d'informations sur le module
-                        $moduleInfo = null;
-
-                        if (CoreLoader::isCallable("LibModule")) {
-                            $moduleInfo = LibModule::getInstance()->getInfoModule($this->getName());
-                        }
-
-                        if ($moduleInfo !== null && is_numeric($moduleInfo->getId())) {
-                            $this->rights['page'] = $moduleInfo->getName();
-                            $this->rights['identifiant'] = $moduleInfo->getId();
-                            $valid = true;
-                        }
-                    }
-                } else if ($this->isBlockZone()) {
-                    // Recherche d'information sur le block
-                    $blockInfo = null;
-
-                    if (CoreLoader::isCallable("LibBlock")) {
-                        $blockInfo = LibBlock::getInstance()->getInfoBlock($this->getId());
-                    }
-
-                    if ($blockInfo !== null && is_numeric($blockInfo->getId())) {
-                        $this->rights['page'] = $blockInfo->getType();
-                        $this->rights['identifiant'] = $blockInfo->getId();
-                        $valid = true;
-                    }
-                } else {
-                    $valid = true;
-                }
+        if (!empty($this->getZone()) && !empty($this->getId())) {
+            if ($this->isModuleZone()) {
+                $valid = $this->canOpenModule();
+            } else if ($this->isBlockZone()) {
+                $valid = $this->canOpenBlock();
+            } else {
+                $valid = true;
             }
         }
 
         $this->rights['validity'] = $valid;
+    }
+
+    /**
+     * Détermine si il est possible d'ouvrir le module.
+     *
+     * @return bool
+     */
+    private function &canOpenModule(): bool {
+        $valid = false;
+
+        if ($this->hasPageAccess()) {
+            if (CoreLoader::isCallable("LibModule") && LibModule::getInstance()->isModule($this->getPage(), $this->getId())) {
+                $valid = true;
+            }
+        } else {
+            // Recherche d'informations sur le module
+            $moduleInfo = null;
+
+            if (CoreLoader::isCallable("LibModule")) {
+                $moduleInfo = LibModule::getInstance()->getInfoModule($this->getName());
+            }
+
+            if ($moduleInfo !== null && is_numeric($moduleInfo->getId())) {
+                $this->rights['page'] = $moduleInfo->getName();
+                $this->rights['identifiant'] = $moduleInfo->getId();
+                $valid = true;
+            }
+        }
+        return $valid;
+    }
+
+    /**
+     * Détermine si il est possible d'ouvrir le block.
+     *
+     * @return bool
+     */
+    private function &canOpenBlock(): bool {
+        $valid = false;
+        $blockInfo = null;
+
+        // Recherche d'information sur le block
+        if (CoreLoader::isCallable("LibBlock")) {
+            $blockInfo = LibBlock::getInstance()->getInfoBlock($this->getId());
+        }
+
+        if ($blockInfo !== null && is_numeric($blockInfo->getId())) {
+            $this->rights['page'] = $blockInfo->getType();
+            $this->rights['identifiant'] = $blockInfo->getId();
+            $valid = true;
+        }
+        return $valid;
     }
 
     /**

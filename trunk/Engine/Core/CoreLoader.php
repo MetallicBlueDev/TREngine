@@ -163,7 +163,7 @@ class CoreLoader {
      * @return bool true chargé.
      */
     public static function &classLoader(string $class): bool {
-        return self::load($class, ""); // Type indéterminé
+        return self::manageLoad($class, ""); // Type indéterminé
     }
 
     /**
@@ -173,7 +173,7 @@ class CoreLoader {
      * @return bool true chargé.
      */
     public static function &translateLoader(string $plugin): bool {
-        return self::load($plugin, self::TYPE_TRANSLATE);
+        return self::manageLoad($plugin, self::TYPE_TRANSLATE);
     }
 
     /**
@@ -183,7 +183,7 @@ class CoreLoader {
      * @return bool true chargé.
      */
     public static function &includeLoader(string $include): bool {
-        return self::load($include, self::TYPE_INCLUDE);
+        return self::manageLoad($include, self::TYPE_INCLUDE);
     }
 
     /**
@@ -369,14 +369,14 @@ class CoreLoader {
     }
 
     /**
-     * Chargeur de fichier.
+     * Chargeur de fichier (uniquement si besoin).
      *
      * @param string $keyName Nom de la classe ou du fichier.
      * @param string $ext Extension.
      * @return bool true chargé.
      * @throws FailLoader
      */
-    private static function &load(string &$keyName, string $ext): bool {
+    private static function &manageLoad(string &$keyName, string $ext): bool {
         try {
             if (empty($keyName)) {
                 throw new FailLoader("loader");
@@ -387,30 +387,44 @@ class CoreLoader {
 
             // Si ce n'est pas déjà chargé
             if (!$loaded) {
-                $path = self::getFilePath($keyName, $ext);
-
-                if (is_file($path)) {
-                    $loaded = self::loadFilePath($keyName, $ext, $path);
-                } else {
-                    switch ($ext) {
-                        case self::TYPE_BLOCK:
-                            CoreLogger::addErrorMessage(ERROR_BLOCK_NO_FILE);
-                            break;
-                        case self::TYPE_MODULE:
-                            CoreLogger::addErrorMessage(ERROR_MODULE_NO_FILE);
-                            break;
-                        case self::TYPE_TRANSLATE:
-                            // Aucune traduction disponible
-                            break;
-                        default:
-                            throw new FailLoader("loader");
-                    }
-                }
+                $loaded = self::load($keyName, $ext);
             }
         } catch (Exception $ex) {
             CoreSecure::getInstance()->throwException($ex->getMessage(), $ex, array(
                 $keyName,
                 $ext));
+        }
+        return $loaded;
+    }
+
+    /**
+     * Chargeur de classe.
+     * 
+     * @param string $keyName
+     * @param string $ext
+     * @return bool
+     * @throws FailLoader
+     */
+    private static function &load(string $keyName, string $ext): bool {
+        $loaded = false;
+        $path = self::getFilePath($keyName, $ext);
+
+        if (is_file($path)) {
+            $loaded = self::loadFilePath($keyName, $ext, $path);
+        } else {
+            switch ($ext) {
+                case self::TYPE_BLOCK:
+                    CoreLogger::addErrorMessage(ERROR_BLOCK_NO_FILE);
+                    break;
+                case self::TYPE_MODULE:
+                    CoreLogger::addErrorMessage(ERROR_MODULE_NO_FILE);
+                    break;
+                case self::TYPE_TRANSLATE:
+                    // Aucune traduction disponible
+                    break;
+                default:
+                    throw new FailLoader("loader");
+            }
         }
         return $loaded;
     }

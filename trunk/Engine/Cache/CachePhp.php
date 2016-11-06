@@ -102,7 +102,7 @@ class CachePhp extends CacheModel {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param string $path
      * @return array
      */
@@ -175,22 +175,33 @@ class CachePhp extends CacheModel {
             flock($fp, LOCK_UN);
             fclose($fp);
         } else {
-            // Recherche d'un fichier htaccess
-            $strlen = strlen($pathFile);
-            $isHtaccessFile = (substr($pathFile, -9, $strlen) === ".htaccess");
-
-            // Si c'est un htaccess, on essai de corriger le problème
-            if ($isHtaccessFile) {
-                // On créée le même fichier en HTML
-                $htaccessPath = substr($pathFile, 0, $strlen - 9);
-                $this->writeFile($htaccessPath . "index.html", $content, $overwrite);
-
-                // Puis on renomme
-                rename($htaccessPath . "index.html", $htaccessPath . ".htaccess");
-            }
-
-            CoreLogger::addException("Bad response for fopen command. Path : " . $pathFile);
+            $this->manageFileOpenError($pathFile, $content, $overwrite);
         }
+    }
+
+    /**
+     * Faite suite à une erreur d'écriture du fichier cache.
+     *
+     * @param string $pathFile
+     * @param string $content
+     * @param bool $overwrite
+     */
+    private function manageFileOpenError(string $pathFile, string $content, bool $overwrite) {
+        // Recherche d'un fichier htaccess
+        $strlen = strlen($pathFile);
+        $isHtaccessFile = (substr($pathFile, -9, $strlen) === ".htaccess");
+
+        // Si c'est un htaccess, on essai de corriger le problème
+        if ($isHtaccessFile) {
+            // On créée le même fichier en HTML
+            $htaccessPath = substr($pathFile, 0, $strlen - 9);
+            $this->writeFile($htaccessPath . "index.html", $content, $overwrite);
+
+            // Puis on renomme
+            rename($htaccessPath . "index.html", $htaccessPath . ".htaccess");
+        }
+
+        CoreLogger::addException("Bad response for fopen command. Path : " . $pathFile);
     }
 
     /**
@@ -249,23 +260,7 @@ class CachePhp extends CacheModel {
      * @param int $timeLimit
      */
     private function removeFile(string $path, int $timeLimit) {
-        // Vérification de la date d'expiration
-        $deleteFile = false;
-
-        // Vérification de la date
-        if ($timeLimit > 0) {
-
-            // Vérification de la date d'expiration
-            if ($timeLimit > $this->getCacheMTime($path)) {
-                // Fichier périmé, suppression
-                $deleteFile = true;
-            }
-        } else {
-            // Suppression du fichier directement
-            $deleteFile = true;
-        }
-
-        if ($deleteFile) {
+        if ($this->canRemoveFile($path, $timeLimit)) {
             $fp = @fopen(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $path, 'a');
 
             if ($fp) {
@@ -284,6 +279,30 @@ class CachePhp extends CacheModel {
                 CoreLogger::addException("Bad response for fopen|unlink command. Path : " . $path);
             }
         }
+    }
+
+    /**
+     * Détermine si il est possible de supprimer le fichier.
+     *
+     * @param string $path
+     * @param int $timeLimit
+     * @return boolean
+     */
+    private function &canRemoveFile(string $path, int $timeLimit): bool {
+        $deleteFile = false;
+
+        // Vérification de la date
+        if ($timeLimit > 0) {
+            // Vérification de la date d'expiration
+            if ($timeLimit > $this->getCacheMTime($path)) {
+                // Fichier périmé, suppression
+                $deleteFile = true;
+            }
+        } else {
+            // Suppression du fichier directement
+            $deleteFile = true;
+        }
+        return $deleteFile;
     }
 
     /**
