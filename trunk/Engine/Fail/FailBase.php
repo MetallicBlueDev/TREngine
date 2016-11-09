@@ -33,7 +33,13 @@ abstract class FailBase extends Exception {
      */
     const FROM_CACHE = 30;
 
-    public function __construct($message, $failSourceNumber = self::FROM_ENGINE) {
+    /**
+     * Création d'une nouvelle exception.
+     * 
+     * @param string $message
+     * @param int $failSourceNumber
+     */
+    public function __construct(string $message, int $failSourceNumber = self::FROM_ENGINE) {
         parent::__construct($message, $failSourceNumber, null);
     }
 
@@ -42,7 +48,7 @@ abstract class FailBase extends Exception {
      *
      * @return string
      */
-    public function getFailSourceName() {
+    public function getFailSourceName(): string {
         $sourceName = get_called_class();
         $pos = strripos($sourceName, '\\');
 
@@ -63,7 +69,7 @@ abstract class FailBase extends Exception {
      *
      * @return string
      */
-    public function getFailInformation() {
+    public function getFailInformation(): string {
         return "Exception " . $this->getFailSourceName() . " (" . $this->getCode() . ") : " . $this->getMessage();
     }
 

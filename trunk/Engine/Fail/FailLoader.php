@@ -11,7 +11,12 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  */
 class FailLoader extends FailBase {
 
-    public function __construct($message) {
+    /**
+     * Exception déclenchée par le chargeur de classe.
+     *
+     * @param string $message
+     */
+    public function __construct(string $message) {
         parent::__construct($message, FailBase::FROM_LOADER);
     }
 
