@@ -162,7 +162,7 @@ class CoreSession {
                 $newSession->setUser($userInfos, true);
 
                 // Tentative d'ouverture de session
-                $rslt = $newSession->openSession();
+                $rslt = $newSession->createSession();
 
                 if (!$rslt) {
                     self::stopConnection();
@@ -188,7 +188,7 @@ class CoreSession {
      */
     public static function stopConnection() {
         if (self::hasConnection()) {
-            self::$coreSession->closeSession();
+            self::$coreSession->destroySession();
         }
 
         if (self::$coreSession !== null) {
@@ -409,7 +409,7 @@ class CoreSession {
             } else {
                 // Suppression du bannissement
                 $this->userIpBan = "";
-                ExecCookie::destroyCookie(self::getCookieName($this->cookieName['BLACKBAN']));
+                ExecCookie::destroyCookie($this->getBanishmentCookieName());
             }
         }
     }
@@ -430,42 +430,53 @@ class CoreSession {
         );
 
         foreach ($coreSql->fetchArray() as $value) {
-            $banIp = !empty($value['ip']) ? explode(".", $value['ip']) : array();
-            $banIpCounter = count($banIp);
-
-            // Filtre pour la vérification
-            if ($banIpCounter >= 4) {
-                $banList = $value['ip'];
-                $searchIp = $userIp;
-            } else {
-                for ($index = 0; $index < $banIpCounter; $index++) {
-                    $banList .= $banIp[$index];
-                }
-
-                $uIp = explode(".", $userIp);
-                $userIpCounter = count($uIp);
-                $userIpCounter = $userIpCounter < $banIpCounter ? $userIpCounter : $banIpCounter;
-
-                for ($index = 0; $index < $userIpCounter; $index++) {
-                    $searchIp .= $uIp[$index];
-                }
-            }
-
-            // Vérification du client
-            if (!empty($searchIp) && $searchIp === $banList) {
-                // IP bannis !
-                $this->userIpBan = $value['ip'];
-            } else if ($this->userInfos !== null && $this->userInfos->getName() === $value['name']) {
-                // Pseudo bannis !
-                $this->userIpBan = $value['ip'];
-            } else {
-                $this->userIpBan = "";
-            }
+            $this->searchBanishmentIp($userIp, $value);
 
             // La vérification a déjà aboutie, on arrête
             if ($this->bannedSession()) {
                 break;
             }
+        }
+    }
+
+    /**
+     * Vérification du banissement de l'IP.
+     *
+     * @param string $userIp
+     * @param array $value
+     */
+    private function searchBanishmentIp(string $userIp, array $value) {
+        $banIp = !empty($value['ip']) ? explode(".", $value['ip']) : array();
+        $banIpCounter = count($banIp);
+        $searchIp = "";
+
+        // Filtre pour la vérification
+        if ($banIpCounter >= 4) {
+            $banList = $value['ip'];
+            $searchIp = $userIp;
+        } else {
+            for ($index = 0; $index < $banIpCounter; $index++) {
+                $banList .= $banIp[$index];
+            }
+
+            $uIp = explode(".", $userIp);
+            $userIpCounter = count($uIp);
+            $userIpCounter = $userIpCounter < $banIpCounter ? $userIpCounter : $banIpCounter;
+
+            for ($index = 0; $index < $userIpCounter; $index++) {
+                $searchIp .= $uIp[$index];
+            }
+        }
+
+        // Vérification du client
+        if (!empty($searchIp) && $searchIp === $banList) {
+            // IP bannis !
+            $this->userIpBan = $value['ip'];
+        } else if ($this->userInfos !== null && $this->userInfos->getName() === $value['name']) {
+            // Pseudo bannis !
+            $this->userIpBan = $value['ip'];
+        } else {
+            $this->userIpBan = "";
         }
     }
 
@@ -486,53 +497,18 @@ class CoreSession {
         $isValidSession = true;
 
         if (!$this->userLogged()) {
-            // Cookie de l'id du client
-            $userId = self::getCookie($this->cookieName['USER']);
-
-            // Cookie de session
-            $sessionId = self::getCookie($this->cookieName['SESSION']);
-
-            // Cookie de langue
-            $userLanguage = self::getCookie($this->cookieName['LANGUE']);
-
-            // Cookie de template
-            $userTemplate = self::getCookie($this->cookieName['TEMPLATE']);
-
-            // Bannissement par IP
-            $this->userIpBan = self::getCookie($this->cookieName['BLACKBAN']);
+            $userId = self::getCookie($this->getUserCookieName());
+            $sessionId = self::getCookie($this->getSessionCookieName());
+            $this->userIpBan = self::getCookie($this->getBanishmentCookieName());
 
             // Vérifie si une session est ouverte
             if ((!empty($userId) && !empty($sessionId))) {
                 // La session doit être entièrement re-validée
-                $isValidSession = false;
-
-                $coreCache = CoreCache::getInstance(CoreCache::SECTION_SESSIONS);
-
-                if ($coreCache->cached($sessionId . ".php")) {
-                    // Si fichier cache trouvé, on l'utilise
-                    $sessions = $coreCache->readCache($sessionId . ".php");
-
-                    if ($sessions['user_id'] === $userId && $sessions['sessionId'] === $sessionId) {
-                        // Mise a jour du dernier accès toute les 5 min
-                        if (($coreCache->getCacheMTime($sessionId . ".php") + 5 * 60) < $this->timer) {
-                            // En base
-                            $isValidSession = $this->updateLastConnect($userId);
-
-                            // En cache
-                            $coreCache->touchCache($sessionId . ".php");
-                        } else {
-                            $isValidSession = true;
-                        }
-                    }
-
-                    if ($isValidSession) {
-                        // Injection des informations du client
-                        $this->setUser($sessions);
-                        $this->userInfos->setLangue($userLanguage);
-                        $this->userInfos->setTemplate($userTemplate);
-                    }
-                }
+                $isValidSession = $this->tryOpenSession($userId, $sessionId);
             } else {
+                $userLanguage = self::getCookie($this->getLangueCookieName());
+                $userTemplate = self::getCookie($this->getTemplateCookieName());
+
                 $this->setUserAnonymous();
                 $this->userInfos->setLangue($userLanguage);
                 $this->userInfos->setTemplate($userTemplate);
@@ -542,9 +518,96 @@ class CoreSession {
     }
 
     /**
+     * Tentative d'ouverture de la session.
+     * 
+     * @param string $userId
+     * @param string $sessionId
+     * @return bool
+     */
+    private function tryOpenSession(string $userId, string $sessionId): bool {
+        // La session doit être entièrement re-validée
+        $isValidSession = false;
+        $coreCache = CoreCache::getInstance(CoreCache::SECTION_SESSIONS);
+
+        if ($coreCache->cached($sessionId . ".php")) {
+            // Si fichier cache trouvé, on l'utilise
+            $sessions = $coreCache->readCache($sessionId . ".php");
+
+            if ($sessions['user_id'] === $userId && $sessions['sessionId'] === $sessionId) {
+                // Mise a jour du dernier accès toute les 5 min
+                if (($coreCache->getCacheMTime($sessionId . ".php") + 5 * 60) < $this->timer) {
+                    // En base
+                    $isValidSession = $this->updateLastConnect($userId);
+
+                    // En cache
+                    $coreCache->touchCache($sessionId . ".php");
+                } else {
+                    $isValidSession = true;
+                }
+            }
+
+            if ($isValidSession) {
+                $userLanguage = self::getCookie($this->getLangueCookieName());
+                $userTemplate = self::getCookie($this->getTemplateCookieName());
+
+                // Injection des informations du client
+                $this->setUser($sessions);
+                $this->userInfos->setLangue($userLanguage);
+                $this->userInfos->setTemplate($userTemplate);
+            }
+        }
+        return $isValidSession;
+    }
+
+    /**
+     * Retourne le nom du cookie stockant l'identifiant du client.
+     *
+     * @return string
+     */
+    private function &getUserCookieName(): string {
+        return self::getCryptCookieName($this->cookieName['USER']);
+    }
+
+    /**
+     * Retourne le nom du cookie stockant l'identifiant de session.
+     *
+     * @return string
+     */
+    private function &getSessionCookieName(): string {
+        return self::getCryptCookieName($this->cookieName['SESSION']);
+    }
+
+    /**
+     * Retourne le nom du cookie stockant la langue du client.
+     *
+     * @return string
+     */
+    private function &getLangueCookieName(): string {
+        return self::getCryptCookieName($this->cookieName['LANGUE']);
+    }
+
+    /**
+     * Retourne le nom du cookie stockant le thème du client.
+     *
+     * @return string
+     */
+    private function &getTemplateCookieName(): string {
+        return self::getCryptCookieName($this->cookieName['TEMPLATE']);
+    }
+
+    /**
+     * Retourne le nom du cookie stockant le bannissement du client.
+     *
+     * @return string
+     */
+    private function &getBanishmentCookieName(): string {
+        return self::getCryptCookieName($this->cookieName['BLACKBAN']);
+    }
+
+    /**
      * Ferme une session ouverte.
      */
-    private function closeSession() {
+    private function destroySession() {
         // Destruction du fichier de session
         $coreCache = CoreCache::getInstance(CoreCache::SECTION_SESSIONS);
 
@@ -559,7 +622,7 @@ class CoreSession {
                 continue;
             }
 
-            ExecCookie::destroyCookie(self::getCookieName($value));
+            ExecCookie::destroyCookie(self::getCryptCookieName($value));
         }
     }
 
@@ -568,7 +631,7 @@ class CoreSession {
      *
      * @return bool true succès
      */
-    private function &openSession(): bool {
+    private function &createSession(): bool {
         $rslt = false;
         $this->sessionId = ExecCrypt::makeIdentifier(32);
 
@@ -576,17 +639,8 @@ class CoreSession {
         $cookieTimeLimit = $this->timer + $this->sessionTimeLimit;
 
         // Creation des cookies
-        $cookieUser = ExecCookie::createCookie(
-        self::getCookieName($this->cookieName['USER']), ExecCrypt::md5Encrypt(
-        $this->userInfos->getId(), self::getSalt()
-        ), $cookieTimeLimit
-        );
-
-        $cookieSession = ExecCookie::createCookie(
-        self::getCookieName($this->cookieName['SESSION']), ExecCrypt::md5Encrypt(
-        $this->sessionId, self::getSalt()
-        ), $cookieTimeLimit
-        );
+        $cookieUser = ExecCookie::createCookie($this->getUserCookieName(), ExecCrypt::md5Encrypt($this->userInfos->getId(), self::getSalt()), $cookieTimeLimit);
+        $cookieSession = ExecCookie::createCookie($this->getSessionCookieName(), ExecCrypt::md5Encrypt($this->sessionId, self::getSalt()), $cookieTimeLimit);
 
         if ($cookieUser && $cookieSession) {
             // Ecriture du cache
@@ -672,7 +726,6 @@ class CoreSession {
      * @return string
      */
     private static function &getCookie(string $cookieName): string {
-        $cookieName = self::getCookieName($cookieName);
         $cookieContent = ExecCookie::getCookie($cookieName);
         $cookieContent = ExecCrypt::md5Decrypt($cookieContent, self::getSalt());
         return $cookieContent;
@@ -684,7 +737,7 @@ class CoreSession {
      * @param string $cookieName
      * @return string
      */
-    private static function &getCookieName(string $cookieName): string {
+    private static function &getCryptCookieName(string $cookieName): string {
         return ExecCrypt::cryptByMd5TrEngine($cookieName, self::getSalt());
     }
 
@@ -694,7 +747,8 @@ class CoreSession {
      * @return string
      */
     private static function getSalt(): string {
-        return CoreMain::getInstance()->getCryptKey() . CoreMain::getInstance()->getAgentInfos()->getBrowserName();
+        $coreMain = CoreMain::getInstance();
+        return $coreMain->getCryptKey() . $coreMain->getAgentInfos()->getBrowserName();
     }
 
     /**
