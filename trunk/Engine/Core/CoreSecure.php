@@ -165,72 +165,115 @@ class CoreSecure {
      * @return array
      */
     private function &getDebugMessage(Exception $ex = null, array $argv = array()): array {
-        // Tableau avec les lignes d'erreurs
-        $errorMessage = array();
+        $errorMessages = array();
 
-        // Analyse de l'exception
-        if ($ex !== null) {
-            if ($this->debuggingMode) {
-                if ($ex instanceof FailBase) {
-                    $errorMessage[] = $ex->getFailInformation();
-                } else {
-                    $errorMessage[] = "Exception PHP (" . $ex->getCode() . ") : " . $ex->getMessage();
-                }
-            }
-
-            $errorMessage[] = "";
-
-            foreach ($ex->getTrace() as $traceValue) {
-                $errorLine = "";
-
-                if (is_array($traceValue)) {
-                    foreach ($traceValue as $key => $value) {
-                        if ($key === "file" || $key === "function") {
-                            $value = preg_replace("/([a-zA-Z0-9._]+).php/", "<span class=\"text_bold\">\\1</span>.php", $value);
-                            $errorLine .= " <span class=\"text_bold\">" . $key . "</span> " . $value;
-                        } else if ($key === "line" || $key == "class") {
-                            $errorLine .= " in <span class=\"text_bold\">" . $key . "</span> " . $value;
-                        }
-                    }
-                }
-
-                if (!empty($errorLine)) {
-                    $errorMessage[] = $errorLine;
-                }
-            }
-        }
+        $this->appendException($ex, $errorMessages);
 
         // Fusion des informations supplémentaires
         if (!empty($argv)) {
-            $errorMessage[] = "";
-            $errorMessage[] = "<span class=\"text_bold\">Additional information about the error:</span>";
-            $errorMessage = array_merge($errorMessage, $argv);
+            $errorMessages[] = "";
+            $errorMessages[] = "<span class=\"text_bold\">Additional information about the error:</span>";
+            $errorMessages = array_merge($errorMessages, $argv);
         }
 
+        $this->appendSqlErrors($errorMessages);
+        $this->appendLoggerErrors($errorMessages);
+        return $errorMessages;
+    }
+
+    /**
+     * Ajoute des informations sur l'exception.
+     *
+     * @param Exception $ex
+     * @param array $errorMessages
+     */
+    private function &appendException(Exception $ex, array &$errorMessages) {
+        if ($ex !== null) {
+            $this->appendExceptionMessage($ex, $errorMessages);
+            $errorMessages[] = "";
+            $this->appendExceptionTrace($ex, $errorMessages);
+        }
+    }
+
+    /**
+     * Ajoute une information générale sur l'exception.
+     *
+     * @param Exception $ex
+     * @param array $errorMessages
+     */
+    private function &appendExceptionMessage(Exception $ex, array &$errorMessages) {
+        if ($this->debuggingMode) {
+            if ($ex instanceof FailBase) {
+                $errorMessages[] = $ex->getFailInformation();
+            } else {
+                $errorMessages[] = "Exception PHP (" . $ex->getCode() . ") : " . $ex->getMessage();
+            }
+        }
+    }
+
+    /**
+     * Ajoute la trace (pile d'appel) de l'exception.
+     *
+     * @param Exception $ex
+     * @param array $errorMessages
+     */
+    private function &appendExceptionTrace(Exception $ex, array &$errorMessages) {
+        foreach ($ex->getTrace() as $traceValue) {
+            $errorLine = "";
+
+            if (is_array($traceValue)) {
+                foreach ($traceValue as $key => $value) {
+                    if ($key === "file" || $key === "function") {
+                        $value = preg_replace("/([a-zA-Z0-9._]+).php/", "<span class=\"text_bold\">\\1</span>.php", $value);
+                        $errorLine .= " <span class=\"text_bold\">" . $key . "</span> " . $value;
+                    } else if ($key === "line" || $key == "class") {
+                        $errorLine .= " in <span class=\"text_bold\">" . $key . "</span> " . $value;
+                    }
+                }
+            }
+
+            if (!empty($errorLine)) {
+                $errorMessages[] = $errorLine;
+            }
+        }
+    }
+
+    /**
+     * Ajoute des informations sur les dernières erreurs SQL.
+     *
+     * @param array $errorMessages
+     */
+    private function &appendSqlErrors(array &$errorMessages) {
         if (CoreLoader::isCallable("CoreSession") && CoreLoader::isCallable("CoreSql")) {
             if (CoreSql::hasConnection()) {
                 if (CoreSession::getInstance()->getUserInfos()->hasRegisteredRank()) {
                     $sqlErrors = CoreSql::getInstance()->getLastError();
 
                     if (!empty($sqlErrors)) {
-                        $errorMessage[] = "";
-                        $errorMessage[] = "<span class=\"text_bold\">Last Sql error message:</span>";
-                        $errorMessage = array_merge($errorMessage, $sqlErrors);
+                        $errorMessages[] = "";
+                        $errorMessages[] = "<span class=\"text_bold\">Last Sql error message:</span>";
+                        $errorMessages = array_merge($errorMessages, $sqlErrors);
                     }
                 }
             }
         }
+    }
 
+    /**
+     * Ajoute des informations sur les erreurs collectées dans le journal.
+     *
+     * @param array $errorMessages
+     */
+    private function &appendLoggerErrors(array &$errorMessages) {
         if (CoreLoader::isCallable("CoreLogger")) {
             $loggerExceptions = CoreLogger::getExceptions();
 
             if (!empty($loggerExceptions)) {
-                $errorMessage[] = "";
-                $errorMessage[] = "<span class=\"text_bold\">Exceptions logged:</span>";
-                $errorMessage = array_merge($errorMessage, $loggerExceptions);
+                $errorMessages[] = "";
+                $errorMessages[] = "<span class=\"text_bold\">Exceptions logged:</span>";
+                $errorMessages = array_merge($errorMessages, $loggerExceptions);
             }
         }
-        return $errorMessage;
     }
 
     /**
