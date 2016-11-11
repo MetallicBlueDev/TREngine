@@ -8,7 +8,8 @@ if (preg_match("/CoreInfo.php/ie", $_SERVER['PHP_SELF'])) {
 }
 
 /**
- * Recherche d'information rapide.
+ * Recherche d'information rapide sur le moteur d'exécution et son environnement coté serveur.
+ *
  * Attention, il faut faire en sorte que cette classe soit compatible PHP 5.6 (date minimale 08/2014).
  * Classe autorisée à manipuler $_SERVER.
  *
@@ -32,7 +33,7 @@ class CoreInfo {
     }
 
     /**
-     * Initilisation des contantes d'informations.
+     * Création des constantes contenant les informations sur l'environnement.
      */
     public static function initialize() {
         if (!self::$initialized) {

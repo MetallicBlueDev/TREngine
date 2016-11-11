@@ -5,7 +5,7 @@ namespace TREngine\Engine\Core;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Gestionnaire de données en mémoire.
+ * Collecteur de données pour mise en mémoire tampon.
  *
  * @author Sébastien Villemain
  */

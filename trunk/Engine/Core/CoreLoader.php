@@ -8,7 +8,7 @@ use TREngine\Engine\Fail\FailLoader;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Chargeur de classe.
+ * Gestionnaire de chargeur de classe.
  *
  * @author Sébastien Villemain
  */
@@ -399,7 +399,7 @@ class CoreLoader {
 
     /**
      * Chargeur de classe.
-     * 
+     *
      * @param string $keyName
      * @param string $ext
      * @return bool

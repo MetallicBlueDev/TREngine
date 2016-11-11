@@ -179,7 +179,7 @@ class ExecAgent {
     }
 
     /**
-     * Retourne la chaine User agent.
+     * Retourne la chaine User-Agent.
      *
      * @return string
      */
@@ -238,7 +238,7 @@ class ExecAgent {
     }
 
     /**
-     * Retourne le Referer du client.
+     * Retourne le chemin référent qu'a suivi le client.
      *
      * @return string
      */

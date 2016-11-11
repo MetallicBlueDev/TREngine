@@ -5,14 +5,14 @@ namespace TREngine\Engine\Core;
 use TREngine\Engine\Exec\ExecAgent;
 
 /**
- * Information de base sur l'agent.
+ * Collecteur d'information sur le User-Agent.
  *
  * @author Sébastien Villemain
  */
 class CoreAgentData extends CoreDataStorage {
 
     /**
-     * Nouvel agent de stockage.
+     * Nouveau collecteur d'information sur le User-Agent.
      */
     public function __construct() {
         parent::__construct();
@@ -46,7 +46,7 @@ class CoreAgentData extends CoreDataStorage {
     }
 
     /**
-     * User agent complet du client.
+     * User-Agent complet de cette session.
      *
      * @return string
      */
@@ -94,7 +94,7 @@ class CoreAgentData extends CoreDataStorage {
     }
 
     /**
-     * Referer du client.
+     * Chemin référent qu'a suivi le client.
      *
      * @var string
      */
@@ -120,7 +120,7 @@ class CoreAgentData extends CoreDataStorage {
     }
 
     /**
-     * Recherche la chaine User agent.
+     * Recherche la chaine User-Agent.
      */
     private function searchUserAgent() {
         $this->setDataValue("userAgent", ExecAgent::getRawUserAgent());
@@ -144,7 +144,7 @@ class CoreAgentData extends CoreDataStorage {
     }
 
     /**
-     * Recherche le Referer du client.
+     * Recherche le chemin référent que le client a suivi.
      */
     private function searchReferer() {
         $this->setDataValue("agentReferer", ExecAgent::getReferer());

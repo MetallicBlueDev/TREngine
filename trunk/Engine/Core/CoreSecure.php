@@ -11,11 +11,9 @@ use TREngine\Engine\Fail\FailEngine;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Système de sécurité.
- * Analyse rapidement les données reçues.
- * Configure les erreurs.
- * Capture la configuration.
+ * Gestionnaire de la sécurité du noyaux.
  *
+ * Inclus un système de sécurité, une analyse rapidement les données reçues et une configuration les erreurs.
  * Classe autorisée à manipuler les Superglobals.
  *
  * @author Sébastien Villemain

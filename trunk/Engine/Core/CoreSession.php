@@ -10,7 +10,7 @@ use TREngine\Engine\Exec\ExecCookie;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Gestionnaire des sessions.
+ * Gestionnaire de sessions.
  *
  * @author Sébastien Villemain
  */

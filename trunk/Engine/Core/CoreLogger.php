@@ -7,7 +7,7 @@ use TREngine\Engine\Exec\ExecTimeMarker;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Gestionnaire de messages.
+ * Gestionnaire de messages (journal d'information, d'avertissement et d'erreur).
  *
  * @author Sébastien Villemain
  */

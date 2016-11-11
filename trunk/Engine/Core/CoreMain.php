@@ -12,6 +12,7 @@ use TREngine\Engine\Exec\ExecEntities;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
+ * Gestionnaire du noyau et d'enchainement dans le moteur.
  * Classe principal du moteur.
  *
  * @author Sébastien Villemain
@@ -676,7 +677,7 @@ class CoreMain {
 
     /**
      * Chargement de la configuration spécifique (via fichier).
-     * 
+     *
      * @param array $rawConfig
      */
     private function loadSpecificConfig(array $rawConfig) {

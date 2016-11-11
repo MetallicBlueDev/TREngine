@@ -5,7 +5,7 @@ namespace TREngine\Engine\Core;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Gestionnaire de requêtes URL.
+ * Gestionnaire de requêtes vers le protocole HTTP.
  * Classe autorisée à manipuler les Superglobals.
  *
  * @author Sébastien Villemain

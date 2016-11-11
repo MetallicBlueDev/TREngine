@@ -5,7 +5,7 @@ namespace TREngine\Engine\Core;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Gestionnaire de transaction de base.
+ * Collecteur d'information sur une transaction.
  *
  * @author Sébastien Villemain
  */

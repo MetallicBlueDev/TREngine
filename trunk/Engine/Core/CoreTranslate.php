@@ -7,7 +7,7 @@ use TREngine\Engine\Exec\ExecEntities;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Moteur de traduction de texte.
+ * Gestionnaire de traduction de texte.
  *
  * @author Sébastien Villemain
  */

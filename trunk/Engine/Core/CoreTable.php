@@ -5,7 +5,7 @@ namespace TREngine\Engine\Core;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Nom des tables de base de données utilisée par le moteur.
+ * Référence le nom des tables de base de données utilisée par le moteur.
  *
  * @author Sébastien Villemain
  */
