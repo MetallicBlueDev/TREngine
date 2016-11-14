@@ -233,7 +233,7 @@ class CoreLoader {
      * @return mixed
      */
     public static function &callback(string $callback) {
-        $ext = null;
+        $ext = "";
         self::buildExtensionAndKeyName($callback, $ext);
 
         // Récupère un seul paramètre supplémentaire
@@ -277,7 +277,7 @@ class CoreLoader {
      * @return string
      */
     public static function &getFullQualifiedClassName(string $className, string $prefixName = ""): string {
-        $ext = null;
+        $ext = "";
 
         if (!empty($prefixName)) {
             $prefixName .= "\\";
@@ -330,7 +330,7 @@ class CoreLoader {
      * @return string chemin absolu ou nulle.
      */
     private static function &getAbsolutePath(string $keyName, string $ext): string {
-        $rslt = null;
+        $rslt = "";
 
         if (self::isLoaded($keyName, $ext)) {
             $rslt = self::$loadedFiles[self::getLoadedFileKey($keyName, $ext)];
@@ -442,7 +442,7 @@ class CoreLoader {
         }
 
         if ($ext === self::TYPE_TRANSLATE) {
-            $fakeExt = null;
+            $fakeExt = "";
             self::buildGenericExtensionAndKeyName($keyName, $fakeExt, $prefixName);
 
             if ($fakeExt !== null && $fakeExt !== $ext) {
