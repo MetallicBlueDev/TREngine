@@ -127,10 +127,10 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
     /**
      * Date d'inscription du client.
      *
-     * @return timestamp
+     * @return datetime
      */
     public function &getDate() {
-        return $this->getDataValue("date");
+        return $this->getDataValue("registration_date");
     }
 
     /**

@@ -8,6 +8,7 @@ use TREngine\Engine\Lib\LibMakeStyle;
 use TREngine\Engine\Exec\ExecMailer;
 use TREngine\Engine\Exec\ExecTimeMarker;
 use TREngine\Engine\Exec\ExecEntities;
+use \Closure;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -189,7 +190,8 @@ class CoreMain {
      * @return int
      */
     public function &getSessionTimeLimit(): int {
-        return (int) $this->getConfigValue("sessionTimeLimit");
+        $limit = (int) $this->getConfigValue("sessionTimeLimit");
+        return $limit;
     }
 
     /**
@@ -506,10 +508,10 @@ class CoreMain {
      * Retourne la valeur par défaut de la configuration.
      *
      * @param string $keyName
-     * @param string $callback
+     * @param Closure $callback
      * @return string
      */
-    private function &getDefaultConfigValue(string $keyName, string $callback): string {
+    private function &getDefaultConfigValue(string $keyName, Closure $callback): string {
         $value = $this->getConfigValue($keyName);
 
         if (empty($value)) {

@@ -97,16 +97,17 @@ class CoreRequest {
      * @return string
      */
     public static function &getRequestMethod(): string {
-        return self::getRequest();
+        return self::getString("REQUEST_METHOD", "", "SERVER");
     }
 
     /**
      * Retourne le contenu de la requête demandée.
      *
      * @param string $hash
+     * @param bool $useDefault
      * @return array
      */
-    private static function &getRequest(string $hash = "default"): array {
+    private static function &getRequest(string $hash, bool $useDefault): array {
         $hash = strtoupper($hash);
         $input = array();
 
@@ -130,10 +131,15 @@ class CoreRequest {
                 $input = &$_SERVER;
                 break;
             default:
-                $hash = self::getString("REQUEST_METHOD", "", "SERVER");
+                if (!$useDefault) {
+                    CoreSecure::getInstance()->throwException("requestHash", null, array(
+                        $hash));
+                }
+
+                $hash = self::getRequestMethod();
 
                 if (!empty($hash)) {
-                    $input = self::getRequest($hash);
+                    $input = self::getRequest($hash, false);
                 }
         }
         return $input;
@@ -155,7 +161,7 @@ class CoreRequest {
             $rslt = self::$buffer[$name];
         } else {
             // Recherche de la méthode courante
-            $input = self::getRequest($hash);
+            $input = self::getRequest($hash, true);
 
             if (isset($input[$name]) && $input[$name] !== null) {
                 $rslt = self::protect($input[$name], $type);

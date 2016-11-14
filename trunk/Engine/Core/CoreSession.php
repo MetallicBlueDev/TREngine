@@ -519,7 +519,7 @@ class CoreSession {
 
     /**
      * Tentative d'ouverture de la session.
-     * 
+     *
      * @param string $userId
      * @param string $sessionId
      * @return bool
@@ -766,7 +766,7 @@ class CoreSession {
             "name",
             "mail",
             "rank",
-            "date",
+            "registration_date",
             "avatar",
             "website",
             "signature",

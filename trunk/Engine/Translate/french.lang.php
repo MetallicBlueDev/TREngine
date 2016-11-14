@@ -34,6 +34,7 @@ $lang = array(
     "ERROR_DEBUG_MAKESTYLECONFIG" => "La configuration des templates n'est pas valide.",
     "ERROR_DEBUG_BLOCKSIDE" => "Un block tente de s'afficher dans une position invalide.",
     "ERROR_DEBUG_ACCESSRANK" => "Un type de droit non reconnu a été détecté.",
+    "ERROR_DEBUG_REQUESTHASH" => "Le type de méthode utlisée pour la requête vers le protocole HTTP n'est pas valide.",
 // Erreur diverse
     "ERROR_404" => "Erreur 404, la page demandée est introuvable.",
     "ERROR_BLOCK_CODE" => "Le code d'un block n'est pas utilisable.",

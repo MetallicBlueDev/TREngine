@@ -47,9 +47,9 @@ class LibBlockData extends LibEntityData {
     /**
      * Retourne l'identifiant du block.
      *
-     * @return int
+     * @return string
      */
-    public function &getId() {
+    public function &getId(): string {
         return $this->getIntValue("block_id");
     }
 
@@ -58,7 +58,7 @@ class LibBlockData extends LibEntityData {
      *
      * @return string
      */
-    public function &getName() {
+    public function &getName(): string {
         return $this->getSideName();
     }
 
@@ -123,7 +123,7 @@ class LibBlockData extends LibEntityData {
      *
      * @return int
      */
-    public function &getRank() {
+    public function &getRank(): int {
         return $this->getIntValue("rank");
     }
 
@@ -210,7 +210,7 @@ class LibBlockData extends LibEntityData {
      *
      * @return string
      */
-    public function &getZone() {
+    public function &getZone(): string {
         $zone = "BLOCK";
         return $zone;
     }
