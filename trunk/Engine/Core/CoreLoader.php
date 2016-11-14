@@ -196,9 +196,9 @@ class CoreLoader {
      */
     public static function &isCallable(string $className, string $methodName = "", bool $static = false): bool {
         $rslt = false;
+        $ext = "";
 
         if (!empty($methodName)) {
-            $ext = null;
             self::buildExtensionAndKeyName($className, $ext);
 
             // Vérifie si la classe est en mémoire
@@ -435,9 +435,8 @@ class CoreLoader {
      * @param string $keyName
      * @param string $ext
      * @param string $prefixName
-     * @return string
      */
-    private static function buildExtensionAndKeyName(string &$keyName, string &$ext, string $prefixName = ""): string {
+    private static function buildExtensionAndKeyName(string &$keyName, string &$ext, string $prefixName = "") {
         if (empty($ext)) {
             self::buildGenericExtensionAndKeyName($keyName, $ext, $prefixName);
         }
