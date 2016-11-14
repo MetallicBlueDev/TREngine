@@ -372,7 +372,7 @@ class CoreSession {
                 "ip != ''",
                 "&& (name = 'Hacker' || name = '')",
                 "&& type = '0'",
-                "&& DATE_ADD(date, INTERVAL " . self::BANISHMENT_DURATION . " DAY) > CURDATE()"
+                "&& DATE_ADD(banishment_date, INTERVAL " . self::BANISHMENT_DURATION . " DAY) > CURDATE()"
             )
             );
         }
