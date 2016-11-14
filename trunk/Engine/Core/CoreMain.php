@@ -444,10 +444,10 @@ class CoreMain {
      *
      * @param string $key
      * @param string $subKey
-     * @return string
+     * @return mixed
      */
-    private function &getConfigValue(string $key, string $subKey = ""): string {
-        $rslt = "";
+    private function &getConfigValue(string $key, string $subKey = "") {
+        $rslt = array();
 
         if (isset($this->configs[$key])) {
             $rslt = $this->configs[$key];
