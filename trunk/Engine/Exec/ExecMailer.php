@@ -29,7 +29,7 @@ class ExecMailer {
      * @return string
      */
     public static function &displayMail($mail, $name = "mail") {
-        $rslt = null;
+        $rslt = "";
         $mail = str_replace("@", "_AT_", $mail);
         $mail = str_replace(".", "_DOT_", $mail);
         $protected = "<a href=\"mailto:" . $mail . "\">" . $name . "</a>";

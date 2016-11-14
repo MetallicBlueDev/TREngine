@@ -447,7 +447,7 @@ class CoreMain {
      * @return string
      */
     private function &getConfigValue(string $key, string $subKey = ""): string {
-        $rslt = null;
+        $rslt = "";
 
         if (isset($this->configs[$key])) {
             $rslt = $this->configs[$key];
@@ -543,7 +543,7 @@ class CoreMain {
 
         // Tentative d'utilisation du template du client
         if (!LibMakeStyle::isTemplateDir($templateName)) {
-            $templateName = null;
+            $templateName = "";
         }
 
         // Tentative d'utilisation du template du site

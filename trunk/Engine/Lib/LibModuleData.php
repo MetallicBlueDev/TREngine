@@ -39,11 +39,7 @@ class LibModuleData extends LibEntityData {
         }
 
         if ($initializeConfig) {
-            $rawConfigs = null;
-
-            if (isset($data['configs'])) {
-                $rawConfigs = $data['configs'];
-            }
+            $rawConfigs = isset($data['configs']) ? $data['configs'] : array();
             $data['configs'] = self::getModuleConfigs($rawConfigs);
         }
 

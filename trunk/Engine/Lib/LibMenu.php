@@ -131,7 +131,7 @@ class LibMenu {
      */
     public static function getLine($line) {
         $output = "";
-        $matches = null;
+        $matches = array();
 
         if (preg_match("/(.+)" . self::OPTIONS_TAG . "(.*?)" . self::OPTIONS_TAG . "/", $line, $matches)) {
             // Conversion du texte

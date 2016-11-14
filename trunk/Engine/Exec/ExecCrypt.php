@@ -113,7 +113,7 @@ class ExecCrypt {
      * @return string
      */
     public static function &cryptByMd5Alternative($data, $salt = "") {
-        $cryptData = null;
+        $cryptData = "";
 
         if (defined("CRYPT_MD5") && CRYPT_MD5) {
             if (empty($salt)) {
@@ -158,7 +158,7 @@ class ExecCrypt {
      * @return string
      */
     public static function &cryptByDes($data, $salt = "") {
-        $cryptData = null;
+        $cryptData = "";
 
         if (defined("CRYPT_STD_DES") && CRYPT_STD_DES) {
             if (empty($salt)) {
