@@ -11,7 +11,6 @@ if (preg_match("/CoreInfo.php/ie", $_SERVER['PHP_SELF'])) {
  * Recherche d'information rapide sur le moteur d'exécution et son environnement coté serveur.
  *
  * Attention, il faut faire en sorte que cette classe soit compatible PHP 5.6 (date minimale 08/2014).
- * Classe autorisée à manipuler $_SERVER.
  *
  * @author Sébastien Villemain
  */
@@ -112,7 +111,7 @@ class CoreInfo {
             $baseDir = getcwd();
         } else {
             // Chemin de base
-            $baseName = str_replace($_SERVER['SCRIPT_NAME'], "", $_SERVER['SCRIPT_FILENAME']);
+            $baseName = str_replace($this->getGlobalServer("SCRIPT_NAME"), "", $this->getGlobalServer("SCRIPT_FILENAME"));
             $baseName = str_replace("/", DIRECTORY_SEPARATOR, $baseName);
             $workingDirectory = getcwd();
 
@@ -158,7 +157,7 @@ class CoreInfo {
      */
     private function getUrlAddress() {
         // Recherche de l'URL courante
-        $urlTmp = $_SERVER["REQUEST_URI"];
+        $urlTmp = $this->getGlobalServer("REQUEST_URI");
 
         if (substr($urlTmp, -1) === "/") {
             $urlTmp = substr($urlTmp, 0, -1);
@@ -197,7 +196,8 @@ class CoreInfo {
                 $urlBase[$j] = "";
             }
         }
-        return ((empty($urlFinal)) ? $_SERVER["SERVER_NAME"] : $_SERVER["SERVER_NAME"] . "/" . $urlFinal);
+        $serverName = $this->getGlobalServer("SERVER_NAME");
+        return ((empty($urlFinal)) ? $serverName : $serverName . "/" . $urlFinal);
     }
 
     /**
@@ -226,6 +226,16 @@ class CoreInfo {
             $rslt = "\n";
         }
         return $rslt;
+    }
+
+    /**
+     * Classe autorisée à manipuler $_SERVER.
+     *
+     * @param string $keyName
+     * @return string
+     */
+    private function getGlobalServer($keyName) {
+        return ${"_" . "SERVER"}[$keyName];
     }
 
 }

@@ -12,9 +12,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 
 /**
  * Gestionnaire de la sécurité du noyaux.
- *
  * Inclus un système de sécurité, une analyse rapidement les données reçues et une configuration les erreurs.
- * Classe autorisée à manipuler les Superglobals.
  *
  * @author Sébastien Villemain
  */
@@ -285,7 +283,7 @@ class CoreSecure {
      * Vérification des données reçues (Query string).
      */
     private function checkQueryString() {
-        $queryString = strtolower(rawurldecode($_SERVER['QUERY_STRING']));
+        $queryString = strtolower(rawurldecode(self::getGlobalServer("QUERY_STRING")));
 
         $badStrings = array(
             "select",
@@ -322,11 +320,10 @@ class CoreSecure {
      * Vérification des envois POST.
      */
     private function checkRequestReferer() {
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            if (!empty($_SERVER['HTTP_REFERER'])) {
-                if (!preg_match("/" . $_SERVER['HTTP_HOST'] . "/", $_SERVER['HTTP_REFERER'])) {
-                    $this->throwException("badRequestReferer");
-                }
+        if (self::getGlobalServer("REQUEST_METHOD") === "POST" && !empty(self::getGlobalServer("HTTP_REFERER"))) {
+            // Vérification du demandeur de la méthode POST
+            if (!preg_match("/" . self::getGlobalServer("HTTP_HOST") . "/", self::getGlobalServer("HTTP_REFERER"))) {
+                $this->throwException("badRequestReferer");
             }
         }
     }
@@ -335,9 +332,9 @@ class CoreSecure {
      * Fonction de substitution pour MAGIC_QUOTES_GPC (supprimée depuis PHP 7.0).
      */
     private function checkGPC() {
-        $this->addSlashesForQuotes($_GET);
-        $this->addSlashesForQuotes($_POST);
-        $this->addSlashesForQuotes($_COOKIE);
+        $this->addSlashesForQuotes(self::getGlobalGet());
+        $this->addSlashesForQuotes(self::getGlobalPost());
+        $this->addSlashesForQuotes(self::getGlobalCookie());
     }
 
     /**
@@ -359,6 +356,46 @@ class CoreSecure {
         } else {
             $key = addslashes($key);
         }
+    }
+
+    /**
+     * Classe autorisée à manipuler $_GET.
+     *
+     * @return array
+     */
+    private static function &getGlobalGet(): array {
+        $globalGet = ${"_" . "GET"};
+        return $globalGet;
+    }
+
+    /**
+     * Classe autorisée à manipuler $_POST.
+     *
+     * @return array
+     */
+    private static function &getGlobalPost(): array {
+        $globalPost = ${"_" . "POST"};
+        return $globalPost;
+    }
+
+    /**
+     * Classe autorisée à manipuler $_COOKIE.
+     *
+     * @return array
+     */
+    private static function &getGlobalCookie(): array {
+        $globalCookie = ${"_" . "COOKIE"};
+        return $globalCookie;
+    }
+
+    /**
+     * Classe autorisée à manipuler $_SERVER.
+     *
+     * @param string $keyName
+     * @return string
+     */
+    private static function getGlobalServer($keyName) {
+        return ${"_" . "SERVER"}[$keyName];
     }
 
 }

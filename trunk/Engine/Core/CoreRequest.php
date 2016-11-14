@@ -6,7 +6,6 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 
 /**
  * Gestionnaire de requêtes vers le protocole HTTP.
- * Classe autorisée à manipuler les Superglobals.
  *
  * @author Sébastien Villemain
  */
@@ -101,51 +100,6 @@ class CoreRequest {
     }
 
     /**
-     * Retourne le contenu de la requête demandée.
-     *
-     * @param string $hash
-     * @param bool $useDefault
-     * @return array
-     */
-    private static function &getRequest(string $hash, bool $useDefault): array {
-        $hash = strtoupper($hash);
-        $input = array();
-
-        switch ($hash) {
-            case 'GET':
-                $input = &$_GET;
-                break;
-            case 'POST':
-                $input = &$_POST;
-                break;
-            case 'FILES':
-                $input = &$_FILES;
-                break;
-            case 'COOKIE':
-                $input = &$_COOKIE;
-                break;
-            case 'ENV':
-                $input = &$_ENV;
-                break;
-            case 'SERVER':
-                $input = &$_SERVER;
-                break;
-            default:
-                if (!$useDefault) {
-                    CoreSecure::getInstance()->throwException("requestHash", null, array(
-                        $hash));
-                }
-
-                $hash = self::getRequestMethod();
-
-                if (!empty($hash)) {
-                    $input = self::getRequest($hash, false);
-                }
-        }
-        return $input;
-    }
-
-    /**
      * Récupère, analyse et vérifie une variable URL.
      *
      * @param string $name Nom de la variable
@@ -160,7 +114,6 @@ class CoreRequest {
         if (isset(self::$buffer[$name])) {
             $rslt = self::$buffer[$name];
         } else {
-            // Recherche de la méthode courante
             $input = self::getRequest($hash, true);
 
             if (isset($input[$name]) && $input[$name] !== null) {
@@ -171,6 +124,63 @@ class CoreRequest {
             }
         }
         return $rslt;
+    }
+
+    /**
+     * Retourne le contenu de la requête demandée.
+     *
+     * @param string $hash
+     * @param bool $useDefault
+     * @return array
+     */
+    private static function &getRequest(string $hash, bool $useDefault): array {
+        $hash = strtoupper($hash);
+        $input = array();
+
+        switch ($hash) {
+            case 'GET':
+                $input = self::getGlobalGet();
+                break;
+            case 'POST':
+                $input = self::getGlobalPost();
+                break;
+            case 'FILES':
+                $input = self::getGlobalFiles();
+                break;
+            case 'COOKIE':
+                $input = self::getGlobalCookie();
+                break;
+            case 'ENV':
+                $input = self::getGlobalEnv();
+                break;
+            case 'SERVER':
+                $input = self::getGlobalServer();
+                break;
+            default:
+                $input = self::getDefaultRequest($hash, $useDefault);
+        }
+        return $input;
+    }
+
+    /**
+     * Retourne le contenu de la requête par défaut.
+     *
+     * @param string $hash
+     * @param bool $useDefault
+     * @return array
+     */
+    private static function &getDefaultRequest(string $hash, bool $useDefault): array {
+        if (!$useDefault) {
+            CoreSecure::getInstance()->throwException("requestHash", null, array(
+                $hash));
+        }
+
+        $hash = self::getRequestMethod();
+
+        if (!empty($hash)) {
+            $input = self::getRequest($hash, false);
+        }
+        return $input;
     }
 
     /**
@@ -186,46 +196,167 @@ class CoreRequest {
         switch ($type) {
             case 'INT':
             case 'INTEGER':
-                $matches = array();
-                preg_match('/-?[0-9]+/', (string) $content, $matches);
-                $content = (int) $matches[0];
+                $content = self::protectInt($content);
                 break;
-
             case 'FLOAT':
             case 'DOUBLE':
-                $matches = array();
-                preg_match('/-?[0-9]+(\.[0-9]+)?/', (string) $content, $matches);
-                $content = (float) $matches[0];
+                $content = self::protectFloat($content);
                 break;
-
             case 'BOOL':
             case 'BOOLEAN':
-                $content = (string) $content;
-                $content = ($content === "1" || $content === "true") ? "1" : "0";
-                $content = (bool) $content;
+                $content = self::protectBool($content);
                 break;
-
             case 'BASE64':
-                $content = (string) preg_replace('/[^A-Z0-9\/+=]/i', '', $content);
+                $content = self::protectBase64($content);
                 break;
-
             case 'WORD':
-                $content = (string) preg_replace('/[^A-Z_]/i', '', $content);
-                $content = self::protect($content, "STRING");
+                $content = self::protectWord($content);
                 break;
-
             case 'STRING':
-                $content = trim($content);
-                if (preg_match('/(\.\.|http:|ftp:)/', $content)) {
-                    $content = "";
-                }
+                $content = self::protectString($content);
                 break;
             default:
                 CoreLogger::addException("CoreRequest : data type unknown");
-                $content = self::protect($content, "STRING");
+                $content = self::protectString($content);
                 break;
         }
         return $content;
+    }
+
+    /**
+     * Force le typage en entier.
+     *
+     * @param mixed $content
+     * @return int
+     */
+    private static function &protectInt($content): int {
+        $matches = array();
+        preg_match('/-?[0-9]+/', (string) $content, $matches);
+        $content = (int) $matches[0];
+        return $content;
+    }
+
+    /**
+     * Force le typage en float.
+     *
+     * @param mixed $content
+     * @return float
+     */
+    private static function &protectFloat($content): float {
+        $matches = array();
+        preg_match('/-?[0-9]+(\.[0-9]+)?/', (string) $content, $matches);
+        $content = (float) $matches[0];
+        return $content;
+    }
+
+    /**
+     * Force le typage en valeur booléenne.
+     *
+     * @param mixed $content
+     * @return bool
+     */
+    private static function &protectBool($content): bool {
+        $content = (string) $content;
+        $content = ($content === "1" || $content === "true") ? "1" : "0";
+        $content = (bool) $content;
+        return $content;
+    }
+
+    /**
+     * Force le typage en chaine de caractère en base 64.
+     *
+     * @param mixed $content
+     * @return string
+     */
+    private static function &protectBase64($content): string {
+        $content = (string) preg_replace('/[^A-Z0-9\/+=]/i', '', $content);
+        return $content;
+    }
+
+    /**
+     * Force le typage en chaine de caractère sur un mot.
+     *
+     * @param mixed $content
+     * @return string
+     */
+    private static function &protectWord($content): string {
+        $content = (string) preg_replace('/[^A-Z_]/i', '', $content);
+        return self::protectString($content);
+    }
+
+    /**
+     * Force le typage en chaine de caractère.
+     *
+     * @param mixed $content
+     * @return string
+     */
+    private static function &protectString($content): string {
+        $content = trim((string) $content);
+
+        if (preg_match('/(\.\.|http:|ftp:)/', $content)) {
+            $content = "";
+        }
+        return $content;
+    }
+
+    /**
+     * Classe autorisée à manipuler les $_GET.
+     *
+     * @return array
+     */
+    private static function &getGlobalGet(): array {
+        $globalVars = ${"_" . "GET"};
+        return $globalVars;
+    }
+
+    /**
+     * Classe autorisée à manipuler les $_POST.
+     *
+     * @return array
+     */
+    private static function &getGlobalPost(): array {
+        $globalVars = ${"_" . "POST"};
+        return $globalVars;
+    }
+
+    /**
+     * Classe autorisée à manipuler les $_FILES.
+     *
+     * @return array
+     */
+    private static function &getGlobalFiles(): array {
+        $globalVars = ${"_" . "FILES"};
+        return $globalVars;
+    }
+
+    /**
+     * Classe autorisée à manipuler les $_COOKIE.
+     *
+     * @return array
+     */
+    private static function &getGlobalCookie(): array {
+        $globalVars = ${"_" . "COOKIE"};
+        return $globalVars;
+    }
+
+    /**
+     * Classe autorisée à manipuler les $_ENV.
+     *
+     * @return array
+     */
+    private static function &getGlobalEnv(): array {
+        $globalVars = ${"_" . "ENV"};
+        return $globalVars;
+    }
+
+    /**
+     * Classe autorisée à manipuler les $_SERVER.
+     *
+     * @return array
+     */
+    private static function &getGlobalServer(): array {
+        $globalVars = ${"_" . "SERVER"};
+        return $globalVars;
     }
 
 }
