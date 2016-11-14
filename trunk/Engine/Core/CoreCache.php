@@ -462,7 +462,7 @@ class CoreCache extends CacheModel {
      * @param array $cacheVariables
      * @return string
      */
-    public function &readCache(string $path, string $cacheVariableName = "", string $cacheVariables = array()): string {
+    public function &readCache(string $path, string $cacheVariableName = "", array $cacheVariables = array()): string {
         // Ajout des valeurs en cache
         if (!empty($cacheVariableName)) {
             ${$cacheVariableName} = &$cacheVariables;
