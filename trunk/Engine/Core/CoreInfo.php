@@ -3,7 +3,7 @@
 namespace TREngine\Engine\Core;
 
 // Exceptionnellement, NE PAS inclure SecurityCheck
-if (preg_match("/CoreInfo.php/ie", $_SERVER['PHP_SELF'])) {
+if (CoreInfo::invalidPhpSelf()) {
     exit();
 }
 
@@ -20,6 +20,15 @@ class CoreInfo {
 
     private function __construct() {
 
+    }
+
+    /**
+     * Détermine si l'accès à ce fichier est invalide.
+     * 
+     * @return bool
+     */
+    public static function invalidPhpSelf() {
+        return preg_match("/CoreInfo.php/ie", self::getGlobalServer("PHP_SELF"));
     }
 
     /**
@@ -111,7 +120,7 @@ class CoreInfo {
             $baseDir = getcwd();
         } else {
             // Chemin de base
-            $baseName = str_replace($this->getGlobalServer("SCRIPT_NAME"), "", $this->getGlobalServer("SCRIPT_FILENAME"));
+            $baseName = str_replace(self::getGlobalServer("SCRIPT_NAME"), "", self::getGlobalServer("SCRIPT_FILENAME"));
             $baseName = str_replace("/", DIRECTORY_SEPARATOR, $baseName);
             $workingDirectory = getcwd();
 
@@ -157,7 +166,7 @@ class CoreInfo {
      */
     private function getUrlAddress() {
         // Recherche de l'URL courante
-        $urlTmp = $this->getGlobalServer("REQUEST_URI");
+        $urlTmp = self::getGlobalServer("REQUEST_URI");
 
         if (substr($urlTmp, -1) === "/") {
             $urlTmp = substr($urlTmp, 0, -1);
@@ -196,7 +205,7 @@ class CoreInfo {
                 $urlBase[$j] = "";
             }
         }
-        $serverName = $this->getGlobalServer("SERVER_NAME");
+        $serverName = self::getGlobalServer("SERVER_NAME");
         return ((empty($urlFinal)) ? $serverName : $serverName . "/" . $urlFinal);
     }
 
@@ -234,7 +243,7 @@ class CoreInfo {
      * @param string $keyName
      * @return string
      */
-    private function getGlobalServer($keyName) {
+    private static function getGlobalServer($keyName) {
         return ${"_" . "SERVER"}[$keyName];
     }
 
