@@ -300,7 +300,7 @@ class CoreRequest {
     }
 
     /**
-     * Classe autorisée à manipuler les $_GET.
+     * Classe autorisée à manipuler les $_GET (lecture seule).
      *
      * @return array
      */
@@ -310,7 +310,7 @@ class CoreRequest {
     }
 
     /**
-     * Classe autorisée à manipuler les $_POST.
+     * Classe autorisée à manipuler les $_POST (lecture seule).
      *
      * @return array
      */
@@ -320,7 +320,7 @@ class CoreRequest {
     }
 
     /**
-     * Classe autorisée à manipuler les $_FILES.
+     * Classe autorisée à manipuler les $_FILES (lecture seule).
      *
      * @return array
      */
@@ -330,7 +330,7 @@ class CoreRequest {
     }
 
     /**
-     * Classe autorisée à manipuler les $_COOKIE.
+     * Classe autorisée à manipuler les $_COOKIE (lecture seule).
      *
      * @return array
      */
@@ -340,7 +340,7 @@ class CoreRequest {
     }
 
     /**
-     * Classe autorisée à manipuler les $_ENV.
+     * Classe autorisée à manipuler les $_ENV (lecture seule).
      *
      * @return array
      */
@@ -350,7 +350,7 @@ class CoreRequest {
     }
 
     /**
-     * Classe autorisée à manipuler les $_SERVER.
+     * Classe autorisée à manipuler les $_SERVER (lecture seule).
      *
      * @return array
      */

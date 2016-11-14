@@ -359,37 +359,37 @@ class CoreSecure {
     }
 
     /**
-     * Classe autorisée à manipuler $_GET.
+     * Classe autorisée à manipuler $_GET (lecture et écriture).
      *
      * @return array
      */
     private static function &getGlobalGet(): array {
-        $globalGet = ${"_" . "GET"};
+        $globalGet = &${"_" . "GET"};
         return $globalGet;
     }
 
     /**
-     * Classe autorisée à manipuler $_POST.
+     * Classe autorisée à manipuler $_POST (lecture et écriture).
      *
      * @return array
      */
     private static function &getGlobalPost(): array {
-        $globalPost = ${"_" . "POST"};
+        $globalPost = &${"_" . "POST"};
         return $globalPost;
     }
 
     /**
-     * Classe autorisée à manipuler $_COOKIE.
+     * Classe autorisée à manipuler $_COOKIE (lecture et écriture).
      *
      * @return array
      */
     private static function &getGlobalCookie(): array {
-        $globalCookie = ${"_" . "COOKIE"};
+        $globalCookie = &${"_" . "COOKIE"};
         return $globalCookie;
     }
 
     /**
-     * Classe autorisée à manipuler $_SERVER.
+     * Classe autorisée à manipuler $_SERVER (lecture seule).
      *
      * @param string $keyName
      * @return string

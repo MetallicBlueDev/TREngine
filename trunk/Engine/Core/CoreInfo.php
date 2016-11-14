@@ -24,7 +24,7 @@ class CoreInfo {
 
     /**
      * Détermine si l'accès à ce fichier est invalide.
-     * 
+     *
      * @return bool
      */
     public static function invalidPhpSelf() {
@@ -238,7 +238,7 @@ class CoreInfo {
     }
 
     /**
-     * Classe autorisée à manipuler $_SERVER.
+     * Classe autorisée à manipuler $_SERVER (lecture seule).
      *
      * @param string $keyName
      * @return string
