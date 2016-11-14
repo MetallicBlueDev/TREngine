@@ -8,7 +8,7 @@ use TREngine\Engine\Lib\LibMakeStyle;
 use TREngine\Engine\Exec\ExecMailer;
 use TREngine\Engine\Exec\ExecTimeMarker;
 use TREngine\Engine\Exec\ExecEntities;
-use \Closure;
+use Closure;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 

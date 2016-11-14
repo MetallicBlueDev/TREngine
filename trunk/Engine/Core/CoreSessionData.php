@@ -3,6 +3,7 @@
 namespace TREngine\Engine\Core;
 
 use TREngine\Engine\Exec\ExecEntities;
+use DateTime;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -31,6 +32,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
         $this->updateDataValue("rank", $this->getIntValue("rank"));
         $this->updateDataValue("signature", ExecEntities::stripSlashes($this->getStringValue("signature")));
         $this->updateDataValue("website", ExecEntities::stripSlashes($this->getStringValue("website")));
+        $this->updateDataValue("registration_date", new DateTime($this->getStringValue("registration_date")));
     }
 
     /**
@@ -129,8 +131,8 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
      *
      * @return datetime
      */
-    public function &getDate() {
-        return $this->getDataValue("registration_date");
+    public function &getRegistrationDate(): DateTime {
+        return $this->getDatetimeValue("registration_date");
     }
 
     /**

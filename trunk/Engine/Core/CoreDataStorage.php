@@ -2,6 +2,8 @@
 
 namespace TREngine\Engine\Core;
 
+use DateTime;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -89,6 +91,18 @@ abstract class CoreDataStorage {
      */
     protected function &getIntValue(string $keyName, int $defaultValue = null): int {
         $value = (int) $this->getDataValue($keyName, $defaultValue);
+        return $value;
+    }
+
+    /**
+     * Retourne la valeur de la clé sous forme de date/heure.
+     *
+     * @param string $keyName
+     * @param DateTime $defaultValue
+     * @return DateTime
+     */
+    protected function &getDatetimeValue(string $keyName, DateTime $defaultValue = null): DateTime {
+        $value = $this->getDataValue($keyName, $defaultValue);
         return $value;
     }
 
