@@ -18,8 +18,8 @@ class ExecAgent {
      *
      * @var array
      */
-    private static $osRessources = array(
-        // Windows
+    private static $osResources = array(
+        // OS Microsoft
         "Windows NT 10" => "Windows 10",
         "Windows NT 6.3" => "Windows 8.1",
         "Windows NT 6.2" => "Windows 8",
@@ -38,31 +38,50 @@ class ExecAgent {
         "Windows 95" => "Windows 95",
         "Windows_95" => "Windows 95",
         "Win95" => "Windows 95",
-        "Windows" => "Windows",
-        // Linux
-        "Ubuntu" => "Linux Ubuntu",
-        "Fedora" => "Linux Fedora",
-        "Linux" => "Linux",
+        "Windows Phone" => "Windows Phone",
+        "Windows" => "Unknown Windows OS", // Terme générique
+        // OS UNIX
+        "Ubuntu" => "Ubuntu",
+        "Fedora" => "Fedora",
         "FreeBSD" => "FreeBSD",
         "OpenSolaris" => "SunOS",
         "SunOS" => "SunOS",
         "BeOS" => "BeOS",
+        "ApacheBench" => "ApacheBench",
         "AIX" => "AIX",
-        "IRIX" => "IRIX",
-        "Unix" => "Unix",
-        // Mac
-        "iPhone" => "iPhone",
-        "iPod" => "iPod",
-        "iPad" => "iPad",
+        "IRIX" => "Irix",
+        "OSF" => "DEC OSF",
+        "HP-UX" => "HP-UX",
+        "NetBSD" => "NetBSD",
+        "BSDi" => "BSDi",
+        "OpenBSD" => "OpenBSD",
+        "Symbian" => "Symbian OS",
+        "Linux" => "Unknown Linux OS", // Terme générique
+        "Unix" => "Unknown Unix OS", // Terme générique
+        // OS Apple
+        "iPhone" => "iOS",
+        "iPod" => "iOS",
+        "iPad" => "iOS",
         "Mac OS X" => "Mac OS X",
+        "OS X" => "Mac OS X",
         "Mac_PowerPC" => "Mac OS 9",
-        "Macintosh" => "Mac",
+        "PPC MAC" => "Mac OS 9",
+        "Macintosh" => "Mac", // Terme générique
         // Autres
         "Android" => "Android",
         "Blackberry" => "BlackBerry",
         "webos" => "Mobile",
-        "Playstation portable" => "PSP",
-        "Nintendo Wii" => "Nintendo Wii"
+        "Playstation portable" => "PlayStation Portable (PSP)",
+        "Playstation vita" => "Playstation Vita",
+        "Playstation 3" => "Playstation 3",
+        "Playstation 4" => "Playstation 4",
+        "Playstation" => "Playstation", // Terme générique
+        "nintendo dsi" => "Nintendo DSi",
+        "intendo ds" => "Nintendo DS",
+        "nintendo 3ds" => "Nintendo 3DS",
+        "Wii" => "Nintendo Wii",
+        "Nintendo Wii" => "Nintendo Wii",
+        "Nintendo" => "Nintendo" // Terme générique
     );
 
     /**
@@ -70,8 +89,7 @@ class ExecAgent {
      *
      * @var array
      */
-    private static $browserRessouces = array(
-        // LES NAVIGATEURS INTERNET ---
+    private static $browserResouces = array(
         // Netscape
         "Nav" => "Netscape",
         "Gold" => "Netscape",
@@ -83,11 +101,15 @@ class ExecAgent {
         "IEMobile" => "Internet Explorer Mobile",
         // Internet Explorer
         "MSIE" => "Internet Explorer",
+        "Internet Explorer" => "Internet Explorer",
+        "Trident" => "Internet Explorer",
         "Maxthon" => "Maxthon",
+        "Edge" => "Edge",
         // FireFox
         "Firebird" => "Firefox",
         "Firefox" => "Firefox",
-        // Other...
+        "fennec" => "Firefox Mobile",
+        // Autre
         "ELinks" => "ELinks",
         "iCab" => "iCab",
         "Konqueror" => "Konqueror",
@@ -102,11 +124,15 @@ class ExecAgent {
         // Chrome
         "Chrome" => "Chrome",
         // Opera
+        "opera mobi" => "Opera Mobile",
+        "opera mini" => "Opera Mini",
+        "operamini" => "Opera Mini",
+        "OPR" => "Opera",
         "Opera" => "Opera",
         // Safari
         "Safari" => "Safari",
-        // LES ROBOTS INTERNET ---
-        "ia_archiver" => "Alexa",
+        // Les robots internet
+        "ia_archiver" => "Alexa Crawler",
         "Ask Jeeves" => "Ask Jeeves",
         "Baiduspider" => "Baidu Spider",
         "curl" => "cURL",
@@ -116,15 +142,33 @@ class ExecAgent {
         "Gigabot" => "Gigabot",
         "Googlebot" => "Googlebot",
         "grub" => "Grub",
-        "Yahoo! Slurp" => "Yahoo! Slurp",
+        "fastcrawler" => "FastCrawler",
+        "infoseek" => "InfoSeek Robot",
+        "Lycos" => "Lycos",
+        "yandex" => "YandexBot",
+        "mediapartners-google" => "MediaPartners Google",
+        "CRAZYWEBCRAWLER" => "Crazy Webcrawler",
+        "adsbot-google" => "AdsBot Google",
+        "feedfetcher-google" => "Feedfetcher Google",
+        "curious george" => "Curious George",
+        "MJ12bot" => "Majestic-12",
+        "Uptimebot" => "Uptimebot",
+        "Yahoo" => "Yahoo! Slurp",
         "Slurp" => "Inktomi Slurp",
         "teoma" => "Inktomi Slurp",
-        "msnbot" => "Msnbot",
+        "msnbot" => "MSNBot",
         "Scooter" => "Scooter AltaVista",
         "Wget" => "Wget",
-        // Mozilla - AT LAST SEARCH!
+        "bingbot" => "Bing",
+        // Uniquement à la fin - Terme générique
         "Mozilla" => "Mozilla",
-        "Mobile" => "Handheld Browser",
+        "Mobile" => "Generic Browser",
+        "wireless" => "Generic Browser",
+        "j2me" => "Generic Browser",
+        "midp" => "Generic Browser",
+        "cldc" => "Generic Browser",
+        "smartphone" => "Generic Browser",
+        "cellphone" => "Generic Browser"
     );
 
     /**
@@ -197,7 +241,7 @@ class ExecAgent {
     public static function &getOsName(&$currentUserAgent) {
         $currentOs = "";
 
-        foreach (self::$osRessources as $osAgent => $osName) {
+        foreach (self::$osResources as $osAgent => $osName) {
             if (preg_match("/" . $osAgent . "/ie", $currentUserAgent)) {
                 $currentOs = $osName;
                 break;
@@ -219,7 +263,7 @@ class ExecAgent {
     public static function &getBrowserData(&$currentUserAgent) {
         $currentBrowser = array();
 
-        foreach (self::$browserRessouces as $browserAgent => $browserName) {
+        foreach (self::$browserResouces as $browserAgent => $browserName) {
             if (preg_match("/" . $browserAgent . "[ \/]([0-9\.]+)/ie", $currentUserAgent, $version) || preg_match("/" . $browserAgent . "/ie", $currentUserAgent, $version)) {
                 $currentBrowser[] = isset($version[1]) ? trim($version[1]) : "";
                 $currentBrowser[] = $browserName;
