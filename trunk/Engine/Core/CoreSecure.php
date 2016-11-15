@@ -43,10 +43,10 @@ class CoreSecure {
      * Routine de sécurisation.
      */
     private function __construct() {
-        $this->checkError();
-        $this->checkQueryString();
-        $this->checkRequestReferer();
-        $this->checkGPC();
+        $this->configureOutput();
+        $this->checkServerQueryString();
+        $this->checkServerRequest();
+        $this->checkGlobals();
 
         // Attention: il ne faut pas définir l'index avant CoreInfo mais avant CoreLoader
         if (!defined("TR_ENGINE_INDEX")) {
@@ -240,16 +240,14 @@ class CoreSecure {
      * @param array $errorMessages
      */
     private function &appendSqlErrors(array &$errorMessages) {
-        if (CoreLoader::isCallable("CoreSession") && CoreLoader::isCallable("CoreSql")) {
+        if ($this->debuggingMode && CoreLoader::isCallable("CoreSql")) {
             if (CoreSql::hasConnection()) {
-                if (CoreSession::getInstance()->getUserInfos()->hasRegisteredRank()) {
-                    $sqlErrors = CoreSql::getInstance()->getLastError();
+                $sqlErrors = CoreSql::getInstance()->getLastError();
 
-                    if (!empty($sqlErrors)) {
-                        $errorMessages[] = "";
-                        $errorMessages[] = "<span class=\"text_bold\">Last Sql error message:</span>";
-                        $errorMessages = array_merge($errorMessages, $sqlErrors);
-                    }
+                if (!empty($sqlErrors)) {
+                    $errorMessages[] = "";
+                    $errorMessages[] = "<span class=\"text_bold\">Last Sql error message:</span>";
+                    $errorMessages = array_merge($errorMessages, $sqlErrors);
                 }
             }
         }
@@ -273,19 +271,34 @@ class CoreSecure {
     }
 
     /**
-     * Réglages des sorties d'erreurs.
+     * Réglages de la sortie d'erreurs.
+     * Affichage de toutes les erreurs.
      */
-    private function checkError() {
+    private function configureOutput() {
         error_reporting(defined("E_ALL") ? E_ALL : E_ERROR | E_WARNING | E_PARSE);
     }
 
     /**
-     * Vérification des données reçues (Query string).
+     * Vérification des données reçues (depuis QUERY_STRING).
      */
-    private function checkQueryString() {
+    private function checkServerQueryString() {
         $queryString = strtolower(rawurldecode(self::getGlobalServer("QUERY_STRING")));
+        $badStrings = self::getBadQueryStrings();
 
-        $badStrings = array(
+        foreach ($badStrings as $badStringValue) {
+            if (strpos($queryString, $badStringValue)) {
+                $this->throwException("badQueryString");
+            }
+        }
+    }
+
+    /**
+     * Retourne la liste des caractères interdits.
+     *
+     * @return array
+     */
+    private static function getBadQueryStrings(): array {
+        return array(
             "select",
             "union",
             "insert",
@@ -307,19 +320,16 @@ class CoreSecure {
             "<form",
             "<img",
             "<body",
-            "<link");
-
-        foreach ($badStrings as $badStringValue) {
-            if (strpos($queryString, $badStringValue)) {
-                $this->throwException("badQueryString");
-            }
-        }
+            "<link",
+            "..",
+            "http://",
+            "%3C%3F");
     }
 
     /**
-     * Vérification des envois POST.
+     * Vérification de la provenance des requêtes.
      */
-    private function checkRequestReferer() {
+    private function checkServerRequest() {
         if (self::getGlobalServer("REQUEST_METHOD") === "POST" && !empty(self::getGlobalServer("HTTP_REFERER"))) {
             // Vérification du demandeur de la méthode POST
             if (!preg_match("/" . self::getGlobalServer("HTTP_HOST") . "/", self::getGlobalServer("HTTP_REFERER"))) {
@@ -329,9 +339,9 @@ class CoreSecure {
     }
 
     /**
-     * Fonction de substitution pour MAGIC_QUOTES_GPC (supprimée depuis PHP 7.0).
+     * Vérification des variables globales.
      */
-    private function checkGPC() {
+    private function checkGlobals() {
         $this->addSlashesForQuotes(self::getGlobalGet());
         $this->addSlashesForQuotes(self::getGlobalPost());
         $this->addSlashesForQuotes(self::getGlobalCookie());
