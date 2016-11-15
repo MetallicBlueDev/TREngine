@@ -23,9 +23,31 @@ class ExecAgent {
      */
     private static $osResources = array(
         array(
+            "Playstation" => array(
+                "Playstation portable" => "PlayStation Portable (PSP)", // XrossMediaBar
+                "Playstation vita" => "Playstation Vita", // LiveArea
+                "Playstation 3" => "Playstation 3", // XrossMediaBar
+                "Playstation 4" => "Playstation 4", // Orbis OS
+                "Playstation" => "Playstation" // Terme générique
+            )),
+        array(
+            "Nintendo" => array(
+                "Nintendo dsi" => "Nintendo DSi",
+                "Nintendo ds" => "Nintendo DS",
+                "Nintendo 3ds" => "Nintendo 3DS",
+                "Nintendo Wii" => "Nintendo Wii",
+                "Nintendo Switch" => "Nintendo Switch",
+                "Nintendo" => "Nintendo" // Terme générique
+            )),
+        array(
+            "Xbox" => array(
+                "Xbox 360" => "Xbox 360", // Windows NT 6.1
+                "Xbox One" => "Xbox One", // Windows NT 10.0
+                "Xbox" => "Xbox" // Terme générique
+            )),
+        array(
             "Windows" => array(
-                "Windows NT 10 Mobile" => "Windows 10 Mobile", // <================ ??
-                "Windows NT 10" => "Windows 10",
+                "Windows NT 10.0" => "Windows 10",
                 "Windows NT 6.3" => "Windows 8.1",
                 "Windows NT 6.2" => "Windows 8",
                 "Windows NT 6.1" => "Windows 7",
@@ -35,13 +57,12 @@ class ExecAgent {
                 "Windows xp" => "Windows XP",
                 "Windows NT 5.0" => "Windows 2000",
                 "Windows 2000" => "Windows 2000",
+                "Windows Mobile" => "Windows Mobile",
                 "Windows CE" => "Windows Mobile",
                 "Win 9x 4.90" => "Windows Me.",
                 "Windows me" => "Windows Me.",
                 "Windows 98" => "Windows 98",
-                "Win98" => "Windows 98",
                 "Windows 95" => "Windows 95",
-                "Windows_95" => "Windows 95",
                 "Win95" => "Windows 95",
                 "Windows Phone" => "Windows Phone",
                 "Windows" => "Unknown Windows OS" // Terme générique
@@ -56,15 +77,16 @@ class ExecAgent {
                 "ChorusOS" => "ChorusOS",
                 "FreeBSD" => "FreeBSD",
                 "OpenSolaris" => "OpenSolaris",
-                "SunOS" => "Oracle Solaris",
-                "Oracle Solaris" => "Oracle Solaris",
-                "Solaris" => "Oracle Solaris",
+                "SunOS" => "Solaris",
+                "Oracle Solaris" => "Solaris",
+                "Solaris" => "Solaris",
                 "BlueEyedOS" => "BlueEyedOS",
                 "Minix" => "Minix",
                 "NetBSD" => "NetBSD",
                 "DragonFly" => "DragonFly BSD",
                 "BSDi" => "BSDi",
                 "OpenBSD" => "OpenBSD",
+                "SymbOS" => "Symbian OS",
                 "Symbian" => "Symbian OS",
                 "QNX" => "QNX",
                 "XNU" => "XNU",
@@ -80,9 +102,9 @@ class ExecAgent {
                 "SUSE" => "openSUSE",
                 "openSUSE" => "openSUSE",
                 "CrOs" => "Chromium OS",
-                "CrOS" => "Chromium OS",
+                "CrKey" => "Android",
                 "Android" => "Android",
-                "webos" => "WebOS",
+                "webOS" => "WebOS",
                 "Debian" => "Debian",
                 "Linux" => "Linux",
                 "Unix" => "Unknown Unix OS" // Terme générique
@@ -105,7 +127,7 @@ class ExecAgent {
                 "iPhone" => "iOS",
                 "iPod" => "iOS",
                 "iPad" => "iOS",
-                "tvOS" => "tvOS",
+                "AppleTV" => "tvOS",
                 "watchOS" => "watchOS",
                 "Mac OS X 10.12" => "macOS 10.12 Sierra",
                 "Mac OS X 10.11" => "OS X 10.11 El Capitan",
@@ -121,29 +143,6 @@ class ExecAgent {
                 "Mac OS X 10.1" => "Mac OS X 10.1 Puma",
                 "Mac OS X 10.0" => "Mac OS X 10.0 Cheetah",
                 "Macintosh" => "Unknown Mac OS" // Terme générique
-            )),
-        array(
-            "Playstation" => array(
-                "Playstation portable" => "PlayStation Portable (PSP)",
-                "Playstation vita" => "Playstation Vita", // LiveArea
-                "Playstation 3" => "Playstation 3",
-                "Playstation 4" => "Playstation 4", // Orbis OS
-                "Playstation" => "Playstation" // Terme générique
-            )),
-        array(
-            "Nintendo" => array(
-                "Nintendo dsi" => "Nintendo DSi",
-                "Nintendo ds" => "Nintendo DS",
-                "Nintendo 3ds" => "Nintendo 3DS",
-                "Nintendo Wii" => "Nintendo Wii",
-                "Nintendo Switch" => "Nintendo Switch",
-                "Nintendo" => "Nintendo" // Terme générique
-            )),
-        array(
-            "Xbox " => array(
-                "Xbox 360" => "Xbox 360",
-                "Xbox One" => "Xbox One",
-                "Xbox" => "Xbox" // Terme générique
             )),
         array(
             "Other" => array(
