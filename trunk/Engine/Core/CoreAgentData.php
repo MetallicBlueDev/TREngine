@@ -62,11 +62,23 @@ class CoreAgentData extends CoreDataStorage {
      *
      * @return string
      */
-    public function &getOs(): string {
+    public function &getOsName(): string {
         if (!$this->exist("agentOsName")) {
             $this->searchOs();
         }
         return $this->getStringValue("agentOsName");
+    }
+
+    /**
+     * Type de système d'exploitation du client.
+     *
+     * @return string
+     */
+    public function &getOsCategory(): string {
+        if (!$this->exist("agentOsCategory")) {
+            $this->searchOs();
+        }
+        return $this->getStringValue("agentOsCategory");
     }
 
     /**
@@ -130,7 +142,10 @@ class CoreAgentData extends CoreDataStorage {
      * Recherche le système d'exploitation du client.
      */
     private function searchOs() {
-        $this->setDataValue("agentOsName", ExecAgent::getOsName($this->getUserAgent()));
+        $osData = ExecAgent::getOsData($this->getUserAgent());
+
+        $this->setDataValue("agentOsCategory", $osData['category']);
+        $this->setDataValue("agentOsName", $osData['name']);
     }
 
     /**
@@ -139,8 +154,8 @@ class CoreAgentData extends CoreDataStorage {
     private function searchBrowserData() {
         $browserData = ExecAgent::getBrowserData($this->getUserAgent());
 
-        $this->setDataValue("agentBrowserVersion", $browserData[0]);
-        $this->setDataValue("agentBrowserName", $browserData[1]);
+        $this->setDataValue("agentBrowserVersion", $browserData['version']);
+        $this->setDataValue("agentBrowserName", $browserData['name']);
     }
 
     /**

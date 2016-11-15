@@ -309,25 +309,23 @@ class ExecAgent {
      * Retourne le système d'exploitation du client.
      *
      * @param string $currentUserAgent
-     * @return string
+     * @return array
      */
-    public static function &getOsName(&$currentUserAgent) {
-        $currentOs = "";
+    public static function &getOsData(&$currentUserAgent) {
+        $currentOs = array(
+            "category" => "",
+            "name" => "Unknown Os");
 
         foreach (self::$osResources as $osCategory => $osSubResources) {
             foreach ($osSubResources as $osAgent => $osName) {
                 // Remplace les underscores par un point afin d'obtenir qu'une version de l'agent
                 // Exemple avec Mac OS X 10_7 et Mac OS X 10.7
                 if (preg_match("/" . str_replace("_", ".", $osAgent) . "/ie", $currentUserAgent)) {
-                    $currentOs = $osName;
+                    $currentOs['category'] = $osCategory;
+                    $currentOs['name'] = $osName;
                     break 2;
                 }
             }
-        }
-
-
-        if (empty($currentOs)) {
-            $currentOs = "Unknown Os";
         }
         return $currentOs;
     }
@@ -339,22 +337,16 @@ class ExecAgent {
      * @return array
      */
     public static function &getBrowserData(&$currentUserAgent) {
-        $currentBrowser = array();
+        $currentBrowser = array(
+            "version" => "",
+            "name" => "Unknown Browser");
 
         foreach (self::$browserResouces as $browserAgent => $browserName) {
             if (preg_match("/" . $browserAgent . "[ \/]([0-9\.]+)/ie", $currentUserAgent, $version) || preg_match("/" . $browserAgent . "/ie", $currentUserAgent, $version)) {
-                $currentBrowser[] = isset($version[1]) ? trim($version[1]) : "";
-                $currentBrowser[] = $browserName;
+                $currentBrowser['version'] = isset($version[1]) ? trim($version[1]) : "";
+                $currentBrowser['name'] = $browserName;
                 break;
             }
-        }
-
-        if (!isset($currentBrowser[0])) {
-            $currentBrowser[] = "";
-        }
-
-        if (!isset($currentBrowser[1])) {
-            $currentBrowser[] = "Unknown Browser";
         }
         return $currentBrowser;
     }
