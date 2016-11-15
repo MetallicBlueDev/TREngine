@@ -311,6 +311,7 @@ class CoreSecure {
             "load_file",
             "outfile",
             "document.cookie",
+            "document.write",
             "onmouse",
             "<script",
             "<iframe",
@@ -321,6 +322,7 @@ class CoreSecure {
             "<img",
             "<body",
             "<link",
+            "<comment",
             "..",
             "http://",
             "%3C%3F");
