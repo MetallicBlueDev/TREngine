@@ -14,74 +14,149 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class ExecAgent {
 
     /**
-     * Tableau des systèmes d'exploitation.
+     * Liste des systèmes d'exploitation.
+     * Attention, les underscores sont remplacés par des points dans les clés.
+     * Vérifié à l'aide de croisement d'information.
+     * Notamment https://udger.com/resources/ua-list/os
      *
      * @var array
      */
     private static $osResources = array(
-        // OS Microsoft
-        "Windows NT 10" => "Windows 10",
-        "Windows NT 6.3" => "Windows 8.1",
-        "Windows NT 6.2" => "Windows 8",
-        "Windows NT 6.1" => "Windows 7",
-        "Windows NT 6.0" => "Windows Vista",
-        "Windows NT 5.2" => "Windows Server 2003",
-        "Windows NT 5.1" => "Windows XP",
-        "Windows xp" => "Windows XP",
-        "Windows NT 5.0" => "Windows 2000",
-        "Windows 2000" => "Windows 2000",
-        "Windows CE" => "Windows Mobile",
-        "Win 9x 4.90" => "Windows Me.",
-        "Windows me" => "Windows Me.",
-        "Windows 98" => "Windows 98",
-        "Win98" => "Windows 98",
-        "Windows 95" => "Windows 95",
-        "Windows_95" => "Windows 95",
-        "Win95" => "Windows 95",
-        "Windows Phone" => "Windows Phone",
-        "Windows" => "Unknown Windows OS", // Terme générique
-        // OS UNIX
-        "Ubuntu" => "Ubuntu",
-        "Fedora" => "Fedora",
-        "FreeBSD" => "FreeBSD",
-        "OpenSolaris" => "SunOS",
-        "SunOS" => "SunOS",
-        "BeOS" => "BeOS",
-        "ApacheBench" => "ApacheBench",
-        "AIX" => "AIX",
-        "IRIX" => "Irix",
-        "OSF" => "DEC OSF",
-        "HP-UX" => "HP-UX",
-        "NetBSD" => "NetBSD",
-        "BSDi" => "BSDi",
-        "OpenBSD" => "OpenBSD",
-        "Symbian" => "Symbian OS",
-        "Linux" => "Unknown Linux OS", // Terme générique
-        "Unix" => "Unknown Unix OS", // Terme générique
-        // OS Apple
-        "iPhone" => "iOS",
-        "iPod" => "iOS",
-        "iPad" => "iOS",
-        "Mac OS X" => "Mac OS X",
-        "OS X" => "Mac OS X",
-        "Mac_PowerPC" => "Mac OS 9",
-        "PPC MAC" => "Mac OS 9",
-        "Macintosh" => "Mac", // Terme générique
-        // Autres
-        "Android" => "Android",
-        "Blackberry" => "BlackBerry",
-        "webos" => "Mobile",
-        "Playstation portable" => "PlayStation Portable (PSP)",
-        "Playstation vita" => "Playstation Vita",
-        "Playstation 3" => "Playstation 3",
-        "Playstation 4" => "Playstation 4",
-        "Playstation" => "Playstation", // Terme générique
-        "nintendo dsi" => "Nintendo DSi",
-        "intendo ds" => "Nintendo DS",
-        "nintendo 3ds" => "Nintendo 3DS",
-        "Wii" => "Nintendo Wii",
-        "Nintendo Wii" => "Nintendo Wii",
-        "Nintendo" => "Nintendo" // Terme générique
+        array(
+            "Windows" => array(
+                "Windows NT 10 Mobile" => "Windows 10 Mobile", // <================ ??
+                "Windows NT 10" => "Windows 10",
+                "Windows NT 6.3" => "Windows 8.1",
+                "Windows NT 6.2" => "Windows 8",
+                "Windows NT 6.1" => "Windows 7",
+                "Windows NT 6.0" => "Windows Vista",
+                "Windows NT 5.2" => "Windows Server 2003",
+                "Windows NT 5.1" => "Windows XP",
+                "Windows xp" => "Windows XP",
+                "Windows NT 5.0" => "Windows 2000",
+                "Windows 2000" => "Windows 2000",
+                "Windows CE" => "Windows Mobile",
+                "Win 9x 4.90" => "Windows Me.",
+                "Windows me" => "Windows Me.",
+                "Windows 98" => "Windows 98",
+                "Win98" => "Windows 98",
+                "Windows 95" => "Windows 95",
+                "Windows_95" => "Windows 95",
+                "Win95" => "Windows 95",
+                "Windows Phone" => "Windows Phone",
+                "Windows" => "Unknown Windows OS" // Terme générique
+            )),
+        array(
+            "Unix" => array(
+                "Ubuntu" => "Ubuntu",
+                "Fedora" => "Fedora",
+                "LynxOS" => "LynxOS",
+                "Raspbian" => "Raspbian",
+                "UnixWare" => "UnixWare",
+                "ChorusOS" => "ChorusOS",
+                "FreeBSD" => "FreeBSD",
+                "OpenSolaris" => "OpenSolaris",
+                "SunOS" => "Oracle Solaris",
+                "Oracle Solaris" => "Oracle Solaris",
+                "Solaris" => "Oracle Solaris",
+                "BlueEyedOS" => "BlueEyedOS",
+                "Minix" => "Minix",
+                "NetBSD" => "NetBSD",
+                "DragonFly" => "DragonFly BSD",
+                "BSDi" => "BSDi",
+                "OpenBSD" => "OpenBSD",
+                "Symbian" => "Symbian OS",
+                "QNX" => "QNX",
+                "XNU" => "XNU",
+                "AIX" => "AIX",
+                "IRIX64" => "Irix",
+                "IRIX" => "Irix",
+                "OSF" => "DEC OSF",
+                "HP-UX" => "HP-UX",
+                "CentOS" => "CentOS",
+                "Mandriva" => "Mandriva",
+                "Red Hat" => "Red Hat",
+                "Slackware" => "Slackware",
+                "SUSE" => "openSUSE",
+                "openSUSE" => "openSUSE",
+                "CrOs" => "Chromium OS",
+                "CrOS" => "Chromium OS",
+                "Android" => "Android",
+                "webos" => "WebOS",
+                "Debian" => "Debian",
+                "Linux" => "Linux",
+                "Unix" => "Unknown Unix OS" // Terme générique
+            )),
+        array(
+            "Be OS" => array(
+                "AtheOS" => "AtheOS",
+                "Syllable" => "Syllable",
+                "NewOS" => "NewOS",
+                "Haiku " => "Haiku",
+                "AmigaOS" => "AmigaOS",
+                "Amiga" => "AmigaOS",
+                "MorphOS" => "MorphOS",
+                "Icaros" => "Icaros",
+                "AROS" => "AROS",
+                "BeOS " => "BeOS"
+            )),
+        array(
+            "Apple" => array(
+                "iPhone" => "iOS",
+                "iPod" => "iOS",
+                "iPad" => "iOS",
+                "tvOS" => "tvOS",
+                "watchOS" => "watchOS",
+                "Mac OS X 10.12" => "macOS 10.12 Sierra",
+                "Mac OS X 10.11" => "OS X 10.11 El Capitan",
+                "Mac OS X 10.10" => "OS X 10.10 Yosemite",
+                "Mac OS X 10.9" => "OS X 10.9 Mavericks",
+                "Mac OS X 10.8" => "OS X 10.8 Mountain Lion",
+                "Mac OS X 10.7" => "Mac OS X 10.7 Lion",
+                "Mac OS X 10.6" => "Mac OS X 10.6 Snow Leopard",
+                "Mac OS X 10.5" => "Mac OS X 10.5 Leopard",
+                "Mac OS X 10.4" => "Mac OS X 10.4 Tiger",
+                "Mac OS X 10.3" => "Mac OS X 10.3 Panther",
+                "Mac OS X 10.2" => "Mac OS X 10.2 Jaguar",
+                "Mac OS X 10.1" => "Mac OS X 10.1 Puma",
+                "Mac OS X 10.0" => "Mac OS X 10.0 Cheetah",
+                "Macintosh" => "Unknown Mac OS" // Terme générique
+            )),
+        array(
+            "Playstation" => array(
+                "Playstation portable" => "PlayStation Portable (PSP)",
+                "Playstation vita" => "Playstation Vita", // LiveArea
+                "Playstation 3" => "Playstation 3",
+                "Playstation 4" => "Playstation 4", // Orbis OS
+                "Playstation" => "Playstation" // Terme générique
+            )),
+        array(
+            "Nintendo" => array(
+                "Nintendo dsi" => "Nintendo DSi",
+                "Nintendo ds" => "Nintendo DS",
+                "Nintendo 3ds" => "Nintendo 3DS",
+                "Nintendo Wii" => "Nintendo Wii",
+                "Nintendo Switch" => "Nintendo Switch",
+                "Nintendo" => "Nintendo" // Terme générique
+            )),
+        array(
+            "Xbox " => array(
+                "Xbox 360" => "Xbox 360",
+                "Xbox One" => "Xbox One",
+                "Xbox" => "Xbox" // Terme générique
+            )),
+        array(
+            "Other" => array(
+                "ApacheBench" => "ApacheBench",
+                "MenuetOS" => "MenuetOS",
+                "KolibriOS" => "KolibriOS",
+                "HotJava" => "Java",
+                "Java" => "Java",
+                "RIM Tablet OS 1" => "BlackBerry",
+                "RIM Tablet OS 2" => "BlackBerry",
+                "Blackberry" => "BlackBerry",
+                "BB10" => "BlackBerry"
+            ))
     );
 
     /**
@@ -241,12 +316,17 @@ class ExecAgent {
     public static function &getOsName(&$currentUserAgent) {
         $currentOs = "";
 
-        foreach (self::$osResources as $osAgent => $osName) {
-            if (preg_match("/" . $osAgent . "/ie", $currentUserAgent)) {
-                $currentOs = $osName;
-                break;
+        foreach (self::$osResources as $osCategory => $osSubResources) {
+            foreach ($osSubResources as $osAgent => $osName) {
+                // Remplace les underscores par un point afin d'obtenir qu'une version de l'agent
+                // Exemple avec Mac OS X 10_7 et Mac OS X 10.7
+                if (preg_match("/" . str_replace("_", ".", $osAgent) . "/ie", $currentUserAgent)) {
+                    $currentOs = $osName;
+                    break 2;
+                }
             }
         }
+
 
         if (empty($currentOs)) {
             $currentOs = "Unknown Os";
