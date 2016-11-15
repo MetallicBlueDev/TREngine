@@ -128,7 +128,6 @@ class ExecAgent {
                 "iPod" => "iOS",
                 "iPad" => "iOS",
                 "AppleTV" => "tvOS",
-                "watchOS" => "watchOS",
                 "Mac OS X 10.12" => "macOS 10.12 Sierra",
                 "Mac OS X 10.11" => "OS X 10.11 El Capitan",
                 "Mac OS X 10.10" => "OS X 10.10 Yosemite",
