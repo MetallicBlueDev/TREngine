@@ -11,7 +11,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class ExecAgent {
+class ExecUserAgent {
 
     /**
      * Liste des systèmes d'exploitation.

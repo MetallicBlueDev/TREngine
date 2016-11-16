@@ -2,7 +2,7 @@
 
 namespace TREngine\Engine\Core;
 
-use TREngine\Engine\Exec\ExecAgent;
+use TREngine\Engine\Exec\ExecUserAgent;
 
 /**
  * Collecteur d'information sur le User-Agent.
@@ -121,28 +121,28 @@ class CoreAgentData extends CoreDataStorage {
      * Recherche l'adresse IP du client.
      */
     private function searchAddressIp() {
-        $this->setDataValue("agentIp", ExecAgent::getAddressIp());
+        $this->setDataValue("agentIp", ExecUserAgent::getAddressIp());
     }
 
     /**
      * Recherche l'hôte du client.
      */
     private function searchHost() {
-        $this->setDataValue("agentHost", ExecAgent::getHost($this->getAddressIp()));
+        $this->setDataValue("agentHost", ExecUserAgent::getHost($this->getAddressIp()));
     }
 
     /**
      * Recherche la chaine User-Agent.
      */
     private function searchUserAgent() {
-        $this->setDataValue("userAgent", ExecAgent::getRawUserAgent());
+        $this->setDataValue("userAgent", ExecUserAgent::getRawUserAgent());
     }
 
     /**
      * Recherche le système d'exploitation du client.
      */
     private function searchOs() {
-        $osData = ExecAgent::getOsData($this->getUserAgent());
+        $osData = ExecUserAgent::getOsData($this->getUserAgent());
 
         $this->setDataValue("agentOsCategory", $osData['category']);
         $this->setDataValue("agentOsName", $osData['name']);
@@ -152,7 +152,7 @@ class CoreAgentData extends CoreDataStorage {
      * Recherche le navigateur du client.
      */
     private function searchBrowserData() {
-        $browserData = ExecAgent::getBrowserData($this->getUserAgent());
+        $browserData = ExecUserAgent::getBrowserData($this->getUserAgent());
 
         $this->setDataValue("agentBrowserVersion", $browserData['version']);
         $this->setDataValue("agentBrowserName", $browserData['name']);
@@ -162,7 +162,7 @@ class CoreAgentData extends CoreDataStorage {
      * Recherche le chemin référent que le client a suivi.
      */
     private function searchReferer() {
-        $this->setDataValue("agentReferer", ExecAgent::getReferer());
+        $this->setDataValue("agentReferer", ExecUserAgent::getReferer());
     }
 
 }
