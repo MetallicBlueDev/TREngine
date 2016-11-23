@@ -22,139 +22,131 @@ class ExecUserAgent {
      * @var array
      */
     private static $osResources = array(
-        array(
-            "Playstation" => array(
-                "Playstation portable" => "PlayStation Portable (PSP)", // XrossMediaBar
-                "Playstation vita" => "Playstation Vita", // LiveArea
-                "Playstation 3" => "Playstation 3", // XrossMediaBar
-                "Playstation 4" => "Playstation 4", // Orbis OS
-                "Playstation" => "Playstation" // Terme générique
-            )),
-        array(
-            "Nintendo" => array(
-                "Nintendo dsi" => "Nintendo DSi",
-                "Nintendo ds" => "Nintendo DS",
-                "Nintendo 3ds" => "Nintendo 3DS",
-                "Nintendo Wii" => "Nintendo Wii",
-                "Nintendo Switch" => "Nintendo Switch",
-                "Nintendo" => "Nintendo" // Terme générique
-            )),
-        array(
-            "Xbox" => array(
-                "Xbox 360" => "Xbox 360", // Windows NT 6.1
-                "Xbox One" => "Xbox One", // Windows NT 10.0
-                "Xbox" => "Xbox" // Terme générique
-            )),
-        array(
-            "Windows" => array(
-                "Windows NT 10.0" => "Windows 10",
-                "Windows NT 6.3" => "Windows 8.1",
-                "Windows NT 6.2" => "Windows 8",
-                "Windows NT 6.1" => "Windows 7",
-                "Windows NT 6.0" => "Windows Vista",
-                "Windows NT 5.2" => "Windows Server 2003",
-                "Windows NT 5.1" => "Windows XP",
-                "Windows xp" => "Windows XP",
-                "Windows NT 5.0" => "Windows 2000",
-                "Windows 2000" => "Windows 2000",
-                "Windows Mobile" => "Windows Mobile",
-                "Windows CE" => "Windows Mobile",
-                "Win 9x 4.90" => "Windows Me.",
-                "Windows me" => "Windows Me.",
-                "Windows 98" => "Windows 98",
-                "Windows 95" => "Windows 95",
-                "Win95" => "Windows 95",
-                "Windows Phone" => "Windows Phone",
-                "Windows" => "Unknown Windows OS" // Terme générique
-            )),
-        array(
-            "Unix" => array(
-                "Ubuntu" => "Ubuntu",
-                "Fedora" => "Fedora",
-                "LynxOS" => "LynxOS",
-                "Raspbian" => "Raspbian",
-                "UnixWare" => "UnixWare",
-                "ChorusOS" => "ChorusOS",
-                "FreeBSD" => "FreeBSD",
-                "OpenSolaris" => "OpenSolaris",
-                "SunOS" => "Solaris",
-                "Oracle Solaris" => "Solaris",
-                "Solaris" => "Solaris",
-                "BlueEyedOS" => "BlueEyedOS",
-                "Minix" => "Minix",
-                "NetBSD" => "NetBSD",
-                "DragonFly" => "DragonFly BSD",
-                "BSDi" => "BSDi",
-                "OpenBSD" => "OpenBSD",
-                "SymbOS" => "Symbian OS",
-                "Symbian" => "Symbian OS",
-                "QNX" => "QNX",
-                "XNU" => "XNU",
-                "AIX" => "AIX",
-                "IRIX64" => "Irix",
-                "IRIX" => "Irix",
-                "OSF" => "DEC OSF",
-                "HP-UX" => "HP-UX",
-                "CentOS" => "CentOS",
-                "Mandriva" => "Mandriva",
-                "Red Hat" => "Red Hat",
-                "Slackware" => "Slackware",
-                "SUSE" => "openSUSE",
-                "openSUSE" => "openSUSE",
-                "CrOs" => "Chromium OS",
-                "CrKey" => "Android",
-                "Android" => "Android",
-                "webOS" => "WebOS",
-                "Debian" => "Debian",
-                "Linux" => "Linux",
-                "Unix" => "Unknown Unix OS" // Terme générique
-            )),
-        array(
-            "Be OS" => array(
-                "AtheOS" => "AtheOS",
-                "Syllable" => "Syllable",
-                "NewOS" => "NewOS",
-                "Haiku " => "Haiku",
-                "AmigaOS" => "AmigaOS",
-                "Amiga" => "AmigaOS",
-                "MorphOS" => "MorphOS",
-                "Icaros" => "Icaros",
-                "AROS" => "AROS",
-                "BeOS " => "BeOS"
-            )),
-        array(
-            "Apple" => array(
-                "iPhone" => "iOS",
-                "iPod" => "iOS",
-                "iPad" => "iOS",
-                "AppleTV" => "tvOS",
-                "Mac OS X 10.12" => "macOS 10.12 Sierra",
-                "Mac OS X 10.11" => "OS X 10.11 El Capitan",
-                "Mac OS X 10.10" => "OS X 10.10 Yosemite",
-                "Mac OS X 10.9" => "OS X 10.9 Mavericks",
-                "Mac OS X 10.8" => "OS X 10.8 Mountain Lion",
-                "Mac OS X 10.7" => "Mac OS X 10.7 Lion",
-                "Mac OS X 10.6" => "Mac OS X 10.6 Snow Leopard",
-                "Mac OS X 10.5" => "Mac OS X 10.5 Leopard",
-                "Mac OS X 10.4" => "Mac OS X 10.4 Tiger",
-                "Mac OS X 10.3" => "Mac OS X 10.3 Panther",
-                "Mac OS X 10.2" => "Mac OS X 10.2 Jaguar",
-                "Mac OS X 10.1" => "Mac OS X 10.1 Puma",
-                "Mac OS X 10.0" => "Mac OS X 10.0 Cheetah",
-                "Macintosh" => "Unknown Mac OS" // Terme générique
-            )),
-        array(
-            "Other" => array(
-                "ApacheBench" => "ApacheBench",
-                "MenuetOS" => "MenuetOS",
-                "KolibriOS" => "KolibriOS",
-                "HotJava" => "Java",
-                "Java" => "Java",
-                "RIM Tablet OS 1" => "BlackBerry",
-                "RIM Tablet OS 2" => "BlackBerry",
-                "Blackberry" => "BlackBerry",
-                "BB10" => "BlackBerry"
-            ))
+        "Playstation" => array(
+            "Playstation portable" => "PlayStation Portable (PSP)", // XrossMediaBar
+            "Playstation vita" => "Playstation Vita", // LiveArea
+            "Playstation 3" => "Playstation 3", // XrossMediaBar
+            "Playstation 4" => "Playstation 4", // Orbis OS
+            "Playstation" => "Playstation" // Terme générique
+        ),
+        "Nintendo" => array(
+            "Nintendo dsi" => "Nintendo DSi",
+            "Nintendo ds" => "Nintendo DS",
+            "Nintendo 3ds" => "Nintendo 3DS",
+            "Nintendo Wii" => "Nintendo Wii",
+            "Nintendo Switch" => "Nintendo Switch",
+            "Nintendo" => "Nintendo" // Terme générique
+        ),
+        "Xbox" => array(
+            "Xbox 360" => "Xbox 360", // Windows NT 6.1
+            "Xbox One" => "Xbox One", // Windows NT 10.0
+            "Xbox" => "Xbox" // Terme générique
+        ),
+        "Windows" => array(
+            "Windows NT 10.0" => "Windows 10",
+            "Windows NT 6.3" => "Windows 8.1",
+            "Windows NT 6.2" => "Windows 8",
+            "Windows NT 6.1" => "Windows 7",
+            "Windows NT 6.0" => "Windows Vista",
+            "Windows NT 5.2" => "Windows Server 2003",
+            "Windows NT 5.1" => "Windows XP",
+            "Windows xp" => "Windows XP",
+            "Windows NT 5.0" => "Windows 2000",
+            "Windows 2000" => "Windows 2000",
+            "Windows Mobile" => "Windows Mobile",
+            "Windows CE" => "Windows Mobile",
+            "Win 9x 4.90" => "Windows Me.",
+            "Windows me" => "Windows Me.",
+            "Windows 98" => "Windows 98",
+            "Windows 95" => "Windows 95",
+            "Win95" => "Windows 95",
+            "Windows Phone" => "Windows Phone",
+            "Windows" => "Unknown Windows OS" // Terme générique
+        ),
+        "Unix" => array(
+            "Ubuntu" => "Ubuntu",
+            "Fedora" => "Fedora",
+            "LynxOS" => "LynxOS",
+            "Raspbian" => "Raspbian",
+            "UnixWare" => "UnixWare",
+            "ChorusOS" => "ChorusOS",
+            "FreeBSD" => "FreeBSD",
+            "OpenSolaris" => "OpenSolaris",
+            "SunOS" => "Solaris",
+            "Oracle Solaris" => "Solaris",
+            "Solaris" => "Solaris",
+            "BlueEyedOS" => "BlueEyedOS",
+            "Minix" => "Minix",
+            "NetBSD" => "NetBSD",
+            "DragonFly" => "DragonFly BSD",
+            "BSDi" => "BSDi",
+            "OpenBSD" => "OpenBSD",
+            "SymbOS" => "Symbian OS",
+            "Symbian" => "Symbian OS",
+            "QNX" => "QNX",
+            "XNU" => "XNU",
+            "AIX" => "AIX",
+            "IRIX64" => "Irix",
+            "IRIX" => "Irix",
+            "OSF" => "DEC OSF",
+            "HP-UX" => "HP-UX",
+            "CentOS" => "CentOS",
+            "Mandriva" => "Mandriva",
+            "Red Hat" => "Red Hat",
+            "Slackware" => "Slackware",
+            "SUSE" => "openSUSE",
+            "openSUSE" => "openSUSE",
+            "CrOs" => "Chromium OS",
+            "CrKey" => "Android",
+            "Android" => "Android",
+            "webOS" => "WebOS",
+            "Debian" => "Debian",
+            "Linux" => "Linux",
+            "Unix" => "Unknown Unix OS" // Terme générique
+        ),
+        "Be OS" => array(
+            "AtheOS" => "AtheOS",
+            "Syllable" => "Syllable",
+            "NewOS" => "NewOS",
+            "Haiku " => "Haiku",
+            "AmigaOS" => "AmigaOS",
+            "Amiga" => "AmigaOS",
+            "MorphOS" => "MorphOS",
+            "Icaros" => "Icaros",
+            "AROS" => "AROS",
+            "BeOS " => "BeOS"
+        ),
+        "Apple" => array(
+            "iPhone" => "iOS",
+            "iPod" => "iOS",
+            "iPad" => "iOS",
+            "AppleTV" => "tvOS",
+            "Mac OS X 10.12" => "macOS 10.12 Sierra",
+            "Mac OS X 10.11" => "OS X 10.11 El Capitan",
+            "Mac OS X 10.10" => "OS X 10.10 Yosemite",
+            "Mac OS X 10.9" => "OS X 10.9 Mavericks",
+            "Mac OS X 10.8" => "OS X 10.8 Mountain Lion",
+            "Mac OS X 10.7" => "Mac OS X 10.7 Lion",
+            "Mac OS X 10.6" => "Mac OS X 10.6 Snow Leopard",
+            "Mac OS X 10.5" => "Mac OS X 10.5 Leopard",
+            "Mac OS X 10.4" => "Mac OS X 10.4 Tiger",
+            "Mac OS X 10.3" => "Mac OS X 10.3 Panther",
+            "Mac OS X 10.2" => "Mac OS X 10.2 Jaguar",
+            "Mac OS X 10.1" => "Mac OS X 10.1 Puma",
+            "Mac OS X 10.0" => "Mac OS X 10.0 Cheetah",
+            "Macintosh" => "Unknown Mac OS" // Terme générique
+        ),
+        "Other" => array(
+            "ApacheBench" => "ApacheBench",
+            "MenuetOS" => "MenuetOS",
+            "KolibriOS" => "KolibriOS",
+            "HotJava" => "Java",
+            "Java" => "Java",
+            "RIM Tablet OS 1" => "BlackBerry",
+            "RIM Tablet OS 2" => "BlackBerry",
+            "Blackberry" => "BlackBerry",
+            "BB10" => "BlackBerry"
+        )
     );
 
     /**
@@ -163,100 +155,98 @@ class ExecUserAgent {
      * @var array
      */
     private static $browserResouces = array(
-        array(
-            "Browser" => array(
-                // Netscape
-                "Nav" => "Netscape",
-                "Gold" => "Netscape",
-                "X11" => "Netscape",
-                "Netscape" => "Netscape",
-                // Internet Explorer Mobile
-                "Pocket Internet Explorer" => "Internet Explorer Mobile",
-                "MSPIE" => "Internet Explorer Mobile",
-                "IEMobile" => "Internet Explorer Mobile",
-                // Internet Explorer
-                "MSIE" => "Internet Explorer",
-                "Internet Explorer" => "Internet Explorer",
-                "Trident" => "Internet Explorer",
-                "Maxthon" => "Maxthon",
-                "Edge" => "Edge",
-                // FireFox
-                "Firebird" => "Firefox",
-                "Firefox" => "Firefox",
-                "fennec" => "Firefox Mobile",
-                // Autre
-                "ELinks" => "ELinks",
-                "iCab" => "iCab",
-                "Konqueror" => "Konqueror",
-                "Links" => "Links",
-                "Lynx" => "Lynx",
-                "midori" => "Midori",
-                "Minimo" => "Minimo",
-                "SeaMonkey" => "SeaMonkey",
-                "OffByOne" => "OffByOne",
-                "OmniWeb" => "OmniWeb",
-                "w3m" => "w3m",
-                // Chrome
-                "Chrome" => "Chrome",
-                // Opera
-                "opera mobi" => "Opera Mobile",
-                "opera mini" => "Opera Mini",
-                "operamini" => "Opera Mini",
-                "OPR" => "Opera",
-                "Opera" => "Opera",
-                // Safari
-                "Safari" => "Safari"
-            )),
-        array(
-            "Bot" => array(
-                "alexa" => "Alexa",
-                "GotSiteMonitor" => "GotSiteMonitor.com (Vannet Technology)",
-                "DotBot" => "moz.com (SEOmoz)",
-                "NotifyNinja" => "NotifyNinja.com",
-                "PINGOMETER" => "Pingometer",
-                "ia_archiver" => "Alexa",
-                "Baiduspider" => "Baidu",
-                "Gigabot" => "Gigablast",
-                "GigablastOpenSource" => "Gigablast",
-                "yandex" => "Yandex",
-                "curious george" => "Analytics SEO",
-                "MJ12bot" => "Majestic-12",
-                "Uptimebot" => "Uptime.com",
-                "UptimeRobot" => "UptimeRobot.com",
-                "Yahoo" => "Yahoo!",
-                "Y!J" => "Yahoo!",
-                "Scooter" => "AltaVista",
-                "Wget" => "wget.alanreed.org",
-                "Inspingbot" => "Insping",
-                "Hatena" => "Hatena",
-                "Webshot" => "ShrinkTheWeb.com (Neosys Consulting)",
-                "shrinktheweb.com" => "ShrinkTheWeb.com (Neosys Consulting)",
-                "Site-Shot" => "Site-Shot.com",
-                "Easy-Thumb" => "Easy-Thumb",
-                "SeznamBot" => "Seznam",
-                "Seznam-Zbozi-robot" => "Seznam",
-                "Seznam " => "Seznam",
-                "Exabot" => "ExaLead.com (Dassault Systèmes)",
-                "ExaleadCloudview" => "ExaLead.com (Dassault Systèmes)",
-                "Googlebot" => "Google",
-                "mediapartners-google" => "Google",
-                "Google-Site-Verification" => "Google",
-                "Google-SearchByImage" => "Google",
-                "Google Page Speed Insights" => "Google",
-                "adsbot-google" => "Google",
-                "feedfetcher-google" => "Google",
-                "Google favicon" => "Google",
-                "Google Web Preview" => "Google",
-                "GoogleWebLight" => "Google",
-                "msnbot" => "Bing (Microsoft)",
-                "SkypeUriPreview" => "Bing (Microsoft)",
-                "BingPreview" => "Bing (Microsoft)",
-                "adidxbot" => "Bing (Microsoft)",
-                "bingbot" => "Bing (Microsoft)",
-                "bot" => "Unknown bot",
-                "crawl" => "Unknown bot",
-                "spider" => "Unknown bot"
-            )),
+        "Browser" => array(
+            // Netscape
+            "Nav" => "Netscape",
+            "Gold" => "Netscape",
+            "X11" => "Netscape",
+            "Netscape" => "Netscape",
+            // Internet Explorer Mobile
+            "Pocket Internet Explorer" => "Internet Explorer Mobile",
+            "MSPIE" => "Internet Explorer Mobile",
+            "IEMobile" => "Internet Explorer Mobile",
+            // Internet Explorer
+            "MSIE" => "Internet Explorer",
+            "Internet Explorer" => "Internet Explorer",
+            "Trident" => "Internet Explorer",
+            "Maxthon" => "Maxthon",
+            "Edge" => "Edge",
+            // FireFox
+            "Firebird" => "Firefox",
+            "Firefox" => "Firefox",
+            "fennec" => "Firefox Mobile",
+            // Autre
+            "ELinks" => "ELinks",
+            "iCab" => "iCab",
+            "Konqueror" => "Konqueror",
+            "Links" => "Links",
+            "Lynx" => "Lynx",
+            "midori" => "Midori",
+            "Minimo" => "Minimo",
+            "SeaMonkey" => "SeaMonkey",
+            "OffByOne" => "OffByOne",
+            "OmniWeb" => "OmniWeb",
+            "w3m" => "w3m",
+            // Chrome
+            "Chrome" => "Chrome",
+            // Opera
+            "opera mobi" => "Opera Mobile",
+            "opera mini" => "Opera Mini",
+            "operamini" => "Opera Mini",
+            "OPR" => "Opera",
+            "Opera" => "Opera",
+            // Safari
+            "Safari" => "Safari"
+        ),
+        "Bot" => array(
+            "alexa" => "Alexa",
+            "GotSiteMonitor" => "GotSiteMonitor.com (Vannet Technology)",
+            "DotBot" => "moz.com (SEOmoz)",
+            "NotifyNinja" => "NotifyNinja.com",
+            "PINGOMETER" => "Pingometer",
+            "ia_archiver" => "Alexa",
+            "Baiduspider" => "Baidu",
+            "Gigabot" => "Gigablast",
+            "GigablastOpenSource" => "Gigablast",
+            "yandex" => "Yandex",
+            "curious george" => "Analytics SEO",
+            "MJ12bot" => "Majestic-12",
+            "Uptimebot" => "Uptime.com",
+            "UptimeRobot" => "UptimeRobot.com",
+            "Yahoo" => "Yahoo!",
+            "Y!J" => "Yahoo!",
+            "Scooter" => "AltaVista",
+            "Wget" => "wget.alanreed.org",
+            "Inspingbot" => "Insping",
+            "Hatena" => "Hatena",
+            "Webshot" => "ShrinkTheWeb.com (Neosys Consulting)",
+            "shrinktheweb.com" => "ShrinkTheWeb.com (Neosys Consulting)",
+            "Site-Shot" => "Site-Shot.com",
+            "Easy-Thumb" => "Easy-Thumb",
+            "SeznamBot" => "Seznam",
+            "Seznam-Zbozi-robot" => "Seznam",
+            "Seznam " => "Seznam",
+            "Exabot" => "ExaLead.com (Dassault Systèmes)",
+            "ExaleadCloudview" => "ExaLead.com (Dassault Systèmes)",
+            "Googlebot" => "Google",
+            "mediapartners-google" => "Google",
+            "Google-Site-Verification" => "Google",
+            "Google-SearchByImage" => "Google",
+            "Google Page Speed Insights" => "Google",
+            "adsbot-google" => "Google",
+            "feedfetcher-google" => "Google",
+            "Google favicon" => "Google",
+            "Google Web Preview" => "Google",
+            "GoogleWebLight" => "Google",
+            "msnbot" => "Bing (Microsoft)",
+            "SkypeUriPreview" => "Bing (Microsoft)",
+            "BingPreview" => "Bing (Microsoft)",
+            "adidxbot" => "Bing (Microsoft)",
+            "bingbot" => "Bing (Microsoft)",
+            "bot" => "Unknown bot",
+            "crawl" => "Unknown bot",
+            "spider" => "Unknown bot"
+        ),
         // Uniquement à la fin - Terme générique
         "Mozilla" => "Mozilla",
         "Mobile" => "Generic Browser",
