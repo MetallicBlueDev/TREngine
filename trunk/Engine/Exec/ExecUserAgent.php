@@ -155,16 +155,32 @@ class ExecUserAgent {
      * @var array
      */
     private static $browserResouces = array(
-        "Browser" => array(
+        "Browser-Mobile" => array(
+            // FireFox
+            "fennec" => "Firefox Mobile",
+            "Minimo" => "Minimo", // Ancien projet Mozilla
+            // Internet Explorer Mobile
+            "Pocket Internet Explorer" => "Internet Explorer Mobile",
+            "MSPIE" => "Internet Explorer Mobile",
+            "IEMobile" => "Internet Explorer Mobile",
+            // Opera
+            "opera mobi" => "Opera Mobile",
+            "opera mini" => "Opera Mini",
+            "operamini" => "Opera Mini",
+            // Autre
+            "Kindle Fire" => "Kindle",
+            "Silk" => "Kindle",
+            "Mobile" => "Generic Browser",
+            "smartphone" => "Generic Browser",
+            "cellphone" => "Generic Browser",
+            "wireless" => "Generic Browser"
+        ),
+        "Browser-Desktop" => array(
             // Netscape
             "Nav" => "Netscape",
             "Gold" => "Netscape",
             "X11" => "Netscape",
             "Netscape" => "Netscape",
-            // Internet Explorer Mobile
-            "Pocket Internet Explorer" => "Internet Explorer Mobile",
-            "MSPIE" => "Internet Explorer Mobile",
-            "IEMobile" => "Internet Explorer Mobile",
             // Internet Explorer
             "MSIE" => "Internet Explorer",
             "Internet Explorer" => "Internet Explorer",
@@ -173,8 +189,8 @@ class ExecUserAgent {
             "Edge" => "Edge",
             // FireFox
             "Firebird" => "Firefox",
+            "Iceweasel" => "Firefox",
             "Firefox" => "Firefox",
-            "fennec" => "Firefox Mobile",
             // Autre
             "ELinks" => "ELinks",
             "iCab" => "iCab",
@@ -182,7 +198,6 @@ class ExecUserAgent {
             "Links" => "Links",
             "Lynx" => "Lynx",
             "midori" => "Midori",
-            "Minimo" => "Minimo",
             "SeaMonkey" => "SeaMonkey",
             "OffByOne" => "OffByOne",
             "OmniWeb" => "OmniWeb",
@@ -190,9 +205,6 @@ class ExecUserAgent {
             // Chrome
             "Chrome" => "Chrome",
             // Opera
-            "opera mobi" => "Opera Mobile",
-            "opera mini" => "Opera Mini",
-            "operamini" => "Opera Mini",
             "OPR" => "Opera",
             "Opera" => "Opera",
             // Safari
@@ -247,15 +259,13 @@ class ExecUserAgent {
             "crawl" => "Unknown bot",
             "spider" => "Unknown bot"
         ),
-        // Uniquement à la fin - Terme générique
-        "Mozilla" => "Mozilla",
-        "Mobile" => "Generic Browser",
-        "wireless" => "Generic Browser",
-        "j2me" => "Generic Browser",
-        "midp" => "Generic Browser",
-        "cldc" => "Generic Browser",
-        "smartphone" => "Generic Browser",
-        "cellphone" => "Generic Browser"
+        "Other" => array(
+            // Uniquement à la fin - Terme générique
+            "Mozilla" => "Mozilla",
+            "j2me" => "Generic Browser",
+            "midp" => "Generic Browser",
+            "cldc" => "Generic Browser"
+        )
     );
 
     /**
@@ -352,14 +362,19 @@ class ExecUserAgent {
      */
     public static function &getBrowserData(&$currentUserAgent) {
         $currentBrowser = array(
-            "version" => "",
-            "name" => "Unknown Browser");
+            "category" => "",
+            "name" => "Unknown Browser",
+            "version" => ""
+        );
 
-        foreach (self::$browserResouces as $browserAgent => $browserName) {
-            if (preg_match("/" . $browserAgent . "[ \/]([0-9\.]+)/ie", $currentUserAgent, $version) || preg_match("/" . $browserAgent . "/ie", $currentUserAgent, $version)) {
-                $currentBrowser['version'] = isset($version[1]) ? trim($version[1]) : "";
-                $currentBrowser['name'] = $browserName;
-                break;
+        foreach (self::$browserResouces as $browserCategory => $browserSubResources) {
+            foreach ($browserSubResources as $browserAgent => $browserName) {
+                if (preg_match("/" . $browserAgent . "[ \/]([0-9\.]+)/ie", $currentUserAgent, $version) || preg_match("/" . $browserAgent . "/ie", $currentUserAgent, $version)) {
+                    $currentBrowser['category'] = $browserCategory;
+                    $currentBrowser['name'] = $browserName;
+                    $currentBrowser['version'] = isset($version[1]) ? trim($version[1]) : "";
+                    break 2;
+                }
             }
         }
         return $currentBrowser;
