@@ -1,7 +1,7 @@
 TR Engine
--> http://sourceforge.net/projects/trengine/
+-> https://sourceforge.net/projects/trengine/
 
-This project is executed with PHP 5.6, NetBeans IDE 8.
+This project is executed with PHP 7, NetBeans IDE 8.2.
 Get it here: http://www.php.com / http://netbeans.org/
 
 Subversion Access
@@ -9,7 +9,7 @@ Subversion Access
 
 Thank you for your interest,
 cordially,
-Sébastien Villemain (the-trancer / trancer)
+Sébastien Villemain (trancer)
 
 Author - Sébastien Villemain
 SourceForge : http://sourceforge.net/users/the-trancer
