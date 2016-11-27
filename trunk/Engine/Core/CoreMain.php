@@ -47,7 +47,7 @@ class CoreMain {
     /**
      * Informations sur l'agent.
      *
-     * @var CoreAgentData
+     * @var CoreUserAgentData
      */
     private $agentInfos = null;
 
@@ -86,11 +86,11 @@ class CoreMain {
     /**
      * Retourne les données de l'agent actuel.
      *
-     * @return CoreAgentData
+     * @return CoreUserAgentData
      */
-    public function getAgentInfos(): CoreAgentData {
+    public function getAgentInfos(): CoreUserAgentData {
         if ($this->agentInfos === null) {
-            $this->agentInfos = new CoreAgentData();
+            $this->agentInfos = new CoreUserAgentData();
         }
         return $this->agentInfos;
     }

@@ -9,7 +9,7 @@ use TREngine\Engine\Exec\ExecUserAgent;
  *
  * @author Sébastien Villemain
  */
-class CoreAgentData extends CoreDataStorage {
+class CoreUserAgentData extends CoreDataStorage {
 
     /**
      * Nouveau collecteur d'information sur le User-Agent.
