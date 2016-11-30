@@ -18,18 +18,15 @@ class ExecCookie {
      *
      * @param string $cookieName
      * @param string $cookieContent
-     * @param string $cookieTimeLimit
+     * @param int $cookieTimeLimit
      * @return bool true succès
      */
-    public static function &createCookie($cookieName, $cookieContent, $cookieTimeLimit = "") {
-        $cookieName = urlencode($cookieName);
-        $cookieContent = urlencode($cookieContent);
+    public static function &createCookie(string $cookieName, string $cookieContent, int $cookieTimeLimit = 0): bool {
+        $rslt = false;
 
-        if (empty($cookieTimeLimit)) {
-            $rslt = setcookie($cookieName, $cookieContent);
-        } else if ($cookieTimeLimit == "-1" && !empty(CoreRequest::getString($cookieName, "", "COOKIE"))) {
-            $rslt = setcookie($cookieName, "");
-        } else {
+        if ($cookieTimeLimit >= 0) {
+            $cookieName = urlencode($cookieName);
+            $cookieContent = urlencode($cookieContent);
             $rslt = setcookie($cookieName, $cookieContent, $cookieTimeLimit);
         }
         return $rslt;
@@ -41,8 +38,14 @@ class ExecCookie {
      * @param string $cookieName
      * @return bool true succès
      */
-    public static function &destroyCookie($cookieName) {
-        return self::createCookie($cookieName, "", "-1");
+    public static function &destroyCookie(string $cookieName): bool {
+        $rslt = true;
+        $cookieName = urlencode($cookieName);
+
+        if (!empty(self::requestCookie($cookieName))) {
+            $rslt = setcookie($cookieName, "");
+        }
+        return $rslt;
     }
 
     /**
@@ -51,11 +54,21 @@ class ExecCookie {
      * @param string $cookieName
      * @return string
      */
-    public static function &getCookie($cookieName) {
+    public static function &getCookie(string $cookieName): string {
         $cookieName = urlencode($cookieName);
-        $cookieContent = CoreRequest::getString($cookieName, "", "COOKIE");
+        $cookieContent = self::requestCookie($cookieName);
         $cookieContent = urldecode($cookieContent);
         return $cookieContent;
+    }
+
+    /**
+     * Retourne le contenu brut du cookie.
+     *
+     * @param string $cookieEncodeName
+     * @return string
+     */
+    private static function &requestCookie(string $cookieEncodeName): string {
+        return CoreRequest::getString($cookieEncodeName, "", "COOKIE");
     }
 
 }
