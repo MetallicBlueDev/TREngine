@@ -292,6 +292,16 @@ class CoreTranslate {
      * @return bool
      */
     private function tryLoadTranslation(string $pathLang): bool {
+        /*
+         * Piste d'amélioration :
+         * Pourquoi charger le fichier si c'est pour utiliser le cache après ?
+         * Le système doit être optimisé
+         * 1 - D'abord vérifier si le cache est utilisable
+         *   - il doit exister et être a jour
+         * 2 - charger le cache si disponible, le charger et s'arrêter là
+         * 3 - dans le cas contraire, basculer vers le système déjà en place
+         */
+
         $this->cache = array();
         $loaded = CoreLoader::translateLoader($pathLang);
         return ($loaded && !empty($this->cache));
