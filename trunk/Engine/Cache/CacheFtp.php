@@ -30,9 +30,9 @@ class CacheFtp extends CacheModel {
         $rslt = extension_loaded("ftp") && function_exists('ftp_connect');
 
         if (!$rslt) {
-            CoreLogger::addException("Socket function not found");
+            CoreLogger::addException("FTP function not found");
         }
-        return false;
+        return $rslt;
     }
 
     /**

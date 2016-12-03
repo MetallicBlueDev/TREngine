@@ -67,7 +67,7 @@ class CacheSocket extends CacheModel {
         if (!$rslt) {
             CoreLogger::addException("Socket function not found");
         }
-        return false;
+        return $rslt;
     }
 
     /**
