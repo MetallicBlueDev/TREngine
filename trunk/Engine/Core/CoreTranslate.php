@@ -254,46 +254,8 @@ class CoreTranslate {
 
         // Traduction uniquement si besoin
         if (!$loaded) {
-            $this->cache = array();
-            $loaded = CoreLoader::translateLoader($pathLang);
-
-            if ($loaded && !empty($this->cache)) {
-                $langCacheFileName = self::getLangCacheFileName($pathLang) . $this->languageUsed . ".php";
-                $langOriginalPath = CoreLoader::getTranslateAbsolutePath($pathLang);
-                $content = "";
-
-                // Pour la sélection dans le cache
-                $coreCache = null;
-                if (CoreLoader::isCallable("CoreCache")) {
-                    $coreCache = CoreCache::getInstance(CoreCache::SECTION_TRANSLATE);
-                }
-
-                // Chargement du fichier de traduction
-                if ($coreCache === null || !$coreCache->cached($langCacheFileName) || ($coreCache->getCacheMTime($langCacheFileName) < filemtime($langOriginalPath))) {
-                    foreach ($this->cache as $key => $value) {
-                        if (!empty($key) && !empty($value)) {
-                            $content .= "define(\"" . $key . "\",\"" . self::entitiesTranslate($value) . "\");";
-                        }
-                    }
-
-                    if ($coreCache !== null) {
-                        $coreCache->writeCache($langCacheFileName, $content);
-                    }
-                }
-
-                $this->cache = array();
-
-                // Données de traduction
-                if ($coreCache !== null && $coreCache->cached($langCacheFileName)) {
-                    $coreCache->readCache($langCacheFileName);
-                } else if (!empty($content)) {
-                    if (!empty($content)) {
-                        ob_start();
-                        print eval(" $content ");
-                        ob_get_contents();
-                        ob_end_clean();
-                    }
-                }
+            if ($this->tryLoadTranslation($pathLang)) {
+                $this->fireTranslation($pathLang);
             }
         }
     }
@@ -324,6 +286,95 @@ class CoreTranslate {
     }
 
     /**
+     * Tentative de chargement de la traduction.
+     *
+     * @param string $pathLang
+     * @return bool
+     */
+    private function tryLoadTranslation(string $pathLang): bool {
+        $this->cache = array();
+        $loaded = CoreLoader::translateLoader($pathLang);
+        return ($loaded && !empty($this->cache));
+    }
+
+    /**
+     * Procédure de traduction.
+     *
+     * @param string $pathLang
+     */
+    private function fireTranslation(string $pathLang) {
+        $content = $this->translateByCache($pathLang);
+
+        // Vide le cache
+        $this->cache = array();
+
+        if (!empty($content)) {
+            $this->translatebyBuffer($content);
+        }
+    }
+
+    /**
+     * Tentative de traduction en utilisant le cache.
+     *
+     * @param string $pathLang
+     * @return string
+     */
+    private function translateByCache(string $pathLang): string {
+        $content = "";
+        $coreCache = null;
+
+        if (CoreLoader::isCallable("CoreCache")) {
+            $coreCache = CoreCache::getInstance(CoreCache::SECTION_TRANSLATE);
+        }
+
+        // Chargement du fichier de traduction
+        $langCacheFileName = self::getLangCacheFileName($pathLang) . $this->languageUsed . ".php";
+        $langOriginalPath = CoreLoader::getTranslateAbsolutePath($pathLang);
+
+        if ($coreCache === null || !$coreCache->cached($langCacheFileName) || ($coreCache->getCacheMTime($langCacheFileName) < filemtime($langOriginalPath))) {
+            $content = $this->serializeTranslation();
+
+            if ($coreCache !== null) {
+                $coreCache->writeCache($langCacheFileName, $content);
+                $coreCache = null;
+            }
+        }
+
+        if (empty($content) && $coreCache !== null) {
+            $coreCache->readCache($langCacheFileName);
+        }
+        return $content;
+    }
+
+    /**
+     * Retourne les données de tradution pour mise en cache.
+     *
+     * @return string
+     */
+    private function serializeTranslation(): string {
+        $content = "";
+
+        foreach ($this->cache as $key => $value) {
+            if (!empty($key) && !empty($value)) {
+                $content .= "define(\"" . $key . "\",\"" . self::entitiesTranslate($value) . "\");";
+            }
+        }
+        return $content;
+    }
+
+    /**
+     * Traduction via mémoire tampon et évaluation à la volée.
+     *
+     * @param string $content
+     */
+    private function translatebyBuffer(string $content) {
+        ob_start();
+        print eval(" $content ");
+        ob_get_contents();
+        ob_end_clean();
+    }
+
+    /**
      * Retourne le nom du fichier cache de langue.
      *
      * @param string $pathLang
@@ -348,7 +399,7 @@ class CoreTranslate {
         $languageClient = explode(',', CoreRequest::getString("HTTP_ACCEPT_LANGUAGE", "", "SERVER"));
         $extension = strtolower(substr(trim($languageClient[0]), 0, 2));
 
-        if (isset(self::$languageList[$extension])) {
+        if (self::canUseExtension($extension)) {
             $validExtension = $extension;
         } else {
             // Recherche de l'URL
@@ -359,17 +410,62 @@ class CoreTranslate {
             }
 
             // Recherche de l'extension de URL
+            $matches = array();
             preg_match('@^(?:http://)?([^/]+)@i', $url, $matches);
             preg_match('/[^.]+\.[^.]+$/', $matches[1], $matches);
-            preg_match('/[^.]+$/', $matches[0], $languageExtension);
+            preg_match('/[^.]+$/', $matches[0], $matches);
 
-            $extension = $languageExtension[0];
+            $extension = $matches[0];
 
-            if (isset(self::$languageList[$extension])) {
+            if (self::canUseExtension($extension)) {
                 $validExtension = $extension;
             }
         }
         return $validExtension;
+    }
+
+    /**
+     * Formate l'heure locale.
+     *
+     * @param string $extension l'extension de la langue détectée
+     */
+    private function configureLocale(string $extension) {
+        if ($this->languageUsed === "french" && TR_ENGINE_PHP_OS === "WIN") {
+            setlocale(LC_TIME, "french");
+        } else if ($this->languageUsed === "french" && TR_ENGINE_PHP_OS === "BSD") {
+            setlocale(LC_TIME, "fr_FR.ISO8859-1");
+        } else if ($this->languageUsed === "french") {
+            setlocale(LC_TIME, 'fr_FR');
+        } else {
+            // Tentative de formatage via le nom de la langue
+            if (!setlocale(LC_TIME, $this->languageUsed)) {
+                // Dernière tentative de formatage sous forme "fr_FR"
+                setlocale(LC_TIME, strtolower($extension) . "_" . strtoupper($extension));
+            }
+        }
+    }
+
+    /**
+     * Conversion des caratères spéciaux en entitiées UTF-8.
+     * Ajout d'antislashes pour utilisation dans le cache.
+     *
+     * @param string
+     * @return string
+     */
+    private static function &entitiesTranslate(string $text): string {
+        $text = ExecEntities::entitiesUtf8($text);
+        //$text = ExecEntities::addSlashes($text);
+        return $text;
+    }
+
+    /**
+     * Détermine si l'extension de langue est connue.
+     *
+     * @param string $extension
+     * @return bool
+     */
+    private static function canUseExtension(string $extension): bool {
+        return isset(self::$languageList[$extension]);
     }
 
     /**
@@ -427,40 +523,6 @@ class CoreTranslate {
             $rslt = is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $translatePath . ".php");
         }
         return $rslt;
-    }
-
-    /**
-     * Formate l'heure locale.
-     *
-     * @param string $extension l'extension de la langue détectée
-     */
-    private function configureLocale(string $extension) {
-        if ($this->languageUsed === "french" && TR_ENGINE_PHP_OS === "WIN") {
-            setlocale(LC_TIME, "french");
-        } else if ($this->languageUsed === "french" && TR_ENGINE_PHP_OS === "BSD") {
-            setlocale(LC_TIME, "fr_FR.ISO8859-1");
-        } else if ($this->languageUsed === "french") {
-            setlocale(LC_TIME, 'fr_FR');
-        } else {
-            // Tentative de formatage via le nom de la langue
-            if (!setlocale(LC_TIME, $this->languageUsed)) {
-                // Dernière tentative de formatage sous forme "fr_FR"
-                setlocale(LC_TIME, strtolower($extension) . "_" . strtoupper($extension));
-            }
-        }
-    }
-
-    /**
-     * Conversion des caratères spéciaux en entitiées UTF-8.
-     * Ajout d'antislashes pour utilisation dans le cache.
-     *
-     * @param string
-     * @return string
-     */
-    private static function &entitiesTranslate(string $text): string {
-        $text = ExecEntities::entitiesUtf8($text);
-        //$text = ExecEntities::addSlashes($text);
-        return $text;
     }
 
 }
