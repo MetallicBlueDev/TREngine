@@ -218,9 +218,10 @@ class CoreCache extends CacheModel {
     /**
      * Retourne l'instance du gestionnaire de cache.
      *
+     * @param string $newSectionPath
      * @return CoreCache
      */
-    public static function &getInstance($newSectionPath = null): CoreCache {
+    public static function &getInstance(string $newSectionPath = null): CoreCache {
         self::checkInstance();
 
         if ($newSectionPath !== null) {
