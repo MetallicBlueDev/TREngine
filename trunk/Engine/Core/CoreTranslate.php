@@ -209,7 +209,7 @@ class CoreTranslate {
      *
      * @return CoreTranslate
      */
-    public static function &getInstance() {
+    public static function &getInstance(): CoreTranslate {
         self::checkInstance();
         return self::$coreTranslate;
     }
@@ -240,7 +240,7 @@ class CoreTranslate {
      *
      * @return string
      */
-    public function &getCurrentLanguage() {
+    public function &getCurrentLanguage(): string {
         return $this->languageUsed;
     }
 
@@ -249,7 +249,7 @@ class CoreTranslate {
      *
      * @param string $pathLang chemin du fichier de traduction.
      */
-    public function translate($pathLang) {
+    public function translate(string $pathLang) {
         $loaded = !empty(CoreLoader::getTranslateAbsolutePath($pathLang));
 
         // Traduction uniquement si besoin
@@ -303,7 +303,7 @@ class CoreTranslate {
      *
      * @return array
      */
-    public static function &getLangList() {
+    public static function &getLangList(): array {
         return CoreCache::getInstance()->getFileList("Engine\Translate", ".lang");
     }
 
@@ -312,7 +312,7 @@ class CoreTranslate {
      *
      * @param string $pathLang
      */
-    public static function removeCache($pathLang = "") {
+    public static function removeCache(string $pathLang = "") {
         $langCacheFileName = self::getLangCacheFileName($pathLang);
 
         $coreCache = CoreCache::getInstance(CoreCache::SECTION_TRANSLATE);
@@ -329,7 +329,7 @@ class CoreTranslate {
      * @param string $pathLang
      * @return string
      */
-    private static function getLangCacheFileName($pathLang = "") {
+    private static function getLangCacheFileName(string $pathLang = ""): string {
         if (!empty($pathLang) && substr($pathLang, -1) !== DIRECTORY_SEPARATOR) {
             $pathLang .= DIRECTORY_SEPARATOR;
         }
@@ -341,7 +341,7 @@ class CoreTranslate {
      *
      * @return string
      */
-    private static function &getLanguageExtension() {
+    private static function &getLanguageExtension(): string {
         $validExtension = "";
 
         // Recherche de la langue du client
@@ -378,7 +378,7 @@ class CoreTranslate {
      * @param string $extension l'extension de la langue détectée
      * @return string
      */
-    private static function &getLanguage($extension) {
+    private static function &getLanguage(string $extension): string {
         $language = "";
 
         // Langage du client via le cookie de session
@@ -419,7 +419,7 @@ class CoreTranslate {
      * @param string $language
      * @return bool true langue disponible.
      */
-    private static function isValid($language) {
+    private static function isValid(string $language): bool {
         $rslt = false;
 
         if (!empty($language)) {
@@ -434,7 +434,7 @@ class CoreTranslate {
      *
      * @param string $extension l'extension de la langue détectée
      */
-    private function configureLocale($extension) {
+    private function configureLocale(string $extension) {
         if ($this->languageUsed === "french" && TR_ENGINE_PHP_OS === "WIN") {
             setlocale(LC_TIME, "french");
         } else if ($this->languageUsed === "french" && TR_ENGINE_PHP_OS === "BSD") {
@@ -457,7 +457,7 @@ class CoreTranslate {
      * @param string
      * @return string
      */
-    private static function &entitiesTranslate($text) {
+    private static function &entitiesTranslate(string $text): string {
         $text = ExecEntities::entitiesUtf8($text);
         //$text = ExecEntities::addSlashes($text);
         return $text;
