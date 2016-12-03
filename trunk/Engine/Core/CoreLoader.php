@@ -377,6 +377,8 @@ class CoreLoader {
      * @throws FailLoader
      */
     private static function &manageLoad(string &$keyName, string $ext): bool {
+        $loaded = false;
+
         try {
             if (empty($keyName)) {
                 throw new FailLoader("loader");

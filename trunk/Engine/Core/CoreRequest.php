@@ -170,6 +170,8 @@ class CoreRequest {
      * @return array
      */
     private static function &getDefaultRequest(string $hash, bool $useDefault): array {
+        $input = array();
+
         if (!$useDefault) {
             CoreSecure::getInstance()->throwException("requestHash", null, array(
                 $hash));
