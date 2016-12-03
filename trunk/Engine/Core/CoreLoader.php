@@ -196,13 +196,13 @@ class CoreLoader {
      */
     public static function &isCallable(string $className, string $methodName = "", bool $static = false): bool {
         $rslt = false;
-        $ext = "";
+        $fileType = "";
 
         if (!empty($methodName)) {
-            self::buildExtensionAndKeyName($className, $ext);
+            self::buildKeyNameAndFileType($className, $fileType);
 
             // Vérifie si la classe est en mémoire
-            if (self::isLoaded($className, $ext)) {
+            if (self::isLoaded($className, $fileType)) {
                 // Pour les pages plus complexes comme le module management
                 $pos = strpos($className, ".");
 
@@ -220,8 +220,8 @@ class CoreLoader {
                 }
             }
         } else {
-            self::buildExtensionAndKeyName($className, $ext);
-            $rslt = self::isLoaded($className, $ext);
+            self::buildKeyNameAndFileType($className, $fileType);
+            $rslt = self::isLoaded($className, $fileType);
         }
         return $rslt;
     }
@@ -233,8 +233,8 @@ class CoreLoader {
      * @return mixed
      */
     public static function &callback(string $callback) {
-        $ext = "";
-        self::buildExtensionAndKeyName($callback, $ext);
+        $fileType = "";
+        self::buildKeyNameAndFileType($callback, $fileType);
 
         // Récupère un seul paramètre supplémentaire
         $args = func_get_args();
@@ -244,7 +244,7 @@ class CoreLoader {
         $rslt = call_user_func_array($callback, $args);
 
         if ($rslt === false) {
-            CoreLogger::addException("Failed to execute callback '" . $callback . "'. Extension: " . $ext);
+            CoreLogger::addException("Failed to execute callback '" . $callback . "'. FileType (extension): " . $fileType);
         }
         return $rslt;
     }
@@ -277,13 +277,13 @@ class CoreLoader {
      * @return string
      */
     public static function &getFullQualifiedClassName(string $className, string $prefixName = ""): string {
-        $ext = "";
+        $fileType = "";
 
         if (!empty($prefixName)) {
             $prefixName .= "\\";
         }
 
-        self::buildExtensionAndKeyName($className, $ext, $prefixName);
+        self::buildKeyNameAndFileType($className, $fileType, $prefixName);
         return $className;
     }
 
@@ -326,14 +326,14 @@ class CoreLoader {
      * Retourne le chemin absolu.
      *
      * @param string $keyName Fichier demandé.
-     * @param string $ext
+     * @param string $fileType
      * @return string chemin absolu ou nulle.
      */
-    private static function &getAbsolutePath(string $keyName, string $ext): string {
+    private static function &getAbsolutePath(string $keyName, string $fileType): string {
         $rslt = "";
 
-        if (self::isLoaded($keyName, $ext)) {
-            $rslt = self::$loadedFiles[self::getLoadedFileKey($keyName, $ext)];
+        if (self::isLoaded($keyName, $fileType)) {
+            $rslt = self::$loadedFiles[self::getLoadedFileKey($keyName, $fileType)];
         }
         return $rslt;
     }
@@ -342,13 +342,13 @@ class CoreLoader {
      * Retourne la clé correspondant au fichier.
      *
      * @param string $keyName
-     * @param string $ext
+     * @param string $fileType
      * @return string
      */
-    private static function &getLoadedFileKey(string $keyName, string $ext): string {
+    private static function &getLoadedFileKey(string $keyName, string $fileType): string {
         $loadKeyName = $keyName;
 
-        switch ($ext) {
+        switch ($fileType) {
             case self::TYPE_TRANSLATE:
                 $loadKeyName .= ".lang";
                 break;
@@ -361,22 +361,22 @@ class CoreLoader {
      * Vérifie si le fichier demandé a été chargé.
      *
      * @param string $keyName Fichier demandé.
-     * @param string $ext Extension.
+     * @param string $fileType Type de fichier.
      * @return bool true si c'est déjà chargé.
      */
-    private static function isLoaded(string $keyName, string $ext): bool {
-        return isset(self::$loadedFiles[self::getLoadedFileKey($keyName, $ext)]);
+    private static function isLoaded(string $keyName, string $fileType): bool {
+        return isset(self::$loadedFiles[self::getLoadedFileKey($keyName, $fileType)]);
     }
 
     /**
      * Chargeur de fichier (uniquement si besoin).
      *
      * @param string $keyName Nom de la classe ou du fichier.
-     * @param string $ext Extension.
+     * @param string $fileType Type de fichier.
      * @return bool true chargé.
      * @throws FailLoader
      */
-    private static function &manageLoad(string &$keyName, string $ext): bool {
+    private static function &manageLoad(string &$keyName, string $fileType): bool {
         $loaded = false;
 
         try {
@@ -384,17 +384,17 @@ class CoreLoader {
                 throw new FailLoader("loader");
             }
 
-            self::buildExtensionAndKeyName($keyName, $ext);
-            $loaded = self::isLoaded($keyName, $ext);
+            self::buildKeyNameAndFileType($keyName, $fileType);
+            $loaded = self::isLoaded($keyName, $fileType);
 
             // Si ce n'est pas déjà chargé
             if (!$loaded) {
-                $loaded = self::load($keyName, $ext);
+                $loaded = self::load($keyName, $fileType);
             }
         } catch (Exception $ex) {
             CoreSecure::getInstance()->throwException($ex->getMessage(), $ex, array(
                 $keyName,
-                $ext));
+                $fileType));
         }
         return $loaded;
     }
@@ -403,18 +403,18 @@ class CoreLoader {
      * Chargeur de classe.
      *
      * @param string $keyName
-     * @param string $ext
+     * @param string $fileType
      * @return bool
      * @throws FailLoader
      */
-    private static function &load(string $keyName, string $ext): bool {
+    private static function &load(string $keyName, string $fileType): bool {
         $loaded = false;
-        $path = self::getFilePath($keyName, $ext);
+        $path = self::getFilePath($keyName, $fileType);
 
         if (is_file($path)) {
-            $loaded = self::loadFilePath($keyName, $ext, $path);
+            $loaded = self::loadFilePath($keyName, $fileType, $path);
         } else {
-            switch ($ext) {
+            switch ($fileType) {
                 case self::TYPE_BLOCK:
                     CoreLogger::addErrorMessage(ERROR_BLOCK_NO_FILE);
                     break;
@@ -435,19 +435,19 @@ class CoreLoader {
      * Construction du chemin et du type de fichier.
      *
      * @param string $keyName
-     * @param string $ext
+     * @param string $fileType
      * @param string $prefixName
      */
-    private static function buildExtensionAndKeyName(string &$keyName, string &$ext, string $prefixName = "") {
-        if (empty($ext)) {
-            self::buildGenericExtensionAndKeyName($keyName, $ext, $prefixName);
+    private static function buildKeyNameAndFileType(string &$keyName, string &$fileType, string $prefixName = "") {
+        if (empty($fileType)) {
+            self::buildGenericKeyNameAndFileType($keyName, $fileType, $prefixName);
         }
 
-        if ($ext === self::TYPE_TRANSLATE) {
-            $fakeExt = "";
-            self::buildGenericExtensionAndKeyName($keyName, $fakeExt, $prefixName);
+        if ($fileType === self::TYPE_TRANSLATE) {
+            $fakeFileType = "";
+            self::buildGenericKeyNameAndFileType($keyName, $fakeFileType, $prefixName);
 
-            if ($fakeExt !== null && $fakeExt !== $ext) {
+            if ($fakeFileType !== null && $fakeFileType !== $fileType) {
                 $keyName = self::getFilePathFromNamespace($keyName);
             }
         }
@@ -457,18 +457,18 @@ class CoreLoader {
      * Construction du chemin et du type de fichier.
      *
      * @param string $keyName
-     * @param string $ext
+     * @param string $fileType
      * @param string $prefixName
      */
-    private static function buildGenericExtensionAndKeyName(string &$keyName, string &$ext, string $prefixName) {
+    private static function buildGenericKeyNameAndFileType(string &$keyName, string &$fileType, string $prefixName) {
         if (strpos($keyName, "\Block\Block") !== false) {
-            $ext = self::TYPE_BLOCK;
+            $fileType = self::TYPE_BLOCK;
         } else if (strpos($keyName, "Module\Module") !== false) {
-            $ext = self::TYPE_MODULE;
+            $fileType = self::TYPE_MODULE;
         } else if (strpos($keyName, "\\") === false) {
             foreach (self::NAMESPACE_TYPES as $namespaceType) {
                 if (strrpos($keyName, $namespaceType, -strlen($keyName)) !== false) {
-                    $ext = $namespaceType;
+                    $fileType = $namespaceType;
 
                     $keyName = str_replace("{KEYNAME}", $keyName, self::NAMESPACE_BASE);
                     $keyName = str_replace("{PREFIX}", $prefixName, $keyName);
@@ -481,9 +481,9 @@ class CoreLoader {
             }
         }
 
-        if (empty($ext)) {
-            // Extension par défaut
-            $ext = self::TYPE_CLASS;
+        if (empty($fileType)) {
+            // Type par défaut
+            $fileType = self::TYPE_CLASS;
         }
     }
 
@@ -491,13 +491,13 @@ class CoreLoader {
      * Détermine le chemin vers le fichier.
      *
      * @param string $keyName
-     * @param string $ext
+     * @param string $fileType
      * @return string
      */
-    private static function &getFilePath(string $keyName, string $ext): string {
+    private static function &getFilePath(string $keyName, string $fileType): string {
         $path = "";
 
-        switch ($ext) {
+        switch ($fileType) {
             case self::TYPE_BASE:
             case self::TYPE_CACHE:
             case self::TYPE_CORE:
@@ -513,7 +513,7 @@ class CoreLoader {
                 $path = self::getFilePathFromTranslate($keyName);
                 break;
             case self::TYPE_INCLUDE:
-                $path = str_replace("_", DIRECTORY_SEPARATOR, $keyName) . "." . $ext;
+                $path = str_replace("_", DIRECTORY_SEPARATOR, $keyName) . "." . $fileType;
                 break;
             default:
                 throw new FailLoader("loader");
@@ -527,14 +527,14 @@ class CoreLoader {
      * Charge le fichier suivant son type, son nom et son chemin.
      *
      * @param string $keyName
-     * @param string $ext
+     * @param string $fileType
      * @param string $path
      * @return bool
      */
-    private static function &loadFilePath(string $keyName, string $ext, string $path): bool {
+    private static function &loadFilePath(string $keyName, string $fileType, string $path): bool {
         $loaded = false;
 
-        switch ($ext) {
+        switch ($fileType) {
             case self::TYPE_TRANSLATE:
                 $lang = array();
                 break;
@@ -544,10 +544,10 @@ class CoreLoader {
         }
 
         require $path;
-        self::$loadedFiles[self::getLoadedFileKey($keyName, $ext)] = $path;
+        self::$loadedFiles[self::getLoadedFileKey($keyName, $fileType)] = $path;
         $loaded = true;
 
-        switch ($ext) {
+        switch ($fileType) {
             case self::TYPE_TRANSLATE:
                 if (!empty($lang) && is_array($lang)) {
                     CoreTranslate::getInstance()->affectCache($lang);
