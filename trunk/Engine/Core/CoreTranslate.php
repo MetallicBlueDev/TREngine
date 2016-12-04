@@ -348,7 +348,8 @@ class CoreTranslate {
                 $langOriginalPath = CoreLoader::getTranslateAbsolutePath($pathLang);
 
                 if ($coreCache->getCacheMTime($langCacheFileName) >= filemtime($langOriginalPath)) {
-                    $translated = !empty($coreCache->readCache($langCacheFileName));
+                    $coreCache->readCache($langCacheFileName);
+                    $translated = true;
                 }
             }
         }
