@@ -330,12 +330,8 @@ class CoreLoader {
      * @return string chemin absolu ou nulle.
      */
     private static function &getAbsolutePath(string $keyName, string $fileType): string {
-        $rslt = "";
-
-        if (self::isLoaded($keyName, $fileType)) {
-            $rslt = self::$loadedFiles[self::getLoadedFileKey($keyName, $fileType)];
-        }
-        return $rslt;
+        self::buildKeyNameAndFileType($keyName, $fileType);
+        return self::getFilePath($keyName, $fileType);
     }
 
     /**
@@ -474,8 +470,8 @@ class CoreLoader {
                     $keyName = str_replace("{PREFIX}", $prefixName, $keyName);
                     $keyName = str_replace("{TYPE}", $namespaceType, $keyName);
 
-                    $namespaceSubtype = (strrpos($keyName, $namespaceType . self::SUBTYPE_CUSTOM) !== false) ? self::SUBTYPE_CUSTOM : self::SUBTYPE_ENGINE;
-                    $keyName = str_replace("{ORIGIN}", $namespaceSubtype, $keyName);
+                    $namespaceOrigin = (strrpos($keyName, $namespaceType . self::SUBTYPE_CUSTOM) !== false) ? self::SUBTYPE_CUSTOM : self::SUBTYPE_ENGINE;
+                    $keyName = str_replace("{ORIGIN}", $namespaceOrigin, $keyName);
                     break;
                 }
             }
