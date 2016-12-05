@@ -266,7 +266,7 @@ class CoreTranslate {
      * @param string $pathLang chemin du fichier de traduction.
      */
     public function translate(string $pathLang) {
-        if (!$this->translated($pathLang)) {
+        if (!empty($pathLang) && !$this->translated($pathLang)) {
             $this->fireTranslation($pathLang);
             $this->setTranslated($pathLang);
         }
@@ -517,7 +517,7 @@ class CoreTranslate {
      * @return bool
      */
     private static function canUseExtension(string $extension): bool {
-        return isset(self::$languageList[$extension]);
+        return !empty($extension) && isset(self::$languageList[$extension]);
     }
 
     /**
@@ -549,7 +549,7 @@ class CoreTranslate {
         if (CoreLoader::isCallable("CoreSession")) {
             $language = strtolower(trim(CoreSession::getInstance()->getUserInfos()->getLangue()));
 
-            if (!self::isValid($language)) {
+            if (!self::canUseLanguage($language)) {
                 $language = "";
             }
         }
@@ -565,7 +565,7 @@ class CoreTranslate {
     private static function &getLanguageByExtension(string $extension): string {
         $language = strtolower(trim(self::$languageList[$extension]));
 
-        if (!self::isValid($language)) {
+        if (!self::canUseLanguage($language)) {
             $language = "";
         }
         return $language;
@@ -585,26 +585,20 @@ class CoreTranslate {
         }
 
         // Malheureusement la langue par défaut est aussi invalide
-        if (empty($language) || !self::isValid($language)) {
+        if (empty($language) || !self::canUseLanguage($language)) {
             $language = "english";
         }
         return $language;
     }
 
     /**
-     * Vérifie si le langage est disponible.
+     * Détermine si la langue est disponible.
      *
      * @param string $language
      * @return bool true langue disponible.
      */
-    private static function isValid(string $language): bool {
-        $rslt = false;
-
-        if (!empty($language)) {
-            $translatePath = CoreLoader::getFilePathFromTranslate("Engine", $language);
-            $rslt = is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $translatePath . ".php");
-        }
-        return $rslt;
+    private static function canUseLanguage(string $language): bool {
+        return !empty($language) && is_file(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . CoreLoader::getFilePathFromTranslate("Engine", $language) . ".php");
     }
 
 }
