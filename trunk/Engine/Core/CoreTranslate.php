@@ -206,7 +206,7 @@ class CoreTranslate {
      */
     private function __construct() {
         $this->languageUsed['extension'] = self::getLanguageExtension();
-        $this->languageUsed['name'] = self::getLanguage($this->getCurrentLanguageExtension());
+        $this->languageUsed['name'] = $this->getLanguageTranslated();
 
         $this->configureLocale();
     }
@@ -450,8 +450,8 @@ class CoreTranslate {
         $validExtension = "";
 
         // Recherche de la langue du client
-        $languageClient = explode(',', CoreRequest::getString("HTTP_ACCEPT_LANGUAGE", "", "SERVER"));
-        $extension = strtolower(substr(trim($languageClient[0]), 0, 2));
+        $acceptedLanguages = explode(',', CoreRequest::getString("HTTP_ACCEPT_LANGUAGE", "", "SERVER"));
+        $extension = strtolower(substr(trim($acceptedLanguages[0]), 0, 2));
 
         if (self::canUseExtension($extension)) {
             $validExtension = $extension;
@@ -523,40 +523,70 @@ class CoreTranslate {
     /**
      * Retourne la langue la plus appropriée.
      *
-     * @param string $extension l'extension de la langue détectée
      * @return string
      */
-    private static function &getLanguage(string $extension): string {
+    private function &getLanguageTranslated(): string {
+        $language = self::getLanguageBySession();
+
+        if (empty($language)) {
+            $language = self::getLanguageByExtension($this->getCurrentLanguageExtension());
+
+            if (empty($language)) {
+                $language = self::getLanguageByDefault();
+            }
+        }
+        return $language;
+    }
+
+    /**
+     * Retourne la langue du client (via le cookie de session).
+     *
+     * @return string
+     */
+    private static function &getLanguageBySession(): string {
         $language = "";
 
-        // Langage du client via le cookie de session
         if (CoreLoader::isCallable("CoreSession")) {
-            $userLanguage = strtolower(trim(CoreSession::getInstance()->getUserInfos()->getLangue()));
-        } else {
-            $userLanguage = "";
+            $language = strtolower(trim(CoreSession::getInstance()->getUserInfos()->getLangue()));
+
+            if (!self::isValid($language)) {
+                $language = "";
+            }
+        }
+        return $language;
+    }
+
+    /**
+     * Retourne la langue trouvée via l'extension.
+     *
+     * @param string $extension
+     * @return string
+     */
+    private static function &getLanguageByExtension(string $extension): string {
+        $language = strtolower(trim(self::$languageList[$extension]));
+
+        if (!self::isValid($language)) {
+            $language = "";
+        }
+        return $language;
+    }
+
+    /**
+     * Retourne la langue par défaut.
+     *
+     * @return string
+     */
+    private static function &getLanguageByDefault(): string {
+        $language = "";
+
+        if (CoreLoader::isCallable("CoreMain")) {
+            // Utilisation de la langue par défaut du site
+            $language = CoreMain::getInstance()->getDefaultLanguage();
         }
 
-        if (self::isValid($userLanguage)) {
-            // Langue du client via cookie valide
-            $language = $userLanguage;
-        } else {
-            // Langue trouvée via l'extension
-            $language = strtolower(trim(self::$languageList[$extension]));
-
-            // Si la langue trouvé en invalide
-            if (!self::isValid($language)) {
-                // Utilisation de la langue par défaut du site
-                if (CoreLoader::isCallable("CoreMain")) {
-                    $language = CoreMain::getInstance()->getDefaultLanguage();
-                } else {
-                    $language = "";
-                }
-
-                // Malheureusement la langue par défaut est aussi invalide
-                if (!self::isValid($language)) {
-                    $language = "english";
-                }
-            }
+        // Malheureusement la langue par défaut est aussi invalide
+        if (empty($language) || !self::isValid($language)) {
+            $language = "english";
         }
         return $language;
     }
