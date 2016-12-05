@@ -181,11 +181,11 @@ class CoreTranslate {
     );
 
     /**
-     * Langue utilisée.
+     * Informations sur la langue utilisée.
      *
      * @var array
      */
-    private $languageUsed = array();
+    private $languageInfos = array();
 
     /**
      * Mémorise (temporairement) les données de tradution.
@@ -205,8 +205,8 @@ class CoreTranslate {
      * Nouveau gestionnaire.
      */
     private function __construct() {
-        $this->languageUsed['extension'] = self::getLanguageExtension();
-        $this->languageUsed['name'] = $this->getLanguageTranslated();
+        $this->languageInfos['extension'] = self::getLanguageExtension();
+        $this->languageInfos['name'] = $this->getLanguageTranslated();
 
         $this->configureLocale();
     }
@@ -248,7 +248,7 @@ class CoreTranslate {
      * @return string
      */
     public function &getCurrentLanguage(): string {
-        return $this->languageUsed['name'];
+        return $this->languageInfos['name'];
     }
 
     /**
@@ -257,7 +257,7 @@ class CoreTranslate {
      * @return string
      */
     public function &getCurrentLanguageExtension(): string {
-        return $this->languageUsed['extension'];
+        return $this->languageInfos['extension'];
     }
 
     /**
