@@ -15,46 +15,12 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class ExecCrypt {
 
     /**
-     * Création d'une clé unique.
-     *
-     * @param int $size
-     * @return string
-     */
-    public static function &makeNewKey($size = 32, $letter = true, $number = true, $caseSensitive = true) {
-        $randKey = "";
-        $string = "";
-        $letters = "abcdefghijklmnopqrstuvwxyz";
-        $numbers = "0123456789";
-
-        if ($letter && $number) {
-            $string = $letters . $numbers;
-        } else if ($letter) {
-            $string = $letters;
-        } else {
-            $string = $numbers;
-        }
-
-        // Initialisation
-        srand(time());
-
-        for ($i = 0; $i < $size; $i++) {
-            $key = substr($string, (rand() % (strlen($string))), 1);
-
-            if ($caseSensitive) {
-                $key = (rand(0, 1) == 1) ? strtoupper($key) : strtolower($key);
-            }
-            $randKey .= $key;
-        }
-        return $randKey;
-    }
-
-    /**
      * Création d'un identifiant unique avec des chiffres, lettres et sensible à la case.
      *
      * @param int $size
      * @return string
      */
-    public static function &makeIdentifier($size = 32) {
+    public static function &makeIdentifier(int $size = 32) {
         $key = self::makeNewKey($size, true, true, true);
         return $key;
     }
@@ -277,6 +243,43 @@ class ExecCrypt {
         }
         $plainText = preg_replace('/\\x13\\x00*$/', '', $plainText);
         return $plainText;
+    }
+
+    /**
+     * Création d'une clé générée aléatoirement.
+     *
+     * @param int $size
+     * @param bool $letter
+     * @param bool $number
+     * @param bool $caseSensitive
+     * @return string
+     */
+    private static function &makeNewKey(int $size = 32, bool $letter = true, bool $number = true, bool $caseSensitive = true): string {
+        $randKey = "";
+        $string = "";
+        $letters = "abcdefghijklmnopqrstuvwxyz";
+        $numbers = "0123456789";
+
+        if ($letter && $number) {
+            $string = $letters . $numbers;
+        } else if ($letter) {
+            $string = $letters;
+        } else {
+            $string = $numbers;
+        }
+
+        // Initialisation
+        srand(time());
+
+        for ($i = 0; $i < $size; $i++) {
+            $key = substr($string, (rand() % (strlen($string))), 1);
+
+            if ($caseSensitive) {
+                $key = (rand(0, 1) == 1) ? strtoupper($key) : strtolower($key);
+            }
+            $randKey .= $key;
+        }
+        return $randKey;
     }
 
     /**
