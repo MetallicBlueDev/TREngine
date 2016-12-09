@@ -99,7 +99,7 @@ class CoreHtml {
         }
 
         // Composition du nom du cookie de test
-        $this->cookieTestName = ExecCrypt::cryptByMd5TrEngine(
+        $this->cookieTestName = ExecCrypt::cryptByStandard(
         $prefix . "_" . $this->cookieTestName, self::getSalt()
         );
 

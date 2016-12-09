@@ -20,65 +20,53 @@ class ExecCrypt {
      * @param int $size
      * @return string
      */
-    public static function &makeIdentifier(int $size = 32) {
+    public static function &makeIdentifier(int $size = 32): string {
         $key = self::makeNewKey($size, true, true, true);
         return $key;
     }
 
     /**
-     * Création d'un identifiant unique avec des chiffres.
+     * Création d'un identifiant unique avec que des chiffres.
      *
      * @param int $size
      * @return string
      */
-    public static function &makeNumericIdentifier($size = 32) {
+    public static function &makeNumericIdentifier(int $size = 32): string {
         $key = self::makeNewKey($size, false, true, false);
         return $key;
     }
 
     /**
-     * Création d'un identifiant unique avec des lettres.
+     * Création d'un identifiant unique avec que des lettres en minuscule.
      *
      * @param int $size
      * @return string
      */
-    public static function &makeLetterIdentifier($size = 32) {
+    public static function &makeLetterIdentifier(int $size = 32): string {
         $key = self::makeNewKey($size, true, false, false);
         return $key;
     }
 
     /**
-     * Création d'un identifiant unique avec des lettres sensible à la case.
+     * Création d'un identifiant unique avec des lettres en majuscule et en minuscule
      *
      * @param int $size
      * @return string
      */
-    public static function &makeLetterCaseSensitiveIdentifier($size = 32) {
+    public static function &makeLetterCaseSensitiveIdentifier(int $size = 32): string {
         $key = self::makeNewKey($size, true, false, true);
         return $key;
     }
 
     /**
-     * Cryptage MD5 classique sans salt.
-     * Cryptage de faible qualité.
-     *
-     * @param string $data
-     * @return string
-     */
-    public static function &cryptByMd5($data) {
-        $cryptData = md5($data);
-        return $cryptData;
-    }
-
-    /**
-     * Cryptage MD5 via la fonction crypt() avec salt.
-     * Cryptage qui nécessite l'activation d'une clé serveur.
+     * Cryptage MD5 via la fonction crypt() avec clé additionnelle.
+     * Cryptage qui nécessite l'activation d'une clé coté serveur.
      *
      * @param string $data
      * @param string $salt
      * @return string
      */
-    public static function &cryptByMd5Alternative($data, $salt = "") {
+    public static function &cryptBySmd5(string $data, string $salt = ""): string {
         $cryptData = "";
 
         if (defined("CRYPT_MD5") && CRYPT_MD5) {
@@ -92,20 +80,21 @@ class ExecCrypt {
             if (CoreLoader::isCallable("CoreLogger")) {
                 CoreLogger::addException("Unsupported crypt method: CRYPT_MD5");
             }
-            $cryptData = self::cryptByMd5($data);
+            $cryptData = self::cryptByMd5Unsafe($data);
         }
         return $cryptData;
     }
 
     /**
-     * Cryptage MD5 amélioré spécialement pour le moteur.
+     * Cryptage standard du moteur.
      * Cryptage équilibré (suffisant pour la plus part du temps).
+     * MD5 amélioré spécialement pour le moteur.
      *
      * @param string $data
      * @param string $salt
      * @return string
      */
-    public static function &cryptByMd5TrEngine($data, $salt = "") {
+    public static function &cryptByStandard(string $data, string $salt = ""): string {
         if (empty($salt)) {
             $salt = self::makeIdentifier(8);
         }
@@ -116,14 +105,14 @@ class ExecCrypt {
     }
 
     /**
-     * Cryptage standard DES.
-     * Cryptage moyen qui nécessite l'activation d'une clé serveur.
+     * Cryptage DES.
+     * Cryptage qualité moyenne qui nécessite l'activation d'une clé coté serveur.
      *
      * @param string $data
      * @param string $salt
      * @return string
      */
-    public static function &cryptByDes($data, $salt = "") {
+    public static function &cryptByDes(string $data, string $salt = ""): string {
         $cryptData = "";
 
         if (defined("CRYPT_STD_DES") && CRYPT_STD_DES) {
@@ -137,19 +126,19 @@ class ExecCrypt {
             if (CoreLoader::isCallable("CoreLogger")) {
                 CoreLogger::addException("Unsupported crypt method: CRYPT_STD_DES");
             }
-            $cryptData = self::cryptData($data);
+            $cryptData = self::cryptBySmd5($data, $salt);
         }
         return $cryptData;
     }
 
     /**
      * Cryptage SHA1.
-     * Cryptage de moyen et sans salt.
+     * Cryptage de qualité moyenne et sans clé additionnelle.
      *
      * @param string $data
      * @return string
      */
-    public static function &cryptBySha1($data) {
+    public static function &cryptBySha1(string $data): string {
         $cryptData = sha1($data);
         return $cryptData;
     }
@@ -162,7 +151,7 @@ class ExecCrypt {
      * @param string $salt
      * @return string
      */
-    public static function &cryptBySsha($data, $salt = "") {
+    public static function &cryptBySsha(string $data, string $salt = ""): string {
         if (empty($salt)) {
             $salt = self::makeIdentifier(4);
         }
@@ -173,14 +162,15 @@ class ExecCrypt {
     }
 
     /**
-     * Cryptage my411.
-     * Cryptage de bonne qualité mais lent et sans salt.
+     * Cryptage en chaîne binaire SHA1.
+     * Cryptage de bonne qualité mais lent et sans clé additionnelle.
      *
      * @param string $data
      * @param string $salt
      * @return string
      */
-    public static function &cryptByMy411($data) {
+    public static function &cryptByBinarySha1(string $data): string {
+        // Chaîne hexadécimale H, bit de poids fort en premier
         $cryptData = "*" . sha1(pack("H*", sha1($data)));
         return $cryptData;
     }
@@ -195,7 +185,7 @@ class ExecCrypt {
      * @param int $ivLen
      * @return string
      */
-    public static function &md5Encrypt($plainText, $password, $ivLen = 16) {
+    public static function &md5Encrypt(string $plainText, string $password, int $ivLen = 16): string {
         $plainText .= "\x13";
         $n = strlen($plainText);
 
@@ -227,7 +217,7 @@ class ExecCrypt {
      * @param int $ivLen
      * @return string
      */
-    public static function &md5Decrypt($encText, $password, $ivLen = 16) {
+    public static function &md5Decrypt(string $encText, string $password, int $ivLen = 16): string {
         $encText = base64_decode($encText);
         $n = strlen($encText);
 
@@ -248,7 +238,7 @@ class ExecCrypt {
     /**
      * Création d'une clé générée aléatoirement.
      *
-     * @param int $size
+     * @param int $size taille de la clé
      * @param bool $letter
      * @param bool $number
      * @param bool $caseSensitive
@@ -280,6 +270,18 @@ class ExecCrypt {
             $randKey .= $key;
         }
         return $randKey;
+    }
+
+    /**
+     * Cryptage MD5 classique sans clé additionnelle.
+     * Cryptage de faible qualité.
+     *
+     * @param string $data
+     * @return string
+     */
+    private static function &cryptByMd5Unsafe(string $data): string {
+        $cryptData = md5($data);
+        return $cryptData;
     }
 
     /**
