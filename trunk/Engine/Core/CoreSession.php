@@ -441,7 +441,7 @@ class CoreSession {
 
     /**
      * Vérification du banissement de l'IP.
-     *
+     * TODO A REVOIR EN IPv6
      * @param string $userIp
      * @param array $value
      */
