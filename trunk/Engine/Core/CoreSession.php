@@ -316,6 +316,9 @@ class CoreSession {
     public function checkBanishment() {
         $this->cleanOldBanishment();
 
+        // Bannissement par cookie
+        $this->userIpBan = self::getCookie($this->getBanishmentCookieName());
+
         if ($this->bannedSession()) {
             $this->updateBanishment();
         } else {
@@ -405,7 +408,11 @@ class CoreSession {
                     "ban_id = '" . $banId . "'")
                 );
 
+                // Durée de connexion automatique via cookie
+                $cookieTimeLimit = $this->timer + $this->sessionTimeLimit;
+
                 $this->userIpBan = $userIp;
+                ExecCookie::createCookie($this->getBanishmentCookieName(), ExecCrypt::md5Encrypt($userIp, self::getSalt()), $cookieTimeLimit);
             } else {
                 // Suppression du bannissement
                 $this->userIpBan = "";
@@ -430,54 +437,33 @@ class CoreSession {
         );
 
         foreach ($coreSql->fetchArray() as $value) {
-            $this->searchBanishmentIp($userIp, $value);
+            $this->searchBanishmentUser($userIp, $value);
 
             // La vérification a déjà aboutie, on arrête
             if ($this->bannedSession()) {
+                $this->updateBanishment();
                 break;
             }
         }
     }
 
     /**
-     * Vérification du banissement de l'IP.
-     * TODO A REVOIR EN IPv6
+     * Vérification du banissement de l'utilisateur.
+     *
      * @param string $userIp
      * @param array $value
      */
-    private function searchBanishmentIp(string $userIp, array $value) {
-        $banIp = !empty($value['ip']) ? explode(".", $value['ip']) : array();
-        $banIpCounter = count($banIp);
-        $searchIp = "";
+    private function searchBanishmentUser(string $userIp, array $value) {
+        $banned = false;
 
-        // Filtre pour la vérification
-        if ($banIpCounter >= 4) {
-            $banList = $value['ip'];
-            $searchIp = $userIp;
-        } else {
-            for ($index = 0; $index < $banIpCounter; $index++) {
-                $banList .= $banIp[$index];
-            }
-
-            $uIp = explode(".", $userIp);
-            $userIpCounter = count($uIp);
-            $userIpCounter = $userIpCounter < $banIpCounter ? $userIpCounter : $banIpCounter;
-
-            for ($index = 0; $index < $userIpCounter; $index++) {
-                $searchIp .= $uIp[$index];
-            }
-        }
-
-        // Vérification du client
-        if (!empty($searchIp) && $searchIp === $banList) {
-            // IP bannis !
-            $this->userIpBan = $value['ip'];
+        if (!empty($userIp) && $userIp == $value['ip']) {
+            // Bannissement par IP
+            $banned = true;
         } else if ($this->userInfos !== null && $this->userInfos->getName() === $value['name']) {
-            // Pseudo bannis !
-            $this->userIpBan = $value['ip'];
-        } else {
-            $this->userIpBan = "";
+            // Bannissement par pseudo
+            $banned = true;
         }
+        $this->userIpBan = $banned ? $userIp : "";
     }
 
     /**
@@ -499,7 +485,6 @@ class CoreSession {
         if (!$this->userLogged()) {
             $userId = self::getCookie($this->getUserCookieName());
             $sessionId = self::getCookie($this->getSessionCookieName());
-            $this->userIpBan = self::getCookie($this->getBanishmentCookieName());
 
             // Vérifie si une session est ouverte
             if ((!empty($userId) && !empty($sessionId))) {
