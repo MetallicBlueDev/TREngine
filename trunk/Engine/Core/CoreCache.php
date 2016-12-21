@@ -3,7 +3,7 @@
 namespace TREngine\Engine\Core;
 
 use TREngine\Engine\Cache\CacheModel;
-use TREngine\Engine\Exec\ExecEntities;
+use TREngine\Engine\Exec\ExecString;
 use Exception;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
@@ -718,7 +718,7 @@ class CoreCache extends CacheModel {
      * @return string
      */
     private function &serializeVariable(string $key, string $value): string {
-        $content = "$" . $this->getVariableName($key) . " = \"" . ExecEntities::addSlashes($value) . "\"; ";
+        $content = "$" . $this->getVariableName($key) . " = \"" . ExecString::addSlashes($value) . "\"; ";
         return $content;
     }
 

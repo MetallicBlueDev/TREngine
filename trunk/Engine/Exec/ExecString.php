@@ -12,7 +12,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  *
  * @author Sébastien Villemain
  */
-class ExecEntities {
+class ExecString {
 
     /**
      * Transforme une chaine non-encodée, et la convertit en entitiées unicode &#xxx;

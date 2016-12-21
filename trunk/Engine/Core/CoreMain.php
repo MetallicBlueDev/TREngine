@@ -7,7 +7,7 @@ use TREngine\Engine\Lib\LibModule;
 use TREngine\Engine\Lib\LibMakeStyle;
 use TREngine\Engine\Exec\ExecMailer;
 use TREngine\Engine\Exec\ExecTimeMarker;
-use TREngine\Engine\Exec\ExecEntities;
+use TREngine\Engine\Exec\ExecString;
 use Closure;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
@@ -105,7 +105,7 @@ class CoreMain {
             if (is_array($value)) {
                 $this->configs[$key] = $value;
             } else {
-                $this->configs[$key] = ExecEntities::stripSlashes($value);
+                $this->configs[$key] = ExecString::stripSlashes($value);
             }
         }
     }
@@ -751,7 +751,7 @@ class CoreMain {
             foreach ($coreSql->fetchArray() as $row) {
                 $content .= $coreCache->serializeData(array(
                     $row['name'] => $row['value']));
-                $newConfig[$row['name']] = ExecEntities::stripSlashes($row['value']);
+                $newConfig[$row['name']] = ExecString::stripSlashes($row['value']);
             }
 
             // Mise en cache

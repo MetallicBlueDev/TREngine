@@ -8,7 +8,7 @@ use TREngine\Engine\Core\CoreAccess;
 use TREngine\Engine\Core\CoreRequest;
 use TREngine\Engine\Core\CoreSql;
 use TREngine\Engine\Core\CoreCache;
-use TREngine\Engine\Exec\ExecEntities;
+use TREngine\Engine\Exec\ExecString;
 use TREngine\Engine\Exec\ExecUtils;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
@@ -135,7 +135,7 @@ class LibMenu {
 
         if (preg_match("/(.+)" . self::OPTIONS_TAG . "(.*?)" . self::OPTIONS_TAG . "/", $line, $matches)) {
             // Conversion du texte
-            $text = ExecEntities::textDisplay($matches[1]);
+            $text = ExecString::textDisplay($matches[1]);
 
             $bold = false;
             $italic = false;
@@ -201,7 +201,7 @@ class LibMenu {
         } else {
             // Aucun style appliquer
             // Conversion du texte
-            $output = ExecEntities::textDisplay($line);
+            $output = ExecString::textDisplay($line);
         }
         return $output;
     }

@@ -4,7 +4,7 @@ namespace TREngine\Engine\Lib;
 
 use TREngine\Engine\Core\CoreRequest;
 use TREngine\Engine\Core\CoreHtml;
-use TREngine\Engine\Exec\ExecEntities;
+use TREngine\Engine\Exec\ExecString;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -80,7 +80,7 @@ class LibTabs {
         . "<input type=\"radio\" name=\"" . $this->getTabsName() . "\" id=\"" . $tabId . "\""
         . ($tabSelected ? " checked" : "") . ">"
         . "<label for=\"" . $tabId . "\">"
-        . ExecEntities::textDisplay($title)
+        . ExecString::textDisplay($title)
         . "</label>"
         . "</li>";
 

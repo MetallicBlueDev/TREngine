@@ -4,7 +4,7 @@ namespace TREngine\Engine\Core;
 
 use TREngine\Engine\Lib\LibMakeStyle;
 use TREngine\Engine\Lib\LibModule;
-use TREngine\Engine\Exec\ExecEntities;
+use TREngine\Engine\Exec\ExecString;
 use TREngine\Engine\Exec\ExecCookie;
 use TREngine\Engine\Exec\ExecCrypt;
 
@@ -255,7 +255,7 @@ class CoreHtml {
                 $title .= " - " . $this->title;
             }
         }
-        return ExecEntities::textDisplay($title);
+        return ExecString::textDisplay($title);
     }
 
     /**
@@ -490,8 +490,8 @@ class CoreHtml {
         // 500 caractères maximum
         $keywords = (strlen($keywords) > 500) ? substr($keywords, 0, 500) : $keywords;
 
-        return "<meta name=\"description\" content=\"" . ExecEntities::textDisplay($this->description) . "\" />\n"
-        . "<meta name=\"keywords\" content=\"" . ExecEntities::textDisplay($keywords) . "\" />\n";
+        return "<meta name=\"description\" content=\"" . ExecString::textDisplay($this->description) . "\" />\n"
+        . "<meta name=\"keywords\" content=\"" . ExecString::textDisplay($keywords) . "\" />\n";
     }
 
     /**

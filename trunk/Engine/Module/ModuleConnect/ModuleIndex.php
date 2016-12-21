@@ -15,7 +15,7 @@ use TREngine\Engine\Lib\LibMakeStyle;
 use TREngine\Engine\Lib\LibTabs;
 use TREngine\Engine\Lib\LibForm;
 use TREngine\Engine\Exec\ExecUrl;
-use TREngine\Engine\Exec\ExecEntities;
+use TREngine\Engine\Exec\ExecString;
 use TREngine\Engine\Exec\ExecMailer;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
@@ -163,7 +163,7 @@ class ModuleIndex extends ModuleModel {
                 $validName = true;
 
                 if ($userInfos->getName() != $name) {
-                    $name = ExecEntities::secureText($name);
+                    $name = ExecString::secureText($name);
 
                     CoreSql::getInstance()->select(
                     CoreTable::USERS_TABLE, array(

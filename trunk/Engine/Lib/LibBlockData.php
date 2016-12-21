@@ -5,7 +5,7 @@ namespace TREngine\Engine\Lib;
 use TREngine\Engine\Core\CoreLoader;
 use TREngine\Engine\Core\CoreAccess;
 use TREngine\Engine\Core\CoreAccessType;
-use TREngine\Engine\Exec\ExecEntities;
+use TREngine\Engine\Exec\ExecString;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -38,7 +38,7 @@ class LibBlockData extends LibEntityData {
 
         $this->newStorage($data);
         $this->updateDataValue("mods", explode("|", $this->getStringValue("mods")));
-        $this->updateDataValue("title", ExecEntities::textDisplay($this->getStringValue("title")));
+        $this->updateDataValue("title", ExecString::textDisplay($this->getStringValue("title")));
 
         // Affecte la position du block en lettre.
         $this->sideName = LibBlock::getSideAsLetters($this->getSide());

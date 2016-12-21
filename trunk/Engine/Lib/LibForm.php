@@ -3,7 +3,7 @@
 namespace TREngine\Engine\Lib;
 
 use TREngine\Engine\Core\CoreCache;
-use TREngine\Engine\Exec\ExecEntities;
+use TREngine\Engine\Exec\ExecString;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -269,7 +269,7 @@ class LibForm {
         $this->addCacheVar($options);
         $options = $this->getLastCacheVar();
 
-        $defaultValue = ExecEntities::stripSlashes($defaultValue);
+        $defaultValue = ExecString::stripSlashes($defaultValue);
         $this->addCacheVar($defaultValue);
         $defaultValue = $this->getLastCacheVar();
 
@@ -327,7 +327,7 @@ class LibForm {
             $options = "selected=\"selected\"" . ((!empty($options)) ? " " . $options : "");
         }
 
-        $description = ((!empty($description)) ? ExecEntities::textDisplay($description) : $value);
+        $description = ((!empty($description)) ? ExecString::textDisplay($description) : $value);
 
         $this->addCacheVar($value);
         $value = $this->getLastCacheVar();
@@ -443,7 +443,7 @@ class LibForm {
      */
     private function &getLabel($name, $description) {
         $id = $this->getId($name, "input");
-        $description = ExecEntities::textDisplay($description);
+        $description = ExecString::textDisplay($description);
         $this->addCacheVar($description);
 
         $rslt = "";
@@ -461,7 +461,7 @@ class LibForm {
      * @return string
      */
     private function &getTitle($title) {
-        $title = ExecEntities::textDisplay($title);
+        $title = ExecString::textDisplay($title);
         $this->addCacheVar($title);
 
         $rslt = "";
@@ -480,7 +480,7 @@ class LibForm {
      */
     private function &getDescription($description) {
         $id = $this->getId("description");
-        $description = ExecEntities::textDisplay($description);
+        $description = ExecString::textDisplay($description);
         $this->addCacheVar($description);
 
         $rslt = "";

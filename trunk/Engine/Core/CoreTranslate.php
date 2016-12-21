@@ -2,7 +2,7 @@
 
 namespace TREngine\Engine\Core;
 
-use TREngine\Engine\Exec\ExecEntities;
+use TREngine\Engine\Exec\ExecString;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -505,7 +505,7 @@ class CoreTranslate {
      * @return string
      */
     private static function &entitiesTranslate(string $text): string {
-        $text = ExecEntities::entitiesUtf8($text);
+        $text = ExecString::entitiesUtf8($text);
         //$text = ExecEntities::addSlashes($text);
         return $text;
     }

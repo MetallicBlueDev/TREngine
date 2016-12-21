@@ -4,7 +4,7 @@ namespace TREngine\Engine\Core;
 
 use Exception;
 use TREngine\Engine\Lib\LibMakeStyle;
-use TREngine\Engine\Exec\ExecEntities;
+use TREngine\Engine\Exec\ExecString;
 use TREngine\Engine\Fail\FailBase;
 use TREngine\Engine\Fail\FailEngine;
 
@@ -142,7 +142,7 @@ class CoreSecure {
         $errorMessageTitle = "ERROR_DEBUG_" . strtoupper($customMessage);
 
         if (defined($errorMessageTitle)) {
-            $errorMessageTitle = ExecEntities::entitiesUtf8(constant($errorMessageTitle));
+            $errorMessageTitle = ExecString::entitiesUtf8(constant($errorMessageTitle));
         } else {
             $errorMessageTitle = "Stop loading";
 
