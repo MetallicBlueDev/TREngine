@@ -20,7 +20,7 @@ class ExecUtils {
      * @param bool $strict
      * @return bool
      */
-    public static function inArray($needle, array $haystack, $strict = false): bool {
+    public static function inArray(string $needle, array $haystack, bool $strict = false): bool {
         $rslt = false;
 
         foreach ($haystack as $value) {
@@ -42,7 +42,7 @@ class ExecUtils {
      * @param bool $strict
      * @return bool
      */
-    public static function inMultiArray($needle, array $haystack, $strict = false): bool {
+    public static function inMultiArray(string $needle, array $haystack, bool $strict = false): bool {
         $rslt = false;
 
         foreach ($haystack as $value) {

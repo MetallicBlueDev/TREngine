@@ -23,7 +23,7 @@ class ExecFileBuilder {
      * @param string $cookiePrefix
      * @param string $cryptKey
      */
-    public static function buildConfigFile($mail, $statut, $sessionTimeLimit, $cookiePrefix, $cryptKey) {
+    public static function buildConfigFile(string $mail, string $statut, int $sessionTimeLimit, string $cookiePrefix, string $cryptKey) {
         if (empty($mail) && defined("TR_ENGINE_MAIL")) {
             $mail = TR_ENGINE_MAIL;
         }
@@ -73,12 +73,12 @@ class ExecFileBuilder {
      *
      * @param string $type
      * @param string $host
-     * @param $port int
+     * @param int $port
      * @param string $user
      * @param string $pass
      * @param string $root
      */
-    public static function buildCacheFile($type, $host, $port, $user, $pass, $root) {
+    public static function buildCacheFile(string $type, string $host, int $port, string $user, string $pass, string $root) {
         $coreCache = CoreCache::getInstance(CoreCache::SECTION_CONFIGS);
 
         if (empty($type) || !ExecUtils::inArray($type, CoreCache::getCacheList())) {
@@ -134,7 +134,7 @@ class ExecFileBuilder {
      * @param string $name
      * @param string $prefix
      */
-    public static function buildDatabaseFile($type, $host, $user, $pass, $name, $prefix) {
+    public static function buildDatabaseFile(string $type, string $host, string $user, string $pass, string $name, string $prefix) {
         if (empty($type) || !ExecUtils::inArray($type, CoreSql::getBaseList())) {
             $type = CoreSql::getInstance()->getTransactionType();
         }

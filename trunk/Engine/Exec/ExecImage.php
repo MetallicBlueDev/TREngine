@@ -32,7 +32,7 @@ class ExecImage {
      * @param int $heightDefault
      * @return string
      */
-    public static function &getTag($url, $widthDefault = 350, $heightDefault = -1) {
+    public static function &getTag(string $url, int $widthDefault = 350, int $heightDefault = -1): string {
         $img = "";
 
         $infos = self::getInfos($url);
@@ -72,7 +72,7 @@ class ExecImage {
      * @param string $url
      * @return array
      */
-    public static function getInfos($url) {
+    public static function getInfos(string $url): array {
         $type = array();
 
         if (is_file($url)) {

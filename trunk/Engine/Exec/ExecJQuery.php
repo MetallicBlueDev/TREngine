@@ -13,7 +13,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
  */
 class ExecJQuery {
 
-    public static function checkTreeView($identifier) {
+    public static function checkTreeView(string $identifier) {
         $coreHtml = CoreHtml::getInstance();
         $coreHtml->addCssResourceFile("jquery.treeview.css");
         $coreHtml->addJavascriptFile("jquery.treeview.js");

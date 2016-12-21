@@ -7,7 +7,7 @@ use TREngine\Engine\Core\CoreRequest;
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
- * Outil d'analyse des informations contenu dans le User agent.
+ * Outil d'analyse des informations contenu dans le User-Agent.
  *
  * @author Sébastien Villemain
  */
@@ -273,7 +273,7 @@ class ExecUserAgent {
      *
      * @return string
      */
-    public static function &getAddressIp() {
+    public static function &getAddressIp(): string {
         $currentIp = CoreRequest::getString("HTTP_CLIENT_IP", "", "SERVER");
 
         if (empty($currentIp)) {
@@ -292,7 +292,7 @@ class ExecUserAgent {
      * @param string $currentIp
      * @return string
      */
-    public static function &getHost(&$currentIp) {
+    public static function &getHost(string &$currentIp): string {
         $currentHost = "";
 
         if (!empty($currentIp)) {
@@ -324,7 +324,7 @@ class ExecUserAgent {
      *
      * @return string
      */
-    public static function &getRawUserAgent() {
+    public static function &getRawUserAgent(): string {
         $currentUserAgent = CoreRequest::getString("HTTP_USER_AGENT", "", "SERVER");
         return $currentUserAgent;
     }
@@ -335,7 +335,7 @@ class ExecUserAgent {
      * @param string $currentUserAgent
      * @return array
      */
-    public static function &getOsData(&$currentUserAgent) {
+    public static function &getOsData(string &$currentUserAgent): array {
         $currentOs = array(
             "category" => "",
             "name" => "Unknown Os");
@@ -360,7 +360,7 @@ class ExecUserAgent {
      * @param string $currentUserAgent
      * @return array
      */
-    public static function &getBrowserData(&$currentUserAgent) {
+    public static function &getBrowserData(string &$currentUserAgent): array {
         $currentBrowser = array(
             "category" => "",
             "name" => "Unknown Browser",
@@ -385,7 +385,7 @@ class ExecUserAgent {
      *
      * @return string
      */
-    public static function &getReferer() {
+    public static function &getReferer(): string {
         $currentReferer = htmlentities(CoreRequest::getString("HTTP_REFERER", "", "SERVER"), ENT_QUOTES);
         return $currentReferer;
     }

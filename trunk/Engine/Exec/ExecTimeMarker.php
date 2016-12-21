@@ -30,7 +30,7 @@ class ExecTimeMarker {
      *
      * @param string $name Nom de la mesure.
      */
-    public static function startMeasurement($name) {
+    public static function startMeasurement(string $name) {
         self::$startTime[$name] = self::getMaker();
     }
 
@@ -39,7 +39,7 @@ class ExecTimeMarker {
      *
      * @param string $name Nom de la mesure.
      */
-    public static function stopMeasurement($name) {
+    public static function stopMeasurement(string $name) {
         self::$finishTime[$name] = self::getMaker();
     }
 
@@ -55,9 +55,9 @@ class ExecTimeMarker {
     /**
      * Retourne la durée mesurée en milliseconde.
      *
-     * @return int le temps de génération en milliseconde.
+     * @return float le temps de génération en milliseconde.
      */
-    public static function &getMeasurement($name): float {
+    public static function &getMeasurement(string $name): float {
         $rslt = 0;
 
         if (isset(self::$startTime[$name])) {

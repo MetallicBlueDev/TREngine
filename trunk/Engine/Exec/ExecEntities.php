@@ -21,7 +21,7 @@ class ExecEntities {
      * @param string $source : la chaine
      * @return string $encodedString : chaine et ses entitées
      */
-    public static function &entitiesUtf8($source) {
+    public static function &entitiesUtf8(string $source): string {
         // Remplace les entités numériques
 //        $source = preg_replace_callback(
 //        '~&#x([0-9a-f]+);~i', function($m) {
@@ -119,7 +119,7 @@ class ExecEntities {
      * @param $text string
      * @return string
      */
-    public static function &addSlashes($text) {
+    public static function &addSlashes(string $text): string {
         $text = addslashes($text);
         return $text;
     }
@@ -130,7 +130,7 @@ class ExecEntities {
      * @param string $text
      * @return string
      */
-    public static function &stripSlashes($text) {
+    public static function &stripSlashes(string $text): string {
         $text = stripslashes($text);
         return $text;
     }
@@ -141,7 +141,7 @@ class ExecEntities {
      * @param string $text
      * @return string
      */
-    public static function &textDisplay($text) {
+    public static function &textDisplay(string $text): string {
         $text = self::entitiesUtf8($text);
         //$text = self::stripSlashes($text);
         if (CoreLoader::isCallable("CoreTextEditor")) {
@@ -158,7 +158,7 @@ class ExecEntities {
      * @param string $text
      * @return string
      */
-    public static function &secureText($text) {
+    public static function &secureText(string $text): string {
         $secure = array(
             "content-disposition:" => "&#99;&#111;&#110;&#116;&#101;&#110;&#116;&#45;&#100;&#105;&#115;&#112;&#111;&#115;&#105;&#116;&#105;&#111;&#110;&#58;",
             "content-type:" => "&#99;&#111;&#110;&#116;&#101;&#110;&#116;&#45;&#116;&#121;&#112;&#101;&#58;",
