@@ -96,16 +96,7 @@ class CoreAccess {
 
             if ($userInfos->getRank() >= $accessType->getRank()) {
                 if ($accessType->getRank() === self::RANK_SPECIFIC_RIGHT || $forceSpecificRank) {
-                    foreach ($userInfos->getRights() as $userAccessType) {
-                        if (!$userAccessType->valid()) {
-                            continue;
-                        }
-
-                        if ($accessType->isAssignableFrom($userAccessType)) {
-                            $rslt = true;
-                            break;
-                        }
-                    }
+                    $rslt = self::autorizeSpecific($accessType, $userInfos);
                 } else {
                     $rslt = true;
                 }
@@ -151,6 +142,29 @@ class CoreAccess {
                 "letters" => self::getRankAsLitteral($rank));
         }
         return $rankList;
+    }
+
+    /**
+     * Autorise ou refuse l'accès à la ressource cible.
+     *
+     * @param CoreAccessType $accessType
+     * @param CoreSessionData $userInfos
+     * @return bool
+     */
+    private static function &autorizeSpecific(CoreAccessType &$accessType, CoreSessionData $userInfos): bool {
+        $rslt = false;
+
+        foreach ($userInfos->getRights() as $userAccessType) {
+            if (!$userAccessType->valid()) {
+                continue;
+            }
+
+            if ($accessType->isAssignableFrom($userAccessType)) {
+                $rslt = true;
+                break;
+            }
+        }
+        return $rslt;
     }
 
 }
