@@ -115,8 +115,8 @@ class CacheSocket extends CacheModel {
 
         // Envoi de l'identifiant
         if ($this->sendCommandAndCheckResponse("USER " . $this->getTransactionUser(), array(
-            331,
-            503))) {
+                    331,
+                    503))) {
             if ($this->lastResponseCode === 503) {
                 // Oops, déjà identifié
                 $rslt = true;
@@ -198,7 +198,7 @@ class CacheSocket extends CacheModel {
 
         // On supprime les mauvaises clés
         $dirListKeys = array_merge(
-        array_keys($dirList, ".."), array_keys($dirList, "."), array_keys($dirList, "index.html"), array_keys($dirList, "index.htm"), array_keys($dirList, "index.php"), array_keys($dirList, ".htaccess"), array_keys($dirList, ".svn"), array_keys($dirList, "checker.txt")
+                array_keys($dirList, ".."), array_keys($dirList, "."), array_keys($dirList, "index.html"), array_keys($dirList, "index.htm"), array_keys($dirList, "index.php"), array_keys($dirList, ".htaccess"), array_keys($dirList, ".svn"), array_keys($dirList, "checker.txt")
         );
 
         if (is_array($dirListKeys)) {
@@ -223,7 +223,7 @@ class CacheSocket extends CacheModel {
 
         if ($this->netConnected()) {
             if (!$this->sendCommandAndCheckResponse("MDTM " . $this->getRootPath($path), array(
-                250))) {
+                        250))) {
                 CoreLogger::addException("Bad response for MDTM command. Path : " . $path);
             }
 
@@ -250,8 +250,8 @@ class CacheSocket extends CacheModel {
 
             // Envoi de la requete
             if ($this->sendCommandAndCheckResponse("NLST" . $path, array(
-                150,
-                125))) {
+                        150,
+                        125))) {
                 // On évite la boucle infinie
                 if ($this->passiveData !== false) {
                     while (!feof($this->passiveData)) {
@@ -264,7 +264,7 @@ class CacheSocket extends CacheModel {
 
             // Verification du résultat
             if ($this->receiveResponseCode(array(
-                226))) {
+                        226))) {
                 $dirList = preg_split("/[" . TR_ENGINE_CRLF . "]+/", $dirListString, -1, PREG_SPLIT_NO_EMPTY);
                 $dirList = preg_replace('#^' . preg_quote(substr($path, 1), '#') . '[/\\\\]?#', '', $dirList);
             }
@@ -324,6 +324,7 @@ class CacheSocket extends CacheModel {
 
         // Réponse du serveur
         $response = "";
+        $parts = array();
 
         do {
             $response .= fgets($this->connId, 4096);
@@ -408,8 +409,8 @@ class CacheSocket extends CacheModel {
      */
     private function chmod(string $path, int $mode) {
         if ($this->sendCommandAndCheckResponse("SITE CHMOD " . $mode . " " . $path, array(
-            200,
-            250))) {
+                    200,
+                    250))) {
             CoreLogger::addException("Bad response for SITE CHMOD command. Path : " . $path);
         }
     }
@@ -456,7 +457,7 @@ class CacheSocket extends CacheModel {
 
                 // Verification
                 if (!$this->receiveResponseCode(array(
-                    226))) {
+                            226))) {
                     CoreLogger::addException("Bad response for STOR|APPE|fwrite command. Path : " . $path);
                 }
             }
@@ -464,7 +465,7 @@ class CacheSocket extends CacheModel {
     }
 
     /**
-     * Création d'un dossier sur le serveur .
+     * Création récursive des dossiers sur le serveur.
      *
      * @param string $path : chemin valide à créer
      */
@@ -493,13 +494,7 @@ class CacheSocket extends CacheModel {
                 if (!is_dir($currentPath)) {
                     // Création du dossier
                     if ($this->netConnected()) {
-                        if (!$this->sendCommandAndCheckResponse("MKD " . $path, array(
-                            257))) {
-                            CoreLogger::addException("Bad response for MKD command. Path : " . $path);
-                        }
-
-                        // Ajuste les droits CHMOD
-                        $this->chmod($path, $this->chmod);
+                        $this->makeDirectory($path);
                     }
 
                     // Des petites fichiers bonus...
@@ -511,6 +506,20 @@ class CacheSocket extends CacheModel {
                 }
             }
         }
+    }
+
+    /**
+     * Création d'un dossier sur le serveur.
+     *
+     * @param string $path
+     */
+    private function makeDirectory(string $path) {
+        if (!$this->sendCommandAndCheckResponse("MKD " . $path, array(257))) {
+            CoreLogger::addException("Bad response for MKD command. Path : " . $path);
+        }
+
+        // Ajuste les droits CHMOD
+        $this->chmod($path, $this->chmod);
     }
 
     /**
@@ -538,14 +547,14 @@ class CacheSocket extends CacheModel {
         if ($deleteFile && $this->netConnected()) {
             // Envoie de la commande de suppression du fichier
             if (!$this->sendCommandAndCheckResponse("DELE " . $this->getRootPath($path), array(
-                250))) {
+                        250))) {
                 CoreLogger::addException("Bad response for DELE command. Path : " . $path);
             }
         }
     }
 
     /**
-     * Suppression d'un dossier sur le serveur.
+     * Suppression récurive des dossiers sur le serveur.
      *
      * @param string $path : chemin valide à supprimer
      * @param int $timeLimit
@@ -557,17 +566,8 @@ class CacheSocket extends CacheModel {
         if (empty($dirList)) {
             foreach ($dirList as $dirPath) {
                 // Vérification avant suppression
-                if ($timeLimit > 0) {
-                    if (is_file($this->getRootPath($path . DIRECTORY_SEPARATOR . $dirPath))) {
-                        // Si le fichier n'est pas périmé, on passe au suivant
-                        if ($timeLimit < $this->getMTime($path . DIRECTORY_SEPARATOR . $dirPath)) {
-                            continue;
-                        }
-                    } else {
-                        // C'est un dossier,
-                        // on ne souhaite pas le supprimer dans ce mode de fonctionnement
-                        continue;
-                    }
+                if (!$this->canRemove($path, $dirPath, $timeLimit)) {
+                    continue;
                 }
 
                 if (is_file($this->getRootPath($path . DIRECTORY_SEPARATOR . $dirPath))) {
@@ -584,10 +584,35 @@ class CacheSocket extends CacheModel {
         if ($timeLimit === 0 && $this->netConnected()) {
             // Envoi de la commande de suppression du fichier
             if ($this->sendCommandAndCheckResponse("RMD " . $this->getRootPath($path), array(
-                250))) {
+                        250))) {
                 CoreLogger::addException("Bad response for RMD command. Path : " . $path);
             }
         }
+    }
+
+    /**
+     * Détermine si le fichier peut être supprimé.
+     *
+     * @param string $path
+     * @param string $dirPath
+     * @param int $timeLimit
+     * @return bool
+     */
+    private function &canRemove(string $path, string $dirPath, int $timeLimit): bool {
+        $rslt = true;
+
+        if ($timeLimit > 0) {
+            if (is_file($this->getRootPath($path . DIRECTORY_SEPARATOR . $dirPath))) {
+                // Si le fichier n'est pas périmé, on passe au suivant
+                if ($timeLimit < $this->getMTime($path . DIRECTORY_SEPARATOR . $dirPath)) {
+                    $rslt = false;
+                }
+            } else {
+                // C'est un dossier, on ne souhaite pas le supprimer dans ce mode de fonctionnement
+                $rslt = false;
+            }
+        }
+        return $rslt;
     }
 
     /**
@@ -599,13 +624,15 @@ class CacheSocket extends CacheModel {
         $rslt = false;
 
         // Envoi de la requête
-        if ($this->sendCommandAndCheckResponse("PASV", array(
-            227))) {
+        if ($this->sendCommandAndCheckResponse("PASV", array(227))) {
+            $matches = array();
+
             // Recherche de l'adresse IP et du port...
             if (preg_match('~\((\d+),\s*(\d+),\s*(\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))\)~', $this->lastResponseCode, $matches)) {
                 // Fabuleux, c'est trouvé!
                 $this->passiveIp = $matches[1] . "." . $matches[2] . "." . $matches[3] . "." . $matches[4];
                 $this->passivePort = $matches[5] * 256 + $matches[6];
+                $socket_error_number = $socket_error_message = -1;
 
                 // Tentative de connexion
                 $this->passiveData = fsockopen($this->passiveIp, $this->passivePort, $socket_error_number, $socket_error_message, $this->timeOut);
@@ -616,7 +643,7 @@ class CacheSocket extends CacheModel {
                     $rslt = true;
                 } else {
                     CoreLogger::addException("Could not connect to host " . $this->passiveIp . " on port " . $this->passivePort
-                    . ". Socket error number " . $socket_error_number . " and error message: " . $socket_error_message);
+                            . ". Socket error number " . $socket_error_number . " and error message: " . $socket_error_message);
                 }
             }
         }

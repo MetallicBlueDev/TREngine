@@ -115,15 +115,11 @@ class BaseMysqli extends BaseModel {
         if ($rslt !== null) {
             $nbRows = $rslt->num_rows;
 
-            // Vérification avant de rentrer dans la boucle (optimisation)
             if (empty($className)) {
-                for ($i = 0; $i < $nbRows; $i++) {
-                    $values[] = $rslt->fetch_object();
-                }
-            } else {
-                for ($i = 0; $i < $nbRows; $i++) {
-                    $values[] = $rslt->fetch_object($className);
-                }
+                $className = "stdClass";
+            }
+            for ($i = 0; $i < $nbRows; $i++) {
+                $values[] = $rslt->fetch_object($className);
             }
         }
         return $values;

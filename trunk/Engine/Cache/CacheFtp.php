@@ -153,7 +153,7 @@ class CacheFtp extends CacheModel {
 
         // On supprime les mauvaises clés
         $dirListKeys = array_merge(
-        array_keys($dirList, ".."), array_keys($dirList, "."), array_keys($dirList, "index.html"), array_keys($dirList, "index.htm"), array_keys($dirList, "index.php"), array_keys($dirList, ".htaccess"), array_keys($dirList, ".svn"), array_keys($dirList, "checker.txt")
+                array_keys($dirList, ".."), array_keys($dirList, "."), array_keys($dirList, "index.html"), array_keys($dirList, "index.htm"), array_keys($dirList, "index.php"), array_keys($dirList, ".htaccess"), array_keys($dirList, ".svn"), array_keys($dirList, "checker.txt")
         );
 
         if (is_array($dirListKeys)) {
@@ -181,7 +181,7 @@ class CacheFtp extends CacheModel {
 
             if ($mTime === -1) { // Une erreur est survenue
                 CoreLogger::addException("Bad response for ftp_mdtm command. Path : " . $path
-                . " Turn off the native command.");
+                        . " Turn off the native command.");
             }
         }
         return $mTime;
@@ -293,7 +293,7 @@ class CacheFtp extends CacheModel {
     }
 
     /**
-     * Création d'un dossier sur le serveur FTP.
+     * Création récurvise des dossiers sur le serveur FTP.
      *
      * @param string $path : chemin valide à créer
      */
@@ -322,12 +322,7 @@ class CacheFtp extends CacheModel {
                 if (!is_dir($currentPath)) {
                     // Création du dossier
                     if ($this->netConnected()) {
-                        if (!ftp_mkdir($this->connId, $path)) {
-                            CoreLogger::addException("Bad response for ftp_mkdir command. Path : " . $path);
-                        }
-
-                        // Ajuste les droits CHMOD
-                        $this->chmod($path, $this->chmod);
+                        $this->makeDirectory($path);
                     }
 
                     // Des petites fichiers bonus...
@@ -339,6 +334,20 @@ class CacheFtp extends CacheModel {
                 }
             }
         }
+    }
+
+    /**
+     * Création d'un dossier sur le serveur.
+     *
+     * @param string $path
+     */
+    private function makeDirectory(string $path) {
+        if (!ftp_mkdir($this->connId, $path)) {
+            CoreLogger::addException("Bad response for ftp_mkdir command. Path : " . $path);
+        }
+
+        // Ajuste les droits CHMOD
+        $this->chmod($path, $this->chmod);
     }
 
     /**
@@ -384,17 +393,8 @@ class CacheFtp extends CacheModel {
         if (empty($dirList)) {
             foreach ($dirList as $dirPath) {
                 // Vérification avant suppression
-                if ($timeLimit > 0) {
-                    if (is_file($this->getRootPath($path . DIRECTORY_SEPARATOR . $dirPath))) {
-                        // Si le fichier n'est pas périmé, on passe au suivant
-                        if ($timeLimit < $this->getMTime($path . DIRECTORY_SEPARATOR . $dirPath)) {
-                            continue;
-                        }
-                    } else {
-                        // C'est un dossier,
-                        // on ne souhaite pas le supprimer dans ce mode de fonctionnement
-                        continue;
-                    }
+                if (!$this->canRemove($path, $dirPath, $timeLimit)) {
+                    continue;
                 }
 
                 if (is_file($this->getRootPath($path . DIRECTORY_SEPARATOR . $dirPath))) {
@@ -413,6 +413,31 @@ class CacheFtp extends CacheModel {
                 CoreLogger::addException("Bad response for ftp_rmdir command. Path : " . $path);
             }
         }
+    }
+
+    /**
+     * Détermine si le fichier peut être supprimé.
+     *
+     * @param string $path
+     * @param string $dirPath
+     * @param int $timeLimit
+     * @return bool
+     */
+    private function &canRemove(string $path, string $dirPath, int $timeLimit): bool {
+        $rslt = true;
+
+        if ($timeLimit > 0) {
+            if (is_file($this->getRootPath($path . DIRECTORY_SEPARATOR . $dirPath))) {
+                // Si le fichier n'est pas périmé, on passe au suivant
+                if ($timeLimit < $this->getMTime($path . DIRECTORY_SEPARATOR . $dirPath)) {
+                    $rslt = false;
+                }
+            } else {
+                // C'est un dossier, on ne souhaite pas le supprimer dans ce mode de fonctionnement
+                $rslt = false;
+            }
+        }
+        return $rslt;
     }
 
     /**

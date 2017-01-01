@@ -35,12 +35,14 @@ abstract class CacheModel extends CoreTransaction {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param array $transaction
      * @throws FailCache
      */
     public function initialize(array &$transaction) {
         if (!empty($transaction)) {
+            $matches = array();
+
             if (preg_match("/(ftp:\/\/)(.+)/", $transaction['host'], $matches)) {
                 $transaction['host'] = $matches[2];
             }
@@ -207,12 +209,12 @@ abstract class CacheModel extends CoreTransaction {
 
             // Ecriture de l'entête
             $content = "<?php\n"
-            . "if (!defined(\"TR_ENGINE_INDEX\")){"
-            . "require '" . $dirBase . "Engine" . DIRECTORY_SEPARATOR . "SecurityCheck.php';"
-            . "}"
-            . "// Generated on " . date('Y-m-d H:i:s') . "\n"
-            . $content
-            . "\n?>";
+                    . "if (!defined(\"TR_ENGINE_INDEX\")){"
+                    . "require '" . $dirBase . "Engine" . DIRECTORY_SEPARATOR . "SecurityCheck.php';"
+                    . "}"
+                    . "// Generated on " . date('Y-m-d H:i:s') . "\n"
+                    . $content
+                    . "\n?>";
         }
         return $content;
     }

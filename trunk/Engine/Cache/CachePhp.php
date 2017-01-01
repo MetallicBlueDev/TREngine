@@ -168,7 +168,7 @@ class CachePhp extends CacheModel {
                 @unlink(TR_ENGINE_INDEXDIR . DIRECTORY_SEPARATOR . $pathFile);
 
                 CoreLogger::addException("Bad response for fwrite command. Path : " . $pathFile . ". "
-                . "Server response : " . $nbBytesCmd . " bytes writed, " . $nbBytesFile . " bytes readed");
+                        . "Server response : " . $nbBytesCmd . " bytes writed, " . $nbBytesFile . " bytes readed");
             }
 
             // Libere le verrou
@@ -205,7 +205,7 @@ class CachePhp extends CacheModel {
     }
 
     /**
-     * Ecriture des dossiers, reconstitution des dossiers.
+     * Création récursive des dossiers sur le serveur.
      *
      * @param string $path chemin voulu
      */
@@ -233,14 +233,7 @@ class CachePhp extends CacheModel {
                 $currentPath = ($count === 1) ? $dir : $currentPath . DIRECTORY_SEPARATOR . $dir;
 
                 if (!is_dir($currentPath)) {
-                    // Création du dossier
-                    mkdir($currentPath, $this->chmod);
-                    chmod($currentPath, $this->chmod);
-
-                    // Vérification de l'existence du fichier
-                    if (!is_dir($currentPath)) {
-                        CoreLogger::addException("Bad response for mkdir|chmod command. Path : " . $currentPath);
-                    }
+                    $this->makeDirectory($currentPath);
 
                     // Des petites fichiers bonus...
                     if ($dir === "tmp") {
@@ -250,6 +243,22 @@ class CachePhp extends CacheModel {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Création d'un dossier sur le serveur.
+     *
+     * @param string $path
+     */
+    private function makeDirectory(string $path) {
+        // Création du dossier
+        mkdir($path, $this->chmod);
+        chmod($path, $this->chmod);
+
+        // Vérification de l'existence du fichier
+        if (!is_dir($path)) {
+            CoreLogger::addException("Bad response for mkdir|chmod command. Path : " . $path);
         }
     }
 
@@ -306,7 +315,7 @@ class CachePhp extends CacheModel {
     }
 
     /**
-     * Supprime le dossier.
+     * Suppression récurive des dossiers sur le serveur.
      *
      * @param string $dirPath
      * @param int $timeLimit
@@ -323,18 +332,8 @@ class CachePhp extends CacheModel {
                 // Si c'est un fichier valide
                 if ($file !== ".." && $file !== "." && $file !== ".svn") {
                     // Vérification avant suppression
-                    if ($timeLimit > 0) {
-                        if (is_file($dirPath . DIRECTORY_SEPARATOR . $file)) {
-                            // Si le fichier n'est pas périmé, on passe au suivant
-
-                            if ($timeLimit < $this->getCacheMTime($dirPath . DIRECTORY_SEPARATOR . $file)) {
-                                continue;
-                            }
-                        } else {
-                            // C'est un dossier,
-                            // on ne souhaite pas le supprimer dans ce mode de fonctionnement
-                            continue;
-                        }
+                    if (!$this->canRemove($dirPath, $file, $timeLimit)) {
+                        continue;
                     }
 
                     // Suppression
@@ -360,6 +359,31 @@ class CachePhp extends CacheModel {
                 CoreLogger::addException("Bad response for rmdir command. Path : " . $dirPath);
             }
         }
+    }
+
+    /**
+     * Détermine si le fichier peut être supprimé.
+     *
+     * @param string $dirPath
+     * @param string $file
+     * @param int $timeLimit
+     * @return bool
+     */
+    private function &canRemove(string $dirPath, string $file, int $timeLimit): bool {
+        $rslt = true;
+
+        if ($timeLimit > 0) {
+            if (is_file($dirPath . DIRECTORY_SEPARATOR . $file)) {
+                // Si le fichier n'est pas périmé, on passe au suivant
+                if ($timeLimit < $this->getCacheMTime($dirPath . DIRECTORY_SEPARATOR . $file)) {
+                    $rslt = false;
+                }
+            } else {
+                // C'est un dossier, on ne souhaite pas le supprimer dans ce mode de fonctionnement
+                $rslt = false;
+            }
+        }
+        return $rslt;
     }
 
 }
