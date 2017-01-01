@@ -367,6 +367,8 @@ class ExecUserAgent {
             "version" => ""
         );
 
+        $version = array();
+
         foreach (self::$browserResouces as $browserCategory => $browserSubResources) {
             foreach ($browserSubResources as $browserAgent => $browserName) {
                 if (preg_match("/" . $browserAgent . "[ \/]([0-9\.]+)/ie", $currentUserAgent, $version) || preg_match("/" . $browserAgent . "/ie", $currentUserAgent, $version)) {
