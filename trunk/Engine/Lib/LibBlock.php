@@ -26,6 +26,8 @@ class LibBlock {
 
     /**
      * Nom du fichier cache de bannissement.
+     *
+     * @var string
      */
     const BLOCKS_INDEXER_FILENAME = "blocks_indexer.php";
 
@@ -97,7 +99,7 @@ class LibBlock {
      *
      * @var array array("name" => 0)
      */
-    private static $sideRegistred = array(
+    const SIDE_LIST = array(
         "right" => self::SIDE_RIGHT,
         "left" => self::SIDE_LEFT,
         "top" => self::SIDE_TOP,
@@ -280,7 +282,7 @@ class LibBlock {
                 "Invalid side value: " . $side));
         }
 
-        $sideLetters = array_search($side, self::$sideRegistred);
+        $sideLetters = array_search($side, self::SIDE_LIST);
 
         if ($sideLetters === false) {
             CoreSecure::getInstance()->throwException("blockSide", null, array(
@@ -319,7 +321,7 @@ class LibBlock {
                 $coreSql = CoreSql::getInstance();
 
                 $coreSql->select(
-                CoreTable::BLOCKS_TABLE, array(
+                        CoreTable::BLOCKS_TABLE, array(
                     "block_id",
                     "side",
                     "position",
@@ -371,7 +373,7 @@ class LibBlock {
             $coreSql = CoreSql::getInstance();
 
             $coreSql->select(
-            CoreTable::BLOCKS_TABLE, array(
+                    CoreTable::BLOCKS_TABLE, array(
                 "block_id",
                 "side",
                 "type",
@@ -495,12 +497,12 @@ class LibBlock {
                 "Invalid side value: " . $side));
         }
 
-        if (!isset(self::$sideRegistred[$side])) {
+        if (!isset(self::SIDE_LIST[$side])) {
             CoreSecure::getInstance()->throwException("blockSide", null, array(
                 "Letters side: " . $side));
         }
 
-        $sideNumeric = self::$sideRegistred[$side];
+        $sideNumeric = self::SIDE_LIST[$side];
         return $sideNumeric;
     }
 

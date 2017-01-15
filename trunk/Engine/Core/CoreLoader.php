@@ -110,7 +110,7 @@ class CoreLoader {
      *
      * @var string
      */
-    const NAMESPACE_BASE = "TREngine\{ORIGIN}\{TYPE}\{PREFIX}{KEYNAME}";
+    const NAMESPACE_PATTERN = "TREngine\{ORIGIN}\{TYPE}\{PREFIX}{KEYNAME}";
 
     /**
      * Les types de namespace possible.
@@ -466,7 +466,7 @@ class CoreLoader {
                 if (strrpos($keyName, $namespaceType, -strlen($keyName)) !== false) {
                     $fileType = $namespaceType;
 
-                    $keyName = str_replace("{KEYNAME}", $keyName, self::NAMESPACE_BASE);
+                    $keyName = str_replace("{KEYNAME}", $keyName, self::NAMESPACE_PATTERN);
                     $keyName = str_replace("{PREFIX}", $prefixName, $keyName);
                     $keyName = str_replace("{TYPE}", $namespaceType, $keyName);
 

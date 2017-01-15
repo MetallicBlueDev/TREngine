@@ -19,6 +19,40 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class CoreSecure {
 
     /**
+     * Retourne la liste des caractères interdits.
+     *
+     * @var array
+     */
+    const BAD_QUERY_STRINGS = array(
+        "select",
+        "union",
+        "insert",
+        "update",
+        "and",
+        "%20union%20",
+        "/*",
+        "*/union/*",
+        "+union+",
+        "load_file",
+        "outfile",
+        "document.cookie",
+        "document.write",
+        "onmouse",
+        "<script",
+        "<iframe",
+        "<applet",
+        "<meta",
+        "<style",
+        "<form",
+        "<img",
+        "<body",
+        "<link",
+        "<comment",
+        "..",
+        "http://",
+        "%3C%3F");
+
+    /**
      * Instance de cette classe.
      *
      * @var CoreSecure
@@ -283,49 +317,12 @@ class CoreSecure {
      */
     private function checkServerQueryString() {
         $queryString = strtolower(rawurldecode(self::getGlobalServer("QUERY_STRING")));
-        $badStrings = self::getBadQueryStrings();
 
-        foreach ($badStrings as $badStringValue) {
+        foreach (self::BAD_QUERY_STRINGS as $badStringValue) {
             if (strpos($queryString, $badStringValue)) {
                 $this->throwException("badQueryString");
             }
         }
-    }
-
-    /**
-     * Retourne la liste des caractères interdits.
-     *
-     * @return array
-     */
-    private static function getBadQueryStrings(): array {
-        return array(
-            "select",
-            "union",
-            "insert",
-            "update",
-            "and",
-            "%20union%20",
-            "/*",
-            "*/union/*",
-            "+union+",
-            "load_file",
-            "outfile",
-            "document.cookie",
-            "document.write",
-            "onmouse",
-            "<script",
-            "<iframe",
-            "<applet",
-            "<meta",
-            "<style",
-            "<form",
-            "<img",
-            "<body",
-            "<link",
-            "<comment",
-            "..",
-            "http://",
-            "%3C%3F");
     }
 
     /**

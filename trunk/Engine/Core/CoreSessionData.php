@@ -255,7 +255,7 @@ class CoreSessionData extends CoreDataStorage implements CoreAccessToken {
 
             if ($coreSql->affectedRows() > 0) {
                 foreach ($coreSql->fetchArray() as $rights) {
-                    $accessTypes[] = CoreAccessType::getTypeFromDatabase($rights);
+                    $accessTypes[] = CoreAccessType::getTypeFromDatas($rights);
                 }
             }
         }

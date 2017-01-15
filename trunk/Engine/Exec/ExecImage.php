@@ -16,7 +16,7 @@ class ExecImage {
      *
      * @var array
      */
-    private static $typesAllowed = array(
+    const TYPE_LIST = array(
         "IMAGETYPE_GIF",
         "IMAGETYPE_JPEG",
         "IMAGETYPE_JPG",
@@ -42,8 +42,8 @@ class ExecImage {
             $height = $infos[1];
 
             foreach (array(
-                'width',
-                'height') as $original) {
+        'width',
+        'height') as $original) {
                 $default = $original . "Default";
 
                 if (${$original} > ${$default} && ${$default}) {
@@ -78,7 +78,7 @@ class ExecImage {
         if (is_file($url)) {
             $infos = getimagesize($url);
 
-            if ($infos !== false && isset($infos[2]) && ExecUtils::inArray($infos[2], self::$typesAllowed, true)) {
+            if ($infos !== false && isset($infos[2]) && ExecUtils::inArray($infos[2], self::TYPE_LIST, true)) {
                 $type[] = isset($infos[0]) ? $infos[0] : 0;
                 $type[] = isset($infos[1]) ? $infos[1] : 0;
                 $type[] = $infos[2];

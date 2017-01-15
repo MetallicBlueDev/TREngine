@@ -18,11 +18,15 @@ class CoreSession {
 
     /**
      * Nom du fichier cache de bannissement.
+     *
+     * @var string
      */
     const BANISHMENT_FILENAME = "banishment.txt";
 
     /**
      * Durée (en jour) d'un bannissement.
+     *
+     * @var int
      */
     const BANISHMENT_DURATION = 2;
 
@@ -152,8 +156,8 @@ class CoreSession {
         if (self::validLogin($userName) && self::validPassword($userPass)) {
             $userPass = self::cryptPass($userPass);
             $userInfos = self::getUserInfo(array(
-                "name = '" . $userName . "'",
-                "&& pass = '" . $userPass . "'"));
+                        "name = '" . $userName . "'",
+                        "&& pass = '" . $userPass . "'"));
 
             if (count($userInfos) > 1) {
                 $newSession = self::getInstance();
@@ -292,7 +296,7 @@ class CoreSession {
         if ($this->userLogged()) {
             // Rafraichir le cache de session
             $userInfos = self::getUserInfo(array(
-                "user_id = '" . $this->userInfos->getId() . "'"));
+                        "user_id = '" . $this->userInfos->getId() . "'"));
 
             if (count($userInfos) > 1) {
                 $this->setUser($userInfos, true);
@@ -333,7 +337,7 @@ class CoreSession {
         $coreSql = CoreSql::getInstance();
 
         $coreSql->select(
-        CoreTable::BANNED_TABLE, array(
+                CoreTable::BANNED_TABLE, array(
             "reason"), array(
             "ip = '" . $this->userIpBan . "'")
         );
@@ -371,12 +375,12 @@ class CoreSession {
         // Nettoyage des adresses IP périmées de la base de données.
         if ($cleanBanishment) {
             CoreSql::getInstance()->delete(
-            CoreTable::BANNED_TABLE, array(
+                    CoreTable::BANNED_TABLE, array(
                 "ip != ''",
                 "&& (name = 'Hacker' || name = '')",
                 "&& type = '0'",
                 "&& DATE_ADD(banishment_date, INTERVAL " . self::BANISHMENT_DURATION . " DAY) > CURDATE()"
-            )
+                    )
             );
         }
     }
@@ -392,7 +396,7 @@ class CoreSession {
 
             // Vérification en base (au cas ou il y aurait un débannissement)
             $coreSql->select(
-            CoreTable::BANNED_TABLE, array(
+                    CoreTable::BANNED_TABLE, array(
                 "ban_id"), array(
                 "ip = '" . $this->userIpBan . "'")
             );
@@ -403,7 +407,7 @@ class CoreSession {
 
                 // Mise à jour de l'ip
                 $coreSql->update(
-                CoreTable::BANNED_TABLE, array(
+                        CoreTable::BANNED_TABLE, array(
                     "ip" => $userIp), array(
                     "ban_id = '" . $banId . "'")
                 );
@@ -430,7 +434,7 @@ class CoreSession {
 
         // Sinon on recherche dans la base les bannis; leurs ip et leurs pseudo
         $coreSql->select(
-        CoreTable::BANNED_TABLE, array(
+                CoreTable::BANNED_TABLE, array(
             "ip",
             "name"), array(), array(
             "ban_id")
@@ -746,7 +750,7 @@ class CoreSession {
 
         $coreSql = CoreSql::getInstance();
         $coreSql->select(
-        CoreTable::USERS_TABLE, array(
+                CoreTable::USERS_TABLE, array(
             "user_id",
             "name",
             "mail",

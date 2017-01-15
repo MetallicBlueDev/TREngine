@@ -51,7 +51,7 @@ class CoreAccess {
      *
      * @var array array("name" => 0)
      */
-    private static $rankRegistred = array(
+    const RANK_LIST = array(
         "ACCESS_NONE" => self::RANK_NONE,
         "ACCESS_PUBLIC" => self::RANK_PUBLIC,
         "ACCESS_REGISTRED" => self::RANK_REGISTRED,
@@ -117,7 +117,7 @@ class CoreAccess {
                 "Invalid rank value: " . $rank));
         }
 
-        $rankLitteral = array_search($rank, self::$rankRegistred);
+        $rankLitteral = array_search($rank, self::RANK_LIST);
 
         if ($rankLitteral === false) {
             CoreSecure::getInstance()->throwException("accessRank", null, array(
@@ -136,7 +136,7 @@ class CoreAccess {
     public static function &getRankList(): array {
         $rankList = array();
 
-        foreach (self::$rankRegistred as $rank) {
+        foreach (self::RANK_LIST as $rank) {
             $rankList[] = array(
                 "numeric" => $rank,
                 "letters" => self::getRankAsLitteral($rank));

@@ -111,7 +111,7 @@ class LibMenu {
                     "rank" => $item->getRank(),
                     "identifiant" => $this->identifier);
 
-                if (CoreAccess::autorize(CoreAccessType::getTypeFromDatabase($infos))) {
+                if (CoreAccess::autorize(CoreAccessType::getTypeFromDatas($infos))) {
                     $out .= $this->items[$key]->toString($callback);
                 }
             }

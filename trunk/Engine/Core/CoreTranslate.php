@@ -14,18 +14,11 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class CoreTranslate {
 
     /**
-     * Instance du gestionnaire du traducteur.
-     *
-     * @var CoreTranslate
-     */
-    private static $coreTranslate = null;
-
-    /**
      * Liste des differentes langues.
      *
      * @var array
      */
-    private static $languageList = array(
+    const LANGUAGE_LIST = array(
         "aa" => "Afar",
         "ab" => "Abkhazian",
         "af" => "Afrikaans",
@@ -179,6 +172,13 @@ class CoreTranslate {
         "zh" => "Chinese",
         "zu" => "Zulu"
     );
+
+    /**
+     * Instance du gestionnaire du traducteur.
+     *
+     * @var CoreTranslate
+     */
+    private static $coreTranslate = null;
 
     /**
      * Informations sur la langue utilisée.
@@ -517,7 +517,7 @@ class CoreTranslate {
      * @return bool
      */
     private static function canUseExtension(string $extension): bool {
-        return !empty($extension) && isset(self::$languageList[$extension]);
+        return !empty($extension) && isset(self::LANGUAGE_LIST[$extension]);
     }
 
     /**
@@ -563,7 +563,7 @@ class CoreTranslate {
      * @return string
      */
     private static function &getLanguageByExtension(string $extension): string {
-        $language = strtolower(trim(self::$languageList[$extension]));
+        $language = strtolower(trim(self::LANGUAGE_LIST[$extension]));
 
         if (!self::canUseLanguage($language)) {
             $language = "";

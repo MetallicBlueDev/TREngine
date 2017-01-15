@@ -19,7 +19,7 @@ class CoreAccessType implements CoreAccessToken {
      *
      * @var string
      */
-    const MAGIC_ACCESS = "all";
+    const FULL_ACCESS = "all";
 
     /**
      * Cache d'accès typé.
@@ -45,12 +45,12 @@ class CoreAccessType implements CoreAccessToken {
     }
 
     /**
-     * Retourne l'accès spécifique.
+     * Retourne l'accès depuis la table d'information.
      *
      * @param array $rights
      * @return CoreAccessType
      */
-    public static function &getTypeFromDatabase(array &$rights): CoreAccessType {
+    public static function &getTypeFromDatas(array &$rights): CoreAccessType {
         $newAccess = new CoreAccessType($rights);
         return $newAccess;
     }
@@ -67,7 +67,7 @@ class CoreAccessType implements CoreAccessToken {
             "rank" => $data->getRank(),
             "identifiant" => $data->getId(),
             "name" => $data->getName());
-        return self::getTypeFromDatabase($infos);
+        return self::getTypeFromDatas($infos);
     }
 
     /**
@@ -76,14 +76,14 @@ class CoreAccessType implements CoreAccessToken {
      * @return CoreAccessType
      */
     public static function &getTypeFromAdmin(): CoreAccessType {
-        if (!isset(self::$cache[self::MAGIC_ACCESS])) {
+        if (!isset(self::$cache[self::FULL_ACCESS])) {
             $infos = array(
-                "zone" => self::MAGIC_ACCESS,
-                "rank" => self::MAGIC_ACCESS,
-                "identifiant" => self::MAGIC_ACCESS);
-            self::$cache[self::MAGIC_ACCESS] = self::getTypeFromDatabase($infos);
+                "zone" => self::FULL_ACCESS,
+                "rank" => self::FULL_ACCESS,
+                "identifiant" => self::FULL_ACCESS);
+            self::$cache[self::FULL_ACCESS] = self::getTypeFromDatas($infos);
         }
-        return self::$cache[self::MAGIC_ACCESS];
+        return self::$cache[self::FULL_ACCESS];
     }
 
     /**
@@ -202,9 +202,9 @@ class CoreAccessType implements CoreAccessToken {
     public function isAssignableFrom(CoreAccessType $otherAccessType): bool {
         $rslt = false;
 
-        if ($otherAccessType->getZone() === $this->getZone() || $otherAccessType->getZone() === self::MAGIC_ACCESS) {
-            if ($otherAccessType->getId() === $this->getId() || $otherAccessType->getId() === self::MAGIC_ACCESS) {
-                if (empty($this->getPage()) || ($this->getPage() === $otherAccessType->getPage() || $otherAccessType->getPage() === self::MAGIC_ACCESS)) {
+        if ($otherAccessType->getZone() === $this->getZone() || $otherAccessType->getZone() === self::FULL_ACCESS) {
+            if ($otherAccessType->getId() === $this->getId() || $otherAccessType->getId() === self::FULL_ACCESS) {
+                if (empty($this->getPage()) || ($this->getPage() === $otherAccessType->getPage() || $otherAccessType->getPage() === self::FULL_ACCESS)) {
                     $rslt = true;
                 }
             }

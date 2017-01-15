@@ -21,7 +21,7 @@ class ExecUserAgent {
      *
      * @var array
      */
-    private static $osResources = array(
+    const OS_RESOURCES_LIST = array(
         "Playstation" => array(
             "Playstation portable" => "PlayStation Portable (PSP)", // XrossMediaBar
             "Playstation vita" => "Playstation Vita", // LiveArea
@@ -154,7 +154,7 @@ class ExecUserAgent {
      *
      * @var array
      */
-    private static $browserResouces = array(
+    const BROWSER_RESOURCES_LIST = array(
         "Browser-Mobile" => array(
             // FireFox
             "fennec" => "Firefox Mobile",
@@ -269,6 +269,23 @@ class ExecUserAgent {
     );
 
     /**
+     * Chaine d'identifiacation de l'hôte.
+     *
+     * @var string
+     */
+    const HOST_REGEXP = "/([^.]{1,})((\.(co|com|net|org|edu|gov|mil))|())
+                ((\.(ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|az|ba|bb|bd|be|bf|bg|
+                bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|
+                cr|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|fi|fj|fk|fm|fo|fr|
+                fx|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|
+                hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|
+                kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|
+                ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nt|nu|nz|om|pa|pe|pf|
+                pg|ph|pk|pl|pm|pn|pr|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|
+                sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tm|tn|to|tp|tr|tt|tv|tw|
+                tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zr|zw))|())$/ie";
+
+    /**
      * Retourne l'adresse IP du client.
      *
      * @return string
@@ -302,17 +319,7 @@ class ExecUserAgent {
         if ($currentHost !== $currentIp && $currentHost !== false) {
             $res = array();
 
-            if (preg_match("/([^.]{1,})((\.(co|com|net|org|edu|gov|mil))|())
-                ((\.(ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|az|ba|bb|bd|be|bf|bg|
-                bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|
-                cr|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|fi|fj|fk|fm|fo|fr|
-                fx|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|
-                hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|
-                kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|
-                ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nt|nu|nz|om|pa|pe|pf|
-                pg|ph|pk|pl|pm|pn|pr|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|
-                sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tm|tn|to|tp|tr|tt|tv|tw|
-                tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zr|zw))|())$/ie", $currentHost, $res)) {
+            if (preg_match(self::HOST_REGEXP, $currentHost, $res)) {
                 $currentHost = $res[0];
             }
         }
@@ -340,7 +347,7 @@ class ExecUserAgent {
             "category" => "",
             "name" => "Unknown Os");
 
-        foreach (self::$osResources as $osCategory => $osSubResources) {
+        foreach (self::OS_RESOURCES_LIST as $osCategory => $osSubResources) {
             foreach ($osSubResources as $osAgent => $osName) {
                 // Remplace les underscores par un point afin d'obtenir qu'une version de l'agent
                 // Exemple avec Mac OS X 10_7 et Mac OS X 10.7
@@ -369,7 +376,7 @@ class ExecUserAgent {
 
         $version = array();
 
-        foreach (self::$browserResouces as $browserCategory => $browserSubResources) {
+        foreach (self::BROWSER_RESOURCES_LIST as $browserCategory => $browserSubResources) {
             foreach ($browserSubResources as $browserAgent => $browserName) {
                 if (preg_match("/" . $browserAgent . "[ \/]([0-9\.]+)/ie", $currentUserAgent, $version) || preg_match("/" . $browserAgent . "/ie", $currentUserAgent, $version)) {
                     $currentBrowser['category'] = $browserCategory;
