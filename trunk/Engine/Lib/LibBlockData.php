@@ -50,6 +50,7 @@ class LibBlockData extends LibEntityData {
      * @return string
      */
     public function &getId(): string {
+        // Note : l'identification du block est un entier mais la fonction générale demande une chaine de caractère
         return $this->getIntValue("block_id");
     }
 

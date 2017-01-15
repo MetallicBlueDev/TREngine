@@ -271,7 +271,7 @@ class CoreAccessType implements CoreAccessToken {
 
         // Recherche d'information sur le block
         if (CoreLoader::isCallable("LibBlock")) {
-            $blockInfo = LibBlock::getInstance()->getInfoBlock($this->getId());
+            $blockInfo = LibBlock::getInstance()->getBlockInfo($this->getId());
         }
 
         if ($blockInfo !== null && is_numeric($blockInfo->getId())) {

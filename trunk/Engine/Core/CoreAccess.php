@@ -12,7 +12,7 @@ require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '
 class CoreAccess {
 
     /**
-     * Accès non défini.
+     * Accès non défini (cas de désactivation).
      *
      * @var int
      */
