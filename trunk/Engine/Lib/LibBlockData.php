@@ -68,7 +68,7 @@ class LibBlockData extends LibEntityData {
      *
      * @return int
      */
-    public function &getSide() {
+    public function &getSide(): int {
         return $this->getIntValue("side");
     }
 
@@ -77,7 +77,7 @@ class LibBlockData extends LibEntityData {
      *
      * @return string
      */
-    public function &getSideName() {
+    public function &getSideName(): string {
         return $this->sideName;
     }
 
@@ -86,7 +86,7 @@ class LibBlockData extends LibEntityData {
      *
      * @return string
      */
-    public function &getTemplateName() {
+    public function &getTemplateName(): string {
         $templateName = "block_" . $this->sideName;
         return $templateName;
     }
@@ -96,7 +96,7 @@ class LibBlockData extends LibEntityData {
      *
      * @return string
      */
-    public function &getTitle() {
+    public function &getTitle(): string {
         return $this->getStringValue("title");
     }
 
@@ -106,7 +106,7 @@ class LibBlockData extends LibEntityData {
      *
      * @return string
      */
-    public function &getContent() {
+    public function &getContent(): string {
         return $this->getStringValue("content");
     }
 
@@ -115,7 +115,7 @@ class LibBlockData extends LibEntityData {
      *
      * @param string $content
      */
-    public function setContent($content) {
+    public function setContent(string $content) {
         $this->setDataValue("content", $content);
     }
 
@@ -133,12 +133,11 @@ class LibBlockData extends LibEntityData {
      *
      * @return array
      */
-    public function &getTargetModules() {
+    public function &getTargetModules(): array {
         $rslt = $this->getDataValue("mods");
 
         if (empty($rslt)) {
-            $rslt = array(
-                "all");
+            $rslt = array("all");
         }
         return $rslt;
     }
@@ -148,7 +147,7 @@ class LibBlockData extends LibEntityData {
      *
      * @return string
      */
-    public function &getType() {
+    public function &getType(): string {
         $dataValue = ucfirst($this->getStringValue("type"));
         return $dataValue;
     }
@@ -158,7 +157,7 @@ class LibBlockData extends LibEntityData {
      *
      * @return string
      */
-    public function getFolderName() {
+    public function getFolderName(): string {
         return "Block" . $this->getType();
     }
 
@@ -167,7 +166,7 @@ class LibBlockData extends LibEntityData {
      *
      * @return string
      */
-    public function getClassName() {
+    public function getClassName(): string {
         return "Block" . $this->getType();
     }
 
@@ -176,7 +175,7 @@ class LibBlockData extends LibEntityData {
      *
      * @return bool
      */
-    public function installed() {
+    public function installed(): bool {
         return $this->hasValue("block_id");
     }
 
@@ -186,19 +185,12 @@ class LibBlockData extends LibEntityData {
      * @param bool $checkModule
      * @return bool true le block doit être actif.
      */
-    public function &canActive($checkModule = true) {
+    public function &canActive(bool $checkModule = true): bool {
         $rslt = false;
 
         if (CoreAccess::autorize(CoreAccessType::getTypeFromToken($this))) {
             if ($checkModule) {
-                if (CoreLoader::isCallable("LibModule")) {
-                    foreach ($this->getTargetModules() as $modSelected) {
-                        if ($modSelected === "all" || LibModule::isSelected($modSelected)) {
-                            $rslt = true;
-                            break;
-                        }
-                    }
-                }
+                $rslt = $this->canActiveForModule();
             } else {
                 $rslt = true;
             }
@@ -214,6 +206,25 @@ class LibBlockData extends LibEntityData {
     public function &getZone(): string {
         $zone = "BLOCK";
         return $zone;
+    }
+
+    /**
+     * Vérifie si le block doit être activé sur le module actuel.
+     *
+     * @return bool
+     */
+    private function &canActiveForModule(): bool {
+        $rslt = false;
+
+        if (CoreLoader::isCallable("LibModule")) {
+            foreach ($this->getTargetModules() as $modSelected) {
+                if ($modSelected === "all" || LibModule::isSelected($modSelected)) {
+                    $rslt = true;
+                    break;
+                }
+            }
+        }
+        return $rslt;
     }
 
 }
