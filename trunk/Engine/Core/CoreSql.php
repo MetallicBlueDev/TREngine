@@ -3,6 +3,7 @@
 namespace TREngine\Engine\Core;
 
 use TREngine\Engine\Base\BaseModel;
+use TREngine\Engine\Fail\FailSql;
 use Exception;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
@@ -46,12 +47,14 @@ class CoreSql extends BaseModel {
 
         if (!$loaded) {
             CoreSecure::getInstance()->throwException("sqlType", null, array(
-                $databaseConfig['type']));
+                $databaseConfig['type']
+            ));
         }
 
         if (!CoreLoader::isCallable($baseClassName, "initialize")) {
             CoreSecure::getInstance()->throwException("sqlCode", null, array(
-                $baseClassName));
+                $baseClassName
+            ));
         }
 
         try {
@@ -118,14 +121,16 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      */
     public function netConnect() {
         $this->selectedBase->netConnect();
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return bool
      */
@@ -134,7 +139,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      */
     public function netDeconnect() {
         if (self::hasConnection()) {
@@ -152,7 +158,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return int
      */
@@ -161,7 +168,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -170,7 +178,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -179,7 +188,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -188,7 +198,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -197,7 +208,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -206,7 +218,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -215,7 +228,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @param string $table Nom de la table
      * @param array $where
@@ -233,7 +247,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -242,7 +257,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @param string $className
      * @return array
@@ -252,7 +268,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @param string $table Nom de la table
      * @param array $keys
@@ -269,7 +286,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -278,7 +296,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @param string $sql
      * @throws Exception
@@ -301,7 +320,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @param string $table
      * @param array $values
@@ -320,7 +340,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @param string $table Nom de la table
      * @param array $values Sous la forme array("keyName" => "newValue")
@@ -339,7 +360,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return mixed
      */
@@ -348,7 +370,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -357,7 +380,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @param mixed $query
      * @return bool
@@ -368,7 +392,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @param string $name
      * @param string $key
@@ -379,7 +404,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @param string $name
      * @param string $key clé à utiliser
@@ -390,7 +416,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @param string $name
      * @return array
@@ -400,7 +427,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @param string $name
      * @return mixed
@@ -410,7 +438,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -419,7 +448,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @param string $key
      */
@@ -428,7 +458,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @param string $value
      */
@@ -444,7 +475,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -453,7 +485,8 @@ class CoreSql extends BaseModel {
     }
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @return string
      */

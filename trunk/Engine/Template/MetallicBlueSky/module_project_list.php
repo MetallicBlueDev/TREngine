@@ -1,5 +1,9 @@
-<div class="title"><span><?php echo $title; ?></span></div>
-<div class="description" style="width: 90%;"><span><?php echo $description; ?></span></div>
+<div class="title"><span><?php
+echo $title;
+?></span></div>
+<div class="description" style="width: 90%;"><span><?php
+echo $description;
+?></span></div>
 
 <?php
 $progress = "";
@@ -15,7 +19,8 @@ foreach ($projects as $key => $projectItem) {
     }
     ?>
 
-    <?php echo CoreHtml::getLink('?module=project&view=displayProject&projectId=' . $projectItem['projectid'], '
+    <?php
+    echo TREngine\Engine\Core\CoreHtml::getLink('?module=project&view=displayProject&projectId=' . $projectItem['projectid'], '
         <div class="project_body' . $progress . '">
             <div>
                 <div class="project_img"><img alt="" src="' . TREngine\Engine\Lib\LibMakeStyle::getTemplateDir() . '/project/' . strtolower($projectItem['language']) . '.png" /></div>
@@ -31,4 +36,6 @@ foreach ($projects as $key => $projectItem) {
 }
 ?>
 
-<div style="text-align: center;"><?php echo $nbProjects; ?></div>
+<div style="text-align: center;"><?php
+echo $nbProjects;
+?></div>

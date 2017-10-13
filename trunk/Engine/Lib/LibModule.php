@@ -158,8 +158,7 @@ class LibModule {
     /**
      * Retourne les informations du module cible.
      *
-     * @param string $moduleName
-     *            Le nom du module, par défaut le module courant.
+     * @param string $moduleName Le nom du module, par défaut le module courant.
      * @return LibModuleData Informations sur le module.
      */
     public function &getInfoModule($moduleName = "") {

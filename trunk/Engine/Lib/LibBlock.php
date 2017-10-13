@@ -309,8 +309,7 @@ class LibBlock {
     /**
      * Retourne les informations du block cible.
      *
-     * @param int $blockId
-     *            l'identifiant du block.
+     * @param int $blockId l'identifiant du block.
      * @return LibBlockData Informations sur le block.
      */
     public function &getBlockInfo(int $blockId): LibBlockData {

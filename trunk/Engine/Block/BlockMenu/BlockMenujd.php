@@ -2,9 +2,10 @@
 
 namespace TREngine\Engine\Block;
 
+use TREngine\Engine\Block\BlockMenu\BlockMenu;
 use TREngine\Engine\Core\CoreHtml;
-use TREngine\Engine\Lib\LibMakeStyle;
 use TREngine\Engine\Exec\ExecJQuery;
+use TREngine\Engine\Lib\LibMakeStyle;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -20,18 +21,20 @@ class BlockMenujd extends BlockMenu {
 
         $menus = $this->getMenu();
         if (CoreHtml::getInstance()->javascriptEnabled()) {
-            $menus->addAttributs("class", "jd_menu" . (($this->getBlockData()->getSide() == 1 || $this->getBlockData()->getSide() == 2) ? " jd_menu_vertical" : ""));
+            $menus->addAttributs("class", "jd_menu" . (($this->getBlockData()
+                ->getSide() == 1 || $this->getBlockData()
+                ->getSide() == 2) ? " jd_menu_vertical" : ""));
         }
 
         $libMakeStyle = new LibMakeStyle();
-        $libMakeStyle->assign("blockTitle", $this->getBlockData()->getTitle());
+        $libMakeStyle->assign("blockTitle", $this->getBlockData()
+            ->getTitle());
         $libMakeStyle->assign("blockContent", $menus->render());
-        $libMakeStyle->display($this->getBlockData()->getTemplateName());
+        $libMakeStyle->display($this->getBlockData()
+            ->getTemplateName());
     }
 
-    public function install() {
-
-    }
+    public function install() {}
 
     public function uninstall() {
         parent::uninstall();

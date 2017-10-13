@@ -3,12 +3,14 @@
 namespace TREngine\Engine\Block\BlockLogin;
 
 use TREngine\Engine\Block\BlockModel;
+use TREngine\Engine\Core\CoreCache;
+use TREngine\Engine\Core\CoreHtml;
 use TREngine\Engine\Core\CoreMain;
 use TREngine\Engine\Core\CoreRequest;
 use TREngine\Engine\Core\CoreSession;
-use TREngine\Engine\Core\CoreHtml;
-use TREngine\Engine\Lib\LibMakeStyle;
+use TREngine\Engine\Exec\ExecImage;
 use TREngine\Engine\Lib\LibForm;
+use TREngine\Engine\Lib\LibMakeStyle;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -54,15 +56,15 @@ class BlockLogin extends BlockModel {
             echo $this->render();
         } else {
             $libMakeStyle = new LibMakeStyle();
-            $libMakeStyle->assign("blockTitle", $this->getBlockData()->getTitle());
+            $libMakeStyle->assign("blockTitle", $this->getBlockData()
+                ->getTitle());
             $libMakeStyle->assign("blockContent", $this->render());
-            $libMakeStyle->display($this->getBlockData()->getTemplateName());
+            $libMakeStyle->display($this->getBlockData()
+                ->getTemplateName());
         }
     }
 
-    public function install() {
-
-    }
+    public function install() {}
 
     public function uninstall() {
         $coreCache = CoreCache::getInstance(CoreCache::SECTION_FORMS);
@@ -109,9 +111,7 @@ class BlockLogin extends BlockModel {
             }
 
             if ($this->displayIcons) {
-                $content .= CoreHtml::getLink("module=connect&view=logout", BLOCKLOGIN_LOGOUT) . "<br />"
-                . CoreHtml::getLink("module=connect&view=account", BLOCKLOGIN_MY_ACCOUNT) . "<br />"
-                . CoreHtml::getLink("module=receiptbox", BLOCKLOGIN_MY_RECEIPTBOX . " (?)") . "<br />";
+                $content .= CoreHtml::getLink("module=connect&view=logout", BLOCKLOGIN_LOGOUT) . "<br />" . CoreHtml::getLink("module=connect&view=account", BLOCKLOGIN_MY_ACCOUNT) . "<br />" . CoreHtml::getLink("module=receiptbox", BLOCKLOGIN_MY_RECEIPTBOX . " (?)") . "<br />";
             }
         } else {
             $moreLink = "<ul>";
@@ -120,9 +120,7 @@ class BlockLogin extends BlockModel {
                 $moreLink .= "<li><span class=\"text_bold\">" . CoreHtml::getLinkWithAjax("module=connect&view=registration", "blockType=" . $this->getBlockData()->getType() . "&localView=registration", "#login-logonblock", BLOCKLOGIN_GET_ACCOUNT) . "</span></li>";
             }
 
-            $moreLink .= "<li>" . CoreHtml::getLinkWithAjax("module=connect&view=logon", "blockType=" . $this->getBlockData()->getType() . "&localView=logon", "#login-logonblock", BLOCKLOGIN_GET_LOGON) . "</li>"
-            . "<li>" . CoreHtml::getLinkWithAjax("module=connect&view=forgetlogin", "blockType=" . $this->getBlockData()->getType() . "&localView=forgetlogin", "#login-logonblock", BLOCKLOGIN_GET_FORGET_LOGIN) . "</li>"
-            . "<li>" . CoreHtml::getLinkWithAjax("module=connect&view=forgetpass", "blockType=" . $this->getBlockData()->getType() . "&localView=forgetpass", "#login-logonblock", BLOCKLOGIN_GET_FORGET_PASS) . "</li></ul>";
+            $moreLink .= "<li>" . CoreHtml::getLinkWithAjax("module=connect&view=logon", "blockType=" . $this->getBlockData()->getType() . "&localView=logon", "#login-logonblock", BLOCKLOGIN_GET_LOGON) . "</li>" . "<li>" . CoreHtml::getLinkWithAjax("module=connect&view=forgetlogin", "blockType=" . $this->getBlockData()->getType() . "&localView=forgetlogin", "#login-logonblock", BLOCKLOGIN_GET_FORGET_LOGIN) . "</li>" . "<li>" . CoreHtml::getLinkWithAjax("module=connect&view=forgetpass", "blockType=" . $this->getBlockData()->getType() . "&localView=forgetpass", "#login-logonblock", BLOCKLOGIN_GET_FORGET_PASS) . "</li></ul>";
 
             $content .= "<div id=\"login-logonblock\">";
 
@@ -209,10 +207,10 @@ class BlockLogin extends BlockModel {
         $form->addInputText("login", LOGIN . " ");
         $form->addInputHidden("module", "connect");
         $form->addInputHidden("view", "registration");
-        //$form->addInputHidden("layout", "module");
+        // $form->addInputHidden("layout", "module");
         $form->addInputSubmit("submit", VALID);
         $form->addHtmlInFieldset($moreLink);
-        //CoreHtml::getInstance()->addJavascript("validForgetPass('#form-login-registrationblock', '#form-login-registrationblock-login-input');");
+        // CoreHtml::getInstance()->addJavascript("validForgetPass('#form-login-registrationblock', '#form-login-registrationblock-login-input');");
         return $form->render("login-registrationblock");
     }
 

@@ -4,6 +4,7 @@ namespace TREngine\Engine\Base;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
+use TREngine\Engine\Core\CoreTable;
 use TREngine\Engine\Core\CoreTransaction;
 use TREngine\Engine\Exec\ExecUtils;
 use TREngine\Engine\Fail\FailSql;
@@ -58,7 +59,8 @@ abstract class BaseModel extends CoreTransaction {
     protected $quoted = array();
 
     /**
-     * {@inheritDoc}
+     *
+     * {@inheritdoc}
      *
      * @param string $message
      * @throws FailSql
@@ -106,20 +108,15 @@ abstract class BaseModel extends CoreTransaction {
     public function delete(string $table, array $where = array(), array $like = array(), string $limit = "") {
         // Nom complet de la table
         $table = $this->getTableName($table);
-
         // Mise en place du WHERE
         $whereValue = empty($where) ? "" : " WHERE " . implode(" ", $where);
-
         // Mise en place du LIKE
         $likeValue = empty($like) ? "" : " LIKE " . implode(" ", $like);
-
         // Fonction ET entre WHERE et LIKE
         if (!empty($whereValue) && !empty($likeValue)) {
             $whereValue .= "AND";
         }
-
         $limit = empty($limit) ? "" : " LIMIT " . $limit;
-
         $this->sql = "DELETE FROM " . $table . $whereValue . $likeValue . $limit;
     }
 
@@ -155,10 +152,7 @@ abstract class BaseModel extends CoreTransaction {
     public function insert(string $table, array $keys, array $values) {
         // Nom complet de la table
         $table = $this->getTableName($table);
-
-        $this->sql = "INSERT INTO " . $table . " ("
-        . implode(", ", $this->converKey($keys)) . ") VALUES ("
-        . implode(", ", $this->converValue($values)) . ")";
+        $this->sql = "INSERT INTO " . $table . " (" . implode(", ", $this->converKey($keys)) . ") VALUES (" . implode(", ", $this->converValue($values)) . ")";
     }
 
     /**
@@ -192,19 +186,14 @@ abstract class BaseModel extends CoreTransaction {
     public function select(string $table, array $values, array $where = array(), array $orderby = array(), string $limit = "") {
         // Nom complet de la table
         $table = $this->getTableName($table);
-
         // Mise en place des valeurs sélectionnées
         $valuesValue = implode(", ", $values);
-
         // Mise en place du where
         $whereValue = empty($where) ? "" : " WHERE " . implode(" ", $where);
-
         // Mise en place de la limite
         $limit = empty($limit) ? "" : " LIMIT " . $limit;
-
         // Mise en place de l'ordre
         $orderbyValue = empty($orderby) ? "" : " ORDER BY " . implode(", ", $orderby);
-
         // Mise en forme de la requête finale
         $this->sql = "SELECT " . $valuesValue . " FROM " . $table . $whereValue . $orderbyValue . $limit;
     }
@@ -221,21 +210,16 @@ abstract class BaseModel extends CoreTransaction {
     public function update(string $table, array $values, array $where, array $orderby = array(), string $limit = "") {
         // Nom complet de la table
         $table = $this->getTableName($table);
-
         // Affectation des clès à leurs valeurs
         $valuesString = array();
         foreach ($values as $key => $value) {
             $valuesString[] = $this->converKey($key) . " = " . $this->converValue($value);
         }
-
         $whereValue = empty($where) ? "" : " WHERE " . implode(" ", $where);
-
         // Mise en place de la limite
         $limit = empty($limit) ? "" : " LIMIT " . $limit;
-
         // Mise en place de l'ordre
         $orderbyValue = empty($orderby) ? "" : " ORDER BY " . implode(", ", $orderby);
-
         // Mise en forme de la requête finale
         $this->sql = "UPDATE " . $table . " SET " . implode(", ", $valuesString) . $whereValue . $orderbyValue . $limit;
     }
@@ -287,7 +271,6 @@ abstract class BaseModel extends CoreTransaction {
                     $this->buffer[$name][] = $row;
                 }
             }
-
             reset($this->buffer[$name]);
         }
     }
@@ -307,7 +290,6 @@ abstract class BaseModel extends CoreTransaction {
                     $this->buffer[$name][] = $row;
                 }
             }
-
             reset($this->buffer[$name]);
         }
     }
@@ -320,7 +302,8 @@ abstract class BaseModel extends CoreTransaction {
      */
     public function &fetchBuffer(string $name): array {
         $buffer = array(
-            current($this->buffer[$name]));
+            current($this->buffer[$name])
+        );
         next($this->buffer[$name]);
         return $buffer;
     }
@@ -342,7 +325,8 @@ abstract class BaseModel extends CoreTransaction {
      */
     public function &getLastError(): array {
         $rslt = array(
-            "<span class=\"text_bold\">Last Sql query</span> : " . $this->getSql());
+            "<span class=\"text_bold\">Last Sql query</span> : " . $this->getSql()
+        );
         return $rslt;
     }
 
@@ -410,7 +394,6 @@ abstract class BaseModel extends CoreTransaction {
             } else {
                 $q = $this->quoteKey;
             }
-
             $s = $q . $s . $q;
         }
         return $s;
@@ -428,7 +411,6 @@ abstract class BaseModel extends CoreTransaction {
                 $value[$realKey] = $this->converValue($realValue);
             }
         }
-
         if (is_bool($value)) {
             $value = ($value === true) ? 1 : 0;
         } else if (is_null($value)) {
@@ -436,7 +418,6 @@ abstract class BaseModel extends CoreTransaction {
         } else if (is_string($value)) {
             $value = $this->converEscapeString($value);
         }
-
         if (!is_array($value)) {
             $value = $this->addQuote($value, true);
         }
@@ -457,7 +438,6 @@ abstract class BaseModel extends CoreTransaction {
         } else {
             $key = $this->addQuote($key);
         }
-
         // Converti les multiples espaces (tabulation, espace en trop) en espace simple
         $key = preg_replace("/[\t ]+/", " ", $key);
         return $key;
