@@ -2,18 +2,17 @@
 
 namespace TREngine\Engine\Lib;
 
-use Exception;
-use TREngine\Engine\Block\BlockModel;
+use TREngine\Engine\Core\CoreAccess;
+use TREngine\Engine\Core\CoreCache;
 use TREngine\Engine\Core\CoreLoader;
 use TREngine\Engine\Core\CoreLogger;
-use TREngine\Engine\Core\CoreSecure;
-use TREngine\Engine\Core\CoreTable;
-use TREngine\Engine\Core\CoreSql;
-use TREngine\Engine\Core\CoreTranslate;
-use TREngine\Engine\Core\CoreCache;
-use TREngine\Engine\Core\CoreAccess;
-use TREngine\Engine\Core\CoreUrlRewriting;
 use TREngine\Engine\Core\CoreRequest;
+use TREngine\Engine\Core\CoreSecure;
+use TREngine\Engine\Core\CoreSql;
+use TREngine\Engine\Core\CoreTable;
+use TREngine\Engine\Core\CoreTranslate;
+use TREngine\Engine\Core\CoreUrlRewriting;
+use Exception;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -114,7 +113,8 @@ class LibBlock {
         "moduleright" => self::SIDE_MODULE_RIGHT,
         "moduleleft" => self::SIDE_MODULE_LEFT,
         "moduletop" => self::SIDE_MODULE_TOP,
-        "modulebottom" => self::SIDE_MODULE_BOTTOM);
+        "modulebottom" => self::SIDE_MODULE_BOTTOM
+    );
 
     /**
      * Gestionnnaire de blocks.
@@ -209,7 +209,8 @@ class LibBlock {
     public function launchStandaloneBlockType(string $blockTypeName) {
         if (!$this->isStandaloneBlockType($blockTypeName)) {
             CoreSecure::getInstance()->throwException("blockType", null, array(
-                "Invalid type value: " . $blockTypeName));
+                "Invalid type value: " . $blockTypeName
+            ));
         }
 
         $empty = array(
@@ -217,7 +218,8 @@ class LibBlock {
             "type" => $blockTypeName,
             "side" => self::SIDE_RIGHT,
             "mods" => "all",
-            "title" => $blockTypeName);
+            "title" => $blockTypeName
+        );
         $blockInfo = new LibBlockData($empty);
         $this->addBlockInfo($blockInfo);
         $this->launchBlock($blockInfo, false);
@@ -254,7 +256,8 @@ class LibBlock {
         foreach (self::SIDE_LIST as $sideNumeric) {
             $sideList[] = array(
                 "numeric" => $sideNumeric,
-                "letters" => self::getSideAsLitteral($sideNumeric));
+                "letters" => self::getSideAsLitteral($sideNumeric)
+            );
         }
         return $sideList;
     }
@@ -288,7 +291,8 @@ class LibBlock {
 
         if ($sideLetters === false) {
             CoreSecure::getInstance()->throwException("blockSide", null, array(
-                "Numeric side: " . $side));
+                "Numeric side: " . $side
+            ));
         }
         return $sideLetters;
     }
@@ -305,7 +309,8 @@ class LibBlock {
     /**
      * Retourne les informations du block cible.
      *
-     * @param int $blockId l'identifiant du block.
+     * @param int $blockId
+     *            l'identifiant du block.
      * @return LibBlockData Informations sur le block.
      */
     public function &getBlockInfo(int $blockId): LibBlockData {
@@ -338,8 +343,7 @@ class LibBlock {
         if (!$coreCache->cached($blockId . ".php")) {
             $coreSql = CoreSql::getInstance();
 
-            $coreSql->select(
-                    CoreTable::BLOCKS_TABLE, array(
+            $coreSql->select(CoreTable::BLOCKS_TABLE, array(
                 "block_id",
                 "side",
                 "position",
@@ -347,9 +351,10 @@ class LibBlock {
                 "content",
                 "type",
                 "rank",
-                "mods"), array(
-                "block_id =  '" . $blockId . "'")
-            );
+                "mods"
+            ), array(
+                "block_id =  '" . $blockId . "'"
+            ));
 
             if ($coreSql->affectedRows() > 0) {
                 $blockData = $coreSql->fetchArray()[0];
@@ -385,15 +390,15 @@ class LibBlock {
         if (!$coreCache->cached(self::BLOCKS_INDEXER_FILENAME)) {
             $coreSql = CoreSql::getInstance();
 
-            $coreSql->select(
-                    CoreTable::BLOCKS_TABLE, array(
+            $coreSql->select(CoreTable::BLOCKS_TABLE, array(
                 "block_id",
                 "side",
                 "type",
-                "rank"), array(), array(
+                "rank"
+            ), array(), array(
                 "side",
-                "position")
-            );
+                "position"
+            ));
 
             if ($coreSql->affectedRows() > 0) {
                 $blocksIndexer = $coreSql->fetchArray();
@@ -478,6 +483,7 @@ class LibBlock {
 
             try {
                 /**
+                 *
                  * @var BlockModel
                  */
                 $blockClass = new $blockClassName();
@@ -504,7 +510,8 @@ class LibBlock {
     private static function &getSideAsNumeric(string $sideName): int {
         if (!isset(self::SIDE_LIST[$sideName])) {
             CoreSecure::getInstance()->throwException("blockSide", null, array(
-                "Letters side: " . $sideName));
+                "Letters side: " . $sideName
+            ));
         }
 
         $sideNumeric = self::SIDE_LIST[$sideName];

@@ -2,6 +2,8 @@
 
 namespace TREngine\Engine\Core;
 
+use TREngine\Engine\Fail\FailEngine;
+
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
 /**
@@ -63,9 +65,7 @@ abstract class CoreTransaction extends CoreDataStorage {
     /**
      * Etablie une connexion au serveur.
      */
-    public function netConnect() {
-
-    }
+    public function netConnect() {}
 
     /**
      * Retourne l'état de la connexion.
@@ -79,9 +79,7 @@ abstract class CoreTransaction extends CoreDataStorage {
     /**
      * Déconnexion du serveur.
      */
-    public function netDeconnect() {
-
-    }
+    public function netDeconnect() {}
 
     /**
      * Sélectionne un noeud dans la transaction.

@@ -2,21 +2,21 @@
 
 namespace TREngine\Engine\Lib;
 
-use Exception;
-use TREngine\Engine\Module\ModuleModel;
-use TREngine\Engine\Core\CoreLogger;
-use TREngine\Engine\Core\CoreMain;
-use TREngine\Engine\Core\CoreTable;
-use TREngine\Engine\Core\CoreSql;
-use TREngine\Engine\Core\CoreCache;
 use TREngine\Engine\Core\CoreAccess;
 use TREngine\Engine\Core\CoreAccessType;
-use TREngine\Engine\Core\CoreSession;
-use TREngine\Engine\Core\CoreTranslate;
+use TREngine\Engine\Core\CoreCache;
 use TREngine\Engine\Core\CoreLoader;
+use TREngine\Engine\Core\CoreLogger;
+use TREngine\Engine\Core\CoreMain;
 use TREngine\Engine\Core\CoreRequest;
 use TREngine\Engine\Core\CoreSecure;
+use TREngine\Engine\Core\CoreSession;
+use TREngine\Engine\Core\CoreSql;
+use TREngine\Engine\Core\CoreTable;
+use TREngine\Engine\Core\CoreTranslate;
+use TREngine\Engine\Core\CoreUrlRewriting;
 use TREngine\Engine\Exec\ExecUtils;
+use Exception;
 
 require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'SecurityCheck.php';
 
@@ -51,9 +51,7 @@ class LibModule {
     /**
      * Création du gestionnaire.
      */
-    private function __construct() {
-
-    }
+    private function __construct() {}
 
     /**
      * Vérification de l'instance du gestionnaire des modules.
@@ -136,7 +134,8 @@ class LibModule {
         foreach ($modules as $module) {
             $moduleList[] = array(
                 "value" => $module,
-                "name" => "Module " . $module);
+                "name" => "Module " . $module
+            );
         }
         return $moduleList;
     }
@@ -159,7 +158,8 @@ class LibModule {
     /**
      * Retourne les informations du module cible.
      *
-     * @param string $moduleName Le nom du module, par défaut le module courant.
+     * @param string $moduleName
+     *            Le nom du module, par défaut le module courant.
      * @return LibModuleData Informations sur le module.
      */
     public function &getInfoModule($moduleName = "") {
@@ -183,14 +183,14 @@ class LibModule {
             if (!$coreCache->cached($moduleName . ".php")) {
                 $coreSql = CoreSql::getInstance();
 
-                $coreSql->select(
-                CoreTable::MODULES_TABLE, array(
+                $coreSql->select(CoreTable::MODULES_TABLE, array(
                     "mod_id",
                     "name",
                     "rank",
-                    "configs"), array(
-                    "name =  '" . $moduleName . "'")
-                );
+                    "configs"
+                ), array(
+                    "name =  '" . $moduleName . "'"
+                ));
 
                 if ($coreSql->affectedRows() > 0) {
                     $moduleData = $coreSql->fetchArray()[0];
@@ -268,7 +268,8 @@ class LibModule {
         // Vérification de la sous page
         $moduleInfo->setView($this->getValidViewPage(array(
             $moduleClassName,
-            ($moduleInfo->installed()) ? $moduleInfo->getView() : "install")));
+            ($moduleInfo->installed()) ? $moduleInfo->getView() : "install"
+        )));
 
         // Affichage du module si possible
         if ($loaded && !empty($moduleInfo->getView())) {
@@ -276,6 +277,7 @@ class LibModule {
 
             try {
                 /**
+                 *
                  * @var ModuleModel
                  */
                 $moduleClass = new $moduleClassName();
@@ -325,7 +327,8 @@ class LibModule {
             if ($pageInfo[1] !== $default) {
                 $rslt = $this->getValidViewPage(array(
                     $pageInfo[0],
-                    $default));
+                    $default
+                ));
             }
         } else {
             $rslt = $pageInfo[1];
@@ -342,11 +345,11 @@ class LibModule {
         $coreSql = CoreSql::getInstance();
 
         $coreSql->addQuotedValue("count + 1");
-        $coreSql->update(
-        CoreTable::MODULES_TABLE, array(
-            "count" => "count + 1"), array(
-            "mod_id = '" . $modId . "'")
-        );
+        $coreSql->update(CoreTable::MODULES_TABLE, array(
+            "count" => "count + 1"
+        ), array(
+            "mod_id = '" . $modId . "'"
+        ));
     }
 
 }
