@@ -25,4 +25,11 @@
 		<nature>org.eclipse.php.core.PHPNature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>TREngine</name>
+			<type>2</type>
+			<location>C:/Program Files (x86)/EasyPHP-Devserver-17/eds-www/TREngine</location>
+		</link>
+	</linkedResources>
 </projectDescription>
